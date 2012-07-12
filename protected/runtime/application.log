@@ -1,0 +1,529 @@
+2012/07/10 16:03:57 [error] [exception.CException] exception 'CException' with message 'Property "BootBreadcrumbs.0" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWidgetFactory.php(162): CComponent->__set('0', 'Login')
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(147): CWidgetFactory->createWidget(Object(SiteController), 'bootstrap.widge...', Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/login.php(5): CBaseController->widget('bootstrap.widge...', Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('login', Array, true)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php(92): CController->render('login', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): SiteController->actionLogin()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(287): CController->runAction(Object(CInlineAction))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('login')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('site/login')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/site/login
+HTTP_REFERER=http://localhost/WorksManagement/page/about
+---
+2012/07/10 16:12:34 [error] [exception.CException] exception 'CException' with message 'Property "BootBreadcrumbs.0" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWidgetFactory.php(162): CComponent->__set('0', 'Login')
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(147): CWidgetFactory->createWidget(Object(SiteController), 'bootstrap.widge...', Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/login.php(5): CBaseController->widget('bootstrap.widge...', Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('login', Array, true)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php(92): CController->render('login', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): SiteController->actionLogin()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(287): CController->runAction(Object(CInlineAction))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('login')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('site/login')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/site/login
+HTTP_REFERER=http://localhost/WorksManagement/page/about
+---
+2012/07/10 16:14:03 [error] [exception.CException] exception 'CException' with message 'Property "BootBreadcrumbs.0" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWidgetFactory.php(162): CComponent->__set('0', 'links')
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(147): CWidgetFactory->createWidget(Object(SiteController), 'bootstrap.widge...', Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/login.php(9): CBaseController->widget('bootstrap.widge...', Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('login', Array, true)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php(92): CController->render('login', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): SiteController->actionLogin()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(287): CController->runAction(Object(CInlineAction))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('login')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('site/login')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/site/login
+HTTP_REFERER=http://localhost/WorksManagement/page/about
+---
+2012/07/10 16:15:24 [error] [exception.CException] exception 'CException' with message 'Property "BootBreadcrumbs.0" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWidgetFactory.php(162): CComponent->__set('0', 'Login')
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(147): CWidgetFactory->createWidget(Object(SiteController), 'bootstrap.widge...', Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/login.php(9): CBaseController->widget('bootstrap.widge...', Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('login', Array, true)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php(92): CController->render('login', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): SiteController->actionLogin()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(287): CController->runAction(Object(CInlineAction))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('login')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('site/login')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/site/login
+HTTP_REFERER=http://localhost/WorksManagement/page/about
+---
+2012/07/10 16:23:55 [error] [exception.CException] exception 'CException' with message 'Property "BootBreadcrumbs.Login" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWidgetFactory.php(162): CComponent->__set('Login', Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(147): CWidgetFactory->createWidget(Object(SiteController), 'bootstrap.widge...', Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/login.php(9): CBaseController->widget('bootstrap.widge...', Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('login', Array, true)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php(92): CController->render('login', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): SiteController->actionLogin()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(287): CController->runAction(Object(CInlineAction))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('login')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('site/login')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/site/login
+HTTP_REFERER=http://localhost/WorksManagement/page/about
+---
+2012/07/10 16:23:57 [error] [exception.CException] exception 'CException' with message 'Property "BootBreadcrumbs.Login" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWidgetFactory.php(162): CComponent->__set('Login', Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(147): CWidgetFactory->createWidget(Object(SiteController), 'bootstrap.widge...', Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/login.php(9): CBaseController->widget('bootstrap.widge...', Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('login', Array, true)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php(92): CController->render('login', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): SiteController->actionLogin()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(287): CController->runAction(Object(CInlineAction))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('login')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('site/login')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/site/login
+HTTP_REFERER=http://localhost/WorksManagement/page/about
+---
+2012/07/10 16:24:14 [error] [exception.CException] exception 'CException' with message 'Property "BootBreadcrumbs.Login" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWidgetFactory.php(162): CComponent->__set('Login', Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(147): CWidgetFactory->createWidget(Object(SiteController), 'bootstrap.widge...', Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/login.php(9): CBaseController->widget('bootstrap.widge...', Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('login', Array, true)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php(92): CController->render('login', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): SiteController->actionLogin()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(287): CController->runAction(Object(CInlineAction))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('login')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('site/login')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(13): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/site/login
+HTTP_REFERER=http://localhost/WorksManagement/page/about
+---
+2012/07/11 16:02:01 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:02:01 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:02:01 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:02:01 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:02:01 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:02:01 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:02:01 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/layouts/column1.php (1)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:02:01 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/layouts/main.php (34)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/layouts/column1.php (5)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+2012/07/11 16:02:01 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/layouts/main.php (34)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/layouts/column1.php (5)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+2012/07/11 16:02:01 [trace] [system.CModule] Loading "coreMessages" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/layouts/main.php (52)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/layouts/column1.php (5)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+2012/07/11 16:05:58 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:05:58 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:05:58 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:05:58 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:05:58 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:05:58 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:05:58 [trace] [system.CModule] Loading "themeManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:05:58 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (1)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:05:58 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+2012/07/11 16:05:58 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "coreMessages" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:24 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "giix".' in /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php:280
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('giix')
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(18): CApplication->run()
+#3 {main}
+REQUEST_URI=/WorksManagement/index.php?r=giix
+---
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "errorHandler" application component
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "themeManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (45)
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (1)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (45)
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (45)
+2012/07/11 16:12:24 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (45)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:34 [trace] [system.base.CModule] Loading "gii" module
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "themeManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:12:34 [trace] [system.CModule] Loading "coreMessages" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:00 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:00 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:00 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:00 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:13:00 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:13:00 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:00 [trace] [system.CModule] Loading "themeManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:00 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (1)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:00 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+2012/07/11 16:13:00 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:04 [trace] [system.base.CModule] Loading "gii" module
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "themeManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/11 16:13:04 [trace] [system.CModule] Loading "coreMessages" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:51 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:51 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:51 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:51 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/12 15:46:51 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/12 15:46:51 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:51 [trace] [system.CModule] Loading "themeManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:51 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (1)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:51 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+2012/07/12 15:46:51 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (32)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "themeManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (1)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:54 [trace] [system.CModule] Loading "coreMessages" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (81)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:55 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:55 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:55 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:55 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/12 15:46:55 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/12 15:46:55 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:55 [trace] [system.CModule] Loading "themeManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (66)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:55 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/contact.php (10)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (66)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:55 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/contact.php (10)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (66)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:55 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/contact.php (31)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (66)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:56 [trace] [system.CModule] Loading "coreMessages" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/contact.php (35)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (66)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:56 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:56 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:56 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:56 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/12 15:46:56 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/12 15:46:56 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:46:56 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (345)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (101)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "themeManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (92)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/login.php (5)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (92)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "messages" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/BootBreadcrumbs.php (47)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/login.php (5)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (92)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "coreMessages" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/site/login.php (23)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (92)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (92)
+2012/07/12 15:47:05 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php (67)
+in /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php (3)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/SiteController.php (92)
