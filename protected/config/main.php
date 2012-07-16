@@ -41,6 +41,7 @@ return array(
 			'application.models.*',
 			'application.components.*',
 			'application.extensions.*',
+			'ext.giix-components.*',	// giix components
 		),
 		
 		// Application components
