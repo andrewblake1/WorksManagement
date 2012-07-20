@@ -3,6 +3,20 @@
 class SiteController extends Controller
 {
 	/**
+	 * Specifies the access control rules.
+	 * This method is used by the 'accessControl' filter.
+	 * @return array access control rules
+	 */
+	public function accessRules()
+	{
+		return array(
+			array('allow',  // all users
+				'users'=>array('*'),
+			),
+		);
+	}
+	
+	/**
 	 * Declares class-based actions.
 	 */
 	public function actions()

@@ -1,34 +1,42 @@
 <div class="view">
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('id')); ?>:
-	<?php echo GxHtml::link(GxHtml::encode($data->id), array('view', 'id' => $data->id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('description')); ?>:
-	<?php echo GxHtml::encode($data->description); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
+	<?php echo CHtml::encode($data->description); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('day')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->day0)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('day')); ?>:</b>
+	<?php echo CHtml::encode($data->day); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('purchase_orders_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->purchaseOrders)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('purchase_orders_id')); ?>:</b>
+	<?php echo CHtml::encode($data->purchase_orders_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('crew_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->crew)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('crew_id')); ?>:</b>
+	<?php echo CHtml::encode($data->crew_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('project_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->project)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('project_id')); ?>:</b>
+	<?php echo CHtml::encode($data->project_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('client_to_task_type_client_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->clientToTaskTypeClient)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('client_to_task_type_client_id')); ?>:</b>
+	<?php echo CHtml::encode($data->client_to_task_type_client_id); ?>
 	<br />
+
 	<?php /*
-	<?php echo GxHtml::encode($data->getAttributeLabel('client_to_task_type_task_type_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->clientToTaskTypeTaskType)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('client_to_task_type_task_type_id')); ?>:</b>
+	<?php echo CHtml::encode($data->client_to_task_type_task_type_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('staff_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->staff)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>
+	<?php echo CHtml::encode($data->staff_id); ?>
 	<br />
+
 	*/ ?>
 
 </div>

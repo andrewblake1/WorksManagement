@@ -35,6 +35,7 @@
 <div class="container">
 	<div class="row">
 		<header class="span12">
+<?php /*
 			<div id="header-top" class="row">
 				<div class="span4">
 					<a href="<?php echo Yii::app()->request->baseUrl; ?>/">
@@ -48,36 +49,73 @@
 					</p>
 				</div>
 			</div>
+*/ ?>
 
-			<div class="navbar">
-				<div class="navbar-inner">
-					<div class="container">
-						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</a>
-						<a class="brand" href="<?php echo Yii::app()->request->baseUrl; ?>/"><?php echo CHtml::encode(Yii::app()->name); ?></a>
-						<div class="nav-collapse">
-						<?php $this->widget('zii.widgets.CMenu',array(
-							'items'=>array(
-								array('label'=>'Home', 'url'=>array('/site/index')),
-								array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
-								array('label'=>'Contact', 'url'=>array('/site/contact')),
-								array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-								array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
-							),
-							'htmlOptions'=>array('class'=>'nav'),
-						)); ?>
-						</div>
-					</div>
-				</div>
-			</div><!-- navbar -->
-			
+<?php $this->widget('bootstrap.widgets.BootNavbar', array(
+    'fixed'=>false,
+    'brand'=>Yii::app()->name,
+    'brandUrl'=>'#',
+    'collapse'=>true, // requires bootstrap-responsive.css
+    'items'=>array(
+        array(
+            'class'=>'bootstrap.widgets.BootMenu',
+            'items'=>array(
+                array('label'=>'Tables - development shortcut', 'url'=>'#', 'items'=>array(
+					array('label'=>'AuthItem', 'url'=>array('/AuthItem')),
+					array('label'=>'Client', 'url'=>array('/Client')),
+					array('label'=>'Crew', 'url'=>array('/Crew')),
+					array('label'=>'Day', 'url'=>array('/Day')),
+					array('label'=>'DutyType', 'url'=>array('/DutyType')),
+					array('label'=>'Dutycategory', 'url'=>array('/Dutycategory')),
+					array('label'=>'Generic', 'url'=>array('/Generic')),
+					array('label'=>'GenericProjectType', 'url'=>array('/GenericProjectType')),
+					array('label'=>'GenericTaskType', 'url'=>array('/GenericTaskType')),
+					array('label'=>'GenericType', 'url'=>array('/GenericType')),
+					array('label'=>'Genericprojectcategory', 'url'=>array('/Genericprojectcategory')),
+					array('label'=>'Generictaskcategory', 'url'=>array('/Generictaskcategory')),
+					array('label'=>'Material', 'url'=>array('/Material')),
+					array('label'=>'Plan', 'url'=>array('/Plan')),
+					array('label'=>'Project', 'url'=>array('/Project')),
+					array('label'=>'PurchaseOrders', 'url'=>array('/PurchaseOrders')),
+					array('label'=>'ResourceType', 'url'=>array('/ResourceType')),
+					array('label'=>'Resourcecategory', 'url'=>array('/Resourcecategory')),
+					array('label'=>'Staff', 'url'=>array('/Staff')),
+					array('label'=>'Supplier', 'url'=>array('/Supplier')),
+					array('label'=>'Task', 'url'=>array('/Task')),
+					array('label'=>'TaskType', 'url'=>array('/TaskType')),
+                    '---',
+                    array('label'=>'Pivot tables'),
+					array('label'=>'Assembly', 'url'=>array('/Assembly')),
+					array('label'=>'AuthAssignment', 'url'=>array('/AuthAssignment')),
+					array('label'=>'ClientToTaskType', 'url'=>array('/ClientToTaskType')),
+					array('label'=>'ClientToTaskTypeToDutyType', 'url'=>array('/ClientToTaskTypeToDutyType')),
+					array('label'=>'Duty', 'url'=>array('/Duty')),
+					array('label'=>'MaterialToTask', 'url'=>array('/MaterialToTask')),
+					array('label'=>'ProjectToAuthAssignment', 'url'=>array('/ProjectToAuthAssignment')),
+					array('label'=>'ProjectToGenericProjectType', 'url'=>array('/ProjectToGenericProjectType')),
+					array('label'=>'Reschedule', 'url'=>array('/Reschedule')),
+					array('label'=>'TaskToAssembly', 'url'=>array('/TaskToAssembly')),
+					array('label'=>'TaskToGenericTaskType', 'url'=>array('/TaskToGenericTaskType')),
+					array('label'=>'TaskToResourceType', 'url'=>array('/TaskToResourceType')),
+                )),
+            ),
+        ),
+		$this->operations,
+        array(
+            'class'=>'bootstrap.widgets.BootMenu',
+            'htmlOptions'=>array('class'=>'pull-right'),
+            'items'=>array(
+				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
+				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
+            ),
+        ),
+    ),
+)); ?>
+					
 			<?php if(isset($this->breadcrumbs)):?>
-				<?php $this->widget('zii.widgets.CBreadcrumbs', array(
+				<?php $this->widget('bootstrap.widgets.BootBreadcrumbs', array(
 					'links'=>$this->breadcrumbs,
-					'htmlOptions'=>array('class'=>'breadcrumbs breadcrumb'),
+//					'htmlOptions'=>array('class'=>'breadcrumbs breadcrumb'),
 				)); ?><!-- breadcrumbs -->
 			<?php endif?>
 		</header>
@@ -88,19 +126,6 @@
 			<?php echo $content; ?>
 		</div>
 	</div>
-
-	<div class="row">
-		<footer class="span12">
-			<div class="row">
-				<div class="span8">
-					<p>Copyright &copy; <?php echo date('Y'); ?> by My Company - All Rights Reserved.</p>
-				</div>
-				<div class="span4">
-					<p style="text-align:right;">Web Design by <a href="#" target="_blank">Cool Company</a></p>
-				</div>
-			</div>
-		</footer>
-	</div><!-- footer -->
 
 </div><!-- container -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>

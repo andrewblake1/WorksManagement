@@ -1,41 +1,25 @@
-<div class="form">
+<?php $form=$this->beginWidget('bootstrap.widgets.BootActiveForm',array(
+	'id'=>'client-form',
+	'htmlOptions'=>array('class'=>'well'),
+	'enableAjaxValidation'=>false,
+)); ?>
 
-
-<?php $form = $this->beginWidget('GxActiveForm', array(
-	'id' => 'client-form',
-	'enableAjaxValidation' => true,
-));
-?>
-
-	<p class="note">
-		<?php echo Yii::t('app', 'Fields with'); ?> <span class="required">*</span> <?php echo Yii::t('app', 'are required'); ?>.
-	</p>
+	<p class="help-block">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
-		<div class="row">
-		<?php echo $form->labelEx($model,'name'); ?>
-		<?php echo $form->textField($model, 'name', array('maxlength' => 64)); ?>
-		<?php echo $form->error($model,'name'); ?>
-		</div><!-- row -->
-		<div class="row">
-		<?php echo $form->labelEx($model,'deleted'); ?>
-		<?php echo $form->checkBox($model, 'deleted'); ?>
-		<?php echo $form->error($model,'deleted'); ?>
-		</div><!-- row -->
-		<div class="row">
-		<?php echo $form->labelEx($model,'staff_id'); ?>
-		<?php echo $form->dropDownList($model, 'staff_id', GxHtml::listDataEx(Staff::model()->findAllAttributes(null, true))); ?>
-		<?php echo $form->error($model,'staff_id'); ?>
-		</div><!-- row -->
+	<?php echo $form->textFieldRow($model,'name',array('class'=>'span5','maxlength'=>64)); ?>
 
-		<label><?php echo GxHtml::encode($model->getRelationLabel('taskTypes')); ?></label>
-		<?php echo $form->checkBoxList($model, 'taskTypes', GxHtml::encodeEx(GxHtml::listDataEx(TaskType::model()->findAllAttributes(null, true)), false, true)); ?>
-		<label><?php echo GxHtml::encode($model->getRelationLabel('projects')); ?></label>
-		<?php echo $form->checkBoxList($model, 'projects', GxHtml::encodeEx(GxHtml::listDataEx(Project::model()->findAllAttributes(null, true)), false, true)); ?>
+	<?php echo $form->textFieldRow($model,'deleted',array('class'=>'span5')); ?>
 
-<?php
-echo GxHtml::submitButton(Yii::t('app', 'Save'));
-$this->endWidget();
-?>
-</div><!-- form -->
+	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
+
+	<div class="form-actions">
+		<?php $this->widget('bootstrap.widgets.BootButton', array(
+			'buttonType'=>'submit',
+			'type'=>'primary',
+			'label'=>$model->isNewRecord ? 'Create' : 'Save',
+		)); ?>
+	</div>
+
+<?php $this->endWidget(); ?>

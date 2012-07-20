@@ -29,12 +29,12 @@ $this->widget('bootstrap.widgets.BootBreadcrumbs', array(
 		<?php echo $form->labelEx($model,'password'); ?>
 		<?php echo $form->passwordField($model,'password'); ?>
 		<?php echo $form->error($model,'password'); ?>
-		<p class="alert alert-info">
+<!--		<p class="alert alert-info">
 			Hint: You may login with <tt>demo/demo</tt> or <tt>admin/admin</tt>.
-		</p>
+		</p>-->
 
-		<?php echo $form->checkBox($model,'rememberMe'); ?>
 		<?php echo $form->label($model,'rememberMe'); ?>
+		<?php echo $form->checkBox($model,'rememberMe'); ?>
 		<?php echo $form->error($model,'rememberMe'); ?>
 
 		<div class="form-actions">

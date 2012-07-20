@@ -28,7 +28,7 @@ return array(
 	'configWeb' => array(
 
 		'basePath' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-		'name' => 'Works Managment',
+		'name' => 'Works Management',
 		'theme'=>'base',
 
 		'preload'=>array(
@@ -41,7 +41,6 @@ return array(
 			'application.models.*',
 			'application.components.*',
 			'application.extensions.*',
-			'ext.giix-components.*',	// giix components
 		),
 		
 		// Application components
@@ -75,6 +74,7 @@ return array(
 			'authManager'=>array(
 				'class'=>'CDbAuthManager',
 				'connectionID'=>'db',
+				'defaultRoles'=>array('default'),
 			),
 			
 			// Database
@@ -101,7 +101,7 @@ return array(
 		// using Yii::app()->params['paramName']
 		'params'=>array(
 			// this is used in contact page
-			'adminEmail'=>'webmaster@example.com',
+			'adminEmail'=>'Hawea.George@westcoastenergy.com.au',
 			// delimiter - used when searching and autoseleting as break between fields
 			'delimiter'=>array('search'=>'/', 'display'=>', '),
 		),

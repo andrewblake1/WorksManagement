@@ -1,20 +1,24 @@
 <div class="view">
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('id')); ?>:
-	<?php echo GxHtml::link(GxHtml::encode($data->id), array('view', 'id' => $data->id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('generic_type_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->genericType)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('generic_type_id')); ?>:</b>
+	<?php echo CHtml::encode($data->generic_type_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('generic_project_category_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->genericProjectCategory)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('generic_project_category_id')); ?>:</b>
+	<?php echo CHtml::encode($data->generic_project_category_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('deleted')); ?>:
-	<?php echo GxHtml::encode($data->deleted); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('deleted')); ?>:</b>
+	<?php echo CHtml::encode($data->deleted); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('staff_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->staff)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>
+	<?php echo CHtml::encode($data->staff_id); ?>
 	<br />
+
 
 </div>

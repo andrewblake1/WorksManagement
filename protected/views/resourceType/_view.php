@@ -1,20 +1,24 @@
 <div class="view">
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('id')); ?>:
-	<?php echo GxHtml::link(GxHtml::encode($data->id), array('view', 'id' => $data->id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('description')); ?>:
-	<?php echo GxHtml::encode($data->description); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
+	<?php echo CHtml::encode($data->description); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('resource_category_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->resourceCategory)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('resource_category_id')); ?>:</b>
+	<?php echo CHtml::encode($data->resource_category_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('maximum')); ?>:
-	<?php echo GxHtml::encode($data->maximum); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('maximum')); ?>:</b>
+	<?php echo CHtml::encode($data->maximum); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('deleted')); ?>:
-	<?php echo GxHtml::encode($data->deleted); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('deleted')); ?>:</b>
+	<?php echo CHtml::encode($data->deleted); ?>
 	<br />
+
 
 </div>

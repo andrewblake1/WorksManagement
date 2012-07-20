@@ -1,20 +1,24 @@
 <div class="view">
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('id')); ?>:
-	<?php echo GxHtml::link(GxHtml::encode($data->id), array('view', 'id' => $data->id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('description')); ?>:
-	<?php echo GxHtml::encode($data->description); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
+	<?php echo CHtml::encode($data->description); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('deleted')); ?>:
-	<?php echo GxHtml::encode($data->deleted); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('deleted')); ?>:</b>
+	<?php echo CHtml::encode($data->deleted); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('staff_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->staff)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>
+	<?php echo CHtml::encode($data->staff_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('template_task_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->templateTask)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('template_task_id')); ?>:</b>
+	<?php echo CHtml::encode($data->template_task_id); ?>
 	<br />
+
 
 </div>

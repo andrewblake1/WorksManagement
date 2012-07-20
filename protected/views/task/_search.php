@@ -1,59 +1,32 @@
-<div class="wide form">
-
-<?php $form = $this->beginWidget('GxActiveForm', array(
-	'action' => Yii::app()->createUrl($this->route),
-	'method' => 'get',
+<?php $form=$this->beginWidget('bootstrap.widgets.BootActiveForm',array(
+	'action'=>Yii::app()->createUrl($this->route),
+	'method'=>'get',
+	'htmlOptions'=>array('class'=>'well'),
 )); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'id'); ?>
-		<?php echo $form->textField($model, 'id', array('maxlength' => 10)); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'id',array('class'=>'span5','maxlength'=>10)); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'description'); ?>
-		<?php echo $form->textArea($model, 'description'); ?>
-	</div>
+	<?php echo $form->textAreaRow($model,'description',array('rows'=>6, 'cols'=>50, 'class'=>'span8')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'day'); ?>
-		<?php echo $form->dropDownList($model, 'day', GxHtml::listDataEx(Day::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'day',array('class'=>'span5','maxlength'=>10)); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'purchase_orders_id'); ?>
-		<?php echo $form->dropDownList($model, 'purchase_orders_id', GxHtml::listDataEx(PurchaseOrders::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'purchase_orders_id',array('class'=>'span5','maxlength'=>10)); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'crew_id'); ?>
-		<?php echo $form->dropDownList($model, 'crew_id', GxHtml::listDataEx(Crew::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'crew_id',array('class'=>'span5','maxlength'=>10)); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'project_id'); ?>
-		<?php echo $form->dropDownList($model, 'project_id', GxHtml::listDataEx(Project::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'project_id',array('class'=>'span5','maxlength'=>10)); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'client_to_task_type_client_id'); ?>
-		<?php echo $form->dropDownList($model, 'client_to_task_type_client_id', GxHtml::listDataEx(ClientToTaskType::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'client_to_task_type_client_id',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'client_to_task_type_task_type_id'); ?>
-		<?php echo $form->dropDownList($model, 'client_to_task_type_task_type_id', GxHtml::listDataEx(ClientToTaskType::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'client_to_task_type_task_type_id',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'staff_id'); ?>
-		<?php echo $form->dropDownList($model, 'staff_id', GxHtml::listDataEx(Staff::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
 
-	<div class="row buttons">
-		<?php echo GxHtml::submitButton(Yii::t('app', 'Search')); ?>
+	<div class="form-actions">
+		<?php $this->widget('bootstrap.widgets.BootButton', array(
+			'type'=>'primary',
+			'label'=>'Search',
+		)); ?>
 	</div>
 
 <?php $this->endWidget(); ?>
-
-</div><!-- search-form -->

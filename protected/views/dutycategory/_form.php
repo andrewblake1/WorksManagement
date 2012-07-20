@@ -1,56 +1,31 @@
-<div class="form">
+<?php $form=$this->beginWidget('bootstrap.widgets.BootActiveForm',array(
+	'id'=>'dutycategory-form',
+	'enableAjaxValidation'=>false,
+	'htmlOptions'=>array('class'=>'well'),
+)); ?>
 
-
-<?php $form = $this->beginWidget('GxActiveForm', array(
-	'id' => 'dutycategory-form',
-	'enableAjaxValidation' => true,
-));
-?>
-
-	<p class="note">
-		<?php echo Yii::t('app', 'Fields with'); ?> <span class="required">*</span> <?php echo Yii::t('app', 'are required'); ?>.
-	</p>
+	<p class="help-block">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
-		<div class="row">
-		<?php echo $form->labelEx($model,'root'); ?>
-		<?php echo $form->textField($model, 'root'); ?>
-		<?php echo $form->error($model,'root'); ?>
-		</div><!-- row -->
-		<div class="row">
-		<?php echo $form->labelEx($model,'lft'); ?>
-		<?php echo $form->textField($model, 'lft'); ?>
-		<?php echo $form->error($model,'lft'); ?>
-		</div><!-- row -->
-		<div class="row">
-		<?php echo $form->labelEx($model,'rgt'); ?>
-		<?php echo $form->textField($model, 'rgt'); ?>
-		<?php echo $form->error($model,'rgt'); ?>
-		</div><!-- row -->
-		<div class="row">
-		<?php echo $form->labelEx($model,'level'); ?>
-		<?php echo $form->textField($model, 'level'); ?>
-		<?php echo $form->error($model,'level'); ?>
-		</div><!-- row -->
-		<div class="row">
-		<?php echo $form->labelEx($model,'description'); ?>
-		<?php echo $form->textField($model, 'description', array('maxlength' => 64)); ?>
-		<?php echo $form->error($model,'description'); ?>
-		</div><!-- row -->
-		<div class="row">
-		<?php echo $form->labelEx($model,'deleted'); ?>
-		<?php echo $form->checkBox($model, 'deleted'); ?>
-		<?php echo $form->error($model,'deleted'); ?>
-		</div><!-- row -->
+	<?php echo $form->textFieldRow($model,'root',array('class'=>'span5')); ?>
 
-		<label><?php echo GxHtml::encode($model->getRelationLabel('dutyTypes')); ?></label>
-		<?php echo $form->checkBoxList($model, 'dutyTypes', GxHtml::encodeEx(GxHtml::listDataEx(DutyType::model()->findAllAttributes(null, true)), false, true)); ?>
-		<label><?php echo GxHtml::encode($model->getRelationLabel('resourcecategories')); ?></label>
-		<?php echo $form->checkBoxList($model, 'resourcecategories', GxHtml::encodeEx(GxHtml::listDataEx(Resourcecategory::model()->findAllAttributes(null, true)), false, true)); ?>
+	<?php echo $form->textFieldRow($model,'lft',array('class'=>'span5')); ?>
 
-<?php
-echo GxHtml::submitButton(Yii::t('app', 'Save'));
-$this->endWidget();
-?>
-</div><!-- form -->
+	<?php echo $form->textFieldRow($model,'rgt',array('class'=>'span5')); ?>
+
+	<?php echo $form->textFieldRow($model,'level',array('class'=>'span5')); ?>
+
+	<?php echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>64)); ?>
+
+	<?php echo $form->textFieldRow($model,'deleted',array('class'=>'span5')); ?>
+
+	<div class="form-actions">
+		<?php $this->widget('bootstrap.widgets.BootButton', array(
+			'buttonType'=>'submit',
+			'type'=>'primary',
+			'label'=>$model->isNewRecord ? 'Create' : 'Save',
+		)); ?>
+	</div>
+
+<?php $this->endWidget(); ?>

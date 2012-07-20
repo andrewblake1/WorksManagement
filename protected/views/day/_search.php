@@ -1,84 +1,26 @@
-<div class="wide form">
-
-<?php $form = $this->beginWidget('GxActiveForm', array(
-	'action' => Yii::app()->createUrl($this->route),
-	'method' => 'get',
+<?php $form=$this->beginWidget('bootstrap.widgets.BootActiveForm',array(
+	'action'=>Yii::app()->createUrl($this->route),
+	'method'=>'get',
+	'htmlOptions'=>array('class'=>'well'),
 )); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'id'); ?>
-		<?php echo $form->textField($model, 'id', array('maxlength' => 10)); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'id',array('class'=>'span5','maxlength'=>10)); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'scheduled'); ?>
-		<?php $form->widget('zii.widgets.jui.CJuiDatePicker', array(
-			'model' => $model,
-			'attribute' => 'scheduled',
-			'value' => $model->scheduled,
-			'options' => array(
-				'showButtonPanel' => true,
-				'changeYear' => true,
-				'dateFormat' => 'yy-mm-dd',
-				),
-			));
-; ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'scheduled',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'preferred'); ?>
-		<?php $form->widget('zii.widgets.jui.CJuiDatePicker', array(
-			'model' => $model,
-			'attribute' => 'preferred',
-			'value' => $model->preferred,
-			'options' => array(
-				'showButtonPanel' => true,
-				'changeYear' => true,
-				'dateFormat' => 'yy-mm-dd',
-				),
-			));
-; ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'preferred',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'earliest'); ?>
-		<?php $form->widget('zii.widgets.jui.CJuiDatePicker', array(
-			'model' => $model,
-			'attribute' => 'earliest',
-			'value' => $model->earliest,
-			'options' => array(
-				'showButtonPanel' => true,
-				'changeYear' => true,
-				'dateFormat' => 'yy-mm-dd',
-				),
-			));
-; ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'earliest',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'planned'); ?>
-		<?php $form->widget('zii.widgets.jui.CJuiDatePicker', array(
-			'model' => $model,
-			'attribute' => 'planned',
-			'value' => $model->planned,
-			'options' => array(
-				'showButtonPanel' => true,
-				'changeYear' => true,
-				'dateFormat' => 'yy-mm-dd',
-				),
-			));
-; ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'planned',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'staff_id'); ?>
-		<?php echo $form->dropDownList($model, 'staff_id', GxHtml::listDataEx(Staff::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
 
-	<div class="row buttons">
-		<?php echo GxHtml::submitButton(Yii::t('app', 'Search')); ?>
+	<div class="form-actions">
+		<?php $this->widget('bootstrap.widgets.BootButton', array(
+			'type'=>'primary',
+			'label'=>'Search',
+		)); ?>
 	</div>
 
 <?php $this->endWidget(); ?>
-
-</div><!-- search-form -->

@@ -1,20 +1,24 @@
 <div class="view">
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('id')); ?>:
-	<?php echo GxHtml::link(GxHtml::encode($data->id), array('view', 'id' => $data->id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('plan_name')); ?>:
-	<?php echo GxHtml::encode($data->plan_name); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('plan_name')); ?>:</b>
+	<?php echo CHtml::encode($data->plan_name); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('url')); ?>:
-	<?php echo GxHtml::encode($data->url); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('url')); ?>:</b>
+	<?php echo CHtml::encode($data->url); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('deleted')); ?>:
-	<?php echo GxHtml::encode($data->deleted); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('deleted')); ?>:</b>
+	<?php echo CHtml::encode($data->deleted); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('staff_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->staff)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>
+	<?php echo CHtml::encode($data->staff_id); ?>
 	<br />
+
 
 </div>

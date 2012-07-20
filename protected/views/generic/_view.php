@@ -1,26 +1,32 @@
 <div class="view">
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('id')); ?>:
-	<?php echo GxHtml::link(GxHtml::encode($data->id), array('view', 'id' => $data->id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('type_int')); ?>:
-	<?php echo GxHtml::encode($data->type_int); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('type_int')); ?>:</b>
+	<?php echo CHtml::encode($data->type_int); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('type_float')); ?>:
-	<?php echo GxHtml::encode($data->type_float); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('type_float')); ?>:</b>
+	<?php echo CHtml::encode($data->type_float); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('type_time')); ?>:
-	<?php echo GxHtml::encode($data->type_time); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('type_time')); ?>:</b>
+	<?php echo CHtml::encode($data->type_time); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('type_date')); ?>:
-	<?php echo GxHtml::encode($data->type_date); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('type_date')); ?>:</b>
+	<?php echo CHtml::encode($data->type_date); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('type_text')); ?>:
-	<?php echo GxHtml::encode($data->type_text); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('type_text')); ?>:</b>
+	<?php echo CHtml::encode($data->type_text); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('staff_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->staff)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>
+	<?php echo CHtml::encode($data->staff_id); ?>
 	<br />
+
 
 </div>

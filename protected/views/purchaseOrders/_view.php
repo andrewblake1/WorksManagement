@@ -1,17 +1,20 @@
 <div class="view">
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('id')); ?>:
-	<?php echo GxHtml::link(GxHtml::encode($data->id), array('view', 'id' => $data->id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('supplier_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->supplier)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('supplier_id')); ?>:</b>
+	<?php echo CHtml::encode($data->supplier_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('purchase_order_no')); ?>:
-	<?php echo GxHtml::encode($data->purchase_order_no); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('purchase_order_no')); ?>:</b>
+	<?php echo CHtml::encode($data->purchase_order_no); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('staff_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->staff)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>
+	<?php echo CHtml::encode($data->staff_id); ?>
 	<br />
+
 
 </div>

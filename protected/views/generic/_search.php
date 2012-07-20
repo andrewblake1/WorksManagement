@@ -1,59 +1,28 @@
-<div class="wide form">
-
-<?php $form = $this->beginWidget('GxActiveForm', array(
-	'action' => Yii::app()->createUrl($this->route),
-	'method' => 'get',
+<?php $form=$this->beginWidget('bootstrap.widgets.BootActiveForm',array(
+	'action'=>Yii::app()->createUrl($this->route),
+	'method'=>'get',
+	'htmlOptions'=>array('class'=>'well'),
 )); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'id'); ?>
-		<?php echo $form->textField($model, 'id', array('maxlength' => 10)); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'id',array('class'=>'span5','maxlength'=>10)); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'type_int'); ?>
-		<?php echo $form->textField($model, 'type_int'); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'type_int',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'type_float'); ?>
-		<?php echo $form->textField($model, 'type_float'); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'type_float',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'type_time'); ?>
-		<?php echo $form->textField($model, 'type_time'); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'type_time',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'type_date'); ?>
-		<?php $form->widget('zii.widgets.jui.CJuiDatePicker', array(
-			'model' => $model,
-			'attribute' => 'type_date',
-			'value' => $model->type_date,
-			'options' => array(
-				'showButtonPanel' => true,
-				'changeYear' => true,
-				'dateFormat' => 'yy-mm-dd',
-				),
-			));
-; ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'type_date',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'type_text'); ?>
-		<?php echo $form->textField($model, 'type_text', array('maxlength' => 255)); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'type_text',array('class'=>'span5','maxlength'=>255)); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'staff_id'); ?>
-		<?php echo $form->dropDownList($model, 'staff_id', GxHtml::listDataEx(Staff::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
 
-	<div class="row buttons">
-		<?php echo GxHtml::submitButton(Yii::t('app', 'Search')); ?>
+	<div class="form-actions">
+		<?php $this->widget('bootstrap.widgets.BootButton', array(
+			'type'=>'primary',
+			'label'=>'Search',
+		)); ?>
 	</div>
 
 <?php $this->endWidget(); ?>
-
-</div><!-- search-form -->

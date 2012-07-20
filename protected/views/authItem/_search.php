@@ -1,49 +1,28 @@
-<div class="wide form">
-
-<?php $form = $this->beginWidget('GxActiveForm', array(
-	'action' => Yii::app()->createUrl($this->route),
-	'method' => 'get',
+<?php $form=$this->beginWidget('bootstrap.widgets.BootActiveForm',array(
+	'action'=>Yii::app()->createUrl($this->route),
+	'method'=>'get',
+	'htmlOptions'=>array('class'=>'well'),
 )); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'name'); ?>
-		<?php echo $form->textField($model, 'name', array('maxlength' => 64)); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'name',array('class'=>'span5','maxlength'=>64)); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'type'); ?>
-		<?php echo $form->textField($model, 'type'); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'type',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'description'); ?>
-		<?php echo $form->textArea($model, 'description'); ?>
-	</div>
+	<?php echo $form->textAreaRow($model,'description',array('rows'=>6, 'cols'=>50, 'class'=>'span8')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'bizrule'); ?>
-		<?php echo $form->textArea($model, 'bizrule'); ?>
-	</div>
+	<?php echo $form->textAreaRow($model,'bizrule',array('rows'=>6, 'cols'=>50, 'class'=>'span8')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'data'); ?>
-		<?php echo $form->textArea($model, 'data'); ?>
-	</div>
+	<?php echo $form->textAreaRow($model,'data',array('rows'=>6, 'cols'=>50, 'class'=>'span8')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'deleted'); ?>
-		<?php echo $form->dropDownList($model, 'deleted', array('0' => Yii::t('app', 'No'), '1' => Yii::t('app', 'Yes')), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'deleted',array('class'=>'span5')); ?>
 
-	<div class="row">
-		<?php echo $form->label($model, 'staff_id'); ?>
-		<?php echo $form->dropDownList($model, 'staff_id', GxHtml::listDataEx(Staff::model()->findAllAttributes(null, true)), array('prompt' => Yii::t('app', 'All'))); ?>
-	</div>
+	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
 
-	<div class="row buttons">
-		<?php echo GxHtml::submitButton(Yii::t('app', 'Search')); ?>
+	<div class="form-actions">
+		<?php $this->widget('bootstrap.widgets.BootButton', array(
+			'type'=>'primary',
+			'label'=>'Search',
+		)); ?>
 	</div>
 
 <?php $this->endWidget(); ?>
-
-</div><!-- search-form -->

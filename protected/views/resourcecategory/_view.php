@@ -1,31 +1,38 @@
 <div class="view">
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('id')); ?>:
-	<?php echo GxHtml::link(GxHtml::encode($data->id), array('view', 'id' => $data->id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('root')); ?>:
-	<?php echo GxHtml::encode($data->root); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('root')); ?>:</b>
+	<?php echo CHtml::encode($data->root); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('lft')); ?>:
-	<?php echo GxHtml::encode($data->lft); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('lft')); ?>:</b>
+	<?php echo CHtml::encode($data->lft); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('rgt')); ?>:
-	<?php echo GxHtml::encode($data->rgt); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('rgt')); ?>:</b>
+	<?php echo CHtml::encode($data->rgt); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('level')); ?>:
-	<?php echo GxHtml::encode($data->level); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('level')); ?>:</b>
+	<?php echo CHtml::encode($data->level); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('duty_category_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->dutyCategory)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('duty_category_id')); ?>:</b>
+	<?php echo CHtml::encode($data->duty_category_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('description')); ?>:
-	<?php echo GxHtml::encode($data->description); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
+	<?php echo CHtml::encode($data->description); ?>
 	<br />
+
 	<?php /*
-	<?php echo GxHtml::encode($data->getAttributeLabel('deleted')); ?>:
-	<?php echo GxHtml::encode($data->deleted); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('deleted')); ?>:</b>
+	<?php echo CHtml::encode($data->deleted); ?>
 	<br />
+
 	*/ ?>
 
 </div>

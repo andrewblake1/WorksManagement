@@ -1,23 +1,28 @@
 <div class="view">
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('id')); ?>:
-	<?php echo GxHtml::link(GxHtml::encode($data->id), array('view', 'id' => $data->id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<?php echo GxHtml::encode($data->getAttributeLabel('travel_time_1_way')); ?>:
-	<?php echo GxHtml::encode($data->travel_time_1_way); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('travel_time_1_way')); ?>:</b>
+	<?php echo CHtml::encode($data->travel_time_1_way); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('critical_completion')); ?>:
-	<?php echo GxHtml::encode($data->critical_completion); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('critical_completion')); ?>:</b>
+	<?php echo CHtml::encode($data->critical_completion); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('planned')); ?>:
-	<?php echo GxHtml::encode($data->planned); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('planned')); ?>:</b>
+	<?php echo CHtml::encode($data->planned); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('client_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->client)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('client_id')); ?>:</b>
+	<?php echo CHtml::encode($data->client_id); ?>
 	<br />
-	<?php echo GxHtml::encode($data->getAttributeLabel('staff_id')); ?>:
-		<?php echo GxHtml::encode(GxHtml::valueEx($data->staff)); ?>
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>
+	<?php echo CHtml::encode($data->staff_id); ?>
 	<br />
+
 
 </div>
