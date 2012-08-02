@@ -28,5 +28,11 @@
 	<?php echo CHtml::encode($data->deleted); ?>
 	<br />
 
+	<?php /*
+	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>
+	<?php echo CHtml::encode($data->staff_id); ?>
+	<br />
+
+	*/ ?>
 
 </div>

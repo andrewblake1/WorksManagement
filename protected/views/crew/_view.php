@@ -16,8 +16,8 @@
 	<?php echo CHtml::encode($data->date_scheduled); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('in_charge')); ?>:</b>
-	<?php echo CHtml::encode($data->in_charge); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('in_charge_id')); ?>:</b>
+	<?php echo CHtml::encode($data->in_charge_id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>

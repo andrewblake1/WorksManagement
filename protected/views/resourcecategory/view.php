@@ -11,5 +11,6 @@
 		'duty_category_id',
 		'description',
 		'deleted',
+		'staff_id',
 	),
 )); ?>

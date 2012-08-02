@@ -20,6 +20,8 @@
 
 	<?php echo $form->textFieldRow($model,'deleted',array('class'=>'span5')); ?>
 
+	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
+
 	<div class="form-actions">
 		<?php $this->widget('bootstrap.widgets.BootButton', array(
 			'type'=>'primary',

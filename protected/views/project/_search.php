@@ -6,6 +6,8 @@
 
 	<?php echo $form->textFieldRow($model,'id',array('class'=>'span5','maxlength'=>10)); ?>
 
+	<?php echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>255)); ?>
+
 	<?php echo $form->textFieldRow($model,'travel_time_1_way',array('class'=>'span5')); ?>
 
 	<?php echo $form->textFieldRow($model,'critical_completion',array('class'=>'span5')); ?>

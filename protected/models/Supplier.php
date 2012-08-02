@@ -10,7 +10,7 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property PurchaseOrders[] $purchaseOrders
+ * @property PurchaseOrder[] $purchaseOrders
  * @property Staff $staff
  */
 class Supplier extends ActiveRecord
@@ -46,7 +46,7 @@ class Supplier extends ActiveRecord
 			array('name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, name, deleted, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,7 +58,7 @@ class Supplier extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrders', 'supplier_id'),
+			'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrder', 'supplier_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
@@ -68,19 +68,16 @@ class Supplier extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Supplier',
 			'name' => 'Name',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -89,11 +86,30 @@ class Supplier extends ActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
-		$criteria->compare('deleted',$this->deleted);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'name',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		parent::getDisplayAttr('name');
+	}
+
 }

@@ -20,6 +20,7 @@
  */
 class Generic extends ActiveRecord
 {
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -53,7 +54,7 @@ class Generic extends ActiveRecord
 			array('type_time, type_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, type_int, type_float, type_time, type_date, type_text, staff_id', 'safe', 'on'=>'search'),
+			array('id, type_int, type_float, type_time, type_date, type_text, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -77,22 +78,20 @@ class Generic extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Generic',
 			'type_int' => 'Type Int',
 			'type_float' => 'Type Float',
 			'type_time' => 'Type Time',
 			'type_date' => 'Type Date',
 			'type_text' => 'Type Text',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -105,10 +104,28 @@ class Generic extends ActiveRecord
 		$criteria->compare('type_time',$this->type_time,true);
 		$criteria->compare('type_date',$this->type_date,true);
 		$criteria->compare('type_text',$this->type_text,true);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
+	
+		$criteria->scopes=array('notDeleted');
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'type_int',
+			'type_float',
+			'type_time',
+			'type_date',
+			'type_text',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
 }

@@ -5,11 +5,13 @@
  *
  * The followings are the available columns in table 'generic_type':
  * @property integer $id
- * @property string $label
+ * @property string $description
  * @property string $mandatory
  * @property integer $allow_new
- * @property string $validation_type_id
+ * @property string $validation_type
  * @property string $data_type
+ * @property string $validation_text
+ * @property string $validation_error
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -46,14 +48,15 @@ class GenericType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('label, mandatory, validation_type_id, data_type, staff_id', 'required'),
+			array('description, mandatory, validation_type, data_type, staff_id', 'required'),
 			array('allow_new, staff_id', 'numerical', 'integerOnly'=>true),
-			array('label, mandatory', 'length', 'max'=>64),
-			array('validation_type_id', 'length', 'max'=>10),
+			array('description, mandatory', 'length', 'max'=>64),
+			array('validation_type', 'length', 'max'=>10),
 			array('data_type', 'length', 'max'=>5),
+			array('validation_text, validation_error', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, label, mandatory, allow_new, validation_type_id, data_type, staff_id', 'safe', 'on'=>'search'),
+			array('id, description, mandatory, allow_new, validation_type, data_type, validation_text, validation_error, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,26 +76,25 @@ class GenericType extends ActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * @return array customized attribute descriptions (name=>description)
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'label' => 'Label',
+		return parent::attributeLabels(array(
+			'id' => 'Generic Type',
 			'mandatory' => 'Mandatory',
 			'allow_new' => 'Allow New',
-			'validation_type_id' => 'Validation Type',
+			'validation_type' => 'Validation Type',
 			'data_type' => 'Data Type',
-			'staff_id' => 'Staff',
-		);
+			'validation_text' => 'Validation Text',
+			'validation_error' => 'Validation Error',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -100,15 +102,37 @@ class GenericType extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('label',$this->label,true);
+		$criteria->compare('description',$this->description,true);
 		$criteria->compare('mandatory',$this->mandatory,true);
 		$criteria->compare('allow_new',$this->allow_new);
-		$criteria->compare('validation_type_id',$this->validation_type_id,true);
+		$criteria->compare('validation_type',$this->validation_type,true);
 		$criteria->compare('data_type',$this->data_type,true);
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('validation_text',$this->validation_text,true);
+		$criteria->compare('validation_error',$this->validation_error,true);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
+	
+		$criteria->scopes=array('notDeleted');
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'description',
+			'mandatory',
+			'allow_new',
+			'validation_type',
+			'data_type',
+			'validation_text',
+			'validation_error',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
 }

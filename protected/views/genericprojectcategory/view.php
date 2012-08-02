@@ -1,4 +1,4 @@
-<!--<h1>View Genericprojectcategory #<?php echo $model->id; ?></h1>-->
+<h1>View Genericprojectcategory #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('bootstrap.widgets.BootDetailView',array(
 	'data'=>$model,

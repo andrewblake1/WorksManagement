@@ -12,5 +12,9 @@
 	<?php echo CHtml::encode($data->client_to_task_type_to_duty_type_id); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>
+	<?php echo CHtml::encode($data->staff_id); ?>
+	<br />
+
 
 </div>

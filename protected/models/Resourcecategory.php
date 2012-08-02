@@ -12,13 +12,21 @@
  * @property integer $duty_category_id
  * @property string $description
  * @property integer $deleted
+ * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property ResourceType[] $resourceTypes
  * @property Dutycategory $dutyCategory
+ * @property Staff $staff
  */
 class Resourcecategory extends ActiveRecord
 {
+	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchDutyCategory;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -45,12 +53,12 @@ class Resourcecategory extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('lft, rgt, level, description', 'required'),
-			array('root, lft, rgt, level, duty_category_id, deleted', 'numerical', 'integerOnly'=>true),
+			array('lft, rgt, level, description, staff_id', 'required'),
+			array('root, lft, rgt, level, duty_category_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, root, lft, rgt, level, duty_category_id, description, deleted', 'safe', 'on'=>'search'),
+			array('id, root, lft, rgt, level, searchDutyCategory, description, deleted, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,6 +72,7 @@ class Resourcecategory extends ActiveRecord
 		return array(
 			'resourceTypes' => array(self::HAS_MANY, 'ResourceType', 'resource_category_id'),
 			'dutyCategory' => array(self::BELONGS_TO, 'Dutycategory', 'duty_category_id'),
+			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
 
@@ -72,23 +81,21 @@ class Resourcecategory extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Resource Category',
 			'root' => 'Root',
 			'lft' => 'Lft',
 			'rgt' => 'Rgt',
 			'level' => 'Level',
 			'duty_category_id' => 'Duty Category',
-			'description' => 'Description',
-			'deleted' => 'Deleted',
-		);
+			'searchDutyCategory' => 'Duty Category',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -100,12 +107,37 @@ class Resourcecategory extends ActiveRecord
 		$criteria->compare('lft',$this->lft);
 		$criteria->compare('rgt',$this->rgt);
 		$criteria->compare('level',$this->level);
-		$criteria->compare('duty_category_id',$this->duty_category_id);
+		$criteria->compare('dutyCategory.description',$this->searchDutyCategory);
 		$criteria->compare('description',$this->description,true);
-		$criteria->compare('deleted',$this->deleted);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff','dutyCategory');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'root',
+			'lft',
+			'rgt',
+			'level',
+			'dutyCategory.description AS searchDutyCategory',
+			'description',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchDutyCategory');
 	}
 }

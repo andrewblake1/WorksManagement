@@ -50,7 +50,7 @@ class Genericprojectcategory extends ActiveRecord
 			array('description', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, root, lft, rgt, level, description, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, root, lft, rgt, level, description, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,23 +72,19 @@ class Genericprojectcategory extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Generic Project Category',
 			'root' => 'Root',
 			'lft' => 'Lft',
 			'rgt' => 'Rgt',
 			'level' => 'Level',
-			'description' => 'Description',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -101,11 +97,28 @@ class Genericprojectcategory extends ActiveRecord
 		$criteria->compare('rgt',$this->rgt);
 		$criteria->compare('level',$this->level);
 		$criteria->compare('description',$this->description,true);
-		$criteria->compare('deleted',$this->deleted);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		$criteria->scopes=array('notDeleted');
+
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'root',
+			'lft',
+			'rgt',
+			'level',
+			'description',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
 }

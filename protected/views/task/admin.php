@@ -1,26 +1,32 @@
-<h1>Manage Tasks</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'task-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
 		'description',
 		'day',
-		'purchase_orders_id',
-		'crew_id',
-		'project_id',
-		/*
-		'client_to_task_type_client_id',
-		'client_to_task_type_task_type_id',
-		'staff_id',
-		*/
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchPurchaseOrder',
+			'value'=>'CHtml::link($data->searchPurchaseOrder,
+				Yii::app()->createUrl("PurchaseOrder/update", array("id"=>$data->purchase_order_id))
+			)',
+			'type'=>'raw',
+		),
+         array(
+			'name'=>'searchCrew',
+			'value'=>'CHtml::link($data->searchCrew,
+				Yii::app()->createUrl("Crew/update", array("id"=>$data->crew_id))
+			)',
+			'type'=>'raw',
+		),
+         array(
+			'name'=>'searchProject',
+			'value'=>'CHtml::link($data->searchProject,
+				Yii::app()->createUrl("Project/update", array("id"=>$data->project_id))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+?>

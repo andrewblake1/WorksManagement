@@ -1,21 +1,31 @@
-<h1>Manage Client To Task Type To Duty Types</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'client-to-task-type-to-duty-type-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
-		'duty_type_id',
-		'client_to_task_type_id',
-		'AuthItem_name',
-		'deleted',
-		'staff_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchDutyType',
+			'value'=>'CHtml::link($data->searchDutyType,
+				Yii::app()->createUrl("DutyType/update", array("id"=>$data->duty_type_id))
+			)',
+			'type'=>'raw',
+		),
+         array(
+			'name'=>'searchClientToTaskType',
+			'value'=>'CHtml::link($data->searchClientToTaskType,
+				Yii::app()->createUrl("ClientToTaskType/update", array("id"=>$data->client_to_task_type_id))
+			)',
+			'type'=>'raw',
+		),
+        array(
+			'name'=>'AuthItem_name',
+			'value'=>'CHtml::link($data->AuthItem_name,
+				Yii::app()->createUrl("AuthItem/update", array("id"=>$data->AuthItem_name))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+
+?>

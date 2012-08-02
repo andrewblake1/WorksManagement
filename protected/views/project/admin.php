@@ -1,21 +1,20 @@
-<h1>Manage Projects</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'project-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
+		'description',
 		'travel_time_1_way',
 		'critical_completion',
 		'planned',
-		'client_id',
-		'staff_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchClient',
+			'value'=>'CHtml::link($data->searchClient,
+				Yii::app()->createUrl("Client/update", array("id"=>$data->client_id))
+			)',
+			'type'=>'raw',
 		),
+		'',
 	),
 )); ?>

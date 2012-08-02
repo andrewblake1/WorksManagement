@@ -14,7 +14,7 @@
 
 	<?php echo $form->textFieldRow($model,'level',array('class'=>'span5')); ?>
 
-	<?php echo $form->textFieldRow($model,'name',array('class'=>'span5','maxlength'=>64)); ?>
+	<?php echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>64)); ?>
 
 	<?php echo $form->textFieldRow($model,'deleted',array('class'=>'span5')); ?>
 

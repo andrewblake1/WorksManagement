@@ -21,6 +21,13 @@
 class DutyType extends ActiveRecord
 {
 	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchDutyCategory;
+	public $searchGenericType;
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return DutyType the static model class
@@ -51,7 +58,7 @@ class DutyType extends ActiveRecord
 			array('description', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, lead_in_days, duty_category_id, generic_type_id, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, description, lead_in_days, searchDutyCategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -75,22 +82,20 @@ class DutyType extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'description' => 'Description',
+		return parent::attributeLabels(array(
+			'id' => 'Duty Type',
 			'lead_in_days' => 'Lead In Days',
 			'duty_category_id' => 'Duty Category',
+			'searchDutyCategory' => 'Duty Category',
 			'generic_type_id' => 'Generic Type',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+			'searchGenericType' => 'Generic Type',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -100,13 +105,35 @@ class DutyType extends ActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('lead_in_days',$this->lead_in_days);
-		$criteria->compare('duty_category_id',$this->duty_category_id);
-		$criteria->compare('generic_type_id',$this->generic_type_id);
-		$criteria->compare('deleted',$this->deleted);
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('dutyCategory.description',$this->searchDutyCategory);
+		$criteria->compare('genericType.description',$this->searchGenericType);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff','dutyCategory','genericType');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'description',
+			'lead_in_days',
+			'dutyCategory.description AS searchDutyCategory',
+			'genericType.description AS searchGenericType',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchDutyCategory', 'searchGenericType');
 	}
 }

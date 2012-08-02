@@ -8,8 +8,8 @@
 	<?php echo CHtml::encode($data->supplier_id); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('purchase_order_no')); ?>:</b>
-	<?php echo CHtml::encode($data->purchase_order_no); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('number')); ?>:</b>
+	<?php echo CHtml::encode($data->number); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>

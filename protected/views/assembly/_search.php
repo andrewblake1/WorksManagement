@@ -1,12 +1,14 @@
 <?php $form=$this->beginWidget('bootstrap.widgets.BootActiveForm',array(
 	'action'=>Yii::app()->createUrl($this->route),
-	'htmlOptions'=>array('class'=>'well'),
 	'method'=>'get',
+	'htmlOptions'=>array('class'=>'well'),
 )); ?>
 
 	<?php echo $form->textFieldRow($model,'id',array('class'=>'span5')); ?>
 
-	<?php echo $form->textFieldRow($model,'plan_id',array('class'=>'span5')); ?>
+	<?php echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>255)); ?>
+
+	<?php echo $form->textFieldRow($model,'url',array('class'=>'span5','maxlength'=>255)); ?>
 
 	<?php echo $form->textFieldRow($model,'material_id',array('class'=>'span5')); ?>
 

@@ -9,13 +9,21 @@
  * @property integer $resource_category_id
  * @property integer $maximum
  * @property integer $deleted
+ * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Resourcecategory $resourceCategory
+ * @property Staff $staff
  * @property TaskToResourceType[] $taskToResourceTypes
  */
 class ResourceType extends ActiveRecord
 {
+	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchResourceCategory;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -42,12 +50,12 @@ class ResourceType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, maximum', 'required'),
-			array('resource_category_id, maximum, deleted', 'numerical', 'integerOnly'=>true),
+			array('description, maximum, staff_id', 'required'),
+			array('resource_category_id, maximum, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, resource_category_id, maximum, deleted', 'safe', 'on'=>'search'),
+			array('id, description, searchResourceCategory, maximum, deleted, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,6 +68,7 @@ class ResourceType extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'resourceCategory' => array(self::BELONGS_TO, 'Resourcecategory', 'resource_category_id'),
+			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'resource_type_id'),
 		);
 	}
@@ -69,20 +78,18 @@ class ResourceType extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'description' => 'Description',
+		return parent::attributeLabels(array(
+			'id' => 'Resource Type',
 			'resource_category_id' => 'Resource Category',
+			'searchResourceCategory' => 'Resource Category',
 			'maximum' => 'Maximum',
-			'deleted' => 'Deleted',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -91,12 +98,34 @@ class ResourceType extends ActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('description',$this->description,true);
-		$criteria->compare('resource_category_id',$this->resource_category_id);
+		$criteria->compare('resourceCategory.description',$this->searchResourceCategory);
 		$criteria->compare('maximum',$this->maximum);
-		$criteria->compare('deleted',$this->deleted);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff','resourceCategory');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'description',
+			'resourceCategory.description AS searchResourceCategory',
+			'maximum',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchResourceCategory');
 	}
 }

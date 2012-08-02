@@ -5,17 +5,24 @@
  *
  * The followings are the available columns in table 'reschedule':
  * @property string $id
- * @property string $task_old
- * @property string $task_new
+ * @property string $old_task_id
+ * @property string $new_task_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Task $taskOld
- * @property Task $taskNew
+ * @property Task $oldTask
+ * @property Task $newTask
  * @property Staff $staff
  */
 class Reschedule extends ActiveRecord
 {
+	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchOldTask;
+	public $searchNewTask;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -42,12 +49,12 @@ class Reschedule extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_old, task_new, staff_id', 'required'),
+			array('old_task_id, new_task_id, staff_id', 'required'),
 			array('staff_id', 'numerical', 'integerOnly'=>true),
-			array('task_old, task_new', 'length', 'max'=>10),
+			array('old_task_id, new_task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_old, task_new, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchOldTask, $searchNewTask, $searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,8 +66,8 @@ class Reschedule extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'taskOld' => array(self::BELONGS_TO, 'Task', 'task_old'),
-			'taskNew' => array(self::BELONGS_TO, 'Task', 'task_new'),
+			'oldTask' => array(self::BELONGS_TO, 'Task', 'old_task_id'),
+			'newTask' => array(self::BELONGS_TO, 'Task', 'new_task_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
@@ -70,19 +77,19 @@ class Reschedule extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'task_old' => 'Task Old',
-			'task_new' => 'Task New',
-			'staff_id' => 'Staff',
-		);
+		return parent::attributeLabels(array(
+			'id' => 'Reschedule',
+			'old_task_id' => 'Old Task',
+			'searchOldTask' => 'Old Task',
+			'new_task_id' => 'New Task',
+			'searchNewTask' => 'New Task',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -90,12 +97,33 @@ class Reschedule extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('task_old',$this->task_old,true);
-		$criteria->compare('task_new',$this->task_new,true);
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('oldTask.description',$this->searchOldTask,true);
+		$criteria->compare('newTask.description',$this->searchNewTask,true);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff','oldTask','newTask');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'oldTask.description AS searchOldTask',
+			'newTask.description AS searchNewTask',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchOldTask', 'searchNewTask');
 	}
 }

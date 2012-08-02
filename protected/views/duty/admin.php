@@ -1,21 +1,32 @@
-<h1>Manage Duties</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'duty-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
-		'task_id',
-		'project_to_AuthAssignment_to_client_to_task_type_to_duty_type_id',
+         array(
+			'name'=>'searchTask',
+			'value'=>'CHtml::link($data->searchTask,
+				Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+			)',
+			'type'=>'raw',
+		),
+         array(
+			'name'=>'searchProjectToAuthAssignmentToClientToTaskTypeToDutyType',
+			'value'=>'CHtml::link($data->searchProjectToAuthAssignmentToClientToTaskTypeToDutyType,
+				Yii::app()->createUrl("ProjectToAuthAssignmentToClientToTaskTypeToDutyType/update", array("id"=>$data->project_to_AuthAssignment_to_client_to_task_type_to_duty_type_id))
+			)',
+			'type'=>'raw',
+		),
 		'updated',
-		'generic_id',
-		'staff_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchGeneric',
+			'value'=>'CHtml::link($data->searchGeneric,
+				Yii::app()->createUrl("Generic/update", array("id"=>$data->generic_id))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+
+?>

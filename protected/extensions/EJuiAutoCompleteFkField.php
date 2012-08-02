@@ -180,8 +180,7 @@ class EJuiAutoCompleteFkField extends CJuiAutoComplete {
 		// AB hacking begin
  		$relations = $this->model->relations();
 		$fKModelType = $relations[$this->relName][1];
-		$fKField = $relations[$this->relName][2];
-		$attr = $this->attribute = $fKField;				//the FK field (from CJuiInputWidget)
+		$attr = $this->attribute = $relations[$this->relName][2];				//the FK field (from CJuiInputWidget)
         $tempHtmlOpts = array();
         CHtml::resolveNameID($this->model, $attr, $tempHtmlOpts);
         $id = $tempHtmlOpts['id'];
@@ -199,19 +198,18 @@ class EJuiAutoCompleteFkField extends CJuiAutoComplete {
 			// building displayFileds paramater for sourceUrl
 			$displayFields["display_fields[$key]"] = $field;
 			
-			// deal with multiple columns passed - in array, by treating both ways the same i.e. make the single column and array too
+			// deal with multiple columns passed - in array, by treating both ways the same i.e. make the single column an array too
 			if(!is_array($field))
 			{
 				$field = array($field);
-				$useRelated = FALSE;
+//				$useRelated = FALSE;
 			}
-			else
-			{				
-				$useRelated = TRUE;
-			}
+//			else
+//			{				
+//				$useRelated = TRUE;
+//			}
 			
-// TODO: this line just to get past pre php 5.3 - change to fKModelType::model() once >= 5.3
-eval('$model = '.$fKModelType.'::model();');
+			$model = $fKModelType::model();
 			foreach($field as &$f)
 			{
 				// building display parameter which gets eval'd later
@@ -233,12 +231,10 @@ eval('$model = '.$fKModelType.'::model();');
 		$this->sourceUrl = Yii::app()->createUrl("$fKModelType/fkautocomplete",
 			array_merge($displayFields,
 			array(
-				'fk_field' => $fKField,
 				'fk_model' => $fKModelType
 			))); 
 
 		$display = implode(Yii::app()->params['delimiter']['display'], $display);
-//		eval("\$display=$display;");
 		$this->_display=(!empty($value) ? $display : '');
 		// AB hacking end
 
@@ -277,17 +273,12 @@ eval('$model = '.$fKModelType.'::model();');
         $this->htmlOptions['name'] = $this->_lookupID;       
         parent::run();
 
-        // fouth, an image button to empty all three fields
-        $label=Yii::t('DR','Remove '). ucfirst($this->relName); // TODO: how to translate relname?
-        $deleteImageURL = 'images/text_field_remove.png'; 
-        echo CHtml::image($deleteImageURL, $label,
-            array('title'=>$label,
-                //'name'=>'remove_'.$this->attribute,
-                'name' => 'remove'.$this->_fieldID,
-                'style'=>'margin-left:6px;',
-                'onclick'=>"$('#".$this->_fieldID."').val('');$('#".$this->_saveID."').val('');$('#".$this->_lookupID."').val('');",
-            )
-        );
+/*        // fouth, an image button to empty all three fields
+ 		echo '
+		<a rel="tooltip" data-original-title="Clear"'
+		.	'onclick='."$('#".$this->_fieldID."').val('');$('#".$this->_saveID."').val('');$('#".$this->_lookupID."').val('');>"
+		.'<i class="icon-remove-sign"></i>
+		</a>';*/
     }
 }
 ?>

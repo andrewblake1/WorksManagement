@@ -84,7 +84,7 @@ class Staff extends ActiveRecord
 			array('password', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, first_name, last_name, phone_mobile, email, password, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, first_name, last_name, phone_mobile, email, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -103,7 +103,7 @@ class Staff extends ActiveRecord
 			'clients' => array(self::HAS_MANY, 'Client', 'staff_id'),
 			'clientToTaskTypes' => array(self::HAS_MANY, 'ClientToTaskType', 'staff_id'),
 			'clientToTaskTypeToDutyTypes' => array(self::HAS_MANY, 'ClientToTaskTypeToDutyType', 'staff_id'),
-			'crews' => array(self::HAS_MANY, 'Crew', 'in_charge'),
+			'crews' => array(self::HAS_MANY, 'Crew', 'in_charge_id'),
 			'crews1' => array(self::HAS_MANY, 'Crew', 'staff_id'),
 			'days' => array(self::HAS_MANY, 'Day', 'staff_id'),
 			'duties' => array(self::HAS_MANY, 'Duty', 'staff_id'),
@@ -138,23 +138,20 @@ class Staff extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Staff',
 			'first_name' => 'First Name',
 			'last_name' => 'Last Name',
 			'phone_mobile' => 'Phone Mobile',
 			'email' => 'Email',
 			'password' => 'Password',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -166,13 +163,35 @@ class Staff extends ActiveRecord
 		$criteria->compare('last_name',$this->last_name,true);
 		$criteria->compare('phone_mobile',$this->phone_mobile,true);
 		$criteria->compare('email',$this->email,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('deleted',$this->deleted);
 		$criteria->compare('staff_id',$this->staff_id);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'first_name',
+			'last_name',
+			'phone_mobile',
+			'email',
+			"CONCAT_WS('$delimiter', first_name, last_name, email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+			'first_name',
+			'last_name',
+			'email'
+		);
 	}
 
 	/**

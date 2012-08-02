@@ -1,25 +1,22 @@
-<h1>Manage Staffs</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'staff-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
 		'first_name',
 		'last_name',
-		'phone_mobile',
-		'email',
-		'password',
-		/*
-		'deleted',
-		'staff_id',
-		*/
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+        array(
+			'name'=>'phone_mobile',
+			'value'=>'CHtml::link($data->phone_mobile, "tel:".$data->phone_mobile)',
+			'type'=>'raw',
 		),
-	),
-)); ?>
+        array(
+			'name'=>'email',
+			'value'=>'$data->email',
+			'type'=>'email',
+		),
+  	),
+));
+
+?>

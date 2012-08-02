@@ -7,7 +7,7 @@
 		'preferred_date',
 		'earliest_date',
 		'date_scheduled',
-		'in_charge',
+		'in_charge_id',
 		'staff_id',
 	),
 )); ?>

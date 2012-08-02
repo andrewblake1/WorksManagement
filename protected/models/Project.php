@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'project':
  * @property string $id
+ * @property string $description
  * @property string $travel_time_1_way
  * @property string $critical_completion
  * @property string $planned
@@ -20,6 +21,12 @@
  */
 class Project extends ActiveRecord
 {
+	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchClient;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -48,10 +55,11 @@ class Project extends ActiveRecord
 		return array(
 			array('client_id, staff_id', 'required'),
 			array('client_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description', 'length', 'max'=>255),
 			array('travel_time_1_way, critical_completion, planned', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, travel_time_1_way, critical_completion, planned, client_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, travel_time_1_way, critical_completion, planned, searchClient, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,21 +84,20 @@ class Project extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Project',
 			'travel_time_1_way' => 'Travel Time 1 Way',
 			'critical_completion' => 'Critical Completion',
 			'planned' => 'Planned',
 			'client_id' => 'Client',
-			'staff_id' => 'Staff',
-		);
+			'searchClient' => 'Client',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -98,14 +105,39 @@ class Project extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
+		$criteria->compare('description',$this->description,true);
 		$criteria->compare('travel_time_1_way',$this->travel_time_1_way,true);
 		$criteria->compare('critical_completion',$this->critical_completion,true);
 		$criteria->compare('planned',$this->planned,true);
-		$criteria->compare('client_id',$this->client_id);
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('client.name',$this->searchClient);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+
+		$criteria->with = array('staff','client');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'description',
+			'travel_time_1_way',
+			'critical_completion',
+			'planned',
+			'client.name AS searchClient',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchClient');
 	}
 }

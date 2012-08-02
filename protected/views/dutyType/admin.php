@@ -1,24 +1,26 @@
-<h1>Manage Duty Types</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'duty-type-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
 		'description',
 		'lead_in_days',
-		'duty_category_id',
-		'generic_type_id',
-		'deleted',
-		/*
-		'staff_id',
-		*/
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchDutyCategory',
+			'value'=>'CHtml::link($data->searchDutyCategory,
+				Yii::app()->createUrl("DutyCategory/update", array("id"=>$data->duty_category_id))
+			)',
+			'type'=>'raw',
+		),
+         array(
+			'name'=>'searchGenericType',
+			'value'=>'CHtml::link($data->searchGenericType,
+				Yii::app()->createUrl("GenericType/update", array("id"=>$data->generic_type_id))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+
+?>

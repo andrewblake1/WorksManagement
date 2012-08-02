@@ -21,6 +21,12 @@
 class AuthAssignment extends ActiveRecord
 {
 	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchUser;
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return AuthAssignment the static model class
@@ -52,7 +58,7 @@ class AuthAssignment extends ActiveRecord
 			array('bizrule, data', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, itemname, userid, bizrule, data, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, itemname, searchUser, bizrule, data, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,22 +82,21 @@ class AuthAssignment extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'itemname' => 'Itemname',
-			'userid' => 'Userid',
+		return parent::attributeLabels(array(
+			'id' => 'Role Assignment',
+			'naturalKey' => 'User/Role (First/Last/Email/Role)',
+			'itemname' => 'Role',
+			'userid' => 'User (First/Last/Email)',
+			'searchUser' => 'User (First/Last/Email)',
 			'bizrule' => 'Bizrule',
 			'data' => 'Data',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -100,14 +105,55 @@ class AuthAssignment extends ActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('itemname',$this->itemname,true);
-		$criteria->compare('userid',$this->userid);
+		$this->compositeCriteria($criteria,
+			array(
+				'user.first_name',
+				'user.last_name',
+				'user.email'
+			),
+			$this->searchUser
+		);
 		$criteria->compare('bizrule',$this->bizrule,true);
 		$criteria->compare('data',$this->data,true);
-		$criteria->compare('deleted',$this->deleted);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff', 'user');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'itemname',
+			"CONCAT_WS('$delimiter',user.first_name,user.last_name,user.email) AS searchUser",
+			'bizrule',
+			'data',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+			'user'=>array('first_name','last_name','email'),
+			'itemname',
+		);
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchUser');
+	}
+	
 }

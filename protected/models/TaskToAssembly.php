@@ -18,6 +18,13 @@
 class TaskToAssembly extends ActiveRecord
 {
 	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchTask;
+	public $searchAssembly;
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return TaskToAssembly the static model class
@@ -48,7 +55,7 @@ class TaskToAssembly extends ActiveRecord
 			array('task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, assembly_id, quantity, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchTask, searchAssembly, quantity, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -71,20 +78,20 @@ class TaskToAssembly extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Task To Assembly',
 			'task_id' => 'Task',
+			'searchTask' => 'Task',
 			'assembly_id' => 'Assembly',
+			'searchAssembly' => 'Assembly',
 			'quantity' => 'Quantity',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -92,13 +99,36 @@ class TaskToAssembly extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('task_id',$this->task_id,true);
-		$criteria->compare('assembly_id',$this->assembly_id);
+		$criteria->compare('task.description',$this->searchTask,true);
+		$criteria->compare('assembly.description',$this->searchAssembly);
 		$criteria->compare('quantity',$this->quantity);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
+	
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff','assembly','task');
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'task.description AS searchTask',
+			'assembly.description AS searchAssembly',
+			'quantity',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchTask', 'searchAssembly');
 	}
 }

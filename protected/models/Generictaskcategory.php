@@ -9,7 +9,7 @@
  * @property integer $lft
  * @property integer $rgt
  * @property integer $level
- * @property string $name
+ * @property string $description
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -45,12 +45,12 @@ class Generictaskcategory extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('lft, rgt, level, name, staff_id', 'required'),
+			array('lft, rgt, level, description, staff_id', 'required'),
 			array('root, lft, rgt, level, deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>64),
+			array('description', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, root, lft, rgt, level, name, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, root, lft, rgt, level, name, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -68,27 +68,23 @@ class Generictaskcategory extends ActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * @return array customized attribute labels (description=>label)
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Generic Task Category',
 			'root' => 'Root',
 			'lft' => 'Lft',
 			'rgt' => 'Rgt',
 			'level' => 'Level',
-			'name' => 'Name',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -100,12 +96,29 @@ class Generictaskcategory extends ActiveRecord
 		$criteria->compare('lft',$this->lft);
 		$criteria->compare('rgt',$this->rgt);
 		$criteria->compare('level',$this->level);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('deleted',$this->deleted);
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('description',$this->description,true);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
+	
+		$criteria->scopes=array('notDeleted');
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'root',
+			'lft',
+			'rgt',
+			'level',
+			'description',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
 }

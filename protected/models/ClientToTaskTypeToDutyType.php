@@ -21,6 +21,13 @@
 class ClientToTaskTypeToDutyType extends ActiveRecord
 {
 	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchDutyType;
+	public $searchClientToTaskType;
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return ClientToTaskTypeToDutyType the static model class
@@ -51,7 +58,7 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 			array('AuthItem_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, duty_type_id, client_to_task_type_id, AuthItem_name, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchDutyType, searchClientToTaskType, AuthItem_name, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,21 +83,21 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Client To Task Type To Duty Type',
+			'naturalKey' => '(Client/Task Type/Duty Type/Role)',
 			'duty_type_id' => 'Duty Type',
-			'client_to_task_type_id' => 'Client To Task Type',
-			'AuthItem_name' => 'Auth Item Name',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+			'searchDutyType' => 'Duty Type',
+			'client_to_task_type_id' => 'Client To Task Type (Client/Task Type)',
+			'searchClientToTaskType' => 'Client To Task Type (Client/Task Type)',
+			'AuthItem_name' => 'Role',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -98,14 +105,60 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('duty_type_id',$this->duty_type_id);
-		$criteria->compare('client_to_task_type_id',$this->client_to_task_type_id);
+		$criteria->compare('dutyType.description',$this->searchDutyType,true);
+		$this->compositeCriteria($criteria,
+			array(
+				'clientToTaskType.client.name',
+				'clientToTaskType.taskType.description'
+			),
+			$this->searchClientToTaskType
+		);
 		$criteria->compare('AuthItem_name',$this->AuthItem_name,true);
-		$criteria->compare('deleted',$this->deleted);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		$criteria->scopes=array('notDeleted');
+
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+
+		$criteria->with = array('staff','dutyType','clientToTaskType.client','clientToTaskType.taskType');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'dutyType.description AS searchDutyType',
+			"CONCAT_WS('$delimiter',
+				clientToTaskType.client.name,
+				clientToTaskType.taskType.description
+				) AS searchClientToTaskType",
+			'AuthItem_name',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+				'clientToTaskType.client'=>array('name'),
+				'clientToTaskType.taskType'=>array('description'),
+				'dutyType'=>array('description'),
+				'AuthItem_name'
+		);
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchDutyType', 'searchClientToTaskType');
+	}
+
 }

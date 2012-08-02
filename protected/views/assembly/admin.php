@@ -1,21 +1,24 @@
-<h1>Manage Assemblies</h1>
+<?php
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'assembly-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
-		'plan_id',
-		'material_id',
-		'quantity',
-		'deleted',
-		'staff_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+		'description',
+        array(
+			'name'=>'url',
+			'value'=>'CHtml::link($data->url, $data->url)',
+			'type'=>'raw',
 		),
+         array(
+			'name'=>'searchMaterial',
+			'value'=>'CHtml::link($data->searchMaterial,
+				Yii::app()->createUrl("Material/update", array("id"=>$data->material_id))
+			)',
+			'type'=>'raw',
+		),
+ 		'quantity',
 	),
-)); ?>
+));
+
+?>

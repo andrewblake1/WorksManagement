@@ -7,7 +7,6 @@
 
 return array(
 
-
 	// Set yiiPath (relative to Environment.php)
 	'yiiPath' => dirname(__FILE__) . '/../../../../yii-1.1.10.r3566/framework/yii.php',
 	'yiicPath' => dirname(__FILE__) . '/../../../../yii-1.1.10.r3566/framework/yiic.php',
@@ -41,6 +40,7 @@ return array(
 			'application.models.*',
 			'application.components.*',
 			'application.extensions.*',
+			'application.controllers.*',
 		),
 		
 		// Application components
@@ -94,6 +94,11 @@ return array(
 
 			'bootstrap'=>array(
 				'class'=>'ext.bootstrap.components.Bootstrap', // assuming you extracted bootstrap under extensions
+			),
+			
+			// site wide functions
+			'functions'=>array(
+				'class'=>'application.components.Functions',
 			),
 		),
 

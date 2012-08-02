@@ -5,20 +5,26 @@
  *
  * The followings are the available columns in table 'assembly':
  * @property integer $id
- * @property integer $plan_id
+ * @property string $description
+ * @property string $url
  * @property integer $material_id
  * @property integer $quantity
  * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Plan $plan
  * @property Material $material
  * @property Staff $staff
  * @property TaskToAssembly[] $taskToAssemblies
  */
 class Assembly extends ActiveRecord
 {
+	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchMaterial;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -45,11 +51,12 @@ class Assembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('plan_id, material_id, quantity, staff_id', 'required'),
-			array('plan_id, material_id, quantity, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, material_id, quantity, staff_id', 'required'),
+			array('material_id, quantity, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, url', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, plan_id, material_id, quantity, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, description, url, searchMaterial, quantity, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -61,7 +68,6 @@ class Assembly extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'plan' => array(self::BELONGS_TO, 'Plan', 'plan_id'),
 			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'assembly_id'),
@@ -73,21 +79,19 @@ class Assembly extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'plan_id' => 'Plan',
+		return parent::attributeLabels(array(
+			'id' => 'Assembly',
+			'url' => 'Url',
 			'material_id' => 'Material',
+			'searchMaterial' => 'Material',
 			'quantity' => 'Quantity',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -95,14 +99,38 @@ class Assembly extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('plan_id',$this->plan_id);
-		$criteria->compare('material_id',$this->material_id);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('url',$this->url,true);
+		$criteria->compare('material.description',$this->searchMaterial,true);
 		$criteria->compare('quantity',$this->quantity);
-		$criteria->compare('deleted',$this->deleted);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+
+		$criteria->with = array('staff','material');
+
+		$delimiter = Yii::app()->params['delimiter']['display'];
+
+		$criteria->select=array(
+			'id',
+			'description',
+			'url',
+			'material.description AS searchMaterial',
+			'quantity',
+			'deleted',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchMaterial');
 	}
 }

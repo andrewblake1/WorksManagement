@@ -19,6 +19,14 @@
 class ProjectToGenericProjectType extends ActiveRecord
 {
 	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchGenericProjectType;
+	public $searchProject;
+	public $searchGeneric;
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return ProjectToGenericProjectType the static model class
@@ -49,7 +57,7 @@ class ProjectToGenericProjectType extends ActiveRecord
 			array('project_id, generic_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, generic_project_type_id, project_id, generic_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchGenericProjectType, searchProject, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,20 +81,21 @@ class ProjectToGenericProjectType extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Project To Generic Project Type',
 			'generic_project_type_id' => 'Generic Project Type',
+			'searchGenericProjectType' => 'Generic Project Type',
 			'project_id' => 'Project',
+			'searchProject' => 'Project',
 			'generic_id' => 'Generic',
-			'staff_id' => 'Staff',
-		);
+			'searchGeneric' => 'Generic',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -94,13 +103,35 @@ class ProjectToGenericProjectType extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('generic_project_type_id',$this->generic_project_type_id);
-		$criteria->compare('project_id',$this->project_id,true);
-		$criteria->compare('generic_id',$this->generic_id,true);
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('genericProjectType.genericType.description',$this->searchGenericProjectType);
+		$criteria->compare('project.id',$this->searchProject,true);
+		$criteria->compare('generic.id',$this->searchGeneric,true);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
+	
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff','genericProjectType.genericType','project','generic');
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'genericProjectType.genericType.description AS searchGenericProjectType',
+			'project.id AS searchProject',
+			'generic.id AS searchGeneric',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchGenericProjectType', 'searchProject', 'searchGeneric');
 	}
 }

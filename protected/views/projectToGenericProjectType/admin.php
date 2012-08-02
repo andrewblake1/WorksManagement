@@ -1,20 +1,31 @@
-<h1>Manage Project To Generic Project Types</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'project-to-generic-project-type-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
-		'generic_project_type_id',
-		'project_id',
-		'generic_id',
-		'staff_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchGenericProjectType',
+			'value'=>'CHtml::link($data->searchGenericProjectType,
+				Yii::app()->createUrl("GenericProjectType/update", array("id"=>$data->generic_project_type_id))
+			)',
+			'type'=>'raw',
+		),
+        array(
+			'name'=>'searchProject',
+			'value'=>'CHtml::link($data->searchProject,
+				Yii::app()->createUrl("Project/update", array("id"=>$data->project_id))
+			)',
+			'type'=>'raw',
+		),
+         array(
+			'name'=>'searchGeneric',
+			'value'=>'CHtml::link($data->searchGeneric,
+				Yii::app()->createUrl("Generic/update", array("id"=>$data->generic_id))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+
+?>

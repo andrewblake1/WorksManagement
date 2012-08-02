@@ -1,4 +1,4 @@
-<h1>View ResourceType #<?php echo $model->id; ?></h1>
+<<h1>View ResourceType #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('bootstrap.widgets.BootDetailView',array(
 	'data'=>$model,

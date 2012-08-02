@@ -20,6 +20,14 @@
 class Duty extends ActiveRecord
 {
 	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchTask;
+	public $searchProjectToAuthAssignmentToClientToTaskTypeToDutyType;
+	public $searchGeneric;
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return Duty the static model class
@@ -51,7 +59,7 @@ class Duty extends ActiveRecord
 			array('updated', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, project_to_AuthAssignment_to_client_to_task_type_to_duty_type_id, updated, generic_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchTask, searchProjectToAuthAssignmentToClientToTaskTypeToDutyType, updated, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -75,21 +83,22 @@ class Duty extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Duty',
 			'task_id' => 'Task',
+			'searchTask' => 'Task',
 			'project_to_AuthAssignment_to_client_to_task_type_to_duty_type_id' => 'Project To Auth Assignment To Client To Task Type To Duty Type',
+			'searchProjectToAuthAssignmentToClientToTaskTypeToDutyType' => 'Project To Auth Assignment To Client To Task Type To Duty Type',
 			'updated' => 'Updated',
 			'generic_id' => 'Generic',
-			'staff_id' => 'Staff',
-		);
+			'searchGeneric' => 'Generic',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -97,14 +106,67 @@ class Duty extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('task_id',$this->task_id,true);
-		$criteria->compare('project_to_AuthAssignment_to_client_to_task_type_to_duty_type_id',$this->project_to_AuthAssignment_to_client_to_task_type_to_duty_type_id,true);
+		$criteria->compare('task.description',$this->searchTask,true);
+		$this->compositeCriteria(
+			$criteria,
+			array(
+				'projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.project.id',
+				'projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.itemname',
+				'projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user.first_name',
+				'projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user.last_name',
+				'projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user.email',
+				'projectToAuthAssignmentToClientToTaskTypeToDutyType.clientToTaskTypeToDutyType.clientToTaskType.client.name',
+				'projectToAuthAssignmentToClientToTaskTypeToDutyType.clientToTaskTypeToDutyType.clientToTaskType.taskType.description',
+				'projectToAuthAssignmentToClientToTaskTypeToDutyType.clientToTaskTypeToDutyType.dutyType.description',
+			), $this->searchProjectToAuthAssignmentToClientToTaskTypeToDutyType);
 		$criteria->compare('updated',$this->updated,true);
-		$criteria->compare('generic_id',$this->generic_id,true);
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('generic.id',$this->searchGeneric,true);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+
+		$criteria->with = array(
+			'staff',
+			'projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.project',
+			'projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.authAssignment',
+			'projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user',
+			'projectToAuthAssignmentToClientToTaskTypeToDutyType.clientToTaskTypeToDutyType.clientToTaskType.client',
+			'projectToAuthAssignmentToClientToTaskTypeToDutyType.clientToTaskTypeToDutyType.clientToTaskType.taskType',
+			'projectToAuthAssignmentToClientToTaskTypeToDutyType.clientToTaskTypeToDutyType.dutyType',
+			'generic',
+		);
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'task.description',
+			"CONCAT_WS('$delimiter',
+				projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.project.id,
+				projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.itemname,
+				projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user.first_name,
+				projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user.last_name,
+				projectToAuthAssignmentToClientToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user.email,
+				projectToAuthAssignmentToClientToTaskTypeToDutyType.clientToTaskTypeToDutyType.clientToTaskType.client.name,
+				projectToAuthAssignmentToClientToTaskTypeToDutyType.clientToTaskTypeToDutyType.clientToTaskType.taskType.description,
+				projectToAuthAssignmentToClientToTaskTypeToDutyType.clientToTaskTypeToDutyType.dutyType.description
+				) AS searchProjectToAuthAssignmentToClientToTaskTypeToDutyType",
+			'updated',
+			'generic.id AS searchGeneric',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchTask', 'searchProjectToAuthAssignmentToClientToTaskTypeToDutyType', 'searchGeneric');
+	}
+
 }

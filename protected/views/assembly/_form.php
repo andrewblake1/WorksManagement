@@ -1,29 +1,15 @@
-<?php $form=$this->beginWidget('bootstrap.widgets.BootActiveForm',array(
-	'id'=>'assembly-form',
-	'htmlOptions'=>array('class'=>'well'),
-	'enableAjaxValidation'=>false,
-)); ?>
+<?php
 
-	<p class="help-block">Fields with <span class="required">*</span> are required.</p>
+$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
 
-	<?php echo $form->errorSummary($model); ?>
+	echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>255/*, 'disabled'=>'disabled'*/));
 
-	<?php echo $form->textFieldRow($model,'plan_id',array('class'=>'span5')); ?>
+	echo $form->textFieldRow($model,'url',array('class'=>'span5','maxlength'=>255));
 
-	<?php echo $form->textFieldRow($model,'material_id',array('class'=>'span5')); ?>
+	MaterialController::listWidgetRow($model, $form, 'material_id');
 
-	<?php echo $form->textFieldRow($model,'quantity',array('class'=>'span5')); ?>
+	echo $form->textFieldRow($model,'quantity',array('class'=>'span5'));
 
-	<?php echo $form->textFieldRow($model,'deleted',array('class'=>'span5')); ?>
+$this->endWidget();
 
-	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
-
-	<div class="form-actions">
-		<?php $this->widget('bootstrap.widgets.BootButton', array(
-			'buttonType'=>'submit',
-			'type'=>'primary',
-			'label'=>$model->isNewRecord ? 'Create' : 'Save',
-		)); ?>
-	</div>
-
-<?php $this->endWidget(); ?>
+?>

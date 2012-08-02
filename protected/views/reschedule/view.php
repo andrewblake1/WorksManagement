@@ -4,8 +4,8 @@
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'task_old',
-		'task_new',
+		'old_task_id',
+		'new_task_id',
 		'staff_id',
 	),
 )); ?>

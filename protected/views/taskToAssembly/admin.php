@@ -1,20 +1,25 @@
-<h1>Manage Task To Assemblies</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'task-to-assembly-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
-		'task_id',
-		'assembly_id',
-		'quantity',
-		'staff_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchTask',
+			'value'=>'CHtml::link($data->searchTask,
+				Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+			)',
+			'type'=>'raw',
 		),
+         array(
+			'name'=>'searchAssembly',
+			'value'=>'CHtml::link($data->searchAssembly,
+				Yii::app()->createUrl("Assembly/update", array("id"=>$data->assembly_id))
+			)',
+			'type'=>'raw',
+		),
+		'quantity',
 	),
-)); ?>
+));
+
+?>

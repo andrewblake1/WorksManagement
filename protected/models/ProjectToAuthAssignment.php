@@ -17,6 +17,13 @@
 class ProjectToAuthAssignment extends ActiveRecord
 {
 	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchProject;
+	public $searchAuthAssignment;
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return ProjectToAuthAssignment the static model class
@@ -47,7 +54,7 @@ class ProjectToAuthAssignment extends ActiveRecord
 			array('project_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, project_id, AuthAssignment_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchProject, searchAuthAssignment, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,19 +77,19 @@ class ProjectToAuthAssignment extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Project To Auth Assignment',
 			'project_id' => 'Project',
-			'AuthAssignment_id' => 'Auth Assignment',
-			'staff_id' => 'Staff',
-		);
+			'searchProject' => 'Project',
+			'AuthAssignment_id' => 'Auth Assignment (Role/First/Last/Email)',
+			'searchAuthAssignment' => 'Auth Assignment (Role/First/Last/Email)',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -90,12 +97,47 @@ class ProjectToAuthAssignment extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('project_id',$this->project_id,true);
-		$criteria->compare('AuthAssignment_id',$this->AuthAssignment_id);
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('project.id',$this->searchProject,true);
+		$this->compositeCriteria(
+			$criteria,
+			array(
+				'authAssignment.itemname',
+				'authAssignment.user.first_name',
+				'authAssignment.user.last_name',
+				'authAssignment.user.email'
+			),
+			$this->searchAuthAssignment
+		);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
+	
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff','authAssignment.itemname','authAssignment.user','project');
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'project.id',
+			"CONCAT_WS('$delimiter',
+				authAssignment.itemname,
+				authAssignment.user.first_name,
+				authAssignment.user.last_name,
+				authAssignment.user.email
+				) AS searchAuthAssignment",
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchProject', 'searchAuthAssignment');
 	}
 }

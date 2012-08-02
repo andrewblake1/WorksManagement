@@ -8,7 +8,7 @@
 		'lft',
 		'rgt',
 		'level',
-		'name',
+		'description',
 		'deleted',
 		'staff_id',
 	),

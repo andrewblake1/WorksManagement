@@ -1,20 +1,24 @@
-<h1>Manage Client To Task Types</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'client-to-task-type-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
-		'client_id',
-		'task_type_id',
-		'deleted',
-		'staff_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchClient',
+			'value'=>'CHtml::link($data->searchClient,
+				Yii::app()->createUrl("Client/update", array("id"=>$data->client_id))
+			)',
+			'type'=>'raw',
+		),
+        array(
+			'name'=>'searchTaskType',
+			'value'=>'CHtml::link($data->searchTaskType,
+				Yii::app()->createUrl("TaskType/update", array("id"=>$data->task_type_id))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+
+?>

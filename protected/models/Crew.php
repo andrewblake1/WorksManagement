@@ -8,7 +8,7 @@
  * @property string $preferred_date
  * @property string $earliest_date
  * @property string $date_scheduled
- * @property integer $in_charge
+ * @property integer $in_charge_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -18,6 +18,12 @@
  */
 class Crew extends ActiveRecord
 {
+	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchInCharge;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -44,12 +50,12 @@ class Crew extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('in_charge, staff_id', 'required'),
-			array('in_charge, staff_id', 'numerical', 'integerOnly'=>true),
+			array('in_charge_id, staff_id', 'required'),
+			array('in_charge_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('preferred_date, earliest_date, date_scheduled', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, preferred_date, earliest_date, date_scheduled, in_charge, staff_id', 'safe', 'on'=>'search'),
+			array('id, preferred_date, earliest_date, date_scheduled, searchInCharge, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -61,7 +67,7 @@ class Crew extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'inCharge' => array(self::BELONGS_TO, 'Staff', 'in_charge'),
+			'inCharge' => array(self::BELONGS_TO, 'Staff', 'in_charge_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'crew_id'),
 		);
@@ -72,21 +78,21 @@ class Crew extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Crew',
+			'crew' => 'In Charge/Date Scheduled (First/Last/Email/Scheduled',
 			'preferred_date' => 'Preferred Date',
 			'earliest_date' => 'Earliest Date',
 			'date_scheduled' => 'Date Scheduled',
-			'in_charge' => 'In Charge',
-			'staff_id' => 'Staff',
-		);
+			'in_charge_id' => 'In Charge (First/Last/Email)',
+			'searchInCharge' => 'In Charge (First/Last/Email)',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -97,11 +103,51 @@ class Crew extends ActiveRecord
 		$criteria->compare('preferred_date',$this->preferred_date,true);
 		$criteria->compare('earliest_date',$this->earliest_date,true);
 		$criteria->compare('date_scheduled',$this->date_scheduled,true);
-		$criteria->compare('in_charge',$this->in_charge);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('inCharge.first_name','inCharge.last_name','inCharge.email'), $this->searchInCharge);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+
+		$criteria->with = array('staff','inCharge');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'preferred_date',
+			'earliest_date',
+			'date_scheduled',
+			"CONCAT_WS('$delimiter',
+				inCharge.first_name,
+				inCharge.last_name,
+				inCharge.email
+				) AS searchInCharge",
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+			'inCharge'=>array('first_name', 'last_name', 'email'),
+			'date_scheduled'
+		);
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchInCharge');
+	}
+
 }

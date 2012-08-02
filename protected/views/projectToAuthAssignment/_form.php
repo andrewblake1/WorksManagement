@@ -1,25 +1,11 @@
-<?php $form=$this->beginWidget('bootstrap.widgets.BootActiveForm',array(
-	'id'=>'project-to-auth-assignment-form',
-	'enableAjaxValidation'=>false,
-	'htmlOptions'=>array('class'=>'well'),
-)); ?>
+<?php
 
-	<p class="help-block">Fields with <span class="required">*</span> are required.</p>
+$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
 
-	<?php echo $form->errorSummary($model); ?>
+	AuthAssignmentController::listWidgetRow($model, $form, 'project_id');
 
-	<?php echo $form->textFieldRow($model,'project_id',array('class'=>'span5','maxlength'=>10)); ?>
+	AuthAssignmentController::listWidgetRow($model, $form, 'AuthAssignment_id');
 
-	<?php echo $form->textFieldRow($model,'AuthAssignment_id',array('class'=>'span5')); ?>
+$this->endWidget();
 
-	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
-
-	<div class="form-actions">
-		<?php $this->widget('bootstrap.widgets.BootButton', array(
-			'buttonType'=>'submit',
-			'type'=>'primary',
-			'label'=>$model->isNewRecord ? 'Create' : 'Save',
-		)); ?>
-	</div>
-
-<?php $this->endWidget(); ?>
+?>

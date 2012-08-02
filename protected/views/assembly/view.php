@@ -4,7 +4,8 @@
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'plan_id',
+		'description',
+		'url',
 		'material_id',
 		'quantity',
 		'deleted',

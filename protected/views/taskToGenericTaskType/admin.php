@@ -1,20 +1,25 @@
-<h1>Manage Task To Generic Task Types</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'task-to-generic-task-type-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
 		'task_id',
-		'generic_task_type_id',
-		'generic_id',
-		'staff_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchGenericTaskType',
+			'value'=>'CHtml::link($data->searchGenericTaskType,
+				Yii::app()->createUrl("GenericTaskType/update", array("id"=>$data->generic_task_type_id))
+			)',
+			'type'=>'raw',
+		),
+         array(
+			'name'=>'searchGeneric',
+			'value'=>'CHtml::link($data->searchGeneric,
+				Yii::app()->createUrl("Generic/update", array("id"=>$data->generic_id))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+
+?>

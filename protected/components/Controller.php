@@ -27,7 +27,7 @@ class Controller extends CController
 	/**
 	 * @var string the model name
 	 */
-	private $modelName;
+	public $modelName;
 	/**
 	 * @var string the flash message to show sort and search instructions
 	 */
@@ -121,106 +121,78 @@ class Controller extends CController
 		{
 			// url parameters
 			$displayFields = $_GET['display_fields'];
-			$fKField = $_GET['fk_field'];
 			$fKModelType = $_GET['fk_model'];
-// TODO: this line just to get past pre php 5.3 - change to fKModelType::model() once >= 5.3
-//eval('$model = '.$fKModelType.'::model();');
-			$model = fKModelType::model();
-			
+			$model = $fKModelType::model();
 			// protect against possible injection
-			if(in_array($fKField, $model->tableSchema->columnNames))
+			$criteria = new CDbCriteria;
+			$criteria->params = array();
+			$terms = explode(Yii::app()->params['delimiter']['search'], $_GET['term']);
+
+			// key will contain either a number or a foreign key field in which case field will be the lookup value
+			foreach($displayFields as $key => $field)
 			{
-				$criteria = new CDbCriteria;
-				$criteria->params = array();
-				$terms = explode(Yii::app()->params['delimiter']['search'], $_GET['term']);
-
-				// key will contain either a number or a foreign key field in which case field will be the lookup value
-				foreach($displayFields as $key => $field)
+				// deal with multiple columns passed - in array, by treating both ways the same i.e. make the single column and array too
+				if(!is_array($field))
+					$field = array($field);
+				foreach($field as &$f)
 				{
-					// deal with multiple columns passed - in array, by treating both ways the same i.e. make the single column and array too
-					if(!is_array($field))
-						$field = array($field);
-					foreach($field as &$f)
+
+					// building display parameter which gets eval'd later
+					$display .= (isset($display) ? ".Yii::app()->params['delimiter']['display']." : '') . '$p->';
+
+					// if we are using a foreign key lookup
+					if($relName = self::getRelationFromKey($key, $fKModelType, $f))
 					{
-
-						// building display parameter which gets eval'd later
-						$display .= (isset($display) ? ".Yii::app()->params['delimiter']['display']." : '') . '$p->';
-
-						// if we are using a foreign key lookup
-						if($relName = self::getRelationFromKey($key, $fKModelType, $f))
-						{
-							if(!is_array($criteria->with) || !in_array($relName, $criteria->with))
-								$criteria->with[] = $relName;
-							// relName is also the related object name
-							$display .= $relName.'->';
-						}
-
-						// building display parameter which gets eval'd later
-						$display .= $f;
-						$criteria->condition .= ($criteria->condition ? " AND " : '')."$f like :$f";
-						// get term for this column from users entry
-						// with trailing wildcard only; probably a good idea for large volumes of data
-						$term = ($term = each($terms)) ? trim($term['value']) . '%' : '%';
-						$criteria->params[":$f"] = $term;
-						// correct order-by field
-						$criteria->order = "$f asc";
+						if(!is_array($criteria->with) || !in_array($relName, $criteria->with))
+							$criteria->with[] = $relName;
+						// relName is also the related object name
+						$display .= $relName.'->';
 					}
-				}
 
-				// probably a good idea to limit the results
-				$criteria->limit = 20;
-
-				$fKModels = $model->findAll($criteria);
-
-				// if some models founds
-				if(!empty($fKModels))
-				{
-					$out = array();
-					foreach ($fKModels as $p)
-					{
-						eval("\$value=$display;");
-						$out[] = array(
-							// expression to give the string for the autoComplete drop-down
-							'label' => $value,  
-							'value' => $value, 
-							// return value from autocomplete
-							'id' => $p->$fKField, 
-						);
-					}
-					echo CJSON::encode($out);
-					Yii::app()->end();
+					// building display parameter which gets eval'd later
+					$display .= $f;
+					$criteria->condition .= ($criteria->condition ? " AND " : '')."$f like :$f";
+					// get term for this column from users entry
+					// with trailing wildcard only; probably a good idea for large volumes of data
+					$term = ($term = each($terms)) ? trim($term['value']) . '%' : '%';
+					$criteria->params[":$f"] = $term;
+					// correct order-by field
+					$criteria->order = "$f asc";
 				}
 			}
-		}
-	}
 
-	public function fKAutocompleteWidget($model, $relation, $cols=NULL, $length = 50, $showFKField = false, $FKFieldSize = 10)
-	{
-		$this->widget('EJuiAutoCompleteFkField', array(
-			'model'=>$model, 
-			// set 'true' to display the FK field with 'readonly' attribute.
-			'showFKField'=>$showFKField,
-			// display size of the FK field.  only matters if not hidden.  defaults to 10
-			'FKFieldSize'=>$FKFieldSize, 
-			'relName'=>$relation,			// the relation name defined above
-			'displayAttr'=>$cols,			// attribute or pseudo-attribute to display AB hacking altered this
-			// length of the AutoComplete/display field, defaults to 50
-			'autoCompleteLength'=>$length,
-			// any attributes of CJuiAutoComplete and jQuery JUI AutoComplete widget may 
-			// also be defined.  read the code and docs for all options
-			'options'=>array(
-				// number of characters that must be typed before 
-				// autoCompleter returns a value, defaults to 2
-				'minLength'=>1, 
-			),
-		));
+			// probably a good idea to limit the results
+			$criteria->limit = 20;
+
+			$fKModels = $model->findAll($criteria);
+
+			// if some models founds
+			if(!empty($fKModels))
+			{
+				$out = array();
+				$primaryKey = $model->tableSchema->primaryKey;
+				foreach ($fKModels as $p)
+				{
+					eval("\$value=$display;");
+					$out[] = array(
+						// expression to give the string for the autoComplete drop-down
+						'label' => $value,  
+						'value' => $value, 
+						// return value from autocomplete
+						'id' => $p->$primaryKey, 
+					);
+				}
+				echo CJSON::encode($out);
+				Yii::app()->end();
+			}
+		}
 	}
 
 	public static function getRelationFromKey($key, &$fKModelType, &$field)
 	{
 // TODO this line just to get past pre php 5.3 - change to fKModelType::model() once >= 5.3
 //eval('$model = '.$fKModelType.'::model();');
-		$model = fKModelType::model();
+		$model = $fKModelType::model();
 		if(!is_numeric($key))
 		{
 			// ensure the foreign key exists in this model
@@ -434,11 +406,11 @@ class Controller extends CController
 		// build the breadcrumb trail from the trail array
 		for($cntr = 1; $cntr <= ($trailLength = count($trail)); $cntr++)
 		{
-			// build the breadcrumbs
+			// if last crumb
 			if($cntr == $trailLength && !$lastCrumb)
-				$breadcrumbs[] = $trail[$cntr - 1];
+				$breadcrumbs[] = 'Manage '.$trail[$cntr - 1].'s';
 			else
-				$breadcrumbs[$trail[$cntr - 1].'s'] = array("{$trail[$cntr - 1]}/index");
+				$breadcrumbs['Manage '.$trail[$cntr - 1].'s'] = array("{$trail[$cntr - 1]}/index");
 		}
 		
 		if($lastCrumb)
@@ -480,6 +452,7 @@ class Controller extends CController
 
 		if(isset($_POST[$this->modelName]))
 		{
+$t = $model->attributes;
 			$model->attributes=$_POST[$this->modelName];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
@@ -583,4 +556,45 @@ class Controller extends CController
 		}
 	}
 	
+	static function listWidgetRow($model, $form, $fkField, $htmlOptions = array())
+	{
+		static::autoTextWidget($model, $form, $fkField, $htmlOptions);
+//		static::dropDownListWidget($model, $form, $fkField, $htmlOptions);
+	}
+	
+	static function autoTextWidget($model, $form, $fkField, $htmlOptions = array())
+	{
+		$modelName = str_replace('Controller', '', get_called_class());
+		
+		// get relation name from foreign key
+		// TODO rewrite this as single preg_replace
+		// upper case first letter of words other than first, remove _ and id off end
+		$relName = preg_replace('/(.*)[iI]d$/', '$1', lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $fkField)))));
+//		$relName = lcfirst(str_replace('Controller', '', get_called_class()));
+			
+		Yii::app()->controller->widget('WMEJuiAutoCompleteFkField',
+			array(
+				'model'=>$model,
+				'form'=>$form,
+				'relName'=>$relName,
+				'fkField'=>$fkField,
+				'displayAttr'=> $modelName::getDisplayAttr(),
+				'htmlOptions'=> $htmlOptions,
+			)
+		);
+	}
+	
+	static function dropDownListWidget($model, $form, $fkField, $htmlOptions = array())
+	{
+		$modelName = str_replace('Controller', '', get_called_class());
+		$target = new $modelName;
+		
+		echo $form->dropDownListRow(
+			$target,
+			$target->tableSchema->primaryKey, $modelName::getListData(),
+				$htmlOptions + array(
+					'class'=>'span5',
+					'name'=>get_class($model)."[$fkField]"));
+	}
+
 }

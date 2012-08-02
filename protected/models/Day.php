@@ -48,7 +48,7 @@ class Day extends ActiveRecord
 			array('scheduled, preferred, earliest, planned', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, scheduled, preferred, earliest, planned, staff_id', 'safe', 'on'=>'search'),
+			array('id, scheduled, preferred, earliest, planned, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,21 +70,19 @@ class Day extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Day',
 			'scheduled' => 'Scheduled',
 			'preferred' => 'Preferred',
 			'earliest' => 'Earliest',
 			'planned' => 'Planned',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -96,10 +94,25 @@ class Day extends ActiveRecord
 		$criteria->compare('preferred',$this->preferred,true);
 		$criteria->compare('earliest',$this->earliest,true);
 		$criteria->compare('planned',$this->planned,true);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
+	
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff');
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'scheduled',
+			'preferred',
+			'earliest',
+			'planned',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
 }

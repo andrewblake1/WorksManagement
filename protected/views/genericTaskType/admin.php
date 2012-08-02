@@ -1,25 +1,32 @@
-<h1>Manage Generic Task Types</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'generic-task-type-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
-		'client_to_task_type_client_id',
-		'client_to_task_type_task_type_id',
+         array(
+			'name'=>'searchClientToTaskType',
+			'value'=>'CHtml::link($data->searchClientToTaskType,
+				Yii::app()->createUrl("ClientToTaskType/update", array("id"=>$data->client_to_task_type_id))
+			)',
+			'type'=>'raw',
+		),
 		'description',
-		'generic_task_category_id',
-		'generic_type_id',
-		/*
-		'deleted',
-		'staff_id',
-		*/
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchGenericTaskCategory',
+			'value'=>'CHtml::link($data->searchGenericTaskCategory,
+				Yii::app()->createUrl("GenericTaskCategory/update", array("id"=>$data->generic_task_category_id))
+			)',
+			'type'=>'raw',
+		),
+         array(
+			'name'=>'searchGenericType',
+			'value'=>'CHtml::link($data->searchGenericType,
+				Yii::app()->createUrl("GenericType/update", array("id"=>$data->generic_type_id))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+
+?>

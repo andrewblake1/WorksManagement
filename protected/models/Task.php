@@ -7,11 +7,10 @@
  * @property string $id
  * @property string $description
  * @property string $day
- * @property string $purchase_orders_id
+ * @property string $purchase_order_id
  * @property string $crew_id
  * @property string $project_id
- * @property integer $client_to_task_type_client_id
- * @property integer $client_to_task_type_task_type_id
+ * @property integer $client_to_task_type_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -19,13 +18,12 @@
  * @property MaterialToTask[] $materialToTasks
  * @property Reschedule[] $reschedules
  * @property Reschedule[] $reschedules1
- * @property PurchaseOrders $purchaseOrders
+ * @property PurchaseOrder $purchaseOrder
  * @property Crew $crew
  * @property Day $day0
  * @property Project $project
- * @property ClientToTaskType $clientToTaskTypeClient
- * @property ClientToTaskType $clientToTaskTypeTaskType
  * @property Staff $staff
+ * @property ClientToTaskType $clientToTaskType
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
  * @property TaskToResourceType[] $taskToResourceTypes
@@ -33,6 +31,15 @@
  */
 class Task extends ActiveRecord
 {
+	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchPurchaseOrder;
+	public $searchCrew;
+	public $searchProject;
+	public $searchClientToTaskType;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -59,12 +66,12 @@ class Task extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, day, purchase_orders_id, crew_id, project_id, client_to_task_type_client_id, client_to_task_type_task_type_id, staff_id', 'required'),
-			array('client_to_task_type_client_id, client_to_task_type_task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
-			array('day, purchase_orders_id, crew_id, project_id', 'length', 'max'=>10),
+			array('description, day, purchase_order_id, crew_id, project_id, client_to_task_type_id, staff_id', 'required'),
+			array('client_to_task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('day, purchase_order_id, crew_id, project_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, day, purchase_orders_id, crew_id, project_id, client_to_task_type_client_id, client_to_task_type_task_type_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, description, day, searchPurchaseOrder, searchCrew, searchProject, searchClientToTaskType, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -80,13 +87,12 @@ class Task extends ActiveRecord
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'task_id'),
 			'reschedules' => array(self::HAS_MANY, 'Reschedule', 'task_old'),
 			'reschedules1' => array(self::HAS_MANY, 'Reschedule', 'task_new'),
-			'purchaseOrders' => array(self::BELONGS_TO, 'PurchaseOrders', 'purchase_orders_id'),
+			'purchaseOrder' => array(self::BELONGS_TO, 'PurchaseOrder', 'purchase_order_id'),
 			'crew' => array(self::BELONGS_TO, 'Crew', 'crew_id'),
 			'day0' => array(self::BELONGS_TO, 'Day', 'day'),
 			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
-			'clientToTaskTypeClient' => array(self::BELONGS_TO, 'ClientToTaskType', 'client_to_task_type_client_id'),
-			'clientToTaskTypeTaskType' => array(self::BELONGS_TO, 'ClientToTaskType', 'client_to_task_type_task_type_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'clientToTaskType' => array(self::BELONGS_TO, 'ClientToTaskType', 'client_to_task_type_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
 			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'task_id'),
 			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'task_id'),
@@ -99,42 +105,104 @@ class Task extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'description' => 'Description',
+		return parent::attributeLabels(array(
+			'id' => 'Task',
 			'day' => 'Day',
-			'purchase_orders_id' => 'Purchase Orders',
-			'crew_id' => 'Crew',
+			'purchase_order_id' => 'Purchase Order (Supplier/Order number)',
+			'searchPurchaseOrder' => 'Purchase Order (Supplier/Order number)',
+			'crew_id' => 'Crew (First/Last/Email)',
+			'searchCrew' => 'Crew (First/Last/Email)',
 			'project_id' => 'Project',
-			'client_to_task_type_client_id' => 'Client To Task Type Client',
-			'client_to_task_type_task_type_id' => 'Client To Task Type Task Type',
-			'staff_id' => 'Staff',
-		);
+			'searchProject' => 'Project',
+			'client_to_task_type_id' => 'Client To Task Type (Client/Task type)',
+			'searchClientToTaskType' => 'Client To Task Type (Client/Task type)',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('day',$this->day,true);
-		$criteria->compare('purchase_orders_id',$this->purchase_orders_id,true);
-		$criteria->compare('crew_id',$this->crew_id,true);
-		$criteria->compare('project_id',$this->project_id,true);
-		$criteria->compare('client_to_task_type_client_id',$this->client_to_task_type_client_id);
-		$criteria->compare('client_to_task_type_task_type_id',$this->client_to_task_type_task_type_id);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria,
+			array(
+				'purchaseOrder.supplier.name',
+				'purchaseOrder.number',
+			),
+			$this->searchPurchaseOrder
+		);
+		$this->compositeCriteria($criteria,
+			array(
+				'crew.inCharge.first_name',
+				'crew.inCharge.last_name',
+				'crew.inCharge.email',
+			),
+			$this->searchCrew
+		);
+		$criteria->compare('project.id',$this->searchProject,true);
+		$this->compositeCriteria($criteria,
+			array(
+				'clientToTaskType.client.name',
+				'clientToTaskType.taskType.description',
+				),
+			$this->searchClientToTaskType
+		);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
+	
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array(
+			'staff',
+			'purchaseOrder',
+			'purchaseOrder.supplier',
+			'clientToTaskType.client',
+			'clientToTaskType.taskType',
+			'crew.inCharge',
+			'project',
+			'clientToTaskType.client',
+			);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'description',
+			'day',
+			"CONCAT_WS('$delimiter',
+				purchaseOrder.supplier.name,
+				purchaseOrder.number
+				) AS searchPurchaseOrder",
+			"CONCAT_WS('$delimiter',
+				crew.inCharge.first_name,
+				crew.inCharge.last_name,
+				crew.inCharge.email
+				) AS searchCrew",
+			'project.id AS searchProject',
+			"CONCAT_WS('$delimiter',
+				clientToTaskType.client.name,
+				clientToTaskType.taskType.description
+				) AS searchClientToTaskType",
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchPurchaseOrder', 'searchCrew', 'searchProject', 'searchClientToTaskType');
 	}
 }

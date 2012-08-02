@@ -12,7 +12,7 @@
 
 	<?php echo $form->textFieldRow($model,'date_scheduled',array('class'=>'span5')); ?>
 
-	<?php echo $form->textFieldRow($model,'in_charge',array('class'=>'span5')); ?>
+	<?php echo $form->textFieldRow($model,'in_charge_id',array('class'=>'span5')); ?>
 
 	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
 

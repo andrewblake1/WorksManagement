@@ -6,9 +6,7 @@
 
 	<?php echo $form->textFieldRow($model,'id',array('class'=>'span5')); ?>
 
-	<?php echo $form->textFieldRow($model,'client_to_task_type_client_id',array('class'=>'span5')); ?>
-
-	<?php echo $form->textFieldRow($model,'client_to_task_type_task_type_id',array('class'=>'span5')); ?>
+	<?php echo $form->textFieldRow($model,'client_to_task_type_id',array('class'=>'span5')); ?>
 
 	<?php echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>64)); ?>
 

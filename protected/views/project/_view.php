@@ -4,6 +4,10 @@
 	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
+	<?php echo CHtml::encode($data->description); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('travel_time_1_way')); ?>:</b>
 	<?php echo CHtml::encode($data->travel_time_1_way); ?>
 	<br />

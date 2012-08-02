@@ -6,7 +6,7 @@
 		'id',
 		'description',
 		'deleted',
-		'staff_id',
 		'template_task_id',
+		'staff_id',
 	),
 )); ?>

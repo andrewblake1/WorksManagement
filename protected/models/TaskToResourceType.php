@@ -20,6 +20,13 @@
 class TaskToResourceType extends ActiveRecord
 {
 	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchTask;
+	public $searchResourceType;
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return TaskToResourceType the static model class
@@ -51,7 +58,7 @@ class TaskToResourceType extends ActiveRecord
 			array('start', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, resource_type_id, quantity, hours, start, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchTask, searchResourceType, quantity, hours, start, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -74,22 +81,22 @@ class TaskToResourceType extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Task To Resource Type',
 			'task_id' => 'Task',
+			'searchTask' => 'Task',
 			'resource_type_id' => 'Resource Type',
+			'searchResourceType' => 'Resource Type',
 			'quantity' => 'Quantity',
 			'hours' => 'Hours',
 			'start' => 'Start',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -97,15 +104,39 @@ class TaskToResourceType extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('task_id',$this->task_id,true);
-		$criteria->compare('resource_type_id',$this->resource_type_id);
+		$criteria->compare('task.description',$this->searchTask,true);
+		$criteria->compare('resourceType.description',$this->searchResourceType);
 		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('hours',$this->hours);
 		$criteria->compare('start',$this->start,true);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
+	
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff','task','resourceType');
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'task.description',
+			'resourceType.description AS searchResourceType',
+			'quantity',
+			'hours',
+			'start',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchTask', 'searchResourceType');
 	}
 }

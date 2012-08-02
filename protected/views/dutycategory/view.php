@@ -10,5 +10,6 @@
 		'level',
 		'description',
 		'deleted',
+		'staff_id',
 	),
 )); ?>

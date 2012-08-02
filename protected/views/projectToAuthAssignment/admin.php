@@ -1,19 +1,24 @@
-<h1>Manage Project To Auth Assignments</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'project-to-auth-assignment-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
-		'project_id',
-		'AuthAssignment_id',
-		'staff_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchProject',
+			'value'=>'CHtml::link($data->searchProject,
+				Yii::app()->createUrl("Project/update", array("id"=>$data->project_id))
+			)',
+			'type'=>'raw',
+		),
+         array(
+			'name'=>'searchAuthAssignment',
+			'value'=>'CHtml::link($data->searchAuthAssignment,
+				Yii::app()->createUrl("AuthAssignment/update", array("id"=>$data->AuthAssignment_id))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+
+?>

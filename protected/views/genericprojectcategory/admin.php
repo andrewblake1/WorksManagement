@@ -1,12 +1,7 @@
-<h1>Manage Genericprojectcategories</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'genericprojectcategory-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
 		'root',
@@ -14,12 +9,7 @@
 		'rgt',
 		'level',
 		'description',
-		/*
-		'deleted',
-		'staff_id',
-		*/
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
-		),
 	),
-)); ?>
+));
+
+?>

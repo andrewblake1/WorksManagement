@@ -53,7 +53,7 @@ class AuthItem extends ActiveRecord
 			array('description, bizrule, data', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('name, type, description, bizrule, data, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('name, type, description, bizrule, data, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,22 +78,18 @@ class AuthItem extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'name' => 'Name',
+		return parent::attributeLabels(array(
+			'name' => 'Role',
 			'type' => 'Type',
-			'description' => 'Description',
 			'bizrule' => 'Bizrule',
 			'data' => 'Data',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -105,11 +101,24 @@ class AuthItem extends ActiveRecord
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('bizrule',$this->bizrule,true);
 		$criteria->compare('data',$this->data,true);
-		$criteria->compare('deleted',$this->deleted);
-		$criteria->compare('staff_id',$this->staff_id);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'name',
+			'type',
+			'description',
+			'bizrule',
+			'data',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
 }

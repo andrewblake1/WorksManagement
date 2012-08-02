@@ -16,12 +16,17 @@
  * @property Staff $staff
  * @property ClientToTaskTypeToDutyType[] $clientToTaskTypeToDutyTypes
  * @property GenericTaskType[] $genericTaskTypes
- * @property GenericTaskType[] $genericTaskTypes1
  * @property Task[] $tasks
- * @property Task[] $tasks1
  */
 class ClientToTaskType extends ActiveRecord
 {
+	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchClient;
+	public $searchTaskType;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -52,7 +57,7 @@ class ClientToTaskType extends ActiveRecord
 			array('client_id, task_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, client_id, task_type_id, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchClient, searchTaskType, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -68,10 +73,8 @@ class ClientToTaskType extends ActiveRecord
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'clientToTaskTypeToDutyTypes' => array(self::HAS_MANY, 'ClientToTaskTypeToDutyType', 'client_to_task_type_id'),
-			'genericTaskTypes' => array(self::HAS_MANY, 'GenericTaskType', 'client_to_task_type_client_id'),
-			'genericTaskTypes1' => array(self::HAS_MANY, 'GenericTaskType', 'client_to_task_type_task_type_id'),
-			'tasks' => array(self::HAS_MANY, 'Task', 'client_to_task_type_client_id'),
-			'tasks1' => array(self::HAS_MANY, 'Task', 'client_to_task_type_task_type_id'),
+			'genericTaskTypes' => array(self::HAS_MANY, 'GenericTaskType', 'client_to_task_type_id'),
+			'tasks' => array(self::HAS_MANY, 'Task', 'client_to_task_type_id'),
 		);
 	}
 
@@ -80,20 +83,20 @@ class ClientToTaskType extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Client To Task Type',
+			'naturalKey' => '(Client/Task Type)',
 			'client_id' => 'Client',
+			'searchClient' => 'Client',
 			'task_type_id' => 'Task Type',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+			'searchTaskType' => 'Task Type',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -101,13 +104,44 @@ class ClientToTaskType extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('client_id',$this->client_id);
-		$criteria->compare('task_type_id',$this->task_type_id);
-		$criteria->compare('deleted',$this->deleted);
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('client.name',$this->searchClient, true);
+		$criteria->compare('taskType.description',$this->searchTaskType, true);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		$criteria->scopes=array('notDeleted');
+
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+
+		$criteria->with = array('staff', 'client','taskType');
+
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'client.name AS searchClient',
+			'taskType.description AS searchTaskType',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
 	}
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array('client_id' => array('client.name'), 'task_type_id' => array('taskType.description'));
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchClient', 'searchTaskType');
+	}
+
 }

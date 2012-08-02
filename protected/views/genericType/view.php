@@ -4,11 +4,13 @@
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'label',
+		'description',
 		'mandatory',
 		'allow_new',
-		'validation_type_id',
+		'validation_type',
 		'data_type',
+		'validation_text',
+		'validation_error',
 		'staff_id',
 	),
 )); ?>

@@ -6,5 +6,6 @@
 		'id',
 		'project_to_AuthAssignment_id',
 		'client_to_task_type_to_duty_type_id',
+		'staff_id',
 	),
 )); ?>

@@ -1,20 +1,20 @@
-<h1>Manage Crews</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'crew-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
 		'preferred_date',
 		'earliest_date',
 		'date_scheduled',
-		'in_charge',
-		'staff_id',
 		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+			'name'=>'searchInCharge',
+			'value'=>'CHtml::link($data->searchInCharge,
+				Yii::app()->createUrl("Staff/update", array("id"=>$data->in_charge_id))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+
+?>

@@ -1,12 +1,7 @@
-<h1>Manage Generics</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'generic-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
 		'type_int',
@@ -14,11 +9,7 @@
 		'type_time',
 		'type_date',
 		'type_text',
-		/*
-		'staff_id',
-		*/
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
-		),
 	),
-)); ?>
+));
+
+?>

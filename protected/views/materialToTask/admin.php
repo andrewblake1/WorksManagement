@@ -1,20 +1,25 @@
-<h1>Manage Material To Tasks</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'material-to-task-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
-		'material_id',
-		'task_id',
-		'quantity',
-		'staff_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchMaterial',
+			'value'=>'CHtml::link($data->searchMaterial,
+				Yii::app()->createUrl("Material/update", array("id"=>$data->material_id))
+			)',
+			'type'=>'raw',
 		),
+         array(
+			'name'=>'searchTask',
+			'value'=>'CHtml::link($data->searchTask,
+				Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+			)',
+			'type'=>'raw',
+		),
+		'quantity',
 	),
-)); ?>
+));
+
+?>

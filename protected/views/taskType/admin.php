@@ -1,20 +1,18 @@
-<h1>Manage Task Types</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'task-type-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
 		'description',
-		'deleted',
-		'staff_id',
-		'template_task_id',
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
+         array(
+			'name'=>'searchTemplateTask',
+			'value'=>'CHtml::link($data->searchTemplateTask,
+				Yii::app()->createUrl("TemplateTask/update", array("id"=>$data->template_task_id))
+			)',
+			'type'=>'raw',
 		),
 	),
-)); ?>
+));
+
+?>

@@ -1,24 +1,27 @@
-<h1>Manage Task To Resource Types</h1>
+<?php 
 
-<?php $this->widget('bootstrap.widgets.BootAlert'); ?>
-
-<?php $this->widget('bootstrap.widgets.BootGridView',array(
-	'id'=>'task-to-resource-type-grid',
-	'type'=>'striped',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+$this->widget('adminViewWidget',array(
+	'model'=>$model,
 	'columns'=>array(
 		'id',
-		'task_id',
-		'resource_type_id',
+         array(
+			'name'=>'searchTask',
+			'value'=>'CHtml::link($data->searchTask,
+				Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+			)',
+			'type'=>'raw',
+		),
+         array(
+			'name'=>'searchResourceType',
+			'value'=>'CHtml::link($data->searchResourceType,
+				Yii::app()->createUrl("ResourceType/update", array("id"=>$data->resource_type_id))
+			)',
+			'type'=>'raw',
+		),
 		'quantity',
 		'hours',
 		'start',
-		/*
-		'staff_id',
-		*/
-		array(
-			'class'=>'bootstrap.widgets.BootButtonColumn',
-		),
 	),
-)); ?>
+));
+
+?>

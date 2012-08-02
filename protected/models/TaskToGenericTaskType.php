@@ -19,6 +19,14 @@
 class TaskToGenericTaskType extends ActiveRecord
 {
 	/**
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
+	 */
+	public $searchTask;
+	public $searchGenericTaskType;
+	public $searchGeneric;
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return TaskToGenericTaskType the static model class
@@ -49,7 +57,7 @@ class TaskToGenericTaskType extends ActiveRecord
 			array('task_id, generic_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, generic_task_type_id, generic_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchTask, searchGeneric, searchGenericTaskType, generic_id, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,20 +81,21 @@ class TaskToGenericTaskType extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
+			'id' => 'Task To Generic Task Type',
 			'task_id' => 'Task',
+			'searchTask' => 'Task',
 			'generic_task_type_id' => 'Generic Task Type',
+			'searchGenericTaskType' => 'Generic Task Type',
 			'generic_id' => 'Generic',
-			'staff_id' => 'Staff',
-		);
+			'searchGeneric_id' => 'Generic',
+		));
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -94,13 +103,35 @@ class TaskToGenericTaskType extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('task_id',$this->task_id,true);
-		$criteria->compare('generic_task_type_id',$this->generic_task_type_id);
-		$criteria->compare('generic_id',$this->generic_id,true);
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('task.description',$this->searchTask,true);
+		$criteria->compare('genericTaskType.description',$this->searchGenericTaskType);
+		$criteria->compare('generic.id',$this->searchGeneric,true);
+		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
+	
+		if(!isset($_GET[__CLASS__.'_sort']))
+			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
+		
+		$criteria->with = array('staff','task','genericTaskType','generic');
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		$delimiter = Yii::app()->params['delimiter']['search'];
+
+		$criteria->select=array(
+			'id',
+			'task.description AS searchTask',
+			'genericTaskType.description AS searchGenericTaskType',
+			'generic.id AS searchGeneric',
+			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+		);
+
+		return $criteria;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchTask', 'searchGenericTaskType', 'searchGeneric');
 	}
 }
