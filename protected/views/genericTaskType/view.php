@@ -4,8 +4,7 @@
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'client_to_task_type_id',
-		'description',
+		'task_type_id',
 		'generic_task_category_id',
 		'generic_type_id',
 		'deleted',

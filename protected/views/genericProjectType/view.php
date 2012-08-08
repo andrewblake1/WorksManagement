@@ -4,8 +4,9 @@
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'generic_type_id',
+		'project_type_id',
 		'generic_project_category_id',
+		'generic_type_id',
 		'deleted',
 		'staff_id',
 	),

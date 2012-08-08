@@ -86,9 +86,6 @@ class Genericprojectcategory extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
@@ -97,16 +94,6 @@ class Genericprojectcategory extends ActiveRecord
 		$criteria->compare('rgt',$this->rgt);
 		$criteria->compare('level',$this->level);
 		$criteria->compare('description',$this->description,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-
-		$criteria->scopes=array('notDeleted');
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-		
-		$criteria->with = array('staff');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
 
 		$criteria->select=array(
 			'id',
@@ -115,7 +102,6 @@ class Genericprojectcategory extends ActiveRecord
 			'rgt',
 			'level',
 			'description',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

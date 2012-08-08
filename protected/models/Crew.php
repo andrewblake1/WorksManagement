@@ -104,12 +104,8 @@ class Crew extends ActiveRecord
 		$criteria->compare('earliest_date',$this->earliest_date,true);
 		$criteria->compare('date_scheduled',$this->date_scheduled,true);
 		$this->compositeCriteria($criteria, array('inCharge.first_name','inCharge.last_name','inCharge.email'), $this->searchInCharge);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-
-		$criteria->with = array('staff','inCharge');
+		$criteria->with = array('inCharge');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 
@@ -123,7 +119,6 @@ class Crew extends ActiveRecord
 				inCharge.last_name,
 				inCharge.email
 				) AS searchInCharge",
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

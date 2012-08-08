@@ -14,7 +14,7 @@
 
 	<?php echo $form->textFieldRow($model,'planned',array('class'=>'span5')); ?>
 
-	<?php echo $form->textFieldRow($model,'client_id',array('class'=>'span5')); ?>
+	<?php echo $form->textFieldRow($model,'project_type_id',array('class'=>'span5')); ?>
 
 	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
 

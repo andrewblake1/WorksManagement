@@ -6,7 +6,7 @@
  * The followings are the available columns in table 'generic_type':
  * @property integer $id
  * @property string $description
- * @property string $mandatory
+ * @property integer $mandatory
  * @property integer $allow_new
  * @property string $validation_type
  * @property string $data_type
@@ -22,6 +22,24 @@
  */
 class GenericType extends ActiveRecord
 {
+	/**
+	 * Returns data types.
+	 * @return array data storage types - to match enum type in mysql workbench
+	 */
+	public static function getDataTypes()
+	{
+		return array(1=>'Date', 2=>'Float' ,3=>'Int', 4=>'Text' , 5=>'Time');
+	}
+
+	/**
+	 * Returns validation types.
+	 * @return array validation types - to match enum type in mysql workbench
+	 */
+	public static function getValidationTypes()
+	{
+		return array(1=>'None', 2=>'PCRE', 3=>'SQL select', 4=>'Value list');
+	}
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -48,9 +66,9 @@ class GenericType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, mandatory, validation_type, data_type, staff_id', 'required'),
-			array('allow_new, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description, mandatory', 'length', 'max'=>64),
+			array('description, validation_type, data_type, staff_id', 'required'),
+			array('mandatory, allow_new, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description', 'length', 'max'=>64),
 			array('validation_type', 'length', 'max'=>10),
 			array('data_type', 'length', 'max'=>5),
 			array('validation_text, validation_error', 'safe'),
@@ -96,29 +114,16 @@ class GenericType extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('description',$this->description,true);
-		$criteria->compare('mandatory',$this->mandatory,true);
+		$criteria->compare('mandatory',$this->mandatory);
 		$criteria->compare('allow_new',$this->allow_new);
 		$criteria->compare('validation_type',$this->validation_type,true);
 		$criteria->compare('data_type',$this->data_type,true);
 		$criteria->compare('validation_text',$this->validation_text,true);
 		$criteria->compare('validation_error',$this->validation_error,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-	
-		$criteria->scopes=array('notDeleted');
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-		
-		$criteria->with = array('staff');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
 
 		$criteria->select=array(
 			'id',
@@ -129,7 +134,6 @@ class GenericType extends ActiveRecord
 			'data_type',
 			'validation_text',
 			'validation_error',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

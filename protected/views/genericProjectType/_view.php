@@ -4,12 +4,16 @@
 	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('generic_type_id')); ?>:</b>
-	<?php echo CHtml::encode($data->generic_type_id); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('project_type_id')); ?>:</b>
+	<?php echo CHtml::encode($data->project_type_id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('generic_project_category_id')); ?>:</b>
 	<?php echo CHtml::encode($data->generic_project_category_id); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('generic_type_id')); ?>:</b>
+	<?php echo CHtml::encode($data->generic_type_id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('deleted')); ?>:</b>

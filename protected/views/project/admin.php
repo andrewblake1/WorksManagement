@@ -5,16 +5,15 @@ $this->widget('adminViewWidget',array(
 	'columns'=>array(
 		'id',
 		'description',
-		'travel_time_1_way',
-		'critical_completion',
-		'planned',
          array(
-			'name'=>'searchClient',
-			'value'=>'CHtml::link($data->searchClient,
-				Yii::app()->createUrl("Client/update", array("id"=>$data->client_id))
+			'name'=>'searchProjectType',
+			'value'=>'CHtml::link($data->searchProjectType,
+				Yii::app()->createUrl("ProjectType/update", array("id"=>$data->project_type_id))
 			)',
 			'type'=>'raw',
 		),
-		'',
+		'travel_time_1_way',
+		'critical_completion',
+		'planned',
 	),
 )); ?>

@@ -100,12 +100,8 @@ class ResourceType extends ActiveRecord
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('resourceCategory.description',$this->searchResourceCategory);
 		$criteria->compare('maximum',$this->maximum);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
 		
-		$criteria->with = array('staff','resourceCategory');
+		$criteria->with = array('resourceCategory');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 
@@ -114,7 +110,6 @@ class ResourceType extends ActiveRecord
 			'description',
 			'resourceCategory.description AS searchResourceCategory',
 			'maximum',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

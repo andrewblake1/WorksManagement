@@ -47,15 +47,15 @@ class Controller extends CController
 	 */
 	private $trail = array(
 		'Client'=>array(
-			'ClientToTaskType'=>array(
+			'TaskType'=>array(
 				'TaskType'=>array(
-					'ClientToTaskTypeToDutyType',
+					'TaskTypeToDutyType',
 				),
 			),
 		),
 		'Project'=>array(
 			'ProjectToAuthAssignment'=>array(
-				'ProjectToAuthAssignmentToClientToTaskTypeToDutyType',
+				'ProjectToAuthAssignmentToTaskTypeToDutyType',
 			),
 			'ProjectToGenericProjectType'
 		),
@@ -92,9 +92,6 @@ class Controller extends CController
 		),
 	);
 	
-	
-	
-	
 	public function __construct($id, $module = null)
 	{
 		$this->modelName = str_replace('Controller', '', get_class($this));
@@ -120,7 +117,6 @@ class Controller extends CController
 		if (isset($_GET['term']))
 		{
 			// url parameters
-			$displayFields = $_GET['display_fields'];
 			$fKModelType = $_GET['fk_model'];
 			$model = $fKModelType::model();
 			// protect against possible injection
@@ -129,41 +125,38 @@ class Controller extends CController
 			$terms = explode(Yii::app()->params['delimiter']['search'], $_GET['term']);
 
 			// key will contain either a number or a foreign key field in which case field will be the lookup value
-			foreach($displayFields as $key => $field)
+			foreach($fKModelType::getDisplayAttr() as $key => $field)
 			{
-				// deal with multiple columns passed - in array, by treating both ways the same i.e. make the single column and array too
-				if(!is_array($field))
-					$field = array($field);
-				foreach($field as &$f)
+				// building display parameter which gets eval'd later
+				$display .= (isset($display) ? ".Yii::app()->params['delimiter']['display']." : '') . '$p->';
+
+				// building display parameter which gets eval'd later
+				// get term for this column from users entry
+				// with trailing wildcard only; probably a good idea for large volumes of data
+				$term = ($term = each($terms)) ? trim($term['value']) . '%' : '%';
+
+				// if we are using a foreign key lookup
+				if(!is_numeric($key))
 				{
-
-					// building display parameter which gets eval'd later
-					$display .= (isset($display) ? ".Yii::app()->params['delimiter']['display']." : '') . '$p->';
-
-					// if we are using a foreign key lookup
-					if($relName = self::getRelationFromKey($key, $fKModelType, $f))
-					{
-						if(!is_array($criteria->with) || !in_array($relName, $criteria->with))
-							$criteria->with[] = $relName;
-						// relName is also the related object name
-						$display .= $relName.'->';
-					}
-
-					// building display parameter which gets eval'd later
-					$display .= $f;
-					$criteria->condition .= ($criteria->condition ? " AND " : '')."$f like :$f";
-					// get term for this column from users entry
-					// with trailing wildcard only; probably a good idea for large volumes of data
-					$term = ($term = each($terms)) ? trim($term['value']) . '%' : '%';
-					$criteria->params[":$f"] = $term;
-					// correct order-by field
-					$criteria->order = "$f asc";
+					$criteria->with[] = $key;
+					$display .= str_replace('.', '->', $key).'->';
+					$criteria->order[] = "$key.$field asc";
+					$paramName = ':'.str_replace('.', '', $key).$field;
+					$criteria->condition .= ($criteria->condition ? " AND " : '')."$key.$field like $paramName";
+					$criteria->params["$paramName"] = $term;
 				}
+				else
+				{
+					$criteria->order[] = "$field asc";
+					$criteria->condition .= ($criteria->condition ? " AND " : '')."$field like :$field";
+					$criteria->params[":$field"] = $term;
+				}
+				$display .= $field;
 			}
 
 			// probably a good idea to limit the results
 			$criteria->limit = 20;
-
+			$criteria->order = implode(', ', $criteria->order);
 			$fKModels = $model->findAll($criteria);
 
 			// if some models founds
@@ -188,7 +181,7 @@ class Controller extends CController
 		}
 	}
 
-	public static function getRelationFromKey($key, &$fKModelType, &$field)
+/*	public static function getRelationFromKey($key, &$fKModelType, &$field)
 	{
 // TODO this line just to get past pre php 5.3 - change to fKModelType::model() once >= 5.3
 //eval('$model = '.$fKModelType.'::model();');
@@ -210,50 +203,7 @@ class Controller extends CController
 		elseif(!in_array($field, $model->tableSchema->columnNames))
 			throw new CException("$field does not exist in $fKModelType ".
 				print_r($$model->tableSchema->columnNames));
-	}
-	
-	/**
-	 * Deals with database errors like integrity constraints.
-	 * Saves a particular model if no error otherwise sets models error message.
-	 * @param array $messages where key is needle and value the message to display if needle found in catch error message.
-	 * @param CActiveRecord $model the model to save.
-	 * @param boolean $redirect will redirect on successful if set to true otherwise will return true on success or false on failure to save.
-	 * @return boolean $saved true if saved otherwise false - if not redirected
-	 */
-	protected function save($model, $messages=array(), $redirect=TRUE)
-	{
-		$coreMessages = array('1062' => 'Duplicates are not allowed');
-		
-		$messages = $messages + $coreMessages;
-		
-		try
-		{
-			if(($saved = $model->save()) && $redirect)
-			{
-				// if redirect is a path
-				if($redirect !== TRUE)
-					$this->redirect($redirect);
-				else	// default is to admin view
-					$this->redirect(array('admin','id'=>$model->getPrimaryKey()));
-			}
-		}
-		catch(CDbException $e)
-		{
-			$errorMessage = $e->getMessage();
-			foreach ($messages as $needle => &$message)
-			{
-				if(strpos($errorMessage, "$needle") !== FALSE)
-				{
-					$errorMessage = $message;
-					break;
-				}
-			}
-					
-			$model->addError(null, $errorMessage);
-		}
-		
-		return $saved;
-	}
+	}*/
 	
     public function behaviors()
     {
@@ -452,17 +402,18 @@ class Controller extends CController
 
 		if(isset($_POST[$this->modelName]))
 		{
-$t = $model->attributes;
 			$model->attributes=$_POST[$this->modelName];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			if($model->dbCallback('save'))
+			{
+				$this->redirect(array('update','id'=>$model->getPrimaryKey()));
+			}
 		}
 
 		$this->breadcrumbs = $this->getBreadCrumbTrail('Create');
 
-		$this->menu=array(
-			array('label'=>$this->modelName.'s','url'=>array('index')),
-		);
+//		$this->menu=array(
+//			array('label'=>$this->modelName.'s','url'=>array('index')),
+//		);
 
 		$this->render('create',array(
 			'model'=>$model,
@@ -484,16 +435,18 @@ $t = $model->attributes;
 		if(isset($_POST[$this->modelName]))
 		{
 			$model->attributes=$_POST[$this->modelName];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			if($model->dbCallback('save'))
+			{
+				$this->redirect(array('admin','id'=>$model->getPrimaryKey()));
+			}
 		}
 
 		$this->breadcrumbs = $this->getBreadCrumbTrail('Update');
 
 		$this->menu=array(
-			array('label'=>$this->modelName.'s','url'=>array('index')),
+//			array('label'=>$this->modelName.'s','url'=>array('index')),
 			array('label'=>'Create '.$this->modelName,'url'=>array('create')),
-			array('label'=>'View '.$this->modelName,'url'=>array('view','id'=>$model->id)),
+//			array('label'=>'View '.$this->modelName,'url'=>array('view','id'=>$model->id)),
 		);
 
 		$this->render('update',array(
@@ -564,13 +517,10 @@ $t = $model->attributes;
 	
 	static function autoTextWidget($model, $form, $fkField, $htmlOptions = array())
 	{
-		$modelName = str_replace('Controller', '', get_called_class());
-		
 		// get relation name from foreign key
-		// TODO rewrite this as single preg_replace
+		// TODO rewrite this as single preg_replace - use camelize function
 		// upper case first letter of words other than first, remove _ and id off end
 		$relName = preg_replace('/(.*)[iI]d$/', '$1', lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $fkField)))));
-//		$relName = lcfirst(str_replace('Controller', '', get_called_class()));
 			
 		Yii::app()->controller->widget('WMEJuiAutoCompleteFkField',
 			array(
@@ -578,7 +528,6 @@ $t = $model->attributes;
 				'form'=>$form,
 				'relName'=>$relName,
 				'fkField'=>$fkField,
-				'displayAttr'=> $modelName::getDisplayAttr(),
 				'htmlOptions'=> $htmlOptions,
 			)
 		);

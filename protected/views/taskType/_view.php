@@ -12,6 +12,10 @@
 	<?php echo CHtml::encode($data->deleted); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('client_id')); ?>:</b>
+	<?php echo CHtml::encode($data->client_id); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('template_task_id')); ?>:</b>
 	<?php echo CHtml::encode($data->template_task_id); ?>
 	<br />

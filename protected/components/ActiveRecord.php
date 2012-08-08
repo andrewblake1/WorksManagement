@@ -6,7 +6,6 @@ abstract class ActiveRecord extends CActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchStaff;
-	
 	public $naturalKey;
 	
 	/**
@@ -19,36 +18,29 @@ abstract class ActiveRecord extends CActiveRecord
 		// format models as $key=>$value with listData
 		$criteria=new CDbCriteria;
 		
-		// loop thru display attribute array for this model
-		foreach(static::getDisplayAttr() as $key1 => $value1)
+		// key will contain either a number or a foreign key field in which case field will be the lookup value
+		foreach(static::getDisplayAttr() as $key => $field)
 		{
-			// if this attribute is an array
-			if(is_array($value1))
+			// if we are using a foreign key lookup
+			if(!is_numeric($key))
 			{
-				// $key1 is the relation and $value the column list
-				foreach($value1 as &$value2)
-				{
-					$criteria->order[] = "$key1.$value2 ASC";
-					$concat[] = "$key1.$value2";
-				}
-				$criteria->with[] = $key1;
+				$criteria->with[] = $key;
+				$criteria->order[] = "$key.$field asc";
+				$concat_ws[] = "$key.$field";
 			}
-			// otherwise
 			else
 			{
-				// $value1 is column
-				$criteria->order[] = "$value1 ASC";
-				$concat[] = $value1;
+				$criteria->order[] = "$field asc";
+				$concat_ws[] = $field;
 			}
 		}
-		
-		$criteria->order = implode(' ', $criteria->order);
-		$firstAttribName = Yii::app()->functions->camelize($concat[0]);
+
+		$criteria->order = implode(', ', $criteria->order);
 
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 				'id',
-				"CONCAT_WS('$delimiter',".implode(',', $concat).") AS naturalKey",
+				"CONCAT_WS('$delimiter',".implode(',', $concat_ws).") AS naturalKey",
 			);
 		
 		return CHtml::listData(
@@ -57,45 +49,6 @@ abstract class ActiveRecord extends CActiveRecord
 			'naturalKey'
 		);
 	}
-/*	public static function getListData()
-	{
-		// format models as $key=>$value with listData
-		$criteria=new CDbCriteria;
-		$criteria->order = '
-			first_name ASC,
-			last_name ASC,
-			email ASC'
-		;
-		$criteria->select=array(
-			'id',
-			"CONCAT_WS('$delimiter',
-				first_name,
-				last_name,
-				email
-				) AS staff",
-		);
-		
-		return CHtml::listData(
-			self::model()->findAll($criteria), 
-			self::model()->tableSchema->primaryKey, 'staff'
-		);
-	}
-	public static function getListData($displayColumn='description')
-	{
-		// format models as $key=>$value with listData
-		$criteria=new CDbCriteria;
-		$criteria->scopes=array('notDeleted');
-		$criteria->order = "$displayColumn ASC";
-		$criteria->select=array(
-			static::model()->tableSchema->primaryKey,
-			"$displayColumn",
-		);
-		
-		return CHtml::listData(
-			self::model()->findAll($criteria), 
-			self::model()->tableSchema->primaryKey, $displayColumn
-		);
-	}*/
 
 	/**
 	 * Returns array of columns to be concatenated - for lists.
@@ -157,7 +110,7 @@ abstract class ActiveRecord extends CActiveRecord
 		$sort[] = '*';
 		
 		$dataProvider = new CActiveDataProvider($this, array(
-			'criteria'=>$this->searchCriteria,
+			'criteria'=>self::getSearchCriteria($this),
 			'sort'=>array('attributes'=>$sort),
 		));
 		
@@ -213,6 +166,123 @@ abstract class ActiveRecord extends CActiveRecord
 			'description' => 'Description',
 			'deleted' => 'Deleted',
 		);
+	}
+
+
+	/**
+	 * Sets common criteria for search.
+	 * @return CDbCriteria the search/filter conditions.
+	 * @param CDbCriteria $criteria the criteria object to set.
+	 */
+	public function getSearchCriteria($model)
+	{
+		$searchCriteria = $model->searchCriteria;
+		
+		// if this model has a deleted property
+		if(in_array('staff_id', $model->tableSchema->getColumnNames()))
+		{
+			$this->compositeCriteria($searchCriteria, array('staff.first_name','staff.last_name','staff.email'), $model->searchStaff);
+			$searchCriteria->with[] = 'staff';
+			$delimiter = Yii::app()->params['delimiter']['display'];
+			$searchCriteria->select[] = "CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff";
+		}
+
+		if(!isset($_GET[get_class($model).'_sort']))
+			$searchCriteria->order = 't.'.$model->tableSchema->primaryKey." DESC";
+
+		return $searchCriteria;
+	}
+
+	public function beforeSave()
+	{
+		$arrayForeignKeys=$this->tableSchema->foreignKeys;
+		
+		foreach ($this->attributes as $name=>$value)
+		{
+			if (array_key_exists($name, $arrayForeignKeys) && $this->metadata->columns[$name]->allowNull && trim($value)=='')
+			{
+				$this->$name=NULL;
+			}      
+		}
+
+		return parent::beforeSave();
+	}
+	
+	public function beforeValidate()
+	{
+		// If there is a staff id column
+		if(isset($this->metadata->columns['staff_id']))
+		{
+			$this->staff_id = Yii::app()->user->id;
+		}
+
+		return parent::beforeValidate();
+	}
+
+
+	/**
+	 * Container to deal with error handling for model database calls.
+	 * @param String $callback the name of the method to call.
+	 * @param array $callbackArgs array of method arguments.
+	 * @param array $messages where key is needle and value the message to display if needle found in catch error message.
+	 * @return returns the return value from the method call.
+	 */
+	public function dbCallback($callback, $callbackArgs=array(), $messages=array())
+	{
+		$coreMessages = array('1062' => 'Duplicates are not allowed');
+		
+		$messages = $messages + $coreMessages;
+
+		try
+		{
+			$return = call_user_func_array(array($this, $callback), $callbackArgs);
+			
+/*			if(($saved = $model->save()) && $redirect)
+			{
+				// if redirect is a path
+				if($redirect !== TRUE)
+					$this->redirect($redirect);
+				else	// default is to admin view
+					$this->redirect(array('admin','id'=>$model->getPrimaryKey()));
+			}*/
+		}
+		catch(CDbException $e)
+		{
+			$errorMessage = $e->getMessage();
+			foreach ($messages as $needle => &$message)
+			{
+				// NB: do not remove the speech marks around needle - converting to string
+				if(strpos($errorMessage, "$needle") !== FALSE)
+				{
+					$errorMessage = $message;
+					break;
+				}
+			}
+					
+			$this->addError(null, $errorMessage);
+		}
+		
+/*		// in case not caught by exception but already added to model then
+		// post process the errors
+		if($this->hasErrors())
+		{
+			foreach($this->getErrors() as $attribute => $errorMessage)
+			{
+				foreach ($messages as $needle => &$message)
+				{
+					if(strpos($errorMessage[0], $needle) !== FALSE)
+					{
+						$errorMessage[0] = $message;
+						$this->clearErrors(array($attribute));
+						$this->addError($attribute, $errorMessage);
+						break;
+					}
+				}
+					
+			}
+		}*/
+		
+		return $return;
 	}
 
 }

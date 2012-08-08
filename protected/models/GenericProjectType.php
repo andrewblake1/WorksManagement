@@ -5,8 +5,9 @@
  *
  * The followings are the available columns in table 'generic_project_type':
  * @property integer $id
- * @property integer $generic_type_id
+ * @property integer $project_type_id
  * @property integer $generic_project_category_id
+ * @property integer $generic_type_id
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -14,6 +15,7 @@
  * @property GenericType $genericType
  * @property Genericprojectcategory $genericProjectCategory
  * @property Staff $staff
+ * @property ProjectType $projectType
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
  */
 class GenericProjectType extends ActiveRecord
@@ -22,8 +24,9 @@ class GenericProjectType extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchGenericType;
+	public $searchProjectType;
 	public $searchGenericProjectCategory;
+	public $searchGenericType;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -51,11 +54,11 @@ class GenericProjectType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('generic_type_id, staff_id', 'required'),
-			array('generic_type_id, generic_project_category_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('project_type_id, generic_type_id, staff_id', 'required'),
+			array('project_type_id, generic_project_category_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchGenericType, searchGenericProjectCategory, searchStaff', 'safe', 'on'=>'search'),
+			array('id, searchProjectType, searchGenericProjectCategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,6 +73,7 @@ class GenericProjectType extends ActiveRecord
 			'genericType' => array(self::BELONGS_TO, 'GenericType', 'generic_type_id'),
 			'genericProjectCategory' => array(self::BELONGS_TO, 'Genericprojectcategory', 'generic_project_category_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
 			'projectToGenericProjectTypes' => array(self::HAS_MANY, 'ProjectToGenericProjectType', 'generic_project_type_id'),
 		);
 	}
@@ -81,10 +85,12 @@ class GenericProjectType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Generic Project Type',
-			'generic_type_id' => 'Generic Type',
-			'searchGenericType' => 'Generic Type',
+			'project_type_id' => 'Project Type (Client/Project type)',
+			'searchProjectType' => 'Project Type (Client/Project type)',
 			'generic_project_category_id' => 'Generic Project Category',
 			'searchGenericProjectCategory' => 'Generic Project Category',
+			'generic_type_id' => 'Generic Type',
+			'searchGenericType' => 'Generic Type',
 		));
 	}
 
@@ -93,28 +99,33 @@ class GenericProjectType extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('genericType.description',$this->searchGenericType);
+		$this->compositeCriteria($criteria, array(
+			'projectType.client.name',
+			'projectType.projectType.description'
+		), $this->searchProjectType);
 		$criteria->compare('genericProjectCategory.description',$this->searchGenericProjectCategory);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-
-		$criteria->with = array('staff','genericType','genericProjectCategory');
+		$criteria->compare('genericType.description',$this->searchGenericType);
+		
+		$criteria->with = array(
+			'projectType.client',
+			'projectType',
+			'genericProjectCategory',
+			'genericType',
+			);
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 
 		$criteria->select=array(
 			'id',
-			'genericType.description AS searchGenericType',
+			"CONCAT_WS('$delimiter',
+				client.name,
+				projectType.description
+				) AS searchProjectType",
 			'genericProjectCategory.description AS searchGenericProjectCategory',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+			'genericType.description AS searchGenericType',
 		);
 
 		return $criteria;
@@ -126,8 +137,9 @@ class GenericProjectType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-				'genericType'=>array('description'),
-				'genericProjectCategory'=>array('description'),
+			'client.name',
+			'projectType.description',
+			'genericType.description',
 		);
 	}
 
@@ -137,7 +149,7 @@ class GenericProjectType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchGenericType', 'searchGenericProjectCategory');
+		return array('searchProjectType', 'searchGenericProjectCategory', 'searchGenericType');
 	}
 
 }

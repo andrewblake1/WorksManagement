@@ -4,12 +4,8 @@
 	<?php echo CHtml::link(CHtml::encode($data->id),array('view','id'=>$data->id)); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('client_to_task_type_id')); ?>:</b>
-	<?php echo CHtml::encode($data->client_to_task_type_id); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('description')); ?>:</b>
-	<?php echo CHtml::encode($data->description); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('task_type_id')); ?>:</b>
+	<?php echo CHtml::encode($data->task_type_id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('generic_task_category_id')); ?>:</b>

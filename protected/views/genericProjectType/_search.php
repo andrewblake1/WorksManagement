@@ -6,9 +6,11 @@
 
 	<?php echo $form->textFieldRow($model,'id',array('class'=>'span5')); ?>
 
-	<?php echo $form->textFieldRow($model,'generic_type_id',array('class'=>'span5')); ?>
+	<?php echo $form->textFieldRow($model,'project_type_id',array('class'=>'span5')); ?>
 
 	<?php echo $form->textFieldRow($model,'generic_project_category_id',array('class'=>'span5')); ?>
+
+	<?php echo $form->textFieldRow($model,'generic_type_id',array('class'=>'span5')); ?>
 
 	<?php echo $form->textFieldRow($model,'deleted',array('class'=>'span5')); ?>
 

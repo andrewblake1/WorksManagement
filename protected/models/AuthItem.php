@@ -17,7 +17,7 @@
  * @property Staff $staff
  * @property AuthItemChild[] $authItemchildren
  * @property AuthItemChild[] $authItemchildren1
- * @property ClientToTaskTypeToDutyType[] $clientToTaskTypeToDutyTypes
+ * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
  */
 class AuthItem extends ActiveRecord
 {
@@ -69,7 +69,7 @@ class AuthItem extends ActiveRecord
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'authItemchildren' => array(self::HAS_MANY, 'AuthItemChild', 'parent'),
 			'authItemchildren1' => array(self::HAS_MANY, 'AuthItemChild', 'child'),
-			'clientToTaskTypeToDutyTypes' => array(self::HAS_MANY, 'ClientToTaskTypeToDutyType', 'AuthItem_name'),
+			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'AuthItem_name'),
 		);
 	}
 
@@ -91,9 +91,6 @@ class AuthItem extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('name',$this->name,true);
@@ -101,14 +98,6 @@ class AuthItem extends ActiveRecord
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('bizrule',$this->bizrule,true);
 		$criteria->compare('data',$this->data,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-		
-		$criteria->with = array('staff');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
 
 		$criteria->select=array(
 			'name',
@@ -116,7 +105,6 @@ class AuthItem extends ActiveRecord
 			'description',
 			'bizrule',
 			'data',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

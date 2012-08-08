@@ -12,9 +12,9 @@ $this->widget('adminViewWidget',array(
 			'type'=>'raw',
 		),
          array(
-			'name'=>'searchProjectToAuthAssignmentToClientToTaskTypeToDutyType',
-			'value'=>'CHtml::link($data->searchProjectToAuthAssignmentToClientToTaskTypeToDutyType,
-				Yii::app()->createUrl("ProjectToAuthAssignmentToClientToTaskTypeToDutyType/update", array("id"=>$data->project_to_AuthAssignment_to_client_to_task_type_to_duty_type_id))
+			'name'=>'searchProjectToAuthAssignmentToTaskTypeToDutyType',
+			'value'=>'CHtml::link($data->searchProjectToAuthAssignmentToTaskTypeToDutyType,
+				Yii::app()->createUrl("ProjectToAuthAssignmentToTaskTypeToDutyType/update", array("id"=>$data->project_to_AuthAssignment_to_task_type_to_duty_type_id))
 			)',
 			'type'=>'raw',
 		),

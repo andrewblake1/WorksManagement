@@ -11,7 +11,7 @@
  *
  * The followings are the available model relations:
  * @property Staff $staff
- * @property ClientToTaskType[] $clientToTaskTypes
+ * @property TaskType[] $taskTypes
  * @property Project[] $projects
  */
 class Client extends ActiveRecord
@@ -60,7 +60,7 @@ class Client extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'clientToTaskTypes' => array(self::HAS_MANY, 'ClientToTaskType', 'client_id'),
+			'taskTypes' => array(self::HAS_MANY, 'TaskType', 'client_id'),
 			'projects' => array(self::HAS_MANY, 'Project', 'client_id'),
 		);
 	}
@@ -81,26 +81,14 @@ class Client extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-		
-		$criteria->with = array('staff');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
 
 		$criteria->select=array(
 			'id',
 			'name',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;
@@ -111,7 +99,7 @@ class Client extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		parent::getDisplayAttr('name');
+		return array('name');
 	}
 
 }

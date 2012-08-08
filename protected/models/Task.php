@@ -10,7 +10,7 @@
  * @property string $purchase_order_id
  * @property string $crew_id
  * @property string $project_id
- * @property integer $client_to_task_type_id
+ * @property integer $task_type_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -23,7 +23,7 @@
  * @property Day $day0
  * @property Project $project
  * @property Staff $staff
- * @property ClientToTaskType $clientToTaskType
+ * @property TaskType $taskType
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
  * @property TaskToResourceType[] $taskToResourceTypes
@@ -38,7 +38,7 @@ class Task extends ActiveRecord
 	public $searchPurchaseOrder;
 	public $searchCrew;
 	public $searchProject;
-	public $searchClientToTaskType;
+	public $searchTaskType;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -66,12 +66,12 @@ class Task extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, day, purchase_order_id, crew_id, project_id, client_to_task_type_id, staff_id', 'required'),
-			array('client_to_task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, day, purchase_order_id, crew_id, project_id, task_type_id, staff_id', 'required'),
+			array('task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('day, purchase_order_id, crew_id, project_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, day, searchPurchaseOrder, searchCrew, searchProject, searchClientToTaskType, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, day, searchPurchaseOrder, searchCrew, searchProject, searchTaskType, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -92,7 +92,7 @@ class Task extends ActiveRecord
 			'day0' => array(self::BELONGS_TO, 'Day', 'day'),
 			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'clientToTaskType' => array(self::BELONGS_TO, 'ClientToTaskType', 'client_to_task_type_id'),
+			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
 			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'task_id'),
 			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'task_id'),
@@ -114,8 +114,8 @@ class Task extends ActiveRecord
 			'searchCrew' => 'Crew (First/Last/Email)',
 			'project_id' => 'Project',
 			'searchProject' => 'Project',
-			'client_to_task_type_id' => 'Client To Task Type (Client/Task type)',
-			'searchClientToTaskType' => 'Client To Task Type (Client/Task type)',
+			'task_type_id' => 'Task Type (Client/Task type)',
+			'searchTaskType' => 'Task Type (Client/Task type)',
 		));
 	}
 
@@ -124,9 +124,6 @@ class Task extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
@@ -134,7 +131,7 @@ class Task extends ActiveRecord
 		$criteria->compare('day',$this->day,true);
 		$this->compositeCriteria($criteria,
 			array(
-				'purchaseOrder.supplier.name',
+				'supplier.name',
 				'purchaseOrder.number',
 			),
 			$this->searchPurchaseOrder
@@ -150,25 +147,18 @@ class Task extends ActiveRecord
 		$criteria->compare('project.id',$this->searchProject,true);
 		$this->compositeCriteria($criteria,
 			array(
-				'clientToTaskType.client.name',
-				'clientToTaskType.taskType.description',
+				'taskType.client.name',
+				'taskType.description',
 				),
-			$this->searchClientToTaskType
+			$this->searchTaskType
 		);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-	
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
 		
 		$criteria->with = array(
-			'staff',
 			'purchaseOrder',
 			'purchaseOrder.supplier',
-			'clientToTaskType.client',
-			'clientToTaskType.taskType',
 			'crew.inCharge',
 			'project',
-			'clientToTaskType.client',
+			'taskType.client',
 			);
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
@@ -178,20 +168,19 @@ class Task extends ActiveRecord
 			'description',
 			'day',
 			"CONCAT_WS('$delimiter',
-				purchaseOrder.supplier.name,
+				supplier.name,
 				purchaseOrder.number
 				) AS searchPurchaseOrder",
 			"CONCAT_WS('$delimiter',
-				crew.inCharge.first_name,
-				crew.inCharge.last_name,
-				crew.inCharge.email
+				inCharge.first_name,
+				inCharge.last_name,
+				inCharge.email
 				) AS searchCrew",
 			'project.id AS searchProject',
 			"CONCAT_WS('$delimiter',
-				clientToTaskType.client.name,
-				clientToTaskType.taskType.description
-				) AS searchClientToTaskType",
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
+				client.name,
+				taskType.description
+				) AS searchTaskType",
 		);
 
 		return $criteria;
@@ -203,6 +192,6 @@ class Task extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchPurchaseOrder', 'searchCrew', 'searchProject', 'searchClientToTaskType');
+		return array('searchPurchaseOrder', 'searchCrew', 'searchProject', 'searchTaskType');
 	}
 }

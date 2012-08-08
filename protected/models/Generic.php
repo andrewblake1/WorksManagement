@@ -93,9 +93,6 @@ class Generic extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
@@ -104,16 +101,6 @@ class Generic extends ActiveRecord
 		$criteria->compare('type_time',$this->type_time,true);
 		$criteria->compare('type_date',$this->type_date,true);
 		$criteria->compare('type_text',$this->type_text,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-	
-		$criteria->scopes=array('notDeleted');
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-		
-		$criteria->with = array('staff');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
 
 		$criteria->select=array(
 			'id',
@@ -122,7 +109,6 @@ class Generic extends ActiveRecord
 			'type_time',
 			'type_date',
 			'type_text',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

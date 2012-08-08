@@ -109,14 +109,8 @@ class Resourcecategory extends ActiveRecord
 		$criteria->compare('level',$this->level);
 		$criteria->compare('dutyCategory.description',$this->searchDutyCategory);
 		$criteria->compare('description',$this->description,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
 		
-		$criteria->with = array('staff','dutyCategory');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
+		$criteria->with = array('dutyCategory');
 
 		$criteria->select=array(
 			'id',
@@ -126,7 +120,6 @@ class Resourcecategory extends ActiveRecord
 			'level',
 			'dutyCategory.description AS searchDutyCategory',
 			'description',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

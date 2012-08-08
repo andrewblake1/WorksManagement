@@ -13,7 +13,7 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property ClientToTaskTypeToDutyType[] $clientToTaskTypeToDutyTypes
+ * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
  * @property Dutycategory $dutyCategory
  * @property GenericType $genericType
  * @property Staff $staff
@@ -70,7 +70,7 @@ class DutyType extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'clientToTaskTypeToDutyTypes' => array(self::HAS_MANY, 'ClientToTaskTypeToDutyType', 'duty_type_id'),
+			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'duty_type_id'),
 			'dutyCategory' => array(self::BELONGS_TO, 'Dutycategory', 'duty_category_id'),
 			'genericType' => array(self::BELONGS_TO, 'GenericType', 'generic_type_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
@@ -107,12 +107,8 @@ class DutyType extends ActiveRecord
 		$criteria->compare('lead_in_days',$this->lead_in_days);
 		$criteria->compare('dutyCategory.description',$this->searchDutyCategory);
 		$criteria->compare('genericType.description',$this->searchGenericType);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
 		
-		$criteria->with = array('staff','dutyCategory','genericType');
+		$criteria->with = array('dutyCategory','genericType');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 
@@ -122,7 +118,6 @@ class DutyType extends ActiveRecord
 			'lead_in_days',
 			'dutyCategory.description AS searchDutyCategory',
 			'genericType.description AS searchGenericType',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

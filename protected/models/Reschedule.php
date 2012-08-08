@@ -91,20 +91,12 @@ class Reschedule extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('oldTask.description',$this->searchOldTask,true);
 		$criteria->compare('newTask.description',$this->searchNewTask,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-		
-		$criteria->with = array('staff','oldTask','newTask');
+		$criteria->with = array('oldTask','newTask');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 
@@ -112,7 +104,6 @@ class Reschedule extends ActiveRecord
 			'id',
 			'oldTask.description AS searchOldTask',
 			'newTask.description AS searchNewTask',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

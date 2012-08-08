@@ -24,8 +24,8 @@
 	<?php echo CHtml::encode($data->project_id); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('client_to_task_type_id')); ?>:</b>
-	<?php echo CHtml::encode($data->client_to_task_type_id); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('task_type_id')); ?>:</b>
+	<?php echo CHtml::encode($data->task_type_id); ?>
 	<br />
 
 	<?php /*

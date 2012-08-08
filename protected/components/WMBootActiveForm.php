@@ -14,6 +14,7 @@ class WMBootActiveForm extends BootActiveForm
 	public $enableAjaxValidation=false;
 	public $htmlOptions=array('class'=>'well');
 	public $model;
+	public $models=null;
 
 	/**
 	 * Displays a particular model.
@@ -23,6 +24,7 @@ class WMBootActiveForm extends BootActiveForm
        // this method is called by CController::beginWidget()
 		$this->controller = $this->getController();
 		$this->id="{$this->controller->modelName}-form";
+		echo $this->errorSummary($this->models ? $this->models : $this->model);
 		parent::init();
 	}
  
@@ -41,10 +43,10 @@ class WMBootActiveForm extends BootActiveForm
 		parent::run();
 	}
 
-	public function dropDownListRow($model, $attribute, $data = array(), $htmlOptions = array())
+/*	public function dropDownListRow($model, $attribute, $data = array(), $htmlOptions = array())
 	{
 		return $this->inputRow(BootInput::TYPE_DROPDOWN, $model, $attribute, $data, $htmlOptions);
-	}
+	}*/
 
 }
 

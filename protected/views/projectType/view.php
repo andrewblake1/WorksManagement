@@ -1,12 +1,12 @@
-<h1>View ClientToTaskTypeToDutyType #<?php echo $model->id; ?></h1>
+<h1>View ProjectType #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('bootstrap.widgets.BootDetailView',array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'duty_type_id',
-		'client_to_task_type_id',
-		'AuthItem_name',
+		'description',
+		'description',
+		'client_id',
 		'deleted',
 		'staff_id',
 	),

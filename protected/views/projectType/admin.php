@@ -4,6 +4,7 @@ $this->widget('adminViewWidget',array(
 	'model'=>$model,
 	'columns'=>array(
 		'id',
+		'description',
          array(
 			'name'=>'searchClient',
 			'value'=>'CHtml::link($data->searchClient,
@@ -11,10 +12,10 @@ $this->widget('adminViewWidget',array(
 			)',
 			'type'=>'raw',
 		),
-        array(
-			'name'=>'searchTaskType',
-			'value'=>'CHtml::link($data->searchTaskType,
-				Yii::app()->createUrl("TaskType/update", array("id"=>$data->task_type_id))
+         array(
+			'name'=>'searchTemplateProject',
+			'value'=>'CHtml::link($data->searchTemplateProject,
+				Yii::app()->createUrl("TemplateProject/update", array("id"=>$data->template_project_id))
 			)',
 			'type'=>'raw',
 		),

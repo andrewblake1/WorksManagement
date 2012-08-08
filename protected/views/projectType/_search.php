@@ -4,11 +4,13 @@
 	'htmlOptions'=>array('class'=>'well'),
 )); ?>
 
-	<?php echo $form->textFieldRow($model,'id',array('class'=>'span5','maxlength'=>10)); ?>
+	<?php echo $form->textFieldRow($model,'id',array('class'=>'span5')); ?>
 
-	<?php echo $form->textFieldRow($model,'project_to_AuthAssignment_id',array('class'=>'span5','maxlength'=>10)); ?>
+	<?php echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>64)); ?>
 
-	<?php echo $form->textFieldRow($model,'client_to_task_type_to_duty_type_id',array('class'=>'span5')); ?>
+	<?php echo $form->textFieldRow($model,'deleted',array('class'=>'span5')); ?>
+
+	<?php echo $form->textFieldRow($model,'template_project_id',array('class'=>'span5','maxlength'=>10)); ?>
 
 	<?php echo $form->textFieldRow($model,'staff_id',array('class'=>'span5')); ?>
 

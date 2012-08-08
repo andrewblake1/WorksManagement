@@ -188,54 +188,27 @@ class EJuiAutoCompleteFkField extends CJuiAutoComplete {
         $this->_saveID = $id . '_save';
         $this->_lookupID = $id .'_lookup';
 
-        $related = $this->model->{$this->relName}; // get the related record
         $value = CHtml::resolveValue($this->model, $this->attribute);
-		$display = array();
 
-		// key will contain either a number or a foreign key field in which case field will be the lookup column in related table
-		foreach($this->displayAttr as $key => $field)
+		foreach($fKModelType::getDisplayAttr() as $key => $field)
 		{
-			// building displayFileds paramater for sourceUrl
-			$displayFields["display_fields[$key]"] = $field;
-			
-			// deal with multiple columns passed - in array, by treating both ways the same i.e. make the single column an array too
-			if(!is_array($field))
+			if(is_numeric($key))
 			{
-				$field = array($field);
-//				$useRelated = FALSE;
+				$this->_display[] = $this->model->{$this->relName}->$field;
 			}
-//			else
-//			{				
-//				$useRelated = TRUE;
-//			}
-			
-			$model = $fKModelType::model();
-			foreach($field as &$f)
+			else
 			{
-				// building display parameter which gets eval'd later
-				$d = '';
-				
-				// if we are using another foreign key lookup - another level of indirection
-				if($relName = Controller::getRelationFromKey($key, $fKModelType, $f))
-					$d .= $relName.'->';
-				// ensure the column exists
-				elseif(!in_array($f, $model->tableSchema->columnNames))
-					return;
-
-				// building display parameter which gets eval'd later
-				$d .= $f;
-				$v = eval('$display[] = $related->'.$d.';');
+				$key = str_replace('.', '->', $key);
+				$this->_display[] = $this->model->{$this->relName}->$key->$field;
 			}
 		}
-
+		
 		$this->sourceUrl = Yii::app()->createUrl("$fKModelType/fkautocomplete",
-			array_merge($displayFields,
 			array(
 				'fk_model' => $fKModelType
-			))); 
+			)); 
 
-		$display = implode(Yii::app()->params['delimiter']['display'], $display);
-		$this->_display=(!empty($value) ? $display : '');
+		$this->_display=(!empty($value) ? implode(Yii::app()->params['delimiter']['display'], $this->_display) : '');
 		// AB hacking end
 
         if (!isset($this->options['minLength']))

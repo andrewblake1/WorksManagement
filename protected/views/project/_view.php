@@ -20,8 +20,8 @@
 	<?php echo CHtml::encode($data->planned); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('client_id')); ?>:</b>
-	<?php echo CHtml::encode($data->client_id); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('project_type_id')); ?>:</b>
+	<?php echo CHtml::encode($data->project_type_id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('staff_id')); ?>:</b>

@@ -19,8 +19,8 @@
  * @property AuthItem[] $authItems
  * @property Assembly[] $assemblies
  * @property Client[] $clients
- * @property ClientToTaskType[] $clientToTaskTypes
- * @property ClientToTaskTypeToDutyType[] $clientToTaskTypeToDutyTypes
+ * @property TaskType[] $taskTypes
+ * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
  * @property Crew[] $crews
  * @property Crew[] $crews1
  * @property Day[] $days
@@ -101,8 +101,8 @@ class Staff extends ActiveRecord
 			'authItems' => array(self::HAS_MANY, 'AuthItem', 'staff_id'),
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'staff_id'),
 			'clients' => array(self::HAS_MANY, 'Client', 'staff_id'),
-			'clientToTaskTypes' => array(self::HAS_MANY, 'ClientToTaskType', 'staff_id'),
-			'clientToTaskTypeToDutyTypes' => array(self::HAS_MANY, 'ClientToTaskTypeToDutyType', 'staff_id'),
+			'taskTypes' => array(self::HAS_MANY, 'TaskType', 'staff_id'),
+			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'staff_id'),
 			'crews' => array(self::HAS_MANY, 'Crew', 'in_charge_id'),
 			'crews1' => array(self::HAS_MANY, 'Crew', 'staff_id'),
 			'days' => array(self::HAS_MANY, 'Day', 'staff_id'),
@@ -153,9 +153,6 @@ class Staff extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
@@ -163,12 +160,6 @@ class Staff extends ActiveRecord
 		$criteria->compare('last_name',$this->last_name,true);
 		$criteria->compare('phone_mobile',$this->phone_mobile,true);
 		$criteria->compare('email',$this->email,true);
-		$criteria->compare('staff_id',$this->staff_id);
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-		
-		$delimiter = Yii::app()->params['delimiter']['search'];
 
 		$criteria->select=array(
 			'id',
@@ -176,7 +167,6 @@ class Staff extends ActiveRecord
 			'last_name',
 			'phone_mobile',
 			'email',
-			"CONCAT_WS('$delimiter', first_name, last_name, email) AS searchStaff",
 		);
 
 		return $criteria;

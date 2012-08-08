@@ -1,12 +1,12 @@
 <?php
 
 /**
- * This is the model class for table "client_to_task_type_to_duty_type".
+ * This is the model class for table "task_type_to_duty_type".
  *
- * The followings are the available columns in table 'client_to_task_type_to_duty_type':
+ * The followings are the available columns in table 'task_type_to_duty_type':
  * @property integer $id
  * @property integer $duty_type_id
- * @property integer $client_to_task_type_id
+ * @property integer $task_type_id
  * @property string $AuthItem_name
  * @property integer $deleted
  * @property integer $staff_id
@@ -15,22 +15,22 @@
  * @property DutyType $dutyType
  * @property AuthItem $authItemName
  * @property Staff $staff
- * @property ClientToTaskType $clientToTaskType
- * @property ProjectToAuthAssignmentToClientToTaskTypeToDutyType[] $projectToAuthAssignmentToClientToTaskTypeToDutyTypes
+ * @property TaskType $taskType
+ * @property ProjectToAuthAssignmentToTaskTypeToDutyType[] $projectToAuthAssignmentToTaskTypeToDutyTypes
  */
-class ClientToTaskTypeToDutyType extends ActiveRecord
+class TaskTypeToDutyType extends ActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchDutyType;
-	public $searchClientToTaskType;
+	public $searchTaskType;
 	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return ClientToTaskTypeToDutyType the static model class
+	 * @return TaskTypeToDutyType the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -42,7 +42,7 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'client_to_task_type_to_duty_type';
+		return 'task_type_to_duty_type';
 	}
 
 	/**
@@ -53,12 +53,12 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('duty_type_id, client_to_task_type_id, AuthItem_name, staff_id', 'required'),
-			array('duty_type_id, client_to_task_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('duty_type_id, task_type_id, AuthItem_name, staff_id', 'required'),
+			array('duty_type_id, task_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('AuthItem_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchDutyType, searchClientToTaskType, AuthItem_name, searchStaff', 'safe', 'on'=>'search'),
+			array('id, searchDutyType, searchTaskType, AuthItem_name, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,8 +73,8 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 			'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
 			'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'AuthItem_name'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'clientToTaskType' => array(self::BELONGS_TO, 'ClientToTaskType', 'client_to_task_type_id'),
-			'projectToAuthAssignmentToClientToTaskTypeToDutyTypes' => array(self::HAS_MANY, 'ProjectToAuthAssignmentToClientToTaskTypeToDutyType', 'client_to_task_type_to_duty_type_id'),
+			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
+			'projectToAuthAssignmentToTaskTypeToDutyTypes' => array(self::HAS_MANY, 'ProjectToAuthAssignmentToTaskTypeToDutyType', 'task_type_to_duty_type_id'),
 		);
 	}
 
@@ -84,12 +84,12 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Client To Task Type To Duty Type',
+			'id' => 'Task Type To Duty Type',
 			'naturalKey' => '(Client/Task Type/Duty Type/Role)',
 			'duty_type_id' => 'Duty Type',
 			'searchDutyType' => 'Duty Type',
-			'client_to_task_type_id' => 'Client To Task Type (Client/Task Type)',
-			'searchClientToTaskType' => 'Client To Task Type (Client/Task Type)',
+			'task_type_id' => 'Task Type (Client/Task Type)',
+			'searchTaskType' => 'Task Type (Client/Task Type)',
 			'AuthItem_name' => 'Role',
 		));
 	}
@@ -99,29 +99,20 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('dutyType.description',$this->searchDutyType,true);
 		$this->compositeCriteria($criteria,
 			array(
-				'clientToTaskType.client.name',
-				'clientToTaskType.taskType.description'
+				'client.name',
+				'taskType.description'
 			),
-			$this->searchClientToTaskType
+			$this->searchTaskType
 		);
 		$criteria->compare('AuthItem_name',$this->AuthItem_name,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
 
-		$criteria->scopes=array('notDeleted');
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-
-		$criteria->with = array('staff','dutyType','clientToTaskType.client','clientToTaskType.taskType');
+		$criteria->with = array('dutyType','taskType.client','taskType');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 
@@ -129,11 +120,10 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 			'id',
 			'dutyType.description AS searchDutyType',
 			"CONCAT_WS('$delimiter',
-				clientToTaskType.client.name,
-				clientToTaskType.taskType.description
-				) AS searchClientToTaskType",
+				client.name,
+				taskType.description
+				) AS searchTaskType",
 			'AuthItem_name',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;
@@ -145,10 +135,10 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-				'clientToTaskType.client'=>array('name'),
-				'clientToTaskType.taskType'=>array('description'),
-				'dutyType'=>array('description'),
-				'AuthItem_name'
+			'taskType.client'=>'name',
+			'taskType'=>'description',
+			'dutyType'=>'description',
+			'AuthItem_name'
 		);
 	}
 
@@ -158,7 +148,7 @@ class ClientToTaskTypeToDutyType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchDutyType', 'searchClientToTaskType');
+		return array('searchDutyType', 'searchTaskType');
 	}
 
 }

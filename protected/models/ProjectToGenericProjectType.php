@@ -83,8 +83,8 @@ class ProjectToGenericProjectType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Project To Generic Project Type',
-			'generic_project_type_id' => 'Generic Project Type',
-			'searchGenericProjectType' => 'Generic Project Type',
+			'generic_project_type_id' => 'Generic Project Type (Client/Project type/Generic type)',
+			'searchGenericProjectType' => 'Generic Project Type (Client/Project type/Generic type)',
 			'project_id' => 'Project',
 			'searchProject' => 'Project',
 			'generic_id' => 'Generic',
@@ -103,24 +103,25 @@ class ProjectToGenericProjectType extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('genericProjectType.genericType.description',$this->searchGenericProjectType);
-		$criteria->compare('project.id',$this->searchProject,true);
+		$this->compositeCriteria($criteria, array(
+			'genericProjectType.client.name',
+			'genericProjectType.projectType.description',
+			'genericProjectType.genericType.description',
+			), $this->searchGenericProjectType);
+		$criteria->compare('project.description',$this->searchProject,true);
 		$criteria->compare('generic.id',$this->searchGeneric,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-	
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
 		
-		$criteria->with = array('staff','genericProjectType.genericType','project','generic');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
+		$criteria->with = array('genericProjectType.genericType','project','generic');
 
 		$criteria->select=array(
 			'id',
-			'genericProjectType.genericType.description AS searchGenericProjectType',
-			'project.id AS searchProject',
+			"CONCAT_WS('$delimiter',
+				genericProjectType.client.name,
+				genericProjectType.projectType.description,
+				genericProjectType.genericType.description,
+				) AS searchGenericProjectType",
+			'project.description AS searchProject',
 			'generic.id AS searchGeneric',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

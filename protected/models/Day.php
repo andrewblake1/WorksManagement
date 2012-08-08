@@ -94,14 +94,6 @@ class Day extends ActiveRecord
 		$criteria->compare('preferred',$this->preferred,true);
 		$criteria->compare('earliest',$this->earliest,true);
 		$criteria->compare('planned',$this->planned,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-	
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-		
-		$criteria->with = array('staff');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
 
 		$criteria->select=array(
 			'id',
@@ -109,7 +101,6 @@ class Day extends ActiveRecord
 			'preferred',
 			'earliest',
 			'planned',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

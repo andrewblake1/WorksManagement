@@ -8,7 +8,7 @@
 
 	<?php echo $form->textFieldRow($model,'task_id',array('class'=>'span5','maxlength'=>10)); ?>
 
-	<?php echo $form->textFieldRow($model,'project_to_AuthAssignment_to_client_to_task_type_to_duty_type_id',array('class'=>'span5','maxlength'=>10)); ?>
+	<?php echo $form->textFieldRow($model,'project_to_AuthAssignment_to_task_type_to_duty_type_id',array('class'=>'span5','maxlength'=>10)); ?>
 
 	<?php echo $form->textFieldRow($model,'updated',array('class'=>'span5')); ?>
 

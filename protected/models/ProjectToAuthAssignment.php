@@ -91,9 +91,6 @@ class ProjectToAuthAssignment extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
@@ -108,25 +105,19 @@ class ProjectToAuthAssignment extends ActiveRecord
 			),
 			$this->searchAuthAssignment
 		);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-	
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
 		
-		$criteria->with = array('staff','authAssignment.itemname','authAssignment.user','project');
+		$criteria->with = array('authAssignment.itemname','authAssignment.user','project');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
-
 		$criteria->select=array(
 			'id',
-			'project.id',
+			'project.id AS searchProject',
 			"CONCAT_WS('$delimiter',
 				authAssignment.itemname,
 				authAssignment.user.first_name,
 				authAssignment.user.last_name,
 				authAssignment.user.email
 				) AS searchAuthAssignment",
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

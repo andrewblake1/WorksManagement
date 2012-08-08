@@ -5,10 +5,10 @@
 	'attributes'=>array(
 		'id',
 		'description',
+		'project_type_id',
 		'travel_time_1_way',
 		'critical_completion',
 		'planned',
-		'client_id',
 		'staff_id',
 	),
 )); ?>

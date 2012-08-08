@@ -10,7 +10,7 @@ $form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
 
 	echo $form->textFieldRow($model,'type_date',array('class'=>'span5'));
 
-	echo $form->textFieldRow($model,'type_text',array('class'=>'span5','maxlength'=>255)); ?>
+	echo $form->textFieldRow($model,'type_text',array('class'=>'span5','maxlength'=>255));
 
 $this->endWidget();
 

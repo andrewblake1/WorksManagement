@@ -12,9 +12,9 @@ $this->widget('adminViewWidget',array(
 			'type'=>'raw',
 		),
          array(
-			'name'=>'searchClientToTaskTypeToDutyType',
-			'value'=>'CHtml::link($data->searchClientToTaskTypeToDutyType,
-				Yii::app()->createUrl("ClientToTaskTypeToDutyType/update", array("id"=>$data->client_to_task_type_to_duty_type_id))
+			'name'=>'searchTaskTypeToDutyType',
+			'value'=>'CHtml::link($data->searchTaskTypeToDutyType,
+				Yii::app()->createUrl("TaskTypeToDutyType/update", array("id"=>$data->task_type_to_duty_type_id))
 			)',
 			'type'=>'raw',
 		),

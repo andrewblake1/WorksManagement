@@ -12,7 +12,7 @@ $form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
 
 	ProjectController::listWidgetRow($model, $form, 'project_id');
 
-	ClientToTaskTypeController::listWidgetRow($model, $form, 'client_to_task_type_id');
+	TaskTypeController::listWidgetRow($model, $form, 'task_type_id');
 
 $this->endWidget();
 

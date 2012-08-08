@@ -89,28 +89,18 @@ class PurchaseOrder extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('supplier.name',$this->searchSupplier);
 		$criteria->compare('number',$this->number,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-	
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
 		
-		$criteria->with = array('staff','supplier');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
+		$criteria->with = array('supplier');
 
 		$criteria->select=array(
 			'id',
 			'supplier.name AS searchSupplier',
 			'number',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;
@@ -123,7 +113,7 @@ class PurchaseOrder extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'supplier'=>array('name'),
+			'supplier'=>'name',
 			'number',
 		);
 	}

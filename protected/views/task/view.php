@@ -9,7 +9,7 @@
 		'purchase_order_id',
 		'crew_id',
 		'project_id',
-		'client_to_task_type_id',
+		'task_type_id',
 		'staff_id',
 	),
 )); ?>

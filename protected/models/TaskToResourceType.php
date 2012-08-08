@@ -98,9 +98,6 @@ class TaskToResourceType extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
@@ -109,12 +106,8 @@ class TaskToResourceType extends ActiveRecord
 		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('hours',$this->hours);
 		$criteria->compare('start',$this->start,true);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-	
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
 		
-		$criteria->with = array('staff','task','resourceType');
+		$criteria->with = array('task','resourceType');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 
@@ -125,7 +118,6 @@ class TaskToResourceType extends ActiveRecord
 			'quantity',
 			'hours',
 			'start',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;

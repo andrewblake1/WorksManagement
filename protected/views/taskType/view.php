@@ -5,8 +5,9 @@
 	'attributes'=>array(
 		'id',
 		'description',
+		'description',
+		'client_id',
 		'deleted',
-		'template_task_id',
 		'staff_id',
 	),
 )); ?>

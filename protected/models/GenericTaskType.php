@@ -5,8 +5,7 @@
  *
  * The followings are the available columns in table 'generic_task_type':
  * @property integer $id
- * @property integer $client_to_task_type_id
- * @property string $description
+ * @property integer $task_type_id
  * @property integer $generic_task_category_id
  * @property integer $generic_type_id
  * @property integer $deleted
@@ -16,7 +15,7 @@
  * @property GenericType $genericType
  * @property Generictaskcategory $genericTaskCategory
  * @property Staff $staff
- * @property ClientToTaskType $clientToTaskType
+ * @property TaskType $taskType
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
  */
 class GenericTaskType extends ActiveRecord
@@ -25,7 +24,7 @@ class GenericTaskType extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchClientToTaskType;
+	public $searchTaskType;
 	public $searchGenericTaskCategory;
 	public $searchGenericType;
 	
@@ -55,12 +54,11 @@ class GenericTaskType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('client_to_task_type_id, description, generic_type_id, staff_id', 'required'),
-			array('client_to_task_type_id, generic_task_category_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>64),
+			array('task_type_id, generic_type_id, staff_id', 'required'),
+			array('task_type_id, generic_task_category_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchClientToTaskType, description, searchGenericTaskCategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
+			array('id, searchTaskType, searchGenericTaskCategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -75,7 +73,7 @@ class GenericTaskType extends ActiveRecord
 			'genericType' => array(self::BELONGS_TO, 'GenericType', 'generic_type_id'),
 			'genericTaskCategory' => array(self::BELONGS_TO, 'Generictaskcategory', 'generic_task_category_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'clientToTaskType' => array(self::BELONGS_TO, 'ClientToTaskType', 'client_to_task_type_id'),
+			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
 			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'generic_task_type_id'),
 		);
 	}
@@ -87,8 +85,8 @@ class GenericTaskType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Generic Task Type',
-			'client_to_task_type_id' => 'Client To Task Type (Client/Task type)',
-			'searchClientToTaskType' => 'Client To Task Type (Client/Task type)',
+			'task_type_id' => 'Task Type (Client/Task type)',
+			'searchTaskType' => 'Task Type (Client/Task type)',
 			'generic_task_category_id' => 'Generic Task Category',
 			'searchGenericTaskCategory' => 'Generic Task Category',
 			'generic_type_id' => 'Generic Type',
@@ -101,25 +99,19 @@ class GenericTaskType extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$this->compositeCriteria($criteria, array('clientToTaskType.client.name','clientToTaskType.taskType.description'), $this->searchClientToTaskType);
-		$criteria->compare('description',$this->description,true);
+		$this->compositeCriteria($criteria, array(
+			'taskType.client.name',
+			'taskType.taskType.description'
+		), $this->searchTaskType);
 		$criteria->compare('genericTaskCategory.description',$this->searchGenericTaskCategory);
 		$criteria->compare('genericType.description',$this->searchGenericType);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
 		
 		$criteria->with = array(
-			'staff',
-			'clientToTaskType.client',
-			'clientToTaskType.taskType',
+			'taskType.client',
+			'taskType',
 			'genericTaskCategory',
 			'genericType',
 			);
@@ -129,16 +121,26 @@ class GenericTaskType extends ActiveRecord
 		$criteria->select=array(
 			'id',
 			"CONCAT_WS('$delimiter',
-				clientToTaskType.client.name,
-				clientToTaskType.taskType.description
-				) AS searchClientToTaskType",
-			'description',
+				client.name,
+				taskType.description
+				) AS searchTaskType",
 			'genericTaskCategory.description AS searchGenericTaskCategory',
 			'genericType.description AS searchGenericType',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;
+	}
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+			'client.name',
+			'taskType.description',
+			'genericType.description',
+		);
 	}
 
 	/**
@@ -147,7 +149,7 @@ class GenericTaskType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchClientToTaskType', 'searchGenericTaskCategory', 'searchGenericType');
+		return array('searchTaskType', 'searchGenericTaskCategory', 'searchGenericType');
 	}
 
 }

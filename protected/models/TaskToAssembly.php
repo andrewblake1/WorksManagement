@@ -102,21 +102,14 @@ class TaskToAssembly extends ActiveRecord
 		$criteria->compare('task.description',$this->searchTask,true);
 		$criteria->compare('assembly.description',$this->searchAssembly);
 		$criteria->compare('quantity',$this->quantity);
-		$this->compositeCriteria($criteria, array('staff.first_name','staff.last_name','staff.email'), $this->searchStaff);
-	
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
 		
-		$criteria->with = array('staff','assembly','task');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
+		$criteria->with = array('assembly','task');
 
 		$criteria->select=array(
 			'id',
 			'task.description AS searchTask',
 			'assembly.description AS searchAssembly',
 			'quantity',
-			"CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff",
 		);
 
 		return $criteria;
