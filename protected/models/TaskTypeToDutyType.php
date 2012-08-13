@@ -135,7 +135,7 @@ class TaskTypeToDutyType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'taskType.client'=>'name',
+			'taskType->client'=>'name',
 			'taskType'=>'description',
 			'dutyType'=>'description',
 			'AuthItem_name'

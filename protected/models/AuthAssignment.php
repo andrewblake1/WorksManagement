@@ -137,7 +137,7 @@ class AuthAssignment extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'user'=>'first_name','last_name','email',
+			'user'=>'first_name',
 			'user'=>'last_name',
 			'user'=>'last_name',
 			'itemname',

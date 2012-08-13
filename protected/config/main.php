@@ -100,6 +100,19 @@ return array(
 			'functions'=>array(
 				'class'=>'application.components.Functions',
 			),
+			
+/*			// widget factory
+			'widgetFactory'=>array(
+				'class'=>CWidgetFactory,
+				'widgets'=>array(
+					'CDetailView'=>array(
+						'htmlOptions'=>array(
+							'class'=>'boxedDetail zebra-striped',
+						),
+					),
+				),
+			),*/
+
 		),
 
 		// application-level parameters that can be accessed

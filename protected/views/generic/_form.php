@@ -1,16 +1,16 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	echo $form->textFieldRow($model,'type_int',array('class'=>'span5'));
+	$form->textFieldRow('type_int');
 
-	echo $form->textFieldRow($model,'type_float',array('class'=>'span5'));
+	$form->textFieldRow('type_float');
 
-	echo $form->textFieldRow($model,'type_time',array('class'=>'span5'));
+	$form->textFieldRow('type_time');
 
-	echo $form->textFieldRow($model,'type_date',array('class'=>'span5'));
+	$form->textFieldRow('type_date');
 
-	echo $form->textFieldRow($model,'type_text',array('class'=>'span5','maxlength'=>255));
+	$form->textFieldRow('type_text');
 
 $this->endWidget();
 

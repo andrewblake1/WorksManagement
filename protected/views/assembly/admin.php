@@ -1,6 +1,6 @@
 <?php
 
-$this->widget('adminViewWidget',array(
+$this->widget('AdminViewWidget',array(
 	'model'=>$model,
 	'columns'=>array(
 		'id',

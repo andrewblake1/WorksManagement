@@ -51,14 +51,14 @@
 			</div>
 */ ?>
 
-<?php $this->widget('bootstrap.widgets.BootNavbar', array(
+<?php $this->widget('bootstrap.widgets.TbNavbar', array(
     'fixed'=>false,
     'brand'=>Yii::app()->name,
     'brandUrl'=>'#',
     'collapse'=>true, // requires bootstrap-responsive.css
     'items'=>array(
         array(
-            'class'=>'bootstrap.widgets.BootMenu',
+            'class'=>'bootstrap.widgets.TbMenu',
             'items'=>array(
                 array('label'=>'Tables - development shortcut', 'url'=>'#', 'items'=>array(
 					array('label'=>'AuthItem', 'url'=>array('/AuthItem')),
@@ -104,7 +104,7 @@
         ),
 		$this->operations,
         array(
-            'class'=>'bootstrap.widgets.BootMenu',
+            'class'=>'bootstrap.widgets.TbMenu',
             'htmlOptions'=>array('class'=>'pull-right'),
             'items'=>array(
 				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
@@ -115,11 +115,16 @@
 )); ?>
 					
 			<?php if(isset($this->breadcrumbs)):?>
-				<?php $this->widget('bootstrap.widgets.BootBreadcrumbs', array(
+				<?php $this->widget('bootstrap.widgets.TbBreadcrumbs', array(
 					'links'=>$this->breadcrumbs,
 //					'htmlOptions'=>array('class'=>'breadcrumbs breadcrumb'),
 				)); ?><!-- breadcrumbs -->
 			<?php endif?>
+
+			<?php if(isset($this->formTitle) && $this->formTitle):?>
+				<?php echo '<h1>'.CHtml::encode($this->formTitle).'</h1>'; ?>
+			<?php endif?>
+
 		</header>
 	</div>
 	

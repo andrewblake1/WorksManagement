@@ -1,24 +1,20 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>64));
+	$form->textFieldRow('description');
 
-	echo $form->checkBoxRow($model,'mandatory');	
+	$form->checkBoxRow('mandatory');	
 
-	echo $form->checkBoxRow($model,'allow_new');
+	$form->checkBoxRow('allow_new');
 
-	echo $form->dropDownListRow(
-		$model,
-		'validation_type', $model->validationTypes);
+	$form->dropDownListRow('validation_type', $model->validationTypeLabels);
 	
-	echo $form->dropDownListRow(
-		$model,
-		'data_type', $model->dataTypes);
+	$form->dropDownListRow('data_type', $model->dataTypeLabels);
 
-	echo $form->textAreaRow($model,'validation_text',array('rows'=>6, 'cols'=>50, 'class'=>'span8'));
+	$form->textAreaRow('validation_text');
 
-	echo $form->textAreaRow($model,'validation_error',array('rows'=>6, 'cols'=>50, 'class'=>'span8'));
+	$form->textAreaRow('validation_error');
 
 $this->endWidget();
 

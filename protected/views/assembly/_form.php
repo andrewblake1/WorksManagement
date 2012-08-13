@@ -1,14 +1,14 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>255/*, 'disabled'=>'disabled'*/));
+	$form->textFieldRow('description');
 
-	echo $form->textFieldRow($model,'url',array('class'=>'span5','maxlength'=>255));
+	$form->textFieldRow('url');
 
 	MaterialController::listWidgetRow($model, $form, 'material_id');
 
-	echo $form->textFieldRow($model,'quantity',array('class'=>'span5'));
+	$form->textFieldRow('quantity');
 
 $this->endWidget();
 

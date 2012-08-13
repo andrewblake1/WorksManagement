@@ -29,6 +29,11 @@ class Controller extends CController
 	 */
 	public $modelName;
 	/**
+	 * @var string the form titel
+	 */
+	public $formTitle;
+	
+	/**
 	 * @var string the flash message to show sort and search instructions
 	 */
 	const messageSortSearch = '<p><strong>To sort,</strong> click on column name.
@@ -111,7 +116,7 @@ class Controller extends CController
 	}
 
 	// data provider for EJuiAutoCompleteFkField
-	public function actionFKAutocomplete()
+	public function actionAutocomplete()
 	{
 		// if something has been entered
 		if (isset($_GET['term']))
@@ -233,11 +238,11 @@ class Controller extends CController
 	{
 		return array(
 			array('allow',
-				'actions'=>array('admin','index','view','fkautocomplete'),
+				'actions'=>array('admin','index','view'),
 				'roles'=>array($this->modelName.'Read'),
 			),
 			array('allow',
-				'actions'=>array('create','delete','update'),
+				'actions'=>array('create','delete','update','autocomplete'),
 				'roles'=>array($this->modelName),
 			),
 			array('deny',  // deny all users
@@ -253,7 +258,7 @@ class Controller extends CController
 		if(count($this->menu))
 		{
 			$operations = array(
-				'class'=>'bootstrap.widgets.BootMenu',
+				'class'=>'bootstrap.widgets.TbMenu',
 				'items'=>array(
 					array('label'=>'Operations', 'url'=>'#', 'items'=>$this->menu),
 				),
@@ -372,7 +377,7 @@ class Controller extends CController
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
-	 */
+	 
 	public function actionView($id)
 	{
 		$this->breadcrumbs = $this->getBreadCrumbTrail();
@@ -387,7 +392,7 @@ class Controller extends CController
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
 		));
-	}
+	}*/
 
 	/**
 	 * Creates a new model.
@@ -409,13 +414,7 @@ class Controller extends CController
 			}
 		}
 
-		$this->breadcrumbs = $this->getBreadCrumbTrail('Create');
-
-//		$this->menu=array(
-//			array('label'=>$this->modelName.'s','url'=>array('index')),
-//		);
-
-		$this->render('create',array(
+		$this->widget('CreateViewWidget', array(
 			'model'=>$model,
 		));
 	}
@@ -437,19 +436,11 @@ class Controller extends CController
 			$model->attributes=$_POST[$this->modelName];
 			if($model->dbCallback('save'))
 			{
-				$this->redirect(array('admin','id'=>$model->getPrimaryKey()));
+				$this->redirect(array('admin'));
 			}
 		}
 
-		$this->breadcrumbs = $this->getBreadCrumbTrail('Update');
-
-		$this->menu=array(
-//			array('label'=>$this->modelName.'s','url'=>array('index')),
-			array('label'=>'Create '.$this->modelName,'url'=>array('create')),
-//			array('label'=>'View '.$this->modelName,'url'=>array('view','id'=>$model->id)),
-		);
-
-		$this->render('update',array(
+		$this->widget('UpdateViewWidget', array(
 			'model'=>$model,
 		));
 	}

@@ -1,6 +1,6 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	TaskTypeController::listWidgetRow($model, $form, 'task_type_id');
 

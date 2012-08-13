@@ -23,21 +23,68 @@
 class GenericType extends ActiveRecord
 {
 	/**
-	 * Returns data types.
+	 * Data types. These are the emum values set by the DataType custom type within 
+	 * the database
+	 */
+	const dataTypeDate = 'Date';
+	const dataTypeFloat = 'Float';
+	const dataTypeInt = 'Int';
+	const dataTypeText = 'Text';
+	const dataTypeTime  = 'Time';
+
+	/**
+	 * Validation types. These are the emum values set by the ValidationType custom type within
+	 * the database
+	 */
+	const validationTypeNone = 'None';
+	const validationTypePCRE = 'PCRE';
+	const validationTypeRange = 'Range';
+	const validationTypeSQLSelect = 'SQL select';
+	const validationTypeValueList = 'Value list';
+
+	/**
+	 * Returns data type labels.
 	 * @return array data storage types - to match enum type in mysql workbench
 	 */
-	public static function getDataTypes()
+	public static function getDataTypeLabels()
 	{
-		return array(1=>'Date', 2=>'Float' ,3=>'Int', 4=>'Text' , 5=>'Time');
+		return array(
+			self::dataTypeDate=>'Date',
+			self::dataTypeFloat=>'Float',
+			self::dataTypeInt=>'Int',
+			self::dataTypeText=>'Text' ,
+			self::dataTypeTime=>'Time',
+		);
+	}
+
+	/**
+	 * Returns data type column names.
+	 * @return array data storage types - to match enum type in mysql workbench
+	 */
+	public static function getDataTypeColumnNames()
+	{
+		return array(
+			self::dataTypeDate=>'type_date',
+			self::dataTypeFloat=>'type_float',
+			self::dataTypeInt=>'type_int',
+			self::dataTypeText=>'type_text' ,
+			self::dataTypeTime=>'type_time',
+		);
 	}
 
 	/**
 	 * Returns validation types.
 	 * @return array validation types - to match enum type in mysql workbench
 	 */
-	public static function getValidationTypes()
+	public static function getValidationTypeLabels()
 	{
-		return array(1=>'None', 2=>'PCRE', 3=>'SQL select', 4=>'Value list');
+		return array(
+			self::validationTypeNone=>'None',
+			self::validationTypePCRE=>'PCRE',
+			self::validationTypeRange=>'Range',
+			self::validationTypeSQLSelect=>'SQL select',
+			self::validationTypeValueList=>'Value list'
+		);
 	}
 
 	/**
@@ -75,7 +122,68 @@ class GenericType extends ActiveRecord
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, description, mandatory, allow_new, validation_type, data_type, validation_text, validation_error, searchStaff', 'safe', 'on'=>'search'),
+			array('validation_text', 'validationText'),
 		);
+	}
+
+	/**
+	* @param string $attribute the name of the attribute to be validated
+	* @param array $params options specified in the validation rule
+	*/
+	public function validationText($attribute, $params)
+	{
+		$errorMessage = NULL;
+		
+		switch($this->validation_type)
+		{
+			// Value list
+			case self::validationTypeValueList :
+				if(!$this->$attribute)
+					$errorMessage = 'You must provide at least one value or several values seperated by a comma.';
+				break;
+				
+			// Perl compatible regular expression
+			case self::validationTypePCRE :
+				// Turn off error reporting
+				$old_error = error_reporting(0);
+				if(preg_match($this->$attribute, '') === false) 
+				{
+					$errorMessage = 'There is an error in your expression. Remember this
+						is perl compatible flavor which means the first and last characters must be the same ( / or
+						# are commonly used e.g. #\d+# or /^[0-9]*$/ ). The error was:<br>'.preg_last_error();
+				}
+				// Set error reporting to old level
+				error_reporting($old_error);
+				break;
+				
+			// Numeric range
+			case self::validationTypeRange :
+				if(!preg_match('/^\s*\d+\s*[\-]\s*\d+\s*$/', $this->$attribute))
+					$errorMessage = 'Invalid range given - must be positive integers
+						seperated by a hyhpen(-) e.g. 5-10.';
+				break;
+				
+  			// SQL select
+			case self::validationTypeSQLSelect:
+//TODO: open another database connection as this user whenever entering user entered sql.
+//otherwise they can run their sql with full application access rights
+				// test if sql is valid
+				try
+				{
+					// if no rows returned
+					if(!sizeof(Yii::app()->db->createCommand($this->$attribute)->queryAll()))
+						$errorMessage = 'No rows are being returned by your query which means there is nothing to select.';
+				}
+				catch(Exception $e)
+				{
+					$errorMessage = 'You have an error in your expression, the database says:<br> '.$e->getMessage();
+				}
+				break;
+		}
+		
+		// if validation failed
+		if($errorMessage)
+			$this->addError($attribute, $errorMessage);
 	}
 
 	/**

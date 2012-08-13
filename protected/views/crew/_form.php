@@ -1,12 +1,12 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	echo $form->textFieldRow($model,'preferred_date',array('class'=>'span5'));
+	$form->textFieldRow('preferred_date');
 
-	echo $form->textFieldRow($model,'earliest_date',array('class'=>'span5'));
+	$form->textFieldRow('earliest_date');
 
-	echo $form->textFieldRow($model,'date_scheduled',array('class'=>'span5'));
+	$form->textFieldRow('date_scheduled');
 
 	StaffController::listWidgetRow($model, $form, 'in_charge_id');
 

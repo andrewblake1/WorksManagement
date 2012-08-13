@@ -137,9 +137,9 @@ class GenericTaskType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'client.name',
-			'taskType.description',
-			'genericType.description',
+			'client->name',
+			'taskType->description',
+			'genericType->description',
 		);
 	}
 

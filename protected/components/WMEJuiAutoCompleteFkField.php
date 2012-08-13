@@ -1,51 +1,63 @@
 <?php
-
-/**
- * Autocomplete widget that extends EJuiAutoCompleteFkField extension for WM.
- * WMEJuiAutoCompleteFkField class file.
- * @author Andrew Blake <andrew@newzealandfishing.com>
- * @copyright  Copyright &copy; Andrew Blake 2012-
- * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
- *
- * @param WMBootActiveForm $form the form
- * @param ActiveRecord $model the model
- * @param string $relName the relation name
- * @param string $fkField the foreign key field
- * @param int $autoCompleteLength the length of the AutoComplete/display field, defaults to 50
- * @param bool $showFKField set 'true' to display the FK field with 'readonly' attribute
- * @param int $FKFieldSize display size of the FK field. Only matters if not hidden. Defaults to 10
- * @param array $htmlOptions html options
- * @param array $options any attributes of CJuiAutoComplete and jQuery JUI AutoComplete widget may
- *		also be defined. Read the code and docs for all options
+/*
+ * Autocomplete using a foreign key field
  */
-
-class WMEJuiAutoCompleteFkField extends EJuiAutoCompleteFkField
+class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 {
-	public $form;
-	public $model;
-	public $relName;
-	public $fkField;
-	public $autoCompleteLength = 50;
-	public $showFKField = false;
-	public $FKFieldSize = 10;
-	public $htmlOptions = array();
-	public $options = array('minLength'=>1); 
-	
+
 	/**
-	 * Displays a particular model.
+	 * @var string the foreign key field.
 	 */
+	public $fkField;
+	/**
+	 * @var string the relation name to the FK table
+	 */
+	public $relName;
+
     public function init()
     {
-        // this method is called by CController::beginWidget()
-		parent::init();
-		echo $this->form->labelEx($this->model,$this->fkField);
+  		$relations = $this->model->relations();
+		$fKModelType = $relations[$this->relName][1];
+		$attr = $this->attribute = $relations[$this->relName][2];				//the FK field (from CJuiInputWidget)
+        $tempHtmlOpts = array();
+        CHtml::resolveNameID($this->model, $attr, $tempHtmlOpts);
+        $id = $tempHtmlOpts['id'];
+        $this->_fieldID = $id;
+        $this->_saveID = $id . '_save';
+        $this->_lookupID = $id .'_lookup';
+
+        $value = CHtml::resolveValue($this->model, $this->attribute);
+
+		foreach($fKModelType::getDisplayAttr() as $key => $field)
+		{
+			if(is_numeric($key))
+			{
+				eval('$this->_display[] = $this->model->{$this->relName}->'."$field;");
+			}
+			else
+			{
+				eval('$this->_display[] = $this->model->{$this->relName}->'."$key->$field;");
+			}
+		}
+		
+		$this->sourceUrl = Yii::app()->createUrl("$fKModelType/autocomplete",
+			array(
+				'fk_model' => $fKModelType
+			)); 
+
+		$this->_display=(!empty($value) ? implode(Yii::app()->params['delimiter']['display'], $this->_display) : '');
+
+		parent::init(); // ensure necessary assets are loaded
+
+		echo $this->form->labelEx($this->model, $this->fkField);
 	}
- 
+	
     public function run()
     {
-        // this method is called by CController::endWidget()
-		parent::run();
-		echo $this->form->error($this->model,$this->fkField);
+ 
+        parent::run();
+		
+		echo $this->form->error($this->model, $this->fkField);
     }
 }
 

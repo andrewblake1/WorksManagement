@@ -1,16 +1,16 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	echo $form->textFieldRow($model,'name',array('class'=>'span5','maxlength'=>64));
+	$form->textFieldRow('name');
 
-	echo $form->textFieldRow($model,'type',array('class'=>'span5'));
+	$form->textFieldRow('type');
 
-	echo $form->textAreaRow($model,'description',array('rows'=>6, 'cols'=>50, 'class'=>'span8'));
+	$form->textAreaRow('description');
 
-	echo $form->textAreaRow($model,'bizrule',array('rows'=>6, 'cols'=>50, 'class'=>'span8'));
+	$form->textAreaRow('bizrule');
 
-	echo $form->textAreaRow($model,'data',array('rows'=>6, 'cols'=>50, 'class'=>'span8'));
+	$form->textAreaRow('data');
 
 $this->endWidget();
 

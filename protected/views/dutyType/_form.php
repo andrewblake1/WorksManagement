@@ -1,10 +1,10 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>64));
+	$form->textFieldRow('description');
 
-	echo $form->textFieldRow($model,'lead_in_days',array('class'=>'span5'));
+	$form->textFieldRow('lead_in_days');
 
 	DutyCategoryController::listWidgetRow($model, $form, 'duty_category_id');
 

@@ -1,10 +1,10 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	echo $form->textAreaRow($model,'description',array('rows'=>6, 'cols'=>50, 'class'=>'span8'));
+	$form->textAreaRow('description');
 
-	echo $form->textFieldRow($model,'day',array('class'=>'span5','maxlength'=>10));
+	$form->textFieldRow('day');
 
 	PurchaseOrderController::listWidgetRow($model, $form, 'purchase_order_id');
 

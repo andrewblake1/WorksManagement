@@ -155,12 +155,12 @@ class EJuiAutoCompleteFkField extends CJuiAutoComplete {
 	 */
 	private $_fieldID;
         
-	/**
+ 	/**
 	 * @var string the ID of the hidden field to save the display value
 	 */
 	private $_saveID;
         
-	/**
+ 	/**
 	 * @var string the ID of the AutoComplete field
 	 */
 	private $_lookupID;
@@ -203,7 +203,7 @@ class EJuiAutoCompleteFkField extends CJuiAutoComplete {
 			}
 		}
 		
-		$this->sourceUrl = Yii::app()->createUrl("$fKModelType/fkautocomplete",
+		$this->sourceUrl = Yii::app()->createUrl("$fKModelType/autocomplete",
 			array(
 				'fk_model' => $fKModelType
 			)); 
@@ -237,13 +237,13 @@ class EJuiAutoCompleteFkField extends CJuiAutoComplete {
         } else {
             echo CHtml::activeHiddenField($this->model,$this->attribute);
         }
-        
+
         // second, the hidden field used to refresh the display value
         echo CHtml::hiddenField($this->_saveID,$this->_display, array('id'=>$this->_saveID)); 
 
         // third, the autoComplete field itself
         $this->htmlOptions['id'] = $this->_lookupID;
-        $this->htmlOptions['name'] = $this->_lookupID;       
+        $this->htmlOptions['name'] = $this->_lookupID;   
         parent::run();
 
 /*        // fouth, an image button to empty all three fields

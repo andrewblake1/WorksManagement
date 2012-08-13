@@ -1,16 +1,26 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model, 'models'=>$models));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'models'=>$models));
 
-	echo $form->textFieldRow($model,'description',array('class'=>'span5','maxlength'=>255));
+	$form->textFieldRow('description');
 	
-	ProjectTypeController::listWidgetRow($model, $form, 'project_type_id');
+	// only show the project type drop down when creating
+	if($model->isNewRecord)
+		ProjectTypeController::listWidgetRow($model, $form, 'project_type_id');
 
-	echo $form->textFieldRow($model,'travel_time_1_way',array('class'=>'span5'));
+	$form->textFieldRow('travel_time_1_way');
 
-	echo $form->textFieldRow($model,'critical_completion',array('class'=>'span5'));
+	$form->textFieldRow('critical_completion');
 
-	echo $form->textFieldRow($model,'planned',array('class'=>'span5'));
+	$form->textFieldRow('planned');
+	
+	// generics
+	$this->widget('GenericWidgets',array(
+		'model'=>$model,
+		'form'=>$form,
+		'toGenericTypeRelation'=>'projectToGenericProjectTypes',
+		'genericTypeRelation'=>'genericProjectType',
+	));
 
 $this->endWidget();
 

@@ -1,6 +1,6 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	ProjectToAuthAssignmentController::listWidgetRow($model, $form, 'project_to_AuthAssignment_id');
 

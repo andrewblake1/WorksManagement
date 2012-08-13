@@ -285,6 +285,19 @@ abstract class ActiveRecord extends CActiveRecord
 		return $return;
 	}
 
+	/*
+	 * automatically add max length attribute to inputs to save being in view file
+	 * From http://www.yiiframework.com/forum/index.php/topic/3320-automatic-maxlength-attribute-for-input-fields-type-text-or-password/
+	 */
+	public function getAttributeMaxLength($attribute)
+	{
+		$validators = $this->getValidators($attribute);
+		foreach($validators as $validator)
+		{
+			if($validator instanceof CStringValidator)
+				return $validator->max;
+		}
+	}
 }
 
 ?>

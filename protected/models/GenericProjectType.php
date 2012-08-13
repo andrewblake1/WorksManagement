@@ -137,9 +137,9 @@ class GenericProjectType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'client.name',
-			'projectType.description',
-			'genericType.description',
+			'projectType->client->name',
+			'projectType->description',
+			'genericType->description',
 		);
 	}
 

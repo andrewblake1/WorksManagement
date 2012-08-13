@@ -151,14 +151,14 @@ class ProjectToAuthAssignmentToTaskTypeToDutyType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'projectToAuthAssignment.project'=>'id',
-			'projectToAuthAssignment.authAssignment'=>'itemname',
-			'projectToAuthAssignment.authAssignment.user'=>'first_name',
-			'projectToAuthAssignment.authAssignment.user'=>'last_name',
-			'projectToAuthAssignment.authAssignment.user'=>'email',
-			'taskTypeToDutyType.taskType.client'=>'name',
-			'taskTypeToDutyType.taskType.taskType'=>'description',
-			'taskTypeToDutyType.dutyType'=>'description',
+			'projectToAuthAssignment->project'=>'id',
+			'projectToAuthAssignment->authAssignment'=>'itemname',
+			'projectToAuthAssignment->authAssignment->user'=>'first_name',
+			'projectToAuthAssignment->authAssignment->user'=>'last_name',
+			'projectToAuthAssignment->authAssignment->user'=>'email',
+			'taskTypeToDutyType->taskType->client'=>'name',
+			'taskTypeToDutyType->taskType->taskType'=>'description',
+			'taskTypeToDutyType->dutyType'=>'description',
 		);
 	}
 

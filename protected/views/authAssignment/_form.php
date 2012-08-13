@@ -1,14 +1,14 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	echo $form->textFieldRow($model,'itemname',array('class'=>'span5','maxlength'=>64));
+	$form->textFieldRow('itemname');
 
 	StaffController::listWidgetRow($model, $form, 'userid');
 
-	echo $form->textAreaRow($model,'bizrule',array('rows'=>6, 'cols'=>50, 'class'=>'span8'));
+	$form->textAreaRow('bizrule');
 
-	echo $form->textAreaRow($model,'data',array('rows'=>6, 'cols'=>50, 'class'=>'span8'));
+	$form->textAreaRow('data');
 
 $this->endWidget();
 

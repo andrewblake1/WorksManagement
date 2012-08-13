@@ -13,7 +13,6 @@
  *
  * The followings are the available model relations:
  * @property GenericProjectType[] $genericProjectTypes
- * @property Project[] $projects
  * @property Staff $staff
  * @property Project $templateProject
  * @property Client $client
@@ -72,7 +71,6 @@ class ProjectType extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'genericProjectTypes' => array(self::HAS_MANY, 'GenericProjectType', 'project_type_id'),
-			'projects' => array(self::HAS_MANY, 'Project', 'project_type_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'templateProject' => array(self::BELONGS_TO, 'Project', 'template_project_id'),
 			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),

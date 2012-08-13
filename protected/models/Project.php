@@ -27,6 +27,11 @@ class Project extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchProjectType;
+	/**
+	 * @var integer $project_type_id dummy value used when creating projects
+	 * but not needed needed to be persistant
+	 */
+	public $project_type_id;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -54,13 +59,13 @@ class Project extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, project_type_id, staff_id', 'required'),
+			array('description, staff_id', 'required'),
 			array('project_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			array('travel_time_1_way, critical_completion, planned', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, travel_time_1_way, critical_completion, planned, searchProjectType, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, travel_time_1_way, critical_completion, planned, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -108,16 +113,6 @@ class Project extends ActiveRecord
 		$criteria->compare('travel_time_1_way',$this->travel_time_1_way,true);
 		$criteria->compare('critical_completion',$this->critical_completion,true);
 		$criteria->compare('planned',$this->planned,true);
-		$this->compositeCriteria(
-			$criteria,
-			array(
-				'projectType.client.name',
-				'projectType.description'
-			),
-			$this->searchProjectType
-		);
-
-		$criteria->with = array('projectType.client','projectType');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 		$criteria->select=array(
@@ -135,12 +130,5 @@ class Project extends ActiveRecord
 		return $criteria;
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchProjectType');
-	}
+
 }

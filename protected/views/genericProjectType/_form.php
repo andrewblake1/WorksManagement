@@ -1,6 +1,6 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	ProjectTypeController::listWidgetRow($model, $form, 'project_type_id');
 

@@ -1,16 +1,16 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	echo $form->textFieldRow($model,'first_name',array('class'=>'span5','maxlength'=>64));
+	$form->textFieldRow('first_name');
 
-	echo $form->textFieldRow($model,'last_name',array('class'=>'span5','maxlength'=>64));
+	$form->textFieldRow('last_name');
 
-	echo $form->textFieldRow($model,'phone_mobile',array('class'=>'span5','maxlength'=>64));
+	$form->textFieldRow('phone_mobile');
 
-	echo $form->textFieldRow($model,'email',array('class'=>'span5','maxlength'=>255));
+	$form->textFieldRow('email');
 
-	echo $form->passwordFieldRow($model,'password',array('class'=>'span5','maxlength'=>32));
+	$form->passwordFieldRow('password');
 
 $this->endWidget();
 

@@ -1,12 +1,12 @@
 <?php
 
-$form=$this->beginWidget('WMBootActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	MaterialController::listWidgetRow($model, $form, 'material_id');
 
-	echo $form->textFieldRow($model,'task_id',array('class'=>'span5','maxlength'=>10));
+	$form->textFieldRow('task_id');
 
-	echo $form->textFieldRow($model,'quantity',array('class'=>'span5'));
+	$form->textFieldRow('quantity');
 
 $this->endWidget();
 

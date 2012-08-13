@@ -131,7 +131,9 @@ class Crew extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'inCharge'=>array('first_name', 'last_name', 'email'),
+			'inCharge'=>'first_name',
+			'inCharge'=>'last_name',
+			'inCharge'=>'email',
 			'date_scheduled'
 		);
 	}

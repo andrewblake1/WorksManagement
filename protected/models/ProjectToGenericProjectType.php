@@ -104,21 +104,23 @@ class ProjectToGenericProjectType extends ActiveRecord
 
 		$criteria->compare('id',$this->id,true);
 		$this->compositeCriteria($criteria, array(
-			'genericProjectType.client.name',
+			'genericProjectType.projectType.client.name',
 			'genericProjectType.projectType.description',
 			'genericProjectType.genericType.description',
 			), $this->searchGenericProjectType);
 		$criteria->compare('project.description',$this->searchProject,true);
 		$criteria->compare('generic.id',$this->searchGeneric,true);
 		
-		$criteria->with = array('genericProjectType.genericType','project','generic');
+		$criteria->with = array('genericProjectType.projectType.client','genericProjectType.projectType', 'genericProjectType.genericType','project','generic');
+
+		$delimiter = Yii::app()->params['delimiter']['display'];
 
 		$criteria->select=array(
 			'id',
 			"CONCAT_WS('$delimiter',
-				genericProjectType.client.name,
-				genericProjectType.projectType.description,
-				genericProjectType.genericType.description,
+				client.name,
+				projectType.description,
+				genericType.description
 				) AS searchGenericProjectType",
 			'project.description AS searchProject',
 			'generic.id AS searchGeneric',
