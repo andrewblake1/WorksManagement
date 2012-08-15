@@ -2583,3 +2583,230 @@ in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controlle
 in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/WMEJuiAutoCompleteFkField.php(35) : eval()'d code (1)
 in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/WMEJuiAutoCompleteFkField.php (35)
 in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (714)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (103)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (328)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (103)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (328)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (103)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.web.filters.CFilterChain] Running filter ProjectController.filteraccessControl()
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "authManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "db" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.db.CDbConnection] Opening DB connection
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthAssignment`
+WHERE userid=:userid
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthItem`
+WHERE name=:name
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.web.auth.CDbAuthManager] Checking permission "ProjectRead"
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT `parent`
+FROM `AuthItemChild`
+WHERE child=:name
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthItem`
+WHERE name=:name
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.web.auth.CDbAuthManager] Checking permission "default"
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SHOW COLUMNS FROM `project`
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (384)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `project`
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (384)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "functions" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (402)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "themeManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (425)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "widgetFactory" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (425)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthAssignment`
+WHERE userid=:userid
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (26)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (425)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthItem`
+WHERE name=:name
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (26)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (425)
+2012/08/16 11:19:51 [trace] [system.web.auth.CDbAuthManager] Checking permission "system admin"
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (26)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (425)
+2012/08/16 11:19:51 [trace] [system.db.ar.CActiveRecord] Project.count()
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SHOW COLUMNS FROM `project_type`
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `project_type`
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SHOW COLUMNS FROM `client`
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `client`
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SHOW COLUMNS FROM `staff`
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `staff`
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.db.ar.CActiveRecord] Project.count() eagerly
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT COUNT(DISTINCT `t`.`id`) FROM `project` `t`  LEFT OUTER JOIN `project_type` `projectType` ON (`t`.`project_type_id`=`projectType`.`id`) AND (projectType.deleted=0)  LEFT OUTER JOIN `client` `client` ON (`projectType`.`client_id`=`client`.`id`) AND (client.deleted=0)  LEFT OUTER JOIN `staff` `staff` ON (`t`.`staff_id`=`staff`.`id`) AND (staff.deleted=0) 
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.db.ar.CActiveRecord] Project.findAll()
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT `t`.`id` AS `t0_c0`, `t`.`description` AS `t0_c1`, `t`.`travel_time_1_way` AS `t0_c3`, `t`.`critical_completion` AS `t0_c4`, `t`.`planned` AS `t0_c5`, CONCAT_WS('/',
+				'client.name',
+				'projectType.description'
+				) AS searchProjectType, CONCAT_WS(', ',staff.first_name,staff.last_name,staff.email) AS searchStaff, `projectType`.`id` AS `t1_c0`, `projectType`.`description` AS `t1_c1`, `projectType`.`client_id` AS `t1_c2`, `projectType`.`template_project_id` AS `t1_c3`, `projectType`.`deleted` AS `t1_c4`, `projectType`.`staff_id` AS `t1_c5`, `client`.`id` AS `t2_c0`, `client`.`name` AS `t2_c1`, `client`.`deleted` AS `t2_c2`, `client`.`staff_id` AS `t2_c3`, `staff`.`id` AS `t3_c0`, `staff`.`first_name` AS `t3_c1`, `staff`.`last_name` AS `t3_c2`, `staff`.`phone_mobile` AS `t3_c3`, `staff`.`email` AS `t3_c4`, `staff`.`password` AS `t3_c5`, `staff`.`deleted` AS `t3_c6`, `staff`.`staff_id` AS `t3_c7` FROM `project` `t`  LEFT OUTER JOIN `project_type` `projectType` ON (`t`.`project_type_id`=`projectType`.`id`) AND (projectType.deleted=0)  LEFT OUTER JOIN `client` `client` ON (`projectType`.`client_id`=`client`.`id`) AND (client.deleted=0)  LEFT OUTER JOIN `staff` `staff` ON (`t`.`staff_id`=`staff`.`id`) AND (staff.deleted=0)  ORDER BY t.id DESC LIMIT 10
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "coreMessages" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbButtonColumn.php (37)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (103)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php (48)
+2012/08/16 11:19:51 [trace] [system.CModule] Loading "format" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php (51)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/admin.php (19)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (425)
+2012/08/16 11:19:51 [trace] [system.db.ar.CActiveRecord] lazy loading Project.projectType
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/WMEJuiAutoCompleteFkField.php(39) : eval()'d code (1)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/WMEJuiAutoCompleteFkField.php (39)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (714)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT `projectType`.`id` AS `t1_c0`, `projectType`.`description` AS `t1_c1`, `projectType`.`client_id` AS `t1_c2`, `projectType`.`template_project_id` AS `t1_c3`, `projectType`.`deleted` AS `t1_c4`, `projectType`.`staff_id` AS `t1_c5` FROM `project_type` `projectType`  WHERE (projectType.deleted=0) AND (`projectType`.`id`=:ypl0)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/WMEJuiAutoCompleteFkField.php(39) : eval()'d code (1)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/WMEJuiAutoCompleteFkField.php (39)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (714)
+2012/08/16 11:19:51 [trace] [system.db.ar.CActiveRecord] lazy loading Project.projectToGenericProjectTypes
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/GenericWidgets.php (27)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/project/_form.php (24)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CreateViewWidget.php (33)
+2012/08/16 11:19:51 [trace] [system.db.ar.CActiveRecord] lazy loading Project.staff
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/WMEJuiAutoCompleteFkField.php(35) : eval()'d code (1)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/WMEJuiAutoCompleteFkField.php (35)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (714)
+2012/08/16 11:19:51 [trace] [system.db.CDbCommand] Querying SQL: SELECT `staff`.`id` AS `t1_c0`, `staff`.`first_name` AS `t1_c1`, `staff`.`last_name` AS `t1_c2`, `staff`.`phone_mobile` AS `t1_c3`, `staff`.`email` AS `t1_c4`, `staff`.`password` AS `t1_c5`, `staff`.`deleted` AS `t1_c6`, `staff`.`staff_id` AS `t1_c7` FROM `staff` `staff`  WHERE (staff.deleted=0) AND (`staff`.`id`=:ypl0)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/WMEJuiAutoCompleteFkField.php(35) : eval()'d code (1)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/WMEJuiAutoCompleteFkField.php (35)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (714)
+2012/08/16 11:19:58 [trace] [system.CModule] Loading "log" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.CModule] Loading "bootstrap" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.CModule] Loading "clientScript" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (103)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.CModule] Loading "assetManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (328)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (103)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/08/16 11:19:58 [trace] [system.CModule] Loading "request" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (328)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (103)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/components/Bootstrap.php (84)
+2012/08/16 11:19:58 [trace] [system.CModule] Loading "urlManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.web.filters.CFilterChain] Running filter ProjectController.filteraccessControl()
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.CModule] Loading "user" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.CModule] Loading "session" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.CModule] Loading "authManager" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.CModule] Loading "db" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.db.CDbConnection] Opening DB connection
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthAssignment`
+WHERE userid=:userid
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthItem`
+WHERE name=:name
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.web.auth.CDbAuthManager] Checking permission "Project"
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.db.CDbCommand] Querying SQL: SELECT `parent`
+FROM `AuthItemChild`
+WHERE child=:name
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthItem`
+WHERE name=:name
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.web.auth.CDbAuthManager] Checking permission "project manager"
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.db.CDbCommand] Querying SQL: SELECT `parent`
+FROM `AuthItemChild`
+WHERE child=:name
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthItem`
+WHERE name=:name
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.web.auth.CDbAuthManager] Checking permission "system admin"
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.db.CDbCommand] Querying SQL: SHOW COLUMNS FROM `project`
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (562)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:58 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `project`
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (562)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
+2012/08/16 11:19:59 [trace] [system.CModule] Loading "coreMessages" application component
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (690)
+in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php (565)
+in /Users/Andrew/NetBeansProjects/WorksManagement/index.php (18)
