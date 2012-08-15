@@ -101,7 +101,7 @@ class ProjectType extends ActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('template_project_id',$this->template_project_id,true);
-		$criteria->compare('templateProject.description',$this->searchTemplateProject,true);
+//		$criteria->compare('templateProject.description',$this->searchTemplateProject,true);
 		$criteria->compare('client.name',$this->searchClient,true);
 		
 		$criteria->with = array('client', 'templateProject');

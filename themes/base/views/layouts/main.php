@@ -35,96 +35,64 @@
 <div class="container">
 	<div class="row">
 		<header class="span12">
-<?php /*
-			<div id="header-top" class="row">
-				<div class="span4">
-					<a href="<?php echo Yii::app()->request->baseUrl; ?>/">
-						<img src="<?php echo Yii::app()->theme->baseUrl; ?>/img/yii.png" alt="" />
-					</a>
-				</div>
-				<div class="span8">
-					<p style="text-align:right;">
-						Call now on 555 555 555<br />
-						Follow us on <a class="badge badge-info" href="#" target="_blank">Twitter</a>
-					</p>
-				</div>
-			</div>
-*/ ?>
 
-<?php $this->widget('bootstrap.widgets.TbNavbar', array(
-    'fixed'=>false,
-    'brand'=>Yii::app()->name,
-    'brandUrl'=>'#',
-    'collapse'=>true, // requires bootstrap-responsive.css
-    'items'=>array(
-        array(
-            'class'=>'bootstrap.widgets.TbMenu',
-            'items'=>array(
-                array('label'=>'Tables - development shortcut', 'url'=>'#', 'items'=>array(
-					array('label'=>'AuthItem', 'url'=>array('/AuthItem')),
-					array('label'=>'Client', 'url'=>array('/Client')),
-					array('label'=>'Crew', 'url'=>array('/Crew')),
-					array('label'=>'Day', 'url'=>array('/Day')),
-					array('label'=>'Duty', 'url'=>array('/Duty')),
-					array('label'=>'DutyType', 'url'=>array('/DutyType')),
-					array('label'=>'Dutycategory', 'url'=>array('/Dutycategory')),
-					array('label'=>'Generic', 'url'=>array('/Generic')),
-					array('label'=>'GenericProjectType', 'url'=>array('/GenericProjectType')),
-					array('label'=>'GenericTaskType', 'url'=>array('/GenericTaskType')),
-					array('label'=>'GenericType', 'url'=>array('/GenericType')),
-					array('label'=>'Genericprojectcategory', 'url'=>array('/Genericprojectcategory')),
-					array('label'=>'Generictaskcategory', 'url'=>array('/Generictaskcategory')),
-					array('label'=>'Material', 'url'=>array('/Material')),
-					array('label'=>'Plan', 'url'=>array('/Plan')),
-					array('label'=>'Project', 'url'=>array('/Project')),
-					array('label'=>'ProjectType', 'url'=>array('/ProjectType')),
-					array('label'=>'PurchaseOrders', 'url'=>array('/PurchaseOrders')),
-					array('label'=>'ResourceType', 'url'=>array('/ResourceType')),
-					array('label'=>'Resourcecategory', 'url'=>array('/Resourcecategory')),
-					array('label'=>'Staff', 'url'=>array('/Staff')),
-					array('label'=>'Supplier', 'url'=>array('/Supplier')),
-					array('label'=>'Task', 'url'=>array('/Task')),
-					array('label'=>'TaskType', 'url'=>array('/TaskType')),
-                    '---',
-                    array('label'=>'Pivot tables'),
-					array('label'=>'Assembly', 'url'=>array('/Assembly')),
-					array('label'=>'AuthAssignment', 'url'=>array('/AuthAssignment')),
-					array('label'=>'TaskTypeToDutyType', 'url'=>array('/TaskTypeToDutyType')),
-					array('label'=>'Duty', 'url'=>array('/Duty')),
-					array('label'=>'MaterialToTask', 'url'=>array('/MaterialToTask')),
-					array('label'=>'ProjectToAuthAssignment', 'url'=>array('/ProjectToAuthAssignment')),
-					array('label'=>'ProjectToAuthAssignmentToTaskTypeToDutyType', 'url'=>array('/ProjectToAuthAssignmentToTaskTypeToDutyType')),
-					array('label'=>'ProjectToGenericProjectType', 'url'=>array('/ProjectToGenericProjectType')),
-					array('label'=>'Reschedule', 'url'=>array('/Reschedule')),
-					array('label'=>'TaskToAssembly', 'url'=>array('/TaskToAssembly')),
-					array('label'=>'TaskToGenericTaskType', 'url'=>array('/TaskToGenericTaskType')),
-					array('label'=>'TaskToResourceType', 'url'=>array('/TaskToResourceType')),
-                )),
-            ),
-        ),
-		$this->operations,
-        array(
-            'class'=>'bootstrap.widgets.TbMenu',
-            'htmlOptions'=>array('class'=>'pull-right'),
-            'items'=>array(
-				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
-            ),
-        ),
-    ),
-)); ?>
-					
+			<?php $this->widget('bootstrap.widgets.TbNavbar', array(
+				'fixed'=>false,
+				'brand'=>Yii::app()->name,
+				'brandUrl'=>'#',
+				'collapse'=>true, // requires bootstrap-responsive.css
+				'items'=>array(
+//					$this->operations,
+					array(
+						'class'=>'bootstrap.widgets.TbMenu',
+						'htmlOptions'=>array('class'=>'pull-right'),
+						'items'=>array(
+							array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
+							array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
+						),
+					),
+				),
+			)); ?>
+			
+			<!-- breadcrumbs -->
 			<?php if(isset($this->breadcrumbs)):?>
 				<?php $this->widget('bootstrap.widgets.TbBreadcrumbs', array(
 					'links'=>$this->breadcrumbs,
-//					'htmlOptions'=>array('class'=>'breadcrumbs breadcrumb'),
-				)); ?><!-- breadcrumbs -->
+				)); ?>
 			<?php endif?>
 
-			<?php if(isset($this->formTitle) && $this->formTitle):?>
-				<?php echo '<h1>'.CHtml::encode($this->formTitle).'</h1>'; ?>
-			<?php endif?>
 
+			<!-- tabs -->
+			<?php
+			if($this->tabs)
+			{
+				$this->widget('bootstrap.widgets.TbMenu', array(
+					'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
+					'stacked'=>false, // whether this is a stacked menu
+					'items'=>$this->tabs,
+				));
+			}
+			?>
+				
+			<?php
+			if(isset($this->heading) && $this->heading)
+			{
+				echo '<h2>'.CHtml::encode($this->heading);
+				// if admin action
+				if($this->action->Id == 'admin')
+				{
+					echo ' ';
+					$this->widget('bootstrap.widgets.TbButton', array(
+						'label'=>'New',
+						'url'=>'#myModal',
+						'type'=>'primary',
+						'size'=>'small', // '', 'large', 'small' or 'mini'
+						'htmlOptions'=>array('data-toggle'=>'modal'),
+					));
+				}
+				echo '</h2>';
+			}
+			?>
 		</header>
 	</div>
 	

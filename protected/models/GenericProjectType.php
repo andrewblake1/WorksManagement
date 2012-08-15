@@ -106,8 +106,8 @@ class GenericProjectType extends ActiveRecord
 			'projectType.client.name',
 			'projectType.projectType.description'
 		), $this->searchProjectType);
-		$criteria->compare('genericProjectCategory.description',$this->searchGenericProjectCategory);
-		$criteria->compare('genericType.description',$this->searchGenericType);
+		$criteria->compare('genericProjectCategory.description',$this->searchGenericProjectCategory,true);
+		$criteria->compare('genericType.description',$this->searchGenericType,true);
 		
 		$criteria->with = array(
 			'projectType.client',

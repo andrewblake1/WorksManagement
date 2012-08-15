@@ -102,7 +102,7 @@ class Duty extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('task.description',$this->searchTask,true);
 		$this->compositeCriteria(
 			$criteria,
@@ -117,7 +117,7 @@ class Duty extends ActiveRecord
 				'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.dutyType.description',
 			), $this->searchProjectToAuthAssignmentToTaskTypeToDutyType);
 		$criteria->compare('updated',$this->updated,true);
-		$criteria->compare('generic.id',$this->searchGeneric,true);
+		$criteria->compare('generic.id',$this->searchGeneric);
 
 		$criteria->with = array(
 			'task',

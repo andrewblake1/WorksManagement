@@ -32,6 +32,10 @@ class Project extends ActiveRecord
 	 * but not needed needed to be persistant
 	 */
 	public $project_type_id;
+	/**
+	 * @var integer $client_id may be passed via get for search
+	 */
+	public $client_id;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -59,13 +63,13 @@ class Project extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, staff_id', 'required'),
+			array('description, project_type_id, staff_id', 'required'),
 			array('project_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			array('travel_time_1_way, critical_completion, planned', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, travel_time_1_way, critical_completion, planned, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, travel_time_1_way, critical_completion, planned, searchStaff, searchProjectType, client_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -108,13 +112,26 @@ class Project extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('description',$this->description,true);
-		$criteria->compare('travel_time_1_way',$this->travel_time_1_way,true);
-		$criteria->compare('critical_completion',$this->critical_completion,true);
-		$criteria->compare('planned',$this->planned,true);
+		$criteria->compare('travel_time_1_way',$this->travel_time_1_way);
+		$criteria->compare('critical_completion',$this->critical_completion);
+		$criteria->compare('planned',$this->planned);
+		$this->compositeCriteria(
+			$criteria,
+			array(
+				'projectType.client.name',
+				'projectType.description'
+			),
+			$this->searchProjectType
+		);
+		// this variable not in table - from get
+		$criteria->compare('client',$this->client_id);
+
+		$criteria->with = array('projectType.client', 'projectType');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
+
 		$criteria->select=array(
 			'id',
 			'description',
@@ -130,5 +147,13 @@ class Project extends ActiveRecord
 		return $criteria;
 	}
 
-
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchProjectType');
+	}
+	
 }

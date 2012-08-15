@@ -52,8 +52,6 @@ class Generic extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return $this->customValidators + array(
-//			array('type_text', 'val_required'),
-//			array('type_text', 'validationLookup'),
 			array('staff_id', 'required'),
 			array('type_int, staff_id', 'numerical', 'integerOnly'=>true),
 			array('type_float', 'numerical'),
@@ -65,7 +63,7 @@ class Generic extends ActiveRecord
 		);
 	}
 	
-	public function setCustomValidators($genericType)
+	public function setCustomValidators($genericType, $params)
 	{
 		// Get GenericType column names
 		$dataTypeColumnNames = GenericType::getDataTypeColumnNames();
@@ -94,7 +92,7 @@ class Generic extends ActiveRecord
 
 			// SQL select
 			case GenericType::validationTypeSQLSelect:
-				$this->customValidators[] = array($targetAttribute, 'validationLookup');
+				$this->customValidators[] = array($targetAttribute, 'validationLookup') + $params;
 				break;
 		}
 
@@ -148,7 +146,11 @@ class Generic extends ActiveRecord
 	 */
 	public function validationLookup($attribute, $params)
 	{
-		$this->checkLookup($this->projectToGenericProjectType->genericProjectType->genericType, $this->$attribute, $attribute);
+		$this->checkLookup(
+			$this->$params['relation_modelToGenericModelType']->$params['relation_genericModelType']->genericType,
+			$this->$attribute,
+			$attribute
+		);
 	}
 
 	public function checkLookup($genericType, $value, $attribute)
@@ -240,11 +242,11 @@ class Generic extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('type_int',$this->type_int);
 		$criteria->compare('type_float',$this->type_float);
-		$criteria->compare('type_time',$this->type_time,true);
-		$criteria->compare('type_date',$this->type_date,true);
+		$criteria->compare('type_time',$this->type_time);
+		$criteria->compare('type_date',$this->type_date);
 		$criteria->compare('type_text',$this->type_text,true);
 
 		$criteria->select=array(

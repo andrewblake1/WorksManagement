@@ -38,7 +38,7 @@
  * @property Project[] $projects
  * @property ProjectToAuthAssignment[] $projectToAuthAssignments
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
- * @property PurchaseOrders[] $purchaseOrders
+ * @property PurchaseOrder[] $purchaseOrders
  * @property Reschedule[] $reschedules
  * @property Staff $staff
  * @property Staff[] $staffs

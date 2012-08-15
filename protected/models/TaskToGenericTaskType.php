@@ -102,14 +102,14 @@ class TaskToGenericTaskType extends ActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$this->compositeCriteria($criteria, array(
 			'genericTaskType.client.name',
 			'genericTaskType.taskType.description',
 			'genericTaskType.genericType.description',
 			), $this->searchGenericTaskType);
 		$criteria->compare('task.description',$this->searchTask,true);
-		$criteria->compare('generic.id',$this->searchGeneric,true);
+		$criteria->compare('generic.id',$this->searchGeneric);
 		
 		$criteria->with = array('genericTaskType.genericType','task','generic');
 

@@ -89,11 +89,11 @@ class Day extends ActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('scheduled',$this->scheduled,true);
-		$criteria->compare('preferred',$this->preferred,true);
-		$criteria->compare('earliest',$this->earliest,true);
-		$criteria->compare('planned',$this->planned,true);
+		$criteria->compare('id',$this->id);
+		$criteria->compare('scheduled',$this->scheduled);
+		$criteria->compare('preferred',$this->preferred);
+		$criteria->compare('earliest',$this->earliest);
+		$criteria->compare('planned',$this->planned);
 
 		$criteria->select=array(
 			'id',

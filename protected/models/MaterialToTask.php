@@ -100,8 +100,8 @@ class MaterialToTask extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('material.description',$this->searchMaterial);
+		$criteria->compare('id',$this->id);
+		$criteria->compare('material.description',$this->searchMaterial,true);
 		$criteria->compare('task.description',$this->searchTask,true);
 		$criteria->compare('quantity',$this->quantity);
 		

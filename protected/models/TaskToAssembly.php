@@ -98,9 +98,9 @@ class TaskToAssembly extends ActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('task.description',$this->searchTask,true);
-		$criteria->compare('assembly.description',$this->searchAssembly);
+		$criteria->compare('assembly.description',$this->searchAssembly,true);
 		$criteria->compare('quantity',$this->quantity);
 		
 		$criteria->with = array('assembly','task');

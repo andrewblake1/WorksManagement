@@ -83,7 +83,6 @@ abstract class ActiveRecord extends CActiveRecord
 	{
 		return array(
 			'AttributesBackupBehavior' => 'ext.AttributesBackupBehavior',
-//			'EActiveRecordRelationBehavior' => 'ext.activerecord-relation.EActiveRecordRelationBehavior'
 		);
 	}
 	
@@ -101,11 +100,13 @@ abstract class ActiveRecord extends CActiveRecord
 						'desc'=>" $attribute DESC",
 					);
 		}
+		
 		// add searchStaff
-			$sort['searchStaff'] = array(
-						'asc'=>" searchStaff ",
-						'desc'=>" searchStaff DESC",
-					);
+		$sort['searchStaff'] = array(
+					'asc'=>" searchStaff ",
+					'desc'=>" searchStaff DESC",
+				);
+
 		// add all other attributes
 		$sort[] = '*';
 		
@@ -236,15 +237,6 @@ abstract class ActiveRecord extends CActiveRecord
 		try
 		{
 			$return = call_user_func_array(array($this, $callback), $callbackArgs);
-			
-/*			if(($saved = $model->save()) && $redirect)
-			{
-				// if redirect is a path
-				if($redirect !== TRUE)
-					$this->redirect($redirect);
-				else	// default is to admin view
-					$this->redirect(array('admin','id'=>$model->getPrimaryKey()));
-			}*/
 		}
 		catch(CDbException $e)
 		{
@@ -261,26 +253,6 @@ abstract class ActiveRecord extends CActiveRecord
 					
 			$this->addError(null, $errorMessage);
 		}
-		
-/*		// in case not caught by exception but already added to model then
-		// post process the errors
-		if($this->hasErrors())
-		{
-			foreach($this->getErrors() as $attribute => $errorMessage)
-			{
-				foreach ($messages as $needle => &$message)
-				{
-					if(strpos($errorMessage[0], $needle) !== FALSE)
-					{
-						$errorMessage[0] = $message;
-						$this->clearErrors(array($attribute));
-						$this->addError($attribute, $errorMessage);
-						break;
-					}
-				}
-					
-			}
-		}*/
 		
 		return $return;
 	}

@@ -100,12 +100,12 @@ class TaskToResourceType extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('task.description',$this->searchTask,true);
-		$criteria->compare('resourceType.description',$this->searchResourceType);
+		$criteria->compare('resourceType.description',$this->searchResourceType,true);
 		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('hours',$this->hours);
-		$criteria->compare('start',$this->start,true);
+		$criteria->compare('start',$this->start);
 		
 		$criteria->with = array('task','resourceType');
 
@@ -113,7 +113,7 @@ class TaskToResourceType extends ActiveRecord
 
 		$criteria->select=array(
 			'id',
-			'task.description',
+			'task.description AS searchTask',
 			'resourceType.description AS searchResourceType',
 			'quantity',
 			'hours',

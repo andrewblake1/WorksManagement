@@ -27,13 +27,6 @@ $this->widget('AdminViewWidget',array(
 			)',
 			'type'=>'raw',
 		),
-         array(
-			'name'=>'searchTaskType',
-			'value'=>'CHtml::link($data->searchTaskType,
-				Yii::app()->createUrl("TaskType/update", array("id"=>$data->task_type_id))
-			)',
-			'type'=>'raw',
-		),
 	),
 ));
 ?>

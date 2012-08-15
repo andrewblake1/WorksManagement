@@ -93,12 +93,12 @@ class ProjectToAuthAssignment extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('project.id',$this->searchProject,true);
+		$criteria->compare('id',$this->id);
+		$criteria->compare('project.description',$this->searchProject,true);
 		$this->compositeCriteria(
 			$criteria,
 			array(
-				'authAssignment.itemname',
+				'authAssignment.itemname0.itemname',
 				'authAssignment.user.first_name',
 				'authAssignment.user.last_name',
 				'authAssignment.user.email'
@@ -106,17 +106,17 @@ class ProjectToAuthAssignment extends ActiveRecord
 			$this->searchAuthAssignment
 		);
 		
-		$criteria->with = array('authAssignment.itemname','authAssignment.user','project');
+		$criteria->with = array('authAssignment.itemname0','authAssignment.user','project');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 		$criteria->select=array(
 			'id',
-			'project.id AS searchProject',
+			'project.description AS searchProject',
 			"CONCAT_WS('$delimiter',
 				authAssignment.itemname,
-				authAssignment.user.first_name,
-				authAssignment.user.last_name,
-				authAssignment.user.email
+				user.first_name,
+				user.last_name,
+				user.email
 				) AS searchAuthAssignment",
 		);
 

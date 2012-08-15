@@ -94,7 +94,7 @@ class ProjectToAuthAssignmentToTaskTypeToDutyType extends ActiveRecord
 	public function getSearchCriteria()
 	{
 		$criteria=new CDbCriteria;
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$this->compositeCriteria(
 			$criteria,
 			array(

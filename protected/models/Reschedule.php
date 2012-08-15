@@ -93,7 +93,7 @@ class Reschedule extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('oldTask.description',$this->searchOldTask,true);
 		$criteria->compare('newTask.description',$this->searchNewTask,true);
 		$criteria->with = array('oldTask','newTask');

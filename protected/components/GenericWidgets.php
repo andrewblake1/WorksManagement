@@ -8,8 +8,9 @@ class GenericWidgets extends TbActiveForm
 	private $controller;
 	public $model;
 	public $form;
-	public $toGenericTypeRelation;
-	public $genericTypeRelation;
+	public $relation_modelToGenericModelType;
+	public $relation_modelToGenericModelTypes;
+	public $relation_genericModelType;
 
 	/**
 	 * Displays a particular model.
@@ -23,10 +24,10 @@ class GenericWidgets extends TbActiveForm
     public function run()
     {
 		// loop thru all the pivot table generic types associated to this model
-		foreach($this->model->{$this->toGenericTypeRelation} as $toGenericType)
+		foreach($this->model->{$this->relation_modelToGenericModelTypes} as $toGenericType)
 		{
 			// get generic type
-			$genericType = $toGenericType->{$this->genericTypeRelation}->genericType;
+			$genericType = $toGenericType->{$this->relation_genericModelType}->genericType;
 			// get generic
 			$generic = $toGenericType->generic;
 			// get array of column names in generic table
@@ -35,8 +36,13 @@ class GenericWidgets extends TbActiveForm
 			$attribute = "[$toGenericType->generic_id]".$dataTypeColumnNames[$genericType->data_type];
 			// get the label
 			$htmlOptions = array('labelOptions' => array('label'=>$genericType->description));
-			// set custom validators in order to show mandatory fields
-			$generic->setCustomValidators($genericType);
+			// set Generic custom validators as per the associated generic type
+			$generic->setCustomValidators($genericType,
+				array(
+					'relation_modelToGenericModelType'=>$this->relation_modelToGenericModelType,
+					'relation_genericModelType'=>$this->relation_genericModelType,
+				)
+			);
 			// create the widget based on the generic validation type
 			switch($genericType->validation_type)
 			{

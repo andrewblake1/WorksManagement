@@ -99,10 +99,10 @@ class Crew extends ActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('preferred_date',$this->preferred_date,true);
-		$criteria->compare('earliest_date',$this->earliest_date,true);
-		$criteria->compare('date_scheduled',$this->date_scheduled,true);
+		$criteria->compare('id',$this->id);
+		$criteria->compare('preferred_date',$this->preferred_date);
+		$criteria->compare('earliest_date',$this->earliest_date);
+		$criteria->compare('date_scheduled',$this->date_scheduled);
 		$this->compositeCriteria($criteria, array('inCharge.first_name','inCharge.last_name','inCharge.email'), $this->searchInCharge);
 
 		$criteria->with = array('inCharge');

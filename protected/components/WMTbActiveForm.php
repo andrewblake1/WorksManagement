@@ -11,7 +11,7 @@ class WMTbActiveForm extends TbActiveForm
 {
 	private $controller;
 	
-	public $enableAjaxValidation=false;
+	public $enableAjaxValidation=true;
 	public $htmlOptions=array('class'=>'well');
 	public $model;
 	public $models=null;
@@ -24,6 +24,8 @@ class WMTbActiveForm extends TbActiveForm
        // this method is called by CController::beginWidget()
 		$this->controller = $this->getController();
 		$this->id="{$this->controller->modelName}-form";
+		$this->action = /*$this->controller->modelName .*/ ($this->model->isNewRecord ? 'create' : 'update');
+        $this->clientOptions = array('validateOnSubmit'=>true);
 		echo $this->errorSummary($this->models ? $this->models : $this->model);
 		parent::init();
 	}

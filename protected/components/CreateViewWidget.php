@@ -21,22 +21,22 @@ class CreateViewWidget extends CWidget
  
     public function run()
     {
-		// add heading
-		// add spaces after capitals
-		$string=preg_replace(
-			'/(?<!^)((?<![[:upper:]])[[:upper:]]|[[:upper:]](?![[:upper:]]))/',
-			' $1',
-			$this->controller->modelName
-		);
-		
-		$this->controller->breadcrumbs = $this->controller->getBreadCrumbTrail('Create');
+?>
+		<?php $this->controller->beginWidget('bootstrap.widgets.TbModal', array('id'=>'myModal')); ?>
 
-		$this->controller->formTitle = "Create {$string}";
-		
-		echo $this->controller->render('_form',array(
-			'model'=>$this->model,
-			'models'=>$this->models,
-			));
+		<div class="modal-body">
+			<?php
+			
+			echo $this->controller->renderPartial('_form',array(
+				'model'=>$this->model,
+				'models'=>$this->models,
+				));
+			
+			?>
+		</div>
+ 
+		<?php $this->controller->endWidget(); ?>		
+<?php
 	}
 }
 

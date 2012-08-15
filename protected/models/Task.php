@@ -6,11 +6,11 @@
  * The followings are the available columns in table 'task':
  * @property string $id
  * @property string $description
+ * @property integer $task_type_id
  * @property string $day
  * @property string $purchase_order_id
  * @property string $crew_id
  * @property string $project_id
- * @property integer $task_type_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -66,7 +66,7 @@ class Task extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, day, purchase_order_id, crew_id, project_id, task_type_id, staff_id', 'required'),
+			array('description, day, crew_id, project_id, task_type_id, staff_id', 'required'),
 			array('task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('day, purchase_order_id, crew_id, project_id', 'length', 'max'=>10),
 			// The following rule is used by search().
@@ -128,7 +128,7 @@ class Task extends ActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('description',$this->description,true);
-		$criteria->compare('day',$this->day,true);
+		$criteria->compare('day',$this->day);
 		$this->compositeCriteria($criteria,
 			array(
 				'supplier.name',

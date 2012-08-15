@@ -13,11 +13,9 @@
  *
  * The followings are the available model relations:
  * @property GenericTaskType[] $genericTaskTypes
- * @property Task[] $tasks
  * @property Staff $staff
  * @property Task $templateTask
  * @property Client $client
- * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
  */
 class TaskType extends ActiveRecord
 {
@@ -73,11 +71,9 @@ class TaskType extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'genericTaskTypes' => array(self::HAS_MANY, 'GenericTaskType', 'task_type_id'),
-			'tasks' => array(self::HAS_MANY, 'Task', 'task_type_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'templateTask' => array(self::BELONGS_TO, 'Task', 'template_task_id'),
 			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
-			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'task_type_id'),
 		);
 	}
 
@@ -105,10 +101,10 @@ class TaskType extends ActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('template_task_id',$this->template_task_id,true);
-		$criteria->compare('templateTask.description',$this->searchTemplateTask,true);
+//		$criteria->compare('templateTask.description',$this->searchTemplateTask,true);
 		$criteria->compare('client.name',$this->searchClient,true);
 		
-		$criteria->with = array('client');
+		$criteria->with = array('client', 'templateTask');
 
 		$criteria->select=array(
 			'id',
@@ -126,8 +122,8 @@ class TaskType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'description',
 			'client'=>'name',
+			'description',
 		);
 	}
 

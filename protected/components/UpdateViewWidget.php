@@ -21,22 +21,6 @@ class UpdateViewWidget extends CWidget
  
     public function run()
     {
-		// add heading
-		// add spaces after capitals
-		$string=preg_replace(
-			'/(?<!^)((?<![[:upper:]])[[:upper:]]|[[:upper:]](?![[:upper:]]))/',
-			' $1',
-			$this->controller->modelName
-		);
-		
-		$this->controller->breadcrumbs = $this->controller->getBreadCrumbTrail('Update');
-
-		$this->controller->menu=array(
-			array('label'=>"Create {$string}", 'url'=>array('create')),
-		);
-
-		$this->controller->formTitle = "Update {$string} {$this->model->id}";
-		
 		echo $this->controller->render('_form',array(
 			'model'=>$this->model,
 			'models'=>$this->models,

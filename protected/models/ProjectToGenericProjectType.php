@@ -102,14 +102,14 @@ class ProjectToGenericProjectType extends ActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$this->compositeCriteria($criteria, array(
 			'genericProjectType.projectType.client.name',
 			'genericProjectType.projectType.description',
 			'genericProjectType.genericType.description',
 			), $this->searchGenericProjectType);
 		$criteria->compare('project.description',$this->searchProject,true);
-		$criteria->compare('generic.id',$this->searchGeneric,true);
+		$criteria->compare('generic.id',$this->searchGeneric);
 		
 		$criteria->with = array('genericProjectType.projectType.client','genericProjectType.projectType', 'genericProjectType.genericType','project','generic');
 

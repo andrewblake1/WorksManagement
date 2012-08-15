@@ -13,7 +13,7 @@ class Controller extends CController
 	/**
 	 * @var array context menu items. This property will be assigned to {@link CMenu::items}.
 	 */
-	public $menu=array();
+//	public $menu=array();
 	/**
 	 * @var array the breadcrumbs of the current page. The value of this property will
 	 * be assigned to {@link CBreadcrumbs::links}. Please refer to {@link CBreadcrumbs::links}
@@ -29,9 +29,13 @@ class Controller extends CController
 	 */
 	public $modelName;
 	/**
-	 * @var string the form titel
+	 * @var array the view heading
 	 */
-	public $formTitle;
+	public $heading;
+	/**
+	 * @var array the tab menu itemse
+	 */
+	private $_tabs;
 	
 	/**
 	 * @var string the flash message to show sort and search instructions
@@ -52,46 +56,44 @@ class Controller extends CController
 	 */
 	private $trail = array(
 		'Client'=>array(
-			'TaskType'=>array(
-				'TaskType'=>array(
-					'TaskTypeToDutyType',
+			'Project'=>array(
+				'Task'=>array(
+					'Crew',
+					'Day',
+					'Duty',
+					'Reschedule',
+// TODO: naming orientation is inconsistent here
+					'MaterialToTask',
+					'TaskToAssembly',
+					'TaskToGenericTaskType',
+					'TaskToResourceType',
 				),
+				'ProjectToAuthAssignment'=>array(
+					'ProjectToAuthAssignmentToTaskTypeToDutyType',
+				),
+				'ProjectToGenericProjectType'
+			),
+			'ProjectType'=>array(
+				'GenericProjectType',
+			),
+			'TaskType'=>array(
+				'GenericTaskType',
+				'TaskTypeToDutyType',
 			),
 		),
-		'Project'=>array(
-			'ProjectToAuthAssignment'=>array(
-				'ProjectToAuthAssignmentToTaskTypeToDutyType',
-			),
-			'ProjectToGenericProjectType'
-		),
-		'Task'=>array(
-			'Crew',
-			'Day',
-			'Duty',
-			'Reschedule',
-			'PurchaseOrders',
-			'MaterialToTask',
-			'TaskToAssembly',
-			'TaskToGenericTaskType',
-			'TaskToResourceType',
-		),
+		'GenericType',
+		'Genericprojectcategory',
+		'Generictaskcategory',
+		'PurchaseOrder',
 		'Material',
-		'Assembly'=>array(
-			'Plan',
-		),
+		'Assembly',
 		'Staff'=>array(
 			'AuthAssignment',
 		),
 		'AuthItem',
-		'GenericProjectType',
-		'Genericprojectcategory',
-		'GenericTaskType'=>array(
-			'Generictaskcategory',
-		),
 		'DutyType'=>array(
 			'Dutycategory',
 		),
-		'GenericType',
 		'ResourceType'=>array(
 			'Resourcecategory',
 		),
@@ -185,7 +187,7 @@ class Controller extends CController
 			}
 		}
 	}
-
+	
 /*	public static function getRelationFromKey($key, &$fKModelType, &$field)
 	{
 // TODO this line just to get past pre php 5.3 - change to fKModelType::model() once >= 5.3
@@ -251,9 +253,111 @@ class Controller extends CController
 		);
 	}
 
-	public function getOperations()
+	public function getTabs()
 	{
-		$operations = NULL;
+		return $this->_tabs;
+	}
+
+	/**
+	 * _tabs property setter. Utilises trail to set tab options.
+	 * @param ActiveRecord $model the model to extract primary key information from to build query string
+	 * @param $nextLevel if true uses next level down in trail array from the models level if false uses the models level
+	 * to extract tab options. Admin and create use models level, update uses next level unless
+	 * the current model is a leaf rather than branch (no further branching) in which case popup form will be used to update
+	 */
+	public function setTabs($model, $nextLevel = true)
+	{
+		// multidimensional array search returns from start of search array to target
+		// need to get the next level items from that point only
+
+		// step thru the trail to our target
+		$items = $this->trail;
+		// if we should return this level NB: this is empty deliberately to keep condition the same as below
+		if(!$nextLevel && (isset($items[$this->modelName])))
+		{
+		}
+		else
+		{
+			$trail = $this->multidimensional_arraySearch($this->trail, $this->modelName);
+			foreach($trail as $key => &$value)
+			{
+				// if we should return this level
+				if(!$nextLevel && (isset($items[$this->modelName]) || in_array($this->modelName, $items)))
+				{
+					break;
+				}
+				$items = $items[$value];
+			}
+			
+			// if taking the next level
+			if($items && $nextLevel) // true for create and update
+			{
+				// still want to show this model in tabs
+				array_unshift($items, $this->modelName);
+			}
+			// otherwise
+			else // admin
+			{
+				if(sizeof($trail) > 1)
+				{
+					// want to show the parent model first in tabs so add to top of items
+					array_unshift($items, $trail[sizeof($trail) - 2]);
+				}
+			}
+		}
+		
+		// if there are items
+		if(is_array($items))
+		{
+			// carry the important ids for breadcrumbs
+			$index = 0;
+			$keyValue = each($_GET);
+			$keyValue = $keyValue['value'];
+
+			foreach($items as $key => &$value)
+			{
+				// get the model name of this item
+				$modelName = is_array($value) ? $key : $value;
+				
+				// if this item matches the main model
+				if($modelName == $this->modelName)
+				{
+					// make this the active tab
+					$this->_tabs[$index]['active'] = true;
+				}
+				
+				// if first item
+				if(!$index)
+				{
+					// TODO: get the name of the foreign key field in this model that references this primary key
+					// instead for now keeping it simple by using our standards - though this relying on naming convention
+					// which will break with rbac tables though could sub-class as easy solution
+					$urlParams = ($keyValue === null) ? array() : array(Yii::app()->functions->uncamelize($modelName) . '_id' => $keyValue);
+					
+					// if nextlevel is true then action should always be update, but also should be update if current model is this model
+					// and not next level
+
+					// create controler/action
+					if($keyValue && (!$nextLevel || ($modelName == $this->modelName)))
+					{
+						$this->_tabs[$index]['label'] = Yii::app()->functions->sentencize($modelName) . " $keyValue";
+						$baseModel = new $modelName;
+						$this->_tabs[$index]['url'] = array("$modelName/update", $baseModel->tableSchema->primaryKey=>$keyValue);
+						$index++;
+						continue;
+					}
+				}
+				
+				$this->_tabs[$index]['label'] = Yii::app()->functions->sentencize($modelName) . 's';
+				$this->_tabs[$index]['url'] =  array("$modelName/admin") + $urlParams;
+				$index++;
+			}
+		}
+	}
+
+/*	public function getOperations()
+	{
+		$operations = array();
 		
 		if(count($this->menu))
 		{
@@ -266,7 +370,7 @@ class Controller extends CController
 		}
 		
 		return $operations;
-	}
+	}*/
 
 	/**
 	 * Manages all models.
@@ -292,11 +396,29 @@ class Controller extends CController
 // TODO excel2007 best format however mixed results getting succesfull creations with this = varies across servers likely php_zip issue	thnk
 // it works on windows machine however not mac nor linux for me so far.
 
+		// set heading
+		if(!$this->heading)
+		{	
+			$this->heading .= Yii::app()->functions->sentencize($this->modelName) . 's';
+		}
+
+		// set breadcrumbs
 		$this->breadcrumbs = $this->getBreadCrumbTrail();
 
+/*		// set operations menu
 		$this->menu=array(
-			array('label'=>'Create '.$this->modelName,'url'=>array('create')),
+			array(
+				'label'=>'Creat '.$this->modelName,
+				'url'=>array('#myModal'),
+				'linkOptions'=>array('data-toggle'=>'modal'),
+			),
 		);
+/*		$this->menu=array(
+			array('label'=>'Create '.$this->modelName, 'url'=>array('create')),
+		);*/
+
+		// set up tab menu if required - using setter
+		$this->setTabs($model, false);
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -307,11 +429,20 @@ class Controller extends CController
 	{
 		static $array_keys = array();
 		
+		// if starting this recursive function
+		if(!$level)
+		{
+			// reset the static variable from the last time this was called
+			// could alternatly store the search value and only scan once if the
+			// same
+			$array_keys = array();
+		}
+
 		// loop thru this level
 		foreach($array as $key => &$value)
 		{
-			// if $key is int then value is not an array
-			if(is_int($key))
+			// if $key is not an array
+			if(!is_array($value))
 			{
 				// do we have a match
 				if($search == strval($value))
@@ -340,7 +471,15 @@ class Controller extends CController
 			{
 				// store this level
 				$array_keys[$level] = $key;
+				break;
 			}
+		}
+		
+		// if we are exiting and not recursing
+		if(!$level)
+		{
+			// sort by the arrays ascending so that we know we have the write order in foreach loops
+			ksort($array_keys);
 		}
 		
 		// return the array keys array
@@ -355,7 +494,7 @@ class Controller extends CController
 	{
 		$breadcrumbs = array();
 		
-		// get the trail array for this model
+/*		// get the trail array for this model
 		$trail = $this->multidimensional_arraySearch($this->trail, $this->modelName);
 		
 		// build the breadcrumb trail from the trail array
@@ -363,36 +502,56 @@ class Controller extends CController
 		{
 			// if last crumb
 			if($cntr == $trailLength && !$lastCrumb)
-				$breadcrumbs[] = 'Manage '.$trail[$cntr - 1].'s';
+				$breadcrumbs[] = $trail[$cntr - 1].'s';
 			else
-				$breadcrumbs['Manage '.$trail[$cntr - 1].'s'] = array("{$trail[$cntr - 1]}/index");
+				$breadcrumbs[$trail[$cntr - 1].'s'] = array("{$trail[$cntr - 1]}/admin");
+		}*/
+		
+		// loop thru the trail for this model
+		foreach($this->multidimensional_arraySearch($this->trail, $this->modelName) as $crumb)
+		{
+			$display = Yii::app()->functions->sentencize($crumb);
+			// if this is the last crumb
+			if($this->modelName == $crumb)
+			{
+				if($lastCrumb == 'Create')
+				{
+					// add crumb to admin view
+					$breadcrumbs[$display.'s'] = array("$crumb/admin");
+					// add last crumb
+					$breadcrumbs[] = $lastCrumb;
+				}
+				elseif($lastCrumb == 'Update')
+				{
+					// add crumb to admin view
+					$breadcrumbs[$display.'s'] = array("$crumb/admin");
+					// add an update crumb to this primary key
+					$primaryKey = Yii::app()->session[$crumb];
+					$breadcrumbs[] = "$display {$primaryKey['value']}";
+				}
+				else
+				{
+					$breadcrumbs[] = $display.'s';
+				}
+			}
+			// otherwise not last crumb
+			else
+			{
+				// add crumb to admin view
+				$breadcrumbs[$display.'s'] = array("$crumb/admin");
+			
+				// if there is a primary key for this
+				if(isset(Yii::app()->session[$crumb]))
+				{
+					// add an update crumb to this primary key
+					$primaryKey = Yii::app()->session[$crumb];
+					$breadcrumbs["$display {$primaryKey['value']}"] = array("$crumb/update", $primaryKey['name']=>$primaryKey['value']);
+				}
+			}
 		}
-		
-		if($lastCrumb)
-			$breadcrumbs[] = $lastCrumb;
-		
+
 		return $breadcrumbs;
 	}
-	
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 
-	public function actionView($id)
-	{
-		$this->breadcrumbs = $this->getBreadCrumbTrail();
-
-		$this->menu=array(
-			array('label'=>'Create '.$this->modelName,'url'=>array('create')),
-			array('label'=>'Update '.$this->modelName,'url'=>array('update','id'=>$model->id)),
-			array('label'=>'Delete '.$this->modelName,'url'=>'#','linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-			array('label'=>$this->modelName.'s','url'=>array('admin')),
-		);
-
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
-	}*/
 
 	/**
 	 * Creates a new model.
@@ -403,16 +562,28 @@ class Controller extends CController
 		$model=new $this->modelName;
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST[$this->modelName]))
 		{
 			$model->attributes=$_POST[$this->modelName];
 			if($model->dbCallback('save'))
 			{
-				$this->redirect(array('update','id'=>$model->getPrimaryKey()));
+				$this->redirect(array('update', $model->tableSchema->primaryKey => $model->getPrimaryKey()));
 			}
 		}
+
+		// otherwise this is just a get and could be passing paramters
+		$model->attributes=$_GET[$this->modelName];
+
+		// set heading
+		$this->heading = "Create " . Yii::app()->functions->sentencize($this->modelName);
+
+		// set breadcrumbs
+		$this->breadcrumbs = $this->getBreadCrumbTrail('Create');
+
+		// set up tab menu if required - using setter
+		$this->tabs = $model;
 
 		$this->widget('CreateViewWidget', array(
 			'model'=>$model,
@@ -429,7 +600,7 @@ class Controller extends CController
 		$model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST[$this->modelName]))
 		{
@@ -439,6 +610,24 @@ class Controller extends CController
 				$this->redirect(array('admin'));
 			}
 		}
+
+		// add primary key into session so it can be retrieved for future use in breadcrumbs
+		Yii::app()->session[$this->modelName] = array(
+			'name'=>$model->tableSchema->primaryKey,
+			'value'=>$id,
+		);
+		
+		// otherwise this is just a get and could be passing paramters
+		$model->attributes=$_GET[$this->modelName];
+		
+		// set heading
+		$this->heading = Yii::app()->functions->sentencize($this->modelName) . " $id";
+
+		// set breadcrumbs
+		$this->breadcrumbs = $this->getBreadCrumbTrail('Update');
+		
+		// set up tab menu if required - using setter
+		$this->tabs = $model;
 
 		$this->widget('UpdateViewWidget', array(
 			'model'=>$model,
@@ -470,7 +659,10 @@ class Controller extends CController
 	 */
 	public function actionIndex()
 	{
-		$this->actionAdmin();
+		// NB: need to redirect as opposed to just calling the relavant action so that the url is correct base
+		// form form action on the admin view
+		$this->redirect(array('admin'));
+		//$this->actionAdmin();
 	}
 
 	/**
@@ -493,7 +685,7 @@ class Controller extends CController
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']===$modelName.'-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']===$this->modelName.'-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
@@ -509,10 +701,8 @@ class Controller extends CController
 	static function autoTextWidget($model, $form, $fkField, $htmlOptions = array())
 	{
 		// get relation name from foreign key
-		// TODO rewrite this as single preg_replace - use camelize function
-		// upper case first letter of words other than first, remove _ and id off end
-		$relName = preg_replace('/(.*)[iI]d$/', '$1', lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $fkField)))));
-			
+		$relName = preg_replace('/(.*)[iI]d$/', '$1', Yii::app()->functions->camelize($fkField));
+		
 		Yii::app()->controller->widget('WMEJuiAutoCompleteFkField',
 			array(
 				'model'=>$model,

@@ -91,7 +91,7 @@ class PurchaseOrder extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id',$this->id);
 		$criteria->compare('supplier.name',$this->searchSupplier);
 		$criteria->compare('number',$this->number,true);
 		

@@ -105,8 +105,8 @@ class DutyType extends ActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('lead_in_days',$this->lead_in_days);
-		$criteria->compare('dutyCategory.description',$this->searchDutyCategory);
-		$criteria->compare('genericType.description',$this->searchGenericType);
+		$criteria->compare('dutyCategory.description',$this->searchDutyCategory,true);
+		$criteria->compare('genericType.description',$this->searchGenericType,true);
 		
 		$criteria->with = array('dutyCategory','genericType');
 

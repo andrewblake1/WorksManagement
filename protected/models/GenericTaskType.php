@@ -106,8 +106,8 @@ class GenericTaskType extends ActiveRecord
 			'taskType.client.name',
 			'taskType.taskType.description'
 		), $this->searchTaskType);
-		$criteria->compare('genericTaskCategory.description',$this->searchGenericTaskCategory);
-		$criteria->compare('genericType.description',$this->searchGenericType);
+		$criteria->compare('genericTaskCategory.description',$this->searchGenericTaskCategory,true);
+		$criteria->compare('genericType.description',$this->searchGenericType,true);
 		
 		$criteria->with = array(
 			'taskType.client',

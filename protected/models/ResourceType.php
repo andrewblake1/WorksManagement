@@ -98,7 +98,7 @@ class ResourceType extends ActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('description',$this->description,true);
-		$criteria->compare('resourceCategory.description',$this->searchResourceCategory);
+		$criteria->compare('resourceCategory.description',$this->searchResourceCategory,true);
 		$criteria->compare('maximum',$this->maximum);
 		
 		$criteria->with = array('resourceCategory');
