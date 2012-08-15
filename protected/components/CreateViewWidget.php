@@ -3,10 +3,11 @@
 /**
  * Create view widget
  * @param ActiveRecord $model the model
+ * @param ActiveRecord $models the models for a multi model view
  */
 class CreateViewWidget extends CWidget
 {
-	private $controller;
+	private $_controller;
 	public $model;
 	public $models;
 
@@ -16,27 +17,21 @@ class CreateViewWidget extends CWidget
     public function init()
     {
        // this method is called by CController::beginWidget()
-		$this->controller = $this->getController();
+		$this->_controller = $this->getController();
 	}
- 
+
     public function run()
     {
-?>
-		<?php $this->controller->beginWidget('bootstrap.widgets.TbModal', array('id'=>'myModal')); ?>
+		$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'myModal'));
 
-		<div class="modal-body">
-			<?php
-			
-			echo $this->controller->renderPartial('_form',array(
-				'model'=>$this->model,
-				'models'=>$this->models,
-				));
-			
-			?>
-		</div>
+		echo '<div class="modal-body">';
+		echo $this->_controller->renderPartial('_form',array(
+			'model'=>$this->model,
+			'models'=>$this->models,
+		));
+		echo '</div>';
  
-		<?php $this->controller->endWidget(); ?>		
-<?php
+		$this->endWidget(); 
 	}
 }
 

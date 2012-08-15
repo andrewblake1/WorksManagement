@@ -5,10 +5,9 @@
  * @param ActiveRecord $model the model
  * @param array $columns the table columns to display in the grid view
  */
-class adminViewWidget extends CWidget
+class AdminViewWidget extends CWidget
 {
-	private $controller;
-
+	private $_controller;
 	public $model;
 	public $columns;
 
@@ -18,7 +17,7 @@ class adminViewWidget extends CWidget
     public function init()
     {
        // this method is called by CController::beginWidget()
-		$this->controller = $this->getController();
+		$this->_controller = $this->getController();
 	}
  
     public function run()
@@ -37,29 +36,27 @@ class adminViewWidget extends CWidget
 		}
 
 		// add the buttons
-		$this->columns[]=array('class'=>'WMBootButtonColumn');
-
-		// add heading
-		// add spaces after capitals
-		$string=preg_replace(
-			'/(?<!^)((?<![[:upper:]])[[:upper:]]|[[:upper:]](?![[:upper:]]))/',
-			' $1',
-			$this->controller->modelName
-		);
-		echo "<h1>Manage {$string}s</h1>";
-
+		$this->columns[]=array('class'=>'WMTbButtonColumn');
+	
 		// add instructions
-		$this->widget('bootstrap.widgets.BootAlert');
+		$this->_controller->widget('bootstrap.widgets.TbAlert');
 
 		// display the grid
-		$this->controller->widget('bootstrap.widgets.BootGridView',array(
-			'id'=>$this->controller->modelName.'-grid',
+		$this->_controller->widget('bootstrap.widgets.TbGridView',array(
+			'id'=>$this->_controller->modelName.'-grid',
 			'type'=>'striped',
 			'dataProvider'=>$this->model->search(),
 			'filter'=>$this->model,
 			'columns'=>$this->columns,
 		));
 
+		// as using boostrap modal for create the html for the modal needs to be on
+		// the calling page
+		$this->_controller->widget('CreateViewWidget', array(
+			'model'=>$this->model,
+		));
+
+		
 	}
 }
 
