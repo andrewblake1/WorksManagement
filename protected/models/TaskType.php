@@ -6,16 +6,18 @@
  * The followings are the available columns in table 'task_type':
  * @property integer $id
  * @property string $description
- * @property integer $client_id
+ * @property integer $project_type_id
  * @property string $template_task_id
  * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property GenericTaskType[] $genericTaskTypes
+ * @property Task[] $tasks
+ * @property ProjectType $projectType
  * @property Staff $staff
  * @property Task $templateTask
- * @property Client $client
+ * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
  */
 class TaskType extends ActiveRecord
 {
@@ -23,7 +25,7 @@ class TaskType extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchClient;
+	public $searchProjectType;
 	public $searchTemplateTask;
 	
 	/**
@@ -52,13 +54,13 @@ class TaskType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, client_id, staff_id', 'required'),
-			array('client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, project_type_id, staff_id', 'required'),
+			array('project_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			array('template_task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, client_id, deleted, searchTemplateTask, searchClient, searchStaff, template_task_id', 'safe', 'on'=>'search'),
+			array('id, description, project_type_id, deleted, searchTemplateTask, searchProjectType, searchStaff, template_task_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -71,9 +73,11 @@ class TaskType extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'genericTaskTypes' => array(self::HAS_MANY, 'GenericTaskType', 'task_type_id'),
+			'tasks' => array(self::HAS_MANY, 'Task', 'task_type_id'),
+			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'templateTask' => array(self::BELONGS_TO, 'Task', 'template_task_id'),
-			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
+			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'task_type_id'),
 		);
 	}
 
@@ -84,10 +88,10 @@ class TaskType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Task Type',
-			'client_id' => 'Client',
-			'searchClient' => 'Client',
-			'template_task_id' => 'Template Task',
-			'searchTemplateTask' => 'Template Task',
+			'project_type_id' => 'Client/Project type',
+			'searchProjectType' => 'Client/Project type',
+			'template_task_id' => 'Template task',
+			'searchTemplateTask' => 'Template task',
 		));
 	}
 
@@ -98,22 +102,67 @@ class TaskType extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('template_task_id',$this->template_task_id,true);
-//		$criteria->compare('templateTask.description',$this->searchTemplateTask,true);
-		$criteria->compare('client.name',$this->searchClient,true);
-		
-		$criteria->with = array('client', 'templateTask');
-
+		// select
 		$criteria->select=array(
-			'id',
-			'description',
-			'client.name AS searchClient',
-			'template_task_id',
+//			't.id',
+			't.description',
+			't.template_task_id',
 		);
 
+		// where
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.template_task_id',$this->template_task_id,true);
+//		$criteria->compare('templateTask.description',$this->searchTemplateTask,true);
+
+		if(isset($this->project_type_id))
+		{
+			$criteria->compare('t.project_type_id',$this->project_type_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				client.name,
+				projectType.description
+				) AS searchProjectType";
+			$this->compositeCriteria($criteria,
+				array(
+					'client.name',
+					'projectType.description',
+				),
+				$this->searchProjectType
+			);
+		}
+		
+		// join
+		$criteria->with = array('projectType', 'projectType.client', 'templateTask');
+
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		$columns[] = 'description';
+  		if(!isset($this->project_type_id))
+		{
+			$columns[] = array(
+				'name'=>'searchProjectType',
+				'value'=>'CHtml::link($data->searchProjectType,
+					Yii::app()->createUrl("ProjectType/update", array("id"=>$data->project_type_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'searchTemplateTask',
+			'value'=>'CHtml::link($data->searchTemplateTask,
+				Yii::app()->createUrl("TemplateTask/update", array("id"=>$data->template_task_id))
+			)',
+			'type'=>'raw',
+		);
+		
+		return $columns;
 	}
 
 	/**
@@ -121,10 +170,24 @@ class TaskType extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		return array(
-			'client'=>'name',
-			'description',
-		);
+/*		$controller = ucfirst(Yii::app()->controller->id);
+		
+		// show when not coming from parent
+		if(!isset($_GET[$controller]['project_type_id'])  && !isset($_GET[$controller]['project_id']) && !isset($_GET[$_GET['model']]))*/
+		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
+		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('task_type_id'))
+		{
+			ActiveRecord::$labelOverrides['task_type_id'] = 'Client/Project type/Task type';
+			$displaAttr['projectType->client']='name';
+		}
+		else
+		{
+			ActiveRecord::$labelOverrides['task_type_id'] = 'Task type';
+		}
+
+		$displaAttr[]='description';
+
+		return $displaAttr;
 	}
 
 	/**
@@ -137,3 +200,5 @@ class TaskType extends ActiveRecord
 	}
 
 }
+
+?>

@@ -14,5 +14,30 @@ Yii::import('bootstrap.widgets.TbButtonColumn');
  */
 class WMTbButtonColumn extends TbButtonColumn
 {
-	public $template='{update} {delete}';
+	public $template;
+
+	/**
+	 * Displays a particular model.
+	 */
+    public function __construct($grid)
+	{
+		$controller = Yii::app()->getController();
+		
+		// set buttons based on access rights
+		if($controller->checkAccess(Controller::accessWrite))
+		{
+			$this->template='{update} {delete}';
+		}
+		elseif($controller->checkAccess(Controller::accessRead))
+		{
+ 			$this->template='{view}';
+		}
+		else
+		{
+			$this->template='';
+		}
+		
+		parent::__construct($grid);
+ 	}
 }
+?>

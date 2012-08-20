@@ -21,6 +21,11 @@
 class Dutycategory extends ActiveRecord
 {
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Duty category';
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return Dutycategory the static model class
@@ -63,9 +68,9 @@ class Dutycategory extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'dutyTypes' => array(self::HAS_MANY, 'DutyType', 'duty_category_id'),
+			'dutyTypes' => array(self::HAS_MANY, 'DutyType', 'dutycategory_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'resourcecategories' => array(self::HAS_MANY, 'Resourcecategory', 'duty_category_id'),
+			'resourcecategories' => array(self::HAS_MANY, 'Resourcecategory', 'dutycategory_id'),
 		);
 	}
 
@@ -75,7 +80,7 @@ class Dutycategory extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Duty Category',
+			'id' => 'Duty category',
 			'root' => 'Root',
 			'lft' => 'Lft',
 			'rgt' => 'Rgt',
@@ -90,23 +95,37 @@ class Dutycategory extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('root',$this->root);
-		$criteria->compare('lft',$this->lft);
-		$criteria->compare('rgt',$this->rgt);
-		$criteria->compare('level',$this->level);
-		$criteria->compare('description',$this->description,true);
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.t.root',$this->root);
+		$criteria->compare('t.lft',$this->lft);
+		$criteria->compare('t.rgt',$this->rgt);
+		$criteria->compare('t.level',$this->level);
+		$criteria->compare('t.description',$this->description,true);
 
 		$criteria->select=array(
-			'id',
-			'root',
-			'lft',
-			'rgt',
-			'level',
-			'description',
+//			't.id',
+			't.root',
+			't.lft',
+			't.rgt',
+			't.level',
+			't.description',
 		);
 
 		return $criteria;
 	}
 
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		$columns[] = 'root';
+		$columns[] = 'lft';
+		$columns[] = 'rgt';
+		$columns[] = 'level';
+		$columns[] = 'description';
+		
+		return $columns;
+	}
+
 }
+
+?>

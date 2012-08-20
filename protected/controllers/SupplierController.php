@@ -3,3 +3,5 @@
 class SupplierController extends Controller
 {
 }
+
+?>

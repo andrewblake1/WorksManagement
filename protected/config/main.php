@@ -1,5 +1,6 @@
 <?php
-
+//INSERT INTO `worksmanagement_dev`.`AuthAssignment` (`id`, `itemname`, `userid`, `bizrule`, `data`, `deleted`, `staff_id`) VALUES (NULL, 'system admin', '1', NULL, NULL, '0', '1');
+//INSERT INTO `worksmanagement_dev`.`staff` (`id`, `first_name`, `last_name`, `phone_mobile`, `email`, `password`, `deleted`, `staff_id`) VALUES (NULL, 'Andrew', 'Blake', NULL, 'admin@newzealandfishing.com', MD5('andrew'), '0', NULL);
 /**
  * Main configuration.
  * All properties can be overridden in mode_<mode>.php files
@@ -21,6 +22,9 @@ return array(
 		// uncomment the following to define a path alias
 		//'local' => 'path/to/local-folder'
 	),
+
+	'homeUrl'=>array('client/admin'),
+	'defaultController'=>array('client/admin'),
 
 	// This is the main Web application configuration. Any writable
 	// CWebApplication properties can be configured here.
@@ -59,7 +63,7 @@ return array(
 					// removes 'site' & 'index' from urls and add pretty urls to static pages
 					'contact'=>'site/contact',
 					'page/<view:\w+>'=>'site/page',
-					'/'=>'site/index',
+					'/'=>'client/admin',
 
 					'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 					'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',

@@ -2,9 +2,16 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	TaskTypeController::listWidgetRow($model, $form, 'task_type_id');
+	if(isset($model->task_type_id))
+	{
+		$form->hiddenField('task_type_id');
+	}
+	else
+	{
+		TaskTypeController::listWidgetRow($model, $form, 'task_type_id');
+	}
 
-	GenericTaskCategoryController::listWidgetRow($model, $form, 'generic_task_category_id');
+	GenerictaskcategoryController::listWidgetRow($model, $form, 'generictaskcategory_id');
 
 	GenericTypeController::listWidgetRow($model, $form, 'generic_type_id');
 

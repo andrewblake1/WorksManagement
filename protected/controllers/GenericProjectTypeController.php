@@ -3,3 +3,5 @@
 class GenericProjectTypeController extends Controller
 {
 }
+
+?>

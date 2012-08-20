@@ -42,7 +42,8 @@
 				'brandUrl'=>'#',
 				'collapse'=>true, // requires bootstrap-responsive.css
 				'items'=>array(
-//					$this->operations,
+					$this->allMenu,
+					//$this->operations,
 					array(
 						'class'=>'bootstrap.widgets.TbMenu',
 						'htmlOptions'=>array('class'=>'pull-right'),
@@ -64,7 +65,7 @@
 
 			<!-- tabs -->
 			<?php
-			if($this->tabs)
+			if($t = $this->tabs)
 			{
 				$this->widget('bootstrap.widgets.TbMenu', array(
 					'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
@@ -78,8 +79,8 @@
 			if(isset($this->heading) && $this->heading)
 			{
 				echo '<h2>'.CHtml::encode($this->heading);
-				// if admin action
-				if($this->action->Id == 'admin')
+				// if admin action and use has update rights
+				if($this->action->Id == 'admin' && $this->checkAccess(Controller::accessWrite))
 				{
 					echo ' ';
 					$this->widget('bootstrap.widgets.TbButton', array(

@@ -3,3 +3,5 @@
 class ClientController extends Controller
 {
 }
+
+?>

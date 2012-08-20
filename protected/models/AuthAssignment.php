@@ -58,7 +58,7 @@ class AuthAssignment extends ActiveRecord
 			array('bizrule, data', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, itemname, searchUser, bizrule, data, searchStaff', 'safe', 'on'=>'search'),
+			array('id, itemname, userid, searchUser, bizrule, data, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -86,8 +86,8 @@ class AuthAssignment extends ActiveRecord
 			'id' => 'Role Assignment',
 			'naturalKey' => 'User/Role (First/Last/Email/Role)',
 			'itemname' => 'Role',
-			'userid' => 'User (First/Last/Email)',
-			'searchUser' => 'User (First/Last/Email)',
+			'userid' => 'User, First/Last/Email',
+			'searchUser' => 'User, First/Last/Email',
 			'bizrule' => 'Bizrule',
 			'data' => 'Data',
 		));
@@ -100,35 +100,70 @@ class AuthAssignment extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('itemname',$this->itemname,true);
-		$this->compositeCriteria($criteria,
-			array(
-				'user.first_name',
-				'user.last_name',
-				'user.email'
-			),
-			$this->searchUser
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria->select=array(
+//			't.id',
+			't.itemname',
+			"CONCAT_WS('$delimiter',
+				user.first_name,
+				user.last_name,
+				user.email
+				) AS searchUser",
+			't.bizrule',
+			't.data',
 		);
-		$criteria->compare('bizrule',$this->bizrule,true);
-		$criteria->compare('data',$this->data,true);
 
-		if(!isset($_GET[__CLASS__.'_sort']))
-			$criteria->order = 't.'.$this->tableSchema->primaryKey." DESC";
-		
+		// where
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.itemname',$this->itemname,true);
+		$criteria->compare('t.bizrule',$this->bizrule,true);
+		$criteria->compare('t.data',$this->data,true);
+		if(isset($this->userid))
+		{
+			$criteria->compare('userid', $this->userid);
+		}
+		else
+		{
+			$this->compositeCriteria($criteria,
+				array(
+					'user.first_name',
+					'user.last_name',
+					'user.email'
+				),
+				$this->searchUser
+			);
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				user.first_name,
+				user.last_name,
+				user.email
+				) AS searchUser";
+		}
+
+		// join
 		$criteria->with = array('user');
 
-		$delimiter = Yii::app()->params['delimiter']['search'];
-
-		$criteria->select=array(
-			'id',
-			'itemname',
-			"CONCAT_WS('$delimiter',user.first_name,user.last_name,user.email) AS searchUser",
-			'bizrule',
-			'data',
-		);
-
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		$columns[] = 'itemname';
+ 		if(!isset($this->userid))
+		{
+			$columns[] = array(
+				'name'=>'searchUser',
+				'value'=>'CHtml::link($data->searchUser,
+					Yii::app()->createUrl("Staff/update", array("id"=>$data->userid))
+				)',
+				'type'=>'raw',
+			);
+		}
+		$columns[] = 'bizrule';
+		$columns[] = 'data';
+		
+		return $columns;
 	}
 
 	/**
@@ -136,12 +171,26 @@ class AuthAssignment extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		return array(
-			'user'=>'first_name',
-			'user'=>'last_name',
-			'user'=>'last_name',
-			'itemname',
-		);
+		$controller = ucfirst(Yii::app()->controller->id);
+		
+//		// show when not coming from parent
+//		if(!isset($_GET[$controller]['staff_id'])  && !isset($_GET[$controller]['project_id']) && !isset($_GET[$_GET['model']]))
+		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
+		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('AuthAssignment_id'))
+		{
+			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role/First/Last/Email';
+			$displaAttr[]='itemname';
+			$displaAttr['user']='first_name';
+			$displaAttr['user']='last_name';
+			$displaAttr['user']='email';
+		}
+		else
+		{
+			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role';
+			$displaAttr[]='itemname';
+		}
+
+		return $displaAttr;
 	}
 
 	/**
@@ -153,4 +202,16 @@ class AuthAssignment extends ActiveRecord
 		return array('searchUser');
 	}
 	
+	/**
+	 * Returns foreign key attribute name within this model that references another model.
+	 * @param string $referencesModel the name name of the model that the foreign key references.
+	 * @return string the foreign key attribute name within this model that references another model
+	 */
+	static function getParentForeignKey($referencesModel)
+	{
+		return parent::getParentForeignKey($referencesModel, array('Staff'=>'userid'));
+	}
+
 }
+
+?>

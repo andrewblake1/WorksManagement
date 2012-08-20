@@ -83,15 +83,23 @@ class Client extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.name',$this->name,true);
 
 		$criteria->select=array(
-			'id',
-			'name',
+			't.id',
+			't.name',
 		);
 
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+		$columns[] = 'id';
+		$columns[] = 'name';
+		
+		return $columns;
 	}
 
 	/**
@@ -103,3 +111,5 @@ class Client extends ActiveRecord
 	}
 
 }
+
+?>

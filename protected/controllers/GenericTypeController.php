@@ -3,3 +3,5 @@
 class GenericTypeController extends Controller
 {
 }
+
+?>

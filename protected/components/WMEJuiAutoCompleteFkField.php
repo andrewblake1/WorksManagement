@@ -40,10 +40,12 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 			}
 		}
 		
+		// create the ajax url including foreign key model name and existing get parameters
 		$this->sourceUrl = Yii::app()->createUrl("$fKModelType/autocomplete",
 			array(
-				'fk_model' => $fKModelType
-			)); 
+				'fk_model' => $fKModelType,
+				'model' => get_class($this->model),
+			) + $_GET); 
 
 		$this->_display=(!empty($value) ? implode(Yii::app()->params['delimiter']['display'], $this->_display) : '');
 

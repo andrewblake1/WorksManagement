@@ -4,7 +4,14 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	$form->textFieldRow('itemname');
 
-	StaffController::listWidgetRow($model, $form, 'userid');
+	if(!isset($model->userid))
+	{
+		StaffController::listWidgetRow($model, $form, 'userid');
+	}
+	else
+	{
+		$form->hiddenField('userid');
+	}	
 
 	$form->textAreaRow('bizrule');
 

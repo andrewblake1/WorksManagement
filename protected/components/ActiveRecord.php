@@ -7,6 +7,65 @@ abstract class ActiveRecord extends CActiveRecord
 	 */
 	public $searchStaff;
 	public $naturalKey;
+	/**
+	 * @var array of labels to override or set at run time
+	 */
+	static $labelOverrides = array();
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName;
+
+	static public function getNiceName($primaryKey=null)
+	{
+		// get the nice name of the model if not set in calling class
+		$niceName = empty(static::$niceName)
+			? Yii::app()->functions->sentencize(get_called_class())
+			: static::$niceName;
+		
+		// if a primary key has been given
+		if($primaryKey)
+		{
+			// if there is description or name attribute in this model
+			$attributeNames = static::model()->attributeNames();
+			if(in_array('description', $attributeNames))
+			{
+				$attributeName = 'description';
+			}
+			elseif(in_array('name', $attributeNames))
+			{
+				$attributeName = 'name';
+			}
+			if(isset($attributeName))
+			{
+				// get the value of that attribute
+				$model = static::model()->findByPk($primaryKey);
+				$value = $model->$attributeName;
+				// if the attribute is longer than 30 characters
+				if(strlen($value) > 30)
+				{
+					// shorten to 30 characters total
+					$value = substr($value, 0, 27) . '...';
+				}
+				// append to our nice name
+				$niceName .= " ($value)";
+			}
+		}
+		
+		return $niceName;
+	}
+	/**
+	 * Returns foreign key attribute name within this model that references another model. This is used
+	 * for creating navigational items i.e. tabs.
+	 * @param string $referencesModel the name name of the model that the foreign key references.
+	 * @return string the foreign key attribute name within this model that references another model
+	 */
+	static function getParentForeignKey($referencesModel, $parentForeignKeys=array())
+	{
+		return isset($parentForeignKeys[$referencesModel])
+			? $parentForeignKeys[$referencesModel]
+			: Yii::app()->functions->uncamelize($referencesModel) . '_id';
+	}
 	
 	/**
 	 * Returns the listdata of specified bound column and display column.
@@ -160,10 +219,10 @@ abstract class ActiveRecord extends CActiveRecord
 	public function attributeLabels($attributeLabels = array())
 	{
 		// array union plus means duplicated members in the right hand array don't overwrite the left
-		return $attributeLabels + array(
+		return ActiveRecord::$labelOverrides + $attributeLabels + array(
 			'naturalKey' => $attributeLabels[$this->tableSchema->primaryKey],
-			'searchStaff' => 'Staff (First/Last/Email)',
-			'staff_id' => 'Staff (First/Last/Email)',
+			'searchStaff' => 'Staff, First/Last/Email',
+			'staff_id' => 'Staff, First/Last/Email',
 			'description' => 'Description',
 			'deleted' => 'Deleted',
 		);
@@ -270,6 +329,11 @@ abstract class ActiveRecord extends CActiveRecord
 				return $validator->max;
 		}
 	}
+
+	public function getAdminColumns()
+	{
+	}
+
 }
 
 ?>

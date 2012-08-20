@@ -3,10 +3,16 @@
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'models'=>$models));
 
 	$form->textFieldRow('description');
-	
-	// only show the project type drop down when creating
+
+	// if creating
 	if($model->isNewRecord)
+	{
 		ProjectTypeController::listWidgetRow($model, $form, 'project_type_id');
+	}
+	else
+	{
+		$form->hiddenField('project_type_id');
+	}
 
 	$form->textFieldRow('travel_time_1_way');
 

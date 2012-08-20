@@ -6,13 +6,13 @@
  * The followings are the available columns in table 'resource_type':
  * @property integer $id
  * @property string $description
- * @property integer $resource_category_id
+ * @property integer $resourcecategory_id
  * @property integer $maximum
  * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Resourcecategory $resourceCategory
+ * @property Resourcecategory $resourcecategory
  * @property Staff $staff
  * @property TaskToResourceType[] $taskToResourceTypes
  */
@@ -22,7 +22,7 @@ class ResourceType extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchResourceCategory;
+	public $searchResourcecategory;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -51,11 +51,11 @@ class ResourceType extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('description, maximum, staff_id', 'required'),
-			array('resource_category_id, maximum, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('resourcecategory_id, maximum, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, searchResourceCategory, maximum, deleted, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, searchResourcecategory, maximum, deleted, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,7 +67,7 @@ class ResourceType extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'resourceCategory' => array(self::BELONGS_TO, 'Resourcecategory', 'resource_category_id'),
+			'resourcecategory' => array(self::BELONGS_TO, 'Resourcecategory', 'resourcecategory_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'resource_type_id'),
 		);
@@ -79,9 +79,9 @@ class ResourceType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Resource Type',
-			'resource_category_id' => 'Resource Category',
-			'searchResourceCategory' => 'Resource Category',
+			'id' => 'Resource type',
+			'resourcecategory_id' => 'Resource category',
+			'searchResourcecategory' => 'Resource category',
 			'maximum' => 'Maximum',
 		));
 	}
@@ -91,28 +91,54 @@ class ResourceType extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('resourceCategory.description',$this->searchResourceCategory,true);
-		$criteria->compare('maximum',$this->maximum);
-		
-		$criteria->with = array('resourceCategory');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
-
+		// select
 		$criteria->select=array(
-			'id',
-			'description',
-			'resourceCategory.description AS searchResourceCategory',
-			'maximum',
+			't.id',
+			't.description',
+			'resourcecategory.description AS searchResourcecategory',
+			't.maximum',
 		);
 
+		// where
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('resourcecategory.description',$this->searchResourcecategory,true);
+		$criteria->compare('t.maximum',$this->maximum);
+		if(isset($this->resource_type_id))
+		{
+			$criteria->compare('t.resource_type_id', $this->resource_type_id);
+		}
+		else
+		{
+			$criteria->compare('resourcecategory.description',$this->searchResourcecategory,true);
+			$criteria->select[]='resourcecategory.description AS searchResourcecategory';
+		}
+		
+		// join
+		$criteria->with = array('resourcecategory');
+
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+		$columns[] = 'id';
+		$columns[] = 'description';
+ 		if(!isset($this->dutycategory_id))
+		{
+			$columns[] = array(
+				'name'=>'searchResourcecategory',
+				'value'=>'CHtml::link($data->searchResourcecategory,
+					Yii::app()->createUrl("Resourcecategory/update", array("id"=>$data->resourcecategory_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+		$columns[] = 'maximum';
+		
+		return $columns;
 	}
 
 	/**
@@ -121,6 +147,8 @@ class ResourceType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchResourceCategory');
+		return array('searchResourcecategory');
 	}
 }
+
+?>

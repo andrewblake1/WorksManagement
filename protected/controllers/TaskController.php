@@ -14,3 +14,5 @@ class TaskController extends Controller
 	protected $relation_modelToGenericModelTypes = 'taskToGenericTaskTypes';
 	protected $relation_modelToGenericModelType = 'taskToGenericTaskType';
 }*/
+
+?>

@@ -3,3 +3,5 @@
 class AuthItemController extends Controller
 {
 }
+
+?>

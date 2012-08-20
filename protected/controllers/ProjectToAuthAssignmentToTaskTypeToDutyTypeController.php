@@ -3,3 +3,5 @@
 class ProjectToAuthAssignmentToTaskTypeToDutyTypeController extends Controller
 {
 }
+
+?>

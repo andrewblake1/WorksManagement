@@ -93,20 +93,34 @@ class AuthItem extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('type',$this->type);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('bizrule',$this->bizrule,true);
-		$criteria->compare('data',$this->data,true);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('t.type',$this->type);
+		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.bizrule',$this->bizrule,true);
+		$criteria->compare('t.data',$this->data,true);
 
 		$criteria->select=array(
-			'name',
-			'type',
-			'description',
-			'bizrule',
-			'data',
+			't.name',
+			't.type',
+			't.description',
+			't.bizrule',
+			't.data',
 		);
 
 		return $criteria;
 	}
+
+	public function getAdminColumns()
+	{
+		$columns[] = 'name';
+		$columns[] = 'type';
+		$columns[] = 'description';
+		$columns[] = 'bizrule';
+		$columns[] = 'data';
+		
+		return $columns;
+	}
+
 }
+
+?>

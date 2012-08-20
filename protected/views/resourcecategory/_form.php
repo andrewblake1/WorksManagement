@@ -10,7 +10,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	$form->textFieldRow('level');
 
-	DutyCategoryController::listWidgetRow($model, $form, 'duty_category_id');
+	DutycategoryController::listWidgetRow($model, $form, 'dutycategory_id');
 
 	$form->textFieldRow('description');
 

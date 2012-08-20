@@ -60,3 +60,5 @@ class GenericController extends Controller
 	}
 	
 }
+
+?>

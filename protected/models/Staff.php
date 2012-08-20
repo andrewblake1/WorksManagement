@@ -19,13 +19,10 @@
  * @property AuthItem[] $authItems
  * @property Assembly[] $assemblies
  * @property Client[] $clients
- * @property TaskType[] $taskTypes
- * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
- * @property Crew[] $crews
- * @property Crew[] $crews1
  * @property Day[] $days
  * @property Duty[] $duties
  * @property DutyType[] $dutyTypes
+ * @property Dutycategory[] $dutycategories
  * @property Generic[] $generics
  * @property GenericProjectType[] $genericProjectTypes
  * @property GenericTaskType[] $genericTaskTypes
@@ -34,23 +31,31 @@
  * @property Generictaskcategory[] $generictaskcategories
  * @property Material[] $materials
  * @property MaterialToTask[] $materialToTasks
- * @property Plan[] $plans
  * @property Project[] $projects
  * @property ProjectToAuthAssignment[] $projectToAuthAssignments
+ * @property ProjectToAuthAssignmentToTaskTypeToDutyType[] $projectToAuthAssignmentToTaskTypeToDutyTypes
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
+ * @property ProjectType[] $projectTypes
  * @property PurchaseOrder[] $purchaseOrders
  * @property Reschedule[] $reschedules
+ * @property Resourcecategory[] $resourcecategories
  * @property Staff $staff
  * @property Staff[] $staffs
  * @property Supplier[] $suppliers
  * @property Task[] $tasks
+ * @property Task[] $tasks1
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
  * @property TaskToResourceType[] $taskToResourceTypes
  * @property TaskType[] $taskTypes
- */
-class Staff extends ActiveRecord
+ * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
+ */class Staff extends ActiveRecord
 {
+	/**
+	 * @var array of referenced parent model name => foregin key name in this model
+	 */
+	protected $parentForeignKeys = array();
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -101,13 +106,10 @@ class Staff extends ActiveRecord
 			'authItems' => array(self::HAS_MANY, 'AuthItem', 'staff_id'),
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'staff_id'),
 			'clients' => array(self::HAS_MANY, 'Client', 'staff_id'),
-			'taskTypes' => array(self::HAS_MANY, 'TaskType', 'staff_id'),
-			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'staff_id'),
-			'crews' => array(self::HAS_MANY, 'Crew', 'in_charge_id'),
-			'crews1' => array(self::HAS_MANY, 'Crew', 'staff_id'),
 			'days' => array(self::HAS_MANY, 'Day', 'staff_id'),
 			'duties' => array(self::HAS_MANY, 'Duty', 'staff_id'),
 			'dutyTypes' => array(self::HAS_MANY, 'DutyType', 'staff_id'),
+			'dutycategories' => array(self::HAS_MANY, 'Dutycategory', 'staff_id'),
 			'generics' => array(self::HAS_MANY, 'Generic', 'staff_id'),
 			'genericProjectTypes' => array(self::HAS_MANY, 'GenericProjectType', 'staff_id'),
 			'genericTaskTypes' => array(self::HAS_MANY, 'GenericTaskType', 'staff_id'),
@@ -116,20 +118,24 @@ class Staff extends ActiveRecord
 			'generictaskcategories' => array(self::HAS_MANY, 'Generictaskcategory', 'staff_id'),
 			'materials' => array(self::HAS_MANY, 'Material', 'staff_id'),
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'staff_id'),
-			'plans' => array(self::HAS_MANY, 'Plan', 'staff_id'),
 			'projects' => array(self::HAS_MANY, 'Project', 'staff_id'),
 			'projectToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthAssignment', 'staff_id'),
+			'projectToAuthAssignmentToTaskTypeToDutyTypes' => array(self::HAS_MANY, 'ProjectToAuthAssignmentToTaskTypeToDutyType', 'staff_id'),
 			'projectToGenericProjectTypes' => array(self::HAS_MANY, 'ProjectToGenericProjectType', 'staff_id'),
-			'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrders', 'staff_id'),
+			'projectTypes' => array(self::HAS_MANY, 'ProjectType', 'staff_id'),
+			'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrder', 'staff_id'),
 			'reschedules' => array(self::HAS_MANY, 'Reschedule', 'staff_id'),
+			'resourcecategories' => array(self::HAS_MANY, 'Resourcecategory', 'staff_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'staffs' => array(self::HAS_MANY, 'Staff', 'staff_id'),
 			'suppliers' => array(self::HAS_MANY, 'Supplier', 'staff_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'staff_id'),
+			'tasks1' => array(self::HAS_MANY, 'Task', 'in_charge_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'staff_id'),
 			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'staff_id'),
 			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'staff_id'),
 			'taskTypes' => array(self::HAS_MANY, 'TaskType', 'staff_id'),
+			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'staff_id'),
 		);
 	}
 
@@ -140,9 +146,9 @@ class Staff extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Staff',
-			'first_name' => 'First Name',
-			'last_name' => 'Last Name',
-			'phone_mobile' => 'Phone Mobile',
+			'first_name' => 'First name',
+			'last_name' => 'Last name',
+			'phone_mobile' => 'Phone mobile',
 			'email' => 'Email',
 			'password' => 'Password',
 		));
@@ -155,21 +161,40 @@ class Staff extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('first_name',$this->first_name,true);
-		$criteria->compare('last_name',$this->last_name,true);
-		$criteria->compare('phone_mobile',$this->phone_mobile,true);
-		$criteria->compare('email',$this->email,true);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.first_name',$this->first_name,true);
+		$criteria->compare('t.last_name',$this->last_name,true);
+		$criteria->compare('t.phone_mobile',$this->phone_mobile,true);
+		$criteria->compare('t.email',$this->email,true);
 
 		$criteria->select=array(
-			'id',
-			'first_name',
-			'last_name',
-			'phone_mobile',
-			'email',
+			't.id',
+			't.first_name',
+			't.last_name',
+			't.phone_mobile',
+			't.email',
 		);
 
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+		$columns[] = 'id';
+		$columns[] = 'first_name';
+		$columns[] = 'last_name';
+        $columns[] = array(
+			'name'=>'phone_mobile',
+			'value'=>'CHtml::link($data->phone_mobile, "tel:".$data->phone_mobile)',
+			'type'=>'raw',
+		);
+        $columns[] = array(
+			'name'=>'email',
+			'value'=>'$data->email',
+			'type'=>'email',
+		);
+		
+		return $columns;
 	}
 
 	/**
@@ -200,3 +225,5 @@ class Staff extends ActiveRecord
 	}
 
 }
+
+?>

@@ -3,3 +3,5 @@
 class MaterialToTaskController extends Controller
 {
 }
+
+?>

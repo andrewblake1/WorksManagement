@@ -179,3 +179,4 @@ abstract class GenericExtensionController extends Controller
 	}
 
 }
+?>

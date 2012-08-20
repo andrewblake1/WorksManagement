@@ -79,7 +79,7 @@ class TaskToAssembly extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task To Assembly',
+			'id' => 'Task to assembly',
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
 			'assembly_id' => 'Assembly',
@@ -93,28 +93,76 @@ class TaskToAssembly extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('task.description',$this->searchTask,true);
-		$criteria->compare('assembly.description',$this->searchAssembly,true);
-		$criteria->compare('quantity',$this->quantity);
-		
-		$criteria->with = array('assembly','task');
-
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			'id',
-			'task.description AS searchTask',
+//			't.id',
 			'assembly.description AS searchAssembly',
-			'quantity',
+			't.quantity',
+		);
+
+		// where
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('assembly.description',$this->searchAssembly,true);
+		$criteria->compare('t.quantity',$this->quantity);
+
+		if(isset($this->task_id))
+		{
+			$criteria->compare('t.task_id',$this->task_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				client.name
+				project.description,
+				task.description
+				) AS searchTask";
+			$this->compositeCriteria($criteria,
+				array(
+					'client.name',
+					'project.description',
+					'task.description'
+				),
+				$this->searchTask
+			);
+		}
+		
+		// join
+		$criteria->with = array(
+			'assembly',
+			'task',
+			'project',
+			'task.taskType.client',
 		);
 
 		return $criteria;
 	}
 
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		if(!isset($this->task_id))
+		{
+			$columns[] = array(
+				'name'=>'searchTask',
+				'value'=>'CHtml::link($data->searchTask,
+					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'searchAssembly',
+			'value'=>'CHtml::link($data->searchAssembly,
+				Yii::app()->createUrl("Assembly/update", array("id"=>$data->assembly_id))
+			)',
+			'type'=>'raw',
+		);
+		
+		return $columns;
+	}
 
 	/**
 	 * Retrieves a sort array for use in CActiveDataProvider.
@@ -125,3 +173,5 @@ class TaskToAssembly extends ActiveRecord
 		return array('searchTask', 'searchAssembly');
 	}
 }
+
+?>

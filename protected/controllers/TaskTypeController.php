@@ -3,3 +3,5 @@
 class TaskTypeController extends Controller
 {
 }
+
+?>

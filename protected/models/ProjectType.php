@@ -83,11 +83,11 @@ class ProjectType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Project Type',
+			'id' => 'Project type',
 			'client_id' => 'Client',
 			'searchClient' => 'Client',
-			'template_project_id' => 'Template Project',
-			'searchTemplateProject' => 'Template Project',
+			'template_project_id' => 'Template project',
+			'searchTemplateProject' => 'Template project',
 		));
 	}
 
@@ -98,22 +98,57 @@ class ProjectType extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('template_project_id',$this->template_project_id,true);
-//		$criteria->compare('templateProject.description',$this->searchTemplateProject,true);
-		$criteria->compare('client.name',$this->searchClient,true);
-		
-		$criteria->with = array('client', 'templateProject');
-
+		// select
 		$criteria->select=array(
-			'id',
-			'description',
-			'client.name AS searchClient',
-			'template_project_id',
+//			't.id',
+			't.description',
+			't.template_project_id',
 		);
 
+		// where
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.template_project_id',$this->template_project_id,true);
+//		$criteria->compare('templateProject.description',$this->searchTemplateProject,true);
+		if(isset($this->client_id))
+		{
+			$criteria->compare('t.client_id', $this->client_id);
+		}
+		else
+		{
+			$criteria->compare('client.name',$this->searchClient,true);
+			$criteria->select[]="client.name AS searchClient";
+		}
+		
+		// join
+		$criteria->with = array('client', 'templateProject');
+
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		$columns[] = 'description';
+		if(!isset($this->client_id))
+		{
+			$columns[] = array(
+				'name'=>'searchClient',
+				'value'=>'CHtml::link($data->searchClient,
+					Yii::app()->createUrl("Client/update", array("id"=>$data->client_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'searchTemplateProject',
+			'value'=>'CHtml::link($data->searchTemplateProject,
+				Yii::app()->createUrl("TemplateProject/update", array("id"=>$data->template_project_id))
+			)',
+			'type'=>'raw',
+		);
+		
+		return $columns;
 	}
 
 	/**
@@ -121,10 +156,22 @@ class ProjectType extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		return array(
-			'client'=>'name',
-			'description',
-		);
+//		// show when not coming from parent - the 'model' variable is only set in WMEJuiAutoCompleteFkField
+//		if(!isset($_GET[ucfirst(Yii::app()->controller->id)]['client_id']) && !isset($_GET[$_GET['model']]))
+		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
+		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_type_id'))
+		{
+			ActiveRecord::$labelOverrides['project_type_id'] = 'Client/Project type';
+			$displaAttr['client']='name';
+		}
+		else
+		{
+			ActiveRecord::$labelOverrides['projeproject_type_idct_id'] = 'Project type';
+		}
+
+		$displaAttr[]='description';
+
+		return $displaAttr;
 	}
 
 	/**
@@ -137,3 +184,5 @@ class ProjectType extends ActiveRecord
 	}
 
 }
+
+?>

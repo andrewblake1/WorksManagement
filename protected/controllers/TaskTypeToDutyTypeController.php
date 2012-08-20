@@ -3,3 +3,5 @@
 class TaskTypeToDutyTypeController extends Controller
 {
 }
+
+?>

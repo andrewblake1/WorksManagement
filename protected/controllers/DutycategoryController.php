@@ -3,3 +3,5 @@
 class DutycategoryController extends Controller
 {
 }
+
+?>

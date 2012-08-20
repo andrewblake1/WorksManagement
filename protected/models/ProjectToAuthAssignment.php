@@ -54,7 +54,7 @@ class ProjectToAuthAssignment extends ActiveRecord
 			array('project_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchProject, searchAuthAssignment, searchStaff', 'safe', 'on'=>'search'),
+			array('id, project_id, searchProject, searchAuthAssignment, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,11 +78,11 @@ class ProjectToAuthAssignment extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Project To Auth Assignment',
-			'project_id' => 'Project',
-			'searchProject' => 'Project',
-			'AuthAssignment_id' => 'Auth Assignment (Role/First/Last/Email)',
-			'searchAuthAssignment' => 'Auth Assignment (Role/First/Last/Email)',
+			'id' => 'Project to auth assignment',
+			'project_id' => 'Client/Project',
+			'searchProject' => 'Client/Project',
+			'AuthAssignment_id' => 'Role/First/Last/Email',
+			'searchAuthAssignment' => 'Role/First/Last/Email',
 		));
 	}
 
@@ -93,25 +93,10 @@ class ProjectToAuthAssignment extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('project.description',$this->searchProject,true);
-		$this->compositeCriteria(
-			$criteria,
-			array(
-				'authAssignment.itemname0.itemname',
-				'authAssignment.user.first_name',
-				'authAssignment.user.last_name',
-				'authAssignment.user.email'
-			),
-			$this->searchAuthAssignment
-		);
-		
-		$criteria->with = array('authAssignment.itemname0','authAssignment.user','project');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			'id',
-			'project.description AS searchProject',
+//			't.id',
 			"CONCAT_WS('$delimiter',
 				authAssignment.itemname,
 				user.first_name,
@@ -120,7 +105,71 @@ class ProjectToAuthAssignment extends ActiveRecord
 				) AS searchAuthAssignment",
 		);
 
+		// where
+//		$criteria->compare('t.id',$this->id);
+		$this->compositeCriteria(
+			$criteria,
+			array(
+				'authAssignment.itemname',
+				'user.first_name',
+				'user.last_name',
+				'user.email'
+			),
+			$this->searchAuthAssignment
+		);
+		
+		if(isset($this->project_id))
+		{
+			$criteria->compare('t.project_id',$this->project_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				client.name,
+				project.description
+				) AS searchProject";
+			$this->compositeCriteria($criteria,
+				array(
+					'client.name',
+					'project.description',
+				),
+				$this->searchProject
+			);
+		}
+		
+		// join
+		$criteria->with = array(
+			'authAssignment.itemname0',
+			'authAssignment.user',
+			'project',
+			'project.projectType.client',
+		);
+
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		if(!isset($this->project_id))
+		{
+			$columns[] = array(
+				'name'=>'searchProject',
+				'value'=>'CHtml::link($data->searchProject,
+					Yii::app()->createUrl("Project/update", array("id"=>$data->project_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'searchAuthAssignment',
+			'value'=>'CHtml::link($data->searchAuthAssignment,
+				Yii::app()->createUrl("AuthAssignment/update", array("id"=>$data->AuthAssignment_id))
+			)',
+			'type'=>'raw',
+		);
+		
+		return $columns;
 	}
 
 	/**
@@ -131,4 +180,37 @@ class ProjectToAuthAssignment extends ActiveRecord
 	{
 		return array('searchProject', 'searchAuthAssignment');
 	}
+	
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+//		// show when not coming from parent
+//		if(!isset($_GET[ucfirst(Yii::app()->controller->id)]['project_id']) && !isset($_GET[$_GET['model']]))
+		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
+		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_to_AuthAssignment_id'))
+		{
+			ActiveRecord::$labelOverrides['project_to_AuthAssignment_id'] = 'Client/Project/Role/First/Last/Email';
+			$displaAttr['project->client']='name';
+			$displaAttr['project']='description';
+			$displaAttr['authAssignment']='itemname';
+			$displaAttr['authAssignment->user']='first_name';
+			$displaAttr['authAssignment->user']='last_name';
+			$displaAttr['authAssignment->user']='email';
+		}
+		else
+		{
+			ActiveRecord::$labelOverrides['project_to_AuthAssignment_id'] = 'Role/First/Last/Email';
+			$displaAttr['authAssignment']='itemname';
+			$displaAttr['authAssignment->user']='first_name';
+			$displaAttr['authAssignment->user']='last_name';
+			$displaAttr['authAssignment->user']='email';
+		}
+
+		return $displaAttr;
+	}
+
 }
+
+?>

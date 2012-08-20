@@ -84,12 +84,12 @@ class TaskTypeToDutyType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task Type To Duty Type',
-			'naturalKey' => '(Client/Task Type/Duty Type/Role)',
-			'duty_type_id' => 'Duty Type',
-			'searchDutyType' => 'Duty Type',
-			'task_type_id' => 'Task Type (Client/Task Type)',
-			'searchTaskType' => 'Task Type (Client/Task Type)',
+			'id' => 'Task type to duty type',
+			'naturalKey' => 'Client/Task type/Duty type/Role',
+			'duty_type_id' => 'Duty type',
+			'searchDutyType' => 'Duty type',
+			'task_type_id' => 'Client/Task type',
+			'searchTaskType' => 'Client/Task type',
 			'AuthItem_name' => 'Role',
 		));
 	}
@@ -101,32 +101,70 @@ class TaskTypeToDutyType extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('dutyType.description',$this->searchDutyType,true);
-		$this->compositeCriteria($criteria,
-			array(
-				'client.name',
-				'taskType.description'
-			),
-			$this->searchTaskType
-		);
-		$criteria->compare('AuthItem_name',$this->AuthItem_name,true);
-
-		$criteria->with = array('dutyType','taskType.client','taskType');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
-
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			'id',
+//			't.id',
 			'dutyType.description AS searchDutyType',
-			"CONCAT_WS('$delimiter',
+			't.AuthItem_name',
+		);
+
+		// where
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('dutyType.description',$this->searchDutyType,true);
+		$criteria->compare('t.AuthItem_name',$this->AuthItem_name,true);
+
+		if(isset($this->task_type_id))
+		{
+			$criteria->compare('t.task_type_id',$this->task_type_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
 				client.name,
 				taskType.description
-				) AS searchTaskType",
-			'AuthItem_name',
-		);
+				) AS searchTaskType";
+			$this->compositeCriteria($criteria, array(
+				'client.name',
+				'taskType.description'
+			), $this->searchTaskType);
+		}
+
+		// join
+		$criteria->with = array('dutyType','taskType.client','taskType');
 
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+        $columns[] = array(
+			'name'=>'searchDutyType',
+			'value'=>'CHtml::link($data->searchDutyType,
+				Yii::app()->createUrl("DutyType/update", array("id"=>$data->duty_type_id))
+			)',
+			'type'=>'raw',
+		);
+ 		if(!isset($this->task_id_id))
+		{
+			$columns[] = array(
+				'name'=>'searchTaskType',
+				'value'=>'CHtml::link($data->searchTaskType,
+					Yii::app()->createUrl("TaskType/update", array("id"=>$data->task_type_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'AuthItem_name',
+			'value'=>'CHtml::link($data->AuthItem_name,
+				Yii::app()->createUrl("AuthItem/update", array("id"=>$data->AuthItem_name))
+			)',
+			'type'=>'raw',
+		);
+		
+		return $columns;
 	}
 
 	/**
@@ -152,3 +190,5 @@ class TaskTypeToDutyType extends ActiveRecord
 	}
 
 }
+
+?>

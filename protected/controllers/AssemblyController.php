@@ -3,3 +3,4 @@
 class AssemblyController extends Controller
 {
 }
+?>

@@ -83,8 +83,8 @@ class TaskToGenericTaskType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Task To Generic Task Type',
-			'generic_task_type_id' => 'Generic Task Type (Client/Task type/Generic type)',
-			'searchGenericTaskType' => 'Generic Task Type (Client/Task type/Generic type)',
+			'generic_task_type_id' => 'Client/Task type/Generic type',
+			'searchGenericTaskType' => 'Client/Task type/Generic type',
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
 			'generic_id' => 'Generic',
@@ -97,34 +97,85 @@ class TaskToGenericTaskType extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$this->compositeCriteria($criteria, array(
-			'genericTaskType.client.name',
-			'genericTaskType.taskType.description',
-			'genericTaskType.genericType.description',
-			), $this->searchGenericTaskType);
-		$criteria->compare('task.description',$this->searchTask,true);
-		$criteria->compare('generic.id',$this->searchGeneric);
-		
-		$criteria->with = array('genericTaskType.genericType','task','generic');
-
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			'id',
+//			't.id',
 			"CONCAT_WS('$delimiter',
-				genericTaskType.client.name,
-				genericTaskType.taskType.description,
-				genericTaskType.genericType.description,
+				client.name,
+				taskType.description,
+				genericType.description,
 				) AS searchGenericTaskType",
-			'task.description AS searchTask',
 			'generic.id AS searchGeneric',
 		);
 
+		// where
+//		$criteria->compare('t.id',$this->id);
+		$this->compositeCriteria($criteria, array(
+			'client.name',
+			'taskType.description',
+			'genericType.description',
+			), $this->searchGenericTaskType);
+		$criteria->compare('generic.id',$this->searchGeneric);
+		
+		if(isset($this->task_id))
+		{
+			$criteria->compare('t.task_id',$this->task_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				client.name
+				project.description,
+				task.description
+				) AS searchTask";
+			$this->compositeCriteria($criteria,
+				array(
+					'client.name',
+					'project.description',
+					'task.description'
+				),
+				$this->searchTask
+			);
+		}
+
+		// join
+		$criteria->with = array('genericTaskType.genericType','task','generic');
+
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+        $columns[] = array(
+			'name'=>'searchGenericTaskType',
+			'value'=>'CHtml::link($data->searchGenericTaskType,
+				Yii::app()->createUrl("GenericTaskType/update", array("id"=>$data->generic_task_type_id))
+			)',
+			'type'=>'raw',
+		);
+		if(!isset($this->task_id))
+		{
+			$columns[] = array(
+				'name'=>'searchTask',
+				'value'=>'CHtml::link($data->searchTask,
+					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'searchGeneric',
+			'value'=>'CHtml::link($data->searchGeneric,
+				Yii::app()->createUrl("Generic/update", array("id"=>$data->generic_id))
+			)',
+			'type'=>'raw',
+		);
+		
+		return $columns;
 	}
 
 	/**
@@ -136,3 +187,5 @@ class TaskToGenericTaskType extends ActiveRecord
 		return array('searchGenericTaskType', 'searchTask', 'searchGeneric');
 	}
 }
+
+?>

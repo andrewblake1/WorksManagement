@@ -84,7 +84,7 @@ class MaterialToTask extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Material To Task',
+			'id' => 'Material to task',
 			'material_id' => 'Material',
 			'searchMaterial' => 'Material',
 			'task_id' => 'Task',
@@ -100,21 +100,74 @@ class MaterialToTask extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('material.description',$this->searchMaterial,true);
-		$criteria->compare('task.description',$this->searchTask,true);
-		$criteria->compare('quantity',$this->quantity);
-		
-		$criteria->with = array('material','task');
-
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			'id',
+//			't.id',
 			'material.description AS searchMaterial',
-			'task.description AS searchTask',
-			'quantity',
+			't.quantity',
+		);
+		
+		// where
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('material.description',$this->searchMaterial,true);
+		$criteria->compare('t.quantity',$this->quantity);
+
+		if(isset($this->task_id))
+		{
+			$criteria->compare('t.task_id',$this->task_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				client.name
+				project.description,
+				task.description
+				) AS searchTask";
+			$this->compositeCriteria($criteria,
+				array(
+					'client.name',
+					'project.description',
+					'task.description'
+				),
+				$this->searchTask
+			);
+		}
+
+		// join
+		$criteria->with = array(
+			'material',
+			'task',
+			'project',
+			'task.taskType.client',
 		);
 
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+        $columns[] = array(
+			'name'=>'searchMaterial',
+			'value'=>'CHtml::link($data->searchMaterial,
+				Yii::app()->createUrl("Material/update", array("id"=>$data->material_id))
+			)',
+			'type'=>'raw',
+		);
+		if(!isset($this->task_id))
+		{
+			$columns[] = array(
+				'name'=>'searchTask',
+				'value'=>'CHtml::link($data->searchTask,
+					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+		$columns[] = 'quantity';
+		
+		return $columns;
 	}
 
 	/**
@@ -126,3 +179,5 @@ class MaterialToTask extends ActiveRecord
 		return array('searchMaterial');
 	}
 }
+
+?>

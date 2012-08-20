@@ -80,11 +80,11 @@ class ProjectToAuthAssignmentToTaskTypeToDutyType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Project To Auth Assignment To Task Type To Duty Type',
-			'project_to_AuthAssignment_id' => 'Project To Auth Assignment (Project/Role/First/Last/Email)',
-			'searchProjectToAuthAssignment' => 'Project To Auth Assignment (Project/Role/First/Last/Email)',
-			'task_type_to_duty_type_id' => 'Task Type To Duty Type (Client/Task type/Duty Type)',
-			'searchTaskTypeToDutyType' => 'Task Type To Duty Type (Client/Task type/Duty Type)',
+			'id' => 'Project to auth assignment to task type to duty type',
+			'project_to_AuthAssignment_id' => 'Project/Role/First/Last/Email',
+			'searchProjectToAuthAssignment' => 'Project/Role/First/Last/Email',
+			'task_type_to_duty_type_id' => 'Client/Task type/Duty type',
+			'searchTaskTypeToDutyType' => 'Client/Task type/Duty type',
 		));
 	}
 
@@ -94,28 +94,57 @@ class ProjectToAuthAssignmentToTaskTypeToDutyType extends ActiveRecord
 	public function getSearchCriteria()
 	{
 		$criteria=new CDbCriteria;
-		$criteria->compare('id',$this->id);
-		$this->compositeCriteria(
-			$criteria,
-			array(
-				'projectToAuthAssignment.project.id',
-				'projectToAuthAssignment.authAssignment.itemname',
-				'projectToAuthAssignment.authAssignment.user.first_name',
-				'projectToAuthAssignment.authAssignment.user.last_name',
-				'projectToAuthAssignment.authAssignment.user.email'
-			),
-			$this->searchProjectToAuthAssignment
+
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria->select=array(
+//			't.id',
+			"CONCAT_WS('$delimiter',
+				client.name,
+				taskType.description,
+				dutyType.description,
+				) AS searchTaskTypeToDutyType",
 		);
+
+		// where
+//		$criteria->compare('t.id',$this->id);
 		$this->compositeCriteria(
 			$criteria,
 			array(
-			'taskTypeToDutyType.taskType.client.name',
-			'taskTypeToDutyType.taskType.taskType.description',
-			'taskTypeToDutyType.dutyType.description',
+			'client.name',
+			'taskType.description',
+			'dutyType.description',
 			),
 			$this->searchTaskTypeToDutyType
 		);
 
+		if(isset($this->project_to_AuthAssignment_id))
+		{
+			$criteria->compare('t.project_to_AuthAssignment_id',$this->project_to_AuthAssignment_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				project.id,
+				authAssignment.itemname,
+				user.first_name,
+				user.last_name,
+				user.email
+				) AS searchProjectToAuthAssignment";
+			$this->compositeCriteria(
+				$criteria,
+				array(
+					'project.id',
+					'authAssignment.itemname',
+					'user.first_name',
+					'user.last_name',
+					'user.email'
+				),
+				$this->searchProjectToAuthAssignment
+			);
+		}
+
+		// join
 		$criteria->with = array(
 			'projectToAuthAssignment.project',
 			'projectToAuthAssignment.authAssignment',
@@ -124,25 +153,31 @@ class ProjectToAuthAssignmentToTaskTypeToDutyType extends ActiveRecord
 			'taskTypeToDutyType.dutyType',
 			);
 
-		$delimiter = Yii::app()->params['delimiter']['search'];
-
-		$criteria->select=array(
-			'id',
-			"CONCAT_WS('$delimiter',
-				projectToAuthAssignment.project.id,
-				projectToAuthAssignment.authAssignment.itemname,
-				projectToAuthAssignment.authAssignment.user.first_name,
-				projectToAuthAssignment.authAssignment.user.last_name,
-				projectToAuthAssignment.authAssignment.user.email
-				) AS searchProjectToAuthAssignment",
-			"CONCAT_WS('$delimiter',
-				taskTypeToDutyType.taskType.client.name,
-				taskTypeToDutyType.taskType.taskType.description,
-				taskTypeToDutyType.dutyType.description,
-				) AS searchTaskTypeToDutyType",
-		);
-
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		if(isset($this->project_to_AuthAssignment_id))
+		{
+			$columns[] = array(
+				'name'=>'searchProjectToAuthAssignment',
+				'value'=>'CHtml::link($data->searchProjectToAuthAssignment,
+					Yii::app()->createUrl("ProjectToAuthAssignment/update", array("id"=>$data->project_to_AuthAssignment_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'searchTaskTypeToDutyType',
+			'value'=>'CHtml::link($data->searchTaskTypeToDutyType,
+				Yii::app()->createUrl("TaskTypeToDutyType/update", array("id"=>$data->task_type_to_duty_type_id))
+			)',
+			'type'=>'raw',
+		);
+		
+		return $columns;
 	}
 
 	/**
@@ -171,3 +206,5 @@ class ProjectToAuthAssignmentToTaskTypeToDutyType extends ActiveRecord
 		return array('searchProjectToAuthAssignment', 'searchTaskTypeToDutyType');
 	}
 }
+
+?>

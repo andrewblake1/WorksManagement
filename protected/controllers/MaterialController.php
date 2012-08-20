@@ -3,3 +3,5 @@
 class MaterialController extends Controller
 {
 }
+
+?>

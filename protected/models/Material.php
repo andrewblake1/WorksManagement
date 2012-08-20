@@ -85,14 +85,24 @@ class Material extends ActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('description',$this->description,true);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.description',$this->description,true);
 
 		$criteria->select=array(
-			'id',
-			'description',
+			't.id',
+			't.description',
 		);
 
 		return $criteria;
 	}
+
+	public function getAdminColumns()
+	{
+		$columns[] = 'id';
+		$columns[] = 'description';
+		
+		return $columns;
+	}
 }
+
+?>

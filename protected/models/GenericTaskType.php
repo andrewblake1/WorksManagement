@@ -6,14 +6,14 @@
  * The followings are the available columns in table 'generic_task_type':
  * @property integer $id
  * @property integer $task_type_id
- * @property integer $generic_task_category_id
+ * @property integer $generictaskcategory_id
  * @property integer $generic_type_id
  * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property GenericType $genericType
- * @property Generictaskcategory $genericTaskCategory
+ * @property Generictaskcategory $generictaskcategory
  * @property Staff $staff
  * @property TaskType $taskType
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
@@ -25,7 +25,7 @@ class GenericTaskType extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchTaskType;
-	public $searchGenericTaskCategory;
+	public $searchGenerictaskcategory;
 	public $searchGenericType;
 	
 	/**
@@ -55,10 +55,10 @@ class GenericTaskType extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('task_type_id, generic_type_id, staff_id', 'required'),
-			array('task_type_id, generic_task_category_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, generictaskcategory_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchTaskType, searchGenericTaskCategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
+			array('id, searchTaskType, searchGenerictaskcategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -71,7 +71,7 @@ class GenericTaskType extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'genericType' => array(self::BELONGS_TO, 'GenericType', 'generic_type_id'),
-			'genericTaskCategory' => array(self::BELONGS_TO, 'Generictaskcategory', 'generic_task_category_id'),
+			'generictaskcategory' => array(self::BELONGS_TO, 'Generictaskcategory', 'generictaskcategory_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
 			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'generic_task_type_id'),
@@ -84,13 +84,13 @@ class GenericTaskType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Generic Task Type',
-			'task_type_id' => 'Task Type (Client/Task type)',
-			'searchTaskType' => 'Task Type (Client/Task type)',
-			'generic_task_category_id' => 'Generic Task Category',
-			'searchGenericTaskCategory' => 'Generic Task Category',
-			'generic_type_id' => 'Generic Type',
-			'searchGenericType' => 'Generic Type',
+			'id' => 'Generic task type',
+			'task_type_id' => 'Client/Project type/Task type',
+			'searchTaskType' => 'Client/Project type/Task type',
+			'generictaskcategory_id' => 'Generic task category',
+			'searchGenerictaskcategory' => 'Generic task category',
+			'generic_type_id' => 'Generic type',
+			'searchGenericType' => 'Generic type',
 		));
 	}
 
@@ -101,34 +101,75 @@ class GenericTaskType extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$this->compositeCriteria($criteria, array(
-			'taskType.client.name',
-			'taskType.taskType.description'
-		), $this->searchTaskType);
-		$criteria->compare('genericTaskCategory.description',$this->searchGenericTaskCategory,true);
-		$criteria->compare('genericType.description',$this->searchGenericType,true);
-		
-		$criteria->with = array(
-			'taskType.client',
-			'taskType',
-			'genericTaskCategory',
-			'genericType',
-			);
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
-
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			'id',
-			"CONCAT_WS('$delimiter',
-				client.name,
-				taskType.description
-				) AS searchTaskType",
-			'genericTaskCategory.description AS searchGenericTaskCategory',
+//			't.id',
+			'generictaskcategory.description AS searchGenerictaskcategory',
 			'genericType.description AS searchGenericType',
 		);
 
+		// where
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('generictaskcategory.description',$this->searchGenerictaskcategory,true);
+		$criteria->compare('genericType.description',$this->searchGenericType,true);
+
+		if(isset($this->task_type_id))
+		{
+			$criteria->compare('t.task_type_id',$this->task_type_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				client.name,
+				taskType.description
+				) AS searchTaskType";
+			$this->compositeCriteria($criteria, array(
+				'client.name',
+				'taskType.description'
+			), $this->searchTaskType);
+		}
+
+		// join
+		$criteria->with = array(
+			'taskType.client',
+			'taskType',
+			'generictaskcategory',
+			'genericType',
+			);
+
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+ 		if(!isset($this->task_type_id))
+		{
+			$columns[] = array(
+				'name'=>'searchTaskType',
+				'value'=>'CHtml::link($data->searchTaskType,
+					Yii::app()->createUrl("TaskType/update", array("id"=>$data->task_type_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'searchGenerictaskcategory',
+			'value'=>'CHtml::link($data->searchGenerictaskcategory,
+				Yii::app()->createUrl("Generictaskcategory/update", array("id"=>$data->generictaskcategory_id))
+			)',
+			'type'=>'raw',
+		);
+        $columns[] = array(
+			'name'=>'searchGenericType',
+			'value'=>'CHtml::link($data->searchGenericType,
+				Yii::app()->createUrl("GenericType/update", array("id"=>$data->generic_type_id))
+			)',
+			'type'=>'raw',
+		);
+		
+		return $columns;
 	}
 
 	/**
@@ -137,9 +178,9 @@ class GenericTaskType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'client->name',
-			'taskType->description',
-			'genericType->description',
+			'client'=>'name',
+			'taskType'=>'description',
+			'genericType'=>'description',
 		);
 	}
 
@@ -149,7 +190,9 @@ class GenericTaskType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTaskType', 'searchGenericTaskCategory', 'searchGenericType');
+		return array('searchTaskType', 'searchGenerictaskcategory', 'searchGenericType');
 	}
 
 }
+
+?>

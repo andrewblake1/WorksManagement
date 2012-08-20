@@ -207,13 +207,13 @@ class GenericType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Generic Type',
+			'id' => 'Generic type',
 			'mandatory' => 'Mandatory',
-			'allow_new' => 'Allow New',
-			'validation_type' => 'Validation Type',
-			'data_type' => 'Data Type',
-			'validation_text' => 'Validation Text',
-			'validation_error' => 'Validation Error',
+			'allow_new' => 'Allow new',
+			'validation_type' => 'Validation type',
+			'data_type' => 'Data type',
+			'validation_text' => 'Validation text',
+			'validation_error' => 'Validation error',
 		));
 	}
 
@@ -224,27 +224,43 @@ class GenericType extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('mandatory',$this->mandatory);
-		$criteria->compare('allow_new',$this->allow_new);
-		$criteria->compare('validation_type',$this->validation_type,true);
-		$criteria->compare('data_type',$this->data_type,true);
-		$criteria->compare('validation_text',$this->validation_text,true);
-		$criteria->compare('validation_error',$this->validation_error,true);
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.mandatory',$this->mandatory);
+		$criteria->compare('t.allow_new',$this->allow_new);
+		$criteria->compare('t.validation_type',$this->validation_type,true);
+		$criteria->compare('t.data_type',$this->data_type,true);
+		$criteria->compare('t.validation_text',$this->validation_text,true);
+		$criteria->compare('t.validation_error',$this->validation_error,true);
 
 		$criteria->select=array(
-			'id',
-			'description',
-			'mandatory',
-			'allow_new',
-			'validation_type',
-			'data_type',
-			'validation_text',
-			'validation_error',
+//			't.id',
+			't.description',
+			't.mandatory',
+			't.allow_new',
+			't.validation_type',
+			't.data_type',
+			't.validation_text',
+			't.validation_error',
 		);
 
 		return $criteria;
 	}
 
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		$columns[] = 'description';
+		$columns[] = 'mandatory';
+		$columns[] = 'allow_new';
+		$columns[] = 'validation_type';
+		$columns[] = 'data_type';
+		$columns[] = 'validation_text';
+		$columns[] = 'validation_error';
+		
+		return $columns;
+	}
+
 }
+
+?>

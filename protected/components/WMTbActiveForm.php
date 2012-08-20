@@ -15,32 +15,77 @@ class WMTbActiveForm extends TbActiveForm
 	public $htmlOptions=array('class'=>'well');
 	public $model;
 	public $models=null;
+	private $_htmlOptionReadonly = array();
 
 	/**
 	 * Displays a particular model.
 	 */
     public function init()
     {
-       // this method is called by CController::beginWidget()
 		$this->controller = $this->getController();
-		$this->id="{$this->controller->modelName}-form";
-		$this->action = /*$this->controller->modelName .*/ ($this->model->isNewRecord ? 'create' : 'update');
+		$modelName = $this->controller->modelName;
+		$this->id="$modelName-form";
         $this->clientOptions = array('validateOnSubmit'=>true);
+		
+		// determine whether form elements should be enabled or disabled by on access rights
+		if(!$this->controller->checkAccess(Controller::accessWrite))
+		{
+			$this->_htmlOptionReadonly = array('readonly'=>'readonly');
+			$this->action = 'view';
+		}
+		else
+		{
+			$this->action = ($this->model->isNewRecord ? 'create' : 'update');
+		}
+		
+		if($this->action == 'create')
+		{
+			echo '<div class="modal-header">';
+			echo '<a class="close" data-dismiss="modal">&times;</a>';
+			echo "<h3>{$modelName::getNiceName()}</h3>";
+			echo '</div>';
+		}
+		
+		// display any validation errors
 		echo $this->errorSummary($this->models ? $this->models : $this->model);
+		
 		parent::init();
 	}
  
     public function run()
     {
-		StaffController::listWidgetRow($this->model, $this, 'staff_id');
+		// only show the staff field when updating and if user is system admin
+		if(!$this->model->isNewRecord && Yii::app()->user->checkAccess('system admin'))
+		{
+			StaffController::listWidgetRow($this->model, $this, 'staff_id', array('readonly'=>'readonly'));
+		}
+		else
+		{
+			$this->hiddenField('staff_id');
+		}
 
-		echo '<div class="form-actions">';
-			$this->controller->widget('bootstrap.widgets.TbButton', array(
-				'buttonType'=>'submit',
-				'type'=>'primary',
-				'label'=>$this->model->isNewRecord ? 'Create' : 'Save',
-			));
-		echo '</div>';
+		// add the create or update button relevant to the context if applicable
+		if($this->action == 'update')
+		{
+			echo '<div class="form-actions">';
+				$this->controller->widget('bootstrap.widgets.TbButton', array(
+					'buttonType'=>'submit',
+					'type'=>'primary',
+					'label'=>  'Save',
+				));
+			echo '</div>';
+		}
+		// othherwise if create
+		elseif($this->action == 'create')
+		{
+			echo '<div class="modal-footer">';
+				$this->controller->widget('bootstrap.widgets.TbButton', array(
+					'buttonType'=>'submit',
+					'type'=>'primary',
+					'label'=>  'Create',
+				));
+			echo '</div>';
+		}
 		
 		parent::run();
 	}
@@ -59,31 +104,41 @@ class WMTbActiveForm extends TbActiveForm
 
 	public function checkBoxRow($attribute, $htmlOptions = array(), $model = NULL)
 	{
-		echo parent::checkBoxRow($model ? $model : $this->model, $attribute, $htmlOptions);
+		echo parent::checkBoxRow($model ? $model : $this->model, $attribute, $htmlOptions + $this->_htmlOptionReadonly);
 	}
 
 	public function textAreaRow($attribute, $data = array(), $htmlOptions = array(), $model = NULL)
 	{
-		echo parent::textAreaRow($model ? $model : $this->model, $attribute, $data, array('rows'=>6, 'cols'=>50, 'class'=>'span8') + $htmlOptions);
+		echo parent::textAreaRow($model ? $model : $this->model, $attribute, $data,
+				array('rows'=>6, 'cols'=>50, 'class'=>'span8') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
 	public function dropDownListRow($attribute, $data = array(), $htmlOptions = array(), $model = NULL)
 	{
-		echo parent::dropDownListRow($model ? $model : $this->model, $attribute, $data, array('class'=>'span5') + $htmlOptions);
+		echo parent::dropDownListRow($model ? $model : $this->model, $attribute,
+			$data, array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
 	public function textFieldRow($attribute, $htmlOptions = array(), $model = NULL)
 	{
 		self::maxLength($model ? $model : $this->model, $attribute, $htmlOptions);
-		echo parent::textFieldRow($model ? $model : $this->model, $attribute, array('class'=>'span5') + $htmlOptions);
+		echo parent::textFieldRow($model ? $model : $this->model, $attribute,
+			array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
 	public function passwordFieldRow($attribute, $htmlOptions = array(), $model = NULL)
 	{
 		self::maxLength($model ? $model : $this->model, $attribute, $htmlOptions);
-		echo parent::passwordFieldRow($model ? $model : $this->model, $attribute, array('class'=>'span5') + $htmlOptions);
+		echo parent::passwordFieldRow($model ? $model : $this->model, $attribute,
+			array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 
+	public function hiddenField($attribute, $htmlOptions = array(), $model = NULL)
+	{
+		echo CHtml::activeHiddenField($model ? $model : $this->model, $attribute,
+			$htmlOptions);
+	}
+	
 }
 
 ?>

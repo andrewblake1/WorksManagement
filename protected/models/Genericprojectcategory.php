@@ -20,6 +20,11 @@
 class Genericprojectcategory extends ActiveRecord
 {
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Generic project category';
+	
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return Genericprojectcategory the static model class
@@ -62,7 +67,7 @@ class Genericprojectcategory extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'genericProjectTypes' => array(self::HAS_MANY, 'GenericProjectType', 'generic_project_category_id'),
+			'genericProjectTypes' => array(self::HAS_MANY, 'GenericProjectType', 'genericprojectcategory_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
@@ -73,7 +78,7 @@ class Genericprojectcategory extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Generic Project Category',
+			'id' => 'Generic project category',
 			'root' => 'Root',
 			'lft' => 'Lft',
 			'rgt' => 'Rgt',
@@ -88,23 +93,37 @@ class Genericprojectcategory extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('root',$this->root);
-		$criteria->compare('lft',$this->lft);
-		$criteria->compare('rgt',$this->rgt);
-		$criteria->compare('level',$this->level);
-		$criteria->compare('description',$this->description,true);
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.root',$this->root);
+		$criteria->compare('t.lft',$this->lft);
+		$criteria->compare('t.rgt',$this->rgt);
+		$criteria->compare('t.level',$this->level);
+		$criteria->compare('t.description',$this->description,true);
 
 		$criteria->select=array(
-			'id',
-			'root',
-			'lft',
-			'rgt',
-			'level',
-			'description',
+//			't.id',
+			't.root',
+			't.lft',
+			't.rgt',
+			't.level',
+			't.description',
 		);
 
 		return $criteria;
 	}
 
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		$columns[] = 'root';
+		$columns[] = 'lft';
+		$columns[] = 'rgt';
+		$columns[] = 'level';
+		$columns[] = 'description';
+ 		
+		return $columns;
+	}
+
 }
+
+?>

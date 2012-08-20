@@ -77,7 +77,7 @@ class PurchaseOrder extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Purchase Order',
+			'id' => 'Purchase order',
 			'supplier_id' => 'Supplier',
 			'searchSupplier' => 'Supplier',
 			'number' => 'Number',
@@ -91,21 +91,35 @@ class PurchaseOrder extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
+		$criteria->compare('t.id',$this->id);
 		$criteria->compare('supplier.name',$this->searchSupplier);
-		$criteria->compare('number',$this->number,true);
+		$criteria->compare('t.number',$this->number,true);
 		
 		$criteria->with = array('supplier');
 
 		$criteria->select=array(
-			'id',
+			't.id',
 			'supplier.name AS searchSupplier',
-			'number',
+			't.number',
 		);
 
 		return $criteria;
 	}
 
+	public function getAdminColumns()
+	{
+		$columns[] = 'id';
+        $columns[] = array(
+			'name'=>'searchSupplier',
+			'value'=>'CHtml::link($data->searchSupplier,
+				Yii::app()->createUrl("Supplier/update", array("id"=>$data->supplier_id))
+			)',
+			'type'=>'raw',
+		);
+		$columns[] = 'number';
+		
+		return $columns;
+	}
 	
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
@@ -127,3 +141,5 @@ class PurchaseOrder extends ActiveRecord
 		return array('searchSupplier');
 	}
 }
+
+?>

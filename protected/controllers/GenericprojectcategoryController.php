@@ -3,3 +3,5 @@
 class GenericprojectcategoryController extends Controller
 {
 }
+
+?>

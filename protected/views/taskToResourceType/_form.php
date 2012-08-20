@@ -2,7 +2,14 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	MaterialController::listWidgetRow($model, $form, 'material_id');
+	if(isset($model->task_id))
+	{
+		$form->hiddenField('task_id');
+	}
+	else
+	{
+		TaskController::listWidgetRow($model, $form, 'task_id');
+	}
 
 	ResourceTypeController::listWidgetRow($model, $form, 'resource_type_id');
 

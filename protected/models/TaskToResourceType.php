@@ -82,11 +82,11 @@ class TaskToResourceType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task To Resource Type',
+			'id' => 'Task to resource type',
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
-			'resource_type_id' => 'Resource Type',
-			'searchResourceType' => 'Resource Type',
+			'resource_type_id' => 'Resource type',
+			'searchResourceType' => 'Resource type',
 			'quantity' => 'Quantity',
 			'hours' => 'Hours',
 			'start' => 'Start',
@@ -100,27 +100,75 @@ class TaskToResourceType extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('task.description',$this->searchTask,true);
+		// select
+		$criteria->select=array(
+//			't.id',
+			'resourceType.description AS searchResourceType',
+			't.quantity',
+			't.hours',
+			't.start',
+		);
+
+		// where
+//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('resourceType.description',$this->searchResourceType,true);
-		$criteria->compare('quantity',$this->quantity);
-		$criteria->compare('hours',$this->hours);
+		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('t.t.hours',$this->hours);
 		$criteria->compare('start',$this->start);
-		
+
+		if(isset($this->task_id))
+		{
+			$criteria->compare('t.task_id',$this->task_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				client.name
+				project.description,
+				task.description
+				) AS searchTask";
+			$this->compositeCriteria($criteria,
+				array(
+					'client.name',
+					'project.description',
+					'task.description'
+				),
+				$this->searchTask
+			);
+		}
+		//  join
 		$criteria->with = array('task','resourceType');
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 
-		$criteria->select=array(
-			'id',
-			'task.description AS searchTask',
-			'resourceType.description AS searchResourceType',
-			'quantity',
-			'hours',
-			'start',
-		);
-
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		if(!isset($this->task_id))
+		{
+			$columns[] = array(
+				'name'=>'searchTask',
+				'value'=>'CHtml::link($data->searchTask,
+					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'searchResourceType',
+			'value'=>'CHtml::link($data->searchResourceType,
+				Yii::app()->createUrl("ResourceType/update", array("id"=>$data->resource_type_id))
+			)',
+			'type'=>'raw',
+		);
+		$columns[] = 'quantity';
+		$columns[] = 'hours';
+		$columns[] = 'start';
+		
+		return $columns;
 	}
 
 	/**
@@ -132,3 +180,5 @@ class TaskToResourceType extends ActiveRecord
 		return array('searchTask', 'searchResourceType');
 	}
 }
+
+?>

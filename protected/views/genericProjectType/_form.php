@@ -2,9 +2,16 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	ProjectTypeController::listWidgetRow($model, $form, 'project_type_id');
+	if(isset($model->project_type_id))
+	{
+		$form->hiddenField('project_type_id');
+	}
+	else
+	{
+		ProjectTypeController::listWidgetRow($model, $form, 'project_type_id');
+	}
 
-	GenericProjectCategoryController::listWidgetRow($model, $form, 'generic_project_category_id');
+	GenericprojectcategoryController::listWidgetRow($model, $form, 'genericprojectcategory_id');
 
 	GenericTypeController::listWidgetRow($model, $form, 'generic_type_id');
 

@@ -18,6 +18,8 @@ class AdminViewWidget extends CWidget
     {
        // this method is called by CController::beginWidget()
 		$this->_controller = $this->getController();
+
+		parent::init();
 	}
  
     public function run()
@@ -56,7 +58,7 @@ class AdminViewWidget extends CWidget
 			'model'=>$this->model,
 		));
 
-		
+		parent::run();
 	}
 }
 

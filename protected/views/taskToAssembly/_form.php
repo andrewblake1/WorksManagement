@@ -2,7 +2,14 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	TaskController::listWidgetRow($model, $form, 'task_id');
+	if(isset($model->task_id))
+	{
+		$form->hiddenField('task_id');
+	}
+	else
+	{
+		TaskController::listWidgetRow($model, $form, 'task_id');
+	}
 
 	AssemblyController::listWidgetRow($model, $form, 'assembly_id');
 

@@ -227,11 +227,11 @@ class Generic extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Generic',
-			'type_int' => 'Type Int',
-			'type_float' => 'Type Float',
-			'type_time' => 'Type Time',
-			'type_date' => 'Type Date',
-			'type_text' => 'Type Text',
+			'type_int' => 'Int',
+			'type_float' => 'Float',
+			'type_time' => 'Time',
+			'type_date' => 'Date',
+			'type_text' => 'Text',
 		));
 	}
 
@@ -242,23 +242,37 @@ class Generic extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('type_int',$this->type_int);
-		$criteria->compare('type_float',$this->type_float);
-		$criteria->compare('type_time',$this->type_time);
-		$criteria->compare('type_date',$this->type_date);
-		$criteria->compare('type_text',$this->type_text,true);
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.type_int',$this->type_int);
+		$criteria->compare('t.type_float',$this->type_float);
+		$criteria->compare('t.type_time',$this->type_time);
+		$criteria->compare('t.type_date',$this->type_date);
+		$criteria->compare('t.type_text',$this->type_text,true);
 
 		$criteria->select=array(
-			'id',
-			'type_int',
-			'type_float',
-			'type_time',
-			'type_date',
-			'type_text',
+//			't.id',
+			't.type_int',
+			't.type_float',
+			't.type_time',
+			't.type_date',
+			't.type_text',
 		);
 
 		return $criteria;
 	}
 
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		$columns[] = 'type_int';
+		$columns[] = 'type_float';
+		$columns[] = 'type_time';
+		$columns[] = 'type_date';
+		$columns[] = 'type_text';
+		
+		return $columns;
+	}
+
 }
+
+?>

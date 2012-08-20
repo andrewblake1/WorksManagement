@@ -53,7 +53,7 @@ class Duty extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, project_to_AuthAssignment_to_task_type_to_duty_type_id, generic_id, staff_id', 'required'),
+			array('task_id, project_to_AuthAssignment_to_task_type_to_duty_type_id, staff_id', 'required'),
 			array('staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_id, project_to_AuthAssignment_to_task_type_to_duty_type_id, generic_id', 'length', 'max'=>10),
 			array('updated', 'safe'),
@@ -87,8 +87,8 @@ class Duty extends ActiveRecord
 			'id' => 'Duty',
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
-			'project_to_AuthAssignment_to_task_type_to_duty_type_id' => 'Project To Auth Assignment To Task Type To Duty Type',
-			'searchProjectToAuthAssignmentToTaskTypeToDutyType' => 'Project To Auth Assignment To Task Type To Duty Type',
+			'project_to_AuthAssignment_to_task_type_to_duty_type_id' => 'Role/First/Last/Email/Duty type',
+			'searchProjectToAuthAssignmentToTaskTypeToDutyType' => 'Role/First/Last/Email/Duty type',
 			'updated' => 'Updated',
 			'generic_id' => 'Generic',
 			'searchGeneric' => 'Generic',
@@ -102,54 +102,101 @@ class Duty extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('task.description',$this->searchTask,true);
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria->select=array(
+//			't.id',
+			"CONCAT_WS('$delimiter',
+				authAssignment.itemname,
+				user.first_name,
+				user.last_name,
+				user.email,
+				dutyType.description
+				) AS searchProjectToAuthAssignmentToTaskTypeToDutyType",
+			't.updated',
+			'generic.id AS searchGeneric',
+		);
+
+		// where
+//		$criteria->compare('t.id',$this->id);
 		$this->compositeCriteria(
 			$criteria,
 			array(
-				'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.project.id',
-				'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.itemname',
-				'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user.first_name',
-				'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user.last_name',
-				'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user.email',
-				'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.taskType.client.name',
-				'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.taskType.description',
-				'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.dutyType.description',
+				'authAssignment.itemname',
+				'user.first_name',
+				'user.last_name',
+				'user.email',
+				'dutyType.description',
 			), $this->searchProjectToAuthAssignmentToTaskTypeToDutyType);
-		$criteria->compare('updated',$this->updated,true);
-		$criteria->compare('generic.id',$this->searchGeneric);
+		$criteria->compare('t.updated',$this->updated,true);
+		$criteria->compare('t.generic.id',$this->searchGeneric);
 
+		if(isset($this->task_id))
+		{
+			$criteria->compare('t.task_id',$this->task_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				client.name
+				project.description,
+				task.description
+				) AS searchTask";
+			$this->compositeCriteria($criteria,
+				array(
+					'client.name',
+					'project.description',
+					'task.description'
+				),
+				$this->searchTask
+			);
+		}
+
+		// join
 		$criteria->with = array(
 			'task',
 			'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.project',
 			'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.authAssignment',
 			'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user',
-			'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.taskType.client',
-			'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.taskType',
+			'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.taskType.projectType.client',
+//			'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.taskType',
 			'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.dutyType',
 			'generic',
 		);
 
-		$delimiter = Yii::app()->params['delimiter']['search'];
-
-		$criteria->select=array(
-			'id',
-			'task.description AS searchTask',
-			"CONCAT_WS('$delimiter',
-				project.id,
-				authAssignment.itemname,
-				user.first_name,
-				user.last_name,
-				user.email,
-				client.name,
-				taskType.description,
-				dutyType.description
-				) AS searchProjectToAuthAssignmentToTaskTypeToDutyType",
-			'updated',
-			'generic.id AS searchGeneric',
-		);
-
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		if(!isset($this->task_id))
+		{
+			$columns[] = array(
+				'name'=>'searchTask',
+				'value'=>'CHtml::link($data->searchTask,
+					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'searchProjectToAuthAssignmentToTaskTypeToDutyType',
+			'value'=>'CHtml::link($data->searchProjectToAuthAssignmentToTaskTypeToDutyType,
+				Yii::app()->createUrl("ProjectToAuthAssignmentToTaskTypeToDutyType/update", array("id"=>$data->project_to_AuthAssignment_to_task_type_to_duty_type_id))
+			)',
+			'type'=>'raw',
+		);
+		$columns[] = 'updated';
+        $columns[] = array(
+			'name'=>'searchGeneric',
+			'value'=>'CHtml::link($data->searchGeneric,
+				Yii::app()->createUrl("Generic/update", array("id"=>$data->generic_id))
+			)',
+			'type'=>'raw',
+		);
+		
+		return $columns;
 	}
 
 	/**
@@ -162,3 +209,5 @@ class Duty extends ActiveRecord
 	}
 
 }
+
+?>

@@ -5,12 +5,12 @@
  *
  * The followings are the available columns in table 'reschedule':
  * @property string $id
- * @property string $old_task_id
+ * @property string $task_id
  * @property string $new_task_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Task $oldTask
+ * @property Task $task
  * @property Task $newTask
  * @property Staff $staff
  */
@@ -20,7 +20,7 @@ class Reschedule extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchOldTask;
+	public $searchTask;
 	public $searchNewTask;
 	
 	/**
@@ -49,12 +49,12 @@ class Reschedule extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('old_task_id, new_task_id, staff_id', 'required'),
+			array('task_id, new_task_id, staff_id', 'required'),
 			array('staff_id', 'numerical', 'integerOnly'=>true),
-			array('old_task_id, new_task_id', 'length', 'max'=>10),
+			array('task_id, new_task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchOldTask, $searchNewTask, $searchStaff', 'safe', 'on'=>'search'),
+			array('id, searchTask, $searchNewTask, $searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,7 +66,7 @@ class Reschedule extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'oldTask' => array(self::BELONGS_TO, 'Task', 'old_task_id'),
+			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
 			'newTask' => array(self::BELONGS_TO, 'Task', 'new_task_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
@@ -79,10 +79,10 @@ class Reschedule extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Reschedule',
-			'old_task_id' => 'Old Task',
-			'searchOldTask' => 'Old Task',
-			'new_task_id' => 'New Task',
-			'searchNewTask' => 'New Task',
+			'task_id' => 'Old task',
+			'searchTask' => 'Old task',
+			'new_task_id' => 'New task',
+			'searchNewTask' => 'New task',
 		));
 	}
 
@@ -93,20 +93,77 @@ class Reschedule extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('oldTask.description',$this->searchOldTask,true);
-		$criteria->compare('newTask.description',$this->searchNewTask,true);
-		$criteria->with = array('oldTask','newTask');
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
-
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			'id',
-			'oldTask.description AS searchOldTask',
-			'newTask.description AS searchNewTask',
+//			't.id',
+			"CONCAT_WS('$delimiter',
+				client.name,
+				project.description,
+				newTask.description
+				) AS searchNewTask"
 		);
 
+		// where
+//		$criteria->compare('t.id',$this->id);
+		$this->compositeCriteria($criteria,
+			array(
+				'client.name',
+				'project.description',
+				'newTask.description',
+			),
+			$this->searchNewTask
+		);
+
+		if(isset($this->task_id))
+		{
+			$criteria->compare('t.task_id',$this->task_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				client.name,
+				project.description,
+				task.description
+				) AS searchTask";
+			$this->compositeCriteria($criteria,
+				array(
+					'client.name',
+					'project.description',
+					'task.description'
+				),
+				$this->searchTask
+			);
+		}
+
+		// join
+		$criteria->with = array('task','newTask', 'task.project', 'task.project.projectType.client');
+
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+		if(!isset($this->task_id))
+		{
+			$columns[] = array(
+				'name'=>'searchTask',
+				'value'=>'CHtml::link($data->searchTask,
+					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+        $columns[] = array(
+			'name'=>'searchNewTask',
+			'value'=>'CHtml::link($data->searchNewTask,
+				Yii::app()->createUrl("Task/update", array("id"=>$data->new_task_id))
+			)',
+			'type'=>'raw',
+		);
+		
+		return $columns;
 	}
 
 	/**
@@ -115,6 +172,8 @@ class Reschedule extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchOldTask', 'searchNewTask');
+		return array('searchTask', 'searchNewTask');
 	}
 }
+
+?>

@@ -3,3 +3,5 @@
 class GenericTaskTypeController extends Controller
 {
 }
+
+?>

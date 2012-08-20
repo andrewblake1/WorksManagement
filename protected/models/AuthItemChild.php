@@ -67,24 +67,12 @@ class AuthItemChild extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Auth Item Child',
+			'id' => 'Auth item child',
 			'parent' => 'Parent',
 			'child' => 'Child',
 		));
 	}
 
-	/**
-	 * @return CDbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('parent',$this->parent);
-		$criteria->compare('child',$this->child);
-		
-		return $criteria;
-	}
-
 }
+
+?>

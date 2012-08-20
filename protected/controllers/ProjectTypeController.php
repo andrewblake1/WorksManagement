@@ -3,3 +3,5 @@
 class ProjectTypeController extends Controller
 {
 }
+
+?>

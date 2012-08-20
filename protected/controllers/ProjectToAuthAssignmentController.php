@@ -3,3 +3,5 @@
 class ProjectToAuthAssignmentController extends Controller
 {
 }
+
+?>

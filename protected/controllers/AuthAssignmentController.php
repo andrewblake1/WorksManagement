@@ -3,3 +3,5 @@
 class AuthAssignmentController extends Controller
 {
 }
+
+?>

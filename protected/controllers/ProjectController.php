@@ -15,3 +15,5 @@ class ProjectController extends Controller
 	protected $relation_modelToGenericModelType = 'projectToGenericProjectType';
 
 }*/
+
+?>

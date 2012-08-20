@@ -95,23 +95,44 @@ class Assembly extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('url',$this->url,true);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.url',$this->url,true);
 		$criteria->compare('material.description',$this->searchMaterial,true);
-		$criteria->compare('quantity',$this->quantity);
+		$criteria->compare('t.quantity',$this->quantity);
 		
 		$criteria->with = array('material');
 
 		$criteria->select=array(
-			'id',
-			'description',
-			'url',
+			't.id',
+			't.description',
+			't.url',
 			'material.description AS searchMaterial',
-			'quantity',
+			't.quantity',
 		);
 
 		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+		$columns[] = 'id';
+		$columns[] = 'description';
+        $columns[] = array(
+			'name'=>'url',
+			'value'=>'CHtml::link($data->url, $data->url)',
+			'type'=>'raw',
+		);
+        $columns[] = array(
+			'name'=>'searchMaterial',
+			'value'=>'CHtml::link($data->searchMaterial,
+				Yii::app()->createUrl("Material/update", array("id"=>$data->material_id))
+			)',
+			'type'=>'raw',
+		);
+ 		$columns[] = 'quantity';
+		
+		return $columns;
 	}
 
 	/**
@@ -123,3 +144,5 @@ class Assembly extends ActiveRecord
 		return array('searchMaterial');
 	}
 }
+
+?>

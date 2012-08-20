@@ -6,17 +6,37 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	// only show when creating
 	if($model->isNewRecord)
+	{
+		if(!isset($model->project_id))
+		{
+			ProjectController::listWidgetRow($model, $form, 'project_id');
+		}
+		else
+		{
+			$form->hiddenField('project_id');
+		}
 		TaskTypeController::listWidgetRow($model, $form, 'task_type_id');
-
-	$form->textFieldRow('day');
+	}
+	else
+	{
+		$form->hiddenField('task_type_id');
+		$form->hiddenField('project_id');
+	}
 
 	PurchaseOrderController::listWidgetRow($model, $form, 'purchase_order_id');
 
-	CrewController::listWidgetRow($model, $form, 'crew_id');
+	StaffController::listWidgetRow($model, $form, 'in_charge_id');
 
-	ProjectController::listWidgetRow($model, $form, 'project_id');
+	$form->textFieldRow('planned');
 	
-	 // generics
+	$form->textFieldRow('scheduled');
+	
+	$form->textFieldRow('earliest');
+	
+	$form->textFieldRow('preferred');
+
+	
+/*	 // generics
 	$this->widget('GenericWidgets',array(
 		'model'=>$model,
 		'form'=>$form,
@@ -25,7 +45,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		'relation_genericModelType'=>'genericTaskType',
 	));
 
-/*	// resources
+	// resources
 	// only show when updating
 	if(!$model->isNewRecord)
 		$this->widget('ResourceWidgets',array(
