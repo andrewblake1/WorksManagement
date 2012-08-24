@@ -13,10 +13,10 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Staff $staff
  * @property ProjectType $projectType
- * @property ProjectToAuthAssignment[] $projectToAuthAssignments
+ * @property Staff $staff
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
+ * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
  * @property ProjectType[] $projectTypes
  * @property Task[] $tasks
  */
@@ -27,11 +27,6 @@ class Project extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchProjectType;
-	/**
-	 * @var integer $project_type_id dummy value used when creating projects
-	 * but not needed needed to be persistant
-	 */
-	public $project_type_id;
 	/**
 	 * @var integer $client_id may be passed via get for search
 	 */
@@ -81,15 +76,14 @@ class Project extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
-			'projectToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthAssignment', 'project_id'),
+			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'projectToGenericProjectTypes' => array(self::HAS_MANY, 'ProjectToGenericProjectType', 'project_id'),
+			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'project_id'),
 			'projectTypes' => array(self::HAS_MANY, 'ProjectType', 'template_project_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'project_id'),
 		);
 	}
-
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -195,14 +189,14 @@ class Project extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
-		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_id'))
+		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('client_id'))
 		{
-			ActiveRecord::$labelOverrides['project_id'] = 'Client/Project';
-			$displaAttr['projectType->client']='name';
+			ActiveRecord::$labelOverrides['project_id'] = 'Project';
 		}
 		else
 		{
-			ActiveRecord::$labelOverrides['project_id'] = 'Project';
+			ActiveRecord::$labelOverrides['project_id'] = 'Client/Project';
+			$displaAttr['projectType->client']='name';
 		}
 
 		$displaAttr[]='description';

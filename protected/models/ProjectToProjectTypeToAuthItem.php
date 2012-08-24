@@ -1,32 +1,41 @@
 <?php
 
 /**
- * This is the model class for table "project_to_AuthAssignment".
+ * This is the model class for table "project_to_project_type_to_AuthItem".
  *
- * The followings are the available columns in table 'project_to_AuthAssignment':
+ * The followings are the available columns in table 'project_to_project_type_to_AuthItem':
  * @property string $id
  * @property string $project_id
+ * @property integer $project_type_to_AuthItem_id
  * @property integer $AuthAssignment_id
+ * @property string $itemname
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Project $project
+ * @property ProjectTypeToAuthItem $projectTypeToAuthItem
+ * @property AuthAssignment $itemname0
  * @property AuthAssignment $authAssignment
  * @property Staff $staff
  */
-class ProjectToAuthAssignment extends ActiveRecord
+class ProjectToProjectTypeToAuthItem extends ActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchProject;
+	public $searchProjectTypeToAuthItem;
 	public $searchAuthAssignment;
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Project to project type to role';
 	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return ProjectToAuthAssignment the static model class
+	 * @return ProjectToProjectTypeToAuthItem the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -38,7 +47,7 @@ class ProjectToAuthAssignment extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'project_to_AuthAssignment';
+		return 'project_to_project_type_to_AuthItem';
 	}
 
 	/**
@@ -49,12 +58,13 @@ class ProjectToAuthAssignment extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_id, AuthAssignment_id, staff_id', 'required'),
-			array('AuthAssignment_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('project_id, project_type_to_AuthItem_id, AuthAssignment_id, itemname, staff_id', 'required'),
+			array('project_type_to_AuthItem_id, AuthAssignment_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('project_id', 'length', 'max'=>10),
+			array('itemname', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, project_id, searchProject, searchAuthAssignment, searchStaff', 'safe', 'on'=>'search'),
+			array('searchProject, searchProjectTypeToAuthItem, searchAuthAssignment, id, project_id, project_type_to_AuthItem_id, AuthAssignment_id, itemname, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,6 +77,8 @@ class ProjectToAuthAssignment extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
+			'projectTypeToAuthItem' => array(self::BELONGS_TO, 'ProjectTypeToAuthItem', 'project_type_to_AuthItem_id'),
+			'itemname0' => array(self::BELONGS_TO, 'AuthAssignment', 'itemname'),
 			'authAssignment' => array(self::BELONGS_TO, 'AuthAssignment', 'AuthAssignment_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
@@ -78,11 +90,14 @@ class ProjectToAuthAssignment extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Project to auth assignment',
+			'id' => 'ID',
 			'project_id' => 'Client/Project',
 			'searchProject' => 'Client/Project',
-			'AuthAssignment_id' => 'Role/First/Last/Email',
-			'searchAuthAssignment' => 'Role/First/Last/Email',
+			'project_type_to_AuthItem_id' => 'Project type',
+			'searchProjectTypeToAuthItem' => 'Project type',
+			'AuthAssignment_id' => 'First/Last/Email',
+			'searchAuthAssignment' => 'First/Last/Email',
+			'itemname' => 'Role',
 		));
 	}
 
@@ -98,26 +113,26 @@ class ProjectToAuthAssignment extends ActiveRecord
 		$criteria->select=array(
 //			't.id',
 			"CONCAT_WS('$delimiter',
-				authAssignment.itemname,
 				user.first_name,
 				user.last_name,
 				user.email
 				) AS searchAuthAssignment",
+			't.itemname',
 		);
-
+		
 		// where
 //		$criteria->compare('t.id',$this->id);
-		$this->compositeCriteria(
-			$criteria,
+		$criteria->compare('AuthAssignment_id',$this->AuthAssignment_id);
+		$this->compositeCriteria($criteria,
 			array(
-				'authAssignment.itemname',
 				'user.first_name',
 				'user.last_name',
-				'user.email'
+				'user.email',
 			),
 			$this->searchAuthAssignment
 		);
-		
+		$criteria->compare('itemname',$this->itemname,true);
+
 		if(isset($this->project_id))
 		{
 			$criteria->compare('t.project_id',$this->project_id);
@@ -125,24 +140,28 @@ class ProjectToAuthAssignment extends ActiveRecord
 		else
 		{
 			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
 				project.description
 				) AS searchProject";
 			$this->compositeCriteria($criteria,
 				array(
-					'client.name',
 					'project.description',
 				),
 				$this->searchProject
 			);
+			
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				projectType.description
+				) AS searchProjectTypeToAuthItem";
+			$this->compositeCriteria($criteria, array(
+				'projectType.description',
+				), $this->searchProjectTypeToAuthItem);
 		}
 		
 		// join
 		$criteria->with = array(
-			'authAssignment.itemname0',
 			'authAssignment.user',
-			'project',
-			'project.projectType.client',
+			'projectTypeToAuthItem',
+			'projectTypeToAuthItem.projectType',
 		);
 
 		return $criteria;
@@ -151,12 +170,20 @@ class ProjectToAuthAssignment extends ActiveRecord
 	public function getAdminColumns()
 	{
 //		$columns[] = 'id';
-		if(!isset($this->project_id))
+		$columns[] = 'itemname';
+ 		if(!isset($this->project_id))
 		{
 			$columns[] = array(
-				'name'=>'searchProject',
-				'value'=>'CHtml::link($data->searchProject,
-					Yii::app()->createUrl("Project/update", array("id"=>$data->project_id))
+					'name'=>'searchProject',
+					'value'=>'CHtml::link($data->searchProject,
+						Yii::app()->createUrl("Project/update", array("id"=>$data->project_id))
+					)',
+					'type'=>'raw',
+				);
+			$columns[] = array(
+				'name'=>'searchProjectTypeToAuthItem',
+				'value'=>'CHtml::link($data->searchProjectTypeToAuthItem,
+					Yii::app()->createUrl("ProjectTypeToAuthItem/update", array("id"=>$data->project_type_to_AuthItem_id))
 				)',
 				'type'=>'raw',
 			);
@@ -178,39 +205,27 @@ class ProjectToAuthAssignment extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchProject', 'searchAuthAssignment');
+		return array('searchProject', 'searchProjectTypeToAuthItem', 'searchAuthAssignment');
 	}
-	
-	/**
-	 * @return array the list of columns to be concatenated for use in drop down lists
-	 */
-	public static function getDisplayAttr()
+
+	public function beforeValidate()
 	{
-//		// show when not coming from parent
-//		if(!isset($_GET[ucfirst(Yii::app()->controller->id)]['project_id']) && !isset($_GET[$_GET['model']]))
-		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
-		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_to_AuthAssignment_id'))
+		// if user has chosen an auth assigment
+		if(isset($this->AuthAssignment_id))
 		{
-			ActiveRecord::$labelOverrides['project_to_AuthAssignment_id'] = 'Client/Project/Role/First/Last/Email';
-			$displaAttr['project->client']='name';
-			$displaAttr['project']='description';
-			$displaAttr['authAssignment']='itemname';
-			$displaAttr['authAssignment->user']='first_name';
-			$displaAttr['authAssignment->user']='last_name';
-			$displaAttr['authAssignment->user']='email';
+			// set the remaining required fields
+			$modelAuthAssignment = AuthAssignment::model()->findByPk($this->AuthAssignment_id);
+			$this->itemname = $modelAuthAssignment->itemname;
+			$modelProject = Project::model()->findByPk($this->project_id);
+			$modelProject->attributes;
+			$modelProjectTypeToAuthItem = ProjectTypeToAuthItem::model()->findByAttributes(array(
+				'project_type_id'=>$modelProject->project_type_id, 
+				'AuthItem_name'=>$this->itemname,
+			));
+			$this->project_type_to_AuthItem_id = $modelProjectTypeToAuthItem->id;
 		}
-		else
-		{
-			ActiveRecord::$labelOverrides['project_to_AuthAssignment_id'] = 'Role/First/Last/Email';
-			$displaAttr['authAssignment']='itemname';
-			$displaAttr['authAssignment->user']='first_name';
-			$displaAttr['authAssignment->user']='last_name';
-			$displaAttr['authAssignment->user']='email';
-		}
-
-		return $displaAttr;
+		return parent::beforeValidate();
 	}
-
 }
 
 ?>

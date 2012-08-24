@@ -23,10 +23,6 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
 	 */
 	public $model;
 	/**
-	 * @var array html options.
-	 */
-	public $htmlOptions = array();
-	/**
 	 * @var array any attributes of CJuiAutoComplete and jQuery JUI AutoComplete widget may
 	 * also be defined. Read the code and docs for all options.
 	 */
@@ -66,6 +62,20 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
 
     public function init()
     {
+// todo: discover the cause of this weird htmloptions issue where htmloptions resets to an empty array if initialized in the properties intitialization
+// area above. Suspect screwy behaviour maybe attributes backup
+		/**
+		* @var array html options.
+		 * NB:
+		*/
+		$this->htmlOptions += array(
+			'class'=>'ui-autocomplete-input',
+			'autocomplete'=>'off',
+			'role'=>'textbox',
+			'aria-autocomplete'=>'list',
+			'aria-haspopup'=>'true',
+		);
+		
         if (!isset($this->options['minLength']))
             $this->options['minLength'] = 2;
 
@@ -79,7 +89,7 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
         // setup javascript to do the work
 		
 		// show initial display value
-        $this->options['create']="js:function(event, ui){\$(this).val('".addslashes($this->_display)."');}";
+ //       $this->options['create']="js:function(event, ui){\$(this).val('".addslashes($this->_display)."');}";
         // after user picks from list, save the ID in model/attr field, and Value in _save field for redisplay
         $this->options['select']="js:function(event, ui){\$('#".$this->_fieldID."').val(ui.item.id);\$('#".$this->_saveID."').val(ui.item.value);}";
         // if onblur not set
@@ -110,6 +120,7 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
         // third, the autoComplete field itself
         $this->htmlOptions['id'] = $this->_lookupID;
         $this->htmlOptions['name'] = $this->_lookupID;   
+		$this->htmlOptions['value'] = $this->_display;   
 
         parent::run();
     }

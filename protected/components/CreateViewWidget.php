@@ -22,16 +22,23 @@ class CreateViewWidget extends CWidget
 
     public function run()
     {
-		$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'myModal'));
+//		// ajax submit set in WMTbActiveForm as url paramter for the ajax submit validate url
+//		if(!isset($_GET['ajaxsubmit']))
+//		{
+			$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'myModal'));
+//		}
 
-		echo '<div class="modal-body">';
+		echo '<div id="form-create" class="modal-body">';
 		echo $this->_controller->renderPartial('_form',array(
 			'model'=>$this->model,
 			'models'=>$this->models,
 		));
 		echo '</div>';
  
-		$this->endWidget(); 
+//		if(!isset($_GET['ajaxsubmit']))
+//		{
+			$this->endWidget(); 
+//		}
 	}
 }
 

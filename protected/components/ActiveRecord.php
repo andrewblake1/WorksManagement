@@ -15,6 +15,12 @@ abstract class ActiveRecord extends CActiveRecord
 	 * @var string nice model name for use in output
 	 */
 	static $niceName;
+	/**
+	 * @var array defaultScopes that can be set and used at run time. This is basically a global
+	 * variable within the class context that allows other classes to filter query results without
+	 * having to pass thru several method arguments. Not tigtly coupled but convenient.
+	 */
+	static $defaultScope = array();
 
 	static public function getNiceName($primaryKey=null)
 	{
@@ -42,13 +48,13 @@ abstract class ActiveRecord extends CActiveRecord
 				$model = static::model()->findByPk($primaryKey);
 				$value = $model->$attributeName;
 				// if the attribute is longer than 30 characters
-				if(strlen($value) > 30)
+				if(strlen($value) > 20)
 				{
-					// shorten to 30 characters total
+					// shorten to 20 characters total
 					$value = substr($value, 0, 27) . '...';
 				}
-				// append to our nice name
-				$niceName .= " ($value)";
+				// make this our nice name
+				$niceName = $value;
 			}
 		}
 		
@@ -193,13 +199,27 @@ abstract class ActiveRecord extends CActiveRecord
 	
     public function defaultScope()
     {
-		$defaultScope = array();
+		// add in any run time scopes accessibly to outside classes
+		$defaultScope = static::$defaultScope;
 	
 		// if this model has a deleted property
 		if(in_array('deleted', $this->tableSchema->getColumnNames()))
 		{
-			$defaultScope['condition'] = $this->getTableAlias(false, false).'.deleted=0';
+			$conditions = array();
+			
+			// if there is an existing condition
+			if(!empty($defaultScope['condition']))
+			{
+				$conditions[] = $defaultScope['condition'];
+			}
+			
+			// append our new condition
+			$conditions[] = $this->getTableAlias(false, false) . '.deleted=0';
+			
+			// set condition in the default scope
+			$defaultScope['condition'] = implode(" AND ", $conditions);
 		}
+		
 		
         return $defaultScope;
     }
@@ -332,6 +352,40 @@ abstract class ActiveRecord extends CActiveRecord
 
 	public function getAdminColumns()
 	{
+	}
+
+	/*
+	 * Set user defined defaults for any attributes that require them
+	 */
+	public function init()
+	{
+		// loop thru attributes
+		foreach($this->attributeNames() as $attributeName)
+		{
+			// if system admin has set a default for this attribute
+			if($defaultValue = DefaultValue::model()->findByAttributes(array('table'=>$this->tableName(), 'column'=>$attributeName)))
+			{
+				// if this is likely to be an sql select
+				if(stripos($defaultValue->select, 'SELECT') !== false)
+				{
+					// attempt to execute the sql
+					try
+					{
+// TODO: this should be run of connection with restricted sys admin rights rather than main app user rights
+						$this->$attributeName = Yii::app()->db->createCommand($defaultValue->select)->queryScalar();
+						continue;
+					}
+					catch (CDbException $e)
+					{
+						// the select failed so assume it is just text with the word 'select' in it - most likely sys admin error but 
+						// deal with it anyway by just doing nothing here and the attribute gets set below anyway
+					}
+				}
+				
+				// set to the value of the select column
+				$this->$attributeName = $defaultValue->select;
+			}
+		}
 	}
 
 }

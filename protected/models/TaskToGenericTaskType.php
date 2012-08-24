@@ -57,7 +57,7 @@ class TaskToGenericTaskType extends ActiveRecord
 			array('task_id, generic_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchGenericTaskType, searchTask, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchGenericTaskType, searchTask, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -82,11 +82,11 @@ class TaskToGenericTaskType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task To Generic Task Type',
-			'generic_task_type_id' => 'Client/Task type/Generic type',
-			'searchGenericTaskType' => 'Client/Task type/Generic type',
-			'task_id' => 'Task',
-			'searchTask' => 'Task',
+			'id' => 'Task to generic task type',
+			'generic_task_type_id' => 'Task type/Generic type)',
+			'searchGenericTaskType' => 'Task type/Generic type)',
+			'task_id' => 'Client/Task',
+			'searchTask' => 'Client/Task',
 			'generic_id' => 'Generic',
 			'searchGeneric' => 'Generic',
 		));
@@ -103,23 +103,21 @@ class TaskToGenericTaskType extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 //			't.id',
-			"CONCAT_WS('$delimiter',
-				client.name,
-				taskType.description,
-				genericType.description,
-				) AS searchGenericTaskType",
 			'generic.id AS searchGeneric',
+			"CONCAT_WS('$delimiter',
+				taskType.description,
+				genericType.description
+				) AS searchGenericTaskType",
 		);
 
 		// where
 //		$criteria->compare('t.id',$this->id);
+		$criteria->compare('generic.id',$this->searchGeneric);
 		$this->compositeCriteria($criteria, array(
-			'client.name',
 			'taskType.description',
 			'genericType.description',
 			), $this->searchGenericTaskType);
-		$criteria->compare('generic.id',$this->searchGeneric);
-		
+
 		if(isset($this->task_id))
 		{
 			$criteria->compare('t.task_id',$this->task_id);
@@ -127,22 +125,29 @@ class TaskToGenericTaskType extends ActiveRecord
 		else
 		{
 			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name
-				project.description,
+				client.name,
+				project.description
 				task.description
 				) AS searchTask";
 			$this->compositeCriteria($criteria,
 				array(
 					'client.name',
 					'project.description',
-					'task.description'
+					'task.description',
 				),
 				$this->searchTask
 			);
 		}
 
 		// join
-		$criteria->with = array('genericTaskType.genericType','task','generic');
+		$criteria->with = array(
+			'genericTaskType.taskType',
+			'genericTaskType.taskType.projectType.client',
+			'genericTaskType.genericType',
+			'task',
+			'task.project',
+			'generic',
+		);
 
 		return $criteria;
 	}
@@ -157,15 +162,15 @@ class TaskToGenericTaskType extends ActiveRecord
 			)',
 			'type'=>'raw',
 		);
-		if(!isset($this->task_id))
+ 		if(!isset($this->task_id))
 		{
 			$columns[] = array(
-				'name'=>'searchTask',
-				'value'=>'CHtml::link($data->searchTask,
-					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
-				)',
-				'type'=>'raw',
-			);
+					'name'=>'searchTask',
+					'value'=>'CHtml::link($data->searchTask,
+						Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+					)',
+					'type'=>'raw',
+				);
 		}
         $columns[] = array(
 			'name'=>'searchGeneric',

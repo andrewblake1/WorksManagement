@@ -37,12 +37,24 @@ class AdminViewWidget extends CWidget
 				);
 		}
 
-		// add the buttons
-		$this->columns[]=array('class'=>'WMTbButtonColumn');
+		// add the buttons - first determine if there are any!
+		if($this->_controller->checkAccess(Controller::accessWrite))
+		{
+			$this->columns[]=array('class'=>'WMTbButtonColumn');
+		}
 	
-		// add instructions
+		// add instructions/ warnings errors via Yii::app()->user->setFlash
+		// NB: thia won't work on ajax update as in delete hence afterDelete javascript added in WMTbButtonColumn
 		$this->_controller->widget('bootstrap.widgets.TbAlert');
 
+// TODO: figure out how to use this for the error message flash in WMTbButtonColumn - also slow the fade futher
+		// add fade out to the flash message
+		Yii::app()->clientScript->registerScript(
+			'myHideEffect',
+			'$(".alert-info").animate({opacity: 1.0}, 10000).fadeOut("slow");',
+			CClientScript::POS_READY
+		);
+		
 		// display the grid
 		$this->_controller->widget('bootstrap.widgets.TbGridView',array(
 			'id'=>$this->_controller->modelName.'-grid',
@@ -54,9 +66,7 @@ class AdminViewWidget extends CWidget
 
 		// as using boostrap modal for create the html for the modal needs to be on
 		// the calling page
-		$this->_controller->widget('CreateViewWidget', array(
-			'model'=>$this->model,
-		));
+		$this->_controller->actionCreate();
 
 		parent::run();
 	}

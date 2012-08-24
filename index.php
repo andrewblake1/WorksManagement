@@ -1,5 +1,4 @@
 <?php
-
 //phpinfo();exit;
 // set environment
 require_once(dirname(__FILE__) . '/protected/extensions/yii-environment/Environment.php');

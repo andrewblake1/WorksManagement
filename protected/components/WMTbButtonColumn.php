@@ -27,6 +27,12 @@ class WMTbButtonColumn extends TbButtonColumn
 		if($controller->checkAccess(Controller::accessWrite))
 		{
 			$this->template='{update} {delete}';
+			$this->afterDelete='function(link,success,data) {
+				if(success)
+				{
+					$("#yw0").html(data);
+				}
+			}';
 		}
 		elseif($controller->checkAccess(Controller::accessRead))
 		{

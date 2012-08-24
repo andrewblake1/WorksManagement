@@ -35,24 +35,6 @@ class GenericController extends Controller
 					'id' => $row[$firstColumnName],
 				);
 			}
-			
-/*			// if no rows found
-			if(empty($out))
-			{
-				// see if allowing new values i.e. not refining to list
-				$command = Yii::app()->db->createCommand("SELECT allow_new FROM generic_type WHERE id = :generic_type_id");
-				$command->bindParam(":generic_type_id", $_GET['generic_type_id'], PDO::PARAM_INT);
-				if($command->queryScalar())
-				{
-					$out[] = array(
-						// expression to give the string for the autoComplete drop-down
-						'label' => $_GET['term'],  
-						'value' => $_GET['term'],
-						// return value from autocomplete
-						'id' => $_GET['term'],
-					);
-				}
-			}*/
 		}
 		
 		echo CJSON::encode($out);

@@ -22,6 +22,31 @@
 class AuthItem extends ActiveRecord
 {
 	/**
+	 *  Auth item type constants
+	 */
+	const typeRole = 2;
+	const typeRight = 1;
+	
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Role';
+	/**
+	 * @var array defaultScopes that can be set and used at run time. This is basically a global
+	 * variable within the class context that allows other classes to filter query results without
+	 * having to pass thru several method arguments. Not tigtly coupled but convenient.
+	 */
+	static $defaultScope = array();
+	
+	public function scopes()
+    {
+		return array(
+			'roles'=>array('condition'=>'t.type=' . self::typeRole),
+			'rights'=>array('condition'=>'t.type=' . self::typeRight),
+		);
+    }
+
+	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
 	 * @return AuthItem the static model class
@@ -38,7 +63,7 @@ class AuthItem extends ActiveRecord
 	{
 		return 'AuthItem';
 	}
-
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -47,8 +72,8 @@ class AuthItem extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, type', 'required'),
-			array('type, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('name', 'required'),
+			array('deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>64),
 			array('description, bizrule, data', 'safe'),
 			// The following rule is used by search().
@@ -94,17 +119,17 @@ class AuthItem extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.type',$this->type);
+		$criteria->compare('t.type', self::typeRole);
 		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.bizrule',$this->bizrule,true);
-		$criteria->compare('t.data',$this->data,true);
+//		$criteria->compare('t.bizrule',$this->bizrule,true);
+//		$criteria->compare('t.data',$this->data,true);
 
 		$criteria->select=array(
 			't.name',
-			't.type',
+//			't.type',
 			't.description',
-			't.bizrule',
-			't.data',
+//			't.bizrule',
+//			't.data',
 		);
 
 		return $criteria;
@@ -113,13 +138,25 @@ class AuthItem extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'name';
-		$columns[] = 'type';
+//		$columns[] = 'type';
 		$columns[] = 'description';
-		$columns[] = 'bizrule';
-		$columns[] = 'data';
+//		$columns[] = 'bizrule';
+//		$columns[] = 'data';
 		
 		return $columns;
 	}
+
+	/*
+	 * can't set default value in database as TEXT data type but is required
+	 */
+	public function init()
+	{
+		// can't set default value in database as TEXT data type
+		$this->type = 'N;';
+		
+		parent::init();
+	}
+
 
 }
 

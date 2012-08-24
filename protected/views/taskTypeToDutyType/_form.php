@@ -13,7 +13,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		TaskTypeController::listWidgetRow($model, $form, 'task_type_id');
 	}
 
-	AuthItemController::listWidgetRow($model, $form, 'AuthItem_name');
+	ProjectTypeToAuthItemController::listWidgetRow($model, $form, 'project_type_to_AuthItem_id');
 
 $this->endWidget();
 

@@ -11,93 +11,32 @@ abstract class GenericExtensionController extends Controller
 	protected $relation_modelToGenericModelTypes;
 	protected $relation_modelToGenericModelType;
 	
-	public function actionCreate()
+	/*
+	 * overidden as mulitple models
+	 */
+	protected function createSave($model, $models)
 	{
-		$model=new $this->modelName;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST[$this->modelName]))
+		if($saved = $model->dbCallback('save'))
 		{
-			$model->attributes=$_POST[$this->modelName];
-			
-			// start a transaction
-			$transaction = Yii::app()->db->beginTransaction();
-			
-			// attempt save of this model without redirect
-			if($saved = $model->dbCallback('save'))
-			{
-				// attempt creation of generics
-				$saved &= $this->createGenerics($model, $models);
-			}
-
-			// if all saved succesfully
-			// NB: it is no good doing try and catch here as caught and dealt to error
-			// in dbCallback
-			if($saved)
-			{
-				// commit
-                $transaction->commit();
-				$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
-			}
-			// otherwise there has been an error which should be captured in model
-			else
-			{
-				// rollback
-                $transaction->rollBack();
-				$model->isNewRecord = TRUE;
-			}
+			// attempt creation of generics
+			$saved &= $this->createGenerics($model, $models);
 		}
-
-		$this->widget('CreateViewWidget', array(
-			'model'=>$model,
-			'models'=>$models,
-		));
+		
+		return $saved;
 	}
 
-	public function actionUpdate($id)
+	/*
+	 * overidden as mulitple models
+	 */
+	protected function updateSave($model, $models)
 	{
-		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST[$this->modelName]))
+		if($saved = $model->dbCallback('save'))
 		{
-			$model->attributes=$_POST[$this->modelName];
-			
-			// start a transaction
-			$transaction = Yii::app()->db->beginTransaction();
-			
-			// attempt save of this model without redirect
-			if($saved = $model->dbCallback('save'))
-			{
-				// attempt update of generics
-				$saved &= $this->updateGenerics($model, $models);
-			}
-
-			// if all saved succesfully
-			// NB: it is no good doing try and catch here as caught and dealt to error
-			// in dbCallback
-			if($saved)
-			{
-				// commit
-                $transaction->commit();
-				$this->redirect(array('admin'));
-			}
-			// otherwise there has been an error which should be captured in model
-			else
-			{
-				// rollback
-                $transaction->rollBack();
-			}
+			// attempt creation of generics
+			$saved &= $this->updateGenerics($model, $models);
 		}
-
-		$this->widget('UpdateViewWidget', array(
-			'model'=>$model,
-			'models'=>$models,
-		));
+		
+		return $saved;
 	}
 
 // TODO: replace with trigger after insert on model. Also cascade delete on these 3 tables
@@ -122,6 +61,9 @@ abstract class GenericExtensionController extends Controller
 		{
 			// create a new generic item to hold value
 			$generic = new Generic();
+// TODO: examine possible factory method pattern
+			$generic->setDefault($genericModelType->genericType);
+			// set default value
 			$saved &= $generic->dbCallback('save');
 			$models[] = $generic;
 			// create new modelToGenericModelType

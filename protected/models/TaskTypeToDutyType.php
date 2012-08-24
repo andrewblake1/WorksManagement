@@ -5,18 +5,21 @@
  *
  * The followings are the available columns in table 'task_type_to_duty_type':
  * @property integer $id
- * @property integer $duty_type_id
  * @property integer $task_type_id
- * @property string $AuthItem_name
+ * @property integer $project_type_id
+ * @property integer $duty_type_id
+ * @property integer $project_type_to_AuthItem_id
  * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property DutyType $dutyType
- * @property AuthItem $authItemName
- * @property Staff $staff
+ * @property Duty[] $duties
+ * @property Duty[] $duties1
  * @property TaskType $taskType
- * @property ProjectToAuthAssignmentToTaskTypeToDutyType[] $projectToAuthAssignmentToTaskTypeToDutyTypes
+ * @property ProjectTypeToAuthItem $projectType
+ * @property DutyType $dutyType
+ * @property Staff $staff
+ * @property ProjectTypeToAuthItem $projectTypeToAuthItem
  */
 class TaskTypeToDutyType extends ActiveRecord
 {
@@ -26,7 +29,19 @@ class TaskTypeToDutyType extends ActiveRecord
 	 */
 	public $searchDutyType;
 	public $searchTaskType;
+	public $searchProjectTypeToAuthItem;
 	
+	public function scopeTask($task_id)
+	{
+		$criteria=new CDbCriteria;
+		$criteria->compare('task.id',$task_id);
+		$criteria->join='JOIN task USING(task_type_id)';
+		
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+// TODO: replace this with late static binding in parent and tableName with a better function that also does nice name and perhaps short name	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -53,12 +68,11 @@ class TaskTypeToDutyType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('duty_type_id, task_type_id, AuthItem_name, staff_id', 'required'),
-			array('duty_type_id, task_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('AuthItem_name', 'length', 'max'=>64),
+			array('task_type_id, project_type_id, duty_type_id, project_type_to_AuthItem_id, staff_id', 'required'),
+			array('task_type_id, project_type_id, duty_type_id, project_type_to_AuthItem_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchDutyType, searchTaskType, AuthItem_name, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_type_id, , searchDutyType, searchTaskType, searchStaff, searchProjectTypeToAuthItem', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,11 +84,13 @@ class TaskTypeToDutyType extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
-			'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'AuthItem_name'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'duties' => array(self::HAS_MANY, 'Duty', 'task_type_id'),
+			'duties1' => array(self::HAS_MANY, 'Duty', 'task_type_to_duty_type_id'),
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
-			'projectToAuthAssignmentToTaskTypeToDutyTypes' => array(self::HAS_MANY, 'ProjectToAuthAssignmentToTaskTypeToDutyType', 'task_type_to_duty_type_id'),
+			'projectType' => array(self::BELONGS_TO, 'ProjectTypeToAuthItem', 'project_type_id'),
+			'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
+			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'projectTypeToAuthItem' => array(self::BELONGS_TO, 'ProjectTypeToAuthItem', 'project_type_to_AuthItem_id'),
 		);
 	}
 
@@ -85,12 +101,12 @@ class TaskTypeToDutyType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Task type to duty type',
-			'naturalKey' => 'Client/Task type/Duty type/Role',
+			'naturalKey' => 'Client/Project type/Task type/Duty type/Role',
 			'duty_type_id' => 'Duty type',
 			'searchDutyType' => 'Duty type',
-			'task_type_id' => 'Client/Task type',
-			'searchTaskType' => 'Client/Task type',
-			'AuthItem_name' => 'Role',
+			'task_type_id' => 'Client/Project type/Task type',
+			'searchTaskType' => 'Client/Project type/Task type',
+			'searchProjectTypeToAuthItem' => 'Role',
 		));
 	}
 
@@ -106,13 +122,13 @@ class TaskTypeToDutyType extends ActiveRecord
 		$criteria->select=array(
 //			't.id',
 			'dutyType.description AS searchDutyType',
-			't.AuthItem_name',
+			'projectTypeToAuthItem.AuthItem_name AS searchProjectTypeToAuthItem',
 		);
 
 		// where
 //		$criteria->compare('t.id',$this->id);
-		$criteria->compare('dutyType.description',$this->searchDutyType,true);
-		$criteria->compare('t.AuthItem_name',$this->AuthItem_name,true);
+		$criteria->compare('dutyType.description',$this->searchDutyType);
+		$criteria->compare('projectTypeToAuthItem.AuthItem_name',$this->searchProjectTypeToAuthItem);
 
 		if(isset($this->task_type_id))
 		{
@@ -120,18 +136,27 @@ class TaskTypeToDutyType extends ActiveRecord
 		}
 		else
 		{
+			// Task type
 			$criteria->select[]="CONCAT_WS('$delimiter',
 				client.name,
+				projectType.description,
 				taskType.description
 				) AS searchTaskType";
 			$this->compositeCriteria($criteria, array(
 				'client.name',
+				'projectType.description',
 				'taskType.description'
 			), $this->searchTaskType);
 		}
 
 		// join
-		$criteria->with = array('dutyType','taskType.client','taskType');
+		$criteria->with = array(
+			'dutyType',
+			'taskType',
+			'taskType.projectType',
+			'taskType.projectType.client',
+			'projectTypeToAuthItem'
+		);
 
 		return $criteria;
 	}
@@ -157,9 +182,9 @@ class TaskTypeToDutyType extends ActiveRecord
 			);
 		}
         $columns[] = array(
-			'name'=>'AuthItem_name',
-			'value'=>'CHtml::link($data->AuthItem_name,
-				Yii::app()->createUrl("AuthItem/update", array("id"=>$data->AuthItem_name))
+			'name'=>'searchProjectTypeToAuthItem',
+			'value'=>'CHtml::link($data->searchProjectTypeToAuthItem,
+				Yii::app()->createUrl("AuthItem/update", array("id"=>$data->searchProjectTypeToAuthItem))
 			)',
 			'type'=>'raw',
 		);
@@ -173,10 +198,11 @@ class TaskTypeToDutyType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'taskType->client'=>'name',
-			'taskType'=>'description',
+//			'taskType->client'=>'name',
+//			'taskType->projectType'=>'description',
+//			'taskType'=>'description',
 			'dutyType'=>'description',
-			'AuthItem_name'
+//			'projectTypeToAuthItem'=>'AuthItem_name'
 		);
 	}
 
@@ -186,9 +212,20 @@ class TaskTypeToDutyType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchDutyType', 'searchTaskType');
+		return array('searchDutyType', 'searchTaskType', 'searchProjectTypeToAuthItem');
 	}
 
+	public function beforeValidate()
+	{
+		// need to set project_type_id which is an extra foreign key to make circular foreign key constraing
+		if(isset($this->project_type_to_AuthItem_id))
+		{
+			$model = ProjectTypeToAuthItem::model()->findByPk($this->project_type_to_AuthItem_id);
+			$this->project_type_id = $model->project_type_id;
+		}
+
+		return parent::beforeValidate();
+	}
 }
 
 ?>

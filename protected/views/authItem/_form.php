@@ -4,13 +4,13 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	$form->textFieldRow('name');
 
-	$form->textFieldRow('type');
+	$form->hiddenField('type');
 
 	$form->textAreaRow('description');
 
-	$form->textAreaRow('bizrule');
+	$form->hiddenField('bizrule');
 
-	$form->textAreaRow('data');
+	$form->hiddenField('data');
 
 $this->endWidget();
 

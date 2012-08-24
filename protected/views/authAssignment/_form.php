@@ -2,7 +2,8 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	$form->textFieldRow('itemname');
+	AuthItemController::listWidgetRow($model, $form, 'itemname', array(), array('roles'));
+//	$form->textFieldRow('itemname');
 
 	if(!isset($model->userid))
 	{
@@ -13,9 +14,9 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		$form->hiddenField('userid');
 	}	
 
-	$form->textAreaRow('bizrule');
+	$form->hiddenField('bizrule');
 
-	$form->textAreaRow('data');
+	$form->hiddenField('data');
 
 $this->endWidget();
 

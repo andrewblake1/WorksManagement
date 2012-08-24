@@ -79,8 +79,8 @@
 			if(isset($this->heading) && $this->heading)
 			{
 				echo '<h2>'.CHtml::encode($this->heading);
-				// if admin action and use has update rights
-				if($this->action->Id == 'admin' && $this->checkAccess(Controller::accessWrite))
+				// if we should be showing the new button
+				if($this->_adminShowNew)
 				{
 					echo ' ';
 					$this->widget('bootstrap.widgets.TbButton', array(

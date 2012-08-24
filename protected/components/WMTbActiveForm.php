@@ -14,8 +14,13 @@ class WMTbActiveForm extends TbActiveForm
 	public $enableAjaxValidation=true;
 	public $htmlOptions=array('class'=>'well');
 	public $model;
+	private $_action;
 	public $models=null;
 	private $_htmlOptionReadonly = array();
+    public $clientOptions = array(
+		'validateOnSubmit'=>true,
+		'validateOnChange'=>false,
+ 	);
 
 	/**
 	 * Displays a particular model.
@@ -25,21 +30,21 @@ class WMTbActiveForm extends TbActiveForm
 		$this->controller = $this->getController();
 		$modelName = $this->controller->modelName;
 		$this->id="$modelName-form";
-        $this->clientOptions = array('validateOnSubmit'=>true);
 		
 		// determine whether form elements should be enabled or disabled by on access rights
 		if(!$this->controller->checkAccess(Controller::accessWrite))
 		{
 			$this->_htmlOptionReadonly = array('readonly'=>'readonly');
-			$this->action = 'view';
+			$this->_action = 'View';
 		}
 		else
 		{
-			$this->action = ($this->model->isNewRecord ? 'create' : 'update');
+			$this->_action = ($this->model->isNewRecord ? 'Create' : 'Update');
 		}
 		
-		if($this->action == 'create')
+		if($this->_action == 'Create')
 		{
+			$this->action = $this->_action;	// NB: this needed here but not for update to set the form action from admin as modal
 			echo '<div class="modal-header">';
 			echo '<a class="close" data-dismiss="modal">&times;</a>';
 			echo "<h3>{$modelName::getNiceName()}</h3>";
@@ -64,26 +69,20 @@ class WMTbActiveForm extends TbActiveForm
 			$this->hiddenField('staff_id');
 		}
 
-		// add the create or update button relevant to the context if applicable
-		if($this->action == 'update')
+		// button attributes
+		$buttonOptions = array('class'=>'form-button btn btn-primary btn-large');
+		// update
+		if($this->_action == 'Update')
 		{
 			echo '<div class="form-actions">';
-				$this->controller->widget('bootstrap.widgets.TbButton', array(
-					'buttonType'=>'submit',
-					'type'=>'primary',
-					'label'=>  'Save',
-				));
+				echo CHtml::submitButton($this->_action, $buttonOptions);
 			echo '</div>';
 		}
-		// othherwise if create
-		elseif($this->action == 'create')
+		// create
+		elseif($this->_action == 'Create')
 		{
 			echo '<div class="modal-footer">';
-				$this->controller->widget('bootstrap.widgets.TbButton', array(
-					'buttonType'=>'submit',
-					'type'=>'primary',
-					'label'=>  'Create',
-				));
+				echo CHtml::submitButton($this->_action, $buttonOptions);
 			echo '</div>';
 		}
 		

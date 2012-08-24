@@ -36,6 +36,10 @@ class Controller extends CController
 	 * @var array the tab menu itemse
 	 */
 	private $_tabs = array();
+	/**
+	 * @var bool whether to show the new button in the admin  
+	 */
+	protected $_adminShowNew = true;
 	
 	/**
 	 * @var string the flash message to show sort and search instructions
@@ -66,12 +70,11 @@ class Controller extends CController
 					'TaskToGenericTaskType',
 					'TaskToResourceType',
 				),
-				'ProjectToAuthAssignment'=>array(
-					'ProjectToAuthAssignmentToTaskTypeToDutyType',
-				),
+				'ProjectToProjectTypeToAuthItem',
 				'ProjectToGenericProjectType'
 			),
 			'ProjectType'=>array(
+				'ProjectTypeToAuthItem',
 				'GenericProjectType',
 				'TaskType'=>array(
 					'GenericTaskType',
@@ -79,21 +82,24 @@ class Controller extends CController
 				),
 			),
 		),
-		'GenericType',
-		'Genericprojectcategory',
-		'Generictaskcategory',
-		'PurchaseOrder',
-		'Material',
-		'Assembly',
-		'Staff'=>array(
-			'AuthAssignment',
-		),
-		'AuthItem',
+		'DefaultValue',
 		'Dutycategory'=>array(
 			'DutyType',
 		),
 		'Resourcecategory'=>array(
 			'ResourceType',
+		),
+		'GenericType',
+		'Genericprojectcategory',
+		'Generictaskcategory',
+		'PurchaseOrder',
+		'Assembly',
+		'Material',
+		'Staff'=>array(
+			'AuthAssignment',
+		),
+		'AuthItem'=>array(
+			'AuthItemChild',
 		),
 	);
 	
@@ -126,15 +132,15 @@ class Controller extends CController
 		if (isset($_GET['term']))
 		{
 			// url parameters
-			$fKModelType = $_GET['fk_model'];
-			$model = $fKModelType::model();
+			$modelName = /*$_GET['fk_model']*/ $this->modelName;
+			$model = $modelName::model();
 			// protect against possible injection
 			$criteria = new CDbCriteria;
 			$criteria->params = array();
 			$terms = explode(Yii::app()->params['delimiter']['search'], $_GET['term']);
 
 			// key will contain either a number or a foreign key field in which case field will be the lookup value
-			foreach($fKModelType::getDisplayAttr() as $key => $field)
+			foreach($modelName::getDisplayAttr() as $key => $field)
 			{
 				// building display parameter which gets eval'd later
 				$display .= (isset($display) ? ".Yii::app()->params['delimiter']['display']." : '') . '$p->';
@@ -166,6 +172,7 @@ class Controller extends CController
 			// probably a good idea to limit the results
 			$criteria->limit = 20;
 			$criteria->order = implode(', ', $criteria->order);
+			$criteria->scopes = empty($_GET['scopes']) ? null : $_GET['scopes'];
 			$fKModels = $model->findAll($criteria);
 
 			// if some models founds
@@ -358,7 +365,7 @@ class Controller extends CController
 					{
 						$this->_tabs[$index]['label'] = $modelName::getNiceName($keyValue);
 						$thisModel = new $modelName;
-						$this->_tabs[$index]['url'] = array("$modelName/update", $thisModel->tableSchema->primaryKey=>$keyValue);
+						$this->_tabs[$index]['url'] = array("$modelName/update", 'id'=>$keyValue);
 						$index++;
 						continue;
 					}
@@ -461,13 +468,29 @@ class Controller extends CController
 		if(isset($_GET['ajax']))
 		{
 			// restore $_GET
+			if(!isset($_GET[$modelName]))
+			{
+				$_GET[$modelName] = array();
+			}
 			$_GET[$modelName] += isset($_SESSION['actionAdminGet'][$modelName]) ? $_SESSION['actionAdminGet'][$modelName] : array();
 		}
-		else
+		elseif(isset($_GET[$modelName]))
 		{
 			// store $_GET
 			$_SESSION['actionAdminGet'][$modelName] = $_GET[$modelName];
-			$_SESSION['actionAdminGet'];
+		}
+		else
+		{
+			// loose our memory
+			unset($_SESSION['actionAdminGet']);
+			// initialise as we check for this presence in defining breadcrumbs to know we have been thru this admin view
+			$_SESSION['actionAdminGet'][$modelName] = array();
+			// block display of the new button unless top level of trail
+			if(sizeof($this->multidimensional_arraySearch($this->trail, $this->modelName)) > 1)
+			{
+				// should we be showing the new button
+				$this->_adminShowNew = false;
+			}
 		}
 		
 		$model=new $modelName('search');
@@ -496,7 +519,7 @@ class Controller extends CController
 
 		// set up tab menu if required - using setter
 		$this->setTabs($model, false);
-
+		
 		$this->render('/admin',array(
 			'model'=>$model,
 		));
@@ -570,13 +593,18 @@ class Controller extends CController
 	 */
 	public function primaryKeyInBreadCrumbTrail($primaryKey)
 	{
-		$breadcrumbs = array();
-		
 		// loop thru the trail for this model
-		foreach($this->multidimensional_arraySearch($this->trail, $this->modelName) as $crumb)
+		foreach($t=$this->multidimensional_arraySearch($this->trail, $this->modelName) as $crumb)
 		{
 			// see if any query paramters
-			$queryParamters = !empty($_SESSION['actionAdminGet'][$crumb]) ? array($crumb=>$_SESSION['actionAdminGet'][$crumb]) : array();
+			if($queryParamters = (!empty($_SESSION['actionAdminGet'][$crumb]) ? $_SESSION['actionAdminGet'][$crumb] : null))
+			{
+				// if primary key exists
+				if(!empty($queryParamters[$primaryKey]))
+				{
+					return true;
+				}
+			}
 		}
 	}
 	
@@ -584,15 +612,30 @@ class Controller extends CController
 	 * Get the breadcrumb trail for this controller.
 	 * return array bread crumb trail for this controller
 	 */
-	public function getBreadCrumbTrail($lastCrumb = NULL, $checkPrimaryKeyExists = FALSE)
+	public function getBreadCrumbTrail($lastCrumb = NULL)
 	{
 		$breadcrumbs = array();
-		
+	
+		// if just gone direct to a screen i.e. our memory/history was cleared
+		if(!isset($_SESSION['actionAdminGet']) && !$lastCrumb)
+		{
+			if(Yii::app()->user->checkAccess("{$this->modelName}Read"))
+			{
+				$breadcrumbs[] = $this->modelName;
+			}
+			return $breadcrumbs;
+		}
+
 		// loop thru the trail for this model
 		foreach($this->multidimensional_arraySearch($this->trail, $this->modelName) as $crumb)
 		{
 			// check access
-			if(!Yii::app()->user->checkAccess($this->modelName.'Read'))
+			if(!Yii::app()->user->checkAccess("{$crumb}Read"))
+			{
+				continue;
+			}
+			// otherwise if we haven't come via this route
+			elseif(!isset($_SESSION['actionAdminGet'][$crumb]))
 			{
 				continue;
 			}
@@ -628,14 +671,14 @@ class Controller extends CController
 			else
 			{
 				// add crumb to admin view
-					$breadcrumbs[$display.'s'] = array("$crumb/admin") + $queryParamters;
+				$breadcrumbs[$display.'s'] = array("$crumb/admin") + $queryParamters;
 			
 				// if there is a primary key for this
 				if(isset($_SESSION[$crumb]))
 				{
 					// add an update crumb to this primary key
 					$primaryKey = $_SESSION[$crumb];
-					$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", $primaryKey['name']=>$primaryKey['value']);
+					$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", 'id'=>$primaryKey['value']);
 				}
 			}
 		}
@@ -643,6 +686,14 @@ class Controller extends CController
 		return $breadcrumbs;
 	}
 
+	/*
+	 * to be overidden if using mulitple models
+	 */
+	protected function createSave($model, $models)
+	{
+		return $model->dbCallback('save');
+	}
+	
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -651,36 +702,84 @@ class Controller extends CController
 	{
 		$model=new $this->modelName;
 
-		// Uncomment the following line if AJAX validation is needed
-		$this->performAjaxValidation($model);
+		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
+		$validating =$this->performAjaxValidation($model);
+// TODO: this is untested without javascript
 
 		if(isset($_POST[$this->modelName]))
 		{
 			$model->attributes=$_POST[$this->modelName];
-			if($model->dbCallback('save'))
+			
+			// start a transaction
+			$transaction = Yii::app()->db->beginTransaction();
+			
+			// attempt save
+			$saved = $this->createSave($model, $models);
+
+			// if not validating and successful
+			if(!$validating && $saved)
 			{
-				$this->redirect(array('update', $model->tableSchema->primaryKey => $model->getPrimaryKey()));
+				// commit
+                $transaction->commit();
+				$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
+			}
+			// otherwise there has been an error which should be captured in model
+			else
+			{
+				// rollback
+                $transaction->rollBack();
+				// if coming from ajaxvalidate
+				if($validating)
+				{
+					$result=array();
+					if(!is_array($models)) 
+					{
+						$models=array($model);
+					}
+					foreach($models as $model)
+					{
+						foreach($model->getErrors() as $attribute=>$errors)
+						{
+							$result[CHtml::activeId($model,$attribute)]=$errors;
+						}
+					}
+					// return the json encoded data to the client
+					echo $t = function_exists('json_encode') ? json_encode($result) : CJSON::encode($result);
+					Yii::app()->end();
+				}
+
+				$model->isNewRecord = TRUE;
 			}
 		}
+		elseif(isset($_GET[$this->modelName]))
+		{
+			// set any url based paramters
+			$model->attributes=$_GET[$this->modelName];
+		}
 
-		// otherwise this is just a get and could be passing paramters
-		$model->attributes=$_GET[$this->modelName];
-
-		// set heading
-		$modelName = $this->modelName;
-		$this->heading = "Create " .  $modelName::getNiceName();
-
-		// set breadcrumbs
-		$this->breadcrumbs = $this->getBreadCrumbTrail('Create');
-
-		// set up tab menu if required - using setter
-		$this->tabs = $model;
+		// add primary key into session so it can be retrieved for future use in breadcrumbs
+		$_SESSION[$this->modelName] = array(
+			'name'=>$model->tableSchema->primaryKey,
+			'value'=>$id,
+		);
+		
 
 		$this->widget('CreateViewWidget', array(
 			'model'=>$model,
+			'models'=>$models,
 		));
 	}
 
+// TODO: huge duplication between actionUpdate and actionCreate - remove duplication 	
+	
+	/*
+	 * to be overidden if using mulitple models
+	 */
+	protected function updateSave($model, $models)
+	{
+		return $model->dbCallback('save');
+	}
+	
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'update' page.
@@ -690,15 +789,53 @@ class Controller extends CController
 	{
 		$model=$this->loadModel($id);
 
-		// Uncomment the following line if AJAX validation is needed
-		$this->performAjaxValidation($model);
+		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
+		$validating =$this->performAjaxValidation($model);
+// TODO: this is untested without javascript
 
 		if(isset($_POST[$this->modelName]))
 		{
 			$model->attributes=$_POST[$this->modelName];
-			if($model->dbCallback('save'))
+			
+			// start a transaction
+			$transaction = Yii::app()->db->beginTransaction();
+			
+			// attempt save
+			$saved = $this->updateSave($model, $models);
+
+			// if not validating and successful
+			if(!$validating && $saved)
 			{
+				// commit
+                $transaction->commit();
 				$this->redirect(array('admin'));
+			}
+			// otherwise there has been an error which should be captured in model
+			else
+			{
+				// rollback
+                $transaction->rollBack();
+				// if coming from ajaxvalidate
+				if($validating)
+				{
+					$result=array();
+					if(!is_array($models)) 
+					{
+						$models=array($model);
+					}
+					foreach($models as $model)
+					{
+						foreach($model->getErrors() as $attribute=>$errors)
+						{
+							$result[CHtml::activeId($model,$attribute)]=$errors;
+						}
+					}
+					// return the json encoded data to the client
+					echo $t = function_exists('json_encode') ? json_encode($result) : CJSON::encode($result);
+					Yii::app()->end();
+				}
+
+				$model->isNewRecord = TRUE;
 			}
 		}
 
@@ -723,8 +860,10 @@ class Controller extends CController
 
 		$this->widget('UpdateViewWidget', array(
 			'model'=>$model,
+			'models'=>$models,
 		));
 	}
+
 
 	/**
 	 * Views a particular model.
@@ -748,29 +887,69 @@ class Controller extends CController
 	{
 		if(Yii::app()->request->isPostRequest)
 		{
-			// we only allow deletion via POST request
-			$model = $this->loadModel($id)->delete();
-			
-			// if this model has a deleted attribute
-			if(isset($model->deleted))
+			try
 			{
-				// mark the row as deleted
-// TODO: need triggers on all tables with deleted that need to cascade
-				$model->deleted = true;
-				$model->save();
-			}
-			// otherwise delete the row
-			else
+				// we only allow deletion via POST request
+				$model = $this->loadModel($id);
+
+				// if this model has a deleted attribute
+				if(isset($model->deleted))
+				{
+					// mark the row as deleted
+					$model->deleted = true;
+					$model->save();
+				}
+				// otherwise delete the row
+				else
+				{
+					$model->delete();
+				}
+				
+				if(!isset($_GET['ajax']))
+				{
+					Yii::app()->user->setFlash('error','<strong>Success!</strong>
+						The row has been succesfully deleted.');
+				}
+				else
+				{
+					echo "
+						<div class='alert alert-block alert-error fade in'>
+							<a class='close' data-dismiss='alert'>×</a>
+							<strong>Success!</strong>
+							The row has been succesfully deleted.
+						</div>
+					";
+				}
+  			}
+			catch (CDbException $e)
 			{
-				$model->delete();
+				if(!isset($_GET['ajax']))
+				{
+					Yii::app()->user->setFlash('error','<strong>Oops!</strong>
+						Unfortunately you can&#39;t delete this as at least one other record in the database refers to it.');
+				}
+				else
+				{
+					echo "
+						<div class='alert alert-block alert-error fade in'>
+							<a class='close' data-dismiss='alert'>×</a>
+							<strong>Oops!</strong>
+							Unfortunately you can&#39;t delete this as at least one other record in the database refers to it.
+						</div>
+					";
+				}
 			}
 			
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']))
+			{
 				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			}
 		}
 		else
+		{
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+		}
 	}
 
 	/**
@@ -804,31 +983,47 @@ class Controller extends CController
 	 */
 	protected function performAjaxValidation($model)
 	{
+		$validating = false;
 		if(isset($_POST['ajax']) && $_POST['ajax']===$this->modelName.'-form')
 		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
+			$jsonErrors = CActiveForm::validate($model);
+			if($model->hasErrors())
+			{
+				echo $jsonErrors;
+				Yii::app()->end();
+
+			}
+			$validating = true;
 		}
+
+		return $validating;
 	}
 	
-	static function listWidgetRow($model, $form, $fkField, $htmlOptions = array())
+	static function listWidgetRow($model, $form, $fkField, $htmlOptions = array(), $scopes = array())
 	{
-		static::autoTextWidget($model, $form, $fkField, $htmlOptions);
+		// set any required default scope
+		// NB this only applies here to drop down list which is populated now, otherwise scope needs to be passed to parent autocomplete
+		// via child autocomplete - warning, the alias can be confusing
+// TODO: should be able to set these scopes in one place and derive correct alias if alias needed
+
+		static::autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes);
 //		static::dropDownListWidget($model, $form, $fkField, $htmlOptions);
+//		static::$defaultScope = $defaultScope;
 	}
 	
-	static function autoTextWidget($model, $form, $fkField, $htmlOptions = array())
+	static function autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes)
 	{
-		// get relation name from foreign key
-		$relName = preg_replace('/(.*)[iI]d$/', '$1', Yii::app()->functions->camelize($fkField));
+//		// get relation name from foreign key
+//		$relName = preg_replace('/(.*)[iI]d$/', '$1', Yii::app()->functions->camelize($fkField));
 		
 		Yii::app()->controller->widget('WMEJuiAutoCompleteFkField',
 			array(
 				'model'=>$model,
 				'form'=>$form,
-				'relName'=>$relName,
+//				'relName'=>$relName,
 				'fkField'=>$fkField,
-				'htmlOptions'=> $htmlOptions,
+				'htmlOptions'=>$htmlOptions,
+				'scopes'=>$scopes,
 			)
 		);
 	}
@@ -842,7 +1037,6 @@ class Controller extends CController
 			$target,
 			$target->tableSchema->primaryKey, $modelName::getListData(),
 				$htmlOptions + array(
-					'class'=>'span5',
 					'name'=>get_class($model)."[$fkField]"));
 	}
 

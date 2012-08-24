@@ -13,18 +13,43 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
+ * @property AuthItem $itemname0
  * @property Staff $user
  * @property Staff $staff
- * @property AuthItem $itemname0
- * @property ProjectToAuthAssignment[] $projectToAuthAssignments
+ * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
  */
 class AuthAssignment extends ActiveRecord
 {
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Role assignment';
+	
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchUser;
+	/**
+	 * @var array defaultScopes that can be set and used at run time. This is basically a global
+	 * variable within the class context that allows other classes to filter query results without
+	 * having to pass thru several method arguments. Not tigtly coupled but convenient.
+	 */
+//	static $defaultScope = array();
+
+	public function scopeProjectToProjectTypeToAuthItem($project_id)
+	{
+		$criteria=new CDbCriteria;
+		$criteria->compare('project.id',$project_id);
+		$criteria->join='
+			JOIN project_type_to_AuthItem projectTypeToAuthItem ON t.itemname=projectTypeToAuthItem.AuthItem_name
+			JOIN project USING(project_type_id)
+		';
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -70,10 +95,10 @@ class AuthAssignment extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'itemname0' => array(self::BELONGS_TO, 'AuthItem', 'itemname'),
 			'user' => array(self::BELONGS_TO, 'Staff', 'userid'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'itemname0' => array(self::BELONGS_TO, 'AuthItem', 'itemname'),
-			'projectToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthAssignment', 'AuthAssignment_id'),
+			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'AuthAssignment_id'),
 		);
 	}
 
@@ -105,11 +130,6 @@ class AuthAssignment extends ActiveRecord
 		$criteria->select=array(
 //			't.id',
 			't.itemname',
-			"CONCAT_WS('$delimiter',
-				user.first_name,
-				user.last_name,
-				user.email
-				) AS searchUser",
 			't.bizrule',
 			't.data',
 		);
@@ -173,21 +193,19 @@ class AuthAssignment extends ActiveRecord
 	{
 		$controller = ucfirst(Yii::app()->controller->id);
 		
-//		// show when not coming from parent
-//		if(!isset($_GET[$controller]['staff_id'])  && !isset($_GET[$controller]['project_id']) && !isset($_GET[$_GET['model']]))
 		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
-		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('AuthAssignment_id'))
+		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('staff_id'))
+		{
+			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role';
+			$displaAttr[]='itemname';
+		}
+		else
 		{
 			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role/First/Last/Email';
 			$displaAttr[]='itemname';
 			$displaAttr['user']='first_name';
 			$displaAttr['user']='last_name';
 			$displaAttr['user']='email';
-		}
-		else
-		{
-			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role';
-			$displaAttr[]='itemname';
 		}
 
 		return $displaAttr;

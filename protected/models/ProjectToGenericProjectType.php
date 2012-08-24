@@ -83,10 +83,10 @@ class ProjectToGenericProjectType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Project to generic project type',
-			'generic_project_type_id' => 'Client/Project type/Generic type)',
-			'searchGenericProjectType' => 'Client/Project type/Generic type)',
-			'project_id' => 'Project',
-			'searchProject' => 'Project',
+			'generic_project_type_id' => 'Project type/Generic type)',
+			'searchGenericProjectType' => 'Project type/Generic type)',
+			'project_id' => 'Client/Project',
+			'searchProject' => 'Client/Project',
 			'generic_id' => 'Generic',
 			'searchGeneric' => 'Generic',
 		));
@@ -104,19 +104,23 @@ class ProjectToGenericProjectType extends ActiveRecord
 		$criteria->select=array(
 //			't.id',
 			'generic.id AS searchGeneric',
+			"CONCAT_WS('$delimiter',
+				projectType.description,
+				genericType.description
+				) AS searchGenericProjectType",
 		);
 
 		// where
 //		$criteria->compare('t.id',$this->id);
 		$criteria->compare('generic.id',$this->searchGeneric);
-		
+		$this->compositeCriteria($criteria, array(
+			'projectType.description',
+			'genericType.description',
+			), $this->searchGenericProjectType);
+
 		if(isset($this->project_id))
 		{
 			$criteria->compare('t.project_id',$this->project_id);
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				genericType.description
-				) AS searchGenericProjectType";
-			$criteria->compare('genericType.description', $this->searchGenericProjectType, true);
 		}
 		else
 		{
@@ -131,26 +135,15 @@ class ProjectToGenericProjectType extends ActiveRecord
 				),
 				$this->searchProject
 			);
-			
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				projectType.description,
-				genericType.description
-				) AS searchGenericProjectType";
-			$this->compositeCriteria($criteria, array(
-				'projectType.client.name',
-				'projectType.description',
-				'genericType.description',
-				), $this->searchGenericProjectType);
 		}
-		
+
 		// join
 		$criteria->with = array(
-			'genericProjectType.projectType.client',
 			'genericProjectType.projectType',
 			'genericProjectType.genericType',
+			'genericProjectType.projectType.client',
 			'project',
-			'generic'
+			'generic',
 		);
 
 		return $criteria;
@@ -166,7 +159,7 @@ class ProjectToGenericProjectType extends ActiveRecord
 			)',
 			'type'=>'raw',
 		);
- 		if(isset($this->project_id))
+ 		if(!isset($this->project_id))
 		{
 			$columns[] = array(
 					'name'=>'searchProject',

@@ -19,7 +19,7 @@
  * @property AuthItem[] $authItems
  * @property Assembly[] $assemblies
  * @property Client[] $clients
- * @property Day[] $days
+ * @property Day[] $daysDefaultValue[] $defaultValues
  * @property Duty[] $duties
  * @property DutyType[] $dutyTypes
  * @property Dutycategory[] $dutycategories
@@ -32,10 +32,10 @@
  * @property Material[] $materials
  * @property MaterialToTask[] $materialToTasks
  * @property Project[] $projects
- * @property ProjectToAuthAssignment[] $projectToAuthAssignments
- * @property ProjectToAuthAssignmentToTaskTypeToDutyType[] $projectToAuthAssignmentToTaskTypeToDutyTypes
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
+ * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
  * @property ProjectType[] $projectTypes
+ * @property ProjectTypeToAuthItem[] $projectTypeToAuthItems
  * @property PurchaseOrder[] $purchaseOrders
  * @property Reschedule[] $reschedules
  * @property Resourcecategory[] $resourcecategories
@@ -49,13 +49,9 @@
  * @property TaskToResourceType[] $taskToResourceTypes
  * @property TaskType[] $taskTypes
  * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
- */class Staff extends ActiveRecord
+ */
+class Staff extends ActiveRecord
 {
-	/**
-	 * @var array of referenced parent model name => foregin key name in this model
-	 */
-	protected $parentForeignKeys = array();
-	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -106,7 +102,7 @@
 			'authItems' => array(self::HAS_MANY, 'AuthItem', 'staff_id'),
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'staff_id'),
 			'clients' => array(self::HAS_MANY, 'Client', 'staff_id'),
-			'days' => array(self::HAS_MANY, 'Day', 'staff_id'),
+			'defaultValues' => array(self::HAS_MANY, 'DefaultValue', 'staff_id'),
 			'duties' => array(self::HAS_MANY, 'Duty', 'staff_id'),
 			'dutyTypes' => array(self::HAS_MANY, 'DutyType', 'staff_id'),
 			'dutycategories' => array(self::HAS_MANY, 'Dutycategory', 'staff_id'),
@@ -119,10 +115,10 @@
 			'materials' => array(self::HAS_MANY, 'Material', 'staff_id'),
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'staff_id'),
 			'projects' => array(self::HAS_MANY, 'Project', 'staff_id'),
-			'projectToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthAssignment', 'staff_id'),
-			'projectToAuthAssignmentToTaskTypeToDutyTypes' => array(self::HAS_MANY, 'ProjectToAuthAssignmentToTaskTypeToDutyType', 'staff_id'),
 			'projectToGenericProjectTypes' => array(self::HAS_MANY, 'ProjectToGenericProjectType', 'staff_id'),
+			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'staff_id'),
 			'projectTypes' => array(self::HAS_MANY, 'ProjectType', 'staff_id'),
+			'projectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectTypeToAuthItem', 'staff_id'),
 			'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrder', 'staff_id'),
 			'reschedules' => array(self::HAS_MANY, 'Reschedule', 'staff_id'),
 			'resourcecategories' => array(self::HAS_MANY, 'Resourcecategory', 'staff_id'),

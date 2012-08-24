@@ -1,6 +1,4 @@
 <?php
-//INSERT INTO `worksmanagement_dev`.`AuthAssignment` (`id`, `itemname`, `userid`, `bizrule`, `data`, `deleted`, `staff_id`) VALUES (NULL, 'system admin', '1', NULL, NULL, '0', '1');
-//INSERT INTO `worksmanagement_dev`.`staff` (`id`, `first_name`, `last_name`, `phone_mobile`, `email`, `password`, `deleted`, `staff_id`) VALUES (NULL, 'Andrew', 'Blake', NULL, 'admin@newzealandfishing.com', MD5('andrew'), '0', NULL);
 /**
  * Main configuration.
  * All properties can be overridden in mode_<mode>.php files
@@ -63,10 +61,14 @@ return array(
 					// removes 'site' & 'index' from urls and add pretty urls to static pages
 					'contact'=>'site/contact',
 					'page/<view:\w+>'=>'site/page',
-					'/'=>'client/admin',
+// TODO: fix error where currently need to switch these two lines when running yiic shell - possibly .htaccess issue or yii bug
+					'/'=>'client/admin', 
+//					'/'=>'site/index',
 
 					'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-					'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+// TODO: fix error where currently need to switch these two lines when running gii
+					'<controller:\w+>/<action:\w+>/<id:.+>'=>'<controller>/<action>',
+//					'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 					'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 
 					// add support for modules

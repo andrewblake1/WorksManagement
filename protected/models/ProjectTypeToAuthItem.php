@@ -1,37 +1,39 @@
 <?php
 
 /**
- * This is the model class for table "task_type".
+ * This is the model class for table "project_type_to_AuthItem".
  *
- * The followings are the available columns in table 'task_type':
+ * The followings are the available columns in table 'project_type_to_AuthItem':
  * @property integer $id
- * @property string $description
  * @property integer $project_type_id
- * @property string $template_task_id
+ * @property string $AuthItem_name
  * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property GenericTaskType[] $genericTaskTypes
- * @property Task[] $tasks
+ * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
  * @property ProjectType $projectType
+ * @property AuthItem $authItemName
  * @property Staff $staff
- * @property Task $templateTask
- * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
+ * @property TaskTypeToDutyTypeToProjectTypeToAuthItem[] $taskTypeToDutyTypeToProjectTypeToAuthItems
+ * @property TaskTypeToDutyTypeToProjectTypeToAuthItem[] $taskTypeToDutyTypeToProjectTypeToAuthItems1
  */
-class TaskType extends ActiveRecord
+class ProjectTypeToAuthItem extends ActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchProjectType;
-	public $searchTemplateTask;
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Project type to role';
 	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return TaskType the static model class
+	 * @return ProjectTypeToAuthItem the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -43,7 +45,7 @@ class TaskType extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'task_type';
+		return 'project_type_to_AuthItem';
 	}
 
 	/**
@@ -54,13 +56,12 @@ class TaskType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, project_type_id, staff_id', 'required'),
+			array('project_type_id, AuthItem_name, staff_id', 'required'),
 			array('project_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>64),
-			array('template_task_id', 'length', 'max'=>10),
+			array('AuthItem_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, project_type_id, deleted, searchTemplateTask, searchProjectType, searchStaff, template_task_id', 'safe', 'on'=>'search'),
+			array('searchProjectType, id, project_type_id, AuthItem_name, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,12 +73,12 @@ class TaskType extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'genericTaskTypes' => array(self::HAS_MANY, 'GenericTaskType', 'task_type_id'),
-			'tasks' => array(self::HAS_MANY, 'Task', 'task_type_id'),
+			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'project_type_to_AuthItem_id'),
 			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
+			'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'AuthItem_name'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'templateTask' => array(self::BELONGS_TO, 'Task', 'template_task_id'),
-			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'task_type_id'),
+			'taskTypeToDutyTypeToProjectTypeToAuthItems' => array(self::HAS_MANY, 'TaskTypeToDutyTypeToProjectTypeToAuthItem', 'project_type_id'),
+			'taskTypeToDutyTypeToProjectTypeToAuthItems1' => array(self::HAS_MANY, 'TaskTypeToDutyTypeToProjectTypeToAuthItem', 'project_type_to_AuthItem_id'),
 		);
 	}
 
@@ -87,11 +88,9 @@ class TaskType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task Type',
-			'project_type_id' => 'Client/Project type',
-			'searchProjectType' => 'Client/Project type',
-			'template_task_id' => 'Template task',
-			'searchTemplateTask' => 'Template task',
+			'id' => 'Project type to role',
+			'project_type_id' => 'Project type',
+			'AuthItem_name' => 'Role',
 		));
 	}
 
@@ -105,15 +104,11 @@ class TaskType extends ActiveRecord
 		// select
 		$criteria->select=array(
 //			't.id',
-			't.description',
-			't.template_task_id',
+			'AuthItem_name',
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.template_task_id',$this->template_task_id,true);
-//		$criteria->compare('templateTask.description',$this->searchTemplateTask,true);
+		$criteria->compare('AuthItem_name',$this->AuthItem_name,true);
 
 		if(isset($this->project_type_id))
 		{
@@ -135,15 +130,15 @@ class TaskType extends ActiveRecord
 		}
 		
 		// join
-		$criteria->with = array('projectType', 'projectType.client', 'templateTask');
+		$criteria->with = array('projectType', 'projectType.client');
 
 		return $criteria;
 	}
-
+	
 	public function getAdminColumns()
 	{
 //		$columns[] = 'id';
-		$columns[] = 'description';
+		$columns[] = 'AuthItem_name';
   		if(!isset($this->project_type_id))
 		{
 			$columns[] = array(
@@ -154,13 +149,6 @@ class TaskType extends ActiveRecord
 				'type'=>'raw',
 			);
 		}
-        $columns[] = array(
-			'name'=>'searchTemplateTask',
-			'value'=>'CHtml::link($data->searchTemplateTask,
-				Yii::app()->createUrl("TemplateTask/update", array("id"=>$data->template_task_id))
-			)',
-			'type'=>'raw',
-		);
 		
 		return $columns;
 	}
@@ -171,18 +159,20 @@ class TaskType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
-//		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_type_id'))
-//		{
-			ActiveRecord::$labelOverrides['task_type_id'] = 'Task type';
-//		}
-//		else
-//		{
-//			ActiveRecord::$labelOverrides['task_type_id'] = 'Client/Project type/Task type';
-//			$displaAttr['projectType->client']='name';
-//			$displaAttr['projectType']='description';
-//		}
+		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_type_id')
+			|| Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_id'))
+			
+		{
+			ActiveRecord::$labelOverrides['project_type_to_AuthItem_id'] = 'Role';
+		}
+		else
+		{
+			ActiveRecord::$labelOverrides['project_type_to_AuthItem_id'] = 'Client/Project type/Role';
+			$displaAttr['projectType->client']='name';
+			$displaAttr['projectType']='description';
+		}
 
-		$displaAttr[]='description';
+		$displaAttr[]='AuthItem_name';
 
 		return $displaAttr;
 	}
@@ -193,9 +183,7 @@ class TaskType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchClient', 'searchTemplateTask');
+		return array('searchProjectType');
 	}
 
 }
-
-?>

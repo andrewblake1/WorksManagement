@@ -88,7 +88,7 @@ class Task extends ActiveRecord
 		return array(
 			'duties' => array(self::HAS_MANY, 'Duty', 'task_id'),
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'task_id'),
-			'reschedules' => array(self::HAS_MANY, 'Reschedule', 'old_task_id'),
+			'reschedules' => array(self::HAS_MANY, 'Reschedule', 'task_id'),
 			'reschedules1' => array(self::HAS_MANY, 'Reschedule', 'new_task_id'),
 			'purchaseOrder' => array(self::BELONGS_TO, 'PurchaseOrder', 'purchase_order_id'),
 			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
@@ -286,18 +286,16 @@ class Task extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-//		// show when not coming from parent
-//		if(!isset($_GET[ucfirst(Yii::app()->controller->id)]['project_id']) && !isset($_GET[$_GET['model']]))
 		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
-		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('task_id'))
+		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_id'))
+		{
+			ActiveRecord::$labelOverrides['task_id'] = 'Task';
+		}
+		else
 		{
 			ActiveRecord::$labelOverrides['task_id'] = 'Client/Project/Task';
 			$displaAttr['project->projectType->client']='name';
 			$displaAttr['project']='description';
-		}
-		else
-		{
-			ActiveRecord::$labelOverrides['task_id'] = 'Task';
 		}
 
 		$displaAttr[]='description';

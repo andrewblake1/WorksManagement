@@ -6,16 +6,18 @@
  * The followings are the available columns in table 'duty':
  * @property string $id
  * @property string $task_id
- * @property string $project_to_AuthAssignment_to_task_type_to_duty_type_id
+ * @property integer $task_type_id
  * @property string $updated
  * @property string $generic_id
  * @property integer $staff_id
+ * @property integer $task_type_to_duty_type_id
  *
  * The followings are the available model relations:
  * @property Task $task
+ * @property TaskTypeToDutyType $taskType
  * @property Generic $generic
  * @property Staff $staff
- * @property ProjectToAuthAssignmentToTaskTypeToDutyType $projectToAuthAssignmentToTaskTypeToDutyType
+ * @property TaskTypeToDutyType $taskTypeToDutyType
  */
 class Duty extends ActiveRecord
 {
@@ -24,7 +26,7 @@ class Duty extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchTask;
-	public $searchProjectToAuthAssignmentToTaskTypeToDutyType;
+	public $searchTaskTypeToDutyType;
 	public $searchGeneric;
 	
 	/**
@@ -53,13 +55,13 @@ class Duty extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, project_to_AuthAssignment_to_task_type_to_duty_type_id, staff_id', 'required'),
-			array('staff_id', 'numerical', 'integerOnly'=>true),
-			array('task_id, project_to_AuthAssignment_to_task_type_to_duty_type_id, generic_id', 'length', 'max'=>10),
+			array('task_id, task_type_id, staff_id, task_type_to_duty_type_id', 'required'),
+			array('task_type_id, staff_id, task_type_to_duty_type_id', 'numerical', 'integerOnly'=>true),
+			array('task_id, generic_id', 'length', 'max'=>10),
 			array('updated', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchTask, searchProjectToAuthAssignmentToTaskTypeToDutyType, updated, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
+			array('id, searchTask, searchTaskTypeToDutyType, updated, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,9 +74,10 @@ class Duty extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
+			'taskType' => array(self::BELONGS_TO, 'TaskTypeToDutyType', 'task_type_id'),
 			'generic' => array(self::BELONGS_TO, 'Generic', 'generic_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'projectToAuthAssignmentToTaskTypeToDutyType' => array(self::BELONGS_TO, 'ProjectToAuthAssignmentToTaskTypeToDutyType', 'project_to_AuthAssignment_to_task_type_to_duty_type_id'),
+			'taskTypeToDutyType' => array(self::BELONGS_TO, 'TaskTypeToDutyType', 'task_type_to_duty_type_id'),
 		);
 	}
 
@@ -87,8 +90,9 @@ class Duty extends ActiveRecord
 			'id' => 'Duty',
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
-			'project_to_AuthAssignment_to_task_type_to_duty_type_id' => 'Role/First/Last/Email/Duty type',
-			'searchProjectToAuthAssignmentToTaskTypeToDutyType' => 'Role/First/Last/Email/Duty type',
+			'task_type_id' => 'Task type',
+			'task_type_to_duty_type_id' => 'Duty',
+			'searchTaskTypeToDutyType' => 'Duty',
 			'updated' => 'Updated',
 			'generic_id' => 'Generic',
 			'searchGeneric' => 'Generic',
@@ -112,9 +116,9 @@ class Duty extends ActiveRecord
 				user.last_name,
 				user.email,
 				dutyType.description
-				) AS searchProjectToAuthAssignmentToTaskTypeToDutyType",
+				) AS searchTaskTypeToDutyType",
 			't.updated',
-			'generic.id AS searchGeneric',
+//			'generic.id AS searchGeneric',
 		);
 
 		// where
@@ -127,9 +131,9 @@ class Duty extends ActiveRecord
 				'user.last_name',
 				'user.email',
 				'dutyType.description',
-			), $this->searchProjectToAuthAssignmentToTaskTypeToDutyType);
+			), $this->searchTaskTypeToDutyType);
 		$criteria->compare('t.updated',$this->updated,true);
-		$criteria->compare('t.generic.id',$this->searchGeneric);
+//		$criteria->compare('t.generic.id',$this->searchGeneric);
 
 		if(isset($this->task_id))
 		{
@@ -152,16 +156,19 @@ class Duty extends ActiveRecord
 			);
 		}
 
+		// NB: without this the has_many relations aren't returned and some select columns don't exist
+		$criteria->together = true;
+
 		// join
 		$criteria->with = array(
 			'task',
-			'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.project',
-			'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.authAssignment',
-			'projectToAuthAssignmentToTaskTypeToDutyType.projectToAuthAssignment.authAssignment.user',
-			'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.taskType.projectType.client',
-//			'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.taskType',
-			'projectToAuthAssignmentToTaskTypeToDutyType.taskTypeToDutyType.dutyType',
-			'generic',
+			'task.project',
+			'task.project.projectToProjectTypeToAuthItems',
+			'task.project.projectToProjectTypeToAuthItems.authAssignment',
+			'task.project.projectToProjectTypeToAuthItems.authAssignment.user',
+			'task.project.projectType.client',
+			'taskTypeToDutyType.dutyType',
+//			'generic',
 		);
 
 		return $criteria;
@@ -181,20 +188,20 @@ class Duty extends ActiveRecord
 			);
 		}
         $columns[] = array(
-			'name'=>'searchProjectToAuthAssignmentToTaskTypeToDutyType',
-			'value'=>'CHtml::link($data->searchProjectToAuthAssignmentToTaskTypeToDutyType,
-				Yii::app()->createUrl("ProjectToAuthAssignmentToTaskTypeToDutyType/update", array("id"=>$data->project_to_AuthAssignment_to_task_type_to_duty_type_id))
+			'name'=>'searchTaskTypeToDutyType',
+			'value'=>'CHtml::link($data->searchTaskTypeToDutyType,
+				Yii::app()->createUrl("TaskTypeToDutyType/update", array("id"=>$data->task_type_to_duty_type_id))
 			)',
 			'type'=>'raw',
 		);
 		$columns[] = 'updated';
-        $columns[] = array(
+/*        $columns[] = array(
 			'name'=>'searchGeneric',
 			'value'=>'CHtml::link($data->searchGeneric,
 				Yii::app()->createUrl("Generic/update", array("id"=>$data->generic_id))
 			)',
 			'type'=>'raw',
-		);
+		);*/
 		
 		return $columns;
 	}
@@ -205,9 +212,19 @@ class Duty extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTask', 'searchProjectToAuthAssignmentToTaskTypeToDutyType', 'searchGeneric');
+		return array('searchTask', 'searchTaskTypeToDutyType', 'searchGeneric');
 	}
 
+	public function beforeValidate()
+	{
+		if(isset($this->task_type_to_duty_type_id))
+		{
+			$model = TaskTypeToDutyType::model()->findByPk($this->task_type_to_duty_type_id);
+			$this->task_type_id = $model->task_type_id ;
+		}
+		
+		return parent::beforeValidate();
+	}
 }
 
 ?>

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * This is the model class for table "AuthItemChild".
+ * This is the model class for table "default_value".
  *
- * The followings are the available columns in table 'AuthItemChild':
- * @property integer $id
- * @property string $parent
- * @property string $child
+ * The followings are the available columns in table 'default_value':
+ * @property string $id
+ * @property string $table
+ * @property string $column
+ * @property string $select
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Staff $staff
- * @property AuthItem $child0
- * @property AuthItem $parent0
  */
-class AuthItemChild extends ActiveRecord
+class DefaultValue extends ActiveRecord
 {
 	/**
-	 * @var string nice model name for use in output
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
 	 */
-	static $niceName = 'Priviledge';
-	
+	public $searchTableColumn;
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return AuthItemChild the static model class
+	 * @return DefaultValue the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -36,7 +36,7 @@ class AuthItemChild extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'AuthItemChild';
+		return 'default_value';
 	}
 
 	/**
@@ -47,12 +47,12 @@ class AuthItemChild extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('parent, child, staff_id', 'required'),
+			array('table, column, select, staff_id', 'required'),
 			array('staff_id', 'numerical', 'integerOnly'=>true),
-			array('parent, child', 'length', 'max'=>64),
+			array('table, column', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, parent, child, staff_id', 'safe', 'on'=>'search'),
+			array('searchTableColumn, id, table, column, select, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,8 +65,6 @@ class AuthItemChild extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'child0' => array(self::BELONGS_TO, 'AuthItem', 'child'),
-			'parent0' => array(self::BELONGS_TO, 'AuthItem', 'parent'),
 		);
 	}
 
@@ -76,9 +74,11 @@ class AuthItemChild extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Auth item child',
-			'parent' => 'Parent',
-			'child' => 'Child',
+			'id' => 'Default value',
+			'table' => 'Table',
+			'column' => 'Column',
+			'searchTableColumn' => 'Table/Column',
+			'select' => 'Select',
 		));
 	}
 
@@ -89,17 +89,17 @@ class AuthItemChild extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		// select
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.table',$this->table);
+		$criteria->compare('t.column',$this->column);
+		$criteria->compare('t.select',$this->select);
+
 		$criteria->select=array(
 //			't.id',
-			't.parent',
-			't.child',
-		);	
-
-		// where
-//		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.parent',$this->parent);
-		$criteria->compare('t.child',$this->child);
+			't.table',
+			't.column',
+			't.select',
+		);
 
 		return $criteria;
 	}
@@ -107,12 +107,11 @@ class AuthItemChild extends ActiveRecord
 	public function getAdminColumns()
 	{
 //		$columns[] = 'id';
-		$columns[] = 'parent';
- 		$columns[] = 'child';
+		$columns[] = 'table';
+		$columns[] = 'column';
+		$columns[] = 'select';
 		
 		return $columns;
 	}
 
 }
-
-?>

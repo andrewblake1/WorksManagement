@@ -43,6 +43,8 @@ class GenericWidgets extends TbActiveForm
 					'relation_genericModelType'=>$this->relation_genericModelType,
 				)
 			);
+//TODO: should probably be sub-classing here and using inheritance instead of switch. Potentially GenericWidgers could be abstract base with a
+// factory method or static factory method to create the sub types.
 			// create the widget based on the generic validation type
 			switch($genericType->validation_type)
 			{

@@ -1,9 +1,5 @@
 <?php
-class ProjectController extends Controller
-{
-	
-}
-/*class ProjectController extends GenericExtensionController
+class ProjectController extends GenericExtensionController
 {
 	protected $class_ModelToGenericModelType = 'ProjectToGenericProjectType';
 	protected $attribute_generic_model_type_id = 'generic_project_type_id';
@@ -13,7 +9,6 @@ class ProjectController extends Controller
 	protected $relation_modelType = 'projectType';
 	protected $relation_modelToGenericModelTypes = 'projectToGenericProjectTypes';
 	protected $relation_modelToGenericModelType = 'projectToGenericProjectType';
-
-}*/
+}
 
 ?>

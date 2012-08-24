@@ -132,7 +132,7 @@ class GenericTaskType extends ActiveRecord
 
 		// join
 		$criteria->with = array(
-			'taskType.client',
+			'taskType.projectType.client',
 			'taskType',
 			'generictaskcategory',
 			'genericType',
@@ -178,7 +178,7 @@ class GenericTaskType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'client'=>'name',
+			'taskType->projectType->client'=>'name',
 			'taskType'=>'description',
 			'genericType'=>'description',
 		);

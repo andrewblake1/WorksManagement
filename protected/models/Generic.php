@@ -71,28 +71,33 @@ class Generic extends ActiveRecord
 		// get the target attribute
 		$targetAttribute = $dataTypeColumnNames[$genericType->data_type];
 
+// TODO: this switch related to GenericWidgets switch - possible call for sub classes - perhaps Generic should be abstract?
+
+		// custom validation error message
+		$validationError = empty($genericType->validation_error) ? array() : array('message'=>$genericType->validation_error);
+
 		// add any necassary validation rules to the model
 		switch($genericType->validation_type)
 		{
 			// Value list
 			case GenericType::validationTypeValueList :
-				$this->customValidators[] = array($targetAttribute, 'in', 'range'=>explode(',', $genericType->validation_text));
+				$this->customValidators[] = array($targetAttribute, 'in', 'range'=>explode(',', $genericType->validation_text)) + $validationError;
 				break;
 
 			// Perl compatible regular expression
 			case GenericType::validationTypePCRE :
-				$this->customValidators[] = array($targetAttribute, 'match', 'pattern'=>$genericType->validation_text);
+				$this->customValidators[] = array($targetAttribute, 'match', 'pattern'=>$genericType->validation_text) + $validationError;
 				break;
 
 			// Numeric range
 			case GenericType::validationTypeRange :
 				$range = explode('-', $genericType->validation_text);
-				$this->customValidators[] = array($targetAttribute, 'numerical', 'min'=>$range[0], 'max'=>$range[1]);
+				$this->customValidators[] = array($targetAttribute, 'numerical', 'min'=>$range[0], 'max'=>$range[1]) + $validationError;
 				break;
 
 			// SQL select
 			case GenericType::validationTypeSQLSelect:
-				$this->customValidators[] = array($targetAttribute, 'validationLookup') + $params;
+				$this->customValidators[] = array($targetAttribute, 'validationLookup') + $validationError + $params;
 				break;
 		}
 
@@ -271,6 +276,36 @@ class Generic extends ActiveRecord
 		$columns[] = 'type_text';
 		
 		return $columns;
+	}
+
+	/*
+	 * Set user defined default
+	 */
+	public function setDefault(CActiveRecord $genericModelType)
+	{
+		$dataTypeColumnNames = GenericType::getDataTypeColumnNames();
+		$attributeName = $dataTypeColumnNames[$genericModelType->data_type];
+		
+		// if this is likely to be an sql select
+		if(stripos($genericModelType->default_select, 'SELECT') !== false)
+		{
+			// attempt to execute the sql
+			try
+			{
+// TODO: this should be run of connection with restricted sys admin rights rather than main app user rights
+				$this->$attributeName = Yii::app()->db->createCommand($genericModelType->default_select)->queryScalar();
+			}
+			catch (CDbException $e)
+			{
+				// the select failed so assume it is just text with the word 'select' in it - most likely sys admin error but 
+				// deal with it anyway by just doing nothing here and the attribute gets set below anyway
+			}
+		}
+		else
+		{
+			// set to the value of the select column
+			$this->$attributeName = $genericModelType->default_select;
+		}
 	}
 
 }

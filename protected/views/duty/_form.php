@@ -11,7 +11,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		TaskController::listWidgetRow($model, $form, 'task_id');
 	}
 
-	ProjectToAuthAssignmentToTaskTypeToDutyTypeController::listWidgetRow($model, $form, 'project_to_AuthAssignment_to_task_type_to_duty_type_id');
+	TaskTypeToDutyTypeController::listWidgetRow($model, $form, 'task_type_to_duty_type_id', array(), array('scopeTask'=>array($model->task_id)));
 
 	$form->textFieldRow('updated');
 

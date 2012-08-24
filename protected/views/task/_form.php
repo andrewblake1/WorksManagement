@@ -36,7 +36,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	$form->textFieldRow('preferred');
 
 	
-/*	 // generics
+	 // generics
 	$this->widget('GenericWidgets',array(
 		'model'=>$model,
 		'form'=>$form,
@@ -45,7 +45,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		'relation_genericModelType'=>'genericTaskType',
 	));
 
-	// resources
+/*	// resources
 	// only show when updating
 	if(!$model->isNewRecord)
 		$this->widget('ResourceWidgets',array(
