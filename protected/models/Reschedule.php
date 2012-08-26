@@ -54,7 +54,7 @@ class Reschedule extends ActiveRecord
 			array('task_id, new_task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchTask, $searchNewTask, $searchStaff', 'safe', 'on'=>'search'),
+			array('id, searchTask, searchNewTask, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 

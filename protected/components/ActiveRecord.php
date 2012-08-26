@@ -268,7 +268,10 @@ abstract class ActiveRecord extends CActiveRecord
 		}
 
 		if(!isset($_GET[get_class($model).'_sort']))
+		{
+			// this if clause in case a view with no primary key
 			$searchCriteria->order = 't.'.$model->tableSchema->primaryKey." DESC";
+		}
 
 		return $searchCriteria;
 	}

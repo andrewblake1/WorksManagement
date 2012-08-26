@@ -1,40 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "material".
+ * This is the model class for view "v_generic".
  *
- * The followings are the available columns in table 'material':
- * @property integer $id
+ * The followings are the available columns in view 'v_generic':
+ * @property string $id
+ * @property string $parent_id the id from prmimary key in the parent table to restrict search by
  * @property string $description
- * @property integer $deleted
- * @property integer $staff_id
+ * @property string $value this technically is mixed type if int, float, date, time, text
  *
  * The followings are the available model relations:
- * @property Assembly[] $assemblies
  * @property Staff $staff
- * @property MaterialToTask[] $materialToTasks
- * @property TaskTypeToMaterial[] $taskTypeToMaterials
  */
-class Material extends ActiveRecord
+abstract class ViewGenericActiveRecord extends ActiveRecord
 {
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Material the static model class
-	 */
-	public static function model($className=__CLASS__)
+	public function primaryKey()
 	{
-		return parent::model($className);
+		return 'id';
 	}
-
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'material';
-	}
-
+		
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -43,12 +27,9 @@ class Material extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, staff_id', 'required'),
-			array('deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, searchStaff', 'safe', 'on'=>'search'),
+			array('parent_id, description, value', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,10 +41,7 @@ class Material extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'assemblies' => array(self::HAS_MANY, 'Assembly', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'material_id'),
-			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'material_id'),
 		);
 	}
 
@@ -73,7 +51,8 @@ class Material extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Material',
+			'description' => 'Generic type',
+			'value' => 'Value',
 		));
 	}
 
@@ -84,15 +63,15 @@ class Material extends ActiveRecord
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.parent_id',$this->parent_id);
 		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.value',$this->value,true);
 
 		$criteria->select=array(
-			't.id',
 			't.description',
+			't.value',
 		);
 
 		return $criteria;
@@ -100,8 +79,8 @@ class Material extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
 		$columns[] = 'description';
+		$columns[] = 'value';
 		
 		return $columns;
 	}

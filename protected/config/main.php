@@ -67,8 +67,8 @@ return array(
 
 					'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 // TODO: fix error where currently need to switch these two lines when running gii
-					'<controller:\w+>/<action:\w+>/<id:.+>'=>'<controller>/<action>',
-//					'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+//					'<controller:\w+>/<action:\w+>/<id:.+>'=>'<controller>/<action>',
+					'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 					'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 
 					// add support for modules
@@ -147,7 +147,7 @@ return array(
 		// Autoloading model and component classes
 		'import'=>'inherit',
 
-		// Application componentshome
+		// Application components home
 		'components'=>array(
 
 			// Database

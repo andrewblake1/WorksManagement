@@ -203,9 +203,9 @@ class AuthAssignment extends ActiveRecord
 		{
 			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role/First/Last/Email';
 			$displaAttr[]='itemname';
-			$displaAttr['user']='first_name';
-			$displaAttr['user']='last_name';
-			$displaAttr['user']='email';
+			$displaAttr[]='user->first_name';
+			$displaAttr[]='user->last_name';
+			$displaAttr[]='user->email';
 		}
 
 		return $displaAttr;

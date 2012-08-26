@@ -196,7 +196,7 @@ class Project extends ActiveRecord
 		else
 		{
 			ActiveRecord::$labelOverrides['project_id'] = 'Client/Project';
-			$displaAttr['projectType->client']='name';
+			$displaAttr[]='projectType->client->name';
 		}
 
 		$displaAttr[]='description';

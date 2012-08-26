@@ -104,23 +104,18 @@ class ProjectToGenericProjectType extends ActiveRecord
 		$criteria->select=array(
 //			't.id',
 			'generic.id AS searchGeneric',
-			"CONCAT_WS('$delimiter',
-				projectType.description,
-				genericType.description
-				) AS searchGenericProjectType",
 		);
 
 		// where
 //		$criteria->compare('t.id',$this->id);
 		$criteria->compare('generic.id',$this->searchGeneric);
-		$this->compositeCriteria($criteria, array(
-			'projectType.description',
-			'genericType.description',
-			), $this->searchGenericProjectType);
 
 		if(isset($this->project_id))
 		{
 			$criteria->compare('t.project_id',$this->project_id);
+			ActiveRecord::$labelOverrides['searchGenericProjectType'] = 'Generic type';
+			$criteria->compare('genericType.description',$this->searchGenericProjectType);
+			$criteria->select[]="genericType.description AS searchGenericProjectType";
 		}
 		else
 		{
@@ -132,9 +127,17 @@ class ProjectToGenericProjectType extends ActiveRecord
 				array(
 					'client.name',
 					'project.description',
-				),
-				$this->searchProject
+				), $this->searchProject
 			);
+
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				projectType.description,
+				genericType.description
+				) AS searchGenericProjectType";
+			$this->compositeCriteria($criteria, array(
+				'projectType.description',
+				'genericType.description',
+				), $this->searchGenericProjectType);
 		}
 
 		// join

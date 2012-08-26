@@ -20,7 +20,41 @@ class WMTbActiveForm extends TbActiveForm
     public $clientOptions = array(
 		'validateOnSubmit'=>true,
 		'validateOnChange'=>false,
- 	);
+		'afterValidate'=>'js: function(form, data, hasError)
+		{
+			// If adding/editing multiple models as a result of what appears visually to be a single model form
+			// then their are errors returned in the json data object but hasError is false as it hasnt detected errors matching inputs
+			// on the form as they dont exist. This function puts those erros into the error block at the top and stops the form being submitted
+			var $lis = "";
+
+			// if afterValidate is being told there are no errors what it really means is no form inputs have errors
+			if(!hasError)
+			{
+			
+				// loop thru json object which is 2 dimensional array
+				$.each(data, function()
+				{
+					$.each(this, function(k, v)
+					{
+						$lis = $lis + "<li>" + v + "</li>";
+					});
+				});
+
+				// if there are errors with the models but not on the form inputs
+				if($lis != "")
+				{
+					$errorhtml = \'<div id="Task-form_es_" class="alert alert-block alert-error" style="">\
+					<p>Please fix the following input errors:</p><ul>\' + $lis + \'</ul></div>\';
+					
+					$("#Task-form_es_").replaceWith($errorhtml);
+					
+					return false;
+				}
+			}
+
+			return true;
+		}'
+);
 
 	/**
 	 * Displays a particular model.

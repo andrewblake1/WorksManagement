@@ -39,7 +39,11 @@ class Controller extends CController
 	/**
 	 * @var bool whether to show the new button in the admin  
 	 */
-	protected $_adminShowNew = true;
+	protected $_adminShowNew = false;
+	/**
+	 * @var string the name of the model to use in the admin view - the model may serve a database view as opposed to a table  
+	 */
+	protected $_adminViewModel;
 	
 	/**
 	 * @var string the flash message to show sort and search instructions
@@ -68,6 +72,7 @@ class Controller extends CController
 					'MaterialToTask',
 					'TaskToAssembly',
 					'TaskToGenericTaskType',
+					'TaskToPurchaseOrder',
 					'TaskToResourceType',
 				),
 				'ProjectToProjectTypeToAuthItem',
@@ -78,7 +83,10 @@ class Controller extends CController
 				'GenericProjectType',
 				'TaskType'=>array(
 					'GenericTaskType',
+					'TaskTypeToAssembly',
 					'TaskTypeToDutyType',
+					'TaskTypeToMaterial',
+					'TaskTypeToResourceType',
 				),
 			),
 		),
@@ -106,6 +114,11 @@ class Controller extends CController
 	public function __construct($id, $module = null)
 	{
 		$this->modelName = str_replace('Controller', '', get_class($this));
+		
+		if(empty($this->_adminViewModel))
+		{
+			$this->_adminViewModel = $this->modelName;
+		}
 		
 		// clear the labelOverrides that may have been used in previous view
 		ActiveRecord::$labelOverrides = array();
@@ -139,39 +152,43 @@ class Controller extends CController
 			$criteria->params = array();
 			$terms = explode(Yii::app()->params['delimiter']['search'], $_GET['term']);
 
-			// key will contain either a number or a foreign key field in which case field will be the lookup value
-			foreach($modelName::getDisplayAttr() as $key => $field)
+			foreach($modelName::getDisplayAttr() as $field)
 			{
 				// building display parameter which gets eval'd later
-				$display .= (isset($display) ? ".Yii::app()->params['delimiter']['display']." : '') . '$p->';
+				$display[] = '{$p->'.$field.'}';
 
 				// building display parameter which gets eval'd later
 				// get term for this column from users entry
 				// with trailing wildcard only; probably a good idea for large volumes of data
 				$term = ($term = each($terms)) ? trim($term['value']) . '%' : '%';
 
-				// if we are using a foreign key lookup
-				if(!is_numeric($key))
+				/*
+				 * $matches[5] attribute
+				 * $matches[4] alias
+				 * $matches[1] relations
+				 */
+				if(preg_match('/(((.*)->)?(\w*))->(\w*)$/', $field, $matches))
 				{
-					$criteria->with[] = $key;
-					$display .= str_replace('.', '->', $key).'->';
-					$criteria->order[] = "$key.$field asc";
-					$paramName = ':'.str_replace('.', '', $key).$field;
-					$criteria->condition .= ($criteria->condition ? " AND " : '')."$key.$field like $paramName";
-					$criteria->params["$paramName"] = $term;
+					$criteria->with[] = $matches[1];
+					$alias = $matches[4];
+					$attribute = $matches[5];
 				}
 				else
 				{
-					$criteria->order[] = "$field asc";
-					$criteria->condition .= ($criteria->condition ? " AND " : '')."$field like :$field";
-					$criteria->params[":$field"] = $term;
+					$alias = 't';
+					$attribute = $field;
 				}
-				$display .= $field;
+				
+				$criteria->order[] = "$alias.$attribute ASC";
+				$paramName = ":{$alias}_$attribute";
+				$criteria->condition .= ($criteria->condition ? " AND " : '')."$alias.$attribute like $paramName";
+				$criteria->params[$paramName] = $term;
 			}
 
 			// probably a good idea to limit the results
 			$criteria->limit = 20;
 			$criteria->order = implode(', ', $criteria->order);
+			$display = implode(Yii::app()->params['delimiter']['display'], $display);
 			$criteria->scopes = empty($_GET['scopes']) ? null : $_GET['scopes'];
 			$fKModels = $model->findAll($criteria);
 
@@ -182,7 +199,7 @@ class Controller extends CController
 				$primaryKey = $model->tableSchema->primaryKey;
 				foreach ($fKModels as $p)
 				{
-					eval("\$value=$display;");
+					eval("\$value=\"$display\";");
 					$out[] = array(
 						// expression to give the string for the autoComplete drop-down
 						'label' => $value,  
@@ -463,6 +480,9 @@ class Controller extends CController
 
 		$modelName = /*ucfirst($this->id)*/$this->modelName;
 
+		// should we be showing the new button NB: this is used main layout and checked on all views hence initialized in class scope to false
+		$this->_adminShowNew = true;
+
 		// NB: query string is stripped from ajaxUrl hence this hack, but also used
 		// in building breadcrumbs
 		if(isset($_GET['ajax']))
@@ -493,13 +513,30 @@ class Controller extends CController
 			}
 		}
 		
-		$model=new $modelName('search');
+		// may be using a database view instead of main table model
+		$adminViewModel = $this->_adminViewModel;
+		$model=new $adminViewModel('search');
+		
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET[$modelName]))
-			$model->attributes=$_GET[$modelName];
-		if(isset($_POST[$modelName]))
-			$model->attributes=$_POST[$modelName];
-
+		$attributes = array();
+		if(!empty($_GET[$this->_adminViewModel]))
+		{
+			$attributes += $_GET[$this->_adminViewModel];
+		}
+		if(!empty($_GET[$modelName]))
+		{
+			$attributes += $_GET[$modelName];
+		}
+		if(!empty($_POST[$this->_adminViewModel]))
+		{
+			$attributes += $_POST[$this->_adminViewModel];
+		}
+		if(!empty($_POST[$modelName]))
+		{
+			$attributes += $_POST[$modelName];
+		}
+		$model->attributes = $attributes;
+		
 		// if exporting to xl
 		if(isset($_POST['yt0']) && $_POST['yt0'] == 'Download Excel')
 			// Export it
@@ -689,7 +726,7 @@ class Controller extends CController
 	/*
 	 * to be overidden if using mulitple models
 	 */
-	protected function createSave($model, $models)
+	protected function createSave($model,  &$models=array())
 	{
 		return $model->dbCallback('save');
 	}
@@ -736,11 +773,12 @@ class Controller extends CController
 					{
 						$models=array($model);
 					}
-					foreach($models as $model)
+					foreach($models as $m)
 					{
-						foreach($model->getErrors() as $attribute=>$errors)
+						foreach($m->getErrors() as $attribute=>$errors)
 						{
-							$result[CHtml::activeId($model,$attribute)]=$errors;
+							$result[CHtml::activeId($m,$attribute)]=$errors;
+//							$result['Task_description']=array("DescriptaSsadsDon cannot be blank.");
 						}
 					}
 					// return the json encoded data to the client
@@ -775,7 +813,7 @@ class Controller extends CController
 	/*
 	 * to be overidden if using mulitple models
 	 */
-	protected function updateSave($model, $models)
+	protected function updateSave($model,  &$models=array())
 	{
 		return $model->dbCallback('save');
 	}
@@ -808,7 +846,7 @@ class Controller extends CController
 			{
 				// commit
                 $transaction->commit();
-				$this->redirect(array('admin'));
+				$this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
 			}
 			// otherwise there has been an error which should be captured in model
 			else
@@ -943,7 +981,9 @@ class Controller extends CController
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']))
 			{
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+				$this->redirect(isset($_POST['returnUrl'])
+					? $_POST['returnUrl']
+					: array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
 			}
 		}
 		else
@@ -959,7 +999,7 @@ class Controller extends CController
 	{
 		// NB: need to redirect as opposed to just calling the relavant action so that the url is correct base
 		// form form action on the admin view
-		$this->redirect(array('admin'));
+		$this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
 		//$this->actionAdmin();
 	}
 

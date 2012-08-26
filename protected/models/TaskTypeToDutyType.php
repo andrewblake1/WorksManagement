@@ -171,7 +171,7 @@ class TaskTypeToDutyType extends ActiveRecord
 			)',
 			'type'=>'raw',
 		);
- 		if(!isset($this->task_id_id))
+ 		if(!isset($this->task_id))
 		{
 			$columns[] = array(
 				'name'=>'searchTaskType',
@@ -201,7 +201,7 @@ class TaskTypeToDutyType extends ActiveRecord
 //			'taskType->client'=>'name',
 //			'taskType->projectType'=>'description',
 //			'taskType'=>'description',
-			'dutyType'=>'description',
+			'dutyType->description',
 //			'projectTypeToAuthItem'=>'AuthItem_name'
 		);
 	}
@@ -217,7 +217,7 @@ class TaskTypeToDutyType extends ActiveRecord
 
 	public function beforeValidate()
 	{
-		// need to set project_type_id which is an extra foreign key to make circular foreign key constraing
+		// need to set project_type_id which is an extra foreign key to make circular foreign key constraint
 		if(isset($this->project_type_to_AuthItem_id))
 		{
 			$model = ProjectTypeToAuthItem::model()->findByPk($this->project_type_to_AuthItem_id);

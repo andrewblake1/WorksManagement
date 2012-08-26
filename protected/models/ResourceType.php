@@ -12,9 +12,10 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Resourcecategory $resourcecategory
  * @property Staff $staff
+ * @property Resourcecategory $resourcecategory
  * @property TaskToResourceType[] $taskToResourceTypes
+ * @property TaskTypeToResourceType[] $taskTypeToResourceTypes
  */
 class ResourceType extends ActiveRecord
 {
@@ -67,9 +68,10 @@ class ResourceType extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'resourcecategory' => array(self::BELONGS_TO, 'Resourcecategory', 'resourcecategory_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'resourcecategory' => array(self::BELONGS_TO, 'Resourcecategory', 'resourcecategory_id'),
 			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'resource_type_id'),
+			'taskTypeToResourceTypes' => array(self::HAS_MANY, 'TaskTypeToResourceType', 'resource_type_id'),
 		);
 	}
 

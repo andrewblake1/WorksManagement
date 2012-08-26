@@ -14,10 +14,13 @@
  * The followings are the available model relations:
  * @property GenericTaskType[] $genericTaskTypes
  * @property Task[] $tasks
- * @property ProjectType $projectType
  * @property Staff $staff
  * @property Task $templateTask
+ * @property ProjectType $projectType
+ * @property TaskTypeToAssembly[] $taskTypeToAssemblies
  * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
+ * @property TaskTypeToMaterial[] $taskTypeToMaterials
+ * @property TaskTypeToResourceType[] $taskTypeToResourceTypes
  */
 class TaskType extends ActiveRecord
 {
@@ -74,10 +77,13 @@ class TaskType extends ActiveRecord
 		return array(
 			'genericTaskTypes' => array(self::HAS_MANY, 'GenericTaskType', 'task_type_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'task_type_id'),
-			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'templateTask' => array(self::BELONGS_TO, 'Task', 'template_task_id'),
+			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
+			'taskTypeToAssemblies' => array(self::HAS_MANY, 'TaskTypeToAssembly', 'task_type_id'),
 			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'task_type_id'),
+			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'task_type_id'),
+			'taskTypeToResourceTypes' => array(self::HAS_MANY, 'TaskTypeToResourceType', 'task_type_id'),
 		);
 	}
 

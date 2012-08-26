@@ -168,8 +168,8 @@ class ProjectTypeToAuthItem extends ActiveRecord
 		else
 		{
 			ActiveRecord::$labelOverrides['project_type_to_AuthItem_id'] = 'Client/Project type/Role';
-			$displaAttr['projectType->client']='name';
-			$displaAttr['projectType']='description';
+			$displaAttr[]='projectType->client->name';
+			$displaAttr[]='projectType->description';
 		}
 
 		$displaAttr[]='AuthItem_name';

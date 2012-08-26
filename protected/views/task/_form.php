@@ -23,8 +23,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		$form->hiddenField('project_id');
 	}
 
-	PurchaseOrderController::listWidgetRow($model, $form, 'purchase_order_id');
-
 	StaffController::listWidgetRow($model, $form, 'in_charge_id');
 
 	$form->textFieldRow('planned');
@@ -44,14 +42,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		'relation_modelToGenericModelTypes'=>'taskToGenericTaskTypes',
 		'relation_genericModelType'=>'genericTaskType',
 	));
-
-/*	// resources
-	// only show when updating
-	if(!$model->isNewRecord)
-		$this->widget('ResourceWidgets',array(
-			'model'=>$model,
-			'form'=>$form,
-		));*/
 
 $this->endWidget();
 

@@ -17,9 +17,10 @@
  * @property AuthAssignment[] $authAssignments
  * @property AuthAssignment[] $authAssignments1
  * @property AuthItem[] $authItems
+ * @property AuthItemChild[] $authItemchildren
  * @property Assembly[] $assemblies
  * @property Client[] $clients
- * @property Day[] $daysDefaultValue[] $defaultValues
+ * @property DefaultValue[] $defaultValues
  * @property Duty[] $duties
  * @property DutyType[] $dutyTypes
  * @property Dutycategory[] $dutycategories
@@ -46,9 +47,11 @@
  * @property Task[] $tasks1
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
+ * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
  * @property TaskToResourceType[] $taskToResourceTypes
  * @property TaskType[] $taskTypes
  * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
+ * @property TaskTypeToResourceType[] $taskTypeToResourceTypes
  */
 class Staff extends ActiveRecord
 {
@@ -100,6 +103,7 @@ class Staff extends ActiveRecord
 			'authAssignments' => array(self::HAS_MANY, 'AuthAssignment', 'userid'),
 			'authAssignments1' => array(self::HAS_MANY, 'AuthAssignment', 'staff_id'),
 			'authItems' => array(self::HAS_MANY, 'AuthItem', 'staff_id'),
+			'authItemchildren' => array(self::HAS_MANY, 'AuthItemChild', 'staff_id'),
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'staff_id'),
 			'clients' => array(self::HAS_MANY, 'Client', 'staff_id'),
 			'defaultValues' => array(self::HAS_MANY, 'DefaultValue', 'staff_id'),
@@ -129,9 +133,11 @@ class Staff extends ActiveRecord
 			'tasks1' => array(self::HAS_MANY, 'Task', 'in_charge_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'staff_id'),
 			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'staff_id'),
+			'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'staff_id'),
 			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'staff_id'),
 			'taskTypes' => array(self::HAS_MANY, 'TaskType', 'staff_id'),
 			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'staff_id'),
+			'taskTypeToResourceTypes' => array(self::HAS_MANY, 'TaskTypeToResourceType', 'staff_id'),
 		);
 	}
 

@@ -188,9 +188,10 @@ class GenericProjectType extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
+		ActiveRecord::$labelOverrides['generic_project_type_id'] = 'Generic type';
 		return array(
-			'projectType->client->name',
-			'projectType->description',
+//			'projectType->client->name',
+//			'projectType->description',
 			'genericType->description',
 		);
 	}

@@ -12,7 +12,7 @@
  * The followings are the available model relations:
  * @property Supplier $supplier
  * @property Staff $staff
- * @property Task[] $tasks
+ * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
  */
 class PurchaseOrder extends ActiveRecord
 {
@@ -67,7 +67,7 @@ class PurchaseOrder extends ActiveRecord
 		return array(
 			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'tasks' => array(self::HAS_MANY, 'Task', 'purchase_order_id'),
+			'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'purchase_order_id'),
 		);
 	}
 
@@ -127,7 +127,7 @@ class PurchaseOrder extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'supplier'=>'name',
+			'supplier->name',
 			'number',
 		);
 	}

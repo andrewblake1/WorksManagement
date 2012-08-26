@@ -16,6 +16,7 @@
  * @property Material $material
  * @property Staff $staff
  * @property TaskToAssembly[] $taskToAssemblies
+ * @property TaskTypeToAssembly[] $taskTypeToAssemblies
  */
 class Assembly extends ActiveRecord
 {
@@ -71,6 +72,7 @@ class Assembly extends ActiveRecord
 			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'assembly_id'),
+			'taskTypeToAssemblies' => array(self::HAS_MANY, 'TaskTypeToAssembly', 'assembly_id'),
 		);
 	}
 

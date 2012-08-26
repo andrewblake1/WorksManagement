@@ -2,18 +2,31 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	GenericProjectTypeController::listWidgetRow($model, $form, 'generic_project_type_id');
-
-	if(isset($model->project_id))
+	if($model->isNewRecord)
 	{
-		$form->hiddenField('project_id');
+		GenericProjectTypeController::listWidgetRow($model, $form, 'generic_project_type_id');
+
+		if(isset($model->project_id))
+		{
+			$form->hiddenField('project_id');
+		}
+		else
+		{
+			ProjectController::listWidgetRow($model, $form, 'project_id');
+		}
+
+		$form->textFieldRow('generic_id');
 	}
 	else
 	{
-		ProjectController::listWidgetRow($model, $form, 'project_id');
+		$this->widget('GenericWidget', array(
+			'form'=>$form,
+			'relation_modelToGenericModelType'=>'taskToGenericProjectType',
+			'toGenericType'=>$model,
+			'relation_genericModelType'=>'genericProjectType',
+		));
 	}
 
-	$form->textFieldRow('generic_id');
 
 $this->endWidget();
 

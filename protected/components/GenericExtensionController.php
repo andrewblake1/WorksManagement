@@ -14,10 +14,13 @@ abstract class GenericExtensionController extends Controller
 	/*
 	 * overidden as mulitple models
 	 */
-	protected function createSave($model, $models)
+	protected function createSave($model,  &$models=array())
 	{
 		if($saved = $model->dbCallback('save'))
 		{
+			// put the model into the models array used for showing all errors
+			$models[] = $model;
+		
 			// attempt creation of generics
 			$saved &= $this->createGenerics($model, $models);
 		}
@@ -28,10 +31,13 @@ abstract class GenericExtensionController extends Controller
 	/*
 	 * overidden as mulitple models
 	 */
-	protected function updateSave($model, $models)
+	protected function updateSave($model,  &$models=array())
 	{
 		if($saved = $model->dbCallback('save'))
 		{
+			// put the model into the models array used for showing all errors
+			$models[] = $model;
+		
 			// attempt creation of generics
 			$saved &= $this->updateGenerics($model, $models);
 		}
@@ -40,21 +46,18 @@ abstract class GenericExtensionController extends Controller
 	}
 
 // TODO: replace with trigger after insert on model. Also cascade delete on these 3 tables
-// Also update triggers possibly to maintain ref integ. easiest for now in application code.
+// Also update triggers possibly to maintain ref integ. easiest for now in application code but not great for integrity.
 	/**
 	 * Creates the rows needed for generisizm.
 	 * @param CActiveRecord $model the model
 	 * @param array of CActiveRecord models to extract errors from if necassary
 	 * @return returns 0, or null on error of any inserts
 	 */
-	private function createGenerics($model, &$models=array())
+	protected function createGenerics($model, &$models=array())
 	{
 		// initialise the saved variable to show no errors in case the are no
 		// model generics - otherwise will return null indicating a save error
 		$saved = true;
-		
-		// put the model into the models array used for showing all errors
-		$models[] = $model;
 		
 		// loop thru all generic model types associated to this models model type
 		foreach($model->{$this->relation_modelType}->{$this->relation_genericModelTypes} as $genericModelType)
@@ -90,9 +93,6 @@ abstract class GenericExtensionController extends Controller
 		// model generics - otherwise will return null indicating a save error
 		$saved = true;
 		
-		// put the model into the models array used for showing all errors
-		$models[] = $model;
-		 
 		// loop thru all generic model types associated to this models model type
 		foreach($model->{$this->relation_modelToGenericModelTypes} as $modelToGenericModelType)
 		{

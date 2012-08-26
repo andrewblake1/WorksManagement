@@ -142,7 +142,7 @@ class Duty extends ActiveRecord
 		else
 		{
 			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name
+				client.name,
 				project.description,
 				task.description
 				) AS searchTask";
