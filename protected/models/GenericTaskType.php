@@ -21,6 +21,11 @@
 class GenericTaskType extends ActiveRecord
 {
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Custom type';
+
+	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
@@ -28,16 +33,6 @@ class GenericTaskType extends ActiveRecord
 	public $searchGenerictaskcategory;
 	public $searchGenericType;
 	
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return GenericTaskType the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -58,7 +53,7 @@ class GenericTaskType extends ActiveRecord
 			array('task_type_id, generictaskcategory_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchTaskType, searchGenerictaskcategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_type_id, searchTaskType, searchGenerictaskcategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -87,10 +82,10 @@ class GenericTaskType extends ActiveRecord
 			'id' => 'Generic task type',
 			'task_type_id' => 'Client/Project type/Task type',
 			'searchTaskType' => 'Client/Project type/Task type',
-			'generictaskcategory_id' => 'Generic task category',
-			'searchGenerictaskcategory' => 'Generic task category',
-			'generic_type_id' => 'Generic type',
-			'searchGenericType' => 'Generic type',
+			'generictaskcategory_id' => 'Task category',
+			'searchGenerictaskcategory' => 'Task category',
+			'generic_type_id' => 'Custom type',
+			'searchGenericType' => 'Custom type',
 		));
 	}
 
@@ -178,8 +173,8 @@ class GenericTaskType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'taskType->projectType->client->name',
-			'taskType->description',
+//			'taskType->projectType->client->name',
+//			'taskType->description',
 			'genericType->description',
 		);
 	}

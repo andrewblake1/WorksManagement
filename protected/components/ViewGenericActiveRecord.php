@@ -51,7 +51,7 @@ abstract class ViewGenericActiveRecord extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'description' => 'Generic type',
+			'description' => 'Custom type',
 			'value' => 'Value',
 		));
 	}

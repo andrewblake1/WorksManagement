@@ -64,7 +64,6 @@ abstract class GenericExtensionController extends Controller
 		{
 			// create a new generic item to hold value
 			$generic = new Generic();
-// TODO: examine possible factory method pattern
 			$generic->setDefault($genericModelType->genericType);
 			// set default value
 			$saved &= $generic->dbCallback('save');

@@ -22,18 +22,8 @@ class Generictaskcategory extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Generic task category';
+	static $niceName = 'Task category';
 	
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Generictaskcategory the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -78,7 +68,7 @@ class Generictaskcategory extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Generic task category',
+			'id' => 'Task category',
 			'root' => 'Root',
 			'lft' => 'Lft',
 			'rgt' => 'Rgt',

@@ -25,17 +25,12 @@ class TaskToResourceType extends ActiveRecord
 	 */
 	public $searchTask;
 	public $searchResourceType;
-	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return TaskToResourceType the static model class
+	 * @var string nice model name for use in output
 	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+	static $niceName = 'Resource';
 
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -58,7 +53,7 @@ class TaskToResourceType extends ActiveRecord
 			array('start', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchTask, searchResourceType, quantity, hours, start, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchTask, searchResourceType, quantity, hours, start, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -113,7 +108,7 @@ class TaskToResourceType extends ActiveRecord
 //		$criteria->compare('t.id',$this->id);
 		$criteria->compare('resourceType.description',$this->searchResourceType,true);
 		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.t.hours',$this->hours);
+		$criteria->compare('t.hours',$this->hours);
 		$criteria->compare('start',$this->start);
 
 		if(isset($this->task_id))
@@ -137,7 +132,12 @@ class TaskToResourceType extends ActiveRecord
 			);
 		}
 		//  join
-		$criteria->with = array('task','resourceType');
+		$criteria->with = array(
+			'task',
+			'task.project',
+			'task.taskType.projectType.client',
+			'resourceType',
+			);
 
 		$delimiter = Yii::app()->params['delimiter']['search'];
 

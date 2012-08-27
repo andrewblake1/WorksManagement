@@ -24,16 +24,10 @@ class TaskTypeToResourceType extends ActiveRecord
 	 */
 	public $searchResourceType;
 	public $searchTaskType;
-	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return TaskTypeToResourceType the static model class
+	 * @var string nice model name for use in output
 	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+	static $niceName = 'Resource';
 
 	/**
 	 * @return string the associated database table name
@@ -109,7 +103,7 @@ class TaskTypeToResourceType extends ActiveRecord
 //		$criteria->compare('t.id',$this->id);
 		$criteria->compare('resourceType.description',$this->searchResourceType);
 		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.t.hours',$this->hours);
+		$criteria->compare('t.hours',$this->hours);
 
 		if(isset($this->task_type_id))
 		{

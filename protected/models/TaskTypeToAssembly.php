@@ -23,17 +23,12 @@ class TaskTypeToAssembly extends ActiveRecord
 	 */
 	public $searchAssembly;
 	public $searchTaskType;
-	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return TaskTypeToAssembly the static model class
+	 * @var string nice model name for use in output
 	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+	static $niceName = 'Assembly';
 
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -50,11 +45,11 @@ class TaskTypeToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_type_id, assembly_id, quantity, hours, staff_id', 'required'),
-			array('task_type_id, assembly_id, quantity, hours, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, assembly_id, quantity, staff_id', 'required'),
+			array('task_type_id, assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, searchTaskType, searchAssembly, quantity, hours, staff_id', 'safe', 'on'=>'search'),
+			array('id, task_type_id, searchTaskType, searchAssembly, quantity, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 

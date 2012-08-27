@@ -41,9 +41,16 @@ class SiteController extends Controller
 	 */
 	public function actionIndex()
 	{
-		// renders the view file 'protected/views/site/index.php'
-		// using the default layout 'protected/views/layouts/main.php'
-		$this->render('index');
+// TODO: figure out how to get the console app to use its own urlmanager as it seems to want to go to index here or
+// it f...s up!
+		if(isset($_SERVER['argv'][1]) && $_SERVER['argv'][1] == 'shell')
+		{
+			$this->render('index');
+		}
+		else
+		{
+			$this->redirect('client/admin');
+		}
 	}
 
 	/**

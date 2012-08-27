@@ -24,16 +24,6 @@ class Reschedule extends ActiveRecord
 	public $searchNewTask;
 	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Reschedule the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -54,7 +44,7 @@ class Reschedule extends ActiveRecord
 			array('task_id, new_task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchTask, searchNewTask, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchTask, searchNewTask, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 

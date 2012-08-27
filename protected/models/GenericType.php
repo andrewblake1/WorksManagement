@@ -23,6 +23,10 @@
 class GenericType extends ActiveRecord
 {
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Custom type';
+	/**
 	 * Data types. These are the emum values set by the DataType custom type within 
 	 * the database
 	 */
@@ -85,16 +89,6 @@ class GenericType extends ActiveRecord
 			self::validationTypeSQLSelect=>'SQL select',
 			self::validationTypeValueList=>'Value list'
 		);
-	}
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return GenericType the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
 	}
 
 	/**
@@ -207,7 +201,7 @@ class GenericType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Generic type',
+			'id' => 'Custom type',
 			'mandatory' => 'Mandatory',
 			'allow_new' => 'Allow new',
 			'validation_type' => 'Validation type',

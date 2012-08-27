@@ -25,17 +25,11 @@ class TaskToGenericTaskType extends ActiveRecord
 	public $searchGenericTaskType;
 	public $searchTask;
 	public $searchGeneric;
-	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return TaskToGenericTaskType the static model class
+	 * @var string nice model name for use in output
 	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
+	static $niceName = 'Custom type';
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -52,7 +46,7 @@ class TaskToGenericTaskType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('generic_task_type_id, task_id, generic_id, staff_id', 'required'),
+			array('generic_task_type_id, task_id, staff_id', 'required'),
 			array('generic_task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_id, generic_id', 'length', 'max'=>10),
 			// The following rule is used by search().
@@ -83,8 +77,8 @@ class TaskToGenericTaskType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Task to generic task type',
-			'generic_task_type_id' => 'Task type/Generic type)',
-			'searchGenericTaskType' => 'Task type/Generic type)',
+			'generic_task_type_id' => 'Task type/Custom type)',
+			'searchGenericTaskType' => 'Task type/Custom type)',
 			'task_id' => 'Client/Task',
 			'searchTask' => 'Client/Task',
 			'generic_id' => 'Generic',
@@ -146,7 +140,7 @@ class TaskToGenericTaskType extends ActiveRecord
 			'genericTaskType.genericType',
 			'task',
 			'task.project',
-			'generic',
+			'task.taskType.projectType.client',
 		);
 
 		return $criteria;
@@ -183,6 +177,11 @@ class TaskToGenericTaskType extends ActiveRecord
 		return $columns;
 	}
 
+	static function getDisplayAttr()
+	{
+		return array('genericTaskType->genericType->description');
+	}
+	
 	/**
 	 * Retrieves a sort array for use in CActiveDataProvider.
 	 * @return array the for data provider that contains the sort condition.

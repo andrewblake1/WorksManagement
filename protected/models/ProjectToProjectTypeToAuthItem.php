@@ -30,18 +30,8 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Project to project type to role';
+	static $niceName = 'Role';
 	
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return ProjectToProjectTypeToAuthItem the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
 	/**
 	 * @return string the associated database table name
 	 */

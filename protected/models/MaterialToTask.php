@@ -23,21 +23,11 @@ class MaterialToTask extends ActiveRecord
 	 */
 	public $searchMaterial;
 	public $searchTask;
-
 	/**
-	 * @var search variables - foreign key lookups sometimes composite.
-	 * these values are entered by user in admin view to search
+	 * @var string nice model name for use in output
 	 */
+	static $niceName = 'Material';
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return MaterialToTask the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
 
 	/**
 	 * @return string the associated database table name
@@ -60,7 +50,7 @@ class MaterialToTask extends ActiveRecord
 			array('task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchMaterial, searchTask, quantity, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchMaterial, searchTask, quantity, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -138,8 +128,8 @@ class MaterialToTask extends ActiveRecord
 		$criteria->with = array(
 			'material',
 			'task',
-			'project',
-			'task.taskType.client',
+			'task.project',
+			'task.taskType.projectType.client',
 		);
 
 		return $criteria;

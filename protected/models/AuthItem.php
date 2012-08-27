@@ -26,17 +26,10 @@ class AuthItem extends ActiveRecord
 	 */
 	const typeRole = 2;
 	const typeRight = 1;
-	
 	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Role';
-	/**
-	 * @var array defaultScopes that can be set and used at run time. This is basically a global
-	 * variable within the class context that allows other classes to filter query results without
-	 * having to pass thru several method arguments. Not tigtly coupled but convenient.
-	 */
-	static $defaultScope = array();
 	
 	public function scopes()
     {
@@ -45,16 +38,6 @@ class AuthItem extends ActiveRecord
 			'rights'=>array('condition'=>'t.type=' . self::typeRight),
 		);
     }
-
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return AuthItem the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
 
 	/**
 	 * @return string the associated database table name

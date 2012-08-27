@@ -8,7 +8,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	}
 	else
 	{
-		TaskTypeController::listWidgetRow($model, $form, 'task_type_id');
+		throw new CHttpException(400, 'No task type identified, you must get here from the task types page');
 	}
 
 	GenerictaskcategoryController::listWidgetRow($model, $form, 'generictaskcategory_id');

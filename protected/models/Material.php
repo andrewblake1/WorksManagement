@@ -10,23 +10,13 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Assembly[] $assemblies
+ * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property Staff $staff
  * @property MaterialToTask[] $materialToTasks
  * @property TaskTypeToMaterial[] $taskTypeToMaterials
  */
 class Material extends ActiveRecord
 {
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Material the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -60,7 +50,7 @@ class Material extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'assemblies' => array(self::HAS_MANY, 'Assembly', 'material_id'),
+			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'material_id'),
 			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'material_id'),

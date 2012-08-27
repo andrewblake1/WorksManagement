@@ -1,7 +1,4 @@
 <?php
-// NB: these must be run first or there will be an integrity constraing violation against no staff_id
-//INSERT INTO `worksmanagement_dev`.`staff` (`id`, `first_name`, `last_name`, `phone_mobile`, `email`, `password`, `deleted`, `staff_id`) VALUES (NULL, 'Andrew', 'Blake', NULL, 'admin@newzealandfishing.com', MD5('password'), '0', NULL);
-//INSERT INTO `worksmanagement_dev`.`AuthAssignment` (`id`, `itemname`, `userid`, `bizrule`, `data`, `deleted`, `staff_id`) VALUES (NULL, 'system admin', '1', NULL, NULL, '0', '1');
 class RbacCommand extends CConsoleCommand
 {
    
@@ -41,16 +38,34 @@ EOD;
 	    //check the input from the user and continue if they indicated yes to the above question
 	    if(!strncasecmp(trim(fgets(STDIN)),'y',1)) 
 		{
+			
 		     //first we need to remove all operations, roles, child relationship and as-signments
 			 $this->_authManager->clearAll();
-
+			
+			// NB: these must be run first or there will be an integrity constraing violation against no staff_id
+			// NB: these are just an initial user and should be changed once app is installed
+			Yii::app()->db->createCommand("
+				INSERT INTO `staff` (`id`, `first_name`, `last_name`, `phone_mobile`, `email`, `password`, `deleted`, `staff_id`) VALUES (NULL, 'first', 'last', NULL, 'username', MD5('password'), '0', NULL);
+			")->execute();
+			
 			 // system admin
 			 $systemAdminRole=$this->_authManager->createRole('system admin', 'System Administrator');
+			 
+			Yii::app()->db->createCommand("
+				INSERT INTO `AuthAssignment` (`id`, `itemname`, `userid`, `bizrule`, `data`, `deleted`, `staff_id`) VALUES (NULL, 'system admin', '1', NULL, NULL, '0', '1');
+			")->execute();
+			 
+			 
 			 // create tasks
 			 $task=$this->_authManager->createTask('Assembly', 'Assembly task');
 			 $systemAdminRole->addChild('Assembly');
 			 $this->_authManager->createOperation('AssemblyRead', 'Assembly read');
 			 $task->addChild('AssemblyRead');
+
+			 $task=$this->_authManager->createTask('AssemblyToMaterial', 'AssemblyToMaterial task');
+			 $systemAdminRole->addChild('AssemblyToMaterial');
+			 $this->_authManager->createOperation('AssemblyToMaterialRead', 'AssemblyToMaterial read');
+			 $task->addChild('AssemblyToMaterialRead');
 
 			 $task=$this->_authManager->createTask('AuthAssignment', 'AuthAssignment task');
 			 $systemAdminRole->addChild('AuthAssignment');
@@ -83,7 +98,7 @@ EOD;
 			 $task->addChild('TaskTypeToAssemblyRead');
 
 			 $task=$this->_authManager->createTask('TaskTypeToMaterial', 'TaskTypeToMaterial task');
-			 $systemAdminRole->addChild('TaskTypeToAssembly');
+			 $systemAdminRole->addChild('TaskTypeToMaterial');
 			 $this->_authManager->createOperation('TaskTypeToMaterialRead', 'TaskTypeToMaterial read');
 			 $task->addChild('TaskTypeToMaterialRead');
 

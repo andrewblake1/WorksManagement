@@ -26,16 +26,6 @@ class Dutycategory extends ActiveRecord
 	static $niceName = 'Duty category';
 	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Dutycategory the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -96,7 +86,7 @@ class Dutycategory extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 //		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.t.root',$this->root);
+		$criteria->compare('t.root',$this->root);
 		$criteria->compare('t.lft',$this->lft);
 		$criteria->compare('t.rgt',$this->rgt);
 		$criteria->compare('t.level',$this->level);

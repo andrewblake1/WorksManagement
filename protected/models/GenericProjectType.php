@@ -21,6 +21,11 @@
 class GenericProjectType extends ActiveRecord
 {
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Custom type';
+
+	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
@@ -28,16 +33,6 @@ class GenericProjectType extends ActiveRecord
 	public $searchGenericprojectcategory;
 	public $searchGenericType;
 	
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return GenericProjectType the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -87,10 +82,10 @@ class GenericProjectType extends ActiveRecord
 			'id' => 'Generic project type',
 			'project_type_id' => 'Client/Project type',
 			'searchProjectType' => 'Client/Project type',
-			'genericprojectcategory_id' => 'Generic project category',
-			'searchGenericprojectcategory' => 'Generic project category',
-			'generic_type_id' => 'Generic type',
-			'searchGenericType' => 'Generic type',
+			'genericprojectcategory_id' => 'Project category',
+			'searchGenericprojectcategory' => 'Project category',
+			'generic_type_id' => 'Custom type',
+			'searchGenericType' => 'Custom type',
 		));
 	}
 
@@ -188,7 +183,7 @@ class GenericProjectType extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		ActiveRecord::$labelOverrides['generic_project_type_id'] = 'Generic type';
+//		ActiveRecord::$labelOverrides['generic_project_type_id'] = 'Custom type';
 		return array(
 //			'projectType->client->name',
 //			'projectType->description',

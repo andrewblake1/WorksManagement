@@ -24,17 +24,12 @@ class ResourceType extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchResourcecategory;
-	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return ResourceType the static model class
+	 * @var string nice model name for use in output
 	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+	static $niceName = 'Resource';
 
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -56,7 +51,7 @@ class ResourceType extends ActiveRecord
 			array('description', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, searchResourcecategory, maximum, deleted, searchStaff', 'safe', 'on'=>'search'),
+			array('id, resourcecategory_id, description, searchResourcecategory, maximum, deleted, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 

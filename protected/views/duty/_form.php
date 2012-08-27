@@ -8,7 +8,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	}
 	else
 	{
-		TaskController::listWidgetRow($model, $form, 'task_id');
+		throw new CHttpException(400, 'No task identified, you must get here from the tasks page');
 	}
 
 	TaskTypeToDutyTypeController::listWidgetRow($model, $form, 'task_type_to_duty_type_id', array(), array('scopeTask'=>array($model->task_id)));

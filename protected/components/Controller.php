@@ -36,10 +36,10 @@ class Controller extends CController
 	 * @var array the tab menu itemse
 	 */
 	private $_tabs = array();
-	/**
-	 * @var bool whether to show the new button in the admin  
-	 */
-	protected $_adminShowNew = false;
+/**
+	* @var bool whether to show the new button in the admin  
+protected $_adminShowNew = false;
+	*/
 	/**
 	 * @var string the name of the model to use in the admin view - the model may serve a database view as opposed to a table  
 	 */
@@ -101,11 +101,14 @@ class Controller extends CController
 		'Genericprojectcategory',
 		'Generictaskcategory',
 		'PurchaseOrder',
-		'Assembly',
+		'Assembly'=>array(
+			'AssemblyToMaterial',
+		),
 		'Material',
 		'Staff'=>array(
 			'AuthAssignment',
 		),
+		'Supplier',
 		'AuthItem'=>array(
 			'AuthItemChild',
 		),
@@ -213,30 +216,6 @@ class Controller extends CController
 			}
 		}
 	}
-	
-/*	public static function getRelationFromKey($key, &$fKModelType, &$field)
-	{
-// TODO this line just to get past pre php 5.3 - change to fKModelType::model() once >= 5.3
-//eval('$model = '.$fKModelType.'::model();');
-		$model = $fKModelType::model();
-		if(!is_numeric($key))
-		{
-			// ensure the foreign key exists in this model
-			if(!in_array($key, $model->tableSchema->columnNames))
-				return;
-
-			// extract from the models relations the foreign key table
-			foreach($model->relations() as $relName => $relation)
-				if($relation[2] == $key)
-					// $relName now contains the correct relation name which is also the object name
-// TODO: ensure the lookup column exists in foreign key table
-					return $relName;
-		}
-		// ensure the column exists
-		elseif(!in_array($field, $model->tableSchema->columnNames))
-			throw new CException("$field does not exist in $fKModelType ".
-				print_r($$model->tableSchema->columnNames));
-	}*/
 	
     public function behaviors()
     {
@@ -347,8 +326,15 @@ class Controller extends CController
 			$index = 0;
 			// carry the important ids for breadcrumbs
 			$get = isset($_GET[$this->modelName]) ? $_GET[$this->modelName] : $_GET;
-			$keyValue = each($get);
-			$keyValue = $keyValue['value'];
+			if(is_array($get))
+			{
+				$keyValue = each($get);
+				$keyValue = $keyValue['value'];
+			}
+			else
+			{
+				$keyValue = null;
+			}
 
 			foreach($items as $key => &$value)
 			{
@@ -381,7 +367,6 @@ class Controller extends CController
 					if($keyValue && (!$nextLevel || ($modelName == $this->modelName)))
 					{
 						$this->_tabs[$index]['label'] = $modelName::getNiceName($keyValue);
-						$thisModel = new $modelName;
 						$this->_tabs[$index]['url'] = array("$modelName/update", 'id'=>$keyValue);
 						$index++;
 						continue;
@@ -400,76 +385,6 @@ class Controller extends CController
 		}
 	}
 
-	public function getAllMenu(&$array = null, $level = 0)
-	{
-		static $items = array();
-		
-		// if starting this recursive function
-		if(!$level)
-		{
-			// reset the static variable from the last time this was called
-			$items = array();
-			// set the initial value of the array to the trail
-			$array = $this->trail;
-		}
-
-		// loop thru this level
-		foreach($array as $key => &$value)
-		{
-			// if $value is an array
-			if(is_array($value))
-			{
-				// store key if user has access and not first level which they already have access to so don't repeat
-				if($level && $this->checkAccess(self::accessRead))
-				{
-					$items[] = array('label'=>$key::getNiceName() . 's', 'url'=>Yii::app()->createUrl("$key/admin"));
-				}
-				// recurse
-				$this->getAllMenu($value, $level + 1);
-			}
-			// otherwise value is not an array
-			else
-			{
-				// store value if user has access and not first level which they already have access to so don't repeat
-				if($level && $this->checkAccess(self::accessRead))
-				{
-					$items[] = array('label'=>$value::getNiceName() . 's', 'url'=>Yii::app()->createUrl("$value/admin"));
-				}
-			}
-		}
-		
-		// if we are not recursing and have items
-		if(!$level && count($items))
-		{
-			return array(
-					'class'=>'bootstrap.widgets.TbMenu',
-					'items'=>array(
-						array('label'=>'All', 'url'=>'#', 'items'=>$items),
-					),
-				);
-		}
-		
-		// return the array keys array
-		return array();
-	}
-
-/*	public function getOperations()
-	{
-		$operations = array();
-		
-		if(count($this->menu))
-		{
-			$operations = array(
-				'class'=>'bootstrap.widgets.TbMenu',
-				'items'=>array(
-					array('label'=>'Operations', 'url'=>'#', 'items'=>$this->menu),
-				),
-			);
-		}
-		
-		return $operations;
-	}*/
-
 	/**
 	 * Manages all models.
 	 */
@@ -480,8 +395,8 @@ class Controller extends CController
 
 		$modelName = /*ucfirst($this->id)*/$this->modelName;
 
-		// should we be showing the new button NB: this is used main layout and checked on all views hence initialized in class scope to false
-		$this->_adminShowNew = true;
+//		// should we be showing the new button NB: this is used main layout and checked on all views hence initialized in class scope to false
+//		$this->_adminShowNew = true;
 
 		// NB: query string is stripped from ajaxUrl hence this hack, but also used
 		// in building breadcrumbs
@@ -501,17 +416,22 @@ class Controller extends CController
 		}
 		else
 		{
+			// store $_GET
+			$_SESSION['actionAdminGet'][$modelName] = null;
+		}
+/*		else
+		{
 			// loose our memory
 			unset($_SESSION['actionAdminGet']);
 			// initialise as we check for this presence in defining breadcrumbs to know we have been thru this admin view
 			$_SESSION['actionAdminGet'][$modelName] = array();
-			// block display of the new button unless top level of trail
+/*			// block display of the new button unless top level of trail
 			if(sizeof($this->multidimensional_arraySearch($this->trail, $this->modelName)) > 1)
 			{
 				// should we be showing the new button
 				$this->_adminShowNew = false;
 			}
-		}
+		}*/
 		
 		// may be using a database view instead of main table model
 		$adminViewModel = $this->_adminViewModel;
@@ -535,7 +455,7 @@ class Controller extends CController
 		{
 			$attributes += $_POST[$modelName];
 		}
-		$model->attributes = $attributes;
+		$t = $model->attributes = $attributes;
 		
 		// if exporting to xl
 		if(isset($_POST['yt0']) && $_POST['yt0'] == 'Download Excel')
@@ -671,11 +591,11 @@ class Controller extends CController
 			{
 				continue;
 			}
-			// otherwise if we haven't come via this route
+/*			// otherwise if we haven't come via this route
 			elseif(!isset($_SESSION['actionAdminGet'][$crumb]))
 			{
 				continue;
-			}
+			}*/
 
 			// see if any query paramters
 			$queryParamters = !empty($_SESSION['actionAdminGet'][$crumb]) ? array($crumb=>$_SESSION['actionAdminGet'][$crumb]) : array();
@@ -726,9 +646,29 @@ class Controller extends CController
 	/*
 	 * to be overidden if using mulitple models
 	 */
-	protected function createSave($model,  &$models=array())
+	protected function createSave($model, &$models=array())
 	{
-		return $model->dbCallback('save');
+		// atempt save
+		$saved = $model->dbCallback('save');
+		// put the model into the models array used for showing all errors
+		$models[] = $model;
+		
+		return $saved;
+	}
+	
+	/*
+	 * to be overidden if not wanting to redirect to admin
+	 */
+	protected function createRedirect($model)
+	{
+		if(is_array($_SESSION['actionAdminGet'][$this->modelName]))
+		{
+			$this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
+		}
+		else
+		{
+			$this->redirect(array('admin'));
+		}
 	}
 	
 	/**
@@ -758,7 +698,7 @@ class Controller extends CController
 			{
 				// commit
                 $transaction->commit();
-				$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
+				$this->createRedirect($model);
 			}
 			// otherwise there has been an error which should be captured in model
 			else
@@ -778,7 +718,6 @@ class Controller extends CController
 						foreach($m->getErrors() as $attribute=>$errors)
 						{
 							$result[CHtml::activeId($m,$attribute)]=$errors;
-//							$result['Task_description']=array("DescriptaSsadsDon cannot be blank.");
 						}
 					}
 					// return the json encoded data to the client
@@ -801,7 +740,6 @@ class Controller extends CController
 			'value'=>$id,
 		);
 		
-
 		$this->widget('CreateViewWidget', array(
 			'model'=>$model,
 			'models'=>$models,
@@ -813,9 +751,14 @@ class Controller extends CController
 	/*
 	 * to be overidden if using mulitple models
 	 */
-	protected function updateSave($model,  &$models=array())
+	protected function updateSave($model, &$models=array())
 	{
-		return $model->dbCallback('save');
+		// atempt save
+		$saved = $model->dbCallback('save');
+		// put the model into the models array used for showing all errors
+		$models[] = $model;
+		
+		return $saved;
 	}
 	
 	/**
@@ -846,7 +789,9 @@ class Controller extends CController
 			{
 				// commit
                 $transaction->commit();
-				$this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
+				is_array($_SESSION['actionAdminGet'][$this->modelName])
+					? $this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]))
+					: $this->redirect(array('admin'));
 			}
 			// otherwise there has been an error which should be captured in model
 			else
@@ -1039,31 +984,44 @@ class Controller extends CController
 		return $validating;
 	}
 	
-	static function listWidgetRow($model, $form, $fkField, $htmlOptions = array(), $scopes = array())
+	static function listWidgetRow($model, $form, $fkField, $htmlOptions = array(), $scopes = array(), $label = null)
 	{
 		// set any required default scope
 		// NB this only applies here to drop down list which is populated now, otherwise scope needs to be passed to parent autocomplete
 		// via child autocomplete - warning, the alias can be confusing
-// TODO: should be able to set these scopes in one place and derive correct alias if alias needed
+// TODO: not sure on scopes here
 
-		static::autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes);
+		
+		// get the associated relation - assuming only 1
+  		foreach($model->relations() as $relationName => $relation)
+		{
+			// if we have found the relation that uses this attribute which is a foreign key
+			if($relation[2] == $fkField)
+			{
+				$fKModelType = $relation[1];
+				$relName = $relationName;
+				break;
+			}
+		}	
+
+		// set label to passed in label if one passed, otherwise to the tables nice name
+		ActiveRecord::$labelOverrides[$fkField] = $label ? $label : $fKModelType::getNiceName();
+		
+		static::autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType, $relName);
 //		static::dropDownListWidget($model, $form, $fkField, $htmlOptions);
-//		static::$defaultScope = $defaultScope;
 	}
 	
-	static function autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes)
+	static function autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType, $relName)
 	{
-//		// get relation name from foreign key
-//		$relName = preg_replace('/(.*)[iI]d$/', '$1', Yii::app()->functions->camelize($fkField));
-		
 		Yii::app()->controller->widget('WMEJuiAutoCompleteFkField',
 			array(
 				'model'=>$model,
 				'form'=>$form,
-//				'relName'=>$relName,
-				'fkField'=>$fkField,
+				'attribute'=>$fkField,
 				'htmlOptions'=>$htmlOptions,
 				'scopes'=>$scopes,
+				'fKModelType'=>$fKModelType,
+				'relName'=>$relName,
 			)
 		);
 	}

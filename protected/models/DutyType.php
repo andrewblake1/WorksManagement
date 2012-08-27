@@ -21,22 +21,17 @@
 class DutyType extends ActiveRecord
 {
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Duty';
+
+	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchDutycategory;
 	public $searchGenericType;
 	
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return DutyType the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -87,8 +82,8 @@ class DutyType extends ActiveRecord
 			'lead_in_days' => 'Lead in days',
 			'dutycategory_id' => 'Duty category',
 			'searchDutycategory' => 'Duty category',
-			'generic_type_id' => 'Generic type',
-			'searchGenericType' => 'Generic type',
+			'generic_type_id' => 'Custom type',
+			'searchGenericType' => 'Custom type',
 		));
 	}
 

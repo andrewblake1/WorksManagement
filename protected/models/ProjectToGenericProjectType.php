@@ -25,17 +25,12 @@ class ProjectToGenericProjectType extends ActiveRecord
 	public $searchGenericProjectType;
 	public $searchProject;
 	public $searchGeneric;
-	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return ProjectToGenericProjectType the static model class
+	 * @var string nice model name for use in output
 	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+	static $niceName = 'Custom type';
 
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -52,7 +47,7 @@ class ProjectToGenericProjectType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('generic_project_type_id, project_id, generic_id, staff_id', 'required'),
+			array('generic_project_type_id, project_id, staff_id', 'required'),
 			array('generic_project_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('project_id, generic_id', 'length', 'max'=>10),
 			// The following rule is used by search().
@@ -83,8 +78,8 @@ class ProjectToGenericProjectType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Project to generic project type',
-			'generic_project_type_id' => 'Project type/Generic type)',
-			'searchGenericProjectType' => 'Project type/Generic type)',
+			'generic_project_type_id' => 'Project type/Custom type)',
+			'searchGenericProjectType' => 'Project type/Custom type)',
 			'project_id' => 'Client/Project',
 			'searchProject' => 'Client/Project',
 			'generic_id' => 'Generic',
@@ -113,7 +108,7 @@ class ProjectToGenericProjectType extends ActiveRecord
 		if(isset($this->project_id))
 		{
 			$criteria->compare('t.project_id',$this->project_id);
-			ActiveRecord::$labelOverrides['searchGenericProjectType'] = 'Generic type';
+			ActiveRecord::$labelOverrides['searchGenericProjectType'] = 'Custom type';
 			$criteria->compare('genericType.description',$this->searchGenericProjectType);
 			$criteria->select[]="genericType.description AS searchGenericProjectType";
 		}
@@ -183,6 +178,11 @@ class ProjectToGenericProjectType extends ActiveRecord
 		return $columns;
 	}
 
+	static function getDisplayAttr()
+	{
+		return array('genericProjectType->genericType->description');
+	}
+	
 	/**
 	 * Retrieves a sort array for use in CActiveDataProvider.
 	 * @return array the for data provider that contains the sort condition.

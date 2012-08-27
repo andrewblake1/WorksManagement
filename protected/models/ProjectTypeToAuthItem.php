@@ -28,18 +28,8 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Project type to role';
+	static $niceName = 'Role';
 	
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return ProjectTypeToAuthItem the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -158,7 +148,7 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
+/*		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
 		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_type_id')
 			|| Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_id'))
 			
@@ -170,7 +160,7 @@ class ProjectTypeToAuthItem extends ActiveRecord
 			ActiveRecord::$labelOverrides['project_type_to_AuthItem_id'] = 'Client/Project type/Role';
 			$displaAttr[]='projectType->client->name';
 			$displaAttr[]='projectType->description';
-		}
+		}*/
 
 		$displaAttr[]='AuthItem_name';
 

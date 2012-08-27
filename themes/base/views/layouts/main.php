@@ -42,7 +42,7 @@
 				'brandUrl'=>'#',
 				'collapse'=>true, // requires bootstrap-responsive.css
 				'items'=>array(
-					$this->allMenu,
+//					$this->allMenu,
 					//$this->operations,
 					array(
 						'class'=>'bootstrap.widgets.TbMenu',
@@ -80,7 +80,7 @@
 			{
 				echo '<h2>'.CHtml::encode($this->heading);
 				// if we should be showing the new button
-				if($this->_adminShowNew)
+				if(Yii::app()->controller->action->id == 'admin')
 				{
 					echo ' ';
 					$this->widget('bootstrap.widgets.TbButton', array(

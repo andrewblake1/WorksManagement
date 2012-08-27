@@ -23,19 +23,13 @@ class AuthAssignment extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Role assignment';
+	static $niceName = 'Role';
 	
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchUser;
-	/**
-	 * @var array defaultScopes that can be set and used at run time. This is basically a global
-	 * variable within the class context that allows other classes to filter query results without
-	 * having to pass thru several method arguments. Not tigtly coupled but convenient.
-	 */
-//	static $defaultScope = array();
 
 	public function scopeProjectToProjectTypeToAuthItem($project_id)
 	{
@@ -51,16 +45,6 @@ class AuthAssignment extends ActiveRecord
 		return $this;
 	}
 	
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return AuthAssignment the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -83,7 +67,7 @@ class AuthAssignment extends ActiveRecord
 			array('bizrule, data', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, itemname, userid, searchUser, bizrule, data, searchStaff', 'safe', 'on'=>'search'),
+			array('id, staff_id, itemname, userid, searchUser, bizrule, data, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -191,14 +175,14 @@ class AuthAssignment extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		$controller = ucfirst(Yii::app()->controller->id);
+/*		$controller = ucfirst(Yii::app()->controller->id);
 		
 		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
 		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('staff_id'))
 		{
-			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role';
+			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role';*/
 			$displaAttr[]='itemname';
-		}
+/*		}
 		else
 		{
 			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role/First/Last/Email';
@@ -206,7 +190,7 @@ class AuthAssignment extends ActiveRecord
 			$displaAttr[]='user->first_name';
 			$displaAttr[]='user->last_name';
 			$displaAttr[]='user->email';
-		}
+		}*/
 
 		return $displaAttr;
 	}

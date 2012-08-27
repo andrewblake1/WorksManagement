@@ -16,16 +16,6 @@
 class Supplier extends ActiveRecord
 {
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Supplier the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -103,10 +93,10 @@ class Supplier extends ActiveRecord
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */
-	public static function getDisplayAttr()
+/*	public static function getDisplayAttr()
 	{
 		return array('name');
-	}
+	}*/
 
 }
 

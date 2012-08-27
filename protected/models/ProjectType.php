@@ -30,16 +30,6 @@ class ProjectType extends ActiveRecord
 	public $searchTemplateProject;
 	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return ProjectType the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -160,9 +150,9 @@ class ProjectType extends ActiveRecord
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */
-	public static function getDisplayAttr()
+/*	public static function getDisplayAttr()
 	{
-		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
+/*		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
 		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('client_id'))
 		{
 			ActiveRecord::$labelOverrides['project_type_id'] = 'Project type';
@@ -176,7 +166,7 @@ class ProjectType extends ActiveRecord
 		$displaAttr[]='description';
 
 		return $displaAttr;
-	}
+	}*/
 
 	/**
 	 * Retrieves a sort array for use in CActiveDataProvider.

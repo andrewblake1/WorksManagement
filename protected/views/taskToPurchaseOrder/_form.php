@@ -1,36 +1,18 @@
-<div class="form">
+<?php
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'task-to-purchase-order-form',
-	'enableAjaxValidation'=>false,
-)); ?>
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	if(isset($model->task_id))
+	{
+		$form->hiddenField('task_id');
+	}
+	else
+	{
+		throw new CHttpException(400, 'No task identified, you must get here from the tasks page');
+	}
 
-	<?php echo $form->errorSummary($model); ?>
+	PurchaseOrderController::listWidgetRow($model, $form, 'purchase_order_id');
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'task_id'); ?>
-		<?php echo $form->textField($model,'task_id',array('size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'task_id'); ?>
-	</div>
+$this->endWidget();
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'purchase_order_id'); ?>
-		<?php echo $form->textField($model,'purchase_order_id',array('size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'purchase_order_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'staff_id'); ?>
-		<?php echo $form->textField($model,'staff_id'); ?>
-		<?php echo $form->error($model,'staff_id'); ?>
-	</div>
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
-	</div>
-
-<?php $this->endWidget(); ?>
-
-</div><!-- form -->
+?>

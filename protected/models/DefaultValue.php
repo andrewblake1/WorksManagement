@@ -20,16 +20,10 @@ class DefaultValue extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchTableColumn;
-
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return DefaultValue the static model class
+	 * @var string nice model name for use in output
 	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+	static $niceName = 'Default';
 
 	/**
 	 * @return string the associated database table name

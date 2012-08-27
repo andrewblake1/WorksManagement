@@ -2,5 +2,7 @@
 
 class AssemblyController extends Controller
 {
+	
 }
+
 ?>

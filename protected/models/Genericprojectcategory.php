@@ -22,18 +22,8 @@ class Genericprojectcategory extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Generic project category';
+	static $niceName = 'Project category';
 	
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Genericprojectcategory the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -78,7 +68,7 @@ class Genericprojectcategory extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Generic project category',
+			'id' => 'Project category',
 			'root' => 'Root',
 			'lft' => 'Lft',
 			'rgt' => 'Rgt',

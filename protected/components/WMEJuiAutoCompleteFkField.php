@@ -4,34 +4,30 @@
  */
 class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 {
-
 	/**
-	 * @var string the foreign key field / attribute name.
-	 */
-	public $fkField;
-	/**
-	 * @var array named scopes to pass thru in url to autocomplete.
+	 * @var array $scopes named scopes to pass thru in url to autocomplete.
 	 */
 	public $scopes = array();
-
+	/**
+	 * @var string $attribute the attribute.
+	 */
+	public $attribute;
+	/**
+	 * @var string $fKModelType the referenced model.
+	 */
+	public $fKModelType;
+	/**
+	 * @var string $relName the relation name.
+	 */
+	public $relName;
 
     public function init()
     {
-		$attr = $this->attribute = $this->fkField;
+		$attr = $this->attribute;
+		$fKModelType = $this->fKModelType;
+		$relName = $this->relName;
 
-		// get the associated relation - assuming only 1
-  		foreach($this->model->relations() as $relationName => $relation)
-		{
-			// if we have found the relation that uses this attribute which is a foreign key
-			if($relation[2] == $this->fkField)
-			{
-				$fKModelType = $relation[1];
-				$relName = $relationName;
-				break;
-			}
-		}	
-
-         CHtml::resolveNameID($this->model, $attr, $tempHtmlOpts);
+		CHtml::resolveNameID($this->model, $attr, $tempHtmlOpts);
         $id = $tempHtmlOpts['id'];
         $this->_fieldID = $id;
         $this->_saveID = $id . '_save';
@@ -61,9 +57,12 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 
 		$this->_display=(!empty($value) ? implode(Yii::app()->params['delimiter']['display'], $this->_display) : '');
 
+
+//		echo CHtml::label($fKModelType::getNiceName(), $id);
+		echo $this->form->labelEx($this->model, $this->attribute);
+
 		parent::init(); // ensure necessary assets are loaded
 
-		echo $this->form->labelEx($this->model, $this->fkField);
 	}
 	
     public function run()
@@ -71,7 +70,7 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
  
         parent::run();
 		
-		echo $this->form->error($this->model, $this->fkField);
+		echo $this->form->error($this->model, $this->attribute);
     }
 }
 

@@ -23,17 +23,11 @@ class TaskToAssembly extends ActiveRecord
 	 */
 	public $searchTask;
 	public $searchAssembly;
-	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return TaskToAssembly the static model class
+	 * @var string nice model name for use in output
 	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
+	static $niceName = 'Assembly';
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -55,7 +49,7 @@ class TaskToAssembly extends ActiveRecord
 			array('task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchTask, searchAssembly, quantity, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchTask, searchAssembly, quantity, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -133,8 +127,8 @@ class TaskToAssembly extends ActiveRecord
 		$criteria->with = array(
 			'assembly',
 			'task',
-			'project',
-			'task.taskType.client',
+			'task.project',
+			'task.taskType.projectType.client',
 		);
 
 		return $criteria;
@@ -143,6 +137,13 @@ class TaskToAssembly extends ActiveRecord
 	public function getAdminColumns()
 	{
 //		$columns[] = 'id';
+        $columns[] = array(
+			'name'=>'searchAssembly',
+			'value'=>'CHtml::link($data->searchAssembly,
+				Yii::app()->createUrl("Assembly/update", array("id"=>$data->assembly_id))
+			)',
+			'type'=>'raw',
+		);
 		if(!isset($this->task_id))
 		{
 			$columns[] = array(
@@ -153,13 +154,7 @@ class TaskToAssembly extends ActiveRecord
 				'type'=>'raw',
 			);
 		}
-        $columns[] = array(
-			'name'=>'searchAssembly',
-			'value'=>'CHtml::link($data->searchAssembly,
-				Yii::app()->createUrl("Assembly/update", array("id"=>$data->assembly_id))
-			)',
-			'type'=>'raw',
-		);
+		$columns[] = 'quantity';
 		
 		return $columns;
 	}

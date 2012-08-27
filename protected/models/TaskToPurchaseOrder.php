@@ -17,14 +17,15 @@
 class TaskToPurchaseOrder extends ActiveRecord
 {
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return TaskToPurchaseOrder the static model class
+	 * @var string search variables - foreign key lookups sometimes composite.
+	 * these values are entered by user in admin view to search
 	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+	public $searchTask;
+	public $searchPurchaseOrder;
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Purhase order';
 
 	/**
 	 * @return string the associated database table name
@@ -47,7 +48,7 @@ class TaskToPurchaseOrder extends ActiveRecord
 			array('task_id, purchase_order_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, purchase_order_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, task_id, searchTask, searchPurchaseOrder, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -71,31 +72,104 @@ class TaskToPurchaseOrder extends ActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
+			'id' => 'Task to purchase order',
 			'task_id' => 'Task',
-			'purchase_order_id' => 'Purchase Order',
-			'staff_id' => 'Staff',
+			'searchTask' => 'Task',
+			'purchase_order_id' => 'Purchase order',
+			'searchPurchaseOrder' => 'Purchase order',
 		);
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return CDbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('task_id',$this->task_id,true);
-		$criteria->compare('purchase_order_id',$this->purchase_order_id,true);
-		$criteria->compare('staff_id',$this->staff_id);
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria->select=array(
+//			't.id',
+			"CONCAT_WS('$delimiter',
+				supplier.name,
+				purchaseOrder.number
+				) AS searchPurchaseOrder",
+		);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		// where
+//		$criteria->compare('t.id',$this->id);
+			$this->compositeCriteria($criteria,
+				array(
+				'supplier.name',
+				'purchaseOrder.number'
+				),
+				$this->searchPurchaseOrder
+			);
+
+		if(isset($this->task_id))
+		{
+			$criteria->compare('t.task_id',$this->task_id);
+		}
+		else
+		{
+			$criteria->select[]="CONCAT_WS('$delimiter',
+				client.name
+				project.description,
+				task.description
+				) AS searchTask";
+			$this->compositeCriteria($criteria,
+				array(
+					'client.name',
+					'project.description',
+					'task.description'
+				),
+				$this->searchTask
+			);
+		}
+		
+		// join
+		$criteria->with = array(
+			'purchaseOrder',
+			'purchaseOrder.supplier',
+			'task',
+			'task.project',
+			'task.taskType.projectType.client',
+		);
+
+		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+//		$columns[] = 'id';
+        $columns[] = array(
+			'name'=>'searchPurchaseOrder',
+			'value'=>'CHtml::link($data->searchPurchaseOrder,
+				Yii::app()->createUrl("PurchaseOrder/update", array("id"=>$data->purchase_order_id))
+			)',
+			'type'=>'raw',
+		);
+		if(!isset($this->task_id))
+		{
+			$columns[] = array(
+				'name'=>'searchTask',
+				'value'=>'CHtml::link($data->searchTask,
+					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
+				)',
+				'type'=>'raw',
+			);
+		}
+		
+		return $columns;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchTask', 'searchPurchaseOrder');
 	}
 }

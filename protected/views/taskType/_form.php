@@ -10,11 +10,14 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	}
 	else
 	{
-		ProjectTypeController::listWidgetRow($model, $form, 'project_type_id');
+		throw new CHttpException(400, 'No task type identified, you must get here from the task types page');
 	}
-	
-	TaskController::listWidgetRow($model, $form, 'template_task_id');
+/*
+ * provisional
 
+	TaskController::listWidgetRow($model, $form, 'template_task_id', array(), array(), 'Template task');
+ */
+	
 $this->endWidget();
 
 ?>

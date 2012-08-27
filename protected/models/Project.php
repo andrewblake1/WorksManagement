@@ -33,16 +33,6 @@ class Project extends ActiveRecord
 	public $client_id;
 	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Project the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -110,7 +100,7 @@ class Project extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
-			't.t.description',
+			't.description',
 			'travel_time_1_way',
 			't.critical_completion',
 			't.planned',
@@ -186,7 +176,7 @@ class Project extends ActiveRecord
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */
-	public static function getDisplayAttr()
+/*	public static function getDisplayAttr()
 	{
 		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
 		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('client_id'))
@@ -202,7 +192,7 @@ class Project extends ActiveRecord
 		$displaAttr[]='description';
 
 		return $displaAttr;
-	}
+	}*/
 
 }
 

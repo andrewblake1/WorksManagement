@@ -41,16 +41,6 @@ class Task extends ActiveRecord
 	public $searchTaskType;
 	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Task the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -260,7 +250,7 @@ class Task extends ActiveRecord
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */
-	public static function getDisplayAttr()
+/*	public static function getDisplayAttr()
 	{
 		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
 		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_id'))
@@ -277,7 +267,7 @@ class Task extends ActiveRecord
 		$displaAttr[]='description';
 
 		return $displaAttr;
-	}
+	}*/
 
 }
 

@@ -8,7 +8,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	}
 	else
 	{
-		ProjectTypeController::listWidgetRow($model, $form, 'project_type_id');
+		throw new CHttpException(400, 'No project identified, you must get here from the projects page');
 	}
 
 	GenericprojectcategoryController::listWidgetRow($model, $form, 'genericprojectcategory_id');

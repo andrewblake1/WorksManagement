@@ -30,16 +30,6 @@ class Duty extends ActiveRecord
 	public $searchGeneric;
 	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Duty the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -61,7 +51,7 @@ class Duty extends ActiveRecord
 			array('updated', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchTask, searchTaskTypeToDutyType, updated, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchTask, searchTaskTypeToDutyType, updated, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 

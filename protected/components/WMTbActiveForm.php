@@ -43,10 +43,10 @@ class WMTbActiveForm extends TbActiveForm
 				// if there are errors with the models but not on the form inputs
 				if($lis != "")
 				{
-					$errorhtml = \'<div id="Task-form_es_" class="alert alert-block alert-error" style="">\
+					$errorhtml = \'<div id="-form_es_" class="alert alert-block alert-error" style="">\
 					<p>Please fix the following input errors:</p><ul>\' + $lis + \'</ul></div>\';
 					
-					$("#Task-form_es_").replaceWith($errorhtml);
+					$("[id*=-form_es_]").replaceWith($errorhtml);
 					
 					return false;
 				}
@@ -93,12 +93,12 @@ class WMTbActiveForm extends TbActiveForm
  
     public function run()
     {
-		// only show the staff field when updating and if user is system admin
+/*		// only show the staff field when updating and if user is system admin in audit scenario
 		if(!$this->model->isNewRecord && Yii::app()->user->checkAccess('system admin'))
 		{
 			StaffController::listWidgetRow($this->model, $this, 'staff_id', array('readonly'=>'readonly'));
 		}
-		else
+		else*/
 		{
 			$this->hiddenField('staff_id');
 		}

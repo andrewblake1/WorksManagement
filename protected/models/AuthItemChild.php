@@ -22,16 +22,6 @@ class AuthItemChild extends ActiveRecord
 	static $niceName = 'Priviledge';
 	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return AuthItemChild the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -78,7 +68,7 @@ class AuthItemChild extends ActiveRecord
 		return parent::attributeLabels(array(
 			'id' => 'Auth item child',
 			'parent' => 'Parent',
-			'child' => 'Child',
+			'child' => 'Priveledge',
 		));
 	}
 
@@ -92,14 +82,14 @@ class AuthItemChild extends ActiveRecord
 		// select
 		$criteria->select=array(
 //			't.id',
-			't.parent',
+//			't.parent',
 			't.child',
 		);	
 
 		// where
 //		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.parent',$this->parent);
-		$criteria->compare('t.child',$this->child);
+		$criteria->compare('t.child',$this->child, true);
 
 		return $criteria;
 	}
@@ -107,12 +97,22 @@ class AuthItemChild extends ActiveRecord
 	public function getAdminColumns()
 	{
 //		$columns[] = 'id';
-		$columns[] = 'parent';
+//		$columns[] = 'parent';
  		$columns[] = 'child';
 		
 		return $columns;
 	}
 
+	/**
+	 * Returns foreign key attribute name within this model that references another model.
+	 * @param string $referencesModel the name name of the model that the foreign key references.
+	 * @return string the foreign key attribute name within this model that references another model
+	 */
+	static function getParentForeignKey($referencesModel)
+	{
+		return parent::getParentForeignKey($referencesModel, array('AuthItem'=>'parent'));
+	}
+	
 }
 
 ?>

@@ -52,27 +52,25 @@ return array(
 				// enable cookie-based authentication
 				'allowAutoLogin' => true,
 			),
-			
+
 			// uncomment the following to enable URLs in path-format
 			'urlManager'=>array(
 				'urlFormat'=>'path',
 				'showScriptName'=>false,
 				'rules'=>array(
 					// removes 'site' & 'index' from urls and add pretty urls to static pages
-					'contact'=>'site/contact',
-					'page/<view:\w+>'=>'site/page',
-// TODO: fix error where currently need to switch these two lines when running yiic shell - possibly .htaccess issue or yii bug
-					'/'=>'client/admin', 
-//					'/'=>'site/index',
+//					'contact'=>'site/contact',
+//					'page/<view:\w+>'=>'site/page',
+					'/'=>'site/index',
 
-					'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-// TODO: fix error where currently need to switch these two lines when running gii
-//					'<controller:\w+>/<action:\w+>/<id:.+>'=>'<controller>/<action>',
+//					'<controller:\w+>/<id:\d+>'=>'<controller>/view',
+					'<controller:\w+>/<action:update>/<id:.+>'=>'<controller>/<action>',
 					'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+//					'<controller:\w+>/<action:\w+>/<id:.+>'=>'<controller>/<action>',
 					'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 
 					// add support for modules
-					'<module:\w+>/<controller:\w+>/<action:\w+>'=>'<module>/<controller>/<action>',
+//					'<module:\w+>/<controller:\w+>/<action:\w+>'=>'<module>/<controller>/<action>',
 				),
 			),
 

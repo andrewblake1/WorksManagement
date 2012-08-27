@@ -15,7 +15,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 			ProjectController::listWidgetRow($model, $form, 'project_id');
 		}
 
-		$form->textFieldRow('generic_id');
+//		$form->textFieldRow('generic_id');
 	}
 	else
 	{

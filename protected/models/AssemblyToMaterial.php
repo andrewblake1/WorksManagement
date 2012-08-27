@@ -1,40 +1,39 @@
 <?php
 
 /**
- * This is the model class for table "task_type_to_material".
+ * This is the model class for table "assembly_to_material".
  *
- * The followings are the available columns in table 'task_type_to_material':
+ * The followings are the available columns in table 'assembly_to_material':
  * @property integer $id
- * @property integer $task_type_id
+ * @property integer $assembly_id
  * @property integer $material_id
  * @property integer $quantity
+ * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property TaskType $taskType
+ * @property Assembly $assembly
  * @property Material $material
  * @property Staff $staff
  */
-class TaskTypeToMaterial extends ActiveRecord
+class AssemblyToMaterial extends ActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchMaterial;
-	public $searchTaskType;
 	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Material';
-
 
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'task_type_to_material';
+		return 'assembly_to_material';
 	}
 
 	/**
@@ -45,11 +44,11 @@ class TaskTypeToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_type_id, material_id, quantity, staff_id', 'required'),
-			array('task_type_id, material_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, material_id, quantity, staff_id', 'required'),
+			array('assembly_id, material_id, quantity, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, searchTaskType, searchMaterial, quantity, staff_id', 'safe', 'on'=>'search'),
+			array('id, assembly_id, searchMaterial, quantity, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -61,7 +60,7 @@ class TaskTypeToMaterial extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
+			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
 			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
@@ -74,13 +73,12 @@ class TaskTypeToMaterial extends ActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'task_type_id' => 'Task Type',
+			'assembly_id' => 'Assembly',
 			'material_id' => 'Material',
+			'searchMaterial' => 'Material',
 			'quantity' => 'Quantity',
-			'staff_id' => 'Staff',
 		);
 	}
-
 
 	/**
 	 * @return CDbCriteria the search/filter conditions.
@@ -89,44 +87,22 @@ class TaskTypeToMaterial extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
+		// client_id should always be set unless come directly from url so cover this to be safe anyway
+		if(!isset($this->assembly_id))
+		{
+			throw new CHttpException(400, 'No assembly identified, you must get here from the assemblys page');
+		}
+		
+//		$criteria->compare('t.id',$this->id);
+		$criteria->compare('material.description',$this->searchMaterial,true);
+		$criteria->compare('t.quantity',$this->quantity);
+		
+		$criteria->with = array('material');
+
 		$criteria->select=array(
 //			't.id',
 			'material.description AS searchMaterial',
 			't.quantity',
-		);
-
-		// where
-//		$criteria->compare('t.id',$this->id);
-		$criteria->compare('material.description',$this->searchMaterial);
-		$criteria->compare('t.quantity',$this->quantity);
-
-		if(isset($this->task_type_id))
-		{
-			$criteria->compare('t.task_type_id',$this->task_type_id);
-		}
-		else
-		{
-			// Task type
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				projectType.description,
-				taskType.description
-				) AS searchTaskType";
-			$this->compositeCriteria($criteria, array(
-				'client.name',
-				'projectType.description',
-				'taskType.description'
-			), $this->searchTaskType);
-		}
-
-		// join
-		$criteria->with = array(
-			'material',
-			'taskType',
-			'taskType.projectType',
-			'taskType.projectType.client',
 		);
 
 		return $criteria;
@@ -142,32 +118,9 @@ class TaskTypeToMaterial extends ActiveRecord
 			)',
 			'type'=>'raw',
 		);
- 		if(!isset($this->task_id))
-		{
-			$columns[] = array(
-				'name'=>'searchTaskType',
-				'value'=>'CHtml::link($data->searchTaskType,
-					Yii::app()->createUrl("TaskType/update", array("id"=>$data->task_type_id))
-				)',
-				'type'=>'raw',
-			);
-		}
-		$columns[] = 'quantity';
+ 		$columns[] = 'quantity';
 		
 		return $columns;
-	}
-
-	/**
-	 * @return array the list of columns to be concatenated for use in drop down lists
-	 */
-	public static function getDisplayAttr()
-	{
-		return array(
-//			'taskType->client'=>'name',
-//			'taskType->projectType'=>'description',
-//			'taskType'=>'description',
-			'material->description',
-		);
 	}
 
 	/**
@@ -176,6 +129,7 @@ class TaskTypeToMaterial extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchMaterial', 'searchTaskType');
+		return array('searchMaterial');
 	}
+
 }

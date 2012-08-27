@@ -15,43 +15,65 @@ abstract class ActiveRecord extends CActiveRecord
 	 * @var string nice model name for use in output
 	 */
 	static $niceName;
-	/**
+/**
 	 * @var array defaultScopes that can be set and used at run time. This is basically a global
 	 * variable within the class context that allows other classes to filter query results without
 	 * having to pass thru several method arguments. Not tigtly coupled but convenient.
-	 */
-	static $defaultScope = array();
+	 
+	static $defaultScope = array();/*
 
+	/**
+	 * Returns the static model of the specified AR class.
+	 * @return Client the static model class
+	 */
+	public static function model()
+	{
+		return parent::model(get_called_class());
+	}
+
+	// get the nice name of the model
 	static public function getNiceName($primaryKey=null)
 	{
-		// get the nice name of the model if not set in calling class
-		$niceName = empty(static::$niceName)
-			? Yii::app()->functions->sentencize(get_called_class())
-			: static::$niceName;
+		
+		if(!empty(static::$niceName))
+		{
+			$niceName = is_string(static::$niceName)
+				? static::$niceName
+				: static::$niceName[Yii::app()->controller->action->id];
+		}
+		else
+		{
+			$niceName = Yii::app()->functions->sentencize(get_called_class());
+		}
 		
 		// if a primary key has been given
 		if($primaryKey)
 		{
-			// if there is description or name attribute in this model
-			$attributeNames = static::model()->attributeNames();
-			if(in_array('description', $attributeNames))
+//			// if there is description or name attribute in this model
+//			$attributeNames = static::model()->attributeNames();
+/*			if(in_array('description', $attributeNames))
 			{
 				$attributeName = 'description';
 			}
 			elseif(in_array('name', $attributeNames))
 			{
 				$attributeName = 'name';
+			}*/
+			foreach(static::getDisplayAttr() as $relationAttribute)
+			{
+				$attributes[] = '{$model->'.$relationAttribute.'}';
 			}
-			if(isset($attributeName))
+			if(isset($attributes))
 			{
 				// get the value of that attribute
 				$model = static::model()->findByPk($primaryKey);
-				$value = $model->$attributeName;
+				$attributes = implode(Yii::app()->params['delimiter']['display'], $attributes);
+				eval($t ='$value = "'.$attributes.'";');
 				// if the attribute is longer than 30 characters
 				if(strlen($value) > 20)
 				{
 					// shorten to 20 characters total
-					$value = substr($value, 0, 27) . '...';
+					$value = substr($value, 0, 17) . '...';
 				}
 				// make this our nice name
 				$niceName = $value;
@@ -119,8 +141,22 @@ abstract class ActiveRecord extends CActiveRecord
 	 * Returns array of columns to be concatenated - for lists.
 	 * @return array the list of columns to be concatenated
 	 */
-	public static function getDisplayAttr($displayColumn='description')
+	public static function getDisplayAttr()
 	{
+		// choose the best column
+		if(in_array('description', static::model()->tableSchema->getColumnNames()))
+		{
+			$displayColumn='description';
+		}
+		elseif(in_array('name', static::model()->tableSchema->getColumnNames()))
+		{
+			$displayColumn='name';
+		}
+		else
+		{
+			throw new Exception;
+		}
+
 		return array($displayColumn);
 	}
 
@@ -199,8 +235,9 @@ abstract class ActiveRecord extends CActiveRecord
 	
     public function defaultScope()
     {
-		// add in any run time scopes accessibly to outside classes
-		$defaultScope = static::$defaultScope;
+//		// add in any run time scopes accessibly to outside classes
+//		$defaultScope = static::$defaultScope;
+		$defaultScope = array();
 	
 		// if this model has a deleted property
 		if(in_array('deleted', $this->tableSchema->getColumnNames()))

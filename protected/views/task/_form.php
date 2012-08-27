@@ -4,26 +4,26 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	$form->textAreaRow('description');
 
+	if(isset($model->project_id))
+	{
+		$form->hiddenField('project_id');
+	}
+	else
+	{
+		throw new CHttpException(400, 'No project identified, you must get here from the projects page');
+	}
+
 	// only show when creating
 	if($model->isNewRecord)
 	{
-		if(!isset($model->project_id))
-		{
-			ProjectController::listWidgetRow($model, $form, 'project_id');
-		}
-		else
-		{
-			$form->hiddenField('project_id');
-		}
 		TaskTypeController::listWidgetRow($model, $form, 'task_type_id');
 	}
 	else
 	{
 		$form->hiddenField('task_type_id');
-		$form->hiddenField('project_id');
 	}
 
-	StaffController::listWidgetRow($model, $form, 'in_charge_id');
+	StaffController::listWidgetRow($model, $form, 'in_charge_id', array(), array(), 'In charge');
 
 	$form->textFieldRow('planned');
 	

@@ -24,7 +24,7 @@ class AdminViewWidget extends CWidget
  
     public function run()
     {
-		// if system admin user
+/*		// if system admin user and audit scenario
 		if(Yii::app()->user->checkAccess('system admin'))
 		{
 			// add the staff column
@@ -35,7 +35,7 @@ class AdminViewWidget extends CWidget
 					)',
 					'type'=>'raw',
 				);
-		}
+		}*/
 
 		// add the buttons - first determine if there are any!
 		if($this->_controller->checkAccess(Controller::accessWrite))

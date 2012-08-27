@@ -11,11 +11,15 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	}
 	else
 	{
-		ClientController::listWidgetRow($model, $form, 'client_id');
+		throw new CHttpException(400, 'No client identified, you must get here from the clients page');
 	}
 	
-	ProjectController::listWidgetRow($model, $form, 'template_project_id');
+/*
+ * provisional
+
+	ProjectController::listWidgetRow($model, $form, 'template_project_id', array(), array(), 'Template project');
+*/
 
 $this->endWidget();
 
-?>
+?>	

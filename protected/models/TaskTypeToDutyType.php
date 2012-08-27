@@ -30,6 +30,11 @@ class TaskTypeToDutyType extends ActiveRecord
 	public $searchDutyType;
 	public $searchTaskType;
 	public $searchProjectTypeToAuthItem;
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Duty type';
+
 	
 	public function scopeTask($task_id)
 	{
@@ -40,16 +45,6 @@ class TaskTypeToDutyType extends ActiveRecord
 		$this->getDbCriteria()->mergeWith($criteria);
 		
 		return $this;
-	}
-// TODO: replace this with late static binding in parent and tableName with a better function that also does nice name and perhaps short name	
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return TaskTypeToDutyType the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
 	}
 
 	/**
@@ -171,7 +166,7 @@ class TaskTypeToDutyType extends ActiveRecord
 			)',
 			'type'=>'raw',
 		);
- 		if(!isset($this->task_id))
+ 		if(!isset($this->task_type_id))
 		{
 			$columns[] = array(
 				'name'=>'searchTaskType',

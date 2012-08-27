@@ -11,6 +11,14 @@ class TaskController extends GenericExtensionController
 	protected $relation_modelToGenericModelType = 'taskToGenericTaskType';
 
 	/*
+	 * overidden as because generics added want to edit them after creation
+	 */
+	protected function createRedirect($model)
+	{
+		$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
+	}
+
+	/*
 	 * overidden as mulitple models
 	 */
 	protected function createSave($task, &$models=array())
@@ -48,12 +56,12 @@ class TaskController extends GenericExtensionController
 		$saved = true;
 		
 		// loop thru all generic model types associated to this models model type
-		foreach($task->taskType->taskTypeToResourceTypes as $model)
+		foreach($task->taskType->taskTypeToResourceTypes as $taskTypeToResourceType)
 		{
 			// create a new resource
 			$model = new TaskToResourceType();
 			// copy any useful attributes from
-			$model->attributes = $model->attributes;
+			$model->attributes = $taskTypeToResourceType->attributes;
 			$model->staff_id = null;
 			$model->task_id = $task->id;
 			$saved &= $model->dbCallback('save');
@@ -76,7 +84,7 @@ class TaskController extends GenericExtensionController
 		$saved = true;
 		
 		// loop thru all generic model types associated to this models model type
-		foreach($task->taskType->taskTypeToAssembly as $model)
+		foreach($task->taskType->taskTypeToAssemblies as $taskTypeToAssembly)
 		{
 			// create a new resource
 			$model = new TaskToAssembly();
@@ -104,12 +112,12 @@ class TaskController extends GenericExtensionController
 		$saved = true;
 		
 		// loop thru all generic model types associated to this models model type
-		foreach($task->taskType->taskTypeToMaterial as $model)
+		foreach($task->taskType->taskTypeToMaterials as $taskTypeToMaterial)
 		{
 			// create a new resource
-			$model = new TaskToMaterial();
+			$model = new MaterialToTask();
 			// copy any useful attributes from
-			$model->attributes = $taskTypeToAssembly->attributes;
+			$model->attributes = $taskTypeToMaterial->attributes;
 			$model->staff_id = null;
 			$model->task_id = $task->id;
 			$saved &= $model->dbCallback('save');
@@ -133,15 +141,17 @@ class TaskController extends GenericExtensionController
 		$saved = true;
 		
 		// loop thru all generic model types associated to this models model type
-		foreach($task->taskType->taskTypeToDutyType as $model)
+		foreach($task->taskType->taskTypeToDutyTypes as $taskTypeToDutyType)
 		{
 			// create a new resource
-			$model = new TaskToMaterial();
+			$model = new Duty();
 			// copy any useful attributes from
 			$model->attributes = $taskTypeToDutyType->attributes;
 			$model->staff_id = null;
 			$model->task_id = $task->id;
+			$model->task_type_to_duty_type_id = $taskTypeToDutyType->id;
 			$saved &= $model->dbCallback('save');
+			
 			$models[] = $model;
 		}
 		

@@ -2,7 +2,7 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	MaterialController::listWidgetRow($model, $form, 'material_type_id');
+	MaterialController::listWidgetRow($model, $form, 'material_id');
 
 	if(isset($model->task_type_id))
 	{
@@ -10,7 +10,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	}
 	else
 	{
-		TaskTypeController::listWidgetRow($model, $form, 'task_type_id');
+		throw new CHttpException(400, 'No task type identified, you must get here from the task types page');
 	}
 
 	$form->textFieldRow('quantity');
