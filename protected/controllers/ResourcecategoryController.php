@@ -78,9 +78,26 @@ class ResourcecategoryController extends Controller
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/client_val_form.css','screen');
 	}
 
-	public function actionIndex()
+	/**
+	 * Manages all models.
+	 */
+	public function actionAdmin($exportColumns = array())
 	{
-		//create an array open_nodes with the ids of the nodes that we want to be initially open
+		$modelName = /*ucfirst($this->id)*/$this->modelName;
+
+		// set heading
+		if(!$this->heading)
+		{	
+			$this->heading .= $modelName::getNiceName() . 's';
+		}
+
+		// set breadcrumbs
+		$this->breadcrumbs = $this->getBreadCrumbTrail();
+
+		// set up tab menu if required - using setter
+		$this->setTabs($model, false);
+
+	//create an array open_nodes with the ids of the nodes that we want to be initially open
 		//when the tree is loaded.Modify this to suit your needs.Here,we open all nodes on load.
 		$categories= Resourcecategory::model()->findAll(array('order'=>'lft'));
 		$identifiers=array();
@@ -101,27 +118,10 @@ class ResourcecategoryController extends Controller
 		));
 	}
 
-	/**
-	* Returns the data model based on the primary key given in the GET variable.
-	* If the data model is not found, an HTTP exception will be raised.
-	* @param integer the ID of the model to be loaded
-	*/
-	public function loadModel($id)
-	{
-		$model=Resourcecategory::model()->findByPk($id);
-		if($model===null)
-		{
-			throw new CHttpException(404,'The requested page does not exist.');
-		}
-
-		return $model;
-	}
-
 	public function actionFetchTree()
 	{
 		Resourcecategory::printULTree();
 	}
-
 
 	public function actionRename()
 	{
@@ -157,7 +157,7 @@ class ResourcecategoryController extends Controller
 			exit;
 		}
 	}
-
+	
 	public function actionReturnForm()
 	{
 		//don't reload these scripts or they will mess up the page
@@ -174,12 +174,24 @@ class ResourcecategoryController extends Controller
 		);
 
 		//Figure out if we are updating a Model or creating a new one.
-		$model = isset($_POST['update_id']) ? $this->loadModel($_POST['update_id']) : new Resourcecategory;		
+		if(isset($_POST['update_id']))
+		{
+//TODO: may have validation problem here i.e. not sure if fields will be bound correctly so may have to place two modals in the form, one for create
+// and one for update - not sure due to binding problem previously experienced after ajax
+			$model = $this->loadModel($_POST['update_id']);
+			$returnUrl = $this->createUrl("{$this->modelName}/update", array('id'=>$_POST['update_id']));
+		}
+		else
+		{
+			$model = new Resourcecategory;		
+		}
 
+		// set the url for the form so that doesn't try to come back here when update is clicked
 		$this->renderPartial('_form',
 			array(
 				'model'=>$model,
-				'parent_id'=>!empty($_POST['parent_id'])?$_POST['parent_id']:''
+				'parent_id'=>!empty($_POST['parent_id'])?$_POST['parent_id']:'',
+				'action'=>$returnUrl,
 			),
 			false,
 			true
@@ -205,51 +217,42 @@ class ResourcecategoryController extends Controller
 
 		$this->renderPartial('view', array('model'=>$model),false,true);
 	}
-
-	public function actionCreateRoot()
+	/*
+	 * to be overidden if using mulitple models
+	 */
+	protected function createSave($model, &$models=array())
 	{
-		if(isset($_POST['Resourcecategory']))
+		// if new root
+		if(empty($_POST['parent_id']))
 		{
-			$new_root=new Resourcecategory;
-			$new_root->attributes=$_POST['Resourcecategory'];
-			// Ab hacking changed this to force validation so that before validate adds staff_id
-			echo $new_root->saveNode(true)
-				? json_encode(array('success'=>true, 'id'=>$new_root->primaryKey))
-				: json_encode(array('success'=>false, 'message'=>'Error.Root Resourcecategory was not created.'));
-			exit;
+			// atempt save
+			$saved = $model->saveNode(true);
 		}
-	}
-
-	public function actionCreate()
-	{
-		if(isset($_POST['Resourcecategory']))
+		// otherwise appending to a node
+		else
 		{
-			$model=new Resourcecategory;
-			//set the submitted values
-			$model->attributes=$_POST['Resourcecategory'];
 			$parent=$this->loadModel($_POST['parent_id']);
-			//return the JSON result to provide feedback.
-			echo $model->appendTo($parent)
-				? json_encode(array('success'=>true, 'id'=>$model->primaryKey))
-				: json_encode(array('success'=>false, 'message'=>'Error.Resourcecategory was not created.'));
-			exit;
+			$saved = $model->appendTo($parent);
 		}
+		// put the model into the models array used for showing all errors
+		$models[] = $model;
+		
+		return $saved;
 	}
-
-
-	public function actionUpdate()
+	
+// Todo: override updateRedirect and createRedirect to ajax refresh of the the tree
+	/*
+	 * to be overidden if using mulitple models
+	 */
+	protected function updateSave($model, &$models=array())
 	{
-		if(isset($_POST['Resourcecategory']))
-		{
-			$model=$this->loadModel($_POST['update_id']);
-			$model->attributes=$_POST['Resourcecategory'];
-
-			echo $model->saveNode(false)
-				? json_encode(array('success'=>true))
-				: json_encode(array('success'=>false));
-		}
+		// atempt save
+		$saved = $model->saveNode(false);
+		// put the model into the models array used for showing all errors
+		$models[] = $model;
+		
+		return $saved;
 	}
-
 
 	public function actionMoveCopy()
 	{
@@ -365,13 +368,4 @@ class ResourcecategoryController extends Controller
 		}
 
 	}
-
-/*	protected function performAjaxValidation($model)
-	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='resourcecategory-form')
-		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-	}*/
 }

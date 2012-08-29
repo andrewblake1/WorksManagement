@@ -18,7 +18,7 @@ echo '
 
 	<!--The tree will be rendered in this div-->
 
-	<div id="'.Resourcecategory::ADMIN_TREE_CONTAINER_ID.'" >
+	<div id="'.Genericprojectcategory::ADMIN_TREE_CONTAINER_ID.'" >
 
 	</div>';
 
@@ -28,16 +28,18 @@ echo '
 <script  type="text/javascript">
 	$(function ()
 	{
-		
-		$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>")
+		$("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>")
 		.jstree(
 		{
-			"html_data" : {
-				"ajax" : {
+			"html_data" :
+				{
+				"ajax" :
+					{
 					"type":"POST",
-					"url" : "<?php echo $baseUrl; ?>/resourcecategory/fetchTree",
-					"data" : function (n) {
-						return {
+					"url" : "<?php echo $baseUrl; ?>/genericprojectcategory/fetchTree",
+					"data" : function (n)
+					{
+						return{
 							id : n.attr ? n.attr("id") : 0,
 							"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 						};
@@ -58,16 +60,16 @@ echo '
 							// need to re-read modal contents first as selecting a different record
 							$.ajax({
 								type: "POST",
-								url: "<?php echo $baseUrl; ?>/resourcecategory/returnForm",
+								url: "<?php echo $baseUrl; ?>/genericprojectcategory/returnForm",
 								data:{
 									'update_id':  id,
 									"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 								},
 								'beforeSend' : function(){
-									$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
+									$("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
 								},
 								'complete' : function(){
-									$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
+									$("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
 								},
 								success: function(data){
 
@@ -91,7 +93,7 @@ echo '
 						
 							if(confirm('Are you sure you want to remove ' + (obj).attr('rel') + 'and any sub categories'))
 							{
-								jQuery("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").jstree("remove",obj);
+								jQuery("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>").jstree("remove",obj);
 							}
 						}
 					},//remove
@@ -123,17 +125,17 @@ echo '
 		.bind("rename.jstree", function (e, data) {
 			$.ajax({
 				type:"POST",
-				url:"<?php echo $baseUrl; ?>/resourcecategory/rename",
+				url:"<?php echo $baseUrl; ?>/genericprojectcategory/rename",
 				data:  {
 					"id" : data.rslt.obj.attr("id").replace("node_",""),
 					"new_name" : data.rslt.new_name,
 					"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 				},
 				beforeSend : function(){
-					$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
+					$("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
 				},
 				complete : function(){
-					$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
+					$("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
 				},
 				success:function (r) {  response= $.parseJSON(r);
 					if(!response.success) {
@@ -148,16 +150,16 @@ echo '
 		.bind("remove.jstree", function (e, data) {
 			$.ajax({
 				type:"POST",
-				url:"<?php echo $baseUrl; ?>/resourcecategory/remove",
+				url:"<?php echo $baseUrl; ?>/genericprojectcategory/remove",
 				data:{
 					"id" : data.rslt.obj.attr("id").replace("node_",""),
 					"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 				},
 				beforeSend : function(){
-					$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
+					$("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
 				},
 				complete: function(){
-					$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
+					$("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
 				},
 				success:function (r) {  response= $.parseJSON(r);
 					if(!response.success) {
@@ -174,8 +176,8 @@ echo '
 				//not all are needed for this view,but they are there if you need them.
 				//Commented out logs  are for debugging and exploration of jstree.
 
-				next= jQuery.jstree._reference('#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>')._get_next (this, true);
-				previous= jQuery.jstree._reference('#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>')._get_prev(this,true);
+				next= jQuery.jstree._reference('#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>')._get_next (this, true);
+				previous= jQuery.jstree._reference('#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>')._get_prev(this,true);
 
 				pos=data.rslt.cp;
 				moved_node=$(this).attr('id').replace("node_","");
@@ -211,7 +213,7 @@ echo '
 				$.ajax({
 					async : false,
 					type: 'POST',
-					url: "<?php echo $baseUrl; ?>/resourcecategory/moveCopy",
+					url: "<?php echo $baseUrl; ?>/genericprojectcategory/moveCopy",
 
 					data : {
 						"moved_node" : moved_node,
@@ -227,10 +229,10 @@ echo '
 						"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 					},
 					beforeSend : function(){
-						$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
+						$("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
 					},
 					complete : function(){
-						$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
+						$("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
 					},
 					success : function (r) {
 						response=$.parseJSON(r);
@@ -261,14 +263,7 @@ echo '
 
 		$("#reload").click(function ()
 		{
-			jQuery("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").jstree("refresh");
-		});
-
-		$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").delegate("a","click", function(e) {
-			// get the id of the clicked node
-			id = $(this).parent().attr("id").split("_")[1];
-			// go to the admin screen - filtering by this parent id
-			window.location = "<?php echo $baseUrl; ?>/ResourceType/admin?ResourceType[resourcecategory_id]=" + id;
+			jQuery("#<?php echo Genericprojectcategory::ADMIN_TREE_CONTAINER_ID; ?>").jstree("refresh");
 		});
 	});
 

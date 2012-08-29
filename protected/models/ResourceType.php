@@ -94,16 +94,14 @@ class ResourceType extends ActiveRecord
 		$criteria->select=array(
 			't.id',
 			't.description',
-			'resourcecategory.description AS searchResourcecategory',
 			't.maximum',
 		);
 
 		// where
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('resourcecategory.description',$this->searchResourcecategory,true);
 		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('t.resource_type_id', $this->resource_type_id);
+		$criteria->compare('t.resourcecategory_id', $this->resourcecategory_id);
 		
 		// join
 		$criteria->with = array('resourcecategory');

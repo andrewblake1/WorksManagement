@@ -1,16 +1,11 @@
 <?php
 
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'action'=>$action));
 
-	$form->textFieldRow('root');
-
-	$form->textFieldRow('lft');
-
-	$form->textFieldRow('rgt');
-
-	$form->textFieldRow('level');
-
-	$form->textFieldRow('description');
+	$form->textFieldRow('name');
+	
+	// if adding to another node - as opposed to creating a new root
+	echo '<input type="hidden" name= "parent_id" value="'.($_POST['parent_id'] ? $_POST['parent_id']  : '').'" />';
 
 $this->endWidget();
 

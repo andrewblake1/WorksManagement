@@ -339,7 +339,7 @@ protected $_adminShowNew = false;
 		// set the message on how to use the admin screen
 		Yii::app()->user->setFlash('info', self::messageSortSearch);
 
-		$modelName = /*ucfirst($this->id)*/$this->modelName;
+		$modelName = $this->modelName;
 
 //		// should we be showing the new button NB: this is used main layout and checked on all views hence initialized in class scope to false
 //		$this->_adminShowNew = true;
@@ -633,7 +633,7 @@ protected $_adminShowNew = false;
 		));
 	}
 
-// TODO: huge duplication between actionUpdate and actionCreate - remove duplication 	
+// TODO: huge duplication between actionUpdate and actionCreate - remove duplication  - and in the respective redirect and save methods
 	
 	/*
 	 * to be overidden if using mulitple models
@@ -646,6 +646,21 @@ protected $_adminShowNew = false;
 		$models[] = $model;
 		
 		return $saved;
+	}
+	
+	/*
+	 * to be overidden if not wanting to redirect to admin
+	 */
+	protected function updateRedirect($model)
+	{
+		if(is_array($_SESSION['actionAdminGet'][$this->modelName]))
+		{
+			$this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
+		}
+		else
+		{
+			$this->redirect(array('admin'));
+		}
 	}
 	
 	/**
@@ -676,9 +691,7 @@ protected $_adminShowNew = false;
 			{
 				// commit
                 $transaction->commit();
-				is_array($_SESSION['actionAdminGet'][$this->modelName])
-					? $this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]))
-					: $this->redirect(array('admin'));
+				$this->updateRedirect($model);
 			}
 			// otherwise there has been an error which should be captured in model
 			else
