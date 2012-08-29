@@ -48,12 +48,12 @@ class AdminViewWidget extends CWidget
 		$this->_controller->widget('bootstrap.widgets.TbAlert');
 
 // TODO: figure out how to use this for the error message flash in WMTbButtonColumn - also slow the fade futher
-		// add fade out to the flash message
+/*		// add fade out to the flash message
 		Yii::app()->clientScript->registerScript(
 			'myHideEffect',
 			'$(".alert-info").animate({opacity: 1.0}, 10000).fadeOut("slow");',
 			CClientScript::POS_READY
-		);
+		);*/
 		
 		// display the grid
 		$this->_controller->widget('bootstrap.widgets.TbGridView',array(

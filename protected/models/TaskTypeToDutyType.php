@@ -115,41 +115,20 @@ class TaskTypeToDutyType extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-//			't.id',
 			'dutyType.description AS searchDutyType',
 			'projectTypeToAuthItem.AuthItem_name AS searchProjectTypeToAuthItem',
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('dutyType.description',$this->searchDutyType);
 		$criteria->compare('projectTypeToAuthItem.AuthItem_name',$this->searchProjectTypeToAuthItem);
-
-		if(isset($this->task_type_id))
-		{
-			$criteria->compare('t.task_type_id',$this->task_type_id);
-		}
-		else
-		{
-			// Task type
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				projectType.description,
-				taskType.description
-				) AS searchTaskType";
-			$this->compositeCriteria($criteria, array(
-				'client.name',
-				'projectType.description',
-				'taskType.description'
-			), $this->searchTaskType);
-		}
+		$criteria->compare('t.task_type_id',$this->task_type_id);
 
 		// join
 		$criteria->with = array(
 			'dutyType',
 			'taskType',
 			'taskType.projectType',
-			'taskType.projectType.client',
 			'projectTypeToAuthItem'
 		);
 
@@ -158,7 +137,6 @@ class TaskTypeToDutyType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
         $columns[] = array(
 			'name'=>'searchDutyType',
 			'value'=>'CHtml::link($data->searchDutyType,
@@ -166,16 +144,6 @@ class TaskTypeToDutyType extends ActiveRecord
 			)',
 			'type'=>'raw',
 		);
- 		if(!isset($this->task_type_id))
-		{
-			$columns[] = array(
-				'name'=>'searchTaskType',
-				'value'=>'CHtml::link($data->searchTaskType,
-					Yii::app()->createUrl("TaskType/update", array("id"=>$data->task_type_id))
-				)',
-				'type'=>'raw',
-			);
-		}
         $columns[] = array(
 			'name'=>'searchProjectTypeToAuthItem',
 			'value'=>'CHtml::link($data->searchProjectTypeToAuthItem,
@@ -193,11 +161,7 @@ class TaskTypeToDutyType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-//			'taskType->client'=>'name',
-//			'taskType->projectType'=>'description',
-//			'taskType'=>'description',
 			'dutyType->description',
-//			'projectTypeToAuthItem'=>'AuthItem_name'
 		);
 	}
 
@@ -207,7 +171,7 @@ class TaskTypeToDutyType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchDutyType', 'searchTaskType', 'searchProjectTypeToAuthItem');
+		return array('searchDutyType', 'searchProjectTypeToAuthItem');
 	}
 
 	public function beforeValidate()

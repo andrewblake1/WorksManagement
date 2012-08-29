@@ -101,8 +101,8 @@ class Task extends ActiveRecord
 			'searchInCharge' => 'In charge, First/Last/Email',
 			'project_id' => 'Client/Project',
 			'searchProject' => 'Client/Project',
-			'task_type_id' => 'Project type/Task type',
-			'searchTaskType' => 'Project type/Task type',
+			'task_type_id' => 'Task type',
+			'searchTaskType' => 'Task type',
 			'planned' => 'Planned',
 			'scheduled' => 'Scheduled',
 			'earliest' => 'Earliest',
@@ -132,6 +132,9 @@ class Task extends ActiveRecord
 				inCharge.last_name,
 				inCharge.email
 				) AS searchInCharge",
+			"CONCAT_WS('$delimiter',
+				taskType.description
+				) AS searchTaskType",
 		);
 
 		// where
@@ -149,54 +152,19 @@ class Task extends ActiveRecord
 			),
 			$this->searchInCharge
 		);
-		if(isset($this->project_id))
-		{
-			$criteria->compare('t.project_id',$this->project_id);
-
-			ActiveRecord::$labelOverrides['searchTaskType'] = 'Task type';
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				taskType.description
-				) AS searchTaskType";
-			$this->compositeCriteria($criteria,
-				array(
-					'taskType.description',
-				),
-				$this->searchTaskType
-			);
-		}
-		else
-		{
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				project.description
-				) AS searchProject";
-			$this->compositeCriteria($criteria,
-				array(
-					'client.name',
-					'project.description',
-				),
-				$this->searchProject
-			);
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				projectType.description,
-				taskType.description
-				) AS searchTaskType";
-			$this->compositeCriteria($criteria,
-				array(
-					'projectType.description',
-					'taskType.description',
-				),
-				$this->searchTaskType
-			);
-		}
+		$this->compositeCriteria($criteria,
+			array(
+				'taskType.description',
+			),
+			$this->searchTaskType
+		);
+		$criteria->compare('t.project_id',$this->project_id);
 		
 		// join
 		$criteria->with = array(
 			'inCharge',
 			'project',
-			'project.projectType',
 			'taskType',
-			'project.projectType.client',
 			);
 
 		return $criteria;
@@ -213,16 +181,6 @@ class Task extends ActiveRecord
 			)',
 			'type'=>'raw',
 		);
-		if(!isset($this->project_id))
-		{
-			$columns[] = array(
-				'name'=>'searchProject',
-				'value'=>'CHtml::link($data->searchProject,
-					Yii::app()->createUrl("Project/update", array("id"=>$data->project_id))
-				)',
-				'type'=>'raw',
-			);
-		}
         $columns[] = array(
 			'name'=>'searchTaskType',
 			'value'=>'CHtml::link($data->searchTaskType,
@@ -246,28 +204,6 @@ class Task extends ActiveRecord
 	{
 		return array('searchInCharge', 'searchProject', 'searchTaskType');
 	}
-	
-	/**
-	 * @return array the list of columns to be concatenated for use in drop down lists
-	 */
-/*	public static function getDisplayAttr()
-	{
-		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
-		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_id'))
-		{
-			ActiveRecord::$labelOverrides['task_id'] = 'Task';
-		}
-		else
-		{
-			ActiveRecord::$labelOverrides['task_id'] = 'Client/Project/Task';
-			$displaAttr[]='project->projectType->client->name';
-			$displaAttr[]='project->description';
-		}
-
-		$displaAttr[]='description';
-
-		return $displaAttr;
-	}*/
 
 }
 

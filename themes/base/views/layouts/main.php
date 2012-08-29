@@ -6,6 +6,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<!-- Nb: Andrew Blake shifted this line from bottom to here as although meant to be faster to load scripts at bottom
+		nested set admin gui extension needs it up here for some reason -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<?php
 		// Suppress Yii's autoload of JQuery
 		// We're loading it at bottom of page (best practice)
@@ -27,7 +30,6 @@
 	
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap-and-responsive.min.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" />
-	
 	<script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
 </head>
 <body>
@@ -104,7 +106,6 @@
 	</div>
 
 </div><!-- container -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/libs/jquery-1.7.2.min.js"><\/script>')</script>
 <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/libs/bootstrap/bootstrap.min.js"></script>
 <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/script.js"></script>

@@ -87,30 +87,22 @@ class AssemblyToMaterial extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-		// client_id should always be set unless come directly from url so cover this to be safe anyway
-		if(!isset($this->assembly_id))
-		{
-			throw new CHttpException(400, 'No assembly identified, you must get here from the assemblys page');
-		}
-		
-//		$criteria->compare('t.id',$this->id);
-		$criteria->compare('material.description',$this->searchMaterial,true);
-		$criteria->compare('t.quantity',$this->quantity);
-		
-		$criteria->with = array('material');
-
 		$criteria->select=array(
-//			't.id',
 			'material.description AS searchMaterial',
 			't.quantity',
 		);
+
+		$criteria->compare('material.description',$this->searchMaterial,true);
+		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('t.assembly_id',$this->assembly_id);
+		
+		$criteria->with = array('material');
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
         $columns[] = array(
 			'name'=>'searchMaterial',
 			'value'=>'CHtml::link($data->searchMaterial,

@@ -83,7 +83,7 @@ class Duty extends ActiveRecord
 			'task_type_id' => 'Task type',
 			'task_type_to_duty_type_id' => 'Duty',
 			'searchTaskTypeToDutyType' => 'Duty',
-			'updated' => 'Updated',
+			'updated' => 'Complete',
 			'generic_id' => 'Generic',
 			'searchGeneric' => 'Generic',
 		));
@@ -99,7 +99,6 @@ class Duty extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-//			't.id',
 			"CONCAT_WS('$delimiter',
 				authAssignment.itemname,
 				user.first_name,
@@ -108,11 +107,9 @@ class Duty extends ActiveRecord
 				dutyType.description
 				) AS searchTaskTypeToDutyType",
 			't.updated',
-//			'generic.id AS searchGeneric',
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$this->compositeCriteria(
 			$criteria,
 			array(
@@ -123,42 +120,19 @@ class Duty extends ActiveRecord
 				'dutyType.description',
 			), $this->searchTaskTypeToDutyType);
 		$criteria->compare('t.updated',$this->updated,true);
-//		$criteria->compare('t.generic.id',$this->searchGeneric);
-
-		if(isset($this->task_id))
-		{
-			$criteria->compare('t.task_id',$this->task_id);
-		}
-		else
-		{
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				project.description,
-				task.description
-				) AS searchTask";
-			$this->compositeCriteria($criteria,
-				array(
-					'client.name',
-					'project.description',
-					'task.description'
-				),
-				$this->searchTask
-			);
-		}
+		$criteria->compare('t.task_id',$this->task_id);
 
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
 
 		// join
 		$criteria->with = array(
-			'task',
+/*			'task',
 			'task.project',
-			'task.project.projectToProjectTypeToAuthItems',
+			'task.project.projectToProjectTypeToAuthItems',*/
 			'task.project.projectToProjectTypeToAuthItems.authAssignment',
 			'task.project.projectToProjectTypeToAuthItems.authAssignment.user',
-			'task.project.projectType.client',
 			'taskTypeToDutyType.dutyType',
-//			'generic',
 		);
 
 		return $criteria;
@@ -166,17 +140,6 @@ class Duty extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
-		if(!isset($this->task_id))
-		{
-			$columns[] = array(
-				'name'=>'searchTask',
-				'value'=>'CHtml::link($data->searchTask,
-					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
-				)',
-				'type'=>'raw',
-			);
-		}
         $columns[] = array(
 			'name'=>'searchTaskTypeToDutyType',
 			'value'=>'CHtml::link($data->searchTaskTypeToDutyType,
@@ -185,15 +148,13 @@ class Duty extends ActiveRecord
 			'type'=>'raw',
 		);
 		$columns[] = 'updated';
-/*        $columns[] = array(
-			'name'=>'searchGeneric',
-			'value'=>'CHtml::link($data->searchGeneric,
-				Yii::app()->createUrl("Generic/update", array("id"=>$data->generic_id))
-			)',
-			'type'=>'raw',
-		);*/
 		
 		return $columns;
+	}
+
+	static function getDisplayAttr()
+	{
+		return array('taskTypeToDutyType->dutyType->description');
 	}
 
 	/**
@@ -215,6 +176,17 @@ class Duty extends ActiveRecord
 		
 		return parent::beforeValidate();
 	}
+
+	public function beforeSave()
+	{
+		if(!empty($this->updated))
+		{
+			$this->updated = new CDbExpression('NOW()');
+		}
+
+		return parent::beforeSave();
+	}
+
 }
 
 ?>

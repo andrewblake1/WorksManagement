@@ -86,65 +86,23 @@ class Reschedule extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-//			't.id',
-			"CONCAT_WS('$delimiter',
-				client.name,
-				project.description,
-				newTask.description
-				) AS searchNewTask"
-		);
+			'newTask.description AS searchNewTask',
+			);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
-		$this->compositeCriteria($criteria,
-			array(
-				'client.name',
-				'project.description',
-				'newTask.description',
-			),
-			$this->searchNewTask
-		);
-
-		if(isset($this->task_id))
-		{
-			$criteria->compare('t.task_id',$this->task_id);
-		}
-		else
-		{
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				project.description,
-				task.description
-				) AS searchTask";
-			$this->compositeCriteria($criteria,
-				array(
-					'client.name',
-					'project.description',
-					'task.description'
-				),
-				$this->searchTask
-			);
-		}
+		$criteria->compare('newTask.description',$this->searchNewTask,true);
+		$criteria->compare('t.task_id',$this->task_id);
 
 		// join
-		$criteria->with = array('task','newTask', 'task.project', 'task.project.projectType.client');
+		$criteria->with = array(
+			'newTask',
+		);
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
-		if(!isset($this->task_id))
-		{
-			$columns[] = array(
-				'name'=>'searchTask',
-				'value'=>'CHtml::link($data->searchTask,
-					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
-				)',
-				'type'=>'raw',
-			);
-		}
         $columns[] = array(
 			'name'=>'searchNewTask',
 			'value'=>'CHtml::link($data->searchNewTask,

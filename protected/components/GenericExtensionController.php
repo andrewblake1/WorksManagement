@@ -18,11 +18,13 @@ abstract class GenericExtensionController extends Controller
 	{
 		if($saved = $model->dbCallback('save'))
 		{
-			// put the model into the models array used for showing all errors
-			$models[] = $model;
-		
 			// attempt creation of generics
 			$saved &= $this->createGenerics($model, $models);
+		}
+		else
+		{
+			// put the model into the models array used for showing all errors
+			$models[] = $model;
 		}
 		
 		return $saved;
@@ -35,11 +37,13 @@ abstract class GenericExtensionController extends Controller
 	{
 		if($saved = $model->dbCallback('save'))
 		{
-			// put the model into the models array used for showing all errors
-			$models[] = $model;
-		
 			// attempt creation of generics
 			$saved &= $this->updateGenerics($model, $models);
+		}
+		else
+		{
+			// put the model into the models array used for showing all errors
+			$models[] = $model;
 		}
 		
 		return $saved;
@@ -63,17 +67,15 @@ abstract class GenericExtensionController extends Controller
 		foreach($model->{$this->relation_modelType}->{$this->relation_genericModelTypes} as $genericModelType)
 		{
 			// create a new generic item to hold value
-			$generic = new Generic();
-			$generic->setDefault($genericModelType->genericType);
-			// set default value
-			$saved &= $generic->dbCallback('save');
-			$models[] = $generic;
+			$saved &= Generic::createGeneric($genericModelType->genericType, $models, $generic);
 			// create new modelToGenericModelType
 			$modelToGenericModelType = new $this->class_ModelToGenericModelType();
 			$modelToGenericModelType->{$this->attribute_generic_model_type_id} = $genericModelType->id;
 			$modelToGenericModelType->{$this->attribute_model_id} = $model->id;
 			$modelToGenericModelType->generic_id = $generic->id;
+			// attempt save
 			$saved &= $modelToGenericModelType->dbCallback('save');
+			// record any errors
 			$models[] = $modelToGenericModelType;
 		}
 		

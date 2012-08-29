@@ -86,7 +86,7 @@ class TaskController extends GenericExtensionController
 		// loop thru all generic model types associated to this models model type
 		foreach($task->taskType->taskTypeToAssemblies as $taskTypeToAssembly)
 		{
-			// create a new resource
+			// create a new assemblys
 			$model = new TaskToAssembly();
 			// copy any useful attributes from
 			$model->attributes = $taskTypeToAssembly->attributes;
@@ -114,7 +114,7 @@ class TaskController extends GenericExtensionController
 		// loop thru all generic model types associated to this models model type
 		foreach($task->taskType->taskTypeToMaterials as $taskTypeToMaterial)
 		{
-			// create a new resource
+			// create a new materials
 			$model = new MaterialToTask();
 			// copy any useful attributes from
 			$model->attributes = $taskTypeToMaterial->attributes;
@@ -126,7 +126,6 @@ class TaskController extends GenericExtensionController
 		
 		return $saved;
 	}
-
 
 	/**
 	 * Creates the intial duty rows for a task
@@ -143,15 +142,24 @@ class TaskController extends GenericExtensionController
 		// loop thru all generic model types associated to this models model type
 		foreach($task->taskType->taskTypeToDutyTypes as $taskTypeToDutyType)
 		{
-			// create a new resource
+			// create a new duty
 			$model = new Duty();
 			// copy any useful attributes from
 			$model->attributes = $taskTypeToDutyType->attributes;
 			$model->staff_id = null;
 			$model->task_id = $task->id;
 			$model->task_type_to_duty_type_id = $taskTypeToDutyType->id;
+			// if we need to create a generic
+			if(!empty($taskTypeToDutyType->dutyType->generic_type_id))
+			{
+				// create a new generic item to hold value
+				$saved &= Generic::createGeneric($taskTypeToDutyType->dutyType->genericType, $models, $generic);
+				// associate the new generic to this duty
+				$model->generic_id = $generic->id;
+			}
+			// attempt save
 			$saved &= $model->dbCallback('save');
-			
+			// record any errors
 			$models[] = $model;
 		}
 		

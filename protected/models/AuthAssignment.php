@@ -110,63 +110,21 @@ class AuthAssignment extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-//			't.id',
 			't.itemname',
-			't.bizrule',
-			't.data',
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.itemname',$this->itemname,true);
-		$criteria->compare('t.bizrule',$this->bizrule,true);
-		$criteria->compare('t.data',$this->data,true);
-		if(isset($this->userid))
-		{
-			$criteria->compare('userid', $this->userid);
-		}
-		else
-		{
-			$this->compositeCriteria($criteria,
-				array(
-					'user.first_name',
-					'user.last_name',
-					'user.email'
-				),
-				$this->searchUser
-			);
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				user.first_name,
-				user.last_name,
-				user.email
-				) AS searchUser";
-		}
-
-		// join
-		$criteria->with = array('user');
+		$criteria->compare('userid', $this->userid);
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = 'itemname';
- 		if(!isset($this->userid))
-		{
-			$columns[] = array(
-				'name'=>'searchUser',
-				'value'=>'CHtml::link($data->searchUser,
-					Yii::app()->createUrl("Staff/update", array("id"=>$data->userid))
-				)',
-				'type'=>'raw',
-			);
-		}
-		$columns[] = 'bizrule';
-		$columns[] = 'data';
-		
+ 		
 		return $columns;
 	}
 
@@ -175,35 +133,11 @@ class AuthAssignment extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-/*		$controller = ucfirst(Yii::app()->controller->id);
-		
-		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
-		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('staff_id'))
-		{
-			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role';*/
-			$displaAttr[]='itemname';
-/*		}
-		else
-		{
-			ActiveRecord::$labelOverrides['AuthAssignment_id'] = 'Role/First/Last/Email';
-			$displaAttr[]='itemname';
-			$displaAttr[]='user->first_name';
-			$displaAttr[]='user->last_name';
-			$displaAttr[]='user->email';
-		}*/
+		$displaAttr[]='itemname';
 
 		return $displaAttr;
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchUser');
-	}
-	
 	/**
 	 * Returns foreign key attribute name within this model that references another model.
 	 * @param string $referencesModel the name name of the model that the foreign key references.

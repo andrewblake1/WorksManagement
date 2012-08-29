@@ -26,7 +26,6 @@ class ViewTaskToGenericTaskType extends ViewGenericActiveRecord
 		);
 	}
 
-
 	public function getSearchCriteria()
 	{
 		if(!empty($this->task_id))

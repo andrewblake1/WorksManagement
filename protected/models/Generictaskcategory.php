@@ -83,7 +83,6 @@ class Generictaskcategory extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.root',$this->root);
 		$criteria->compare('t.lft',$this->lft);
 		$criteria->compare('t.rgt',$this->rgt);
@@ -91,7 +90,6 @@ class Generictaskcategory extends ActiveRecord
 		$criteria->compare('t.description',$this->description,true);
 
 		$criteria->select=array(
-//			't.id',
 			't.root',
 			't.lft',
 			't.rgt',
@@ -104,7 +102,6 @@ class Generictaskcategory extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = 'root';
 		$columns[] = 'lft';
 		$columns[] = 'rgt';

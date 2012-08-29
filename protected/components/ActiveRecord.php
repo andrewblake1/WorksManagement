@@ -146,18 +146,16 @@ abstract class ActiveRecord extends CActiveRecord
 		// choose the best column
 		if(in_array('description', static::model()->tableSchema->getColumnNames()))
 		{
-			$displayColumn='description';
+			return array('description');
 		}
 		elseif(in_array('name', static::model()->tableSchema->getColumnNames()))
 		{
-			$displayColumn='name';
+			return array('name');
 		}
 		else
 		{
-			throw new Exception;
+			throw new Exception;	// just a debugging exception to ensure correct attrib names etc - shouldn't ever happen live
 		}
-
-		return array($displayColumn);
 	}
 
 	/**
@@ -185,6 +183,29 @@ abstract class ActiveRecord extends CActiveRecord
 		return array(
 			'AttributesBackupBehavior' => 'ext.AttributesBackupBehavior',
 		);
+	}
+	
+	// ensure that where possible a pk has been passed from parent
+	public function assertFromParent()
+	{
+		$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], get_called_class());
+		if(($trailSize = sizeof($trail)) > 1)
+		{
+			// get parent name in trail
+			$parentModel = $trail[$trailSize - 2];
+			$parentForeignKey = static::getParentForeignKey($parentModel);
+			// if we don't have this fk attribute set
+			if(empty($this->$parentForeignKey))
+			{
+				$niceNameLower =  strtolower($parentModel::getNiceName());
+				throw new CHttpException(400, "No $niceNameLower identified, you must get here from the {$niceNameLower}s page");
+			}
+			// otherwise return the fk
+			else
+			{
+				return $parentForeignKey;
+			}
+		}
 	}
 	
 	/**
@@ -317,12 +338,18 @@ abstract class ActiveRecord extends CActiveRecord
 	{
 		$arrayForeignKeys=$this->tableSchema->foreignKeys;
 		
-		foreach ($this->attributes as $name=>$value)
+		foreach($this->attributes as $name=>&$value)
 		{
-			if (array_key_exists($name, $arrayForeignKeys) && $this->metadata->columns[$name]->allowNull && trim($value)=='')
+			// convert empty strings to nulls if null allowed
+			if(array_key_exists($name, $arrayForeignKeys) && $this->metadata->columns[$name]->allowNull && trim($value)=='')
 			{
 				$this->$name=NULL;
-			}      
+			}
+			// convert dates to mysql format
+			if($this->metadata->columns[$name]->dbType == 'date')
+			{
+				$this->$name = date('Y-m-d', strtotime($value));
+			}
 		}
 
 		return parent::beforeSave();
@@ -350,7 +377,7 @@ abstract class ActiveRecord extends CActiveRecord
 	public function dbCallback($callback, $callbackArgs=array(), $messages=array())
 	{
 		$coreMessages = array('1062' => 'Duplicates are not allowed');
-		
+	
 		$messages = $messages + $coreMessages;
 
 		try

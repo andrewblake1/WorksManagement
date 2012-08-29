@@ -218,7 +218,6 @@ class GenericType extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.mandatory',$this->mandatory);
 		$criteria->compare('t.allow_new',$this->allow_new);
@@ -228,7 +227,6 @@ class GenericType extends ActiveRecord
 		$criteria->compare('t.validation_error',$this->validation_error,true);
 
 		$criteria->select=array(
-//			't.id',
 			't.description',
 			't.mandatory',
 			't.allow_new',
@@ -243,7 +241,6 @@ class GenericType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = 'description';
 		$columns[] = 'mandatory';
 		$columns[] = 'allow_new';

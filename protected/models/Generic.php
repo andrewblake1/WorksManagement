@@ -13,10 +13,10 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Duty[] $duties
+ * @property Duty $duty
  * @property Staff $staff
  * @property ProjectToGenericProjectType $projectToGenericProjectType
- * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
+ * @property TaskToGenericTaskType $taskToGenericTaskType
  */
 class Generic extends ActiveRecord
 {
@@ -141,8 +141,9 @@ class Generic extends ActiveRecord
 	 */
 	public function validationLookup($attribute, $params)
 	{
+		eval('$genericType = $this->'.$params['relationToGenericType'].';');
 		$this->checkLookup(
-			$this->$params['relation_modelToGenericModelType']->$params['relation_genericModelType']->genericType,
+			$genericType,
 			$this->$attribute,
 			$attribute
 		);
@@ -208,10 +209,10 @@ class Generic extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'duties' => array(self::HAS_MANY, 'Duty', 'generic_id'),
+			'duty' => array(self::HAS_ONE, 'Duty', 'generic_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'projectToGenericProjectType' => array(self::HAS_ONE, 'ProjectToGenericProjectType', 'generic_id'),
-			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'generic_id'),
+			'taskToGenericTaskType' => array(self::HAS_ONE, 'TaskToGenericTaskType', 'generic_id'),
 		);
 	}
 
@@ -237,7 +238,6 @@ class Generic extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.type_int',$this->type_int);
 		$criteria->compare('t.type_float',$this->type_float);
 		$criteria->compare('t.type_time',$this->type_time);
@@ -245,7 +245,6 @@ class Generic extends ActiveRecord
 		$criteria->compare('t.type_text',$this->type_text,true);
 
 		$criteria->select=array(
-//			't.id',
 			't.type_int',
 			't.type_float',
 			't.type_time',
@@ -258,7 +257,6 @@ class Generic extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = 'type_int';
 		$columns[] = 'type_float';
 		$columns[] = 'type_time';
@@ -298,6 +296,21 @@ class Generic extends ActiveRecord
 		}
 	}
 
+	// create a new generic item
+	static function createGeneric(&$genericType, &$models, &$generic)
+	{
+		// create the object
+		$generic = new self;
+		// set default value
+		$generic->setDefault($genericType);
+		// attempt save
+		$saved = $generic->dbCallback('save');
+		// record any errors
+		$models[] = $generic;
+		
+		return $saved;
+
+	}
 }
 
 ?>

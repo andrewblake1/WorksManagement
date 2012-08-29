@@ -96,48 +96,27 @@ class DutyType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
-//			't.id',
 			't.description',
 			't.lead_in_days',
 			'genericType.description AS searchGenericType',
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
 		$criteria->compare('genericType.description',$this->searchGenericType,true);
-		if(isset($this->duty_type_id))
-		{
-			$criteria->compare('t.duty_type_id', $this->duty_type_id);
-		}
-		else
-		{
-			$criteria->compare('dutycategory.description',$this->searchDutycategory,true);
-			$criteria->select[]='dutycategory.description AS searchDutycategory';
-		}
+		$criteria->compare('t.duty_type_id', $this->duty_type_id);
 		
 		// join
-		$criteria->with = array('dutycategory','genericType');
+		$criteria->with = array('genericType');
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = 'description';
 		$columns[] = 'lead_in_days';
-		if(!isset($this->dutycategory_id))
-		{
-			$columns[] = array(
-				'name'=>'searchDutycategory',
-				'value'=>'CHtml::link($data->searchDutycategory,
-					Yii::app()->createUrl("Dutycategory/update", array("id"=>$data->dutycategory_id))
-				)',
-				'type'=>'raw',
-			);
-		}
         $columns[] = array(
 			'name'=>'searchGenericType',
 			'value'=>'CHtml::link($data->searchGenericType,
@@ -155,7 +134,7 @@ class DutyType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchDutycategory', 'searchGenericType');
+		return array('searchGenericType');
 	}
 }
 

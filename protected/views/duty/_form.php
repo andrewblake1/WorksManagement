@@ -2,20 +2,27 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	if(isset($model->task_id))
+//	TaskTypeToDutyTypeController::listWidgetRow($model, $form, 'task_type_to_duty_type_id', array(), array('scopeTask'=>array($model->task_id)));
+
+	// if previously saved
+	if($model->updated)
 	{
-		$form->hiddenField('task_id');
+		$form->textFieldRow('updated', array('readonly'=>'readonly'));
 	}
 	else
 	{
-		throw new CHttpException(400, 'No task identified, you must get here from the tasks page');
+		$form->checkBoxRow('updated');
 	}
 
-	TaskTypeToDutyTypeController::listWidgetRow($model, $form, 'task_type_to_duty_type_id', array(), array('scopeTask'=>array($model->task_id)));
-
-	$form->textFieldRow('updated');
-
-	$form->textFieldRow('generic_id');
+	if(!empty($this->model->generic_id))
+	{
+		$this->controller->widget('GenericWidget', array(
+			'form'=>$this->form,
+			'generic'=>$this->model->generic,
+			'genericType'=>$this->model->taskTypeToDutyType->dutyType->genericType,
+			'relationToGenericType'=>"duty->taskTypeToDutyType->dutyType->genericType",
+		));
+	}
 
 $this->endWidget();
 

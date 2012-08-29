@@ -93,31 +93,12 @@ class ProjectTypeToAuthItem extends ActiveRecord
 
 		// select
 		$criteria->select=array(
-//			't.id',
 			'AuthItem_name',
 		);
 
 		// where
 		$criteria->compare('AuthItem_name',$this->AuthItem_name,true);
-
-		if(isset($this->project_type_id))
-		{
-			$criteria->compare('t.project_type_id',$this->project_type_id);
-		}
-		else
-		{
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				projectType.description
-				) AS searchProjectType";
-			$this->compositeCriteria($criteria,
-				array(
-					'client.name',
-					'projectType.description',
-				),
-				$this->searchProjectType
-			);
-		}
+		$criteria->compare('t.project_type_id',$this->project_type_id);
 		
 		// join
 		$criteria->with = array('projectType', 'projectType.client');
@@ -127,18 +108,7 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = 'AuthItem_name';
-  		if(!isset($this->project_type_id))
-		{
-			$columns[] = array(
-				'name'=>'searchProjectType',
-				'value'=>'CHtml::link($data->searchProjectType,
-					Yii::app()->createUrl("ProjectType/update", array("id"=>$data->project_type_id))
-				)',
-				'type'=>'raw',
-			);
-		}
 		
 		return $columns;
 	}
@@ -148,20 +118,6 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-/*		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
-		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_type_id')
-			|| Yii::app()->getController()->primaryKeyInBreadCrumbTrail('project_id'))
-			
-		{
-			ActiveRecord::$labelOverrides['project_type_to_AuthItem_id'] = 'Role';
-		}
-		else
-		{
-			ActiveRecord::$labelOverrides['project_type_to_AuthItem_id'] = 'Client/Project type/Role';
-			$displaAttr[]='projectType->client->name';
-			$displaAttr[]='projectType->description';
-		}*/
-
 		$displaAttr[]='AuthItem_name';
 
 		return $displaAttr;

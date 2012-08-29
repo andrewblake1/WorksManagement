@@ -12,16 +12,7 @@ class TaskToGenericTaskTypeController extends Controller
 	 */
 	protected function createSave($model, &$models = array())
 	{
-		// initialise the saved variable to show no errors in case the are no
-		// model generics - otherwise will return null indicating a save error
-		$saved = true;
-		// create a new generic item to hold value
-		$generic = new Generic();
-		// set default value
-		$generic->setDefault($model->genericTaskType->genericType);
-		$saved &= $generic->dbCallback('save');
-		$models[] = $generic;
-		// now add the foreign key
+		$saved = Generic::createGeneric($model->genericTaskType->genericType, $models, $generic);
 		$model->generic_id = $generic->id;
 
 		return $saved & parent::createSave($model, $models);
@@ -40,9 +31,7 @@ class TaskToGenericTaskTypeController extends Controller
 		// set Generic custom validators as per the associated generic type
 		$generic->setCustomValidators($model->genericTaskType->genericType,
 			array(
-				'relation_modelToGenericModelType'=>'taskToGenericTaskType',
-				'relation_genericModelType'=>'genericTaskType',
-
+				'relationToGenericType'=>'taskToGenericTaskType->genericTaskType->genericType',
 			)
 		);
 

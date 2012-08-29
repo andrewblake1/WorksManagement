@@ -126,6 +126,60 @@ return array(
 			'adminEmail'=>'Hawea.George@westcoastenergy.com.au',
 			// delimiter - used when searching and autoseleting as break between fields
 			'delimiter'=>array('search'=>'/', 'display'=>', '),
+			/**
+			* @var array provides the hierachy for a breadcrumb trail
+			*/
+			'trail' => array(
+				'Client'=>array(
+					'Project'=>array( 
+						'Task'=>array(
+							'Duty',
+							'Reschedule',
+// TODO: naming orientation is inconsistent here
+							'MaterialToTask',
+							'TaskToAssembly',
+							'TaskToGenericTaskType',
+							'TaskToPurchaseOrder',
+							'TaskToResourceType',
+						),
+						'ProjectToProjectTypeToAuthItem',
+						'ProjectToGenericProjectType'
+					),
+					'ProjectType'=>array(
+						'ProjectTypeToAuthItem',
+						'GenericProjectType',
+						'TaskType'=>array(
+							'GenericTaskType',
+							'TaskTypeToAssembly',
+							'TaskTypeToDutyType',
+							'TaskTypeToMaterial',
+							'TaskTypeToResourceType',
+						),
+					),
+				),
+				'DefaultValue',
+				'Dutycategory'=>array(
+					'DutyType',
+				),
+				'Resourcecategory'=>array(
+					'ResourceType',
+				),
+				'GenericType',
+				'Genericprojectcategory',
+				'Generictaskcategory',
+				'PurchaseOrder',
+				'Assembly'=>array(
+					'AssemblyToMaterial',
+				),
+				'Material',
+				'Staff'=>array(
+					'AuthAssignment',
+				),
+				'Supplier',
+				'AuthItem'=>array(
+					'AuthItemChild',
+				),
+			),
 		),
 
 	),

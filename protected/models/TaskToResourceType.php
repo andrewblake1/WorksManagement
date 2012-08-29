@@ -97,7 +97,6 @@ class TaskToResourceType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
-//			't.id',
 			'resourceType.description AS searchResourceType',
 			't.quantity',
 			't.hours',
@@ -105,58 +104,22 @@ class TaskToResourceType extends ActiveRecord
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('resourceType.description',$this->searchResourceType,true);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.hours',$this->hours);
 		$criteria->compare('start',$this->start);
-
-		if(isset($this->task_id))
-		{
-			$criteria->compare('t.task_id',$this->task_id);
-		}
-		else
-		{
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name
-				project.description,
-				task.description
-				) AS searchTask";
-			$this->compositeCriteria($criteria,
-				array(
-					'client.name',
-					'project.description',
-					'task.description'
-				),
-				$this->searchTask
-			);
-		}
+		$criteria->compare('t.task_id',$this->task_id);
+		
 		//  join
 		$criteria->with = array(
-			'task',
-			'task.project',
-			'task.taskType.projectType.client',
 			'resourceType',
 			);
-
-		$delimiter = Yii::app()->params['delimiter']['search'];
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
-		if(!isset($this->task_id))
-		{
-			$columns[] = array(
-				'name'=>'searchTask',
-				'value'=>'CHtml::link($data->searchTask,
-					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
-				)',
-				'type'=>'raw',
-			);
-		}
         $columns[] = array(
 			'name'=>'searchResourceType',
 			'value'=>'CHtml::link($data->searchResourceType,

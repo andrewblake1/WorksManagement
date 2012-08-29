@@ -90,7 +90,6 @@ class TaskToPurchaseOrder extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-//			't.id',
 			"CONCAT_WS('$delimiter',
 				supplier.name,
 				purchaseOrder.number
@@ -98,43 +97,19 @@ class TaskToPurchaseOrder extends ActiveRecord
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
-			$this->compositeCriteria($criteria,
-				array(
-				'supplier.name',
-				'purchaseOrder.number'
-				),
-				$this->searchPurchaseOrder
-			);
-
-		if(isset($this->task_id))
-		{
-			$criteria->compare('t.task_id',$this->task_id);
-		}
-		else
-		{
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name
-				project.description,
-				task.description
-				) AS searchTask";
-			$this->compositeCriteria($criteria,
-				array(
-					'client.name',
-					'project.description',
-					'task.description'
-				),
-				$this->searchTask
-			);
-		}
+		$this->compositeCriteria($criteria,
+			array(
+			'supplier.name',
+			'purchaseOrder.number'
+			),
+			$this->searchPurchaseOrder
+		);
+		$criteria->compare('t.task_id',$this->task_id);
 		
 		// join
 		$criteria->with = array(
 			'purchaseOrder',
 			'purchaseOrder.supplier',
-			'task',
-			'task.project',
-			'task.taskType.projectType.client',
 		);
 
 		return $criteria;
@@ -142,7 +117,6 @@ class TaskToPurchaseOrder extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
         $columns[] = array(
 			'name'=>'searchPurchaseOrder',
 			'value'=>'CHtml::link($data->searchPurchaseOrder,
@@ -150,16 +124,6 @@ class TaskToPurchaseOrder extends ActiveRecord
 			)',
 			'type'=>'raw',
 		);
-		if(!isset($this->task_id))
-		{
-			$columns[] = array(
-				'name'=>'searchTask',
-				'value'=>'CHtml::link($data->searchTask,
-					Yii::app()->createUrl("Task/update", array("id"=>$data->task_id))
-				)',
-				'type'=>'raw',
-			);
-		}
 		
 		return $columns;
 	}

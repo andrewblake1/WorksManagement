@@ -99,7 +99,6 @@ class GenericProjectType extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-//			't.id',
 			"CONCAT_WS('$delimiter',
 				client.name,
 				projectType.description
@@ -109,37 +108,17 @@ class GenericProjectType extends ActiveRecord
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$this->compositeCriteria($criteria, array(
 			'client.name',
 			'projectType.description'
 		), $this->searchProjectType);
 		$criteria->compare('genericprojectcategory.description',$this->searchGenericprojectcategory,true);
 		$criteria->compare('genericType.description',$this->searchGenericType,true);
-		
-		if(isset($this->project_type_id))
-		{
-			$criteria->compare('t.project_type_id',$this->project_type_id);
-		}
-		else
-		{
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				projectType.description
-				) AS searchProjectType";
-			$this->compositeCriteria($criteria,
-				array(
-					'client.name',
-					'projectType.description',
-				),
-				$this->searchProjectType
-			);
-		}
+		$criteria->compare('t.project_type_id',$this->project_type_id);
 		
 		//join 
 		$criteria->with = array(
 			'projectType',
-			'projectType.client',
 			'genericprojectcategory',
 			'genericType',
 			);
@@ -149,17 +128,6 @@ class GenericProjectType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
-  		if(!isset($this->project_type_id))
-		{
-			$columns[] = array(
-				'name'=>'searchProjectType',
-				'value'=>'CHtml::link($data->searchProjectType,
-					Yii::app()->createUrl("ProjectType/update", array("id"=>$data->project_type_id))
-				)',
-				'type'=>'raw',
-			);
-		}
         $columns[] = array(
 			'name'=>'searchGenericprojectcategory',
 			'value'=>'CHtml::link($data->searchGenericprojectcategory,
@@ -183,10 +151,7 @@ class GenericProjectType extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-//		ActiveRecord::$labelOverrides['generic_project_type_id'] = 'Custom type';
 		return array(
-//			'projectType->client->name',
-//			'projectType->description',
 			'genericType->description',
 		);
 	}
@@ -197,7 +162,7 @@ class GenericProjectType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchProjectType', 'searchGenericprojectcategory', 'searchGenericType');
+		return array('searchGenericprojectcategory', 'searchGenericType');
 	}
 
 }

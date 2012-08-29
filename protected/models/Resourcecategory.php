@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This is the model class for table "resourcecategory".
+ * This is the Nested Set  model class for table "resourcecategory".
  *
  * The followings are the available columns in table 'resourcecategory':
  * @property integer $id
@@ -9,8 +9,8 @@
  * @property integer $lft
  * @property integer $rgt
  * @property integer $level
+ * @property string $name
  * @property integer $dutycategory_id
- * @property string $description
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -21,17 +21,30 @@
  */
 class Resourcecategory extends ActiveRecord
 {
-	/**
-	 * @var string nice model name for use in output
+
+         /**
+	 * Id of the div in which the tree will berendered.
 	 */
-	static $niceName = 'Resource category';
-	
+    const ADMIN_TREE_CONTAINER_ID='resourcecategory_admin_tree';
+
+
 	/**
-	 * @var string search variables - foreign key lookups sometimes composite.
-	 * these values are entered by user in admin view to search
+	 * Returns the static model of the specified AR class.
+	 * @return Resourcecategory the static model class
 	 */
-	public $searchDutycategory;
-	
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+
+        /**
+	 * @return string the class name
+	 */
+          public static function className()
+	{
+		return __CLASS__;
+	}
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -45,15 +58,14 @@ class Resourcecategory extends ActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
+		// NOTE1: you should only define rules for those attributes that
 		// will receive user inputs.
+                // NOTE2: Remove ALL rules associated with the nested Behavior:
+                //rgt,lft,root,level,id.
 		return array(
-			array('lft, rgt, level, description, staff_id', 'required'),
-			array('root, lft, rgt, level, dutycategory_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>64),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, root, lft, rgt, level, searchDutycategory, description, deleted, searchStaff', 'safe', 'on'=>'search'),
+			array('name, staff_id', 'required'),
+			array('dutycategory_id', 'numerical', 'integerOnly'=>true),
+			array('name', 'length', 'max'=>64),
 		);
 	}
 
@@ -76,77 +88,128 @@ class Resourcecategory extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return parent::attributeLabels(array(
-			'id' => 'Resource category',
+		return array(
+			'id' => 'ID',
 			'root' => 'Root',
 			'lft' => 'Lft',
 			'rgt' => 'Rgt',
 			'level' => 'Level',
-			'dutycategory_id' => 'Duty category',
-			'searchDutycategory' => 'Duty category',
-		));
+			'name' => 'Name',
+			'dutycategory_id' => 'Dutycategory',
+			'deleted' => 'Deleted',
+			'staff_id' => 'Staff',
+		);
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
-	public function getSearchCriteria()
+	public function search()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
 
-//		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.root',$this->root);
-		$criteria->compare('t.lft',$this->lft);
-		$criteria->compare('t.rgt',$this->rgt);
-		$criteria->compare('t.level',$this->level);
-		$criteria->compare('dutycategory.description',$this->searchDutycategory);
-		$criteria->compare('t.description',$this->description,true);
-		
-		$criteria->with = array('dutycategory');
+		$criteria->compare('id',$this->id);
+		$criteria->compare('root',$this->root);
+		$criteria->compare('lft',$this->lft);
+		$criteria->compare('rgt',$this->rgt);
+		$criteria->compare('level',$this->level);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('dutycategory_id',$this->dutycategory_id);
+		$criteria->compare('deleted',$this->deleted);
+		$criteria->compare('staff_id',$this->staff_id);
 
-		$criteria->select=array(
-//			't.id',
-			't.root',
-			't.lft',
-			't.rgt',
-			't.level',
-			'dutycategory.description AS searchDutycategory',
-			't.description',
-		);
-
-		return $criteria;
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+		));
 	}
 
-	public function getAdminColumns()
-	{
-//		$columns[] = 'id';
-		$columns[] = 'root';
-		$columns[] = 'lft';
-		$columns[] = 'rgt';
-		$columns[] = 'level';
-        $columns[] = array(
-			'name'=>'searchDutycategory',
-			'value'=>'CHtml::link($data->searchDutycategory,
-				Yii::app()->createUrl("Dutycategory/update", array("id"=>$data->dutycategory_id))
-			)',
-			'type'=>'raw',
-		);
-		$columns[] = 'description';
-		
-		return $columns;
-	}
-
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchDutycategory');
-	}
+        public function behaviors()
+{
+    return array(
+        'NestedSetBehavior'=>array(
+            'class'=>'ext.nestedBehavior.NestedSetBehavior',
+            'leftAttribute'=>'lft',
+            'rightAttribute'=>'rgt',
+            'levelAttribute'=>'level',
+            'hasManyRoots'=>true
+            )
+    );
 }
 
-?>
+  public static  function printULTree(){
+     $categories=Resourcecategory::model()->findAll(array('order'=>'root,lft'));
+     $level=0;
+
+foreach($categories as $n=>$category)
+{
+
+    if($category->level==$level)
+        echo CHtml::closeTag('li')."\n";
+    else if($category->level>$level)
+        echo CHtml::openTag('ul')."\n";
+    else
+    {
+        echo CHtml::closeTag('li')."\n";
+
+        for($i=$level-$category->level;$i;$i--)
+        {
+            echo CHtml::closeTag('ul')."\n";
+            echo CHtml::closeTag('li')."\n";
+        }
+    }
+
+    echo CHtml::openTag('li',array('id'=>'node_'.$category->id,'rel'=>$category->name));
+      echo CHtml::openTag('a',array('href'=>'#'));
+    echo CHtml::encode($category->name);
+      echo CHtml::closeTag('a');
+
+    $level=$category->level;
+}
+
+for($i=$level;$i;$i--)
+{
+    echo CHtml::closeTag('li')."\n";
+    echo CHtml::closeTag('ul')."\n";
+}
+
+}
+
+public static  function printULTree_noAnchors(){
+    $categories=Resourcecategory::model()->findAll(array('order'=>'lft'));
+    $level=0;
+
+foreach($categories as $n=>$category)
+{
+    if($category->level == $level)
+        echo CHtml::closeTag('li')."\n";
+    else if ($category->level > $level)
+        echo CHtml::openTag('ul')."\n";
+    else         //if $category->level<$level
+    {
+        echo CHtml::closeTag('li')."\n";
+
+        for ($i = $level - $category->level; $i; $i--) {
+                    echo CHtml::closeTag('ul') . "\n";
+                    echo CHtml::closeTag('li') . "\n";
+                }
+    }
+
+    echo CHtml::openTag('li');
+    echo CHtml::encode($category->name);
+    $level=$category->level;
+}
+
+for ($i = $level; $i; $i--) {
+            echo CHtml::closeTag('li') . "\n";
+            echo CHtml::closeTag('ul') . "\n";
+        }
+
+}
+
+
+
+}

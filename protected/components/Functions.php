@@ -50,5 +50,66 @@ class Functions extends CApplicationComponent
 		return $string; 
 	}
 
+	public function multidimensional_arraySearch(&$array, &$search, $level = 0)
+	{
+		static $array_keys = array();
+		
+		// if starting this recursive function
+		if(!$level)
+		{
+			// reset the static variable from the last time this was called
+			// could alternatly store the search value and only scan once if the
+			// same
+			$array_keys = array();
+		}
+
+		// loop thru this level
+		foreach($array as $key => &$value)
+		{
+			// if $key is not an array
+			if(!is_array($value))
+			{
+				// do we have a match
+				if($search == strval($value))
+				{
+					$array_keys[$level] = $value;
+					break;
+				}
+			}
+			// otherwise key is not int therefore must be array
+			else
+			{
+				// do we have a match
+				if($search == strval($key))
+				{
+					$array_keys[$level] = $key;
+					break;
+				}
+				// otherwise recurse if array
+				elseif(is_array($value))
+				{
+					$this->multidimensional_arraySearch($value, $search, $level + 1);
+				}
+			}
+			// if we have found our answer but havn't yet stored this level
+			if(count($array_keys) && !isset($array_keys[$level]))
+			{
+				// store this level
+				$array_keys[$level] = $key;
+				break;
+			}
+		}
+		
+		// if we are exiting and not recursing
+		if(!$level)
+		{
+			// sort by the arrays ascending so that we know we have the write order in foreach loops
+			ksort($array_keys);
+		}
+		
+		// return the array keys array
+		return $array_keys;
+	} 
+
 }
 ?>

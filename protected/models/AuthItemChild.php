@@ -81,13 +81,10 @@ class AuthItemChild extends ActiveRecord
 
 		// select
 		$criteria->select=array(
-//			't.id',
-//			't.parent',
 			't.child',
 		);	
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.parent',$this->parent);
 		$criteria->compare('t.child',$this->child, true);
 
@@ -96,8 +93,6 @@ class AuthItemChild extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
-//		$columns[] = 'parent';
  		$columns[] = 'child';
 		
 		return $columns;

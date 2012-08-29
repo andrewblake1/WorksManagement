@@ -78,8 +78,8 @@ class ProjectToGenericProjectType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Project to generic project type',
-			'generic_project_type_id' => 'Project type/Custom type)',
-			'searchGenericProjectType' => 'Project type/Custom type)',
+			'generic_project_type_id' => 'Custom type',
+			'searchGenericProjectType' => 'Custom type',
 			'project_id' => 'Client/Project',
 			'searchProject' => 'Client/Project',
 			'generic_id' => 'Generic',
@@ -95,51 +95,19 @@ class ProjectToGenericProjectType extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-//			't.id',
 			'generic.id AS searchGeneric',
+			'genericType.description AS searchGenericProjectType',
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('generic.id',$this->searchGeneric);
-
-		if(isset($this->project_id))
-		{
-			$criteria->compare('t.project_id',$this->project_id);
-			ActiveRecord::$labelOverrides['searchGenericProjectType'] = 'Custom type';
-			$criteria->compare('genericType.description',$this->searchGenericProjectType);
-			$criteria->select[]="genericType.description AS searchGenericProjectType";
-		}
-		else
-		{
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				project.description
-				) AS searchProject";
-			$this->compositeCriteria($criteria,
-				array(
-					'client.name',
-					'project.description',
-				), $this->searchProject
-			);
-
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				projectType.description,
-				genericType.description
-				) AS searchGenericProjectType";
-			$this->compositeCriteria($criteria, array(
-				'projectType.description',
-				'genericType.description',
-				), $this->searchGenericProjectType);
-		}
+		$criteria->compare('genericType.description',$this->searchGenericProjectType);
+		$criteria->compare('t.project_id',$this->project_id);
 
 		// join
 		$criteria->with = array(
-			'genericProjectType.projectType',
 			'genericProjectType.genericType',
-			'genericProjectType.projectType.client',
 			'project',
 			'generic',
 		);
@@ -149,7 +117,6 @@ class ProjectToGenericProjectType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
         $columns[] = array(
 			'name'=>'searchGenericProjectType',
 			'value'=>'CHtml::link($data->searchGenericProjectType,
@@ -157,16 +124,6 @@ class ProjectToGenericProjectType extends ActiveRecord
 			)',
 			'type'=>'raw',
 		);
- 		if(!isset($this->project_id))
-		{
-			$columns[] = array(
-					'name'=>'searchProject',
-					'value'=>'CHtml::link($data->searchProject,
-						Yii::app()->createUrl("Project/update", array("id"=>$data->project_id))
-					)',
-					'type'=>'raw',
-				);
-		}
         $columns[] = array(
 			'name'=>'searchGeneric',
 			'value'=>'CHtml::link($data->searchGeneric,
@@ -189,7 +146,7 @@ class ProjectToGenericProjectType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchGenericProjectType', 'searchProject', 'searchGeneric');
+		return array('searchGenericProjectType', 'searchGeneric');
 	}
 }
 

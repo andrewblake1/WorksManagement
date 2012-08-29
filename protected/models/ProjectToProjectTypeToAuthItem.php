@@ -101,7 +101,6 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-//			't.id',
 			"CONCAT_WS('$delimiter',
 				user.first_name,
 				user.last_name,
@@ -111,7 +110,6 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 		);
 		
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('AuthAssignment_id',$this->AuthAssignment_id);
 		$this->compositeCriteria($criteria,
 			array(
@@ -122,36 +120,11 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 			$this->searchAuthAssignment
 		);
 		$criteria->compare('itemname',$this->itemname,true);
-
-		if(isset($this->project_id))
-		{
-			$criteria->compare('t.project_id',$this->project_id);
-		}
-		else
-		{
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				project.description
-				) AS searchProject";
-			$this->compositeCriteria($criteria,
-				array(
-					'project.description',
-				),
-				$this->searchProject
-			);
-			
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				projectType.description
-				) AS searchProjectTypeToAuthItem";
-			$this->compositeCriteria($criteria, array(
-				'projectType.description',
-				), $this->searchProjectTypeToAuthItem);
-		}
+		$criteria->compare('t.project_id',$this->project_id);
 		
 		// join
 		$criteria->with = array(
 			'authAssignment.user',
-			'projectTypeToAuthItem',
-			'projectTypeToAuthItem.projectType',
 		);
 
 		return $criteria;
@@ -159,26 +132,8 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = 'itemname';
- 		if(!isset($this->project_id))
-		{
-			$columns[] = array(
-					'name'=>'searchProject',
-					'value'=>'CHtml::link($data->searchProject,
-						Yii::app()->createUrl("Project/update", array("id"=>$data->project_id))
-					)',
-					'type'=>'raw',
-				);
-			$columns[] = array(
-				'name'=>'searchProjectTypeToAuthItem',
-				'value'=>'CHtml::link($data->searchProjectTypeToAuthItem,
-					Yii::app()->createUrl("ProjectTypeToAuthItem/update", array("id"=>$data->project_type_to_AuthItem_id))
-				)',
-				'type'=>'raw',
-			);
-		}
-        $columns[] = array(
+		$columns[] = array(
 			'name'=>'searchAuthAssignment',
 			'value'=>'CHtml::link($data->searchAuthAssignment,
 				Yii::app()->createUrl("AuthAssignment/update", array("id"=>$data->AuthAssignment_id))
@@ -195,7 +150,7 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchProject', 'searchProjectTypeToAuthItem', 'searchAuthAssignment');
+		return array('searchAuthAssignment');
 	}
 
 	public function beforeValidate()

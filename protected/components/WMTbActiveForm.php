@@ -10,7 +10,7 @@ Yii::import('bootstrap.widgets.TbActiveForm');
 class WMTbActiveForm extends TbActiveForm
 {
 	private $controller;
-	
+	private $_parent_fk;
 	public $enableAjaxValidation=true;
 	public $htmlOptions=array('class'=>'well');
 	public $model;
@@ -61,6 +61,9 @@ class WMTbActiveForm extends TbActiveForm
 	 */
     public function init()
     {
+		// ensure that where possible a pk has been passed from parent and get that fk if possible
+		$this->_parent_fk = $this->model->assertFromParent();
+
 		$this->controller = $this->getController();
 		$modelName = $this->controller->modelName;
 		$this->id="$modelName-form";
@@ -103,6 +106,13 @@ class WMTbActiveForm extends TbActiveForm
 			$this->hiddenField('staff_id');
 		}
 
+		// if there is a parent foreing key i.e. if there is a level above this in our navigation structure
+		if(!empty($this->_parent_fk))
+		{
+			// add hidden field so gets carried into the model on submit
+			$this->hiddenField($this->_parent_fk);
+		}
+		
 		// button attributes
 		$buttonOptions = array('class'=>'form-button btn btn-primary btn-large');
 		// update
@@ -154,9 +164,34 @@ class WMTbActiveForm extends TbActiveForm
 	
 	public function textFieldRow($attribute, $htmlOptions = array(), $model = NULL)
 	{
-		self::maxLength($model ? $model : $this->model, $attribute, $htmlOptions);
-		echo parent::textFieldRow($model ? $model : $this->model, $attribute,
-			array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+		$model = $model ? $model : $this->model;
+		
+		// determine if date field
+		$columns = $model->tableSchema->columns;
+		if($columns[$attribute]->dbType == 'date')
+		{
+			 $this->datepickerRow($attribute, $htmlOptions ,$model);
+		}
+		else
+		{
+			self::maxLength($model, $attribute, $htmlOptions);
+			echo parent::textFieldRow($model, $attribute,
+				array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+		}
+	}
+
+	public function datepickerRow($attribute, $htmlOptions = array(), $model = NULL)
+	{
+		// NB: the cool boostrap looking datepicker not working
+// TODO: get working with the correct js and css which might be conflicting with something - isn't working anyway
+		$cs = Yii::app()->clientScript;
+		$cs->registerCoreScript('jquery.ui');
+		$cs->registerCssFile($cs->getCoreScriptUrl(). '/jui/css/base/jquery-ui.css');
+
+		$htmlOptions['options']['dateFormat'] = 'd M, yy';
+
+		echo parent::datepickerRow($model ? $model : $this->model, $attribute,
+			array('class'=>'') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
 	public function passwordFieldRow($attribute, $htmlOptions = array(), $model = NULL)

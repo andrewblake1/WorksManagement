@@ -13,7 +13,7 @@ class Controller extends CController
 	/**
 	 * @var array context menu items. This property will be assigned to {@link CMenu::items}.
 	 */
-//	public $menu=array();
+	public $menu=array();
 	/**
 	 * @var array the breadcrumbs of the current page. The value of this property will
 	 * be assigned to {@link CBreadcrumbs::links}. Please refer to {@link CBreadcrumbs::links}
@@ -59,60 +59,6 @@ protected $_adminShowNew = false;
 		/ in a column heading means you can search the different parts by seperating with /.
 		<p>You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>,
 		<b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b> or <b>=</b>) at the beginning of each of your search values.";
-	/**
-	 * @var array provides the hierachy for a breadcrumb trail
-	 */
-	private $trail = array(
-		'Client'=>array(
-			'Project'=>array( 
-				'Task'=>array(
-					'Duty',
-					'Reschedule',
-// TODO: naming orientation is inconsistent here
-					'MaterialToTask',
-					'TaskToAssembly',
-					'TaskToGenericTaskType',
-					'TaskToPurchaseOrder',
-					'TaskToResourceType',
-				),
-				'ProjectToProjectTypeToAuthItem',
-				'ProjectToGenericProjectType'
-			),
-			'ProjectType'=>array(
-				'ProjectTypeToAuthItem',
-				'GenericProjectType',
-				'TaskType'=>array(
-					'GenericTaskType',
-					'TaskTypeToAssembly',
-					'TaskTypeToDutyType',
-					'TaskTypeToMaterial',
-					'TaskTypeToResourceType',
-				),
-			),
-		),
-		'DefaultValue',
-		'Dutycategory'=>array(
-			'DutyType',
-		),
-		'Resourcecategory'=>array(
-			'ResourceType',
-		),
-		'GenericType',
-		'Genericprojectcategory',
-		'Generictaskcategory',
-		'PurchaseOrder',
-		'Assembly'=>array(
-			'AssemblyToMaterial',
-		),
-		'Material',
-		'Staff'=>array(
-			'AuthAssignment',
-		),
-		'Supplier',
-		'AuthItem'=>array(
-			'AuthItemChild',
-		),
-	);
 	
 	public function __construct($id, $module = null)
 	{
@@ -276,14 +222,14 @@ protected $_adminShowNew = false;
 		// need to get the next level items from that point only
 
 		// step thru the trail to our target
-		$items = $this->trail;
+		$items = Yii::app()->params['trail'];
 		// if we should return this level NB: this is empty deliberately to keep condition the same as below
 		if(!$nextLevel && (isset($items[$this->modelName])))
 		{
 		}
 		else
 		{
-			$trail = $this->multidimensional_arraySearch($this->trail, $this->modelName);
+			$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $this->modelName);
 			// get tree of items at or below the desired level
 			foreach($trail as $key => &$value)
 			{
@@ -426,7 +372,7 @@ protected $_adminShowNew = false;
 			// initialise as we check for this presence in defining breadcrumbs to know we have been thru this admin view
 			$_SESSION['actionAdminGet'][$modelName] = array();
 /*			// block display of the new button unless top level of trail
-			if(sizeof($this->multidimensional_arraySearch($this->trail, $this->modelName)) > 1)
+			if(sizeof($this->multidimensional_arraySearch(Yii::app()->params['trail'], $this->modelName)) > 1)
 			{
 				// should we be showing the new button
 				$this->_adminShowNew = false;
@@ -455,7 +401,9 @@ protected $_adminShowNew = false;
 		{
 			$attributes += $_POST[$modelName];
 		}
-		$t = $model->attributes = $attributes;
+		$model->attributes = $attributes;
+		// ensure that where possible a pk has been passed from parent
+		$model->assertFromParent();
 		
 		// if exporting to xl
 		if(isset($_POST['yt0']) && $_POST['yt0'] == 'Download Excel')
@@ -482,67 +430,6 @@ protected $_adminShowNew = false;
 		));
 	}
 
-	private function multidimensional_arraySearch(&$array, &$search, $level = 0)
-	{
-		static $array_keys = array();
-		
-		// if starting this recursive function
-		if(!$level)
-		{
-			// reset the static variable from the last time this was called
-			// could alternatly store the search value and only scan once if the
-			// same
-			$array_keys = array();
-		}
-
-		// loop thru this level
-		foreach($array as $key => &$value)
-		{
-			// if $key is not an array
-			if(!is_array($value))
-			{
-				// do we have a match
-				if($search == strval($value))
-				{
-					$array_keys[$level] = $value;
-					break;
-				}
-			}
-			// otherwise key is not int therefore must be array
-			else
-			{
-				// do we have a match
-				if($search == strval($key))
-				{
-					$array_keys[$level] = $key;
-					break;
-				}
-				// otherwise recurse if array
-				elseif(is_array($value))
-				{
-					$this->multidimensional_arraySearch($value, $search, $level + 1);
-				}
-			}
-			// if we have found our answer but havn't yet stored this level
-			if(count($array_keys) && !isset($array_keys[$level]))
-			{
-				// store this level
-				$array_keys[$level] = $key;
-				break;
-			}
-		}
-		
-		// if we are exiting and not recursing
-		if(!$level)
-		{
-			// sort by the arrays ascending so that we know we have the write order in foreach loops
-			ksort($array_keys);
-		}
-		
-		// return the array keys array
-		return $array_keys;
-	} 
-
 	/**
 	 * Determine if a particular primary key exists in the breadcrumb trail - in any model.
 	 * @param string $primaryKey the primary key attribute name
@@ -551,7 +438,7 @@ protected $_adminShowNew = false;
 	public function primaryKeyInBreadCrumbTrail($primaryKey)
 	{
 		// loop thru the trail for this model
-		foreach($t=$this->multidimensional_arraySearch($this->trail, $this->modelName) as $crumb)
+		foreach(Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $this->modelName) as $crumb)
 		{
 			// see if any query paramters
 			if($queryParamters = (!empty($_SESSION['actionAdminGet'][$crumb]) ? $_SESSION['actionAdminGet'][$crumb] : null))
@@ -584,7 +471,7 @@ protected $_adminShowNew = false;
 		}
 
 		// loop thru the trail for this model
-		foreach($this->multidimensional_arraySearch($this->trail, $this->modelName) as $crumb)
+		foreach(Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $this->modelName) as $crumb)
 		{
 			// check access
 			if(!Yii::app()->user->checkAccess("{$crumb}Read"))

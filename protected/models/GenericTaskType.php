@@ -97,38 +97,18 @@ class GenericTaskType extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-//			't.id',
 			'generictaskcategory.description AS searchGenerictaskcategory',
 			'genericType.description AS searchGenericType',
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('generictaskcategory.description',$this->searchGenerictaskcategory,true);
 		$criteria->compare('genericType.description',$this->searchGenericType,true);
-
-		if(isset($this->task_type_id))
-		{
-			$criteria->compare('t.task_type_id',$this->task_type_id);
-		}
-		else
-		{
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				taskType.description
-				) AS searchTaskType";
-			$this->compositeCriteria($criteria, array(
-				'client.name',
-				'taskType.description'
-			), $this->searchTaskType);
-		}
+		$criteria->compare('t.task_type_id',$this->task_type_id);
 
 		// join
 		$criteria->with = array(
-			'taskType.projectType.client',
-			'taskType',
 			'generictaskcategory',
 			'genericType',
 			);
@@ -138,17 +118,6 @@ class GenericTaskType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
- 		if(!isset($this->task_type_id))
-		{
-			$columns[] = array(
-				'name'=>'searchTaskType',
-				'value'=>'CHtml::link($data->searchTaskType,
-					Yii::app()->createUrl("TaskType/update", array("id"=>$data->task_type_id))
-				)',
-				'type'=>'raw',
-			);
-		}
         $columns[] = array(
 			'name'=>'searchGenerictaskcategory',
 			'value'=>'CHtml::link($data->searchGenerictaskcategory,
@@ -173,8 +142,6 @@ class GenericTaskType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-//			'taskType->projectType->client->name',
-//			'taskType->description',
 			'genericType->description',
 		);
 	}
@@ -185,7 +152,7 @@ class GenericTaskType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTaskType', 'searchGenerictaskcategory', 'searchGenericType');
+		return array('searchGenerictaskcategory', 'searchGenericType');
 	}
 
 }

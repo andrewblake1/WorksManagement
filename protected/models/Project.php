@@ -51,10 +51,10 @@ class Project extends ActiveRecord
 			array('description, project_type_id, staff_id', 'required'),
 			array('project_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
-			array('travel_time_1_way, critical_completion, planned', 'safe'),
+			array('travel_time_1_way, critical_completion, planned, client_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, travel_time_1_way, critical_completion, planned, searchStaff, searchProjectType, client_id', 'safe', 'on'=>'search'),
+			array('id, description, travel_time_1_way, critical_completion, planned, searchStaff, searchProjectType', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -97,13 +97,13 @@ class Project extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
 			't.description',
 			'travel_time_1_way',
 			't.critical_completion',
 			't.planned',
+			'projectType.description AS searchProjectType',
 		);
 
 		// where
@@ -112,31 +112,14 @@ class Project extends ActiveRecord
 		$criteria->compare('t.travel_time_1_way',$this->travel_time_1_way);
 		$criteria->compare('t.critical_completion',$this->critical_completion);
 		$criteria->compare('t.planned',$this->planned);
-		if(isset($this->client_id))
-		{
-			ActiveRecord::$labelOverrides['searchProjectType'] = 'Project Type';
-			$criteria->compare('client.id', $this->client_id);
-			$criteria->compare('projectType.description', $this->searchProjectType, true);
-			$criteria->select[] = "projectType.description AS searchProjectType";
-		}
-		else
-		{
-			$this->compositeCriteria(
-				$criteria,
-				array(
-					'client.name',
-					'projectType.description'
-				),
-				$this->searchProjectType
-			);
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				projectType.description
-				) AS searchProjectType";
-		}
+		$criteria->compare('projectType.description', $this->searchProjectType, true);
+		$criteria->compare('client.id', $this->client_id);
 
 		// join
-		$criteria->with = array('projectType.client', 'projectType');
+		$criteria->with = array(
+			'projectType',
+			'projectType.client',
+		);
 
 		return $criteria;
 	}
@@ -168,31 +151,23 @@ class Project extends ActiveRecord
 		return array('searchProjectType');
 	}
 
-/* TODO: possibly re-engineer this to put this method in the controller. This also probably means moving a couple of other methods from
- * active record to controller also. Breaking a design rule here and creating tight coupling between the controller and the model
- * it is ok for controller to have knowledge of a model but not the other way around. Not using this in any of the associated static model functions
- * currently
- */
-	/**
-	 * @return array the list of columns to be concatenated for use in drop down lists
-	 */
-/*	public static function getDisplayAttr()
+	// ensure that where possible a pk has been passed from parent
+	// needed to overwrite this here because project has to look thru project type to get to client when doing update but gets client for admin
+	public function assertFromParent()
 	{
-		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
-		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('client_id'))
+
+		// if we don't have this fk attribute set
+		if(empty($this->project_type_id) && empty($this->client_id))
 		{
-			ActiveRecord::$labelOverrides['project_id'] = 'Project';
+			$niceNameLower =  strtolower(static::getNiceName());
+			throw new CHttpException(400, "No $niceNameLower identified, you must get here from the {$niceNameLower}s page");
 		}
+		// otherwise return the fk
 		else
 		{
-			ActiveRecord::$labelOverrides['project_id'] = 'Client/Project';
-			$displaAttr[]='projectType->client->name';
+			return $parentForeignKey;
 		}
-
-		$displaAttr[]='description';
-
-		return $displaAttr;
-	}*/
+	}
 
 }
 

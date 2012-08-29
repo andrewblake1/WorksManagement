@@ -28,9 +28,9 @@ class GenericWidgets extends /*TbActiveForm*/CWidget
 		{
 			$this->controller->widget('GenericWidget', array(
 				'form'=>$this->form,
-				'relation_modelToGenericModelType'=>$this->relation_modelToGenericModelType,
-				'toGenericType'=>$toGenericType,
-				'relation_genericModelType'=>$this->relation_genericModelType,
+				'generic'=>$toGenericType->generic,
+				'genericType'=>$toGenericType->{$this->relation_genericModelType}->genericType,
+				'relationToGenericType'=>"{$this->relation_modelToGenericModelType}->{$this->relation_genericModelType}->genericType",
 			));
 		}
 	}

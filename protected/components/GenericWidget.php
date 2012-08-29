@@ -7,9 +7,9 @@ class GenericWidget extends CWidget
 {
 	private $controller;
 	public $form;
-	public $relation_modelToGenericModelType;
-	public $toGenericType;
-	public $relation_genericModelType;
+	public $generic;
+	public $genericType;
+	public $relationToGenericType;
 
 	/**
 	 * Displays a particular model.
@@ -22,23 +22,19 @@ class GenericWidget extends CWidget
  
     public function run()
     {
-		// get generic type
-		$genericType = $this->toGenericType->{$this->relation_genericModelType}->genericType;
-		// get generic
-		$generic = $this->toGenericType->generic;
+		$genericType = $this->genericType;
+		$generic = $this->generic;
 		// get array of column names in generic table
 		$dataTypeColumnNames = GenericType::getDataTypeColumnNames();
 		// get the attribute name to be saving to - post array hence []
-		$attribute = "[{$this->toGenericType->generic_id}]".$dataTypeColumnNames[$genericType->data_type];
+		$attribute = "[{$this->generic->id}]".$dataTypeColumnNames[$genericType->data_type];
 		// get the label
 		$htmlOptions = array('labelOptions' => array('label'=>$genericType->description));
+		
 		// set Generic custom validators as per the associated generic type
-		$generic->setCustomValidators($genericType,
-			array(
-				'relation_modelToGenericModelType'=>$this->relation_modelToGenericModelType,
-				'relation_genericModelType'=>$this->relation_genericModelType,
-			)
-		);
+		// NB: the array is just the relations names used in validationLookup for sql type to get at the genericType model from the generic model
+		$generic->setCustomValidators($genericType, array('relationToGenericType'=>$this->relationToGenericType));
+		
 //TODO: should probably be sub-classing here and using inheritance instead of switch. Potentially GenericWidgers could be abstract base with a
 // factory method or static factory method to create the sub types.
 		// create the widget based on the generic validation type
@@ -46,8 +42,16 @@ class GenericWidget extends CWidget
 		{
 			case GenericType::validationTypeNone :
 			case GenericType::validationTypePCRE :
-				// Text box widget
-				echo $this->form->textFieldRow($attribute, $htmlOptions, $generic);
+				// if should be datepicker
+				if($genericType->data_type == GenericType::dataTypeDate)
+				{
+					echo $this->form->datepickerRow($attribute, $htmlOptions, $generic);
+				}
+				// othewise text box widget
+				else
+				{
+					echo $this->form->textFieldRow($attribute, $htmlOptions, $generic);
+				}
 				break;
 
 			case GenericType::validationTypeRange :

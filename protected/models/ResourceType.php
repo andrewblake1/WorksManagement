@@ -103,15 +103,7 @@ class ResourceType extends ActiveRecord
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('resourcecategory.description',$this->searchResourcecategory,true);
 		$criteria->compare('t.maximum',$this->maximum);
-		if(isset($this->resource_type_id))
-		{
-			$criteria->compare('t.resource_type_id', $this->resource_type_id);
-		}
-		else
-		{
-			$criteria->compare('resourcecategory.description',$this->searchResourcecategory,true);
-			$criteria->select[]='resourcecategory.description AS searchResourcecategory';
-		}
+		$criteria->compare('t.resource_type_id', $this->resource_type_id);
 		
 		// join
 		$criteria->with = array('resourcecategory');
@@ -123,16 +115,6 @@ class ResourceType extends ActiveRecord
 	{
 		$columns[] = 'id';
 		$columns[] = 'description';
- 		if(!isset($this->dutycategory_id))
-		{
-			$columns[] = array(
-				'name'=>'searchResourcecategory',
-				'value'=>'CHtml::link($data->searchResourcecategory,
-					Yii::app()->createUrl("Resourcecategory/update", array("id"=>$data->resourcecategory_id))
-				)',
-				'type'=>'raw',
-			);
-		}
 		$columns[] = 'maximum';
 		
 		return $columns;

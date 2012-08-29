@@ -83,13 +83,11 @@ class DefaultValue extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.table',$this->table);
 		$criteria->compare('t.column',$this->column);
 		$criteria->compare('t.select',$this->select);
 
 		$criteria->select=array(
-//			't.id',
 			't.table',
 			't.column',
 			't.select',
@@ -100,7 +98,6 @@ class DefaultValue extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = 'table';
 		$columns[] = 'column';
 		$columns[] = 'select';

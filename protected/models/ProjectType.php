@@ -96,85 +96,24 @@ class ProjectType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
-//			't.id',
 			't.description',
-			't.template_project_id',
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.template_project_id',$this->template_project_id,true);
-//		$criteria->compare('templateProject.description',$this->searchTemplateProject,true);
-		if(isset($this->client_id))
-		{
-			$criteria->compare('t.client_id', $this->client_id);
-		}
-		else
-		{
-			$criteria->compare('client.name',$this->searchClient,true);
-			$criteria->select[]="client.name AS searchClient";
-		}
+		$criteria->compare('t.client_id', $this->client_id);
 		
 		// join
-		$criteria->with = array('client', 'templateProject');
+		$criteria->with = array('client');
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = 'description';
-		if(!isset($this->client_id))
-		{
-			$columns[] = array(
-				'name'=>'searchClient',
-				'value'=>'CHtml::link($data->searchClient,
-					Yii::app()->createUrl("Client/update", array("id"=>$data->client_id))
-				)',
-				'type'=>'raw',
-			);
-		}
-        $columns[] = array(
-			'name'=>'searchTemplateProject',
-			'value'=>'CHtml::link($data->searchTemplateProject,
-				Yii::app()->createUrl("TemplateProject/update", array("id"=>$data->template_project_id))
-			)',
-			'type'=>'raw',
-		);
 		
 		return $columns;
-	}
-
-	/**
-	 * @return array the list of columns to be concatenated for use in drop down lists
-	 */
-/*	public static function getDisplayAttr()
-	{
-/*		// if this pk attribute has been passed in a higher crumb in the breadcrumb trail
-		if(Yii::app()->getController()->primaryKeyInBreadCrumbTrail('client_id'))
-		{
-			ActiveRecord::$labelOverrides['project_type_id'] = 'Project type';
-		}
-		else
-		{
-			ActiveRecord::$labelOverrides['project_type_id'] = 'Client/Project type';
-			$displaAttr[]='client->name';
-		}
-
-		$displaAttr[]='description';
-
-		return $displaAttr;
-	}*/
-
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchClient', 'searchTemplateProject');
 	}
 
 }

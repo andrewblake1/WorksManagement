@@ -92,41 +92,18 @@ class TaskTypeToAssembly extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-//			't.id',
 			'assembly.description AS searchAssembly',
 			't.quantity',
 		);
 
 		// where
-//		$criteria->compare('t.id',$this->id);
 		$criteria->compare('assembly.description',$this->searchAssembly);
 		$criteria->compare('t.quantity',$this->quantity);
-
-		if(isset($this->task_type_id))
-		{
-			$criteria->compare('t.task_type_id',$this->task_type_id);
-		}
-		else
-		{
-			// Task type
-			$criteria->select[]="CONCAT_WS('$delimiter',
-				client.name,
-				projectType.description,
-				taskType.description
-				) AS searchTaskType";
-			$this->compositeCriteria($criteria, array(
-				'client.name',
-				'projectType.description',
-				'taskType.description'
-			), $this->searchTaskType);
-		}
+		$criteria->compare('t.task_type_id',$this->task_type_id);
 
 		// join
 		$criteria->with = array(
 			'assembly',
-			'taskType',
-			'taskType.projectType',
-			'taskType.projectType.client',
 		);
 
 		return $criteria;
@@ -134,7 +111,6 @@ class TaskTypeToAssembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
         $columns[] = array(
 			'name'=>'searchAssembly',
 			'value'=>'CHtml::link($data->searchAssembly,
@@ -142,16 +118,6 @@ class TaskTypeToAssembly extends ActiveRecord
 			)',
 			'type'=>'raw',
 		);
- 		if(!isset($this->task_id))
-		{
-			$columns[] = array(
-				'name'=>'searchTaskType',
-				'value'=>'CHtml::link($data->searchTaskType,
-					Yii::app()->createUrl("TaskType/update", array("id"=>$data->task_type_id))
-				)',
-				'type'=>'raw',
-			);
-		}
 		$columns[] = 'quantity';
 		
 		return $columns;
@@ -163,9 +129,6 @@ class TaskTypeToAssembly extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-//			'taskType->client'=>'name',
-//			'taskType->projectType'=>'description',
-//			'taskType'=>'description',
 			'assembly->description',
 		);
 	}
