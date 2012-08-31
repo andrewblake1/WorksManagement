@@ -2,5 +2,5 @@
 
 $this->widget('AdminViewWidget',array(
 	'model'=>$model,
-	'columns'=>$model->adminColumns,
+	'columns'=>$model->formattedAdminColumns,
 )); ?>

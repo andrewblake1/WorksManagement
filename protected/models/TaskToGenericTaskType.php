@@ -96,6 +96,7 @@ class TaskToGenericTaskType extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.generic_task_type_id',
 			"CONCAT_WS('$delimiter',
 				taskType.description,
 				genericType.description
@@ -120,13 +121,7 @@ class TaskToGenericTaskType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchGenericTaskType',
-			'value'=>'CHtml::link($data->searchGenericTaskType,
-				Yii::app()->createUrl("GenericTaskType/update", array("id"=>$data->generic_task_type_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchGenericTaskType', 'GenericTaskType', 'generic_task_type_id');
 		
 		return $columns;
 	}

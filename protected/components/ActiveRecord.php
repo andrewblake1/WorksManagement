@@ -49,20 +49,11 @@ abstract class ActiveRecord extends CActiveRecord
 		// if a primary key has been given
 		if($primaryKey)
 		{
-//			// if there is description or name attribute in this model
-//			$attributeNames = static::model()->attributeNames();
-/*			if(in_array('description', $attributeNames))
-			{
-				$attributeName = 'description';
-			}
-			elseif(in_array('name', $attributeNames))
-			{
-				$attributeName = 'name';
-			}*/
 			foreach(static::getDisplayAttr() as $relationAttribute)
 			{
 				$attributes[] = '{$model->'.$relationAttribute.'}';
 			}
+
 			if(isset($attributes))
 			{
 				// get the value of that attribute
@@ -144,7 +135,7 @@ abstract class ActiveRecord extends CActiveRecord
 	public static function getDisplayAttr()
 	{
 		// choose the best column
-		if(in_array('description', static::model()->tableSchema->getColumnNames()))
+		if(in_array('description', $t = static::model()->tableSchema->getColumnNames()))
 		{
 			return array('description');
 		}
@@ -306,6 +297,36 @@ abstract class ActiveRecord extends CActiveRecord
 		);
 	}
 
+	/**
+	 * Creates a field for CGridView
+	 * NB: ensure that $foreingKey is included in the select in getSearchCriteria
+	 * @param type $name
+	 * @param type $modelName
+	 * @param type $foreignKey
+	 * @param type $referencesPk
+	 * @return mixed 
+	 */
+	static function linkColumn($name, $modelName, $foreignKey, $referencesPk='id')
+	{
+		// if the user has at least read access
+		$controllerName = "{$modelName}Controller";
+		if($controllerName::checkAccess(Controller::accessRead))
+		{
+			// create a link
+			return array(
+				'name'=>$name,
+				'value'=>'CHtml::link($data->'.$name.',
+					Yii::app()->createUrl("'.$modelName.'/update", array("'.$referencesPk.'"=>$data->'.$foreignKey.'))
+				)',
+				'type'=>'raw',
+			);
+		}
+		else
+		{
+			// create text
+			return $name;
+		}
+	}
 
 	/**
 	 * Sets common criteria for search.
@@ -345,10 +366,15 @@ abstract class ActiveRecord extends CActiveRecord
 			{
 				$this->$name=NULL;
 			}
-			// convert dates to mysql format
-			if($this->metadata->columns[$name]->dbType == 'date')
+			// convert dates to mysql format - allow for nulls
+			if(!empty($value) && $this->metadata->columns[$name]->dbType == 'date')
 			{
 				$this->$name = date('Y-m-d', strtotime($value));
+			}
+			// convert datetime to mysql format - allow for nulls
+			if(!empty($value) && $this->metadata->columns[$name]->dbType == 'datetime')
+			{
+				$this->$name = date('Y-m-d H:i:s', strtotime($value));
 			}
 		}
 
@@ -417,8 +443,27 @@ abstract class ActiveRecord extends CActiveRecord
 		}
 	}
 
-	public function getAdminColumns()
+	public function getFormattedAdminColumns()
 	{
+		$adminColumns = $this->adminColumns;
+		
+		// get columnn info from schema
+		$columns = $this->tableSchema->columns;
+
+		// add any desired formatting i.e. date to unformatted basic items
+		foreach($adminColumns as $key => &$value)
+		{
+			if(is_string($value) && strpos($value, ':') === false)
+			{
+				// see if date column
+				if($columns[$value]->dbType == 'date')
+				{
+					$value .= ':date';
+				}
+			}
+		}
+		
+		return $adminColumns;
 	}
 
 	/*

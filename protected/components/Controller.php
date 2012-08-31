@@ -44,6 +44,10 @@ protected $_adminShowNew = false;
 	 * @var string the name of the model to use in the admin view - the model may serve a database view as opposed to a table  
 	 */
 	protected $_adminViewModel;
+	/**
+	 * @var string the name of the admin view
+	 */
+	protected $_adminView = '/admin';
 	
 	/**
 	 * @var string the flash message to show sort and search instructions
@@ -60,9 +64,14 @@ protected $_adminShowNew = false;
 		<p>You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>,
 		<b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b> or <b>=</b>) at the beginning of each of your search values.";
 	
+	static function modelName()
+	{
+		return str_replace('Controller', '', get_called_class());
+	}
+	
 	public function __construct($id, $module = null)
 	{
-		$this->modelName = str_replace('Controller', '', get_class($this));
+		$this->modelName = static::modelName();
 		
 		if(empty($this->_adminViewModel))
 		{
@@ -288,7 +297,7 @@ protected $_adminShowNew = false;
 				$modelName = is_array($value) ? $key : $value;
 				
 				// check access
-				if(!$this->checkAccess(self::accessRead))
+				if(!static::checkAccess(self::accessRead))
 				{
 					continue;
 				}
@@ -341,9 +350,6 @@ protected $_adminShowNew = false;
 
 		$modelName = $this->modelName;
 
-//		// should we be showing the new button NB: this is used main layout and checked on all views hence initialized in class scope to false
-//		$this->_adminShowNew = true;
-
 		// NB: query string is stripped from ajaxUrl hence this hack, but also used
 		// in building breadcrumbs
 		if(isset($_GET['ajax']))
@@ -365,19 +371,6 @@ protected $_adminShowNew = false;
 			// store $_GET
 			$_SESSION['actionAdminGet'][$modelName] = null;
 		}
-/*		else
-		{
-			// loose our memory
-			unset($_SESSION['actionAdminGet']);
-			// initialise as we check for this presence in defining breadcrumbs to know we have been thru this admin view
-			$_SESSION['actionAdminGet'][$modelName] = array();
-/*			// block display of the new button unless top level of trail
-			if(sizeof($this->multidimensional_arraySearch(Yii::app()->params['trail'], $this->modelName)) > 1)
-			{
-				// should we be showing the new button
-				$this->_adminShowNew = false;
-			}
-		}*/
 		
 		// may be using a database view instead of main table model
 		$adminViewModel = $this->_adminViewModel;
@@ -425,7 +418,7 @@ protected $_adminShowNew = false;
 		// set up tab menu if required - using setter
 		$this->setTabs($model, false);
 		
-		$this->render('/admin',array(
+		$this->render($this->_adminView,array(
 			'model'=>$model,
 		));
 	}
@@ -459,42 +452,39 @@ protected $_adminShowNew = false;
 	public function getBreadCrumbTrail($lastCrumb = NULL)
 	{
 		$breadcrumbs = array();
+		$modelName = $this->modelName;
 	
 		// if just gone direct to a screen i.e. our memory/history was cleared
 		if(!isset($_SESSION['actionAdminGet']) && !$lastCrumb)
 		{
-			if(Yii::app()->user->checkAccess("{$this->modelName}Read"))
+			if(static::checkAccess(self::accessRead))
 			{
-				$breadcrumbs[] = $this->modelName;
+				$breadcrumbs[] = $modelName;
 			}
 			return $breadcrumbs;
 		}
 
 		// loop thru the trail for this model
-		foreach(Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $this->modelName) as $crumb)
+		foreach(Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName) as $crumb)
 		{
 			// check access
-			if(!Yii::app()->user->checkAccess("{$crumb}Read"))
+			if(!static::checkAccess(self::accessRead, $crumb))
 			{
 				continue;
 			}
-/*			// otherwise if we haven't come via this route
-			elseif(!isset($_SESSION['actionAdminGet'][$crumb]))
-			{
-				continue;
-			}*/
 
 			// see if any query paramters
 			$queryParamters = !empty($_SESSION['actionAdminGet'][$crumb]) ? array($crumb=>$_SESSION['actionAdminGet'][$crumb]) : array();
 
 			$display = $crumb::getNiceName();
 			// if this is the last crumb
-			if($this->modelName == $crumb)
+			if($modelName == $crumb)
 			{
 				if($lastCrumb == 'Create')
 				{
 					// add crumb to admin view
-					$breadcrumbs[$display.'s'] = array("$crumb/admin");
+//					$breadcrumbs[$display.'s'] = array("$crumb/admin");
+					$breadcrumbs[$display.'s'] = array("$crumb/admin") + $queryParamters;
 					// add last crumb
 					$breadcrumbs[] = $lastCrumb;
 				}
@@ -502,7 +492,7 @@ protected $_adminShowNew = false;
 				{
 					// add crumb to admin view. NB using last query paramters to that admin view
 					$breadcrumbs[$display.'s'] = array("$crumb/admin") + $queryParamters;
-					// add an update crumb to this primary key
+					// add a crumb with just the primary key nice name but no href
 					$primaryKey = $_SESSION[$crumb];
 					$breadcrumbs[] = $crumb::getNiceName($primaryKey['value']);
 				}
@@ -940,13 +930,12 @@ protected $_adminShowNew = false;
 
 	const accessRead = 'Read';
 	const accessWrite = '';
-	public function checkAccess($mode, $modelName=null)
+	static function checkAccess($mode, $modelName=null)
 	{
 		if($mode == self::accessRead || $mode === self::accessWrite)
 		{
-			return Yii::app()->user->checkAccess(($modelName ? $modelName : $this->modelName) . $mode);
+			return Yii::app()->user->checkAccess(($modelName ? $modelName : static::modelName()) . $mode);
 		}
-// TODO: throw error i.e. invalid $mode for
 	}
 	
 	

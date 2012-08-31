@@ -219,8 +219,8 @@ class GenericType extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.mandatory',$this->mandatory);
-		$criteria->compare('t.allow_new',$this->allow_new);
+		$criteria->compare('t.mandatory',Yii::app()->format->toMysqlBool($this->mandatory));
+		$criteria->compare('t.allow_new',Yii::app()->format->toMysqlBool($this->allow_new));
 		$criteria->compare('t.validation_type',$this->validation_type,true);
 		$criteria->compare('t.data_type',$this->data_type,true);
 		$criteria->compare('t.validation_text',$this->validation_text,true);
@@ -242,8 +242,8 @@ class GenericType extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'description';
-		$columns[] = 'mandatory';
-		$columns[] = 'allow_new';
+		$columns[] = 'mandatory:boolean';
+		$columns[] = 'allow_new:boolean';
 		$columns[] = 'validation_type';
 		$columns[] = 'data_type';
 		$columns[] = 'validation_text';

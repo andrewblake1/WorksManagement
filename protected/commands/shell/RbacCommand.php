@@ -273,7 +273,7 @@ EOD;
 			 $defaultRole=$this->_authManager->createRole('default', 'Default',
 					'return !Yii::app()->user->isGuest;');
 			 // create task to allow update access if user is related to this task - this will use checkAccess in update action
-			 $this->_authManager->createOperation('DutyUpdate', 'Duty update', 'return $data["userid"] == Yii::app()->user->id;');
+			 $this->_authManager->createOperation('DutyUpdate', 'Duty update', 'return $params["assignedTo"] == Yii::app()->user->id;');
 			 // attach this to the Duty task so that higher users don't get denied when checking this in Duty update action
 			 $dutyTask=$this->_authManager->getAuthItem('Duty');
 			 $dutyTask->addChild('DutyUpdate');

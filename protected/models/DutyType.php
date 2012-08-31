@@ -96,6 +96,7 @@ class DutyType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.generic_type_id',
 			't.description',
 			't.lead_in_days',
 			'genericType.description AS searchGenericType',
@@ -117,13 +118,7 @@ class DutyType extends ActiveRecord
 	{
 		$columns[] = 'description';
 		$columns[] = 'lead_in_days';
-        $columns[] = array(
-			'name'=>'searchGenericType',
-			'value'=>'CHtml::link($data->searchGenericType,
-				Yii::app()->createUrl("GenericType/update", array("id"=>$data->generic_type_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchGenericType', 'GenericType', 'generic_type_id');
 		
 		return $columns;
 	}

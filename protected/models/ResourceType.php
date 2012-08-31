@@ -46,7 +46,7 @@ class ResourceType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, maximum, staff_id', 'required'),
+			array('description, staff_id', 'required'),
 			array('resourcecategory_id, maximum, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			// The following rule is used by search().

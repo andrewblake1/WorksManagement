@@ -19,12 +19,7 @@
  * @property Dutycategory $dutycategory
  * @property Staff $staff
  */
-class Resourcecategory extends ActiveRecord {
-	/**
-	 * Id of the div in which the tree will berendered.
-	 */
-
-	const ADMIN_TREE_CONTAINER_ID = 'resourcecategory_admin_tree';
+class Resourcecategory extends CategoryActiveRecord {
 
 	/**
 	 * @return string the associated database table name
@@ -66,90 +61,8 @@ class Resourcecategory extends ActiveRecord {
 	 */
 	public function attributeLabels() {
 		return array(
-			'id' => 'ID',
-			'root' => 'Root',
-			'lft' => 'Lft',
-			'rgt' => 'Rgt',
-			'level' => 'Level',
-			'name' => 'Name',
 			'dutycategory_id' => 'Dutycategory',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
-	}
-
-	public function behaviors() {
-		return array(
-			'NestedSetBehavior' => array(
-				'class' => 'ext.nestedBehavior.NestedSetBehavior',
-				'leftAttribute' => 'lft',
-				'rightAttribute' => 'rgt',
-				'levelAttribute' => 'level',
-				'hasManyRoots' => true
-			)
-		);
-	}
-
-	public static function printULTree() {
-		$categories = Resourcecategory::model()->findAll(array('order' => 'root,lft'));
-		$level = 0;
-
-		foreach ($categories as $n => $category) {
-
-			if ($category->level == $level)
-				echo CHtml::closeTag('li') . "\n";
-			else if ($category->level > $level)
-				echo CHtml::openTag('ul') . "\n";
-			else {
-				echo CHtml::closeTag('li') . "\n";
-
-				for ($i = $level - $category->level; $i; $i--) {
-					echo CHtml::closeTag('ul') . "\n";
-					echo CHtml::closeTag('li') . "\n";
-				}
-			}
-
-			echo CHtml::openTag('li', array('id' => 'node_' . $category->id, 'rel' => $category->name));
-			echo CHtml::openTag('a', array('href' => '#'));
-			echo CHtml::encode($category->name);
-			echo CHtml::closeTag('a');
-
-			$level = $category->level;
-		}
-
-		for ($i = $level; $i; $i--) {
-			echo CHtml::closeTag('li') . "\n";
-			echo CHtml::closeTag('ul') . "\n";
-		}
-	}
-
-	public static function printULTree_noAnchors() {
-		$categories = Resourcecategory::model()->findAll(array('order' => 'lft'));
-		$level = 0;
-
-		foreach ($categories as $n => $category) {
-			if ($category->level == $level)
-				echo CHtml::closeTag('li') . "\n";
-			else if ($category->level > $level)
-				echo CHtml::openTag('ul') . "\n";
-			else {   //if $category->level<$level
-				echo CHtml::closeTag('li') . "\n";
-
-				for ($i = $level - $category->level; $i; $i--) {
-					echo CHtml::closeTag('ul') . "\n";
-					echo CHtml::closeTag('li') . "\n";
-				}
-			}
-
-			echo CHtml::openTag('li');
-			echo CHtml::encode($category->name);
-			$level = $category->level;
-		}
-
-		for ($i = $level; $i; $i--) {
-			echo CHtml::closeTag('li') . "\n";
-			echo CHtml::closeTag('ul') . "\n";
-		}
+		) + parent::attributeLabels();
 	}
 
 }

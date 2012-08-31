@@ -99,20 +99,16 @@ class GenericProjectType extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			"CONCAT_WS('$delimiter',
-				client.name,
-				projectType.description
-				) AS searchProjectType",
-			'genericprojectcategory.description AS searchGenericprojectcategory',
+			't.genericprojectcategory_id',
+			't.generic_type_id',
+			'projectType.description AS searchProjectType',
+			'genericprojectcategory.name AS searchGenericprojectcategory',
 			'genericType.description AS searchGenericType',
 		);
 
 		// where
-		$this->compositeCriteria($criteria, array(
-			'client.name',
-			'projectType.description'
-		), $this->searchProjectType);
-		$criteria->compare('genericprojectcategory.description',$this->searchGenericprojectcategory,true);
+		$criteria->compare('projectType.description',$this->searchProjectType,true);
+		$criteria->compare('genericprojectcategory.name',$this->searchGenericprojectcategory,true);
 		$criteria->compare('genericType.description',$this->searchGenericType,true);
 		$criteria->compare('t.project_type_id',$this->project_type_id);
 		
@@ -128,20 +124,8 @@ class GenericProjectType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchGenericprojectcategory',
-			'value'=>'CHtml::link($data->searchGenericprojectcategory,
-				Yii::app()->createUrl("Genericprojectcategory/update", array("id"=>$data->genericprojectcategory_id))
-			)',
-			'type'=>'raw',
-		);
-        $columns[] = array(
-			'name'=>'searchGenericType',
-			'value'=>'CHtml::link($data->searchGenericType,
-				Yii::app()->createUrl("GenericType/update", array("id"=>$data->generic_type_id))
-			)',
-			'type'=>'raw',
-		);
+		$columns[] = static::linkColumn('searchGenericprojectcategory', 'Genericprojectcategory', 'genericprojectcategory_id');
+		$columns[] = static::linkColumn('searchGenericType', 'GenericType', 'generic_type_id');
 		
 		return $columns;
 	}

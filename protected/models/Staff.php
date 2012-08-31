@@ -197,7 +197,7 @@ class Staff extends ActiveRecord
 		return array(
 			'first_name',
 			'last_name',
-			'email'
+			'email',
 		);
 	}
 

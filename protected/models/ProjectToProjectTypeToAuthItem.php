@@ -101,6 +101,7 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.AuthAssignment_id',
 			"CONCAT_WS('$delimiter',
 				user.first_name,
 				user.last_name,
@@ -133,13 +134,7 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'itemname';
-		$columns[] = array(
-			'name'=>'searchAuthAssignment',
-			'value'=>'CHtml::link($data->searchAuthAssignment,
-				Yii::app()->createUrl("AuthAssignment/update", array("id"=>$data->AuthAssignment_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchAuthAssignment', 'AuthAssignment', 'AuthAssignment_id');
 		
 		return $columns;
 	}

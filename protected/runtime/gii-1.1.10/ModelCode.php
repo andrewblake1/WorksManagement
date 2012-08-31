@@ -1,6 +1,6 @@
 <?php
 return array (
-  'template' => 'nested',
+  'template' => 'default',
   'tablePrefix' => '',
   'modelPath' => 'application.models',
   'baseClass' => 'ActiveRecord',

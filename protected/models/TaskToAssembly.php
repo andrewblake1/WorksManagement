@@ -91,6 +91,7 @@ class TaskToAssembly extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.assembly_id',
 			'assembly.description AS searchAssembly',
 			't.quantity',
 		);
@@ -110,13 +111,7 @@ class TaskToAssembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchAssembly',
-			'value'=>'CHtml::link($data->searchAssembly,
-				Yii::app()->createUrl("Assembly/update", array("id"=>$data->assembly_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchAssembly', 'Assembly', 'assembly_id');
 		$columns[] = 'quantity';
 		
 		return $columns;
@@ -130,6 +125,12 @@ class TaskToAssembly extends ActiveRecord
 	{
 		return array('searchTask', 'searchAssembly');
 	}
+	
+	static function getDisplayAttr()
+	{
+		return array('assembly->description');
+	}
+
 }
 
 ?>

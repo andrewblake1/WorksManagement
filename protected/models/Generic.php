@@ -241,7 +241,7 @@ class Generic extends ActiveRecord
 		$criteria->compare('t.type_int',$this->type_int);
 		$criteria->compare('t.type_float',$this->type_float);
 		$criteria->compare('t.type_time',$this->type_time);
-		$criteria->compare('t.type_date',$this->type_date);
+		$criteria->compare('t.type_date',Yii::app()->format->toMysqlDate($this->type_date));
 		$criteria->compare('t.type_text',$this->type_text,true);
 
 		$criteria->select=array(

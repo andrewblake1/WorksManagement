@@ -88,6 +88,7 @@ class AssemblyToMaterial extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->select=array(
+			't.material_id',
 			'material.description AS searchMaterial',
 			't.quantity',
 		);
@@ -103,13 +104,7 @@ class AssemblyToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchMaterial',
-			'value'=>'CHtml::link($data->searchMaterial,
-				Yii::app()->createUrl("Material/update", array("id"=>$data->material_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
  		$columns[] = 'quantity';
 		
 		return $columns;
@@ -122,6 +117,16 @@ class AssemblyToMaterial extends ActiveRecord
 	public function getSearchSort()
 	{
 		return array('searchMaterial');
+	}
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+			'assembly->description'
+		);
 	}
 
 }

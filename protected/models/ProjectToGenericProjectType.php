@@ -96,6 +96,8 @@ class ProjectToGenericProjectType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.generic_project_type_id',
+			't.generic_id',
 			'generic.id AS searchGeneric',
 			'genericType.description AS searchGenericProjectType',
 		);
@@ -117,20 +119,8 @@ class ProjectToGenericProjectType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchGenericProjectType',
-			'value'=>'CHtml::link($data->searchGenericProjectType,
-				Yii::app()->createUrl("GenericProjectType/update", array("id"=>$data->generic_project_type_id))
-			)',
-			'type'=>'raw',
-		);
-        $columns[] = array(
-			'name'=>'searchGeneric',
-			'value'=>'CHtml::link($data->searchGeneric,
-				Yii::app()->createUrl("Generic/update", array("id"=>$data->generic_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchGenericProjectType', 'GenericProjectType', 'generic_project_type_id');
+        $columns[] = static::linkColumn('searchGeneric', 'Generic', 'generic_id');
 		
 		return $columns;
 	}

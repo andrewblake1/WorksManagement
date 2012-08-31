@@ -97,6 +97,7 @@ class TaskToResourceType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.resource_type_id',
 			'resourceType.description AS searchResourceType',
 			't.quantity',
 			't.hours',
@@ -120,13 +121,7 @@ class TaskToResourceType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchResourceType',
-			'value'=>'CHtml::link($data->searchResourceType,
-				Yii::app()->createUrl("ResourceType/update", array("id"=>$data->resource_type_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchResourceType', 'ResourceType', 'resource_type_id');
 		$columns[] = 'quantity';
 		$columns[] = 'hours';
 		$columns[] = 'start';
@@ -142,6 +137,12 @@ class TaskToResourceType extends ActiveRecord
 	{
 		return array('searchTask', 'searchResourceType');
 	}
+	
+	static function getDisplayAttr()
+	{
+		return array('resourceType->description');
+	}
+
 }
 
 ?>

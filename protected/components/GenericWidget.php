@@ -9,7 +9,7 @@ class GenericWidget extends CWidget
 	public $form;
 	public $generic;
 	public $genericType;
-	public $relationToGenericType;
+	public $relationToGenericType; // working from a generic model to generic type
 
 	/**
 	 * Displays a particular model.

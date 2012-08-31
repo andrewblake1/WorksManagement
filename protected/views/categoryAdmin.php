@@ -1,5 +1,19 @@
 <?php
 
+$modelName = $this->modelName;
+
+//create an array open_nodes with the ids of the nodes that we want to be initially open
+//when the tree is loaded.Modify this to suit your needs.Here,we open all nodes on load.
+$identifiers=array();
+foreach($modelName::model()->findAll(array('order'=>'lft')) as $n=>$category)
+{
+	$identifiers[]="'".'node_'.$category->id."'";
+}
+
+$dataProvider = new CActiveDataProvider($modelName);
+$baseUrl = Yii::app()->baseUrl;
+$open_nodes = implode(',', $identifiers);
+
 Yii::app()->user->setFlash('info','
 	<ul>
 		<li>If tree is empty,start by creating one or more root nodes.</li>
@@ -18,7 +32,7 @@ echo '
 
 	<!--The tree will be rendered in this div-->
 
-	<div id="'.Dutycategory::ADMIN_TREE_CONTAINER_ID.'" >
+	<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" >
 
 	</div>';
 
@@ -28,7 +42,7 @@ echo '
 <script  type="text/javascript">
 	$(function ()
 	{
-		$("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>")
+		$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>")
 		.jstree(
 		{
 			"html_data" :
@@ -36,7 +50,7 @@ echo '
 				"ajax" :
 					{
 					"type":"POST",
-					"url" : "<?php echo $baseUrl; ?>/dutycategory/fetchTree",
+					"url" : "<?php echo "$baseUrl/$modelName/fetchTree"; ?>",
 					"data" : function (n)
 					{
 						return{
@@ -60,16 +74,16 @@ echo '
 							// need to re-read modal contents first as selecting a different record
 							$.ajax({
 								type: "POST",
-								url: "<?php echo $baseUrl; ?>/dutycategory/returnForm",
+								url: "<?php echo "$baseUrl/$modelName/returnForm"; ?>",
 								data:{
 									'update_id':  id,
 									"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 								},
 								'beforeSend' : function(){
-									$("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
+									$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
 								},
 								'complete' : function(){
-									$("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
+									$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
 								},
 								success: function(data){
 
@@ -93,7 +107,7 @@ echo '
 						
 							if(confirm('Are you sure you want to remove ' + (obj).attr('rel') + 'and any sub categories'))
 							{
-								jQuery("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>").jstree("remove",obj);
+								jQuery("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").jstree("remove",obj);
 							}
 						}
 					},//remove
@@ -125,17 +139,17 @@ echo '
 		.bind("rename.jstree", function (e, data) {
 			$.ajax({
 				type:"POST",
-				url:"<?php echo $baseUrl; ?>/dutycategory/rename",
+				url:"<?php echo "$baseUrl/$modelName/rename"; ?>",
 				data:  {
 					"id" : data.rslt.obj.attr("id").replace("node_",""),
 					"new_name" : data.rslt.new_name,
 					"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 				},
 				beforeSend : function(){
-					$("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
+					$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
 				},
 				complete : function(){
-					$("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
+					$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
 				},
 				success:function (r) {  response= $.parseJSON(r);
 					if(!response.success) {
@@ -150,16 +164,16 @@ echo '
 		.bind("remove.jstree", function (e, data) {
 			$.ajax({
 				type:"POST",
-				url:"<?php echo $baseUrl; ?>/dutycategory/remove",
+				url:"<?php echo "$baseUrl/$modelName/remove"; ?>",
 				data:{
 					"id" : data.rslt.obj.attr("id").replace("node_",""),
 					"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 				},
 				beforeSend : function(){
-					$("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
+					$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
 				},
 				complete: function(){
-					$("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
+					$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
 				},
 				success:function (r) {  response= $.parseJSON(r);
 					if(!response.success) {
@@ -176,8 +190,8 @@ echo '
 				//not all are needed for this view,but they are there if you need them.
 				//Commented out logs  are for debugging and exploration of jstree.
 
-				next= jQuery.jstree._reference('#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>')._get_next (this, true);
-				previous= jQuery.jstree._reference('#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>')._get_prev(this,true);
+				next= jQuery.jstree._reference('#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>')._get_next (this, true);
+				previous= jQuery.jstree._reference('#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>')._get_prev(this,true);
 
 				pos=data.rslt.cp;
 				moved_node=$(this).attr('id').replace("node_","");
@@ -213,7 +227,7 @@ echo '
 				$.ajax({
 					async : false,
 					type: 'POST',
-					url: "<?php echo $baseUrl; ?>/dutycategory/moveCopy",
+					url: "<?php echo "$baseUrl/$modelName/moveCopy"; ?>",
 
 					data : {
 						"moved_node" : moved_node,
@@ -229,10 +243,10 @@ echo '
 						"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 					},
 					beforeSend : function(){
-						$("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
+						$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
 					},
 					complete : function(){
-						$("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
+						$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
 					},
 					success : function (r) {
 						response=$.parseJSON(r);
@@ -263,17 +277,22 @@ echo '
 
 		$("#reload").click(function ()
 		{
-			jQuery("#<?php echo Dutycategory::ADMIN_TREE_CONTAINER_ID; ?>").jstree("refresh");
-		});
-
-		$("#<?php echo Resourcecategory::ADMIN_TREE_CONTAINER_ID; ?>").delegate("a","click", function(e) {
-			// get the id of the clicked node
-			id = $(this).parent().attr("id").split("_")[1];
-			// go to the admin screen - filtering by this parent id
-			window.location = "<?php echo $baseUrl; ?>/DutyType/admin?DutyType[dutycategory_id]=" + id;
+			jQuery("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").jstree("refresh");
 		});
 
 	});
 
 </script>
 
+<?php
+
+try
+{
+	$this->renderPartial('categoryAdmin', array('modelName'=>$modelName, 'baseUrl'=>$baseUrl));
+}
+catch (Exception $e)
+{
+	// discard exception in case the view doesn't exist
+}
+
+?>

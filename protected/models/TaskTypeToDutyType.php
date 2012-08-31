@@ -34,7 +34,6 @@ class TaskTypeToDutyType extends ActiveRecord
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Duty type';
-
 	
 	public function scopeTask($task_id)
 	{
@@ -115,6 +114,7 @@ class TaskTypeToDutyType extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.project_type_to_AuthItem_id',
 			'dutyType.description AS searchDutyType',
 			'projectTypeToAuthItem.AuthItem_name AS searchProjectTypeToAuthItem',
 		);
@@ -137,20 +137,8 @@ class TaskTypeToDutyType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchDutyType',
-			'value'=>'CHtml::link($data->searchDutyType,
-				Yii::app()->createUrl("DutyType/update", array("id"=>$data->duty_type_id))
-			)',
-			'type'=>'raw',
-		);
-        $columns[] = array(
-			'name'=>'searchProjectTypeToAuthItem',
-			'value'=>'CHtml::link($data->searchProjectTypeToAuthItem,
-				Yii::app()->createUrl("AuthItem/update", array("id"=>$data->searchProjectTypeToAuthItem))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchDutyType', 'DutyType', 'duty_type_id');
+        $columns[] = static::linkColumn('searchProjectTypeToAuthItem', 'AuthItem', 'project_type_to_AuthItem_id');
 		
 		return $columns;
 	}

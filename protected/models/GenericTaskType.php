@@ -98,12 +98,14 @@ class GenericTaskType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
-			'generictaskcategory.description AS searchGenerictaskcategory',
+			't.generictaskcategory_id',
+			't.generic_type_id',
+			'generictaskcategory.name AS searchGenerictaskcategory',
 			'genericType.description AS searchGenericType',
 		);
 
 		// where
-		$criteria->compare('generictaskcategory.description',$this->searchGenerictaskcategory,true);
+		$criteria->compare('generictaskcategory.name',$this->searchGenerictaskcategory,true);
 		$criteria->compare('genericType.description',$this->searchGenericType,true);
 		$criteria->compare('t.task_type_id',$this->task_type_id);
 
@@ -118,20 +120,8 @@ class GenericTaskType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchGenerictaskcategory',
-			'value'=>'CHtml::link($data->searchGenerictaskcategory,
-				Yii::app()->createUrl("Generictaskcategory/update", array("id"=>$data->generictaskcategory_id))
-			)',
-			'type'=>'raw',
-		);
-        $columns[] = array(
-			'name'=>'searchGenericType',
-			'value'=>'CHtml::link($data->searchGenericType,
-				Yii::app()->createUrl("GenericType/update", array("id"=>$data->generic_type_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchGenerictaskcategory', 'Generictaskcategory', 'generictaskcategory_id');
+        $columns[] = static::linkColumn('searchGenericType', 'GenericType', 'generic_type_id');
 		
 		return $columns;
 	}

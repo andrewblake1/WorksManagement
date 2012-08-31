@@ -93,7 +93,7 @@ class AuthAssignment extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Role Assignment',
-			'naturalKey' => 'User/Role (First/Last/Email/Role)',
+//			'naturalKey' => 'User/Role (First/Last/Email/Role)',
 			'itemname' => 'Role',
 			'userid' => 'User, First/Last/Email',
 			'searchUser' => 'User, First/Last/Email',
@@ -116,7 +116,7 @@ class AuthAssignment extends ActiveRecord
 
 		// where
 		$criteria->compare('t.itemname',$this->itemname,true);
-		$criteria->compare('userid', $this->userid);
+		$criteria->compare('t.userid', $this->userid);
 
 		return $criteria;
 	}
@@ -134,6 +134,16 @@ class AuthAssignment extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		$displaAttr[]='itemname';
+
+		// NB: this clause needed to add the extra name stuff as this used in two places and user needed on ProjectToProjectTypeToAuthItem
+		if(!isset($_GET['userid']))
+		{
+			static::$labelOverrides['AuthAssignment_id'] = 'Role/First/Last/Email';
+			$displaAttr[]='user->first_name';
+			$displaAttr[]='user->last_name';
+			$displaAttr[]='user->email';
+		}
+
 
 		return $displaAttr;
 	}

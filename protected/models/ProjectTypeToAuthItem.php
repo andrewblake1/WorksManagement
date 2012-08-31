@@ -15,8 +15,8 @@
  * @property ProjectType $projectType
  * @property AuthItem $authItemName
  * @property Staff $staff
- * @property TaskTypeToDutyTypeToProjectTypeToAuthItem[] $taskTypeToDutyTypeToProjectTypeToAuthItems
- * @property TaskTypeToDutyTypeToProjectTypeToAuthItem[] $taskTypeToDutyTypeToProjectTypeToAuthItems1
+ * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
+ * @property TaskTypeToDutyType[] $taskTypeToDutyTypes1
  */
 class ProjectTypeToAuthItem extends ActiveRecord
 {
@@ -67,8 +67,8 @@ class ProjectTypeToAuthItem extends ActiveRecord
 			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
 			'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'AuthItem_name'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'taskTypeToDutyTypeToProjectTypeToAuthItems' => array(self::HAS_MANY, 'TaskTypeToDutyTypeToProjectTypeToAuthItem', 'project_type_id'),
-			'taskTypeToDutyTypeToProjectTypeToAuthItems1' => array(self::HAS_MANY, 'TaskTypeToDutyTypeToProjectTypeToAuthItem', 'project_type_to_AuthItem_id'),
+			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'project_type_id'),
+			'taskTypeToDutyTypes1' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'project_type_to_AuthItem_id'),
 		);
 	}
 

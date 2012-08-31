@@ -82,13 +82,14 @@ class PurchaseOrder extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('supplier.name',$this->searchSupplier);
+		$criteria->compare('supplier.name',$this->searchSupplier, true);
 		$criteria->compare('t.number',$this->number,true);
 		
 		$criteria->with = array('supplier');
 
 		$criteria->select=array(
 			't.id',
+			't.supplier_id',
 			'supplier.name AS searchSupplier',
 			't.number',
 		);
@@ -99,13 +100,7 @@ class PurchaseOrder extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'id';
-        $columns[] = array(
-			'name'=>'searchSupplier',
-			'value'=>'CHtml::link($data->searchSupplier,
-				Yii::app()->createUrl("Supplier/update", array("id"=>$data->supplier_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchSupplier', 'Supplier', 'supplier_id');
 		$columns[] = 'number';
 		
 		return $columns;

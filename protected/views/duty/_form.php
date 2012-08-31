@@ -7,20 +7,20 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	// if previously saved
 	if($model->updated)
 	{
-		$form->textFieldRow('updated', array('readonly'=>'readonly'));
+		$form->textFieldRow('updated', Yii::app()->user->checkAccess('system admin') ? array() : array('readonly'=>'readonly'));
 	}
 	else
 	{
 		$form->checkBoxRow('updated');
 	}
 
-	if(!empty($this->model->generic_id))
+	if(!empty($model->generic_id))
 	{
-		$this->controller->widget('GenericWidget', array(
-			'form'=>$this->form,
-			'generic'=>$this->model->generic,
-			'genericType'=>$this->model->taskTypeToDutyType->dutyType->genericType,
-			'relationToGenericType'=>"duty->taskTypeToDutyType->dutyType->genericType",
+		$this->widget('GenericWidget', array(
+			'form'=>$form,
+			'generic'=>$model->generic,
+			'genericType'=>$model->taskTypeToDutyType->dutyType->genericType,
+			'relationToGenericType'=>'duty->taskTypeToDutyType->dutyType->genericType',
 		));
 	}
 

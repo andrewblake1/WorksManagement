@@ -99,8 +99,8 @@ class Task extends ActiveRecord
 			'id' => 'Task',
 			'in_charge_id' => 'In charge, First/Last/Email',
 			'searchInCharge' => 'In charge, First/Last/Email',
-			'project_id' => 'Client/Project',
-			'searchProject' => 'Client/Project',
+			'project_id' => 'Project',
+			'searchProject' => 'Project',
 			'task_type_id' => 'Task type',
 			'searchTaskType' => 'Task type',
 			'planned' => 'Planned',
@@ -122,6 +122,8 @@ class Task extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
+			't.in_charge_id',
+			't.task_type_id',
 			't.description',
 			't.planned',
 			't.scheduled',
@@ -140,10 +142,10 @@ class Task extends ActiveRecord
 		// where
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.planned',$this->planned);
-		$criteria->compare('t.scheduled',$this->scheduled);
-		$criteria->compare('t.earliest',$this->earliest);
-		$criteria->compare('t.preferred',$this->preferred);
+		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
+		$criteria->compare('t.scheduled',Yii::app()->format->toMysqlDate($this->scheduled));
+		$criteria->compare('t.earliest',Yii::app()->format->toMysqlDate($this->earliest));
+		$criteria->compare('t.preferred',Yii::app()->format->toMysqlDate($this->preferred));
 		$this->compositeCriteria($criteria,
 			array(
 				'inCharge.first_name',
@@ -174,20 +176,8 @@ class Task extends ActiveRecord
 	{
 		$columns[] = 'id';
 		$columns[] = 'description';
-        $columns[] = array(
-			'name'=>'searchInCharge',
-			'value'=>'CHtml::link($data->searchInCharge,
-				Yii::app()->createUrl("Staff/update", array("id"=>$data->in_charge_id))
-			)',
-			'type'=>'raw',
-		);
-        $columns[] = array(
-			'name'=>'searchTaskType',
-			'value'=>'CHtml::link($data->searchTaskType,
-				Yii::app()->createUrl("TaskTyp/update", array("id"=>$data->task_type_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
+        $columns[] = static::linkColumn('searchTaskType', 'TaskType', 'task_type_id');
 		$columns[] = 'planned';
 		$columns[] = 'scheduled';
 		$columns[] = 'earliest';

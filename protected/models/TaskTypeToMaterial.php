@@ -92,6 +92,7 @@ class TaskTypeToMaterial extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.material_id',
 			'material.description AS searchMaterial',
 			't.quantity',
 		);
@@ -111,13 +112,7 @@ class TaskTypeToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchMaterial',
-			'value'=>'CHtml::link($data->searchMaterial,
-				Yii::app()->createUrl("Material/update", array("id"=>$data->material_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
 		$columns[] = 'quantity';
 		
 		return $columns;

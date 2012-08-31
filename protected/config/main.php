@@ -53,6 +53,11 @@ return array(
 				'allowAutoLogin' => true,
 			),
 
+			// Overridden formatting for mysql
+			'format'=>array(
+				'class'=>'application.components.Formatter',
+			),
+
 			// uncomment the following to enable URLs in path-format
 			'urlManager'=>array(
 				'urlFormat'=>'path',

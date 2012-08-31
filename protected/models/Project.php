@@ -84,8 +84,8 @@ class Project extends ActiveRecord
 			'travel_time_1_way' => 'Travel time 1 way',
 			'critical_completion' => 'Critical completion',
 			'planned' => 'Planned',
-			'project_type_id' => 'Client/Project type',
-			'searchProjectType' => 'Client/Project type',
+			'project_type_id' => 'Project type',
+			'searchProjectType' => 'Project type',
 		));
 	}
 
@@ -103,6 +103,7 @@ class Project extends ActiveRecord
 			'travel_time_1_way',
 			't.critical_completion',
 			't.planned',
+			't.project_type_id',	// though not displayed, needed to get id for link field
 			'projectType.description AS searchProjectType',
 		);
 
@@ -110,8 +111,8 @@ class Project extends ActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.travel_time_1_way',$this->travel_time_1_way);
-		$criteria->compare('t.critical_completion',$this->critical_completion);
-		$criteria->compare('t.planned',$this->planned);
+		$criteria->compare('t.critical_completion',Yii::app()->format->toMysqlDate($this->critical_completion));
+		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
 		$criteria->compare('projectType.description', $this->searchProjectType, true);
 		$criteria->compare('client.id', $this->client_id);
 
@@ -128,13 +129,7 @@ class Project extends ActiveRecord
 	{
 		$columns[] = 'id';
 		$columns[] = 'description';
-		$columns[] = array(
-			'name'=>'searchProjectType',
-			'value'=>'CHtml::link($data->searchProjectType,
-				Yii::app()->createUrl("ProjectType/update", array("id"=>$data->project_type_id))
-			)',
-			'type'=>'raw',
-		);
+		$columns[] = static::linkColumn('searchProjectType', 'ProjectType', 'project_type_id');
 		$columns[] = 'travel_time_1_way';
 		$columns[] = 'critical_completion';
 		$columns[] = 'planned';

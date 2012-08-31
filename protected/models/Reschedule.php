@@ -6,12 +6,12 @@
  * The followings are the available columns in table 'reschedule':
  * @property string $id
  * @property string $task_id
- * @property string $new_task_id
+ * @property string $old_scheduled
+ * @property string $description
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Task $task
- * @property Task $newTask
  * @property Staff $staff
  */
 class Reschedule extends ActiveRecord
@@ -21,7 +21,10 @@ class Reschedule extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchTask;
-	public $searchNewTask;
+	/**
+	 * @var string mysqk date  the new scheduled date
+	 */
+	public $scheduled;
 	
 	/**
 	 * @return string the associated database table name
@@ -39,12 +42,13 @@ class Reschedule extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, new_task_id, staff_id', 'required'),
+			array('task_id, staff_id', 'required'),
 			array('staff_id', 'numerical', 'integerOnly'=>true),
-			array('task_id, new_task_id', 'length', 'max'=>10),
+			array('task_id', 'length', 'max'=>10),
+			array('scheduled', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchTask, searchNewTask, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, old_scheduled, description, searchTask, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,7 +61,6 @@ class Reschedule extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-			'newTask' => array(self::BELONGS_TO, 'Task', 'new_task_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
@@ -71,8 +74,7 @@ class Reschedule extends ActiveRecord
 			'id' => 'Reschedule',
 			'task_id' => 'Old task',
 			'searchTask' => 'Old task',
-			'new_task_id' => 'New task',
-			'searchNewTask' => 'New task',
+			'old_scheduled' => 'From',
 		));
 	}
 
@@ -84,32 +86,20 @@ class Reschedule extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			'newTask.description AS searchNewTask',
+			't.old_scheduled',
 			);
 
 		// where
-		$criteria->compare('newTask.description',$this->searchNewTask,true);
 		$criteria->compare('t.task_id',$this->task_id);
-
-		// join
-		$criteria->with = array(
-			'newTask',
-		);
+		$criteria->compare('t.old_scheduled',Yii::app()->format->toMysqlDate($this->old_scheduled));
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchNewTask',
-			'value'=>'CHtml::link($data->searchNewTask,
-				Yii::app()->createUrl("Task/update", array("id"=>$data->new_task_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = 'old_scheduled';
 		
 		return $columns;
 	}
@@ -120,8 +110,9 @@ class Reschedule extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTask', 'searchNewTask');
+		return array('searchTask');
 	}
+
 }
 
 ?>

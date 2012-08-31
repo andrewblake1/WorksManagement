@@ -75,7 +75,7 @@ class TaskToPurchaseOrder extends ActiveRecord
 			'id' => 'Task to purchase order',
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
-			'purchase_order_id' => 'Purchase order',
+			'purchase_order_id' => 'Supplier/Purchase order',
 			'searchPurchaseOrder' => 'Purchase order',
 		);
 	}
@@ -90,6 +90,7 @@ class TaskToPurchaseOrder extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.purchase_order_id',
 			"CONCAT_WS('$delimiter',
 				supplier.name,
 				purchaseOrder.number
@@ -117,13 +118,7 @@ class TaskToPurchaseOrder extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchPurchaseOrder',
-			'value'=>'CHtml::link($data->searchPurchaseOrder,
-				Yii::app()->createUrl("PurchaseOrder/update", array("id"=>$data->purchase_order_id))
-			)',
-			'type'=>'raw',
-		);
+        $columns[] = static::linkColumn('searchPurchaseOrder', 'PurchaseOrder', 'purchase_order_id');
 		
 		return $columns;
 	}

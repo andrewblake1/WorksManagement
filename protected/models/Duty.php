@@ -81,8 +81,8 @@ class Duty extends ActiveRecord
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
 			'task_type_id' => 'Task type',
-			'task_type_to_duty_type_id' => 'Duty',
-			'searchTaskTypeToDutyType' => 'Duty',
+			'task_type_to_duty_type_id' => 'Duty/Role/First/Last/Email',
+			'searchTaskTypeToDutyType' => 'Duty/Role/First/Last/Email',
 			'updated' => 'Complete',
 			'generic_id' => 'Generic',
 			'searchGeneric' => 'Generic',
@@ -99,12 +99,13 @@ class Duty extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.task_type_to_duty_type_id',
 			"CONCAT_WS('$delimiter',
+				dutyType.description,
 				authAssignment.itemname,
 				user.first_name,
 				user.last_name,
-				user.email,
-				dutyType.description
+				user.email
 				) AS searchTaskTypeToDutyType",
 			't.updated',
 		);
@@ -113,13 +114,13 @@ class Duty extends ActiveRecord
 		$this->compositeCriteria(
 			$criteria,
 			array(
+				'dutyType.description',
 				'authAssignment.itemname',
 				'user.first_name',
 				'user.last_name',
 				'user.email',
-				'dutyType.description',
 			), $this->searchTaskTypeToDutyType);
-		$criteria->compare('t.updated',$this->updated,true);
+		$criteria->compare('t.updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
 
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
@@ -127,9 +128,6 @@ class Duty extends ActiveRecord
 
 		// join
 		$criteria->with = array(
-/*			'task',
-			'task.project',
-			'task.project.projectToProjectTypeToAuthItems',*/
 			'task.project.projectToProjectTypeToAuthItems.authAssignment',
 			'task.project.projectToProjectTypeToAuthItems.authAssignment.user',
 			'taskTypeToDutyType.dutyType',
@@ -140,14 +138,8 @@ class Duty extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = array(
-			'name'=>'searchTaskTypeToDutyType',
-			'value'=>'CHtml::link($data->searchTaskTypeToDutyType,
-				Yii::app()->createUrl("TaskTypeToDutyType/update", array("id"=>$data->task_type_to_duty_type_id))
-			)',
-			'type'=>'raw',
-		);
-		$columns[] = 'updated';
+        $columns[] = static::linkColumn('searchTaskTypeToDutyType', 'TaskTypeToDutyType', 'task_type_to_duty_type_id');
+		$columns[] = 'updated:datetime';
 		
 		return $columns;
 	}
@@ -179,11 +171,19 @@ class Duty extends ActiveRecord
 
 	public function beforeSave()
 	{
-		if(!empty($this->updated))
+		// if the updated attribute was null but is now being set
+		if($this->updated == 1 && $this->getOldAttributeValue('updated') == null)
 		{
-			$this->updated = new CDbExpression('NOW()');
+			// set to current datetime
+			$this->updated = date('Y-m-d H:i:s');
 		}
-
+		// system admin clear
+		elseif(empty($this->updated) && Yii::app()->user->checkAccess('system admin'))
+		{
+			// clear
+			$this->updated = null;
+		}
+		
 		return parent::beforeSave();
 	}
 

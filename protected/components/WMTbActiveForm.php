@@ -68,8 +68,15 @@ class WMTbActiveForm extends TbActiveForm
 		$modelName = $this->controller->modelName;
 		$this->id="$modelName-form";
 		
+		// ensure the action if empty is an empty string and not null
+		if(empty($this->action))
+		{
+			$this->action = '';
+		}
+		
 		// determine whether form elements should be enabled or disabled by on access rights
-		if(!$this->controller->checkAccess(Controller::accessWrite))
+		$controllerName = get_class($this->controller);
+		if(!$controllerName::checkAccess(Controller::accessWrite))
 		{
 			$this->_htmlOptionReadonly = array('readonly'=>'readonly');
 			$this->_action = 'View';
