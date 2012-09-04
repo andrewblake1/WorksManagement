@@ -1,24 +1,20 @@
 <?php
 
 /**
- * This is the model class for table "project_type_to_AuthItem".
+ * This is the model class for table "report_to_AuthItem".
  *
- * The followings are the available columns in table 'project_type_to_AuthItem':
- * @property integer $id
- * @property integer $project_type_id
+ * The followings are the available columns in table 'report_to_AuthItem':
+ * @property string $id
+ * @property string $report_id
  * @property string $AuthItem_name
- * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
- * @property ProjectType $projectType
+ * @property Report $report
  * @property AuthItem $authItemName
  * @property Staff $staff
- * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
- * @property TaskTypeToDutyType[] $taskTypeToDutyTypes1
  */
-class ProjectTypeToAuthItem extends ActiveRecord
+class ReportToAuthItem extends ActiveRecord
 {
 	/**
 	 * @var string nice model name for use in output
@@ -30,7 +26,7 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'project_type_to_AuthItem';
+		return 'report_to_AuthItem';
 	}
 
 	/**
@@ -41,12 +37,13 @@ class ProjectTypeToAuthItem extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_type_id, AuthItem_name, staff_id', 'required'),
-			array('project_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('report_id, AuthItem_name, staff_id', 'required'),
+			array('staff_id', 'numerical', 'integerOnly'=>true),
+			array('report_id', 'length', 'max'=>10),
 			array('AuthItem_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, project_type_id, AuthItem_name, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, report_id, AuthItem_name, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,12 +55,9 @@ class ProjectTypeToAuthItem extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'project_type_to_AuthItem_id'),
-			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
+			'report' => array(self::BELONGS_TO, 'Report', 'report_id'),
 			'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'AuthItem_name'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'project_type_id'),
-			'taskTypeToDutyTypes1' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'project_type_to_AuthItem_id'),
 		);
 	}
 
@@ -72,11 +66,11 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return parent::attributeLabels(array(
-			'id' => 'Project type to role',
-			'project_type_id' => 'Project type',
+		return array(
+			'id' => 'Report to role',
+			'report_id' => 'Report',
 			'AuthItem_name' => 'Role',
-		));
+		);
 	}
 
 	/**
@@ -93,8 +87,8 @@ class ProjectTypeToAuthItem extends ActiveRecord
 
 		// where
 		$criteria->compare('t.AuthItem_name',$this->AuthItem_name,true);
-		$criteria->compare('t.project_type_id',$this->project_type_id);
-
+		$criteria->compare('t.report_id',$this->report_id);
+		
 		return $criteria;
 	}
 	

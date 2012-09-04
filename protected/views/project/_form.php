@@ -27,6 +27,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'models'=>$mod
 		'relation_modelToGenericModelType'=>'projectToGenericProjectType',
 		'relation_modelToGenericModelTypes'=>'projectToGenericProjectTypes',
 		'relation_genericModelType'=>'genericProjectType',
+		'relation_category'=>'genericprojectcategory',
+		'categoryModelName'=>'Genericprojectcategory',
 	));
 
 $this->endWidget();

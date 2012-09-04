@@ -172,6 +172,16 @@ EOD;
 			 $this->_authManager->createOperation('ProjectTypeToAuthItemRead', 'ProjectTypeToAuthItem read');
 			 $task->addChild('ProjectTypeToAuthItemRead');
 
+			 $task=$this->_authManager->createTask('Report', 'Report task');
+			 $systemAdminRole->addChild('Report');
+			 $this->_authManager->createOperation('ReportRead', 'Report read');
+			 $task->addChild('ReportRead');
+
+			 $task=$this->_authManager->createTask('ReportToAuthItem', 'ReportToAuthItem task');
+			 $systemAdminRole->addChild('ReportToAuthItem');
+			 $this->_authManager->createOperation('ReportToAuthItemRead', 'ReportToAuthItem read');
+			 $task->addChild('ReportToAuthItemRead');
+
 			 $task=$this->_authManager->createTask('ResourceType', 'ResourceType task');
 			 $systemAdminRole->addChild('ResourceType');
 			 $this->_authManager->createOperation('ResourceTypeRead', 'ResourceType read');
@@ -262,8 +272,14 @@ EOD;
 			 $task->addChild('TaskToResourceTypeRead');
 
 			 // Scheduler
+			 // NB: this role is hard coded into the task _form view
 			 $schedulerRole=$this->_authManager->createRole('scheduler', 'Scheduler');
 			 // create tasks
+			 $task=$this->_authManager->createTask('Schedule', 'Schedule task');
+			 $schedulerRole->addChild('Schedule');
+			 $this->_authManager->createOperation('ScheduleRead', 'Schedule read');
+			 $task->addChild('ScheduleRead');
+
 			 $task=$this->_authManager->createTask('Reschedule', 'Reschedule task');
 			 $schedulerRole->addChild('Reschedule');
 			 $this->_authManager->createOperation('RescheduleRead', 'Reschedule read');
@@ -287,7 +303,7 @@ EOD;
 			 
 			 // create hierachy amongst roles
 			 $systemAdminRole->addChild('project manager');
-			 $projectManagerRole->addChild('scheduler');
+			 $projectManagerRole->addChild('ScheduleRead');
 			 $schedulerRole->addChild('default');
 			 
 		     //provide a message indicating success

@@ -157,6 +157,11 @@ class WMTbActiveForm extends TbActiveForm
 		echo parent::checkBoxRow($model ? $model : $this->model, $attribute, $htmlOptions + $this->_htmlOptionReadonly);
 	}
 
+	public function checkBoxListInlineRow($attribute,  $data = array(), $htmlOptions = array(), $model = NULL)
+	{
+		echo parent::checkBoxListInlineRow($model ? $model : $this->model, 'preferred', $data, $htmlOptions);
+	}
+
 	public function textAreaRow($attribute, $data = array(), $htmlOptions = array(), $model = NULL)
 	{
 		echo parent::textAreaRow($model ? $model : $this->model, $attribute, $data,

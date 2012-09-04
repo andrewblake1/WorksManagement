@@ -1,5 +1,5 @@
 <?php
 return array (
   'baseControllerClass' => 'Controller',
-  'template' => 'nested',
+  'template' => 'default',
 );

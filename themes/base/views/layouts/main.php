@@ -44,8 +44,16 @@
 				'brandUrl'=>'#',
 				'collapse'=>true, // requires bootstrap-responsive.css
 				'items'=>array(
-//					$this->allMenu,
+ 					$this->reportsMenu,
 					//$this->operations,
+					array(
+						'class'=>'bootstrap.widgets.TbMenu',
+						'items'=>array(
+							Yii::app()->user->checkAccess('system admin')
+								? array('label'=>'Database', 'url'=>Yii::app()->request->hostInfo.'/phpMyAdmin')
+								: null,
+						),
+					),
 					array(
 						'class'=>'bootstrap.widgets.TbMenu',
 						'htmlOptions'=>array('class'=>'pull-right'),
@@ -84,6 +92,15 @@
 				// if we should be showing the new button
 				if(Yii::app()->controller->action->id == 'admin')
 				{
+					echo ' ';
+//					echo CHtml::submitButton('Download Excel');
+					$this->widget('bootstrap.widgets.TbButton', array(
+						'label'=>'Download Excel',
+						'url'=>$this->createUrl("{$this->modelName}/admin", array('action'=>'download')),
+						'type'=>'primary',
+						'size'=>'small', // '', 'large', 'small' or 'mini'
+//						'htmlOptions'=>array('data-toggle'=>'modal'),
+					));
 					echo ' ';
 					$this->widget('bootstrap.widgets.TbButton', array(
 						'label'=>'New',

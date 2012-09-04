@@ -11,15 +11,19 @@
  * @property integer $in_charge_id
  * @property string $planned
  * @property string $scheduled
- * @property string $earliest
- * @property string $preferred
  * @property integer $staff_id
+ * @property integer $preferred_mon
+ * @property integer $preferred_tue
+ * @property integer $preferred_wed
+ * @property integer $preferred_thu
+ * @property integer $preferred_fri
+ * @property integer $preferred_sat
+ * @property integer $preferred_sun
  *
  * The followings are the available model relations:
  * @property Duty[] $duties
  * @property MaterialToTask[] $materialToTasks
  * @property Reschedule[] $reschedules
- * @property Reschedule[] $reschedules1
  * @property Project $project
  * @property Staff $staff
  * @property TaskType $taskType
@@ -28,7 +32,6 @@
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
  * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
  * @property TaskToResourceType[] $taskToResourceTypes
- * @property TaskType[] $taskTypes
  */
 class Task extends ActiveRecord
 {
@@ -39,6 +42,11 @@ class Task extends ActiveRecord
 	public $searchInCharge;
 	public $searchProject;
 	public $searchTaskType;
+	public $searchEarliest;
+	/**
+	 * inline checkbox property 
+	 */
+	public $preferred = array();
 	
 	/**
 	 * @return string the associated database table name
@@ -59,10 +67,10 @@ class Task extends ActiveRecord
 			array('description, project_id, task_type_id, in_charge_id, staff_id', 'required'),
 			array('task_type_id, in_charge_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('project_id', 'length', 'max'=>10),
-			array('planned, scheduled, earliest, preferred', 'safe'),
+			array('planned, scheduled, preferred', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('searchInCharge, searchProject, searchTaskType, searchStaff, id, description, project_id, planned, scheduled, earliest, preferred', 'safe', 'on'=>'search'),
+			array('searchInCharge, searchEarliest, searchProject, searchTaskType, searchStaff, id, description, project_id, planned, scheduled, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -77,7 +85,6 @@ class Task extends ActiveRecord
 			'duties' => array(self::HAS_MANY, 'Duty', 'task_id'),
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'task_id'),
 			'reschedules' => array(self::HAS_MANY, 'Reschedule', 'task_id'),
-			'reschedules1' => array(self::HAS_MANY, 'Reschedule', 'new_task_id'),
 			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
@@ -86,7 +93,6 @@ class Task extends ActiveRecord
 			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'task_id'),
 			'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'task_id'),
 			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'task_id'),
-			'taskTypes' => array(self::HAS_MANY, 'TaskType', 'template_task_id'),
 		);
 	}
 
@@ -105,9 +111,14 @@ class Task extends ActiveRecord
 			'searchTaskType' => 'Task type',
 			'planned' => 'Planned',
 			'scheduled' => 'Scheduled',
-			'earliest' => 'Earliest',
-			'preferred' => 'Preferred',
-
+			'searchEarliest' => 'Earliest',
+			'preferred_mon' => 'Mon',
+			'preferred_tue' => 'Tue',
+			'preferred_wed' => 'Wed',
+			'preferred_thu' => 'Thu',
+			'preferred_fri' => 'Fri',
+			'preferred_sat' => 'Sat',
+			'preferred_sun' => 'Sun',
 		));
 	}
 
@@ -127,8 +138,19 @@ class Task extends ActiveRecord
 			't.description',
 			't.planned',
 			't.scheduled',
-			't.earliest',
-			't.preferred',
+			'SELECT DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest
+				FROM task
+				JOIN project ON task.project_id = project.id
+				JOIN duty ON task.id = duty.task_id
+				JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type_id
+				JOIN duty_type ON task_type_to_duty_type.duty_type_id = duty_type.id',
+			't.preferred_mon',
+			't.preferred_tue',
+			't.preferred_wed',
+			't.preferred_thu',
+			't.preferred_fri',
+			't.preferred_sat',
+			't.preferred_sun',
 			"CONCAT_WS('$delimiter',
 				inCharge.first_name,
 				inCharge.last_name,
@@ -144,8 +166,15 @@ class Task extends ActiveRecord
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
 		$criteria->compare('t.scheduled',Yii::app()->format->toMysqlDate($this->scheduled));
-		$criteria->compare('t.earliest',Yii::app()->format->toMysqlDate($this->earliest));
-		$criteria->compare('t.preferred',Yii::app()->format->toMysqlDate($this->preferred));
+		$criteria->compare('searchEarliest',Yii::app()->format->toMysqlDate($this->searchEarliest));
+		$criteria->compare('t.preferred_mon',Yii::app()->format->toMysqlBool($this->preferred_mon));
+		$criteria->compare('t.preferred_tue',Yii::app()->format->toMysqlBool($this->preferred_tue));
+		$criteria->compare('t.preferred_wed',Yii::app()->format->toMysqlBool($this->preferred_wed));
+		$criteria->compare('t.preferred_thu',Yii::app()->format->toMysqlBool($this->preferred_thu));
+		$criteria->compare('t.preferred_fri',Yii::app()->format->toMysqlBool($this->preferred_fri));
+		$criteria->compare('t.preferred_sat',Yii::app()->format->toMysqlBool($this->preferred_sat));
+		$criteria->compare('t.preferred_sun',Yii::app()->format->toMysqlBool($this->preferred_sun));
+
 		$this->compositeCriteria($criteria,
 			array(
 				'inCharge.first_name',
@@ -179,9 +208,15 @@ class Task extends ActiveRecord
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
         $columns[] = static::linkColumn('searchTaskType', 'TaskType', 'task_type_id');
 		$columns[] = 'planned';
+		$columns[] = 'searchEarliest';
 		$columns[] = 'scheduled';
-		$columns[] = 'earliest';
-		$columns[] = 'preferred';
+		$columns[] = 'preferred_mon:boolean';
+		$columns[] = 'preferred_tue:boolean';
+		$columns[] = 'preferred_wed:boolean';
+		$columns[] = 'preferred_thu:boolean';
+		$columns[] = 'preferred_fri:boolean';
+		$columns[] = 'preferred_sat:boolean';
+		$columns[] = 'preferred_sun:boolean';
 		
 		return $columns;
 	}
@@ -192,9 +227,64 @@ class Task extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchInCharge', 'searchProject', 'searchTaskType');
+		return array('searchInCharge', 'searchProject', 'searchTaskType', 'searchEarliest');
 	}
 
+	public function beforeSave() {
+
+		// ensure no tampering of scheduling if user doesn't have the rights
+		if(!Yii::app()->user->checkAccess('Schedule'))
+		{
+			// reset
+			$this->scheduled = $this->getOldAttributeValue('scheduled');
+		}
+		if(!empty($this->preferred))
+		{
+			$this->preferred_mon = in_array('0', $this->preferred);
+			$this->preferred_tue = in_array('1', $this->preferred);
+			$this->preferred_wed = in_array('2', $this->preferred);
+			$this->preferred_thu = in_array('3', $this->preferred);
+			$this->preferred_fri = in_array('4', $this->preferred);
+			$this->preferred_sat = in_array('5', $this->preferred);
+			$this->preferred_sun = in_array('6', $this->preferred);
+		}
+		
+		return parent::beforeSave();
+	}
+
+	public function afterFind() {
+		// prepare check box row items
+		if($this->preferred_mon)
+		{
+			$this->preferred[] = 0;
+		}
+		if($this->preferred_tue)
+		{
+			$this->preferred[] = 1;
+		}
+		if($this->preferred_wed)
+		{
+			$this->preferred[] = 2;
+		}
+		if($this->preferred_thu)
+		{
+			$this->preferred[] = 3;
+		}
+		if($this->preferred_fri)
+		{
+			$this->preferred[] = 4;
+		}
+		if($this->preferred_sat)
+		{
+			$this->preferred[] = 5;
+		}
+		if($this->preferred_sun)
+		{
+			$this->preferred[] = 6;
+		}
+	
+		parent::afterFind();
+	}
 }
 
 ?>

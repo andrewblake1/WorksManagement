@@ -83,6 +83,7 @@ class AuthAssignment extends ActiveRecord
 			'user' => array(self::BELONGS_TO, 'Staff', 'userid'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'AuthAssignment_id'),
+			'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', array('name'=>'AuthItem_name'), 'through'=>'itemname0'),
 		);
 	}
 

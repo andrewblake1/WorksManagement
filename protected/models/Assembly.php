@@ -6,11 +6,15 @@
  * The followings are the available columns in table 'assembly':
  * @property integer $id
  * @property string $description
+ * @property string $unit_price
  * @property string $url
  * @property integer $deleted
+ * @property integer $client_id
+ * @property string $client_alias
  * @property integer $staff_id
  *
  * The followings are the available model relations:
+ * @property Client $client
  * @property Staff $staff
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property TaskToAssembly[] $taskToAssemblies
@@ -35,11 +39,12 @@ class Assembly extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('description, staff_id', 'required'),
-			array('deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description, url', 'length', 'max'=>255),
+			array('deleted, client_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, url, client_alias', 'length', 'max'=>255),
+			array('unit_price', 'length', 'max'=>7),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, url, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, url, client_id, client_alias, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,6 +56,7 @@ class Assembly extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'assembly_id'),
@@ -66,6 +72,9 @@ class Assembly extends ActiveRecord
 		return parent::attributeLabels(array(
 			'id' => 'Assembly',
 			'url' => 'Url',
+			'unit_price' => 'Unit price',
+			'client_id' => 'Client',
+			'client_alias' => 'Client Alias',
 		));
 	}
 
@@ -78,11 +87,14 @@ class Assembly extends ActiveRecord
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.unit_price',$this->unit_price,true);
 		$criteria->compare('t.url',$this->url,true);
+		$criteria->compare('t.client_id', $this->client_id);
 
 		$criteria->select=array(
 			't.id',
 			't.description',
+			't.unit_price',
 			't.url',
 		);
 
@@ -93,6 +105,7 @@ class Assembly extends ActiveRecord
 	{
 		$columns[] = 'id';
 		$columns[] = 'description';
+		$columns[] = 'unit_price';
         $columns[] = array(
 			'name'=>'url',
 			'value'=>'CHtml::link($data->url, $data->url)',

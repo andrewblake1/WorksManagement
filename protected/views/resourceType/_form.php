@@ -6,6 +6,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	$form->textFieldRow('maximum');
 
+	$form->textFieldRow('unit_price');
+
 $this->endWidget();
 
 ?>

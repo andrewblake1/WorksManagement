@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'resource_type':
  * @property integer $id
  * @property string $description
+ * @property string $unit_price
  * @property integer $resourcecategory_id
  * @property integer $maximum
  * @property integer $deleted
@@ -19,11 +20,6 @@
  */
 class ResourceType extends ActiveRecord
 {
-	/**
-	 * @var string search variables - foreign key lookups sometimes composite.
-	 * these values are entered by user in admin view to search
-	 */
-	public $searchResourcecategory;
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -49,9 +45,10 @@ class ResourceType extends ActiveRecord
 			array('description, staff_id', 'required'),
 			array('resourcecategory_id, maximum, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
+			array('unit_price', 'length', 'max'=>7),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, resourcecategory_id, description, searchResourcecategory, maximum, deleted, searchStaff', 'safe', 'on'=>'search'),
+			array('id, resourcecategory_id, description, maximum, deleted, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,7 +75,7 @@ class ResourceType extends ActiveRecord
 		return parent::attributeLabels(array(
 			'id' => 'Resource type',
 			'resourcecategory_id' => 'Resource category',
-			'searchResourcecategory' => 'Resource category',
+			'unit_price' => 'Unit price',
 			'maximum' => 'Maximum',
 		));
 	}
@@ -94,17 +91,16 @@ class ResourceType extends ActiveRecord
 		$criteria->select=array(
 			't.id',
 			't.description',
+			't.unit_price',
 			't.maximum',
 		);
 
 		// where
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.unit_price',$this->unit_price);
 		$criteria->compare('t.maximum',$this->maximum);
 		$criteria->compare('t.resourcecategory_id', $this->resourcecategory_id);
-		
-		// join
-		$criteria->with = array('resourcecategory');
 
 		return $criteria;
 	}
@@ -113,19 +109,12 @@ class ResourceType extends ActiveRecord
 	{
 		$columns[] = 'id';
 		$columns[] = 'description';
+		$columns[] = 'unit_price';
 		$columns[] = 'maximum';
 		
 		return $columns;
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchResourcecategory');
-	}
 }
 
 ?>

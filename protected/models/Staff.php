@@ -19,6 +19,7 @@
  * @property AuthItem[] $authItems
  * @property AuthItemChild[] $authItemchildren
  * @property Assembly[] $assemblies
+ * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property Client[] $clients
  * @property DefaultValue[] $defaultValues
  * @property Duty[] $duties
@@ -38,7 +39,10 @@
  * @property ProjectType[] $projectTypes
  * @property ProjectTypeToAuthItem[] $projectTypeToAuthItems
  * @property PurchaseOrder[] $purchaseOrders
+ * @property Report[] $reports
+ * @property ReportToAuthItem[] $reportToAuthItems
  * @property Reschedule[] $reschedules
+ * @property ResourceType[] $resourceTypes
  * @property Resourcecategory[] $resourcecategories
  * @property Staff $staff
  * @property Staff[] $staffs
@@ -50,7 +54,9 @@
  * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
  * @property TaskToResourceType[] $taskToResourceTypes
  * @property TaskType[] $taskTypes
+ * @property TaskTypeToAssembly[] $taskTypeToAssemblies
  * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
+ * @property TaskTypeToMaterial[] $taskTypeToMaterials
  * @property TaskTypeToResourceType[] $taskTypeToResourceTypes
  */
 class Staff extends ActiveRecord
@@ -95,6 +101,7 @@ class Staff extends ActiveRecord
 			'authItems' => array(self::HAS_MANY, 'AuthItem', 'staff_id'),
 			'authItemchildren' => array(self::HAS_MANY, 'AuthItemChild', 'staff_id'),
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'staff_id'),
+			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'staff_id'),
 			'clients' => array(self::HAS_MANY, 'Client', 'staff_id'),
 			'defaultValues' => array(self::HAS_MANY, 'DefaultValue', 'staff_id'),
 			'duties' => array(self::HAS_MANY, 'Duty', 'staff_id'),
@@ -114,7 +121,10 @@ class Staff extends ActiveRecord
 			'projectTypes' => array(self::HAS_MANY, 'ProjectType', 'staff_id'),
 			'projectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectTypeToAuthItem', 'staff_id'),
 			'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrder', 'staff_id'),
+			'reports' => array(self::HAS_MANY, 'Report', 'staff_id'),
+			'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'staff_id'),
 			'reschedules' => array(self::HAS_MANY, 'Reschedule', 'staff_id'),
+			'resourceTypes' => array(self::HAS_MANY, 'ResourceType', 'staff_id'),
 			'resourcecategories' => array(self::HAS_MANY, 'Resourcecategory', 'staff_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'staffs' => array(self::HAS_MANY, 'Staff', 'staff_id'),
@@ -126,7 +136,9 @@ class Staff extends ActiveRecord
 			'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'staff_id'),
 			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'staff_id'),
 			'taskTypes' => array(self::HAS_MANY, 'TaskType', 'staff_id'),
+			'taskTypeToAssemblies' => array(self::HAS_MANY, 'TaskTypeToAssembly', 'staff_id'),
 			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'staff_id'),
+			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'staff_id'),
 			'taskTypeToResourceTypes' => array(self::HAS_MANY, 'TaskTypeToResourceType', 'staff_id'),
 		);
 	}

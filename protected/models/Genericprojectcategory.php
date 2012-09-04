@@ -43,4 +43,13 @@ class Genericprojectcategory extends CategoryActiveRecord {
 		);
 	}
 
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels() {
+		return array(
+			'id' => 'Project category',
+		) + parent::attributeLabels();
+	}
+
 }

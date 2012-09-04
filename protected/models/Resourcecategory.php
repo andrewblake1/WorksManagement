@@ -22,6 +22,12 @@
 class Resourcecategory extends CategoryActiveRecord {
 
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Resource category';
+
+
+	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
@@ -61,7 +67,8 @@ class Resourcecategory extends CategoryActiveRecord {
 	 */
 	public function attributeLabels() {
 		return array(
-			'dutycategory_id' => 'Dutycategory',
+			'id' => 'Resource category',
+//			'dutycategory_id' => 'Dutycategory',
 		) + parent::attributeLabels();
 	}
 

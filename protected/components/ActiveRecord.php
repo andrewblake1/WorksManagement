@@ -97,8 +97,29 @@ abstract class ActiveRecord extends CActiveRecord
 		$criteria=new CDbCriteria;
 		
 		// key will contain either a number or a foreign key field in which case field will be the lookup value
-		foreach(static::getDisplayAttr() as $key => $field)
+		foreach(static::getDisplayAttr() as $field)
 		{
+			/*
+				* $matches[5] attribute
+				* $matches[4] alias
+				* $matches[1] relations
+				*/
+			if(preg_match('/(((.*)->)?(\w*))->(\w*)$/', $field, $matches))
+			{
+				$criteria->with[] = $matches[1];
+				$alias = $matches[4];
+				$attribute = $matches[5];
+			}
+			else
+			{
+				$alias = 't';
+				$attribute = $field;
+			}
+
+			$criteria->order[] = "$alias.$attribute ASC";
+			$concat_ws[] = "$alias.$attribute";
+		}
+/*		{
 			// if we are using a foreign key lookup
 			if(!is_numeric($key))
 			{
@@ -111,7 +132,7 @@ abstract class ActiveRecord extends CActiveRecord
 				$criteria->order[] = "$field asc";
 				$concat_ws[] = $field;
 			}
-		}
+		}*/
 
 		$criteria->order = implode(', ', $criteria->order);
 
@@ -357,12 +378,12 @@ abstract class ActiveRecord extends CActiveRecord
 
 	public function beforeSave()
 	{
-		$arrayForeignKeys=$this->tableSchema->foreignKeys;
+	//	$arrayForeignKeys=$this->tableSchema->foreignKeys;
 		
 		foreach($this->attributes as $name=>&$value)
 		{
 			// convert empty strings to nulls if null allowed
-			if(array_key_exists($name, $arrayForeignKeys) && $this->metadata->columns[$name]->allowNull && trim($value)=='')
+			if(/*array_key_exists($name, $arrayForeignKeys) &&*/ $this->metadata->columns[$name]->allowNull && trim($value)=='')
 			{
 				$this->$name=NULL;
 			}
@@ -443,29 +464,6 @@ abstract class ActiveRecord extends CActiveRecord
 		}
 	}
 
-	public function getFormattedAdminColumns()
-	{
-		$adminColumns = $this->adminColumns;
-		
-		// get columnn info from schema
-		$columns = $this->tableSchema->columns;
-
-		// add any desired formatting i.e. date to unformatted basic items
-		foreach($adminColumns as $key => &$value)
-		{
-			if(is_string($value) && strpos($value, ':') === false)
-			{
-				// see if date column
-				if($columns[$value]->dbType == 'date')
-				{
-					$value .= ':date';
-				}
-			}
-		}
-		
-		return $adminColumns;
-	}
-
 	/*
 	 * Set user defined defaults for any attributes that require them
 	 */
@@ -500,6 +498,29 @@ abstract class ActiveRecord extends CActiveRecord
 		}
 	}
 
+	public function afterFind()
+	{
+		// format mysql
+		// get columnn info from schema
+		$columns = $this->tableSchema->columns;
+
+		// add any desired formatting i.e. date to unformatted basic items
+		foreach($this->attributes as $attributeName => &$value)
+		{
+			// see if date column
+			if($columns[$attributeName]->dbType == 'date')
+			{
+				$this->$attributeName = Yii::app()->format->date($value);
+			}
+			// see if date column
+			if($columns[$attributeName]->dbType == 'datetime')
+			{
+				$this->$attributeName = Yii::app()->format->datetime($value);
+			}
+		}
+		
+		parent::afterFind();
+	}
 }
 
 ?>

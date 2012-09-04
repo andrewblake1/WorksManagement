@@ -20,7 +20,7 @@
  */
 class Generic extends ActiveRecord
 {
-	/* 
+	/*
 	 * array of validation rules appended to rules at run time as determined
 	 * by the related GenericType
 	 */
@@ -52,12 +52,12 @@ class Generic extends ActiveRecord
 			array('id, type_int, type_float, type_time, type_date, type_text, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
-	
+
 	public function setCustomValidators($genericType, $params)
 	{
 		// Get GenericType column names
 		$dataTypeColumnNames = GenericType::getDataTypeColumnNames();
-		
+
 		// get the target attribute
 		$targetAttribute = $dataTypeColumnNames[$genericType->data_type];
 
@@ -96,11 +96,11 @@ class Generic extends ActiveRecord
 		{
 			$this->customValidators[] = array($targetAttribute, 'required');
 		}
-		
+
 		// force a re-read of validators
 		$this->getValidators(NULL, TRUE);
 	}
-	
+
 	/**
 	 * Override of this necassary because _validators is private var of CModel and populated
 	 * on construct or sometime before our call to dynamically add validators.
@@ -117,7 +117,7 @@ class Generic extends ActiveRecord
 		{
 			$_validators = parent::getValidators($attribute);
 		}
-		
+
 		$validators=array();
 		$scenario=$this->getScenario();
 		foreach($_validators as $validator)
@@ -190,17 +190,17 @@ class Generic extends ActiveRecord
 		catch(Exception $e)
 		{
 			$errorMessage = 'There is an error in the setup - please contact the system administrator, the database says:<br> '.$e->getMessage();
-		}		
-		
+		}
+
 		// if validation failed
 		if($errorMessage)
 		{
 			$this->addError($attribute, $errorMessage);
 		}
-		
+
 		return $display;
 	}
-	
+
 	/**
 	 * @return array relational rules.
 	 */
@@ -262,7 +262,7 @@ class Generic extends ActiveRecord
 		$columns[] = 'type_time';
 		$columns[] = 'type_date';
 		$columns[] = 'type_text';
-		
+
 		return $columns;
 	}
 
@@ -273,7 +273,7 @@ class Generic extends ActiveRecord
 	{
 		$dataTypeColumnNames = GenericType::getDataTypeColumnNames();
 		$attributeName = $dataTypeColumnNames[$genericModelType->data_type];
-		
+
 		// if this is likely to be an sql select
 		if(stripos($genericModelType->default_select, 'SELECT') !== false)
 		{
@@ -285,7 +285,7 @@ class Generic extends ActiveRecord
 			}
 			catch (CDbException $e)
 			{
-				// the select failed so assume it is just text with the word 'select' in it - most likely sys admin error but 
+				// the select failed so assume it is just text with the word 'select' in it - most likely sys admin error but
 				// deal with it anyway by just doing nothing here and the attribute gets set below anyway
 			}
 		}
@@ -307,7 +307,7 @@ class Generic extends ActiveRecord
 		$saved = $generic->dbCallback('save');
 		// record any errors
 		$models[] = $generic;
-		
+
 		return $saved;
 
 	}

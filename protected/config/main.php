@@ -136,6 +136,10 @@ return array(
 			*/
 			'trail' => array(
 				'Client'=>array(
+					'Assembly'=>array(
+						'AssemblyToMaterial',
+					),
+					'Material',
 					'Project'=>array( 
 						'Task'=>array(
 							'Duty',
@@ -162,28 +166,27 @@ return array(
 						),
 					),
 				),
+				'AuthItem'=>array(
+					'AuthItemChild',
+				),
 				'DefaultValue',
 				'Dutycategory'=>array(
 					'DutyType',
-				),
-				'Resourcecategory'=>array(
-					'ResourceType',
 				),
 				'GenericType',
 				'Genericprojectcategory',
 				'Generictaskcategory',
 				'PurchaseOrder',
-				'Assembly'=>array(
-					'AssemblyToMaterial',
+				'Report'=>array(
+					'ReportToAuthItem',
 				),
-				'Material',
+				'Resourcecategory'=>array(
+					'ResourceType',
+				),
 				'Staff'=>array(
 					'AuthAssignment',
 				),
 				'Supplier',
-				'AuthItem'=>array(
-					'AuthItemChild',
-				),
 			),
 		),
 

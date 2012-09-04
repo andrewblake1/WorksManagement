@@ -17,7 +17,8 @@
  * @property Staff $staff
  * @property AuthItemChild[] $authItemchildren
  * @property AuthItemChild[] $authItemchildren1
- * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
+ * @property ProjectTypeToAuthItem[] $projectTypeToAuthItems
+ * @property ReportToAuthItem[] $reportToAuthItems
  */
 class AuthItem extends ActiveRecord
 {
@@ -75,9 +76,10 @@ class AuthItem extends ActiveRecord
 		return array(
 			'authAssignments' => array(self::HAS_MANY, 'AuthAssignment', 'itemname'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'authItemchildren' => array(self::HAS_MANY, 'AuthItemChild', 'parent'),
-			'authItemchildren1' => array(self::HAS_MANY, 'AuthItemChild', 'child'),
-			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'AuthItem_name'),
+			'authItemchildren' => array(self::HAS_MANY, 'AuthItemChild', 'child'),
+			'authItemchildren1' => array(self::HAS_MANY, 'AuthItemChild', 'parent'),
+			'projectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectTypeToAuthItem', 'AuthItem_name'),
+			'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'AuthItem_name'),
 		);
 	}
 

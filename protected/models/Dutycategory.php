@@ -18,6 +18,17 @@
  * @property Staff $staff
  */
 class Dutycategory extends CategoryActiveRecord {
+
+
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels() {
+		return array(
+ 			'id' => 'Duty category',
+		) + parent::attributeLabels();
+	}
+
 	/**
 	 * @return string the associated database table name
 	 */

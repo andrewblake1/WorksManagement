@@ -7,7 +7,6 @@
  * @property integer $id
  * @property string $description
  * @property integer $client_id
- * @property string $template_project_id
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -15,20 +14,12 @@
  * @property GenericProjectType[] $genericProjectTypes
  * @property Project[] $projects
  * @property Staff $staff
- * @property Project $templateProject
  * @property Client $client
  * @property ProjectTypeToAuthItem[] $projectTypeToAuthItems
  * @property TaskType[] $taskTypes 
  */
 class ProjectType extends ActiveRecord
 {
-	/**
-	 * @var string search variables - foreign key lookups sometimes composite.
-	 * these values are entered by user in admin view to search
-	 */
-	public $searchClient;
-	public $searchTemplateProject;
-	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -48,10 +39,9 @@ class ProjectType extends ActiveRecord
 			array('description, client_id, staff_id', 'required'),
 			array('client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
-			array('template_project_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, client_id, deleted, searchTemplateProject, searchClient, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, client_id, deleted, searchClient, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,7 +55,6 @@ class ProjectType extends ActiveRecord
 		return array(
 			'genericProjectTypes' => array(self::HAS_MANY, 'GenericProjectType', 'project_type_id'),
 			'projects' => array(self::HAS_MANY, 'Project', 'project_type_id'),
-			'templateProject' => array(self::BELONGS_TO, 'Project', 'template_project_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
 			'projectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectTypeToAuthItem', 'project_type_id'),
@@ -82,8 +71,6 @@ class ProjectType extends ActiveRecord
 			'id' => 'Project type',
 			'client_id' => 'Client',
 			'searchClient' => 'Client',
-			'template_project_id' => 'Template project',
-			'searchTemplateProject' => 'Template project',
 		));
 	}
 
@@ -102,9 +89,6 @@ class ProjectType extends ActiveRecord
 		// where
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.client_id', $this->client_id);
-		
-		// join
-		$criteria->with = array('client');
 
 		return $criteria;
 	}

@@ -6,11 +6,15 @@
  * The followings are the available columns in table 'material':
  * @property integer $id
  * @property string $description
+ * @property string $unit_price
  * @property integer $deleted
+ * @property string $client_alias
+ * @property integer $client_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property AssemblyToMaterial[] $assemblyToMaterials
+ * @property Client $client
  * @property Staff $staff
  * @property MaterialToTask[] $materialToTasks
  * @property TaskTypeToMaterial[] $taskTypeToMaterials
@@ -34,11 +38,12 @@ class Material extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('description, staff_id', 'required'),
-			array('deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>255),
+			array('deleted, client_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, client_alias', 'length', 'max'=>255),
+			array('unit_price', 'length', 'max'=>7),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, searchStaff, client_alias, client_id, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,6 +56,7 @@ class Material extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'material_id'),
+			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'material_id'),
 			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'material_id'),
@@ -64,6 +70,9 @@ class Material extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Material',
+			'unit_price' => 'Unit price',
+			'client_alias' => 'Client Alias',
+			'client_id' => 'Client',
 		));
 	}
 
@@ -76,10 +85,13 @@ class Material extends ActiveRecord
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.unit_price',$this->unit_price,true);
+		$criteria->compare('t.client_id', $this->client_id);
 
 		$criteria->select=array(
 			't.id',
 			't.description',
+			't.unit_price',
 		);
 
 		return $criteria;
@@ -89,6 +101,7 @@ class Material extends ActiveRecord
 	{
 		$columns[] = 'id';
 		$columns[] = 'description';
+		$columns[] = 'unit_price';
 		
 		return $columns;
 	}

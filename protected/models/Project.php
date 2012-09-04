@@ -13,11 +13,10 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property ProjectType $projectType
  * @property Staff $staff
+ * @property ProjectType $projectType
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
  * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
- * @property ProjectType[] $projectTypes
  * @property Task[] $tasks
  */
 class Project extends ActiveRecord
@@ -66,11 +65,10 @@ class Project extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
 			'projectToGenericProjectTypes' => array(self::HAS_MANY, 'ProjectToGenericProjectType', 'project_id'),
 			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'project_id'),
-			'projectTypes' => array(self::HAS_MANY, 'ProjectType', 'template_project_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'project_id'),
 		);
 	}

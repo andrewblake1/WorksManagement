@@ -42,4 +42,13 @@ class Generictaskcategory extends CategoryActiveRecord {
 		);
 	}
 
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels() {
+		return array(
+			'id' => 'Task category',
+		) + parent::attributeLabels();
+	}
+
 }

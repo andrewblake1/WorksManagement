@@ -399,9 +399,11 @@ protected $_adminShowNew = false;
 		$model->assertFromParent();
 		
 		// if exporting to xl
-		if(isset($_POST['yt0']) && $_POST['yt0'] == 'Download Excel')
+		if(isset($_GET['action']) && $_GET['action'] == 'download')
+		{
 			// Export it
 			$this->toExcel($model->findAll($model->searchCriteria), $exportColumns, null, array(), 'CSV'/*'Excel5'*/);
+		}
 // TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
 // TODO excel2007 best format however mixed results getting succesfull creations with this = varies across servers likely php_zip issue	thnk
 // it works on windows machine however not mac nor linux for me so far.
@@ -415,14 +417,19 @@ protected $_adminShowNew = false;
 		// set breadcrumbs
 		$this->breadcrumbs = $this->getBreadCrumbTrail();
 
+		$this->adminRender($model);
+	}
+
+	protected function adminRender($model)
+	{
 		// set up tab menu if required - using setter
 		$this->setTabs($model, false);
-		
-		$this->render($this->_adminView,array(
+
+		$this->render($this->_adminView, array(
 			'model'=>$model,
 		));
 	}
-
+	
 	/**
 	 * Determine if a particular primary key exists in the breadcrumb trail - in any model.
 	 * @param string $primaryKey the primary key attribute name
@@ -896,9 +903,17 @@ protected $_adminShowNew = false;
 
 		// set label to passed in label if one passed, otherwise to the tables nice name
 		ActiveRecord::$labelOverrides[$fkField] = $label ? $label : $fKModelType::getNiceName();
+
+		// if more than 20 rows in the lookup table use autotext
+		if(($fKModelType::model()->count()) > 20)
+		{
+			static::autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType, $relName);
+		}
+		else
+		{
+			static::dropDownListWidget($model, $form, $fkField, $htmlOptions);
+		}
 		
-		static::autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType, $relName);
-//		static::dropDownListWidget($model, $form, $fkField, $htmlOptions);
 	}
 	
 	static function autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType, $relName)
@@ -922,10 +937,10 @@ protected $_adminShowNew = false;
 		$target = new $modelName;
 		
 		echo $form->dropDownListRow(
-			$target,
-			$target->tableSchema->primaryKey, $modelName::getListData(),
-				$htmlOptions + array(
-					'name'=>get_class($model)."[$fkField]"));
+			$fkField,
+			$modelName::getListData(),
+			$htmlOptions + array('name'=>get_class($model)."[$fkField]"),
+			$model);
 	}
 
 	const accessRead = 'Read';
@@ -937,7 +952,35 @@ protected $_adminShowNew = false;
 			return Yii::app()->user->checkAccess(($modelName ? $modelName : static::modelName()) . $mode);
 		}
 	}
-	
+
+	public function getReportsMenu()
+	{
+		// get this staff model
+		$staffModel = Staff::model()->findByPk(Yii::app()->user->id);
+
+		// get reports allowed for this user role
+		if(!empty($staffModel))
+		{
+			foreach($staffModel->authAssignments as $authAssignment)
+			{
+				foreach($authAssignment->itemname0->reportToAuthItems as $reportToAuthItem)
+				{
+					$report = $reportToAuthItem->report;
+					$items[] = array('label'=>$report->description, 'url'=>Yii::app()->createUrl('Report/show', array('id'=>$report->id)));
+				}
+			}
+		}
+
+		if(!empty($items))
+		{
+			return array(
+				'class'=>'bootstrap.widgets.TbMenu',
+				'items'=>array(
+					array('label'=>'Reports', 'url'=>'#', 'items'=>$items),
+				),
+			);
+		}
+	}
 	
 }
 ?>
