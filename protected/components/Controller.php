@@ -72,7 +72,10 @@ protected $_adminShowNew = false;
 	public function __construct($id, $module = null)
 	{
 		$this->modelName = static::modelName();
-		
+/*try {
+
+}
+Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/	
 		if(empty($this->_adminViewModel))
 		{
 			$this->_adminViewModel = $this->modelName;
@@ -118,7 +121,7 @@ protected $_adminShowNew = false;
 				// building display parameter which gets eval'd later
 				// get term for this column from users entry
 				// with trailing wildcard only; probably a good idea for large volumes of data
-				$term = ($term = each($terms)) ? trim($term['value']) . '%' : '%';
+				$term = '%' . (($term = each($terms)) ? trim($term['value']) . '%' : '%');
 
 				/*
 				 * $matches[5] attribute
@@ -903,15 +906,15 @@ protected $_adminShowNew = false;
 
 		// set label to passed in label if one passed, otherwise to the tables nice name
 		ActiveRecord::$labelOverrides[$fkField] = $label ? $label : $fKModelType::getNiceName();
-
+		
 		// if more than 20 rows in the lookup table use autotext
-		if(($fKModelType::model()->count()) > 20)
+		if($forceAuto || ($fKModelType::model()->count()) > 20)
 		{
 			static::autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType, $relName);
 		}
 		else
 		{
-			static::dropDownListWidget($model, $form, $fkField, $htmlOptions);
+			static::dropDownListWidget($model, $form, $fkField, $htmlOptions, $scopes);
 		}
 		
 	}
@@ -931,14 +934,18 @@ protected $_adminShowNew = false;
 		);
 	}
 	
-	static function dropDownListWidget($model, $form, $fkField, $htmlOptions = array())
+	static function dropDownListWidget($model, $form, $fkField, $htmlOptions = array(), $scopes = array())
 	{
 		$modelName = str_replace('Controller', '', get_called_class());
 		$target = new $modelName;
 		
+		// add a blank value at the top to be converted to null later if allowing nulls
+		$listData = $model->metadata->columns[$fkField]->allowNull ? array(' '=>'') : array();
+		$listData += $modelName::getListData($scopes);
+		
 		echo $form->dropDownListRow(
 			$fkField,
-			$modelName::getListData(),
+			$listData,
 			$htmlOptions + array('name'=>get_class($model)."[$fkField]"),
 			$model);
 	}

@@ -91,7 +91,7 @@ abstract class ActiveRecord extends CActiveRecord
 	 * @param string $displayColumn the bound column.
 	 * @return listData the static model class
 	 */
-	public static function getListData()
+	public static function getListData($scopes = array())
 	{
 		// format models as $key=>$value with listData
 		$criteria=new CDbCriteria;
@@ -138,9 +138,10 @@ abstract class ActiveRecord extends CActiveRecord
 
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-				'id',
+				't.'.static::model()->tableSchema->primaryKey,
 				"CONCAT_WS('$delimiter',".implode(',', $concat_ws).") AS naturalKey",
 			);
+		$criteria->scopes = empty($scopes) ? null : $scopes;
 		
 		return CHtml::listData(
 			static::model()->findAll($criteria), 
@@ -156,7 +157,7 @@ abstract class ActiveRecord extends CActiveRecord
 	public static function getDisplayAttr()
 	{
 		// choose the best column
-		if(in_array('description', $t = static::model()->tableSchema->getColumnNames()))
+		if(in_array('description', static::model()->tableSchema->getColumnNames()))
 		{
 			return array('description');
 		}

@@ -25,6 +25,20 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	 */
 	static $niceName = 'Role';
 	
+	public function scopeTaskTypeToDutyType($task_type_id)
+	{
+		$criteria=new CDbCriteria;
+		$criteria->compare('task_type_to_duty_type.task_type_id',$task_type_id);
+		$criteria->join='
+			 JOIN task_type_to_duty_type USING ( project_type_id )
+		';
+		$criteria->distinct=true;
+		
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+	
 	/**
 	 * @return string the associated database table name
 	 */

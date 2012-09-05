@@ -31,6 +31,10 @@ class AuthAssignment extends ActiveRecord
 	 */
 	public $searchUser;
 
+	public function scopes() {
+		parent::scopes();
+	}
+	
 	public function scopeProjectToProjectTypeToAuthItem($project_id)
 	{
 		$criteria=new CDbCriteria;

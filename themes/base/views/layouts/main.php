@@ -15,6 +15,7 @@
 		// from Google's CDN with fallback to local version 
 		Yii::app()->clientScript->scriptMap=array(
 			'jquery.js'=>false,
+			'jquery.min.js'=>false,
 		);
 		
 		// Load Yii's generated javascript at bottom of page
@@ -107,7 +108,10 @@
 						'url'=>'#myModal',
 						'type'=>'primary',
 						'size'=>'small', // '', 'large', 'small' or 'mini'
-						'htmlOptions'=>array('data-toggle'=>'modal'),
+						'htmlOptions'=>array(
+							'data-toggle'=>'modal',
+							'onclick' => '$("#myModal input:visible:enabled:first").focus();',
+						),
 					));
 				}
 				echo '</h2>';
@@ -124,13 +128,9 @@
 
 </div><!-- container -->
 <script>window.jQuery || document.write('<script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+<!-- container -->
 <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/libs/bootstrap/bootstrap.min.js"></script>
+
 <script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/script.js"></script>
-<script>
-	var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-	g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-	s.parentNode.insertBefore(g,s)}(document,'script'));
-</script>
 </body>
 </html>

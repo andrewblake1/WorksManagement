@@ -17,6 +17,7 @@ class WMTbActiveForm extends TbActiveForm
 	private $_action;
 	public $models=null;
 	private $_htmlOptionReadonly = array();
+	public $focus = 'input:visible:enabled:first';
     public $clientOptions = array(
 		'validateOnSubmit'=>true,
 		'validateOnChange'=>false,

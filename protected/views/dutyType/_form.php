@@ -6,7 +6,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	$form->textFieldRow('lead_in_days');
 
-	GenericTypeController::listWidgetRow($model, $form, 'generic_type_id');
+	GenericTypeController::listWidgetRow($model, $form, 'generic_type_id', array(), array(), null);
 
 $this->endWidget();
 

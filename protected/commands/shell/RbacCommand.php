@@ -301,6 +301,9 @@ EOD;
 			 $defaultRole->addChild('TaskRead');
 			 $defaultRole->addChild('ProjectRead');
 			 
+			 // Grant project manager project read
+			 $projectManagerRole->addChild('ClientRead');
+			 
 			 // create hierachy amongst roles
 			 $systemAdminRole->addChild('project manager');
 			 $projectManagerRole->addChild('ScheduleRead');

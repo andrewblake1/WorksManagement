@@ -17,7 +17,7 @@ return array(
 	//'yiitPath' => dirname(__FILE__) . '/../../../yii/framework/yiit.php',
 
 	// Set YII_DEBUG and YII_TRACE_LEVEL flags
-	'yiiDebug' => true,
+	'yiiDebug' => false,
 	'yiiTraceLevel' => 3,
 	
 	// Static function Yii::setPathOfAlias()

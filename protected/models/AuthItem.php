@@ -123,13 +123,25 @@ class AuthItem extends ActiveRecord
 		return $columns;
 	}
 
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+//			'name',
+			'description',
+		);
+	}
+
 	/*
 	 * can't set default value in database as TEXT data type but is required
 	 */
 	public function init()
 	{
-		// can't set default value in database as TEXT data type
-		$this->type = 'N;';
+		// can't set default value in database as TEXT data type for AuthItem
+		$this->data = 'N;';
+		$this->type = '2';
 		
 		parent::init();
 	}

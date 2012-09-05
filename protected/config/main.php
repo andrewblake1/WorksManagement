@@ -95,6 +95,16 @@ return array(
 				'charset' => 'utf8',
 			),
 
+			// Database
+			'dbReadOnly' => array(
+				'class' => 'DbReadOnly',
+				'connectionString' => '', //override in config/mode_<mode>.php
+				'emulatePrepare' => true,
+				'username' => '', //override in config/mode_<mode>.php
+				'password' => '', //override in config/mode_<mode>.php
+				'charset' => 'utf8',
+			),
+
 			// Error handler
 			'errorHandler'=>array(
 				// use 'site/error' action to display errors
@@ -143,6 +153,7 @@ return array(
 					'Project'=>array( 
 						'Task'=>array(
 							'Duty',
+							'PurchaseOrder',
 							'Reschedule',
 // TODO: naming orientation is inconsistent here
 							'MaterialToTask',
@@ -176,7 +187,6 @@ return array(
 				'GenericType',
 				'Genericprojectcategory',
 				'Generictaskcategory',
-				'PurchaseOrder',
 				'Report'=>array(
 					'ReportToAuthItem',
 				),
