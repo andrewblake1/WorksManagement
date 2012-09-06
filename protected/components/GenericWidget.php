@@ -84,8 +84,11 @@ class GenericWidget extends CWidget
 				break;
 
 			case GenericType::validationTypeValueList :
-				// Drop down list widget 
-				echo $this->form->dropDownListRow($attribute, explode(',', $genericType->validation_text), $htmlOptions, $generic);
+				// Drop down list widget
+				// first need to get a list where array keys are the same as the display members
+				$list = explode(',', $genericType->validation_text);
+				
+				echo $this->form->dropDownListRow($attribute, array_combine($list, $list), $htmlOptions, $generic);
 				break;
 		}
 	}

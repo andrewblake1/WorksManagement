@@ -123,6 +123,15 @@ class TaskToPurchaseOrder extends ActiveRecord
 		return $columns;
 	}
 
+	
+	static function getDisplayAttr()
+	{
+		return array(
+			'purchaseOrder->supplier->name',
+			'purchaseOrder->number',
+		);
+	}
+
 	/**
 	 * Retrieves a sort array for use in CActiveDataProvider.
 	 * @return array the for data provider that contains the sort condition.

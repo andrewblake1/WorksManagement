@@ -7,7 +7,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	// only show when creating
 	if($model->isNewRecord)
 	{
-		TaskTypeController::listWidgetRow($model, $form, 'task_type_id');
+		TaskTypeController::listWidgetRow($model, $form, 'task_type_id', array(), array(
+			'scopeProjectType'=>array($model->project_id)));
 	}
 	else
 	{
@@ -19,9 +20,9 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	$form->textFieldRow('planned');
 
 	// NB: show as read only unless Schedule rights
-	$form->textFieldRow('scheduled',  !Yii::app()->user->checkAccess('Schedule') ? array() : array('disabled'=>'disabled'));
+	$form->textFieldRow('scheduled', Yii::app()->user->checkAccess('Schedule') ? array() : array('disabled'=>'disabled'));
 
-//	$form->textFieldRow('earliest');
+//	$form->textFieldRow('earliest')				;
 
 	$form->checkBoxListInlineRow('preferred', array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'));
 

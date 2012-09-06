@@ -31,6 +31,20 @@ class TaskType extends ActiveRecord
 		return 'task_type';
 	}
 
+	public function scopeProjectType($project_id)
+	{
+		$criteria=new CDbCriteria;
+		$criteria->compare('project.id',$project_id);
+		$criteria->join='
+			 JOIN project_type on t.project_type_id = project_type.id
+			 JOIN project on project_type.id = project.project_type_id
+		';
+
+		$this->getDbCriteria()->mergeWith($criteria);
+	
+		return $this;
+	}
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */

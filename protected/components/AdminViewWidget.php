@@ -38,10 +38,10 @@ class AdminViewWidget extends CWidget
 		}*/
 
 		// add the buttons - first determine if there are any!
-		if($this->_controller->checkAccess(Controller::accessWrite))
-		{
+//		if($this->_controller->checkAccess(Controller::accessRead))
+//		{
 			$this->columns[]=array('class'=>'WMTbButtonColumn');
-		}
+//		}
 	
 		// add instructions/ warnings errors via Yii::app()->user->setFlash
 		// NB: thia won't work on ajax update as in delete hence afterDelete javascript added in WMTbButtonColumn

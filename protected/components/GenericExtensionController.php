@@ -117,8 +117,20 @@ abstract class GenericExtensionController extends Controller
 			// collect model for possible error extraction
 			$models[] = $generic;
 		}
-		
+
 		return $saved;
+	}
+
+	protected function actionGetHtmlId($model,$attribute)
+	{
+		$modelName = get_class($model);
+		
+		if($modelName == 'Generic')
+		{
+			return get_class($model)."_{$model->primaryKey}_$attribute";
+		}
+		
+		return parent::actionGetHtmlId($model,$attribute);
 	}
 
 }

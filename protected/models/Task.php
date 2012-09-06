@@ -47,7 +47,7 @@ class Task extends ActiveRecord
 	 * inline checkbox property 
 	 */
 	public $preferred = array();
-	
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -138,12 +138,7 @@ class Task extends ActiveRecord
 			't.description',
 			't.planned',
 			't.scheduled',
-			'SELECT DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest
-				FROM task
-				JOIN project ON task.project_id = project.id
-				JOIN duty ON task.id = duty.task_id
-				JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type_id
-				JOIN duty_type ON task_type_to_duty_type.duty_type_id = duty_type.id',
+			'DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest',
 			't.preferred_mon',
 			't.preferred_tue',
 			't.preferred_wed',
@@ -160,6 +155,12 @@ class Task extends ActiveRecord
 				taskType.description
 				) AS searchTaskType",
 		);
+
+		// join 
+		$criteria->join='
+			JOIN duty ON t.id = duty.task_id
+			JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type_id
+			JOIN duty_type ON task_type_to_duty_type.duty_type_id = duty_type.id';
 
 		// where
 		$criteria->compare('t.id',$this->id);
@@ -208,7 +209,7 @@ class Task extends ActiveRecord
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
         $columns[] = static::linkColumn('searchTaskType', 'TaskType', 'task_type_id');
 		$columns[] = 'planned';
-		$columns[] = 'searchEarliest';
+		$columns[] = 'searchEarliest:date';
 		$columns[] = 'scheduled';
 		$columns[] = 'preferred_mon:boolean';
 		$columns[] = 'preferred_tue:boolean';
@@ -285,6 +286,18 @@ class Task extends ActiveRecord
 	
 		parent::afterFind();
 	}
+	
+	/*
+	 * can't set default value in database as TEXT data type but is required
+	 */
+	public function init()
+	{
+		// can't set default value in database as TEXT data type for AuthItem
+		$this->planned = date('d M, Y');
+		
+		parent::init();
+	}
+
 }
 
 ?>

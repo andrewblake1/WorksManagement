@@ -300,7 +300,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				$modelName = is_array($value) ? $key : $value;
 				
 				// check access
-				if(!static::checkAccess(self::accessRead))
+				if(!static::checkAccess(self::accessRead, $modelName))
 				{
 					continue;
 				}
@@ -706,11 +706,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					{
 						$models=array($model);
 					}
-					foreach($models as $model)
+					foreach($models as $m)
 					{
-						foreach($model->getErrors() as $attribute=>$errors)
+						foreach($m->getErrors() as $attribute=>$errors)
 						{
-							$result[CHtml::activeId($model,$attribute)]=$errors;
+							$result[$this->actionGetHtmlId($m,$attribute)]=$errors;
 						}
 					}
 					// return the json encoded data to the client
@@ -747,17 +747,42 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		));
 	}
 
+	protected function actionGetHtmlId($model,$attribute)
+	{
+		return CHtml::activeId($model,$attribute);
+	}
 
 	/**
 	 * Views a particular model.
 	 * @param integer $id the ID of the model to be viewed
 	 */
+// TODO: the guts of this is duplicated in actionUpdate
 	public function actionView($id)
 	{
 		$model=$this->loadModel($id);
 
+		// add primary key into session so it can be retrieved for future use in breadcrumbs
+		$_SESSION[$this->modelName] = array(
+			'name'=>$model->tableSchema->primaryKey,
+			'value'=>$id,
+		);
+		
+		// otherwise this is just a get and could be passing paramters
+		$model->attributes=$_GET[$this->modelName];
+		
+		// set heading
+		$modelName = $this->modelName;
+		$this->heading = $modelName::getNiceName($id);
+
+		// set breadcrumbs
+		$this->breadcrumbs = $this->getBreadCrumbTrail('Update');
+		
+		// set up tab menu if required - using setter
+		$this->tabs = $model;
+
 		$this->widget('UpdateViewWidget', array(
 			'model'=>$model,
+			'models'=>$models,
 		));
 	}
 

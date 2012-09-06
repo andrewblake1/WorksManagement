@@ -172,6 +172,11 @@ EOD;
 			 $this->_authManager->createOperation('ProjectTypeToAuthItemRead', 'ProjectTypeToAuthItem read');
 			 $task->addChild('ProjectTypeToAuthItemRead');
 
+			 $task=$this->_authManager->createTask('ProjectToGenericProjectType', 'ProjectToGenericProjectType task');
+			 $systemAdminRole->addChild('ProjectToGenericProjectType');
+			 $this->_authManager->createOperation('ProjectToGenericProjectTypeRead', 'ProjectToGenericProjectType read');
+			 $task->addChild('ProjectToGenericProjectTypeRead');
+
 			 $task=$this->_authManager->createTask('Report', 'Report task');
 			 $systemAdminRole->addChild('Report');
 			 $this->_authManager->createOperation('ReportRead', 'Report read');
@@ -202,6 +207,11 @@ EOD;
 			 $this->_authManager->createOperation('SupplierRead', 'Supplier read');
 			 $task->addChild('SupplierRead');
 
+			 $task=$this->_authManager->createTask('TaskToGenericTaskType', 'TaskToGenericTaskType task');
+			 $systemAdminRole->addChild('TaskToGenericTaskType');
+			 $this->_authManager->createOperation('TaskToGenericTaskTypeRead', 'TaskToGenericTaskType read');
+			 $task->addChild('TaskToGenericTaskTypeRead');
+
 			 // project manager
 			 $projectManagerRole=$this->_authManager->createRole('project manager', 'Project manager');
 			 // create tasks
@@ -224,7 +234,7 @@ EOD;
 			 $task=$this->_authManager->createTask('Project', 'Project task');
 			 $projectManagerRole->addChild('Project');
 			 $this->_authManager->createOperation('ProjectRead', 'Project read');
-			 $task->addChild('AssemblyRead');
+			 $task->addChild('ProjectRead');
 
 			 $task=$this->_authManager->createTask('ProjectToProjectTypeToAuthItem', 'ProjectToProjectTypeToAuthItem task');
 			 $projectManagerRole->addChild('ProjectToProjectTypeToAuthItem');
@@ -235,11 +245,6 @@ EOD;
 			 $projectManagerRole->addChild('TaskTypeToDutyTypeToProjectTypeToAuthItem');
 			 $this->_authManager->createOperation('TaskTypeToDutyTypeToProjectTypeToAuthItemRead', 'TaskTypeToDutyTypeToProjectTypeToAuthItem read');
 			 $task->addChild('TaskTypeToDutyTypeToProjectTypeToAuthItemRead');
-
-			 $task=$this->_authManager->createTask('ProjectToGenericProjectType', 'ProjectToGenericProjectType task');
-			 $projectManagerRole->addChild('ProjectToGenericProjectType');
-			 $this->_authManager->createOperation('ProjectToGenericProjectTypeRead', 'ProjectToGenericProjectType read');
-			 $task->addChild('ProjectToGenericProjectTypeRead');
 
 			 $task=$this->_authManager->createTask('PurchaseOrder', 'PurchaseOrder task');
 			 $projectManagerRole->addChild('PurchaseOrder');
@@ -255,11 +260,6 @@ EOD;
 			 $projectManagerRole->addChild('TaskToAssembly');
 			 $this->_authManager->createOperation('TaskToAssemblyRead', 'TaskToAssembly read');
 			 $task->addChild('TaskToAssemblyRead');
-
-			 $task=$this->_authManager->createTask('TaskToGenericTaskType', 'TaskToGenericTaskType task');
-			 $projectManagerRole->addChild('TaskToGenericTaskType');
-			 $this->_authManager->createOperation('TaskToGenericTaskTypeRead', 'TaskToGenericTaskType read');
-			 $task->addChild('TaskToGenericTaskTypeRead');
 
 			 $task=$this->_authManager->createTask('TaskToPurchaseOrder', 'TaskToPurchaseOrder task');
 			 $projectManagerRole->addChild('TaskToPurchaseOrder');

@@ -153,7 +153,6 @@ return array(
 					'Project'=>array( 
 						'Task'=>array(
 							'Duty',
-							'PurchaseOrder',
 							'Reschedule',
 // TODO: naming orientation is inconsistent here
 							'MaterialToTask',
@@ -196,7 +195,9 @@ return array(
 				'Staff'=>array(
 					'AuthAssignment',
 				),
-				'Supplier',
+				'Supplier'=>array(
+					'PurchaseOrder',
+				),
 			),
 		),
 

@@ -6057,3 +6057,560 @@ Stack trace:
 REQUEST_URI=/WorksManagement/TaskTypeToDutyType/admin?TaskTypeToDutyType%5Btask_type_id%5D=8
 HTTP_REFERER=http://localhost/WorksManagement/taskType/update/8
 ---
+2012/09/06 10:09:51 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '2-6' for key 'project_id_UNIQUE'. The SQL statement executed was: INSERT INTO `project_to_project_type_to_AuthItem` (`AuthAssignment_id`, `staff_id`, `project_id`, `itemname`, `project_type_to_AuthItem_id`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4).
+2012/09/06 10:17:56 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '2-6' for key 'project_id_UNIQUE'. The SQL statement executed was: INSERT INTO `project_to_project_type_to_AuthItem` (`AuthAssignment_id`, `staff_id`, `project_id`, `itemname`, `project_type_to_AuthItem_id`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4).
+2012/09/06 10:17:58 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '2-6' for key 'project_id_UNIQUE'. The SQL statement executed was: INSERT INTO `project_to_project_type_to_AuthItem` (`AuthAssignment_id`, `staff_id`, `project_id`, `itemname`, `project_type_to_AuthItem_id`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4).
+2012/09/06 11:21:22 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'LEFT OUTER JOIN `staff` `user` ON (`t`.`userid`=`user`.`id`) AND (user.deleted=0' at line 7. The SQL statement executed was: SELECT `t`.`id` AS `t0_c0`, CONCAT_WS(', ',t.itemname,user.first_name,user.last_name,user.email) AS naturalKey, `user`.`id` AS `t1_c0`, `user`.`first_name` AS `t1_c1`, `user`.`last_name` AS `t1_c2`, `user`.`phone_mobile` AS `t1_c3`, `user`.`email` AS `t1_c4`, `user`.`password` AS `t1_c5`, `user`.`deleted` AS `t1_c6`, `user`.`staff_id` AS `t1_c7` FROM `AuthAssignment` `t` 
+			JOIN project_type_to_AuthItem projectTypeToAuthItem ON t.itemname = projectTypeToAuthItem.AuthItem_name
+			JOIN project
+			USING ( project_type_id )
+			LEFT JOIN project_to_project_type_to_AuthItem projectToProjectTypeToAuthItem ON projectToProjectTypeToAuthItem.project_id = project.id
+			AND projectToProjectTypeToAuthItem.itemname = projectTypeToAuthItem.AuthItem_name
+			WHERE projectToProjectTypeToAuthItem.id IS NULL LEFT OUTER JOIN `staff` `user` ON (`t`.`userid`=`user`.`id`) AND (user.deleted=0)  WHERE ((t.deleted=0) AND (project.id=:ycp1)) ORDER BY t.itemname ASC, user.first_name ASC, user.last_name ASC, user.email ASC.
+2012/09/06 11:21:22 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'LEFT OUTER JOIN `staff` `user` ON (`t`.`userid`=`user`.`id`) AND (user.deleted=0' at line 7' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:528
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php(390): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(818): CDbCommand->queryAll()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(452): CJoinElement->runQuery(Object(CJoinQuery))
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(70): CJoinElement->find(Object(CDbCriteria))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1296): CActiveFinder->query(Object(CDbCriteria), true)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1410): CActiveRecord->query(Object(CDbCriteria), true)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php(147): CActiveRecord->findAll(Object(CDbCriteria))
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(944): ActiveRecord::getListData(Array)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(917): Controller::dropDownListWidget(Object(ProjectToProjectTypeToAuthItem), Object(WMTbActiveForm), 'AuthAssignment_...', Array, Array)
+#9 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/projectToProjectTypeToAuthItem/_form.php(7): Controller::listWidgetRow(Object(ProjectToProjectTypeToAuthItem), Object(WMTbActiveForm), 'AuthAssignment_...', Array, Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CreateViewWidget.php(35): CController->renderPartial('_form', Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): CreateViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(633): CBaseController->widget('CreateViewWidge...', Array)
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(69): Controller->actionCreate()
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#18 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#23 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#24 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): Controller->adminRender(Object(ProjectToProjectTypeToAuthItem))
+#25 [internal function]: Controller->actionAdmin(Array)
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ProjectToProjectTypeToAuthItemController), Array)
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ProjectToProjectTypeToAuthItemController), Object(ReflectionMethod), Array)
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#36 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#37 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('projectToProjec...')
+#38 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#39 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#40 {main}
+REQUEST_URI=/WorksManagement/projectToProjectTypeToAuthItem/admin?ProjectToProjectTypeToAuthItem%5Bproject_id%5D=2
+HTTP_REFERER=http://localhost/WorksManagement/projectToProjectTypeToAuthItem/admin?ProjectToProjectTypeToAuthItem%5Bproject_id%5D=2
+---
+2012/09/06 13:31:19 [error] [exception.CException] exception 'CException' with message 'Property "ProjectController.model" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:131
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(713): CComponent->__get('model')
+#1 [internal function]: Controller->actionUpdate('2')
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ProjectController), Array)
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ProjectController), Object(ReflectionMethod), Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('update')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('project/update')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#16 {main}
+REQUEST_URI=/WorksManagement/project/update/2
+HTTP_REFERER=http://localhost/WorksManagement/project/update/2
+---
+2012/09/06 15:18:24 [error] [php] Missing argument 1 for Controller::actionUpdate(), called in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php on line 766 and defined (/Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php:671)
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs()
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CInlineAction->runWithParamsInternal()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): ClientController->runAction()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CAccessControlFilter->filter()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): ClientController->filterAccessControl()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): ClientController->runActionWithFilters()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): ClientController->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CWebApplication->run()
+REQUEST_URI=/WorksManagement/client/view/1
+2012/09/06 15:19:06 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'You are not authorized to perform this action.' in /Users/Andrew/yii-1.1.10.r3566/framework/web/auth/CAccessControlFilter.php:157
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/auth/CAccessControlFilter.php(120): CAccessControlFilter->accessDenied(Object(CWebUser), 'You are not aut...')
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(39): CAccessControlFilter->preFilter(Object(CFilterChain))
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('update')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Client/update')
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#10 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#11 {main}
+REQUEST_URI=/WorksManagement/Client/update/1
+HTTP_REFERER=http://localhost/WorksManagement/Assembly/admin?Assembly%5Bclient_id%5D=1
+---
+2012/09/06 16:48:45 [error] [exception.CHttpException.400] exception 'CHttpException' with message 'No task identified, you must get here from the tasks page' in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php:214
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(402): ActiveRecord->assertFromParent()
+#1 [internal function]: Controller->actionAdmin(Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(PurchaseOrderController), Array)
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(PurchaseOrderController), Object(ReflectionMethod), Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('PurchaseOrder/a...')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#16 {main}
+REQUEST_URI=/WorksManagement/PurchaseOrder/admin?PurchaseOrder%5Btask_id%5D=8
+HTTP_REFERER=http://localhost/WorksManagement/Duty/admin?Duty%5Btask_id%5D=8
+---
+2012/09/06 20:58:23 [error] [exception.CException] exception 'CException' with message 'TaskType and its behaviors do not have a method or closure named "scopeTaskType".' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:266
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('scopeTaskType', Array)
+#1 [internal function]: CActiveRecord->__call('scopeTaskType', Array)
+#2 [internal function]: TaskType->scopeTaskType('6')
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1338): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1285): CActiveRecord->applyScopes(Object(CDbCriteria))
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1410): CActiveRecord->query(Object(CDbCriteria), true)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php(147): CActiveRecord->findAll(Object(CDbCriteria))
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(969): ActiveRecord::getListData(Array)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(942): Controller::dropDownListWidget(Object(Task), Object(WMTbActiveForm), 'task_type_id', Array, Array)
+#9 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/task/_form.php(11): Controller::listWidgetRow(Object(Task), Object(WMTbActiveForm), 'task_type_id', Array, Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CreateViewWidget.php(35): CController->renderPartial('_form', Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): CreateViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(633): CBaseController->widget('CreateViewWidge...', Array)
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(69): Controller->actionCreate()
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#18 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#23 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#24 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): Controller->adminRender(Object(Task))
+#25 [internal function]: Controller->actionAdmin(Array)
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(TaskController), Array)
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(TaskController), Object(ReflectionMethod), Array)
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#36 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#37 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Task/admin')
+#38 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#39 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#40 {main}
+REQUEST_URI=/WorksManagement/Task/admin?Task%5Bproject_id%5D=6
+HTTP_REFERER=http://localhost/WorksManagement/Duty/admin?Duty%5Btask_id%5D=8
+---
+2012/09/06 21:13:50 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'project._id' in 'where clause'. The SQL statement executed was: SELECT t.id, CONCAT_WS(', ',t.description) AS naturalKey FROM `task_type` `t` 
+			 JOIN project_type on task_type.project_type_id = project_type.id
+			 JOIN project on project_type.id = project.project_type_id
+		 WHERE (t.deleted=0) AND (project._id=:ycp1) ORDER BY t.description ASC.
+2012/09/06 21:14:19 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'project._id' in 'where clause'' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:528
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php(390): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1291): CDbCommand->queryAll()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1410): CActiveRecord->query(Object(CDbCriteria), true)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php(147): CActiveRecord->findAll(Object(CDbCriteria))
+#4 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(969): ActiveRecord::getListData(Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(942): Controller::dropDownListWidget(Object(Task), Object(WMTbActiveForm), 'task_type_id', Array, Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/task/_form.php(11): Controller::listWidgetRow(Object(Task), Object(WMTbActiveForm), 'task_type_id', Array, Array)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#10 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CreateViewWidget.php(35): CController->renderPartial('_form', Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): CreateViewWidget->run()
+#12 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(633): CBaseController->widget('CreateViewWidge...', Array)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(69): Controller->actionCreate()
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#21 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): Controller->adminRender(Object(Task))
+#22 [internal function]: Controller->actionAdmin(Array)
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(TaskController), Array)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(TaskController), Object(ReflectionMethod), Array)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Task/admin')
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#36 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#37 {main}
+REQUEST_URI=/WorksManagement/Task/admin?Task%5Bproject_id%5D=6
+HTTP_REFERER=http://localhost/WorksManagement/Duty/admin?Duty%5Btask_id%5D=8
+---
+2012/09/06 21:14:23 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'task_type.project_type_id' in 'on clause'. The SQL statement executed was: SELECT t.id, CONCAT_WS(', ',t.description) AS naturalKey FROM `task_type` `t` 
+			 JOIN project_type on task_type.project_type_id = project_type.id
+			 JOIN project on project_type.id = project.project_type_id
+		 WHERE (t.deleted=0) AND (project.id=:ycp1) ORDER BY t.description ASC.
+2012/09/06 21:15:10 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'task_type.project_type_id' in 'on clause'' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:528
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php(390): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1291): CDbCommand->queryAll()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1410): CActiveRecord->query(Object(CDbCriteria), true)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php(147): CActiveRecord->findAll(Object(CDbCriteria))
+#4 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(969): ActiveRecord::getListData(Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(942): Controller::dropDownListWidget(Object(Task), Object(WMTbActiveForm), 'task_type_id', Array, Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/task/_form.php(11): Controller::listWidgetRow(Object(Task), Object(WMTbActiveForm), 'task_type_id', Array, Array)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#10 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CreateViewWidget.php(35): CController->renderPartial('_form', Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): CreateViewWidget->run()
+#12 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(633): CBaseController->widget('CreateViewWidge...', Array)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(69): Controller->actionCreate()
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#21 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): Controller->adminRender(Object(Task))
+#22 [internal function]: Controller->actionAdmin(Array)
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(TaskController), Array)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(TaskController), Object(ReflectionMethod), Array)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Task/admin')
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#36 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#37 {main}
+REQUEST_URI=/WorksManagement/Task/admin?Task%5Bproject_id%5D=6
+HTTP_REFERER=http://localhost/WorksManagement/Duty/admin?Duty%5Btask_id%5D=8
+---
+2012/09/06 21:53:19 [error] [exception.Exception] exception 'Exception' in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php:170
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php(52): ActiveRecord::getDisplayAttr()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(736): ActiveRecord::getNiceName('2')
+#2 [internal function]: Controller->actionUpdate('2')
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(TaskToPurchaseOrderController), Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(TaskToPurchaseOrderController), Object(ReflectionMethod), Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('update')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('taskToPurchaseO...')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/taskToPurchaseOrder/update/2
+HTTP_REFERER=http://localhost/WorksManagement/taskToPurchaseOrder/admin?TaskToPurchaseOrder%5Btask_id%5D=8
+---
+2012/09/06 22:01:27 [error] [exception.Exception] exception 'Exception' in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php:171
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php(52): ActiveRecord::getDisplayAttr()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(736): ActiveRecord::getNiceName('2')
+#2 [internal function]: Controller->actionUpdate('2')
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(TaskToPurchaseOrderController), Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(TaskToPurchaseOrderController), Object(ReflectionMethod), Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('update')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('taskToPurchaseO...')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/taskToPurchaseOrder/update/2
+HTTP_REFERER=http://localhost/WorksManagement/taskToPurchaseOrder/admin?TaskToPurchaseOrder%5Btask_id%5D=8
+---
+2012/09/06 22:01:45 [error] [exception.CHttpException.400] exception 'CHttpException' with message 'No purhase order identified, you must get here from the purhase orders page' in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php:215
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(402): ActiveRecord->assertFromParent()
+#1 [internal function]: Controller->actionAdmin(Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(PurchaseOrderController), Array)
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(PurchaseOrderController), Object(ReflectionMethod), Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('PurchaseOrder/a...')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#16 {main}
+REQUEST_URI=/WorksManagement/PurchaseOrder/admin?PurchaseOrder%5Btask_to_purchase_order_id%5D=2
+HTTP_REFERER=http://localhost/WorksManagement/taskToPurchaseOrder/update/2
+---
+2012/09/06 22:07:03 [error] [exception.CHttpException.400] exception 'CHttpException' with message 'No purhase order identified, you must get here from the purhase orders page' in /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ActiveRecord.php:215
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(402): ActiveRecord->assertFromParent()
+#1 [internal function]: Controller->actionAdmin(Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(PurchaseOrderController), Array)
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(PurchaseOrderController), Object(ReflectionMethod), Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('PurchaseOrder/a...')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#16 {main}
+REQUEST_URI=/WorksManagement/PurchaseOrder/admin?PurchaseOrder%5Btask_to_purchase_order_id%5D=2
+HTTP_REFERER=http://localhost/WorksManagement/taskToPurchaseOrder/update/2
+---
+2012/09/06 22:18:58 [error] [exception.CDbException] exception 'CDbException' with message 'Active record "Task" is trying to select an invalid column "t.cheduled". Note, the column must exist in the table or be an expression with alias.' in /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php:974
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(1269): CJoinElement->getColumnSelect(Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(740): CJoinQuery->__construct(Object(CJoinElement), Object(CDbCriteria))
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(155): CJoinElement->count(Object(CDbCriteria))
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1544): CActiveFinder->count(Object(CDbCriteria))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CActiveDataProvider.php(179): CActiveRecord->count(Object(CDbCriteria))
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(193): CActiveDataProvider->calculateTotalItemCount()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CActiveDataProvider.php(129): CDataProvider->getTotalItemCount()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(137): CActiveDataProvider->fetchData()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/CBaseListView.php(105): CDataProvider->getData()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(269): CBaseListView->init()
+#10 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(65): CBaseController->widget('bootstrap.widge...', Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#21 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): Controller->adminRender(Object(Task))
+#22 [internal function]: Controller->actionAdmin(Array)
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(TaskController), Array)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(TaskController), Object(ReflectionMethod), Array)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Task/admin')
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#36 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#37 {main}
+REQUEST_URI=/WorksManagement/Task/admin?Task%5Bproject_id%5D=6
+HTTP_REFERER=http://localhost/WorksManagement/project/update/6
+---
+2012/09/06 22:22:14 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELECT DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEa' at line 1. The SQL statement executed was: SELECT `t`.`id` AS `t0_c0`, `t`.`in_charge_id` AS `t0_c4`, `t`.`task_type_id` AS `t0_c3`, `t`.`description` AS `t0_c1`, `t`.`planned` AS `t0_c5`, `t`.`scheduled` AS `t0_c6`, SELECT DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest
+				FROM task
+				JOIN project ON task.project_id = project.id
+				JOIN duty ON task.id = duty.task_id
+				JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type_id
+				JOIN duty_type ON task_type_to_duty_type.duty_type_id = duty_type.id AS searchEarliest, `t`.`preferred_mon` AS `t0_c8`, `t`.`preferred_tue` AS `t0_c9`, `t`.`preferred_wed` AS `t0_c10`, `t`.`preferred_thu` AS `t0_c11`, `t`.`preferred_fri` AS `t0_c12`, `t`.`preferred_sat` AS `t0_c13`, `t`.`preferred_sun` AS `t0_c14`, CONCAT_WS(', ',
+				inCharge.first_name,
+				inCharge.last_name,
+				inCharge.email
+				) AS searchInCharge, CONCAT_WS(', ',
+				taskType.description
+				) AS searchTaskType, CONCAT_WS(', ',staff.first_name,staff.last_name,staff.email) AS searchStaff, `inCharge`.`id` AS `t1_c0`, `inCharge`.`first_name` AS `t1_c1`, `inCharge`.`last_name` AS `t1_c2`, `inCharge`.`phone_mobile` AS `t1_c3`, `inCharge`.`email` AS `t1_c4`, `inCharge`.`password` AS `t1_c5`, `inCharge`.`deleted` AS `t1_c6`, `inCharge`.`staff_id` AS `t1_c7`, `project`.`id` AS `t2_c0`, `project`.`description` AS `t2_c1`, `project`.`project_type_id` AS `t2_c2`, `project`.`travel_time_1_way` AS `t2_c3`, `project`.`critical_completion` AS `t2_c4`, `project`.`planned` AS `t2_c5`, `project`.`staff_id` AS `t2_c6`, `taskType`.`id` AS `t3_c0`, `taskType`.`description` AS `t3_c1`, `taskType`.`project_type_id` AS `t3_c2`, `taskType`.`unit_price` AS `t3_c3`, `taskType`.`deleted` AS `t3_c4`, `taskType`.`staff_id` AS `t3_c5`, `staff`.`id` AS `t4_c0`, `staff`.`first_name` AS `t4_c1`, `staff`.`last_name` AS `t4_c2`, `staff`.`phone_mobile` AS `t4_c3`, `staff`.`email` AS `t4_c4`, `staff`.`password` AS `t4_c5`, `staff`.`deleted` AS `t4_c6`, `staff`.`staff_id` AS `t4_c7` FROM `task` `t`  LEFT OUTER JOIN `staff` `inCharge` ON (`t`.`in_charge_id`=`inCharge`.`id`) AND (inCharge.deleted=0)  LEFT OUTER JOIN `project` `project` ON (`t`.`project_id`=`project`.`id`)  LEFT OUTER JOIN `task_type` `taskType` ON (`t`.`task_type_id`=`taskType`.`id`) AND (taskType.deleted=0)  LEFT OUTER JOIN `staff` `staff` ON (`t`.`staff_id`=`staff`.`id`) AND (staff.deleted=0)  WHERE (t.project_id=:ycp0) ORDER BY t.id DESC LIMIT 10.
+2012/09/06 22:22:14 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELECT DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEa' at line 1' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:528
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php(390): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(818): CDbCommand->queryAll()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(452): CJoinElement->runQuery(Object(CJoinQuery))
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(70): CJoinElement->find(Object(CDbCriteria))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1296): CActiveFinder->query(Object(CDbCriteria), true)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1410): CActiveRecord->query(Object(CDbCriteria), true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CActiveDataProvider.php(150): CActiveRecord->findAll(Object(CDbCriteria))
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(137): CActiveDataProvider->fetchData()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/CBaseListView.php(105): CDataProvider->getData()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(269): CBaseListView->init()
+#10 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(65): CBaseController->widget('bootstrap.widge...', Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#21 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): Controller->adminRender(Object(Task))
+#22 [internal function]: Controller->actionAdmin(Array)
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(TaskController), Array)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(TaskController), Object(ReflectionMethod), Array)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Task/admin')
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#36 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#37 {main}
+REQUEST_URI=/WorksManagement/Task/admin?Task%5Bproject_id%5D=6
+HTTP_REFERER=http://localhost/WorksManagement/project/update/6
+---
+2012/09/06 22:26:05 [error] [system.db.CDbCommand] CDbCommand::fetchColumn() failed: SQLSTATE[42000]: Syntax error or access violation: 1066 Not unique table/alias: 'project'. The SQL statement executed was: SELECT COUNT(DISTINCT `t`.`id`) FROM `task` `t` 
+			JOIN project ON task.project_id = project.id
+			JOIN duty ON task.id = duty.task_id
+			JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type_id
+			JOIN duty_type ON task_type_to_duty_type.duty_type_id = duty_type.id LEFT OUTER JOIN `staff` `inCharge` ON (`t`.`in_charge_id`=`inCharge`.`id`) AND (inCharge.deleted=0)  LEFT OUTER JOIN `project` `project` ON (`t`.`project_id`=`project`.`id`)  LEFT OUTER JOIN `task_type` `taskType` ON (`t`.`task_type_id`=`taskType`.`id`) AND (taskType.deleted=0)  LEFT OUTER JOIN `staff` `staff` ON (`t`.`staff_id`=`staff`.`id`) AND (staff.deleted=0)  WHERE (t.project_id=:ycp0).
+2012/09/06 22:26:05 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[42000]: Syntax error or access violation: 1066 Not unique table/alias: 'project'' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:528
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php(425): CDbCommand->queryInternal('fetchColumn', 0, Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(762): CDbCommand->queryScalar()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(155): CJoinElement->count(Object(CDbCriteria))
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1544): CActiveFinder->count(Object(CDbCriteria))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CActiveDataProvider.php(179): CActiveRecord->count(Object(CDbCriteria))
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(193): CActiveDataProvider->calculateTotalItemCount()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CActiveDataProvider.php(129): CDataProvider->getTotalItemCount()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(137): CActiveDataProvider->fetchData()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/CBaseListView.php(105): CDataProvider->getData()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(269): CBaseListView->init()
+#10 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(65): CBaseController->widget('bootstrap.widge...', Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#21 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): Controller->adminRender(Object(Task))
+#22 [internal function]: Controller->actionAdmin(Array)
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(TaskController), Array)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(TaskController), Object(ReflectionMethod), Array)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Task/admin')
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#36 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#37 {main}
+REQUEST_URI=/WorksManagement/Task/admin?Task%5Bproject_id%5D=6
+HTTP_REFERER=http://localhost/WorksManagement/project/update/6
+---
+2012/09/06 22:31:41 [error] [system.db.CDbCommand] CDbCommand::fetchColumn() failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'task.id' in 'on clause'. The SQL statement executed was: SELECT COUNT(DISTINCT `t`.`id`) FROM `task` `t` 
+			JOIN duty ON task.id = duty.task_id
+			JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type_id
+			JOIN duty_type ON task_type_to_duty_type.duty_type_id = duty_type.id LEFT OUTER JOIN `staff` `inCharge` ON (`t`.`in_charge_id`=`inCharge`.`id`) AND (inCharge.deleted=0)  LEFT OUTER JOIN `project` `project` ON (`t`.`project_id`=`project`.`id`)  LEFT OUTER JOIN `task_type` `taskType` ON (`t`.`task_type_id`=`taskType`.`id`) AND (taskType.deleted=0)  LEFT OUTER JOIN `staff` `staff` ON (`t`.`staff_id`=`staff`.`id`) AND (staff.deleted=0)  WHERE (t.project_id=:ycp0).
+2012/09/06 22:31:41 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'task.id' in 'on clause'' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:528
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php(425): CDbCommand->queryInternal('fetchColumn', 0, Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(762): CDbCommand->queryScalar()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveFinder.php(155): CJoinElement->count(Object(CDbCriteria))
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1544): CActiveFinder->count(Object(CDbCriteria))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CActiveDataProvider.php(179): CActiveRecord->count(Object(CDbCriteria))
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(193): CActiveDataProvider->calculateTotalItemCount()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CActiveDataProvider.php(129): CDataProvider->getTotalItemCount()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(137): CActiveDataProvider->fetchData()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/CBaseListView.php(105): CDataProvider->getData()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(269): CBaseListView->init()
+#10 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(65): CBaseController->widget('bootstrap.widge...', Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#21 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): Controller->adminRender(Object(Task))
+#22 [internal function]: Controller->actionAdmin(Array)
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(TaskController), Array)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(TaskController), Object(ReflectionMethod), Array)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Task/admin')
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#36 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(17): CApplication->run()
+#37 {main}
+REQUEST_URI=/WorksManagement/Task/admin?Task%5Bproject_id%5D=6
+HTTP_REFERER=http://localhost/WorksManagement/project/update/6
+---

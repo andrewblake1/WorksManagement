@@ -146,7 +146,6 @@ class AuthItem extends ActiveRecord
 		parent::init();
 	}
 
-
 }
 
 ?>

@@ -52,7 +52,7 @@
 						'items'=>array(
 							Yii::app()->user->checkAccess('system admin')
 								? array('label'=>'Database', 'url'=>Yii::app()->request->hostInfo.'/phpMyAdmin')
-								: null,
+								: array(),
 						),
 					),
 					array(
@@ -110,7 +110,8 @@
 						'size'=>'small', // '', 'large', 'small' or 'mini'
 						'htmlOptions'=>array(
 							'data-toggle'=>'modal',
-							'onclick' => '$("#myModal input:visible:enabled:first").focus();',
+// TODO: alter this slightly to focus on first element when combined with others ie. textarea
+							'onclick' => '$("#myModal input:not([class="hasDatepicker"]):visible:enabled:first").focus();',
 						),
 					));
 				}

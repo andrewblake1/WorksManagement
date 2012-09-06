@@ -17,7 +17,9 @@ class WMTbActiveForm extends TbActiveForm
 	private $_action;
 	public $models=null;
 	private $_htmlOptionReadonly = array();
-	public $focus = 'input:visible:enabled:first';
+	// put focus to first non datepicker as if goes to datepicker then the datepicker will display
+	// in admin view
+	public $focus = 'input:not([class="hasDatepicker"]):visible:enabled:first';
     public $clientOptions = array(
 		'validateOnSubmit'=>true,
 		'validateOnChange'=>false,

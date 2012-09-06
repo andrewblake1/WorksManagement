@@ -167,6 +167,7 @@ abstract class ActiveRecord extends CActiveRecord
 		}
 		else
 		{
+		$t=static::model()->tableSchema->getColumnNames();
 			throw new Exception;	// just a debugging exception to ensure correct attrib names etc - shouldn't ever happen live
 		}
 	}

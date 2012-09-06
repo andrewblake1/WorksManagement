@@ -39,10 +39,13 @@ class AuthAssignment extends ActiveRecord
 	{
 		$criteria=new CDbCriteria;
 		$criteria->compare('project.id',$project_id);
+		$criteria->addCondition('projectToProjectTypeToAuthItem.id IS NULL');
 		$criteria->join='
-			JOIN project_type_to_AuthItem projectTypeToAuthItem ON t.itemname=projectTypeToAuthItem.AuthItem_name
-			JOIN project USING(project_type_id)
-		';
+			JOIN project_type_to_AuthItem projectTypeToAuthItem ON t.itemname = projectTypeToAuthItem.AuthItem_name
+			JOIN project
+			USING ( project_type_id )
+			LEFT JOIN project_to_project_type_to_AuthItem projectToProjectTypeToAuthItem ON projectToProjectTypeToAuthItem.project_id = project.id
+			AND projectToProjectTypeToAuthItem.itemname = projectTypeToAuthItem.AuthItem_name';
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		
