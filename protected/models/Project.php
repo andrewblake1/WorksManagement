@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'project':
  * @property string $id
- * @property string $description
+ * @property string $level
  * @property integer $project_type_id
  * @property string $travel_time_1_way
  * @property string $critical_completion
@@ -13,8 +13,11 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
+ * @property Day[] $days
  * @property Staff $staff
  * @property ProjectType $projectType
+ * @property Schedule $id0
+ * @property ProjectLevel $level0
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
  * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
  * @property Task[] $tasks
@@ -26,11 +29,13 @@ class Project extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchProjectType;
+	public $searchName;
 	/**
 	 * @var integer $client_id may be passed via get for search
 	 */
 	public $client_id;
 	
+	public $scheduleName;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -47,13 +52,13 @@ class Project extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, project_type_id, staff_id', 'required'),
+			array('project_type_id, staff_id', 'required'),
 			array('project_type_id, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>255),
-			array('travel_time_1_way, critical_completion, planned, client_id', 'safe'),
+			array('id, level', 'length', 'max'=>10),
+			array('travel_time_1_way, critical_completion, planned, client_id, scheduleName', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, travel_time_1_way, critical_completion, planned, searchStaff, searchProjectType', 'safe', 'on'=>'search'),
+			array('id, level, travel_time_1_way, critical_completion, planned, searchName, searchStaff, searchProjectType', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,13 +70,17 @@ class Project extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'days' => array(self::HAS_MANY, 'Day', 'project_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
+			'id0' => array(self::BELONGS_TO, 'Schedule', 'id'),
+			'level0' => array(self::BELONGS_TO, 'ProjectLevel', 'level'),
 			'projectToGenericProjectTypes' => array(self::HAS_MANY, 'ProjectToGenericProjectType', 'project_id'),
 			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'project_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'project_id'),
 		);
 	}
+
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -83,6 +92,8 @@ class Project extends ActiveRecord
 			'critical_completion' => 'Critical completion',
 			'planned' => 'Planned',
 			'project_type_id' => 'Project type',
+			'searchName' => 'Project name',
+			'scheduleName' => 'Project name',
 			'searchProjectType' => 'Project type',
 		));
 	}
@@ -97,7 +108,7 @@ class Project extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',
-			't.description',
+			'id0.name AS searchName',
 			'travel_time_1_way',
 			't.critical_completion',
 			't.planned',
@@ -107,7 +118,7 @@ class Project extends ActiveRecord
 
 		// where
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('searchName',$this->searchName,true);
 		$criteria->compare('t.travel_time_1_way',$this->travel_time_1_way);
 		$criteria->compare('t.critical_completion',Yii::app()->format->toMysqlDate($this->critical_completion));
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
@@ -118,6 +129,7 @@ class Project extends ActiveRecord
 		$criteria->with = array(
 			'projectType',
 			'projectType.client',
+			'id0',
 		);
 
 		return $criteria;
@@ -126,7 +138,7 @@ class Project extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'id';
-		$columns[] = 'description';
+		$columns[] = 'searchName';
 		$columns[] = static::linkColumn('searchProjectType', 'ProjectType', 'project_type_id');
 		$columns[] = 'travel_time_1_way';
 		$columns[] = 'critical_completion';
@@ -141,7 +153,7 @@ class Project extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchProjectType');
+		return array('searchProjectType', 'searchName');
 	}
 
 	// ensure that where possible a pk has been passed from parent
@@ -160,6 +172,22 @@ class Project extends ActiveRecord
 		{
 			return $parentForeignKey;
 		}
+	}
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		$displaAttr[]='id0->name';
+
+		return $displaAttr;
+	}
+
+	public function afterFind() {
+		$this->scheduleName = $this->id0->name;
+		
+		parent::afterFind();
 	}
 
 }

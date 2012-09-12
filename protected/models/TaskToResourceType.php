@@ -7,15 +7,16 @@
  * @property string $id
  * @property string $task_id
  * @property integer $resource_type_id
- * @property integer $quantity
- * @property integer $hours
- * @property string $start
+ * @property string $level
+ * @property string $resource_data_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Task $task
  * @property ResourceType $resourceType
  * @property Staff $staff
+ * @property ResourceData $resourceData
+ * @property ResourceData $level0
  */
 class TaskToResourceType extends ActiveRecord
 {
@@ -24,13 +25,16 @@ class TaskToResourceType extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchTask;
-	public $searchResourceType;
 	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Resource';
 
-	
+	public $quantity;
+	public $hours;
+	public $start;
+	public $description;
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -48,12 +52,13 @@ class TaskToResourceType extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('task_id, resource_type_id, quantity, hours, staff_id', 'required'),
-			array('resource_type_id, quantity, hours, staff_id', 'numerical', 'integerOnly'=>true),
+			array('level, resource_type_id, quantity, hours, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description', 'length', 'max'=>255),
 			array('task_id', 'length', 'max'=>10),
 			array('start', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchTask, searchResourceType, quantity, hours, start, searchStaff', 'safe', 'on'=>'search'),
+			array('id, level, task_id, searchTask, description, quantity, hours, start, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -68,6 +73,8 @@ class TaskToResourceType extends ActiveRecord
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
 			'resourceType' => array(self::BELONGS_TO, 'ResourceType', 'resource_type_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'resourceData' => array(self::BELONGS_TO, 'ResourceData', 'resource_data_id'),
+			'level0' => array(self::BELONGS_TO, 'ResourceData', 'level'),
 		);
 	}
 
@@ -81,10 +88,11 @@ class TaskToResourceType extends ActiveRecord
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
 			'resource_type_id' => 'Resource type',
-			'searchResourceType' => 'Resource type',
+			'description' => 'Resource type',
 			'quantity' => 'Quantity',
 			'hours' => 'Hours',
 			'start' => 'Start',
+			'level' => 'Level',
 		));
 	}
 
@@ -98,22 +106,25 @@ class TaskToResourceType extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.resource_type_id',
-			'resourceType.description AS searchResourceType',
-			't.quantity',
-			't.hours',
-			't.start',
+			'resourceType.description AS description',
+			'resourceData.quantity AS quantity',
+			'resourceData.hours AS hours',
+			'resourceData.start AS start',
+			't.level',
 		);
 
 		// where
-		$criteria->compare('resourceType.description',$this->searchResourceType,true);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.hours',$this->hours);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('quantity',$this->quantity);
+		$criteria->compare('hours',$this->hours);
 		$criteria->compare('start',$this->start);
+		$criteria->compare('t.level',$this->level);
 		$criteria->compare('t.task_id',$this->task_id);
 		
 		//  join
 		$criteria->with = array(
 			'resourceType',
+			'resourceData',
 			);
 
 		return $criteria;
@@ -121,10 +132,11 @@ class TaskToResourceType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchResourceType', 'ResourceType', 'resource_type_id');
+        $columns[] = static::linkColumn('description', 'ResourceType', 'resource_type_id');
 		$columns[] = 'quantity';
 		$columns[] = 'hours';
 		$columns[] = 'start';
+		$columns[] = 'level';
 		
 		return $columns;
 	}
@@ -135,12 +147,29 @@ class TaskToResourceType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTask', 'searchResourceType');
+		return array('searchTask', 'description', 'quantity', 'hours', 'start');
 	}
 	
 	static function getDisplayAttr()
 	{
 		return array('resourceType->description');
+	}
+
+	public function beforeSave()
+	{
+		$this->resourceData->quantity = $this->quantity;
+		$this->resourceData->hours = $this->hours;
+		$this->resourceData->start = $this->start;
+
+		return parent::beforeSave();
+	}
+
+	public function afterFind() {
+		$this->quantity = $this->resourceData->quantity;
+		$this->hours = $this->resourceData->hours;
+		$this->start = $this->resourceData->start;
+		
+		parent::afterFind();
 	}
 
 }

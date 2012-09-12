@@ -21,24 +21,54 @@ class TaskController extends GenericExtensionController
 	/*
 	 * overidden as mulitple models
 	 */
-	protected function createSave($task, &$models=array())
+	protected function createSave($model, &$models=array())
 	{
-		// parent create save will add generics -- all we need to do is take care care of adding the other things if no errors
-		// NB: by calling the parent the $task model is added into $models
-		if($saved = parent::createSave($task, $models))
+		// need to insert a row into the schedule nested set model so that the id can be used here
+		
+		// create a root node
+		// NB: the project description is actually the name field in the nested set model
+		$schedule = new Schedule;
+		$schedule->name = $model->scheduleName;
+		if($saved = $schedule->appendTo(Schedule::model()->findByPk($model->crew_id)))
 		{
-			// attempt creation of resources
-			$saved &= $this->createResources($task, $models);
-			// attempt creation of assemblies
-			$saved &= $this->createAssemblys($task, $models);
-			// attempt creation of assemblies
-			$saved &= $this->createMaterials($task, $models);
-			// attempt creation of assemblies
-			$saved &= $this->createDutys($task, $models);
+			$model->id = $schedule->id;
+			// parent create save will add generics -- all we need to do is take care care of adding the other things if no errors
+			// NB: by calling the parent the $model model is added into $models
+			if($saved = parent::createSave($model, $models))
+			{
+				// attempt creation of resources
+				$saved &= $this->createResources($model, $models);
+				// attempt creation of assemblies
+				$saved &= $this->createAssemblys($model, $models);
+				// attempt creation of assemblies
+				$saved &= $this->createMaterials($model, $models);
+				// attempt creation of assemblies
+				$saved &= $this->createDutys($model, $models);
+			}
 		}
+
+		// put the model into the models array used for showing all errors
+		$models[] = $schedule;
 		
 		return $saved;
 	}
+
+	/*
+	 * overidden as mulitple models
+	 */
+	protected function updateSave($model,  &$models=array())
+	{
+		// get the schedule model
+		$schedule = Schedule::model()->findByPk($model->id);
+		$schedule->name = $model->scheduleName;
+		// atempt save
+		$saved = $schedule->saveNode(false);
+		// put the model into the models array used for showing all errors
+		$models[] = $schedule;
+		
+		return $saved & parent::createSave($model, $models);
+	}
+
 
 // TODO: replace these with trigger after insert on model. Also cascade delete on these 3 tables
 // Also update triggers possibly to maintain ref integ. easiest for now in application code but not great for integrity.
@@ -64,8 +94,8 @@ class TaskController extends GenericExtensionController
 			$model->attributes = $taskTypeToResourceType->attributes;
 			$model->staff_id = null;
 			$model->task_id = $task->id;
-			$saved &= $model->dbCallback('save');
-			$models[] = $model;
+			$model->resource_type_id = $taskTypeToResourceType->resource_type_id;
+			$saved &= TaskToResourceTypeController::createSaveStatic($model, $models);
 		}
 		
 		return $saved;
@@ -149,7 +179,8 @@ class TaskController extends GenericExtensionController
 			$model->staff_id = null;
 			$model->task_id = $task->id;
 			$model->task_type_to_duty_type_id = $taskTypeToDutyType->id;
-			// if we need to create a generic
+			$saved &= DutyController::createSaveStatic($model, $models);
+/*			// if we need to create a generic
 			if(!empty($taskTypeToDutyType->dutyType->generic_type_id))
 			{
 				// create a new generic item to hold value
@@ -160,7 +191,7 @@ class TaskController extends GenericExtensionController
 			// attempt save
 			$saved &= $model->dbCallback('save');
 			// record any errors
-			$models[] = $model;
+			$models[] = $model;*/
 		}
 		
 		return $saved;

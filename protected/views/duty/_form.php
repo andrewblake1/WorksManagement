@@ -14,11 +14,11 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		$form->checkBoxRow('updated');
 	}
 
-	if(!empty($model->generic_id))
+	if(!empty($model->dutyData->generic_id))
 	{
 		$this->widget('GenericWidget', array(
 			'form'=>$form,
-			'generic'=>$model->generic,
+			'generic'=>$model->dutyData->generic,
 			'genericType'=>$model->taskTypeToDutyType->dutyType->genericType,
 			'relationToGenericType'=>'duty->taskTypeToDutyType->dutyType->genericType',
 		));

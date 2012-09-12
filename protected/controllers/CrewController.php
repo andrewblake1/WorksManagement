@@ -1,23 +1,7 @@
 <?php
-class ProjectController extends GenericExtensionController
+
+class CrewController extends Controller
 {
-	protected $class_ModelToGenericModelType = 'ProjectToGenericProjectType';
-	protected $attribute_generic_model_type_id = 'generic_project_type_id';
-	protected $attribute_model_id = 'project_id';
-	protected $relation_genericModelType = 'genericProjectType';
-	protected $relation_genericModelTypes = 'genericProjectTypes';
-	protected $relation_modelType = 'projectType';
-	protected $relation_modelToGenericModelTypes = 'projectToGenericProjectTypes';
-	protected $relation_modelToGenericModelType = 'projectToGenericProjectType';
-
-	/*
-	 * overidden as because generics added want to edit them after creation
-	 */
-	protected function createRedirect($model)
-	{
-		$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
-	}
-
 	/*
 	 * overidden as mulitple models
 	 */
@@ -29,8 +13,7 @@ class ProjectController extends GenericExtensionController
 		// NB: the project description is actually the name field in the nested set model
 		$schedule = new Schedule;
 		$schedule->name = $model->scheduleName;
-//		$schedule->level = Schedule::scheduleLevelProjectInt;
-		if($saved = $schedule->saveNode(true))
+		if($saved = $schedule->appendTo(Schedule::model()->findByPk($model->day_id)))
 		{
 			$model->id = $schedule->id;
 			$saved = parent::createSave($model, $models);

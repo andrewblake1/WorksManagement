@@ -268,8 +268,6 @@ echo '
 					}
 				}); //ajax
 
-
-
 			});//each function
 		});   //bind move event
 

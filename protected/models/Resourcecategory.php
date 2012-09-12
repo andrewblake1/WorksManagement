@@ -44,7 +44,7 @@ class Resourcecategory extends CategoryActiveRecord {
 		//rgt,lft,root,level,id.
 		return array(
 			array('name, staff_id', 'required'),
-			array('dutycategory_id', 'numerical', 'integerOnly' => true),
+			array('dutycategory_id', 'safe'),
 			array('name', 'length', 'max' => 64),
 		);
 	}

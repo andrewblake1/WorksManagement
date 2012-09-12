@@ -216,6 +216,16 @@ EOD;
 			 $projectManagerRole=$this->_authManager->createRole('project manager', 'Project manager');
 			 // create tasks
 
+			 $task=$this->_authManager->createTask('Crew', 'Crew task');
+			 $projectManagerRole->addChild('Crew');
+			 $this->_authManager->createOperation('CrewRead', 'Crew read');
+			 $task->addChild('CrewRead');
+
+			 $task=$this->_authManager->createTask('Day', 'Day task');
+			 $projectManagerRole->addChild('Day');
+			 $this->_authManager->createOperation('DayRead', 'Day read');
+			 $task->addChild('DayRead');
+
 			 $task=$this->_authManager->createTask('Duty', 'Duty task');
 			 $projectManagerRole->addChild('Duty');
 			 $this->_authManager->createOperation('DutyRead', 'Duty read');
@@ -251,6 +261,11 @@ EOD;
 			 $this->_authManager->createOperation('PurchaseOrderRead', 'PurchaseOrder read');
 			 $task->addChild('PurchaseOrderRead');
 
+			 $task=$this->_authManager->createTask('Schedule', 'Schedule task');
+			 $projectManagerRole->addChild('Schedule');
+			 $this->_authManager->createOperation('ScheduleRead', 'Schedule read');
+			 $task->addChild('ScheduleRead');
+
 			 $task=$this->_authManager->createTask('Task', 'Task task');
 			 $projectManagerRole->addChild('Task');
 			 $this->_authManager->createOperation('TaskRead', 'Task read');
@@ -275,15 +290,11 @@ EOD;
 			 // NB: this role is hard coded into the task _form view
 			 $schedulerRole=$this->_authManager->createRole('scheduler', 'Scheduler');
 			 // create tasks
-			 $task=$this->_authManager->createTask('Schedule', 'Schedule task');
-			 $schedulerRole->addChild('Schedule');
-			 $this->_authManager->createOperation('ScheduleRead', 'Schedule read');
-			 $task->addChild('ScheduleRead');
-
 			 $task=$this->_authManager->createTask('Reschedule', 'Reschedule task');
 			 $schedulerRole->addChild('Reschedule');
 			 $this->_authManager->createOperation('RescheduleRead', 'Reschedule read');
 			 $task->addChild('RescheduleRead');
+			 $schedulerRole->addChild('Schedule');
 
 			 // default role
 			 $defaultRole=$this->_authManager->createRole('default', 'Default',

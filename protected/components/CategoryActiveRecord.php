@@ -64,9 +64,19 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 		);
 	}
 
-	public static function printULTree() {
-		$categories = static::model()->findAll(array('order' => 'root,lft'));
-		$level = 0;
+	public static function printULTree($parent_id = null) {
+		
+		if($parent_id !== null)
+		{
+			$model = static::model()->findByPk($parent_id);
+			$categories = $model->descendants()->findAll();
+			$level = 1;
+		}
+		else
+		{
+			$categories = static::model()->findAll(array('order' => 'root,lft'));
+			$level = 0;
+		}
 
 		foreach ($categories as $n => $category) {
 

@@ -50,7 +50,8 @@ class GenericProjectType extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('project_type_id, generic_type_id, staff_id', 'required'),
-			array('project_type_id, genericprojectcategory_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('project_type_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('genericprojectcategory_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, project_type_id, searchProjectType, searchGenericprojectcategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),

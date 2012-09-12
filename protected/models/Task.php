@@ -5,13 +5,12 @@
  *
  * The followings are the available columns in table 'task':
  * @property string $id
- * @property string $description
+ * @property string $level
  * @property string $project_id
  * @property integer $task_type_id
  * @property integer $in_charge_id
  * @property string $planned
  * @property string $scheduled
- * @property integer $staff_id
  * @property integer $preferred_mon
  * @property integer $preferred_tue
  * @property integer $preferred_wed
@@ -19,6 +18,8 @@
  * @property integer $preferred_fri
  * @property integer $preferred_sat
  * @property integer $preferred_sun
+ * @property string $crew_id
+ * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Duty[] $duties
@@ -28,6 +29,9 @@
  * @property Staff $staff
  * @property TaskType $taskType
  * @property Staff $inCharge
+ * @property Schedule $id0
+ * @property TaskLevel $level0
+ * @property Crew $crew
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
  * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
@@ -43,10 +47,13 @@ class Task extends ActiveRecord
 	public $searchProject;
 	public $searchTaskType;
 	public $searchEarliest;
+	public $searchName;
 	/**
 	 * inline checkbox property 
 	 */
 	public $preferred = array();
+	
+	public $scheduleName;
 
 	/**
 	 * @return string the associated database table name
@@ -64,13 +71,13 @@ class Task extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, project_id, task_type_id, in_charge_id, staff_id', 'required'),
+			array('project_id, task_type_id, crew_id, in_charge_id, staff_id', 'required'),
 			array('task_type_id, in_charge_id, staff_id', 'numerical', 'integerOnly'=>true),
-			array('project_id', 'length', 'max'=>10),
-			array('planned, scheduled, preferred', 'safe'),
+			array('id, level, project_id, crew_id', 'length', 'max'=>10),
+			array('planned, preferred, scheduled, scheduleName', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('searchInCharge, searchEarliest, searchProject, searchTaskType, searchStaff, id, description, project_id, planned, scheduled, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
+			array('id, level, searchInCharge, searchEarliest, searchProject, searchTaskType, searchStaff, searchName, crew_id, planned, scheduled, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -89,6 +96,9 @@ class Task extends ActiveRecord
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
 			'inCharge' => array(self::BELONGS_TO, 'Staff', 'in_charge_id'),
+			'id0' => array(self::BELONGS_TO, 'Schedule', 'id'),
+			'level0' => array(self::BELONGS_TO, 'TaskLevel', 'level'),
+			'crew' => array(self::BELONGS_TO, 'Crew', 'crew_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
 			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'task_id'),
 			'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'task_id'),
@@ -111,7 +121,9 @@ class Task extends ActiveRecord
 			'searchTaskType' => 'Task type',
 			'planned' => 'Planned',
 			'scheduled' => 'Scheduled',
+			'searchName' => 'Description',
 			'searchEarliest' => 'Earliest',
+			'scheduleName' => 'Task',
 			'preferred_mon' => 'Mon',
 			'preferred_tue' => 'Tue',
 			'preferred_wed' => 'Wed',
@@ -135,7 +147,7 @@ class Task extends ActiveRecord
 			't.id',
 			't.in_charge_id',
 			't.task_type_id',
-			't.description',
+			'id0.name AS searchName',
 			't.planned',
 			't.scheduled',
 			'DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest',
@@ -156,15 +168,17 @@ class Task extends ActiveRecord
 				) AS searchTaskType",
 		);
 
+		// group
+		$criteria->group = 't.id';
 		// join 
 		$criteria->join='
-			JOIN duty ON t.id = duty.task_id
-			JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type_id
-			JOIN duty_type ON task_type_to_duty_type.duty_type_id = duty_type.id';
+			LEFT JOIN duty ON t.id = duty.task_id
+			LEFT JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type_id
+			LEFT JOIN duty_type ON task_type_to_duty_type.duty_type_id = duty_type.id';
 
 		// where
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('searchName',$this->searchName,true);
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
 		$criteria->compare('t.scheduled',Yii::app()->format->toMysqlDate($this->scheduled));
 		$criteria->compare('searchEarliest',Yii::app()->format->toMysqlDate($this->searchEarliest));
@@ -190,13 +204,14 @@ class Task extends ActiveRecord
 			),
 			$this->searchTaskType
 		);
-		$criteria->compare('t.project_id',$this->project_id);
+		$criteria->compare('t.crew_id',$this->crew_id);
 		
 		// join
 		$criteria->with = array(
 			'inCharge',
 			'project',
 			'taskType',
+			'id0',
 			);
 
 		return $criteria;
@@ -205,7 +220,7 @@ class Task extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'id';
-		$columns[] = 'description';
+		$columns[] = 'searchName';
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
         $columns[] = static::linkColumn('searchTaskType', 'TaskType', 'task_type_id');
 		$columns[] = 'planned';
@@ -223,12 +238,22 @@ class Task extends ActiveRecord
 	}
 
 	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		$displaAttr[]='id0->name';
+
+		return $displaAttr;
+	}
+
+	/**
 	 * Retrieves a sort array for use in CActiveDataProvider.
 	 * @return array the for data provider that contains the sort condition.
 	 */
 	public function getSearchSort()
 	{
-		return array('searchInCharge', 'searchProject', 'searchTaskType', 'searchEarliest');
+		return array('searchInCharge', 'searchProject', 'searchTaskType', 'searchEarliest', 'searchName');
 	}
 
 	public function beforeSave() {
@@ -239,6 +264,7 @@ class Task extends ActiveRecord
 			// reset
 			$this->scheduled = $this->getOldAttributeValue('scheduled');
 		}
+
 		if(!empty($this->preferred))
 		{
 			$this->preferred_mon = in_array('0', $this->preferred);
@@ -283,6 +309,8 @@ class Task extends ActiveRecord
 		{
 			$this->preferred[] = 6;
 		}
+
+		$this->scheduleName = $this->id0->name;
 	
 		parent::afterFind();
 	}
@@ -296,6 +324,16 @@ class Task extends ActiveRecord
 		$this->planned = date('d M, Y');
 		
 		parent::init();
+	}
+
+	/*
+	 * can't set default value in database as TEXT data type but is required
+	 */
+	public function beforeValidate()
+	{
+		$this->project_id = $_SESSION['actionAdminGet']['Day']['project_id'];
+		
+		return parent::beforeValidate();
 	}
 
 }

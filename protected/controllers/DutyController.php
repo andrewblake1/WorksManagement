@@ -72,17 +72,74 @@ class DutyController extends Controller
 	 */
 	protected function createSave($model, &$models=array())
 	{
+		// not using this so able to make this static as needed in TaskController
+		return createSaveStatic($model, $models);
+	}
+
+	static function createSaveStatic($model, &$models=array())
+	{
 		$saved = true;
 
-		// if we need to create a generic
-		if(!empty($model->taskTypeToDutyType->dutyType->generic_type_id))
+		// ensure existance of a related DutyData. First get the desired schedule id which is the desired ancestor of task
+		// if this is task level
+		if(($level = $model->taskTypeToDutyType->dutyType->level) == Schedule::scheduleLevelTaskInt)
+		{
+			$schedule_id = $model->task_id;
+		}
+		else
+		{
+			// get the desired ansestor
+			$schedule = Schedule::model()->findByPk($model->task_id);
+
+			while($schedule = $schedule->parent)
+			{
+				if($schedule->level == $level)
+				{
+					break;
+				}
+			}
+			if(empty($schedule))
+			{
+				throw new Exception();
+			}
+
+			$schedule_id = $schedule->id;
+		}
+		// try insert and catch and dump any error - will ensure existence
+		try
+		{
+			$dutyData = new DutyData;
+			$dutyData->schedule_id = $schedule_id;
+			$dutyData->duty_type_id = $model->duty_type_id;
+			$dutyData->level = $level;
+			// NB not recording return here as might fail deliberately if already exists - though will go to catch
+			$dutyData->dbCallback('save');
+		}
+		catch (CDbException $e)
+		{
+			// dump
+
+		}
+		// retrieve the DutyData
+		$dutyData = DutyData::model()->findByAttributes(array(
+			'schedule_id'=>$schedule_id,
+			'duty_type_id'=>$model->duty_type_id,
+		));
+
+		// if there isn't already a generic item to hold value and there should be
+		if(empty($dutyData->generic) && !empty($model->taskTypeToDutyType->dutyType->generic_type_id))
 		{
 			// create a new generic item to hold value
 			$saved &= Generic::createGeneric($model->taskTypeToDutyType->dutyType->genericType, $models, $generic);
 			// associate the new generic to this duty
-			$model->generic_id = $generic->id;
+			$dutyData->generic_id = $generic->id;
+			// attempt save
+			$saved &= parent::createSave($dutyData, $models);
 		}
-		
+
+		// link this Duty to the DutyData
+		$model->duty_data_id = $dutyData->id;
+
 		return $saved & parent::createSave($model, $models);
 	}
 
@@ -92,11 +149,10 @@ class DutyController extends Controller
 	protected function updateSave($model,  &$models=array())
 	{
 		$saved = true;
-
-		$generic = $model->generic;
+		$model->dutyData->updated = $model->updated;
 
 		// if we need to update a generic
-		if(!empty($model->taskTypeToDutyType->dutyType->generic_type_id))
+		if($generic = $model->dutyData->generic)
 		{
 			// massive assignement
 			$generic->attributes=$_POST['Generic'][$generic->id];
@@ -110,8 +166,43 @@ class DutyController extends Controller
 
 			$saved &= parent::updateSave($generic, $models);
 		}
+
+		// attempt save of related DutyData
+		$saved &= parent::updateSave($model->dutyData, $models);
 		
 		return $saved & parent::updateSave($model, $models);
+	}
+
+	/*
+	 * overidden as mulitple models
+	 */
+	protected function actionAfterDelete($model)
+	{
+		// stop orphans in DutyData and Generic
+
+		$criteria=new CDbCriteria;
+		$criteria->compare('duty_data_id', $model->duty_data_id);
+
+		// if DutyData now orphaned
+		if(Duty::model()->count($criteria) == 0)
+		{
+			// get the DutyData model
+			$dutyData = DutyData::model()->findByPk($model->duty_data_id);
+			
+			// get generic id before removing DutyData
+			$generic_id = $dutyData->generic_id;
+			
+			// NB: must delete dutyData first as looks up generic
+			$dutyData->delete();
+			
+			// if there is a generic
+			if($generic_id)
+			{
+				// delete the generic
+				Generic::model()->deleteByPk($generic_id);
+			}
+
+		}
 	}
 
 }

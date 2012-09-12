@@ -34,7 +34,7 @@ class NestedSetBehavior extends CActiveRecordBehavior
 	{
 		$owner=$this->getOwner();
 		$db=$owner->getDbConnection();
-		$criteria=$owner->getDbCriteria();
+ 		$criteria=$owner->getDbCriteria();
 		$alias=$db->quoteColumnName($owner->getTableAlias());
 
 		$criteria->mergeWith(array(

@@ -50,7 +50,8 @@ class GenericTaskType extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('task_type_id, generic_type_id, staff_id', 'required'),
-			array('task_type_id, generictaskcategory_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('generictaskcategory_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, task_type_id, searchTaskType, searchGenerictaskcategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),

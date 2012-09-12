@@ -84,10 +84,10 @@ class CategoryController extends Controller
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/client_val_form.css','screen');
 	}
 
-	public function actionFetchTree()
+	public function actionFetchTree($parent_id = null)
 	{
 		$modelName = $this->modelName();
-		$modelName::printULTree();
+		$modelName::printULTree($parent_id);
 	}
 
 	public function actionRename()
@@ -157,7 +157,9 @@ class CategoryController extends Controller
 		$this->renderPartial('_form',
 			array(
 				'model'=>$model,
-				'parent_id'=>!empty($_POST['parent_id'])?$_POST['parent_id']:'',
+				'parent_id'=>!empty($_POST['parent_id'])
+					? $_POST['parent_id']
+					: '',
 				'action'=>$returnUrl,
 			),
 			false,

@@ -7,17 +7,18 @@
  * @property string $id
  * @property string $task_id
  * @property integer $task_type_id
- * @property string $updated
- * @property string $generic_id
- * @property integer $staff_id
+ * @property integer $duty_type_id
  * @property integer $task_type_to_duty_type_id
+ * @property string $duty_data_id
+ * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Task $task
  * @property TaskTypeToDutyType $taskType
- * @property Generic $generic
  * @property Staff $staff
  * @property TaskTypeToDutyType $taskTypeToDutyType
+ * @property DutyData $dutyType
+ * @property DutyData $dutyData
  */
 class Duty extends ActiveRecord
 {
@@ -27,7 +28,8 @@ class Duty extends ActiveRecord
 	 */
 	public $searchTask;
 	public $searchTaskTypeToDutyType;
-	public $searchGeneric;
+	public $generic_id;
+	public $updated;
 	
 	/**
 	 * @return string the associated database table name
@@ -45,13 +47,13 @@ class Duty extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, task_type_id, staff_id, task_type_to_duty_type_id', 'required'),
-			array('task_type_id, staff_id, task_type_to_duty_type_id', 'numerical', 'integerOnly'=>true),
-			array('task_id, generic_id', 'length', 'max'=>10),
-			array('updated', 'safe'),
+			array('task_id, task_type_id, duty_type_id, task_type_to_duty_type_id, duty_data_id, staff_id', 'required'),
+			array('task_type_id, duty_type_id, task_type_to_duty_type_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_id, duty_data_id', 'length', 'max'=>10),
+			array('updated, generic_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchTask, searchTaskTypeToDutyType, updated, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchTask, searchTaskTypeToDutyType, updated, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,9 +67,10 @@ class Duty extends ActiveRecord
 		return array(
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
 			'taskType' => array(self::BELONGS_TO, 'TaskTypeToDutyType', 'task_type_id'),
-			'generic' => array(self::BELONGS_TO, 'Generic', 'generic_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskTypeToDutyType' => array(self::BELONGS_TO, 'TaskTypeToDutyType', 'task_type_to_duty_type_id'),
+			'dutyType' => array(self::BELONGS_TO, 'DutyData', 'duty_type_id'),
+			'dutyData' => array(self::BELONGS_TO, 'DutyData', 'duty_data_id'),
 		);
 	}
 
@@ -83,9 +86,8 @@ class Duty extends ActiveRecord
 			'task_type_id' => 'Task type',
 			'task_type_to_duty_type_id' => 'Duty/Role/First/Last/Email',
 			'searchTaskTypeToDutyType' => 'Duty/Role/First/Last/Email',
-			'updated' => 'Complete',
+			'updated' => 'Completed',
 			'generic_id' => 'Generic',
-			'searchGeneric' => 'Generic',
 		));
 	}
 
@@ -107,7 +109,7 @@ class Duty extends ActiveRecord
 				user.last_name,
 				user.email
 				) AS searchTaskTypeToDutyType",
-			't.updated',
+			'dutyData.updated AS updated',
 		);
 
 		// where
@@ -120,7 +122,7 @@ class Duty extends ActiveRecord
 				'user.last_name',
 				'user.email',
 			), $this->searchTaskTypeToDutyType);
-		$criteria->compare('t.updated',Yii::app()->format->toMysqlDateTime($this->updated));
+		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
 
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
@@ -128,6 +130,7 @@ class Duty extends ActiveRecord
 
 		// join
 		$criteria->with = array(
+			'dutyData',
 			'task.project.projectToProjectTypeToAuthItems.authAssignment',
 			'task.project.projectToProjectTypeToAuthItems.authAssignment.user',
 			'taskTypeToDutyType.dutyType',
@@ -155,7 +158,7 @@ class Duty extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTask', 'searchTaskTypeToDutyType', 'searchGeneric');
+		return array('searchTask', 'searchTaskTypeToDutyType', 'updated');
 	}
 
 	public function beforeValidate()
@@ -172,21 +175,26 @@ class Duty extends ActiveRecord
 	public function beforeSave()
 	{
 		// if the updated attribute was null but is now being set
-		if($this->updated == 1 && $this->getOldAttributeValue('updated') == null)
+		if($this->updated == 1 && $this->dutyData->getOldAttributeValue('updated') == null)
 		{
 			// set to current datetime
-			$this->updated = date('Y-m-d H:i:s');
+			$this->dutyData->updated = date('Y-m-d H:i:s');
 		}
 		// system admin clear
 		elseif(empty($this->updated) && Yii::app()->user->checkAccess('system admin'))
 		{
 			// clear
-			$this->updated = null;
+			$this->dutyData->updated = null;
 		}
 		
 		return parent::beforeSave();
 	}
 
+	public function afterFind() {
+		$this->updated = $this->dutyData->updated;
+		
+		parent::afterFind();
+	}
 }
 
 ?>

@@ -415,7 +415,6 @@ abstract class ActiveRecord extends CActiveRecord
 		return parent::beforeValidate();
 	}
 
-
 	/**
 	 * Container to deal with error handling for model database calls.
 	 * @param String $callback the name of the method to call.
@@ -426,11 +425,12 @@ abstract class ActiveRecord extends CActiveRecord
 	public function dbCallback($callback, $callbackArgs=array(), $messages=array())
 	{
 		$coreMessages = array('1062' => 'Duplicates are not allowed');
-	
+
 		$messages = $messages + $coreMessages;
 
 		try
 		{
+$t = $this->attributes;
 			$return = call_user_func_array(array($this, $callback), $callbackArgs);
 		}
 		catch(CDbException $e)
@@ -445,10 +445,13 @@ abstract class ActiveRecord extends CActiveRecord
 					break;
 				}
 			}
-					
+
 			$this->addError(null, $errorMessage);
 		}
-		
+if(count($m = $this->getErrors()))
+{
+	$s=1;
+}
 		return $return;
 	}
 

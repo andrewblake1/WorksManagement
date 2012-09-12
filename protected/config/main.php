@@ -151,18 +151,23 @@ return array(
 					),
 					'Material',
 					'Project'=>array( 
-						'Task'=>array(
-							'Duty',
-							'Reschedule',
-// TODO: naming orientation is inconsistent here
-							'MaterialToTask',
-							'TaskToAssembly',
-							'TaskToGenericTaskType',
-							'TaskToPurchaseOrder',
-							'TaskToResourceType',
+						'Day'=>array(
+							'Crew'=>array(
+								'Task'=>array(
+									'Duty',
+									'Reschedule',
+		// TODO: naming orientation is inconsistent here
+									'MaterialToTask',
+									'TaskToAssembly',
+									'TaskToGenericTaskType',
+									'TaskToPurchaseOrder',
+									'TaskToResourceType',
+								),
+							),
 						),
 						'ProjectToProjectTypeToAuthItem',
-						'ProjectToGenericProjectType'
+						'ProjectToGenericProjectType',
+						'Schedule',
 					),
 					'ProjectType'=>array(
 						'ProjectTypeToAuthItem',

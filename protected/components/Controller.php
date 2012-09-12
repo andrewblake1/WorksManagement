@@ -786,6 +786,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		));
 	}
 
+	protected function actionAfterDelete()
+	{
+		
+	}
+
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -812,6 +817,9 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				{
 					$model->delete();
 				}
+				
+				// call up any special handling in child class
+				$this->actionAfterDelete($model);
 				
 				if(!isset($_GET['ajax']))
 				{

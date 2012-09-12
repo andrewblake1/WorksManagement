@@ -19,7 +19,6 @@
  */
 class Dutycategory extends CategoryActiveRecord {
 
-
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */

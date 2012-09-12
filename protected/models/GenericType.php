@@ -53,11 +53,11 @@ class GenericType extends ActiveRecord
 	public static function getDataTypeLabels()
 	{
 		return array(
-			self::dataTypeDate=>'Date',
-			self::dataTypeFloat=>'Float',
-			self::dataTypeInt=>'Int',
-			self::dataTypeText=>'Text' ,
-			self::dataTypeTime=>'Time',
+			self::dataTypeDate=>self::dataTypeDate,
+			self::dataTypeFloat=>self::dataTypeFloat,
+			self::dataTypeInt=>self::dataTypeInt,
+			self::dataTypeText=>self::dataTypeText,
+			self::dataTypeTime=>self::dataTypeTime,
 		);
 	}
 
@@ -83,11 +83,11 @@ class GenericType extends ActiveRecord
 	public static function getValidationTypeLabels()
 	{
 		return array(
-			self::validationTypeNone=>'None',
-			self::validationTypePCRE=>'PCRE',
-			self::validationTypeRange=>'Range',
-			self::validationTypeSQLSelect=>'SQL select',
-			self::validationTypeValueList=>'Value list'
+			self::validationTypeNone=>self::validationTypeNone,
+			self::validationTypePCRE=>self::validationTypePCRE,
+			self::validationTypeRange=>self::validationTypeRange,
+			self::validationTypeSQLSelect=>self::validationTypeSQLSelect,
+			self::validationTypeValueList=>self::validationTypeValueList,
 		);
 	}
 

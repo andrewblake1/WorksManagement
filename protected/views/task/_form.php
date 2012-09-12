@@ -2,7 +2,7 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	$form->textAreaRow('description');
+	$form->textFieldRow('scheduleName');
 
 	// only show when creating
 	if($model->isNewRecord)

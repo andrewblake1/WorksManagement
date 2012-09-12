@@ -27,15 +27,19 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	
 	public function scopeTaskTypeToDutyType($task_type_id)
 	{
+//TODO this and another location that restrict lists need to include the current record if updating rather than excluding it
+// also add deleted to unique indexes and make deleted += 1 so not violating constraints when adding new and removing old multiple times
 		$criteria=new CDbCriteria;
-		$criteria->compare('task_type_to_duty_type.task_type_id',$task_type_id);
+		$criteria->compare('task_type.id',$task_type_id);
+//		$criteria->addCondition('taskTypeToDutyType.id IS NULL');
 		$criteria->join='
-			 JOIN task_type_to_duty_type USING ( project_type_id )
-		';
+			JOIN task_type
+			USING ( project_type_id )
+			';//LEFT JOIN task_type_to_duty_type taskTypeToDutyType ON taskTypeToDutyType.project_type_to_AuthItem_id = t.id
 		$criteria->distinct=true;
-		
+
 		$this->getDbCriteria()->mergeWith($criteria);
-		
+
 		return $this;
 	}
 	
