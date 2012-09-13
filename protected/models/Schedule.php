@@ -10,6 +10,7 @@
  * @property string $rgt
  * @property string $level
  * @property string $name
+ * @property integer $in_charge_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -19,6 +20,7 @@
  * @property Project $project
  * @property ResourceData[] $resourceDatas
  * @property ResourceData[] $resourceDatas1
+ * @property Staff $inCharge
  * @property Staff $staff
  * @property Task $task
  */
@@ -64,7 +66,7 @@ class Schedule extends CategoryActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_id', 'safe'),
+			array('project_id, in_charge_id', 'safe'),
 		) + parent::rules();
 	}
 
@@ -97,6 +99,7 @@ class Schedule extends CategoryActiveRecord {
 			'project' => array(self::HAS_ONE, 'Project', 'id'),
 			'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'schedule_id'),
 			'resourceDatas1' => array(self::HAS_MANY, 'ResourceData', 'level'),
+			'inCharge' => array(self::BELONGS_TO, 'Staff', 'in_charge_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'task' => array(self::HAS_ONE, 'Task', 'id'),
 		);

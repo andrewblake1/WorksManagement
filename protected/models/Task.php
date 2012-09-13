@@ -8,7 +8,6 @@
  * @property string $level
  * @property string $project_id
  * @property integer $task_type_id
- * @property integer $in_charge_id
  * @property string $planned
  * @property string $scheduled
  * @property integer $preferred_mon
@@ -28,7 +27,6 @@
  * @property Project $project
  * @property Staff $staff
  * @property TaskType $taskType
- * @property Staff $inCharge
  * @property Schedule $id0
  * @property TaskLevel $level0
  * @property Crew $crew
@@ -47,13 +45,12 @@ class Task extends ActiveRecord
 	public $searchProject;
 	public $searchTaskType;
 	public $searchEarliest;
-	public $searchName;
+	public $name;
+	public $in_charge_id;
 	/**
 	 * inline checkbox property 
 	 */
 	public $preferred = array();
-	
-	public $scheduleName;
 
 	/**
 	 * @return string the associated database table name
@@ -71,13 +68,13 @@ class Task extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_id, task_type_id, crew_id, in_charge_id, staff_id', 'required'),
-			array('task_type_id, in_charge_id, staff_id', 'numerical', 'integerOnly'=>true),
-			array('id, level, project_id, crew_id', 'length', 'max'=>10),
-			array('planned, preferred, scheduled, scheduleName', 'safe'),
+			array('project_id, task_type_id, crew_id, staff_id', 'required'),
+			array('task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
+			array('planned, preferred, scheduled, name', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, searchInCharge, searchEarliest, searchProject, searchTaskType, searchStaff, searchName, crew_id, planned, scheduled, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
+			array('id, level, searchInCharge, searchEarliest, searchProject, searchTaskType, searchStaff, name, crew_id, planned, scheduled, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,7 +92,6 @@ class Task extends ActiveRecord
 			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
-			'inCharge' => array(self::BELONGS_TO, 'Staff', 'in_charge_id'),
 			'id0' => array(self::BELONGS_TO, 'Schedule', 'id'),
 			'level0' => array(self::BELONGS_TO, 'TaskLevel', 'level'),
 			'crew' => array(self::BELONGS_TO, 'Crew', 'crew_id'),
@@ -121,9 +117,8 @@ class Task extends ActiveRecord
 			'searchTaskType' => 'Task type',
 			'planned' => 'Planned',
 			'scheduled' => 'Scheduled',
-			'searchName' => 'Description',
+			'name' => 'Task',
 			'searchEarliest' => 'Earliest',
-			'scheduleName' => 'Task',
 			'preferred_mon' => 'Mon',
 			'preferred_tue' => 'Tue',
 			'preferred_wed' => 'Wed',
@@ -145,9 +140,8 @@ class Task extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
-			't.in_charge_id',
 			't.task_type_id',
-			'id0.name AS searchName',
+			'id0.name AS name',
 			't.planned',
 			't.scheduled',
 			'DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest',
@@ -178,7 +172,7 @@ class Task extends ActiveRecord
 
 		// where
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('searchName',$this->searchName,true);
+		$criteria->compare('name',$this->name,true);
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
 		$criteria->compare('t.scheduled',Yii::app()->format->toMysqlDate($this->scheduled));
 		$criteria->compare('searchEarliest',Yii::app()->format->toMysqlDate($this->searchEarliest));
@@ -189,7 +183,6 @@ class Task extends ActiveRecord
 		$criteria->compare('t.preferred_fri',Yii::app()->format->toMysqlBool($this->preferred_fri));
 		$criteria->compare('t.preferred_sat',Yii::app()->format->toMysqlBool($this->preferred_sat));
 		$criteria->compare('t.preferred_sun',Yii::app()->format->toMysqlBool($this->preferred_sun));
-
 		$this->compositeCriteria($criteria,
 			array(
 				'inCharge.first_name',
@@ -208,10 +201,10 @@ class Task extends ActiveRecord
 		
 		// join
 		$criteria->with = array(
-			'inCharge',
+			'id0',
+			'id0.inCharge',
 			'project',
 			'taskType',
-			'id0',
 			);
 
 		return $criteria;
@@ -220,7 +213,7 @@ class Task extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'id';
-		$columns[] = 'searchName';
+		$columns[] = 'name';
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
         $columns[] = static::linkColumn('searchTaskType', 'TaskType', 'task_type_id');
 		$columns[] = 'planned';
@@ -253,7 +246,7 @@ class Task extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchInCharge', 'searchProject', 'searchTaskType', 'searchEarliest', 'searchName');
+		return array('searchInCharge', 'searchProject', 'searchTaskType', 'searchEarliest', 'name');
 	}
 
 	public function beforeSave() {
@@ -275,7 +268,10 @@ class Task extends ActiveRecord
 			$this->preferred_sat = in_array('5', $this->preferred);
 			$this->preferred_sun = in_array('6', $this->preferred);
 		}
-		
+
+		$this->id0->name = $this->name;
+		$this->id0->in_charge_id = $this->in_charge_id;
+			
 		return parent::beforeSave();
 	}
 
@@ -310,7 +306,8 @@ class Task extends ActiveRecord
 			$this->preferred[] = 6;
 		}
 
-		$this->scheduleName = $this->id0->name;
+		$this->name = $this->id0->name;
+		$this->in_charge_id = $this->id0->in_charge_id;
 	
 		parent::afterFind();
 	}

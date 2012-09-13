@@ -27,7 +27,8 @@ class Duty extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchTask;
-	public $searchTaskTypeToDutyType;
+	public $description;
+	public $searchInCharge;
 	public $generic_id;
 	public $updated;
 	
@@ -53,7 +54,7 @@ class Duty extends ActiveRecord
 			array('updated, generic_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchTask, searchTaskTypeToDutyType, updated, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchInCharge, searchTask, description, updated, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,9 +86,10 @@ class Duty extends ActiveRecord
 			'searchTask' => 'Task',
 			'task_type_id' => 'Task type',
 			'task_type_to_duty_type_id' => 'Duty/Role/First/Last/Email',
-			'searchTaskTypeToDutyType' => 'Duty/Role/First/Last/Email',
+			'description' => 'Duty',
 			'updated' => 'Completed',
 			'generic_id' => 'Generic',
+			'searchInCharge' => 'In charge',
 		));
 	}
 
@@ -99,38 +101,65 @@ class Duty extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		// select
+		// NB: taking first non null of either the staff assigned to duty at project or staff in charge at target duty level
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.task_type_to_duty_type_id',
-			"CONCAT_WS('$delimiter',
-				dutyType.description,
-				authAssignment.itemname,
-				user.first_name,
-				user.last_name,
-				user.email
-				) AS searchTaskTypeToDutyType",
+			'dutyType.description AS description',
+			"COALESCE(
+				IF(LENGTH(CONCAT_WS('$delimiter',
+					user.first_name,
+					user.last_name,
+					user.email
+					))=0, NULL, CONCAT_WS('$delimiter',
+					user.first_name,
+					user.last_name,
+					user.email
+					)),
+				CONCAT_WS('$delimiter',
+					inCharge.first_name,
+					inCharge.last_name,
+					inCharge.email
+					)
+				) AS searchInCharge",
 			'dutyData.updated AS updated',
 		);
 
 		// where
+		$criteria->compare('dutyType.description',$this->description,true);
 		$this->compositeCriteria(
 			$criteria,
 			array(
-				'dutyType.description',
-				'authAssignment.itemname',
 				'user.first_name',
 				'user.last_name',
 				'user.email',
-			), $this->searchTaskTypeToDutyType);
+			), $this->searchInCharge);
+		$this->compositeCriteria($criteria,
+			array(
+				'inCharge.first_name',
+				'inCharge.last_name',
+				'inCharge.email',
+			),
+			$this->searchInCharge
+		);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
 
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
 
+/*		if(!$assignedTo = $model->task->project->projectToProjectTypeToAuthItems->authAssignment->userid)
+		{
+			// get who is responsible at the target accummulating level for this duty. Because DutyData is at that desired level it links
+			// to correct Schedule to get the in_charge
+			$assignedTo = $model->dutyData->schedule->in_charge_id;
+		}
+		*/
+		
 		// join
 		$criteria->with = array(
 			'dutyData',
+			'dutyData.schedule.inCharge',
 			'task.project.projectToProjectTypeToAuthItems.authAssignment',
 			'task.project.projectToProjectTypeToAuthItems.authAssignment.user',
 			'taskTypeToDutyType.dutyType',
@@ -141,7 +170,8 @@ class Duty extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchTaskTypeToDutyType', 'TaskTypeToDutyType', 'task_type_to_duty_type_id');
+        $columns[] = static::linkColumn('description', 'TaskTypeToDutyType', 'task_type_to_duty_type_id');
+        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'dutyData->schedule->in_charge_id');
 		$columns[] = 'updated:datetime';
 		
 		return $columns;
@@ -158,7 +188,7 @@ class Duty extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTask', 'searchTaskTypeToDutyType', 'updated');
+		return array('searchTask', 'description', 'updated');
 	}
 
 	public function beforeValidate()

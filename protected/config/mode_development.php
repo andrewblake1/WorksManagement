@@ -8,6 +8,8 @@
  * - Show all details on each error
  * - Gii module enabled
  */
+// TODO: AB examine correct error reporting - should fix up to strict level ideally
+//ini_set('error_reporting', E_NOTICE);
 
 return array(
 
@@ -17,7 +19,7 @@ return array(
 	//'yiitPath' => dirname(__FILE__) . '/../../../yii/framework/yiit.php',
 
 	// Set YII_DEBUG and YII_TRACE_LEVEL flags
-	'yiiDebug' => true,
+	'yiiDebug' => false,
 	'yiiTraceLevel' => 3,
 	
 	// Static function Yii::setPathOfAlias()

@@ -26,7 +26,7 @@ abstract class ActiveRecord extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * @return Client the static model class
 	 */
-	public static function model()
+	public static function model($className=__CLASS__)
 	{
 		return parent::model(get_called_class());
 	}
@@ -382,12 +382,12 @@ abstract class ActiveRecord extends CActiveRecord
 	{
 	//	$arrayForeignKeys=$this->tableSchema->foreignKeys;
 		
-		foreach($this->attributes as $name=>&$value)
+		foreach($this->attributes as $name=>$value)
 		{
 			// convert empty strings to nulls if null allowed
 			if(/*array_key_exists($name, $arrayForeignKeys) &&*/ $this->metadata->columns[$name]->allowNull && trim($value)=='')
 			{
-				$this->$name=NULL;
+				$this->$name=new CDbExpression('NULL'); ;
 			}
 			// convert dates to mysql format - allow for nulls
 			if(!empty($value) && $this->metadata->columns[$name]->dbType == 'date')

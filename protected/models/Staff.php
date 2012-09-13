@@ -21,8 +21,11 @@
  * @property Assembly[] $assemblies
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property Client[] $clients
+ * @property Crew[] $crews
+ * @property Day[] $days
  * @property DefaultValue[] $defaultValues
  * @property Duty[] $duties
+ * @property DutyData[] $dutyDatas
  * @property DutyType[] $dutyTypes
  * @property Dutycategory[] $dutycategories
  * @property Generic[] $generics
@@ -42,13 +45,15 @@
  * @property Report[] $reports
  * @property ReportToAuthItem[] $reportToAuthItems
  * @property Reschedule[] $reschedules
+ * @property ResourceData[] $resourceDatas
  * @property ResourceType[] $resourceTypes
  * @property Resourcecategory[] $resourcecategories
+ * @property Schedule[] $schedules
+ * @property Schedule[] $schedules1
  * @property Staff $staff
  * @property Staff[] $staffs
  * @property Supplier[] $suppliers
  * @property Task[] $tasks
- * @property Task[] $tasks1
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
  * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
@@ -58,8 +63,7 @@
  * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
  * @property TaskTypeToMaterial[] $taskTypeToMaterials
  * @property TaskTypeToResourceType[] $taskTypeToResourceTypes
- */
-class Staff extends ActiveRecord
+ */class Staff extends ActiveRecord
 {
 	/**
 	 * @return string the associated database table name
@@ -103,8 +107,11 @@ class Staff extends ActiveRecord
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'staff_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'staff_id'),
 			'clients' => array(self::HAS_MANY, 'Client', 'staff_id'),
+			'crews' => array(self::HAS_MANY, 'Crew', 'staff_id'),
+			'days' => array(self::HAS_MANY, 'Day', 'staff_id'),
 			'defaultValues' => array(self::HAS_MANY, 'DefaultValue', 'staff_id'),
 			'duties' => array(self::HAS_MANY, 'Duty', 'staff_id'),
+			'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'staff_id'),
 			'dutyTypes' => array(self::HAS_MANY, 'DutyType', 'staff_id'),
 			'dutycategories' => array(self::HAS_MANY, 'Dutycategory', 'staff_id'),
 			'generics' => array(self::HAS_MANY, 'Generic', 'staff_id'),
@@ -124,13 +131,15 @@ class Staff extends ActiveRecord
 			'reports' => array(self::HAS_MANY, 'Report', 'staff_id'),
 			'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'staff_id'),
 			'reschedules' => array(self::HAS_MANY, 'Reschedule', 'staff_id'),
+			'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'staff_id'),
 			'resourceTypes' => array(self::HAS_MANY, 'ResourceType', 'staff_id'),
 			'resourcecategories' => array(self::HAS_MANY, 'Resourcecategory', 'staff_id'),
+			'schedules' => array(self::HAS_MANY, 'Schedule', 'in_charge_id'),
+			'schedules1' => array(self::HAS_MANY, 'Schedule', 'staff_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'staffs' => array(self::HAS_MANY, 'Staff', 'staff_id'),
 			'suppliers' => array(self::HAS_MANY, 'Supplier', 'staff_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'staff_id'),
-			'tasks1' => array(self::HAS_MANY, 'Task', 'in_charge_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'staff_id'),
 			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'staff_id'),
 			'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'staff_id'),

@@ -1,6 +1,8 @@
 <?php
 //phpinfo();exit;
 // set environment
+//date_default_timezone_set('Pacific/Auckland');
+
 require_once(dirname(__FILE__) . '/protected/extensions/yii-environment/Environment.php');
 $env = new Environment();
 //$env = new Environment('PRODUCTION'); //override mode
@@ -14,6 +16,7 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $env->yiiTraceLevel);
 //$env->showDebug(); // show produced environment configuration
 require_once($env->yiiPath);
 $env->runYiiStatics(); // like Yii::setPathOfAlias()
+
 Yii::createWebApplication($env->configWeb)->run();
 
 

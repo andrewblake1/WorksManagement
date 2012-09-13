@@ -12,11 +12,11 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Task $task
- * @property ResourceType $resourceType
- * @property Staff $staff
  * @property ResourceData $resourceData
+ * @property ResourceData $resourceType
  * @property ResourceData $level0
+ * @property Staff $staff
+ * @property Task $task
  */
 class TaskToResourceType extends ActiveRecord
 {
@@ -70,11 +70,11 @@ class TaskToResourceType extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-			'resourceType' => array(self::BELONGS_TO, 'ResourceType', 'resource_type_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'resourceData' => array(self::BELONGS_TO, 'ResourceData', 'resource_data_id'),
+			'resourceType' => array(self::BELONGS_TO, 'ResourceData', 'resource_type_id'),
 			'level0' => array(self::BELONGS_TO, 'ResourceData', 'level'),
+			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
 		);
 	}
 
@@ -123,8 +123,8 @@ class TaskToResourceType extends ActiveRecord
 		
 		//  join
 		$criteria->with = array(
-			'resourceType',
 			'resourceData',
+			'resourceData.resourceType',
 			);
 
 		return $criteria;
@@ -152,7 +152,7 @@ class TaskToResourceType extends ActiveRecord
 	
 	static function getDisplayAttr()
 	{
-		return array('resourceType->description');
+		return array('resourceData->resourceType->description');
 	}
 
 	public function beforeSave()

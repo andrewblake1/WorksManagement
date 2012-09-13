@@ -2,7 +2,7 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	$form->textFieldRow('scheduleName');
+	$form->textFieldRow('name');
 
 	// only show when creating
 	if($model->isNewRecord)
@@ -15,7 +15,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		$form->hiddenField('task_type_id');
 	}
 
-	StaffController::listWidgetRow($model, $form, 'in_charge_id', array(), array(), 'In charge');
+	StaffController::listWidgetRow($model->id0 ? $model->id0 : new Schedule, $form, 'in_charge_id', array(), array(), 'In charge');
 
 	$form->textFieldRow('planned');
 

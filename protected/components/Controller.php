@@ -808,8 +808,8 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				// if this model has a deleted attribute
 				if(isset($model->deleted))
 				{
-					// mark the row as deleted
-					$model->deleted = true;
+					// mark the row as deleted - increment to allow re-create and re delete later without violating unique constraints combined with deleted
+					$model->deleted++;
 					$model->save();
 				}
 				// otherwise delete the row

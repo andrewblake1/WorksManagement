@@ -18,9 +18,9 @@
  */
 class Day extends ActiveRecord
 {
-	public $searchName;
-	
-	public $scheduleName;
+	public $searchInCharge;
+	public $name;
+	public $in_charge_id;
 
 	/**
 	 * @return string the associated database table name
@@ -40,11 +40,11 @@ class Day extends ActiveRecord
 		return array(
 			array('project_id, staff_id', 'required'),
 			array('staff_id', 'numerical', 'integerOnly'=>true),
-			array('id, level, project_id', 'length', 'max'=>10),
-			array('scheduleName', 'safe'),
+			array('id, level, project_id, in_charge_id', 'length', 'max'=>10),
+			array('name', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, project_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, name, level, searchInCharge, project_id, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,7 +64,9 @@ class Day extends ActiveRecord
 	{
 		return array(
 			'id' => 'Day',
-			'scheduleName' => 'Day',
+			'in_charge_id' => 'In charge, First/Last/Email',
+			'searchInCharge' => 'In charge, First/Last/Email',
+			'name' => 'Day',
 		);
 	}
 
@@ -76,19 +78,34 @@ class Day extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
-			'id0.name AS searchName',
+			'id0.name AS name',
+			"CONCAT_WS('$delimiter',
+				inCharge.first_name,
+				inCharge.last_name,
+				inCharge.email
+				) AS searchInCharge",
 		);
 
 		// where
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('searchName',$this->searchName,true);
+		$criteria->compare('name',$this->name,true);
 		$criteria->compare('t.project_id',$this->project_id);
+		$this->compositeCriteria($criteria,
+			array(
+				'inCharge.first_name',
+				'inCharge.last_name',
+				'inCharge.email',
+			),
+			$this->searchInCharge
+		);
 
 		// join
 		$criteria->with = array(
 			'id0',
+			'id0.inCharge',
 		);
 
 		return $criteria;
@@ -97,7 +114,8 @@ class Day extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'id';
-		$columns[] = 'searchName';
+		$columns[] = 'name';
+        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
 		
 		return $columns;
 	}
@@ -108,7 +126,7 @@ class Day extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchName');
+		return array('searchInCharge', 'name');
 	}
 
 	/**
@@ -122,7 +140,7 @@ class Day extends ActiveRecord
 	}
 
 	public function afterFind() {
-		$this->scheduleName = $this->id0->name;
+		$this->name = $this->id0->name;
 		
 		parent::afterFind();
 	}

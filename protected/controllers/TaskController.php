@@ -28,7 +28,8 @@ class TaskController extends GenericExtensionController
 		// create a root node
 		// NB: the project description is actually the name field in the nested set model
 		$schedule = new Schedule;
-		$schedule->name = $model->scheduleName;
+		$schedule->name = $model->name;
+		$schedule->in_charge_id = empty($_POST['Schedule']['in_charge_id']) ? null : $_POST['Schedule']['in_charge_id'];
 		if($saved = $schedule->appendTo(Schedule::model()->findByPk($model->crew_id)))
 		{
 			$model->id = $schedule->id;
@@ -60,7 +61,8 @@ class TaskController extends GenericExtensionController
 	{
 		// get the schedule model
 		$schedule = Schedule::model()->findByPk($model->id);
-		$schedule->name = $model->scheduleName;
+		$schedule->name = $model->name;
+		$schedule->in_charge_id = empty($_POST['Schedule']['in_charge_id']) ? null : $_POST['Schedule']['in_charge_id'];
 		// atempt save
 		$saved = $schedule->saveNode(false);
 		// put the model into the models array used for showing all errors

@@ -31,7 +31,13 @@ class DutyController extends Controller
 		// get duty
 		$model = Duty::model()->findByPk($id);
 		// get who the duty is assigned to
-		$assignedTo = $model->task->project->projectToProjectTypeToAuthItems->authAssignment->userid;
+		// if not directly assigned
+		if(!$assignedTo = $model->task->project->projectToProjectTypeToAuthItems->authAssignment->userid)
+		{
+			// get who is responsible at the target accummulating level for this duty. Because DutyData is at that desired level it links
+			// to correct Schedule to get the in_charge
+			$assignedTo = $model->dutyData->schedule->in_charge_id;
+		}
 
 		// system admin
 		if(Yii::app()->user->checkAccess('system admin'))

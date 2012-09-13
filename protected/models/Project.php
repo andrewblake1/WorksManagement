@@ -29,13 +29,15 @@ class Project extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchProjectType;
-	public $searchName;
+	public $searchInCharge;
 	/**
 	 * @var integer $client_id may be passed via get for search
 	 */
 	public $client_id;
 	
-	public $scheduleName;
+	public $name;
+	public $in_charge_id;
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -54,11 +56,11 @@ class Project extends ActiveRecord
 		return array(
 			array('project_type_id, staff_id', 'required'),
 			array('project_type_id, staff_id', 'numerical', 'integerOnly'=>true),
-			array('id, level', 'length', 'max'=>10),
-			array('travel_time_1_way, critical_completion, planned, client_id, scheduleName', 'safe'),
+			array('id, level, in_charge_id', 'length', 'max'=>10),
+			array('travel_time_1_way, critical_completion, planned, client_id, name', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, travel_time_1_way, critical_completion, planned, searchName, searchStaff, searchProjectType', 'safe', 'on'=>'search'),
+			array('id, level, searchInCharge, travel_time_1_way, critical_completion, planned, name, searchStaff, searchProjectType', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -88,12 +90,13 @@ class Project extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Project',
+			'in_charge_id' => 'In charge, First/Last/Email',
+			'searchInCharge' => 'In charge, First/Last/Email',
 			'travel_time_1_way' => 'Travel time 1 way',
 			'critical_completion' => 'Critical completion',
 			'planned' => 'Planned',
 			'project_type_id' => 'Project type',
-			'searchName' => 'Project name',
-			'scheduleName' => 'Project name',
+			'name' => 'Project name',
 			'searchProjectType' => 'Project type',
 		));
 	}
@@ -106,9 +109,15 @@ class Project extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
-			'id0.name AS searchName',
+			'id0.name AS name',
+			"CONCAT_WS('$delimiter',
+				inCharge.first_name,
+				inCharge.last_name,
+				inCharge.email
+				) AS searchInCharge",
 			'travel_time_1_way',
 			't.critical_completion',
 			't.planned',
@@ -118,18 +127,27 @@ class Project extends ActiveRecord
 
 		// where
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('searchName',$this->searchName,true);
+		$criteria->compare('name',$this->name,true);
 		$criteria->compare('t.travel_time_1_way',$this->travel_time_1_way);
 		$criteria->compare('t.critical_completion',Yii::app()->format->toMysqlDate($this->critical_completion));
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
 		$criteria->compare('projectType.description', $this->searchProjectType, true);
 		$criteria->compare('client.id', $this->client_id);
+		$this->compositeCriteria($criteria,
+			array(
+				'inCharge.first_name',
+				'inCharge.last_name',
+				'inCharge.email',
+			),
+			$this->searchInCharge
+		);
 
 		// join
 		$criteria->with = array(
 			'projectType',
 			'projectType.client',
 			'id0',
+			'id0.inCharge',
 		);
 
 		return $criteria;
@@ -138,7 +156,8 @@ class Project extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'id';
-		$columns[] = 'searchName';
+		$columns[] = 'name';
+        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
 		$columns[] = static::linkColumn('searchProjectType', 'ProjectType', 'project_type_id');
 		$columns[] = 'travel_time_1_way';
 		$columns[] = 'critical_completion';
@@ -153,7 +172,7 @@ class Project extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchProjectType', 'searchName');
+		return array('searchInCharge', 'searchProjectType', 'name');
 	}
 
 	// ensure that where possible a pk has been passed from parent
@@ -185,11 +204,10 @@ class Project extends ActiveRecord
 	}
 
 	public function afterFind() {
-		$this->scheduleName = $this->id0->name;
+		$this->name = $this->id0->name;
 		
 		parent::afterFind();
 	}
 
 }
-
 ?>

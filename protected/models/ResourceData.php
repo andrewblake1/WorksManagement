@@ -14,6 +14,7 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
+ * @property ResourceType $resourceType
  * @property Schedule $schedule
  * @property Schedule $level0
  * @property Staff $staff
@@ -67,6 +68,7 @@ class ResourceData extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'resourceType' => array(self::BELONGS_TO, 'ResourceType', 'resource_type_id'),
 			'schedule' => array(self::BELONGS_TO, 'Schedule', 'schedule_id'),
 			'level0' => array(self::BELONGS_TO, 'Schedule', 'level'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
