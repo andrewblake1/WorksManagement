@@ -193,6 +193,7 @@ return array(
 				'Generictaskcategory',
 				'Report'=>array(
 					'ReportToAuthItem',
+					'SubReport',
 				),
 				'Resourcecategory'=>array(
 					'ResourceType',

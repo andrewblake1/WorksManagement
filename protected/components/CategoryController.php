@@ -6,7 +6,11 @@ class CategoryController extends Controller
 	 * @var string the name of the admin view
 	 */
 	protected $_adminView = '/categoryAdmin';
-	
+
+	protected function exportButton()
+	{
+	}
+
 	//UTILITY FUNCTIONS
 	public static  function registerCssAndJs($folder, $jsfile, $cssfile)
 	{

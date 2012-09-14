@@ -182,6 +182,11 @@ EOD;
 			 $this->_authManager->createOperation('ReportRead', 'Report read');
 			 $task->addChild('ReportRead');
 
+			 $task=$this->_authManager->createTask('SubReport', 'SubReport task');
+			 $systemAdminRole->addChild('SubReport');
+			 $this->_authManager->createOperation('SubReportRead', 'SubReport read');
+			 $task->addChild('SubReportRead');
+
 			 $task=$this->_authManager->createTask('ReportToAuthItem', 'ReportToAuthItem task');
 			 $systemAdminRole->addChild('ReportToAuthItem');
 			 $this->_authManager->createOperation('ReportToAuthItemRead', 'ReportToAuthItem read');

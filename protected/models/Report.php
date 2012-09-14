@@ -6,15 +6,20 @@
  * The followings are the available columns in table 'report':
  * @property string $id
  * @property string $description
- * @property string $select
+ * @property string $template_html
+ * @property string $context
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Staff $staff
+ * @property AuthItem $context0
  * @property ReportToAuthItem[] $reportToAuthItems
+ * @property SubReport[] $subReports
  */
 class Report extends ActiveRecord
 {
+	public $sub_report_id;	// dummy place holder for drag and drop list widget in _form
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -31,11 +36,14 @@ class Report extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, select, staff_id', 'required'),
+			array('description, staff_id', 'required'),
 			array('staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
-			array('id, description, select, staff_id', 'safe', 'on'=>'search'),
-			array('select', 'validationReport'),
+			array('context', 'length', 'max'=>64),
+			array('template_html, sub_report_id', 'safe'),
+			// The following rule is used by search().
+			// Please remove those attributes that should not be searched.
+			array('id, description, template_html, context, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -48,7 +56,9 @@ class Report extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'context0' => array(self::BELONGS_TO, 'AuthItem', 'context'),
 			'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'report_id'),
+			'subReports' => array(self::HAS_MANY, 'SubReport', 'report_id'),
 		);
 	}
 
@@ -59,7 +69,10 @@ class Report extends ActiveRecord
 	{
 		return array(
 			'id' => 'Report',
-			'select' => 'Select',
+			'description' => 'Description',
+			'template_html' => 'Template Html',
+			'context' => 'Context',
+			'sub_report_id' => 'Sub report',
 		);
 	}
 
@@ -73,43 +86,24 @@ class Report extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.description',
-			't.select',
+			't.template_html',
+			't.context',
 		);
 
 		// where
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.select', $this->select, true);
-		
+		$criteria->compare('t.description', $this->description, true);
+		$criteria->compare('t.template_html', $this->template_html, true);
+		$criteria->compare('t.context', $this->context, true);
+
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
 		$columns[] = 'description';
-		$columns[] = 'select';
+		$columns[] = 'context';
 		
 		return $columns;
 	}
 
-	public function validationReport($attribute, $params)
-	{
-//TODO: open another database connection as this user whenever entering user entered sql.
-//otherwise they can run their sql with full application access rights
-		// test if sql is valid
-		try
-		{
-			// test validity of sql
-			Yii::app()->db->createCommand($this->$attribute)->queryAll();
-		}
-		catch(Exception $e)
-		{
-			$errorMessage = 'There is an error in the setup - please contact the system administrator, the database says:<br> '.$e->getMessage();
-		}
-
-		// if validation failed
-		if($errorMessage)
-		{
-			$this->addError($attribute, $errorMessage);
-		}
-	}
 }

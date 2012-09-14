@@ -27,6 +27,7 @@ class AuthItem extends ActiveRecord
 	 */
 	const typeRole = 2;
 	const typeRight = 1;
+	const typeTask = 1;
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -37,6 +38,7 @@ class AuthItem extends ActiveRecord
 		return array(
 			'roles'=>array('condition'=>'t.type=' . self::typeRole),
 			'rights'=>array('condition'=>'t.type=' . self::typeRight),
+			'tasks'=>array('condition'=>'t.type=' . self::typeTask),
 		);
     }
 

@@ -39,32 +39,7 @@
 	<div class="row">
 		<header class="span12">
 
-			<?php $this->widget('bootstrap.widgets.TbNavbar', array(
-				'fixed'=>false,
-				'brand'=>Yii::app()->name,
-				'brandUrl'=>'#',
-				'collapse'=>true, // requires bootstrap-responsive.css
-				'items'=>array(
- 					$this->reportsMenu,
-					//$this->operations,
-					array(
-						'class'=>'bootstrap.widgets.TbMenu',
-						'items'=>array(
-							Yii::app()->user->checkAccess('system admin')
-								? array('label'=>'Database', 'url'=>Yii::app()->request->hostInfo.'/phpMyAdmin')
-								: array(),
-						),
-					),
-					array(
-						'class'=>'bootstrap.widgets.TbMenu',
-						'htmlOptions'=>array('class'=>'pull-right'),
-						'items'=>array(
-							array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-							array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
-						),
-					),
-				),
-			)); ?>
+			<?php $this->navbar() ?>
 			
 			<!-- breadcrumbs -->
 			<?php if(isset($this->breadcrumbs)):?>
@@ -93,27 +68,8 @@
 				// if we should be showing the new button
 				if(Yii::app()->controller->action->id == 'admin')
 				{
-					echo ' ';
-//					echo CHtml::submitButton('Download Excel');
-					$this->widget('bootstrap.widgets.TbButton', array(
-						'label'=>'Download Excel',
-						'url'=>$this->createUrl("{$this->modelName}/admin", array('action'=>'download')),
-						'type'=>'primary',
-						'size'=>'small', // '', 'large', 'small' or 'mini'
-//						'htmlOptions'=>array('data-toggle'=>'modal'),
-					));
-					echo ' ';
-					$this->widget('bootstrap.widgets.TbButton', array(
-						'label'=>'New',
-						'url'=>'#myModal',
-						'type'=>'primary',
-						'size'=>'small', // '', 'large', 'small' or 'mini'
-						'htmlOptions'=>array(
-							'data-toggle'=>'modal',
-// TODO: alter this slightly to focus on first element when combined with others ie. textarea
-							'onclick' => '$("#myModal input:not([class="hasDatepicker"]):visible:enabled:first").focus();',
-						),
-					));
+					$this->exportButton();
+					$this->newButton();
 				}
 				echo '</h2>';
 			}

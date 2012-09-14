@@ -46,10 +46,10 @@ class Schedule extends CategoryActiveRecord {
 	public static function getLevels()
 	{
 		return array(
-			Schedule::scheduleLevelProjectInt=>Schedule::scheduleLevelProject,
-			Schedule::scheduleLevelDayInt=>Schedule::scheduleLevelDay,
-			Schedule::scheduleLevelCrewInt=>Schedule::scheduleLevelCrew,
-			Schedule::scheduleLevelTaskInt=>Schedule::scheduleLevelTask,
+			self::scheduleLevelProjectInt=>self::scheduleLevelProject,
+			self::scheduleLevelDayInt=>self::scheduleLevelDay,
+			self::scheduleLevelCrewInt=>self::scheduleLevelCrew,
+			self::scheduleLevelTaskInt=>self::scheduleLevelTask,
 		);
 	}
 

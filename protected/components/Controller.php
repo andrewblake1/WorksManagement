@@ -35,7 +35,7 @@ class Controller extends CController
 	/**
 	 * @var array the tab menu itemse
 	 */
-	private $_tabs = array();
+	protected $_tabs = array();
 /**
 	* @var bool whether to show the new button in the admin  
 protected $_adminShowNew = false;
@@ -522,7 +522,8 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				{
 					// add an update crumb to this primary key
 					$primaryKey = $_SESSION[$crumb];
-					$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", 'id'=>$primaryKey['value']);
+		//			$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", 'id'=>$primaryKey['value']);
+					$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", $primaryKey['key']=>$primaryKey['value']);
 				}
 			}
 		}
@@ -627,6 +628,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			'value'=>$id,
 		);
 		
+		$this->createRender($model, $models);
+	}
+	
+	protected function createRender($model, $models)
+	{
 		$this->widget('CreateViewWidget', array(
 			'model'=>$model,
 			'models'=>$models,
@@ -1021,6 +1027,65 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			);
 		}
 	}
-	
+
+	protected function exportButton()
+	{
+		echo ' ';
+//					echo CHtml::submitButton('Download Excel');
+		$this->widget('bootstrap.widgets.TbButton', array(
+			'label'=>'Download Excel',
+			'url'=>$this->createUrl("{$this->modelName}/admin", array('action'=>'download')),
+			'type'=>'primary',
+			'size'=>'small', // '', 'large', 'small' or 'mini'
+//						'htmlOptions'=>array('data-toggle'=>'modal'),
+		));
+	}
+
+	protected function newButton()
+	{
+		echo ' ';
+		$this->widget('bootstrap.widgets.TbButton', array(
+			'label'=>'New',
+			'url'=>'#myModal',
+			'type'=>'primary',
+			'size'=>'small', // '', 'large', 'small' or 'mini'
+			'htmlOptions'=>array(
+				'data-toggle'=>'modal',
+// TODO: alter this slightly to focus on first element when combined with others ie. textarea
+				'onclick' => '$("#myModal input:not([class="hasDatepicker"]):visible:enabled:first").focus();',
+			),
+		));
+	}
+
+	protected function navbar()
+	{
+		$this->widget('bootstrap.widgets.TbNavbar', array(
+			'fixed'=>false,
+			'brand'=>Yii::app()->name,
+			'brandUrl'=>'#',
+			'collapse'=>true, // requires bootstrap-responsive.css
+			'items'=>array(
+				$this->reportsMenu,
+				//$this->operations,
+				array(
+					'class'=>'bootstrap.widgets.TbMenu',
+					'items'=>array(
+						Yii::app()->user->checkAccess('system admin')
+							? array('label'=>'Database', 'url'=>Yii::app()->request->hostInfo.'/phpMyAdmin')
+							: array(),
+					),
+				),
+				array(
+					'class'=>'bootstrap.widgets.TbMenu',
+					'htmlOptions'=>array('class'=>'pull-right'),
+					'items'=>array(
+						array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
+						array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
+					),
+				),
+			),
+		));
+	}
+
 }
 ?>

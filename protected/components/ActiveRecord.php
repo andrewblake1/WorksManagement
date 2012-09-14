@@ -430,7 +430,6 @@ abstract class ActiveRecord extends CActiveRecord
 
 		try
 		{
-$t = $this->attributes;
 			$return = call_user_func_array(array($this, $callback), $callbackArgs);
 		}
 		catch(CDbException $e)

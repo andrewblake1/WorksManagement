@@ -7637,3 +7637,708 @@ Stack trace:
 REQUEST_URI=/WorksManagement/Duty/admin?Duty%5Btask_id%5D=12
 HTTP_REFERER=http://localhost/WorksManagement/task/update/12
 ---
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "log" application component
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "bootstrap" application component
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "clientScript" application component
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "assetManager" application component
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "request" application component
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "urlManager" application component
+2012/09/14 08:59:29 [trace] [system.web.filters.CFilterChain] Running filter SiteController.filteraccessControl()
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "user" application component
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "session" application component
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "themeManager" application component
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "widgetFactory" application component
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "db" application component
+2012/09/14 08:59:29 [trace] [system.db.CDbConnection] Opening DB connection
+2012/09/14 08:59:29 [trace] [system.db.CDbCommand] Querying SQL: SHOW COLUMNS FROM `staff`
+2012/09/14 08:59:29 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `staff`
+2012/09/14 08:59:29 [trace] [system.db.ar.CActiveRecord] Staff.findByPk()
+2012/09/14 08:59:29 [trace] [system.db.CDbCommand] Querying SQL: SELECT * FROM `staff` `t` WHERE (t.deleted=0) AND (`t`.`id` IS NULL) LIMIT 1
+2012/09/14 08:59:29 [trace] [system.CModule] Loading "authManager" application component
+2012/09/14 08:59:29 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthAssignment`
+WHERE userid=:userid
+2012/09/14 08:59:29 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthItem`
+WHERE name=:name
+2012/09/14 13:00:05 [error] [exception.CHttpException.403] exception 'CHttpException' with message 'You are not authorized to perform this action.' in /Users/Andrew/yii-1.1.10.r3566/framework/web/auth/CAccessControlFilter.php:157
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/auth/CAccessControlFilter.php(120): CAccessControlFilter->accessDenied(Object(CWebUser), 'You are not aut...')
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(39): CAccessControlFilter->preFilter(Object(CFilterChain))
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('client/admin')
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#10 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#11 {main}
+REQUEST_URI=/WorksManagement/client/admin
+---
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "log" application component
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "bootstrap" application component
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "clientScript" application component
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "assetManager" application component
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "request" application component
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "urlManager" application component
+2012/09/14 13:00:42 [trace] [system.web.filters.CFilterChain] Running filter SiteController.filteraccessControl()
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "user" application component
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "session" application component
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "themeManager" application component
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "widgetFactory" application component
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "db" application component
+2012/09/14 13:00:42 [trace] [system.db.CDbConnection] Opening DB connection
+2012/09/14 13:00:42 [trace] [system.db.CDbCommand] Querying SQL: SHOW COLUMNS FROM `staff`
+2012/09/14 13:00:42 [trace] [system.db.CDbCommand] Querying SQL: SHOW CREATE TABLE `staff`
+2012/09/14 13:00:42 [trace] [system.db.ar.CActiveRecord] Staff.findByPk()
+2012/09/14 13:00:42 [trace] [system.db.CDbCommand] Querying SQL: SELECT * FROM `staff` `t` WHERE (t.deleted=0) AND (`t`.`id` IS NULL) LIMIT 1
+2012/09/14 13:00:42 [trace] [system.CModule] Loading "authManager" application component
+2012/09/14 13:00:42 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthAssignment`
+WHERE userid=:userid
+2012/09/14 13:00:42 [trace] [system.db.CDbCommand] Querying SQL: SELECT *
+FROM `AuthItem`
+WHERE name=:name
+2012/09/14 13:24:59 [info] [system.base.CBehavior] Empty array passed as data, nothing to do *here*
+2012/09/14 13:27:13 [info] [system.base.CBehavior] Empty array passed as data, nothing to do *here*
+2012/09/14 13:39:59 [error] [exception.CException] exception 'CException' with message 'ReportController and its behaviors do not have a method or closure named "newButton".' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:266
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php(105): CComponent->__call('newButton', Array)
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php(105): ReportController->newButton()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(77): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(55): CContentDecorator->decorate('<div id="yw0"><...')
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/COutputProcessor.php(45): CContentDecorator->processOutput('<div id="yw0"><...')
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(207): COutputProcessor->run()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(301): CBaseController->endWidget('CContentDecorat...')
+#9 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php(3): CBaseController->endContent()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(785): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#14 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(78): Controller->adminRender(Object(Report))
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): ReportController->adminRender(Object(Report))
+#16 [internal function]: Controller->actionAdmin(Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ReportController), Array)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ReportController), Object(ReflectionMethod), Array)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('report/admin')
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#30 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#31 {main}
+REQUEST_URI=/WorksManagement/report/admin
+HTTP_REFERER=http://localhost/WorksManagement/Report/admin?action=download
+---
+2012/09/14 14:27:43 [error] [exception.CException] exception 'CException' with message 'Property "ReportController._tabs" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:131
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(108): CComponent->__get('_tabs')
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(630): ReportController->createRender(Object(Report), NULL)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): Controller->actionCreate()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('create')
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/create')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#14 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#15 {main}
+REQUEST_URI=/WorksManagement/Report/create
+HTTP_REFERER=http://localhost/WorksManagement/report/admin
+---
+2012/09/14 14:28:08 [error] [exception.CException] exception 'CException' with message 'Property "ReportController._tabs" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:131
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(108): CComponent->__get('_tabs')
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(630): ReportController->createRender(Object(Report), NULL)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): Controller->actionCreate()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('create')
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/create')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#14 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#15 {main}
+REQUEST_URI=/WorksManagement/Report/create
+HTTP_REFERER=http://localhost/WorksManagement/report/admin
+---
+2012/09/14 15:12:45 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'worksmanagement_dev.staffsdf' doesn't exist. The SQL statement executed was: select asdf from staffsdf.
+2012/09/14 15:14:20 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[HY093]: Invalid parameter number: no parameters were bound. The SQL statement executed was: select * from staff where id = :pk
+.
+2012/09/14 15:18:45 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[HY093]: Invalid parameter number: no parameters were bound. The SQL statement executed was: select * from staff where id = :pk
+.
+2012/09/14 15:18:49 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[HY093]: Invalid parameter number: no parameters were bound. The SQL statement executed was: select * from staff where id = :pk
+.
+2012/09/14 15:19:03 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[HY093]: Invalid parameter number: no parameters were bound. The SQL statement executed was: select * from staff where id = :pk
+.
+2012/09/14 15:20:29 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[HY093]: Invalid parameter number: no parameters were bound. The SQL statement executed was: select * from staff where id = :pk
+.
+2012/09/14 15:22:06 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[HY093]: Invalid parameter number: no parameters were bound. The SQL statement executed was: select * from staff where idd = :pk
+.
+2012/09/14 15:22:54 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'idd' in 'where clause'. The SQL statement executed was: select * from staff where idd = 1
+.
+2012/09/14 19:11:23 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'LIMIT 10' at line 1. The SQL statement executed was:  LIMIT 10.
+2012/09/14 19:11:23 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'LIMIT 10' at line 1' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:528
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php(390): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CSqlDataProvider.php(105): CDbCommand->queryAll()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(137): CSqlDataProvider->fetchData()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/CBaseListView.php(105): CDataProvider->getData()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(269): CBaseListView->init()
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/report/_form.php(17): CBaseController->widget('bootstrap.widge...', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('_form', Array, true)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(195): CBaseController->widget('UpdateViewWidge...', Array)
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(631): ReportController->createRender(Object(Report), NULL)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): Controller->actionCreate()
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('create')
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/create')
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#29 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#30 {main}
+REQUEST_URI=/WorksManagement/Report/create
+HTTP_REFERER=http://localhost/WorksManagement/Report/admin
+---
+2012/09/14 20:19:59 [error] [exception.CException] exception 'CException' with message 'The column must be specified in the format of "Name:Type:Label", where "Type" and "Label" are optional.' in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php:115
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(308): TbGridView->createDataColumn('Sub report')
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(103): CGridView->initColumns()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(284): TbGridView->initColumns()
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/report/_form.php(17): CBaseController->widget('bootstrap.widge...', Array)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('_form', Array, true)
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(753): CBaseController->widget('UpdateViewWidge...', Array)
+#14 [internal function]: Controller->actionUpdate('5')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ReportController), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ReportController), Object(ReflectionMethod), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('update')
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/update')
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#28 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#29 {main}
+REQUEST_URI=/WorksManagement/Report/update/5
+HTTP_REFERER=http://localhost/WorksManagement/subReport/admin?SubReport%5Breport_id%5D=5
+---
+2012/09/14 20:21:10 [error] [exception.CException] exception 'CException' with message 'The column must be specified in the format of "Name:Type:Label", where "Type" and "Label" are optional.' in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php:115
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(308): TbGridView->createDataColumn('Sub report')
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(103): CGridView->initColumns()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(284): TbGridView->initColumns()
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/report/_form.php(17): CBaseController->widget('bootstrap.widge...', Array)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('_form', Array, true)
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(753): CBaseController->widget('UpdateViewWidge...', Array)
+#14 [internal function]: Controller->actionUpdate('5')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ReportController), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ReportController), Object(ReflectionMethod), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('update')
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/update')
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#28 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#29 {main}
+REQUEST_URI=/WorksManagement/Report/update/5
+HTTP_REFERER=http://localhost/WorksManagement/subReport/admin?SubReport%5Breport_id%5D=5
+---
+2012/09/14 20:21:43 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'report FROM sub_report LIMIT 10' at line 1. The SQL statement executed was: SELECT CONCAT(CONCAT("[", description), "]") AS Sub report FROM sub_report LIMIT 10.
+2012/09/14 20:21:43 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'report FROM sub_report LIMIT 10' at line 1' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:528
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php(390): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CSqlDataProvider.php(105): CDbCommand->queryAll()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(137): CSqlDataProvider->fetchData()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/CBaseListView.php(105): CDataProvider->getData()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(269): CBaseListView->init()
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/report/_form.php(17): CBaseController->widget('bootstrap.widge...', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('_form', Array, true)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(753): CBaseController->widget('UpdateViewWidge...', Array)
+#16 [internal function]: Controller->actionUpdate('5')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ReportController), Array)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ReportController), Object(ReflectionMethod), Array)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('update')
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/update')
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#30 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#31 {main}
+REQUEST_URI=/WorksManagement/Report/update/5
+HTTP_REFERER=http://localhost/WorksManagement/subReport/admin?SubReport%5Breport_id%5D=5
+---
+2012/09/14 20:21:56 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'report FROM sub_report LIMIT 10' at line 1. The SQL statement executed was: SELECT CONCAT(CONCAT("[", description), "]") AS Sub report FROM sub_report LIMIT 10.
+2012/09/14 20:21:56 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'report FROM sub_report LIMIT 10' at line 1' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:528
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php(390): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CSqlDataProvider.php(105): CDbCommand->queryAll()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(137): CSqlDataProvider->fetchData()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/CBaseListView.php(105): CDataProvider->getData()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(269): CBaseListView->init()
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/report/_form.php(17): CBaseController->widget('bootstrap.widge...', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('_form', Array, true)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(753): CBaseController->widget('UpdateViewWidge...', Array)
+#16 [internal function]: Controller->actionUpdate('5')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ReportController), Array)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ReportController), Object(ReflectionMethod), Array)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('update')
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/update')
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#30 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#31 {main}
+REQUEST_URI=/WorksManagement/Report/update/5
+---
+2012/09/14 20:25:47 [error] [exception.CException] exception 'CException' with message 'The column must be specified in the format of "Name:Type:Label", where "Type" and "Label" are optional.' in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php:115
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(308): TbGridView->createDataColumn('jfgjghf gjhk')
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(103): CGridView->initColumns()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(284): TbGridView->initColumns()
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/report/_form.php(19): CBaseController->widget('bootstrap.widge...', Array)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('_form', Array, true)
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(195): CBaseController->widget('UpdateViewWidge...', Array)
+#14 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(631): ReportController->createRender(Object(Report), NULL)
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): Controller->actionCreate()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('create')
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/create')
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#27 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#28 {main}
+REQUEST_URI=/WorksManagement/Report/create
+HTTP_REFERER=http://localhost/WorksManagement/Report/admin
+---
+2012/09/14 20:27:13 [error] [exception.CException] exception 'CException' with message 'The column must be specified in the format of "Name:Type:Label", where "Type" and "Label" are optional.' in /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php:115
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(308): TbGridView->createDataColumn('Sub report')
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(103): CGridView->initColumns()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(284): TbGridView->initColumns()
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/report/_form.php(19): CBaseController->widget('bootstrap.widge...', Array)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('_form', Array, true)
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(195): CBaseController->widget('UpdateViewWidge...', Array)
+#14 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(631): ReportController->createRender(Object(Report), NULL)
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): Controller->actionCreate()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('create')
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/create')
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#27 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#28 {main}
+REQUEST_URI=/WorksManagement/Report/create
+HTTP_REFERER=http://localhost/WorksManagement/Report/admin
+---
+2012/09/15 10:16:44 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROMa sub_report LIMIT 10' at line 1. The SQL statement executed was: SELECT CONCAT(CONCAT("[", description), "]") AS sub_report_id FROMa sub_report LIMIT 10.
+2012/09/15 10:16:44 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROMa sub_report LIMIT 10' at line 1' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:528
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php(390): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CSqlDataProvider.php(105): CDbCommand->queryAll()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CDataProvider.php(137): CSqlDataProvider->fetchData()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/CBaseListView.php(105): CDataProvider->getData()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/zii/widgets/grid/CGridView.php(269): CBaseListView->init()
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/bootstrap/widgets/TbGridView.php(48): CGridView->init()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(148): TbGridView->init()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('bootstrap.widge...', Array)
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/report/_form.php(19): CBaseController->widget('bootstrap.widge...', Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('_form', Array, true)
+#13 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(753): CBaseController->widget('UpdateViewWidge...', Array)
+#16 [internal function]: Controller->actionUpdate('6')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ReportController), Array)
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ReportController), Object(ReflectionMethod), Array)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('update')
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('report/update')
+#29 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#30 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#31 {main}
+REQUEST_URI=/WorksManagement/report/update/6
+HTTP_REFERER=http://localhost/WorksManagement/report/admin
+---
+2012/09/15 10:32:50 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'sub report staff 1' for key 'description_UNIQUE'. The SQL statement executed was: INSERT INTO `sub_report` (`description`, `select`, `format`, `staff_id`, `report_id`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4).
+2012/09/15 11:13:27 [error] [exception.CException] exception 'CException' with message 'Property "AdminViewWidget.report_html" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWidgetFactory.php(162): CComponent->__set('report_html', '<p>lkjhglkjhkhj...')
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(147): CWidgetFactory->createWidget(Object(ReportController), 'AdminViewWidget', Array)
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(173): CBaseController->createWidget('AdminViewWidget', Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(83): CBaseController->widget('AdminViewWidget', Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): ReportController::actionShow()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('show')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/show')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/Report/show/6
+HTTP_REFERER=http://localhost/WorksManagement/Report/admin
+---
+2012/09/15 11:29:34 [error] [exception.CException] exception 'CException' with message 'Property "ReportController.navbar" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:131
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php(42): CComponent->__get('navbar')
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(77): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(55): CContentDecorator->decorate('<p>lkjhglkjhkhj...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/COutputProcessor.php(45): CContentDecorator->processOutput('<p>lkjhglkjhkhj...')
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(207): COutputProcessor->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(301): CBaseController->endWidget('CContentDecorat...')
+#8 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php(3): CBaseController->endContent()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(834): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#12 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/ReportWidget.php(28): CController->renderText('<p>lkjhglkjhkhj...')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): ReportWidget->run()
+#14 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(83): CBaseController->widget('ReportWidget', Array)
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): ReportController::actionShow()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#21 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('show')
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/show')
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#27 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#28 {main}
+REQUEST_URI=/WorksManagement/Report/show/6
+HTTP_REFERER=http://localhost/WorksManagement/client/admin
+---
+2012/09/15 11:40:05 [error] [exception.CException] exception 'CException' with message 'ReportController and its behaviors do not have a method or closure named "navbar".' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:266
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(232): CComponent->__call('navbar', Array)
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(232): Controller->navbar()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(112): ReportController->getNavbar()
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php(42): CComponent->__get('navbar')
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(77): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(55): CContentDecorator->decorate('<div class="mod...')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/COutputProcessor.php(45): CContentDecorator->processOutput('<div class="mod...')
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(207): COutputProcessor->run()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(301): CBaseController->endWidget('CContentDecorat...')
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php(3): CBaseController->endContent()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(785): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#17 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(221): CBaseController->widget('UpdateViewWidge...', Array)
+#18 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(631): ReportController->createRender(Object(Report), NULL)
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(69): Controller->actionCreate()
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#21 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#26 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#27 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(185): Controller->adminRender(Object(Report))
+#28 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): ReportController->adminRender(Object(Report))
+#29 [internal function]: Controller->actionAdmin(Array)
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ReportController), Array)
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ReportController), Object(ReflectionMethod), Array)
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#36 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#37 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#38 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#39 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#40 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#41 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/admin')
+#42 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#43 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#44 {main}
+REQUEST_URI=/WorksManagement/Report/admin
+---
+2012/09/15 11:41:12 [error] [exception.CException] exception 'CException' with message 'ReportController and its behaviors do not have a method or closure named "navbar".' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:266
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(232): CComponent->__call('navbar', Array)
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(232): Controller->navbar()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(112): ReportController->getNavbar()
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php(42): CComponent->__get('navbar')
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(77): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(55): CContentDecorator->decorate('<div class="mod...')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/COutputProcessor.php(45): CContentDecorator->processOutput('<div class="mod...')
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(207): COutputProcessor->run()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(301): CBaseController->endWidget('CContentDecorat...')
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php(3): CBaseController->endContent()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(785): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#17 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(221): CBaseController->widget('UpdateViewWidge...', Array)
+#18 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(631): ReportController->createRender(Object(Report), NULL)
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(69): Controller->actionCreate()
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#21 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#26 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#27 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(185): Controller->adminRender(Object(Report))
+#28 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): ReportController->adminRender(Object(Report))
+#29 [internal function]: Controller->actionAdmin(Array)
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ReportController), Array)
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ReportController), Object(ReflectionMethod), Array)
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#36 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#37 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#38 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#39 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#40 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#41 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/admin')
+#42 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#43 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#44 {main}
+REQUEST_URI=/WorksManagement/Report/admin
+---
+2012/09/15 11:43:18 [error] [exception.CException] exception 'CException' with message 'ReportController and its behaviors do not have a method or closure named "navbar".' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:266
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(232): CComponent->__call('navbar', Array)
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(232): Controller->navbar()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(112): ReportController->getNavbar()
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php(42): CComponent->__get('navbar')
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(77): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(55): CContentDecorator->decorate('<div class="mod...')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/COutputProcessor.php(45): CContentDecorator->processOutput('<div class="mod...')
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(207): COutputProcessor->run()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(301): CBaseController->endWidget('CContentDecorat...')
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php(3): CBaseController->endContent()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(785): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#17 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(221): CBaseController->widget('UpdateViewWidge...', Array)
+#18 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(631): ReportController->createRender(Object(Report), NULL)
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(69): Controller->actionCreate()
+#20 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#21 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#22 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#24 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#26 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#27 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(185): Controller->adminRender(Object(Report))
+#28 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): ReportController->adminRender(Object(Report))
+#29 [internal function]: Controller->actionAdmin(Array)
+#30 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ReportController), Array)
+#31 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ReportController), Object(ReflectionMethod), Array)
+#32 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#36 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#37 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#38 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#39 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#40 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#41 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/admin')
+#42 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#43 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#44 {main}
+REQUEST_URI=/WorksManagement/Report/admin
+---
+2012/09/15 11:43:31 [error] [exception.CException] exception 'CException' with message 'ReportController and its behaviors do not have a method or closure named "navbar".' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:266
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(232): CComponent->__call('navbar', Array)
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(232): Controller->navbar()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(112): ReportController->getNavbar()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(264): CComponent->__get('navbar')
+#4 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(232): CComponent->__call('navbar', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(232): Controller->navbar()
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/main.php(42): ReportController->getNavbar()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(77): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/CContentDecorator.php(55): CContentDecorator->decorate('<div class="mod...')
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/widgets/COutputProcessor.php(45): CContentDecorator->processOutput('<div class="mod...')
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(207): COutputProcessor->run()
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(301): CBaseController->endWidget('CContentDecorat...')
+#14 /Users/Andrew/NetBeansProjects/WorksManagement/themes/base/views/layouts/column1.php(3): CBaseController->endContent()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(785): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#18 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/UpdateViewWidget.php(27): CController->render('_form', Array)
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): UpdateViewWidget->run()
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(221): CBaseController->widget('UpdateViewWidge...', Array)
+#21 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(631): ReportController->createRender(Object(Report), NULL)
+#22 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/AdminViewWidget.php(69): Controller->actionCreate()
+#23 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): AdminViewWidget->run()
+#24 /Users/Andrew/NetBeansProjects/WorksManagement/protected/views/admin.php(6): CBaseController->widget('AdminViewWidget', Array)
+#25 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(127): require('/Users/Andrew/N...')
+#26 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(96): CBaseController->renderInternal('/Users/Andrew/N...', Array, true)
+#27 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(870): CBaseController->renderFile('/Users/Andrew/N...', Array, true)
+#28 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(783): CController->renderPartial('/admin', Array, true)
+#29 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(433): CController->render('/admin', Array)
+#30 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ReportController.php(185): Controller->adminRender(Object(Report))
+#31 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(423): ReportController->adminRender(Object(Report))
+#32 [internal function]: Controller->actionAdmin(Array)
+#33 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CAction.php(107): ReflectionMethod->invokeArgs(Object(ReportController), Array)
+#34 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(48): CAction->runWithParamsInternal(Object(ReportController), Object(ReflectionMethod), Array)
+#35 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#36 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#37 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#38 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#39 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#40 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#41 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#42 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#43 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('admin')
+#44 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Report/admin')
+#45 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#46 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#47 {main}
+REQUEST_URI=/WorksManagement/Report/admin
+---
