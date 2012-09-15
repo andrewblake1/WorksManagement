@@ -8342,3 +8342,955 @@ Stack trace:
 #47 {main}
 REQUEST_URI=/WorksManagement/Report/admin
 ---
+2012/09/15 14:05:33 [error] [exception.CException] exception 'CException' with message 'Property "Crew.project_id" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(160): CComponent->__set('project_id', '9')
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/DayController.php(25): CActiveRecord->__set('project_id', '9')
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(582): DayController->createSave(Object(Day), Array)
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): Controller->actionCreate()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('Create')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Day/Create')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#16 {main}
+REQUEST_URI=/WorksManagement/Day/Create
+HTTP_REFERER=http://localhost/WorksManagement/Day/admin?Day%5Bproject_id%5D=2
+---
+2012/09/15 14:05:37 [error] [exception.CException] exception 'CException' with message 'Property "Crew.project_id" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(160): CComponent->__set('project_id', '10')
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/DayController.php(25): CActiveRecord->__set('project_id', '10')
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(582): DayController->createSave(Object(Day), Array)
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): Controller->actionCreate()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('Create')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Day/Create')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#16 {main}
+REQUEST_URI=/WorksManagement/Day/Create
+HTTP_REFERER=http://localhost/WorksManagement/Day/admin?Day%5Bproject_id%5D=2
+---
+2012/09/15 14:06:57 [error] [exception.CException] exception 'CException' with message 'Property "Crew.project_id" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:174
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(160): CComponent->__set('project_id', '11')
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/DayController.php(25): CActiveRecord->__set('project_id', '11')
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(582): DayController->createSave(Object(Day), Array)
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): Controller->actionCreate()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('Create')
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Day/Create')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#15 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#16 {main}
+REQUEST_URI=/WorksManagement/Day/Create
+HTTP_REFERER=http://localhost/WorksManagement/Day/admin?Day%5Bproject_id%5D=2
+---
+2012/09/15 14:11:53 [error] [exception.CException] exception 'CException' with message 'Crew and its behaviors do not have a method or closure named "createSave".' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:266
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('createSave', Array)
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/DayController.php(26): CActiveRecord->__call('createSave', Array)
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/DayController.php(26): Crew->createSave(Object(Day), Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(582): DayController->createSave(Object(Day), Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): Controller->actionCreate()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('Create')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Day/Create')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/Day/Create
+HTTP_REFERER=http://localhost/WorksManagement/Day/admin?Day%5Bproject_id%5D=2
+---
+2012/09/15 14:34:22 [error] [exception.CException] exception 'CException' with message 'Property "Day.day_id" is not defined.' in /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php:131
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(144): CComponent->__get('day_id')
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/CrewController.php(24): CActiveRecord->__get('day_id')
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/DayController.php(26): CrewController::createSaveStatic(Object(Day), Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(582): DayController->createSave(Object(Day), Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): Controller->actionCreate()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('Create')
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Day/Create')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#16 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#17 {main}
+REQUEST_URI=/WorksManagement/Day/Create
+HTTP_REFERER=http://localhost/WorksManagement/Day/admin?Day%5Bproject_id%5D=2
+---
+2012/09/15 14:46:23 [error] [php] Missing argument 1 for DayController::createSaveStatic(), called in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ScheduleController.php on line 31 and defined (/Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/DayController.php:15)
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams()
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): ScheduleController->runAction()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CAccessControlFilter->filter()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): ScheduleController->filterAccessControl()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): ScheduleController->runActionWithFilters()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): ScheduleController->run()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CWebApplication->run()
+REQUEST_URI=/WorksManagement/Schedule/addDay
+2012/09/15 14:49:58 [error] [php] Missing argument 1 for Controller::__construct(), called in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ScheduleController.php on line 31 and defined (/Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php:72)
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams()
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): ScheduleController->runAction()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CAccessControlFilter->filter()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): ScheduleController->filterAccessControl()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): ScheduleController->runActionWithFilters()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): ScheduleController->run()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CWebApplication->run()
+REQUEST_URI=/WorksManagement/Schedule/addDay
+2012/09/15 14:50:02 [error] [php] Missing argument 1 for Controller::__construct(), called in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ScheduleController.php on line 31 and defined (/Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php:72)
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams()
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): ScheduleController->runAction()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CAccessControlFilter->filter()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): ScheduleController->filterAccessControl()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): ScheduleController->runActionWithFilters()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): ScheduleController->run()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CWebApplication->run()
+REQUEST_URI=/WorksManagement/Schedule/addDay
+2012/09/15 14:50:22 [error] [php] Missing argument 1 for Controller::__construct(), called in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ScheduleController.php on line 31 and defined (/Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php:72)
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams()
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): ScheduleController->runAction()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CAccessControlFilter->filter()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): ScheduleController->filterAccessControl()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): ScheduleController->runActionWithFilters()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): ScheduleController->run()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CWebApplication->run()
+REQUEST_URI=/WorksManagement/Schedule/addDay
+2012/09/15 14:52:21 [error] [php] Missing argument 1 for Controller::__construct(), called in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ScheduleController.php on line 31 and defined (/Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php:72)
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams()
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): ScheduleController->runAction()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CAccessControlFilter->filter()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): ScheduleController->filterAccessControl()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): ScheduleController->runActionWithFilters()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): ScheduleController->run()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CWebApplication->run()
+REQUEST_URI=/WorksManagement/Schedule/addDay
+2012/09/15 14:53:58 [error] [exception.CException] exception 'CException' with message 'DayController cannot find the requested view "_form".' in /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php:879
+Stack trace:
+#0 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CreateViewWidget.php(35): CController->renderPartial('_form', Array)
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/CBaseController.php(174): CreateViewWidget->run()
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(639): CBaseController->widget('CreateViewWidge...', Array)
+#3 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/Controller.php(631): Controller->createRender(Object(Day), NULL)
+#4 /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ScheduleController.php(32): Controller->actionCreate()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): ScheduleController->actionAddDay()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('addDay')
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/addDay')
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#17 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#18 {main}
+REQUEST_URI=/WorksManagement/Schedule/addDay
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 15:05:40 [error] [php] Missing argument 1 for DayController::createSaveStatic(), called in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ScheduleController.php on line 37 and defined (/Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/DayController.php:15)
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams()
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): ScheduleController->runAction()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CAccessControlFilter->filter()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): ScheduleController->filterAccessControl()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): ScheduleController->runActionWithFilters()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): ScheduleController->run()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CWebApplication->run()
+REQUEST_URI=/WorksManagement/Schedule/addDay
+2012/09/15 15:05:47 [error] [php] Missing argument 1 for DayController::createSaveStatic(), called in /Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/ScheduleController.php on line 37 and defined (/Users/Andrew/NetBeansProjects/WorksManagement/protected/controllers/DayController.php:15)
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams()
+#1 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): ScheduleController->runAction()
+#2 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CAccessControlFilter->filter()
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): ScheduleController->filterAccessControl()
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter()
+#6 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): ScheduleController->runActionWithFilters()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): ScheduleController->run()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController()
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#11 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CWebApplication->run()
+REQUEST_URI=/WorksManagement/Schedule/addDay
+2012/09/15 15:29:44 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `level`=`level`+1 WHERE `lft`>=6 AND `rgt`<=11 AND `root`=:ycp2.
+2012/09/15 15:29:44 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(812): CActiveRecord->updateAll(Array, '`lft`>=6 AND `r...', Array)
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(390): NestedSetBehavior->moveNode(Object(Schedule), 13, 1)
+#3 [internal function]: NestedSetBehavior->moveAsFirst(Object(Schedule))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsFirst', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): CActiveRecord->__call('moveAsFirst', Array)
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): Schedule->moveAsFirst(Object(Schedule))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#21 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 15:30:40 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-5, `rgt`=`rgt`-5, `level`=`level`-1, `root`=:yp0 WHERE `lft`>=6 AND `rgt`<=11 AND `root`=:ycp0.
+2012/09/15 15:30:40 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=6 AND `r...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 15:30:53 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-18, `rgt`=`rgt`-18, `level`=`level`-2, `root`=:yp0 WHERE `lft`>=19 AND `rgt`<=20 AND `root`=:ycp0.
+2012/09/15 15:30:53 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=19 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 15:31:05 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `level`=`level`+1 WHERE `lft`>=25 AND `rgt`<=26 AND `root`=:ycp2.
+2012/09/15 15:31:05 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(812): CActiveRecord->updateAll(Array, '`lft`>=25 AND `...', Array)
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(390): NestedSetBehavior->moveNode(Object(Schedule), 16, 1)
+#3 [internal function]: NestedSetBehavior->moveAsFirst(Object(Schedule))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsFirst', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): CActiveRecord->__call('moveAsFirst', Array)
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): Schedule->moveAsFirst(Object(Schedule))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#21 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 18:14:43 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-10, `rgt`=`rgt`-10, `level`=`level`-2, `root`=:yp0 WHERE `lft`>=11 AND `rgt`<=12 AND `root`=:ycp0.
+2012/09/15 18:14:43 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=11 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 18:57:01 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `level`=`level`+2 WHERE `lft`>=28 AND `rgt`<=29 AND `root`=:ycp2.
+2012/09/15 18:57:01 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(812): CActiveRecord->updateAll(Array, '`lft`>=28 AND `...', Array)
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(390): NestedSetBehavior->moveNode(Object(Schedule), 20, 1)
+#3 [internal function]: NestedSetBehavior->moveAsFirst(Object(Schedule))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsFirst', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): CActiveRecord->__call('moveAsFirst', Array)
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): Schedule->moveAsFirst(Object(Schedule))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#21 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 18:57:05 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `level`=`level`+1 WHERE `lft`>=30 AND `rgt`<=31 AND `root`=:ycp2.
+2012/09/15 18:57:05 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(812): CActiveRecord->updateAll(Array, '`lft`>=30 AND `...', Array)
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(390): NestedSetBehavior->moveNode(Object(Schedule), 27, 1)
+#3 [internal function]: NestedSetBehavior->moveAsFirst(Object(Schedule))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsFirst', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): CActiveRecord->__call('moveAsFirst', Array)
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): Schedule->moveAsFirst(Object(Schedule))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#21 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 18:57:54 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `level`=`level`+1 WHERE `lft`>=25 AND `rgt`<=26 AND `root`=:ycp2.
+2012/09/15 18:57:54 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(812): CActiveRecord->updateAll(Array, '`lft`>=25 AND `...', Array)
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(390): NestedSetBehavior->moveNode(Object(Schedule), 20, 1)
+#3 [internal function]: NestedSetBehavior->moveAsFirst(Object(Schedule))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsFirst', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): CActiveRecord->__call('moveAsFirst', Array)
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): Schedule->moveAsFirst(Object(Schedule))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#21 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 18:58:00 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `level`=`level`+1 WHERE `lft`>=21 AND `rgt`<=22 AND `root`=:ycp2.
+2012/09/15 18:58:00 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(812): CActiveRecord->updateAll(Array, '`lft`>=21 AND `...', Array)
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(390): NestedSetBehavior->moveNode(Object(Schedule), 24, 1)
+#3 [internal function]: NestedSetBehavior->moveAsFirst(Object(Schedule))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsFirst', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): CActiveRecord->__call('moveAsFirst', Array)
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): Schedule->moveAsFirst(Object(Schedule))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#21 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 18:58:20 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `level`=`level`+1 WHERE `lft`>=25 AND `rgt`<=26 AND `root`=:ycp2.
+2012/09/15 18:58:20 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(812): CActiveRecord->updateAll(Array, '`lft`>=25 AND `...', Array)
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(390): NestedSetBehavior->moveNode(Object(Schedule), 12, 1)
+#3 [internal function]: NestedSetBehavior->moveAsFirst(Object(Schedule))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsFirst', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): CActiveRecord->__call('moveAsFirst', Array)
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): Schedule->moveAsFirst(Object(Schedule))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#21 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 18:59:13 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `level`=`level`+1 WHERE `lft`>=19 AND `rgt`<=20 AND `root`=:ycp2.
+2012/09/15 18:59:13 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(812): CActiveRecord->updateAll(Array, '`lft`>=19 AND `...', Array)
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(390): NestedSetBehavior->moveNode(Object(Schedule), 12, 1)
+#3 [internal function]: NestedSetBehavior->moveAsFirst(Object(Schedule))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsFirst', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): CActiveRecord->__call('moveAsFirst', Array)
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): Schedule->moveAsFirst(Object(Schedule))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#21 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule%5Bproject_id%5D=2
+---
+2012/09/15 20:49:10 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-2, `rgt`=`rgt`-2, `level`=`level`-2, `root`=:yp0 WHERE `lft`>=3 AND `rgt`<=4 AND `root`=:ycp0.
+2012/09/15 20:49:10 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=3 AND `r...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 20:50:46 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-4, `rgt`=`rgt`-4, `level`=`level`-2, `root`=:yp0 WHERE `lft`>=5 AND `rgt`<=6 AND `root`=:ycp0.
+2012/09/15 20:50:46 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=5 AND `r...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 20:50:53 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-8, `rgt`=`rgt`-8, `level`=`level`-2, `root`=:yp0 WHERE `lft`>=9 AND `rgt`<=10 AND `root`=:ycp0.
+2012/09/15 20:50:53 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=9 AND `r...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 20:51:01 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-8, `rgt`=`rgt`-8, `level`=`level`-2, `root`=:yp0 WHERE `lft`>=9 AND `rgt`<=10 AND `root`=:ycp0.
+2012/09/15 20:51:01 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=9 AND `r...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 20:54:54 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `level`=`level`+1 WHERE `lft`>=11 AND `rgt`<=12 AND `root`=:ycp2.
+2012/09/15 20:54:54 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(812): CActiveRecord->updateAll(Array, '`lft`>=11 AND `...', Array)
+#2 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(390): NestedSetBehavior->moveNode(Object(Schedule), 14, 1)
+#3 [internal function]: NestedSetBehavior->moveAsFirst(Object(Schedule))
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#5 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsFirst', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): CActiveRecord->__call('moveAsFirst', Array)
+#7 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(267): Schedule->moveAsFirst(Object(Schedule))
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#19 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#20 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#21 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 21:12:35 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-12, `rgt`=`rgt`-12, `level`=`level`-2, `root`=:yp0 WHERE `lft`>=13 AND `rgt`<=14 AND `root`=:ycp0.
+2012/09/15 21:12:36 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=13 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 21:13:15 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-14, `rgt`=`rgt`-14, `level`=`level`-2, `root`=:yp0 WHERE `lft`>=15 AND `rgt`<=16 AND `root`=:ycp0.
+2012/09/15 21:13:15 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=15 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 21:37:41 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-2, `rgt`=`rgt`-2, `level`=`level`-2, `root`=:yp0 WHERE `lft`>=3 AND `rgt`<=4 AND `root`=:ycp0.
+2012/09/15 21:37:41 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=3 AND `r...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 22:35:19 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-28, `rgt`=`rgt`-28, `level`=`level`-2, `root`=:yp0 WHERE `lft`>=29 AND `rgt`<=30 AND `root`=:ycp0.
+2012/09/15 22:35:19 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=29 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 22:40:21 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-27, `rgt`=`rgt`-27, `level`=`level`-1, `root`=:yp0 WHERE `lft`>=28 AND `rgt`<=33 AND `root`=:ycp0.
+2012/09/15 22:40:21 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=28 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 22:40:26 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-21, `rgt`=`rgt`-21, `level`=`level`-1, `root`=:yp0 WHERE `lft`>=22 AND `rgt`<=23 AND `root`=:ycp0.
+2012/09/15 22:40:26 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=22 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 22:40:37 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-9, `rgt`=`rgt`-9, `level`=`level`-1, `root`=:yp0 WHERE `lft`>=10 AND `rgt`<=19 AND `root`=:ycp0.
+2012/09/15 22:40:37 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=10 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 22:40:42 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-9, `rgt`=`rgt`-9, `level`=`level`-1, `root`=:yp0 WHERE `lft`>=10 AND `rgt`<=19 AND `root`=:ycp0.
+2012/09/15 22:40:42 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`crew`, CONSTRAINT `fk_crew_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=10 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 22:41:31 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-29, `rgt`=`rgt`-29, `level`=`level`-1, `root`=:yp0 WHERE `lft`>=30 AND `rgt`<=31 AND `root`=:ycp0.
+2012/09/15 22:41:31 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=30 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(327): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---
+2012/09/15 23:21:08 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION). The SQL statement executed was: UPDATE `schedule` SET `lft`=`lft`-31, `rgt`=`rgt`-31, `level`=`level`-1, `root`=:yp0 WHERE `lft`>=32 AND `rgt`<=33 AND `root`=:ycp0.
+2012/09/15 23:21:08 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails (`worksmanagement_dev`.`day`, CONSTRAINT `fk_day_schedule1` FOREIGN KEY (`id`, `level`) REFERENCES `schedule` (`id`, `level`) ON DELETE CASCADE ON UPDATE NO ACTION)' in /Users/Andrew/yii-1.1.10.r3566/framework/db/CDbCommand.php:354
+Stack trace:
+#0 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(1699): CDbCommand->execute()
+#1 /Users/Andrew/NetBeansProjects/WorksManagement/protected/extensions/nestedBehavior/NestedSetBehavior.php(446): CActiveRecord->updateAll(Array, '`lft`>=32 AND `...', Array)
+#2 [internal function]: NestedSetBehavior->moveAsRoot()
+#3 /Users/Andrew/yii-1.1.10.r3566/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#4 /Users/Andrew/yii-1.1.10.r3566/framework/db/ar/CActiveRecord.php(226): CComponent->__call('moveAsRoot', Array)
+#5 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(330): CActiveRecord->__call('moveAsRoot', Array)
+#6 /Users/Andrew/NetBeansProjects/WorksManagement/protected/components/CategoryController.php(330): Schedule->moveAsRoot()
+#7 /Users/Andrew/yii-1.1.10.r3566/framework/web/actions/CInlineAction.php(50): CategoryController->actionMoveCopy()
+#8 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(309): CInlineAction->runWithParams(Array)
+#9 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilter.php(41): CFilterChain->run()
+#11 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 /Users/Andrew/yii-1.1.10.r3566/framework/web/filters/CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(292): CFilterChain->run()
+#15 /Users/Andrew/yii-1.1.10.r3566/framework/web/CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(276): CController->run('moveCopy')
+#17 /Users/Andrew/yii-1.1.10.r3566/framework/web/CWebApplication.php(135): CWebApplication->runController('Schedule/moveCo...')
+#18 /Users/Andrew/yii-1.1.10.r3566/framework/base/CApplication.php(162): CWebApplication->processRequest()
+#19 /Users/Andrew/NetBeansProjects/WorksManagement/index.php(20): CApplication->run()
+#20 {main}
+REQUEST_URI=/WorksManagement/Schedule/moveCopy
+HTTP_REFERER=http://localhost/WorksManagement/schedule/admin?Schedule[project_id]=2
+---

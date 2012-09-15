@@ -8,6 +8,12 @@ class DayController extends Controller
 	 */
 	protected function createSave($model, &$models=array())
 	{
+		// not using this so able to make this static as needed in TaskController
+		return static::createSaveStatic($model, $models);
+	}
+
+	static function createSaveStatic($model, &$models=array())
+	{
 		// need to insert a row into the schedule nested set model so that the id can be used here
 		
 		// create a root node
@@ -19,6 +25,11 @@ class DayController extends Controller
 		{
 			$model->id = $schedule->id;
 			$saved = parent::createSave($model, $models);
+
+			// add a Crew
+			$crew = new Crew;
+			$crew->day_id = $model->id;
+			$saved = CrewController::createSaveStatic($crew, $models);
 		}
 
 		// put the model into the models array used for showing all errors

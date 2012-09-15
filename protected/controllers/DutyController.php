@@ -79,7 +79,7 @@ class DutyController extends Controller
 	protected function createSave($model, &$models=array())
 	{
 		// not using this so able to make this static as needed in TaskController
-		return createSaveStatic($model, $models);
+		return static::createSaveStatic($model, $models);
 	}
 
 	static function createSaveStatic($model, &$models=array())

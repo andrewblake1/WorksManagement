@@ -132,4 +132,78 @@ class Schedule extends CategoryActiveRecord {
 		parent::afterSave();
 	}
 
+	public static function printULTree($parent_id = null) {
+		
+		if($parent_id !== null)
+		{
+			$model = static::model()->findByPk($parent_id);
+			$categories = $model->descendants()->findAll();
+			$level = 1;
+		}
+		else
+		{
+			$categories = static::model()->findAll(array('order' => 'root,lft'));
+			$level = 0;
+		}
+
+		foreach ($categories as $n => $category) {
+
+			if ($category->level == $level)
+			{
+				echo CHtml::closeTag('li') . "\n";
+			}
+			else if ($category->level > $level)
+				echo CHtml::openTag('ul') . "\n";
+			else {
+				echo CHtml::closeTag('li') . "\n";
+
+				for ($i = $level - $category->level; $i; $i--) {
+					echo CHtml::closeTag('ul') . "\n";
+					echo CHtml::closeTag('li') . "\n";
+				}
+			}
+
+			echo CHtml::openTag('li', array('id' => 'node_' . $category->id, 'rel' => $category->name));
+			echo CHtml::openTag('a', array('href' => '#', 'class' => "level{$category->level}"));
+			if($category->name)
+			{
+				$label = $category->name;
+			}
+			else
+			{
+				switch($category->level)
+				{
+					case Schedule::scheduleLevelDayInt :
+						$label = 'Day '.++$dayCounter;
+						$crewCounter = 0;
+						break;
+					case Schedule::scheduleLevelCrewInt :
+						$label = 'Crew '.++$crewCounter;
+						break;
+				}
+			}
+			switch($category->level)
+			{
+				case Schedule::scheduleLevelDayInt :
+					$label .= " (D{$category->id})";
+					break;
+				case Schedule::scheduleLevelCrewInt :
+					$label .= " (C{$category->id})";
+					break;
+				case Schedule::scheduleLevelTaskInt :
+					$label .= " (T{$category->id})";
+					break;
+			}
+			echo CHtml::encode($label);
+			echo CHtml::closeTag('a');
+
+			$level = $category->level;
+		}
+
+		for ($i = $level; $i; $i--) {
+			echo CHtml::closeTag('li') . "\n";
+			echo CHtml::closeTag('ul') . "\n";
+		}
+	}
+
 }

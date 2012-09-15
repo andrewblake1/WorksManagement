@@ -213,6 +213,7 @@ class ReportController extends Controller
 
 		// set up tab menu if required - using setter
 		$this->_tabs[0]['label'] = 'Create';
+		$this->_tabs[0]['active'] = true;
 
 		// NB: using update widget as clear of modal stuff intented on create in admin view
 		$this->widget('UpdateViewWidget', array(

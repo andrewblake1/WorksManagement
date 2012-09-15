@@ -24,7 +24,7 @@ class ProjectController extends GenericExtensionController
 	protected function createSave($model, &$models=array())
 	{
 		// need to insert a row into the schedule nested set model so that the id can be used here
-		
+
 		// create a root node
 		// NB: the project description is actually the name field in the nested set model
 		$schedule = new Schedule;
@@ -32,13 +32,19 @@ class ProjectController extends GenericExtensionController
 		$schedule->in_charge_id = empty($_POST['Schedule']['in_charge_id']) ? null : $_POST['Schedule']['in_charge_id'];
 		if($saved = $schedule->saveNode(true))
 		{
+			// add the Project
 			$model->id = $schedule->id;
 			$saved = parent::createSave($model, $models);
+
+			// add a Day
+			$day = new Day;
+			$day->project_id = $model->id;
+			$saved = DayController::createSaveStatic($day, $models);
 		}
 
 		// put the model into the models array used for showing all errors
 		$models[] = $schedule;
-		
+
 		return $saved;
 	}
 

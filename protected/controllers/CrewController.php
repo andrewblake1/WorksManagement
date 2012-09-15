@@ -2,10 +2,17 @@
 
 class CrewController extends Controller
 {
+
 	/*
 	 * overidden as mulitple models
 	 */
 	protected function createSave($model, &$models=array())
+	{
+		// not using this so able to make this static as needed in TaskController
+		return static::createSaveStatic($model, $models);
+	}
+
+	static function createSaveStatic($model, &$models=array())
 	{
 		// need to insert a row into the schedule nested set model so that the id can be used here
 		

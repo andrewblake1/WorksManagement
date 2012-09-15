@@ -2,6 +2,9 @@
 
 class CategoryController extends Controller
 {
+
+	public $checkMove = '';
+	public $moveNodeRefreshWhole = 'false';
 	/**
 	 * @var string the name of the admin view
 	 */

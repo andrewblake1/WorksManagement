@@ -19,7 +19,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	));
 
 //	echo '<div class="tinymce">';
-	echo $form->labelEx($model,'contractData');
+//	echo $form->labelEx($model,'contractData');
 	// tiny mce for wysiwyg html
 	$this->widget('ext.tinymce.ETinyMce', array(
         'model'=>$model,
@@ -27,7 +27,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		'editorTemplate'=>'full',
 		'useSwitch'=>false,
 		));
-	echo $form->error($model,'contractData'); 
+//	echo $form->error($model,'contractData'); 
 //	echo '</div>';
 
 $this->endWidget();
