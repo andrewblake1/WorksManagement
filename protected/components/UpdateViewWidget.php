@@ -9,6 +9,7 @@ class UpdateViewWidget extends CWidget
 	private $controller;
 	public $model;
 	public $models;
+	public $parent_fk;
 
 	/**
 	 * Displays a particular model.
@@ -24,6 +25,7 @@ class UpdateViewWidget extends CWidget
 		echo $this->controller->render('_form',array(
 			'model'=>$this->model,
 			'models'=>$this->models,
+			'parent_fk'=>$parent_fk,
 			));
 	}
 }

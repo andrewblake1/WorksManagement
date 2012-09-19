@@ -52,7 +52,7 @@ class DayController extends Controller
 		// put the model into the models array used for showing all errors
 		$models[] = $schedule;
 		
-		return $saved & parent::createSave($model, $models);
+		return $saved & parent::updateSave($model, $models);
 	}
 
 }

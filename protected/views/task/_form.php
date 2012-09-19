@@ -1,8 +1,10 @@
 <?php
 
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'action' => $action, 'parent_fk'=>$parent_fk));
 
 	$form->textFieldRow('name');
+
+	$form->textAreaRow('location');
 
 	// only show when creating
 	if($model->isNewRecord)

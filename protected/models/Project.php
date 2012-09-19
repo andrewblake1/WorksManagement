@@ -175,23 +175,22 @@ class Project extends ActiveRecord
 		return array('searchInCharge', 'searchProjectType', 'name');
 	}
 
-	// ensure that where possible a pk has been passed from parent
+/*	// ensure that where possible a pk has been passed from parent
 	// needed to overwrite this here because project has to look thru project type to get to client when doing update but gets client for admin
 	public function assertFromParent()
 	{
-
+		// if we are in the schdule screen then they may not be a parent foreign key as will be derived when user identifies a node
+		if(Yii::app()->controller->id == 'ScheduleController')
+		{
+			return;
+		}
 		// if we don't have this fk attribute set
-		if(empty($this->project_type_id) && empty($this->client_id))
+		elseif(empty($this->project_type_id) && empty($this->client_id))
 		{
 			$niceNameLower =  strtolower(static::getNiceName());
 			throw new CHttpException(400, "No $niceNameLower identified, you must get here from the {$niceNameLower}s page");
 		}
-		// otherwise return the fk
-		else
-		{
-			return $parentForeignKey;
-		}
-	}
+	}*/
 
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
@@ -204,8 +203,11 @@ class Project extends ActiveRecord
 	}
 
 	public function afterFind() {
-		$this->name = $this->id0->name;
+$s=		$this->name = $this->id0->name;
 		
+		$this->client_id = $this->projectType->client_id;
+$t=		$this->client_id;
+$t1 = $this->attributes;		
 		parent::afterFind();
 	}
 

@@ -2,9 +2,6 @@
 
 class CategoryController extends Controller
 {
-
-	public $checkMove = '';
-	public $moveNodeRefreshWhole = 'false';
 	/**
 	 * @var string the name of the admin view
 	 */
@@ -64,9 +61,18 @@ class CategoryController extends Controller
 		parent::init();
 	}
 
+	/**
+	 * Specifies the access control rules.
+	 * This method is used by the 'accessControl' filter.
+	 * @return array access control rules
+	 */
 	public function accessRules()
 	{
 		return array(
+			array('allow',
+				'actions'=>array('admin'),
+				'roles'=>array($this->modelName.'Read'),
+			),
 			array('allow',
 				'roles'=>array($this->modelName),
 			),
@@ -75,6 +81,7 @@ class CategoryController extends Controller
 			),
 		);
 	}
+
 
 	private function registerAssets()
 	{
@@ -147,21 +154,26 @@ class CategoryController extends Controller
 			'json2.js'=>false,
 		);
 
+		$modelName = empty($_POST['model_name']) ? $this->modelName : $_POST['model_name'];
+		
 		//Figure out if we are updating a Model or creating a new one.
 		if(isset($_POST['update_id']))
 		{
 //TODO: may have validation problem here i.e. not sure if fields will be bound correctly so may have to place two modals in the form, one for create
 // and one for update - not sure due to binding problem previously experienced after ajax
-			$model = $this->loadModel($_POST['update_id']);
-			$returnUrl = $this->createUrl("{$this->modelName}/update", array('id'=>$_POST['update_id']));
+//			$model = $this->loadModel($_POST['update_id']);
+			$model = $modelName::model()->findByPk($_POST['update_id']);
+			$returnUrl = $this->createUrl("$modelName/update", array('id'=>$_POST['update_id']));
 		}
 		else
 		{
-			$model = new $this->modelName;		
+			$model = new $modelName;
+			// massive assignment
+			$model->attributes = $_POST;
 		}
 
 		// set the url for the form so that doesn't try to come back here when update is clicked
-		$this->renderPartial('_form',
+		$this->renderPartial("//$modelName/_form",
 			array(
 				'model'=>$model,
 				'parent_id'=>!empty($_POST['parent_id'])

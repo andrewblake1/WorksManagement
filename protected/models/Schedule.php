@@ -25,7 +25,8 @@
  * @property Task $task
  */
 class Schedule extends CategoryActiveRecord {
-
+	public $levelName;
+	
 	/**
 	 * Data types. These are the emum values set by the DataType custom type within 
 	 * the database
@@ -43,15 +44,12 @@ class Schedule extends CategoryActiveRecord {
 	/**
 	 * @return array duty level value => duty level display name
 	 */
-	public static function getLevels()
-	{
-		return array(
-			self::scheduleLevelProjectInt=>self::scheduleLevelProject,
-			self::scheduleLevelDayInt=>self::scheduleLevelDay,
-			self::scheduleLevelCrewInt=>self::scheduleLevelCrew,
-			self::scheduleLevelTaskInt=>self::scheduleLevelTask,
-		);
-	}
+	static $levels = array(
+		self::scheduleLevelProjectInt=>self::scheduleLevelProject,
+		self::scheduleLevelDayInt=>self::scheduleLevelDay,
+		self::scheduleLevelCrewInt=>self::scheduleLevelCrew,
+		self::scheduleLevelTaskInt=>self::scheduleLevelTask,
+	);
 
 	/**
 	 * @var int project_id passed from parent to identify the project to display 
@@ -66,7 +64,7 @@ class Schedule extends CategoryActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_id, in_charge_id', 'safe'),
+			array('project_id, in_charge_id, levelName', 'safe'),
 		) + parent::rules();
 	}
 
@@ -206,4 +204,37 @@ class Schedule extends CategoryActiveRecord {
 		}
 	}
 
+	public function afterFind() {
+		switch($this->level)
+		{
+			case self::scheduleLevelProjectInt;
+				$this->levelName = self::scheduleLevelProject;
+				break;
+			case self::scheduleLevelDayInt;
+				$this->levelName = self::scheduleLevelDay;
+				break;
+			case self::scheduleLevelCrewInt;
+				$this->levelName = self::scheduleLevelCrew;
+				break;
+			case self::scheduleLevelTaskInt;
+				$this->levelName = self::scheduleLevelTask;
+				break;
+		}
+		parent::afterFind();
+	}
+	
+/*	// ensure that where possible a pk has been passed from parent
+	public function assertFromParent()
+	{
+		// assert from parent won't work as normal from within schedule because the parents are all internal in the nested set
+		// however we do need to ensure that project_id, and subsequently that client_id are set
+		$project = Project::model()->findByPk($_SESSION['Schedule']['value']);
+		$_SESSION['Client']['name'] = 'id';
+		$_SESSION['Client']['value'] = $project->projectType->client_id;
+		
+		return;
+	}*/	
+	
 }
+
+?>

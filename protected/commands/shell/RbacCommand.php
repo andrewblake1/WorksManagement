@@ -291,7 +291,7 @@ EOD;
 			 $this->_authManager->createOperation('TaskToResourceTypeRead', 'TaskToResourceType read');
 			 $task->addChild('TaskToResourceTypeRead');
 
-			 // Scheduler
+			 // SCHEDULER
 			 // NB: this role is hard coded into the task _form view
 			 $schedulerRole=$this->_authManager->createRole('scheduler', 'Scheduler');
 			 // create tasks
@@ -301,7 +301,7 @@ EOD;
 			 $task->addChild('RescheduleRead');
 			 $schedulerRole->addChild('Schedule');
 
-			 // default role
+			 // DEFAULT
 			 $defaultRole=$this->_authManager->createRole('default', 'Default',
 					'return !Yii::app()->user->isGuest;');
 			 // create task to allow update access if user is related to this task - this will use checkAccess in update action
@@ -324,6 +324,21 @@ EOD;
 			 $systemAdminRole->addChild('project manager');
 			 $projectManagerRole->addChild('ScheduleRead');
 			 $schedulerRole->addChild('default');
+			 
+			 // OFFICE ADMIN
+			 $offieAdministratorRole=$this->_authManager->createRole('office admin', 'Office administrator');
+			 
+			 // FIELD MANAGER
+			 $fieldManagerRole=$this->_authManager->createRole('field manager', 'Field manager');
+			 
+			 // OUTAGE PLANNER
+			 $outagePlannerRole=$this->_authManager->createRole('outage planner', 'Outage planner');
+			 
+			 // FOREMAN
+			 $foremanRole=$this->_authManager->createRole('foreman', 'Foreman');
+			 
+			 // STOREMAN
+			 $foremanRole=$this->_authManager->createRole('storeman', 'Stores');
 			 
 		     //provide a message indicating success
 		     echo "Authorization hierarchy successfully generated.";

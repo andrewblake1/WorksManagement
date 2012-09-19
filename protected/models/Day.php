@@ -145,6 +145,15 @@ class Day extends ActiveRecord
 		parent::afterFind();
 	}
 
+	public function assertFromParent()
+	{
+		// if we are in the schdule screen then they may not be a parent foreign key as will be derived when user identifies a node
+		if(!(Yii::app()->controller->id == 'schedule'))
+		{
+			return parent::assertFromParent();
+		}
+	}
+
 }
 
 ?>

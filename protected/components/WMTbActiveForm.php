@@ -10,7 +10,7 @@ Yii::import('bootstrap.widgets.TbActiveForm');
 class WMTbActiveForm extends TbActiveForm
 {
 	private $controller;
-	private $_parent_fk;
+	public $parent_fk;
 	public $enableAjaxValidation=true;
 	public $htmlOptions=array('class'=>'well');
 	public $model;
@@ -19,7 +19,8 @@ class WMTbActiveForm extends TbActiveForm
 	private $_htmlOptionReadonly = array();
 	// put focus to first non datepicker as if goes to datepicker then the datepicker will display
 	// in admin view
-	public $focus = 'input:not([class="hasDatepicker"]):visible:enabled:first';
+//	public $focus = 'input:not([class="hasDatepicker"]):visible:enabled:first';
+	public $focus = '[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first';
     public $clientOptions = array(
 		'validateOnSubmit'=>true,
 		'validateOnChange'=>false,
@@ -58,17 +59,15 @@ class WMTbActiveForm extends TbActiveForm
 			return true;
 		}'
 );
-
+//TODO: high priority - split this form into 4 - update and create modal, and update and create non modal - too many conditions
+// likely this to become abstract with 4 polymorphic children
 	/**
 	 * Displays a particular model.
 	 */
     public function init()
     {
-		// ensure that where possible a pk has been passed from parent and get that fk if possible
-		$this->_parent_fk = $this->model->assertFromParent();
-
 		$this->controller = $this->getController();
-		$modelName = $this->controller->modelName;
+		$modelName = get_class($this->model);
 		$this->id="$modelName-form";
 		
 		// ensure the action if empty is an empty string and not null
@@ -88,17 +87,24 @@ class WMTbActiveForm extends TbActiveForm
 		{
 			$this->_action = ($this->model->isNewRecord ? 'Create' : 'Update');
 		}
-		
+
 		// Only do modal if in admin view
-		if($this->_action == 'Create' && Yii::app()->controller->action->id == 'admin')
+		if(/*$this->_action == 'Create' && */Yii::app()->controller->action->id == 'admin' || Yii::app()->controller->action->id == 'returnForm')
 		{
-			$this->action = $this->_action;	// NB: this needed here but not for update to set the form action from admin as modal
+			$this->action = $this->controller->createUrl("$modelName/{$this->_action}");	// NB: this needed here but not for update to set the form action from admin as modal
 			echo '<div class="modal-header">';
 			echo '<a class="close" data-dismiss="modal">&times;</a>';
 			echo "<h3>{$modelName::getNiceName()}</h3>";
 			echo '</div>';
 		}
-		
+
+		// if no parent foreign key given
+		if(empty($this->parent_fk))
+		{
+			// attmpt to get
+			$this->parent_fk = ActiveRecord::getParentForeignKey($this->controller->getParentCrumb($modelName));
+		}
+
 		// display any validation errors
 		echo $this->errorSummary($this->models ? $this->models : $this->model);
 		
@@ -116,27 +122,28 @@ class WMTbActiveForm extends TbActiveForm
 		{
 			$this->hiddenField('staff_id');
 		}
+		
+		// pass thru the original controller so we know can potentially return here
+		echo CHtml::hiddenField('controller', Yii::app()->controller->modelName);
 
 		// if there is a parent foreing key i.e. if there is a level above this in our navigation structure
-		if(!empty($this->_parent_fk))
+		if(!empty($this->parent_fk))
 		{
 			// add hidden field so gets carried into the model on submit
-			$this->hiddenField($this->_parent_fk);
+			$this->hiddenField($this->parent_fk);
 		}
 		
 		// button attributes
 		$buttonOptions = array('class'=>'form-button btn btn-primary btn-large');
-		// update
-		if($this->_action == 'Update')
+		if(Yii::app()->controller->action->id == 'admin' && ($this->_action == 'Create' || $this->_action == 'Update'))
 		{
-			echo '<div class="form-actions">';
+			echo '<div class="modal-footer">';
 				echo CHtml::submitButton($this->_action, $buttonOptions);
 			echo '</div>';
 		}
-		// create
-		elseif($this->_action == 'Create')
+		elseif($this->_action == 'Update' || $this->_action == 'Create')	// no modal
 		{
-			echo '<div class="modal-footer">';
+			echo '<div class="form-actions">';
 				echo CHtml::submitButton($this->_action, $buttonOptions);
 			echo '</div>';
 		}
@@ -205,6 +212,7 @@ class WMTbActiveForm extends TbActiveForm
 		$cs->registerCssFile($cs->getCoreScriptUrl(). '/jui/css/base/jquery-ui.css');
 
 		$htmlOptions['options']['dateFormat'] = 'd M, yy';
+		$htmlOptions['id'] = $attribute;
 
 		echo parent::datepickerRow($model ? $model : $this->model, $attribute,
 			array('class'=>'') + $htmlOptions + $this->_htmlOptionReadonly);

@@ -66,8 +66,11 @@ abstract class ActiveRecord extends CActiveRecord
 					// shorten to 20 characters total
 					$value = substr($value, 0, 17) . '...';
 				}
-				// make this our nice name
-				$niceName = $value;
+				// make this our nice name - if it isn't empty
+				if($value)
+				{
+					$niceName = $value;
+				}
 			}
 		}
 		
@@ -77,12 +80,13 @@ abstract class ActiveRecord extends CActiveRecord
 	 * Returns foreign key attribute name within this model that references another model. This is used
 	 * for creating navigational items i.e. tabs.
 	 * @param string $referencesModel the name name of the model that the foreign key references.
+	 * @param string $referencesModel foreign keys array in this model.
 	 * @return string the foreign key attribute name within this model that references another model
 	 */
-	static function getParentForeignKey($referencesModel, $parentForeignKeys=array())
+	static function getParentForeignKey($referencesModel, $foreignKeys=array())
 	{
-		return isset($parentForeignKeys[$referencesModel])
-			? $parentForeignKeys[$referencesModel]
+		return isset($foreignKeys[$referencesModel])
+			? $foreignKeys[$referencesModel]
 			: Yii::app()->functions->uncamelize($referencesModel) . '_id';
 	}
 	
@@ -199,26 +203,82 @@ abstract class ActiveRecord extends CActiveRecord
 		);
 	}
 	
-	// ensure that where possible a pk has been passed from parent
+	// ensure that pk's exist for all in trail
 	public function assertFromParent()
 	{
-		$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], get_called_class());
+		// this model name
+		$modelName = get_called_class();
+		
+		// get trail
+		$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName);
+		
+		// if not at top level
 		if(($trailSize = sizeof($trail)) > 1)
 		{
-			// get parent name in trail
-			$parentModel = $trail[$trailSize - 2];
-			$parentForeignKey = static::getParentForeignKey($parentModel);
-			// if we don't have this fk attribute set
-			if(empty($this->$parentForeignKey))
+			// loop thru trail
+			$skip = false;
+			foreach($trail = array_reverse($trail) as $crumb)
 			{
-				$niceNameLower =  strtolower($parentModel::getNiceName());
-				throw new CHttpException(400, "No $niceNameLower identified, you must get here from the {$niceNameLower}s page");
+				// if we had to jump up a level
+				if($skip)
+				{
+					$skip = false;
+					continue;
+				}
+				// skip the first one
+				if($crumb == $modelName)
+				{
+					// get this model
+					if(!empty($_SESSION[$crumb]['value']))
+					{
+						$pk = $_SESSION[$crumb]['value'];
+					}
+					// otherwise we don't have a model so must be admin screen via the parent
+					else
+					{
+						// get parent name
+						$crumb = current($trail);
+						// get the name of the foreing key field in this model referring to the parent
+						$parentForeignKey = static::getParentForeignKey($crumb);
+						// see if we can now get a starting point
+						if(!empty($_GET[$modelName][$parentForeignKey]))
+						{
+							// get parent foreign key value
+							$pk = $_GET[$modelName][$parentForeignKey];
+							// set session variables
+							$_SESSION[$crumb]['name'] = $crumb::model()->tableSchema->primaryKey;
+							$_SESSION[$crumb]['value'] = $pk;
+							// make sure we skip over this in the surrounding loop as now one ahead
+							$skip = true;
+						}
+						// otherwise code error
+						else
+						{
+							throw Exception();
+						}
+					}
+					$model = $crumb::model()->findByPk($pk);
+					continue;
+				}
+
+				// get the name of the foreing key field in this model referring to the parent
+				$primaryKeyName = static::getParentForeignKey($crumb);
+				// ensure the primary key is set for this parent crumb
+				$_SESSION[$crumb]['name'] = $crumb::model()->tableSchema->primaryKey;
+
+				$_SESSION[$crumb]['value'] = $model->$primaryKeyName;
+				// set the model ready for the next one
+				$model = $crumb::model()->findByPk($_SESSION[$crumb]['value']);
+				
+				// capture the first parent only for returning later
+				if(empty($parentForeignKey))
+				{
+					$parentForeignKey = $primaryKeyName;
+				}
 			}
-			// otherwise return the fk
-			else
-			{
-				return $parentForeignKey;
-			}
+			
+			// return the first parent
+			return $parentForeignKey;
 		}
 	}
 	

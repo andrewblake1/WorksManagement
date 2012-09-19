@@ -2,28 +2,10 @@
 
 class ScheduleController extends CategoryController
 {
-	// force refresh of whole tree on move
-	public $moveNodeRefresh = 'true';
-	// ensure tasks can only be moved in crews, crews in days, and days in project
-	public $checkMove =
-		',"crrm" : {
-			move : {
-				check_move : function (m) {
-					target = m.o.find(\'[class^="level"]\').first().attr("class").replace("level","");
-
-					if(m.np.is("DIV"))
-					{
-						destination = 1;
-					}
-					else
-					{
-						destination = m.np.find(\'[class^="level"]\').first().attr("class").replace("level","");
-					}
-
-					return (target - destination) == 1;
-				}
-			}
-		}';
+	/**
+	 * @var string the name of the admin view
+	 */
+	protected $_adminView = 'categoryAdmin';
 
 	/**
 	 * Specifies the access control rules.
@@ -47,31 +29,80 @@ class ScheduleController extends CategoryController
 
 	public function actionAddDay()
 	{
-		// set post variables to simulate coming from a create click in the form
-		$_POST[$this->modelName]['description'] = 'fgh';
-		
-		// do it!
-/*		// do it!
-		$controller = new DayController('DayController');
-		$_SESSION['Project']['value'];
-		$controller->actionCreate();*/
-		$day = new Day();
-		$day->project_id = $_SESSION['Project']['value'];
-		DayController::createSaveStatic($day);
-		parent::actionCreate();
+		if(static::checkAccess(self::accessWrite, 'Day'))
+		{
+			// set post variables to simulate coming from a create click in the form
+			$_POST[$this->modelName]['description'] = '';
+
+			$day = new Day();
+			$day->project_id = $_SESSION['Project']['value'];
+			DayController::createSaveStatic($day);
+			parent::actionCreate();
+		}
+		// otherwise doesn't have permission to be here
+		else
+		{
+			throw new CHttpException(403,'You do not have permission.');
+		}
 	}
 
 	protected function newButton()
 	{
-		echo ' ';
-		$this->widget('bootstrap.widgets.TbButton', array(
-			'label'=>'New',
-			'url'=>$this->createUrl("{$this->modelName}/addDay"),
-			'type'=>'primary',
-			'size'=>'small', // '', 'large', 'small' or 'mini'
-		));
+		if(static::checkAccess(self::accessWrite, 'Day'))
+		{
+			echo ' ';
+			$this->widget('bootstrap.widgets.TbButton', array(
+				'label'=>'New day',
+				'url'=>$this->createUrl("{$this->modelName}/addDay"),
+				'type'=>'primary',
+				'size'=>'small', // '', 'large', 'small' or 'mini'
+			));
+		}
 	}
 
+	
+	public function actionCreate($modalId = 'myModal')
+	{
+		// can't create a schedule, must create a project, or day or crew or task
+		throw new CHttpException(403,'Invalid request.');
+	}
+
+	public function actionUpdate($id)
+	{
+		// can't update a schedule, must update a project, or day or crew or task
+		throw new CHttpException(403,'Invalid request.');
+	}
+
+	public function actionRename()
+	{
+		$id=$_POST['id'];
+		$schedule=$this->loadModel($id);
+		if(static::checkAccess(self::accessWrite, Schedule::$levels[$schedule->level]))
+		{
+			parent::actionRename();
+		}
+		// otherwise doesn't have permission to be here
+		else
+		{
+			throw new CHttpException(403,'You do not have permission.');
+		}
+	}
+
+	public function actionRemove()
+	{
+		$id=$_POST['id'];
+		$schedule=$this->loadModel($id);
+		if(static::checkAccess(self::accessWrite, Schedule::$levels[$schedule->level]))
+		{
+			parent::actionRemove();
+		}
+		// otherwise doesn't have permission to be here
+		else
+		{
+			throw new CHttpException(403,'You do not have permission.');
+		}
+	}
+	
 }
 
 ?>

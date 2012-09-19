@@ -398,6 +398,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			$attributes += $_POST[$modelName];
 		}
 		$model->attributes = $attributes;
+
 		// ensure that where possible a pk has been passed from parent
 		$model->assertFromParent();
 		
@@ -455,6 +456,21 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		}
 	}
 	
+	
+	public function getParentCrumb($modelName = null)
+	{
+		if(empty($modelName))
+		{
+			$modelName = $this->modelName;
+		}
+
+		$trail = array_reverse(Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName));
+
+		if(!empty($trail[1]))
+		{
+			return $trail[1];
+		}
+	}
 	/**
 	 * Get the breadcrumb trail for this controller.
 	 * return array bread crumb trail for this controller
@@ -493,7 +509,6 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				if($lastCrumb == 'Create')
 				{
 					// add crumb to admin view
-//					$breadcrumbs[$display.'s'] = array("$crumb/admin");
 					$breadcrumbs[$display.'s'] = array("$crumb/admin") + $queryParamters;
 					// add last crumb
 					$breadcrumbs[] = $lastCrumb;
@@ -523,7 +538,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					// add an update crumb to this primary key
 					$primaryKey = $_SESSION[$crumb];
 		//			$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", 'id'=>$primaryKey['value']);
-					$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", $primaryKey['key']=>$primaryKey['value']);
+					$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", $primaryKey['name']=>$primaryKey['value']);
 				}
 			}
 		}
@@ -563,7 +578,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreate()
+	public function actionCreate($modalId = 'myModal')
 	{
 		$model=new $this->modelName;
 
@@ -628,14 +643,15 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			'value'=>$id,
 		);
 		
-		$this->createRender($model, $models);
+		$this->createRender($model, $models, $modalId);
 	}
 	
-	protected function createRender($model, $models)
+	protected function createRender($model, $models, $modalId)
 	{
 		$this->widget('CreateViewWidget', array(
 			'model'=>$model,
 			'models'=>$models,
+			'modalId'=>$modalId,
 		));
 	}
 
@@ -659,13 +675,16 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	 */
 	protected function updateRedirect($model)
 	{
+		// may pass a controller name e.g. for task, crew, day from Scedule admin view
+		$controller = empty($_POST['controller']) ? '' : "{$_POST['controller']}/";
+
 		if(is_array($_SESSION['actionAdminGet'][$this->modelName]))
 		{
-			$this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
+			$this->redirect(array("{$controller}admin", $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
 		}
 		else
 		{
-			$this->redirect(array('admin'));
+			$this->redirect(array("{$controller}admin"));
 		}
 	}
 	
@@ -741,6 +760,9 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		$modelName = $this->modelName;
 		$this->heading = $modelName::getNiceName($id);
 
+		// ensure that where possible a pk has been passed from parent and get that fk name if possible
+		$parent_fk = $model->assertFromParent();
+		
 		// set breadcrumbs
 		$this->breadcrumbs = $this->getBreadCrumbTrail('Update');
 		
@@ -750,7 +772,9 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		$this->widget('UpdateViewWidget', array(
 			'model'=>$model,
 			'models'=>$models,
+			'parent_fk'=>$parent_fk,
 		));
+
 	}
 
 	protected function actionGetHtmlId($model,$attribute)
@@ -999,45 +1023,101 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		}
 	}
 
-	public function getReportsMenu()
+	const reportTypeHtml = 0;
+	const reportTypeJavascript = 1;
+	public function getReportsMenu($reportType = self::reportTypeHtml, $context = null)
 	{
-		// get this staff model
-		$staffModel = Staff::model()->findByPk(Yii::app()->user->id);
-
-		// get reports allowed for this user role
-		if(!empty($staffModel))
+		// if no context model given
+		if(!$context)
 		{
-			foreach($staffModel->authAssignments as $authAssignment)
+			// set as this controller
+			$context = $this->modelName;
+		}
+		
+		// if we arent going to receive the pk as id at run time via Schedule ajaxtree
+		if($reportType == self::reportTypeHtml)
+		{
+			// set the primary key
+			$pk = $_SESSION[$context]['value'];
+		}
+		
+		$criteria = new CDbCriteria;
+		// join
+		$criteria->with = array(
+			'reportToAuthItems',
+		);
+
+		// set the context
+		$criteria->condition = 'context = :context OR context IS NULL';
+		$criteria->params = array('context' => $context);
+		
+		foreach(Report::model()->findAll($criteria) as $report)
+		{
+			// determine if this user has access
+			foreach($report->reportToAuthItems as &$reportToAuthItem)
 			{
-				foreach($authAssignment->itemname0->reportToAuthItems as $reportToAuthItem)
+				if(Yii::app()->user->checkAccess($reportToAuthItem->AuthItem_name))
 				{
-					$report = $reportToAuthItem->report;
-					$items[] = array('label'=>$report->description, 'url'=>Yii::app()->createUrl('Report/show', array('id'=>$report->id)));
+					// add menu item
+					$items[$report->description] = array(
+						'label' => $report->description,
+						'url' => Yii::app()->createUrl('Report/show', array(
+							'id' => $report->id,
+							'pk' => $pk,
+						)),
+						'urlJavascript' => Yii::app()->createUrl('Report/show', array('id' => $report->id))."?pk=\" + id",
+						);
 				}
 			}
 		}
 
 		if(!empty($items))
 		{
-			return array(
-				'class'=>'bootstrap.widgets.TbMenu',
-				'items'=>array(
-					array('label'=>'Reports', 'url'=>'#', 'items'=>$items),
-				),
-			);
+			switch($reportType)
+			{
+				case self::reportTypeHtml :
+					return array(
+						'class'=>'bootstrap.widgets.TbMenu',
+						'items'=>array(
+							array('label'=>'Reports', 'url'=>'#', 'items'=>$items),
+						),
+					);
+				case self::reportTypeJavascript :
+					// return report items for context menu in ajax tree
+					if(!$itemCount = count($items))
+					{
+						// if no items then return null
+						return 'null';
+					}
+					foreach($items as $item)
+					{
+						// append menu item
+						$reportTypeJavascript .= 
+							"item$cntr : {
+								\"label\"             : \"{$item['label']}\",
+								\"action\"            : function (obj) { window.location = \"{$item['urlJavascript']}}
+							}".($itemCount > ++$cntr ? ',' : '');
+					}
+					// return the items formatted for jquery context drop down
+					return "{ reports : { 'label' : 'Reports', 'submenu' : {
+								{$reportTypeJavascript}
+							}}}";
+				default :
+					throwException();
+			}
 		}
+		
+		return $reportType == self::reportTypeHtml ? null : 'null';
 	}
 
 	protected function exportButton()
 	{
 		echo ' ';
-//					echo CHtml::submitButton('Download Excel');
 		$this->widget('bootstrap.widgets.TbButton', array(
 			'label'=>'Download Excel',
 			'url'=>$this->createUrl("{$this->modelName}/admin", array('action'=>'download')),
 			'type'=>'primary',
 			'size'=>'small', // '', 'large', 'small' or 'mini'
-//						'htmlOptions'=>array('data-toggle'=>'modal'),
 		));
 	}
 
@@ -1051,10 +1131,9 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			'size'=>'small', // '', 'large', 'small' or 'mini'
 			'htmlOptions'=>array(
 				'data-toggle'=>'modal',
-// TODO: alter this slightly to focus on first element when combined with others ie. textarea
-				'onclick' => '$("#myModal input:not([class="hasDatepicker"]):visible:enabled:first").focus();',
+				'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').focus();',
 			),
-		));
+		)); 
 	}
 
 	protected function navbar()

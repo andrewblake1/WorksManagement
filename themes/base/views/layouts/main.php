@@ -62,7 +62,7 @@
 			?>
 				
 			<?php
-			if(isset($this->heading) && $this->heading)
+			if(!empty($this->heading))
 			{
 				echo '<h2>'.CHtml::encode($this->heading);
 				// if we should be showing the new button

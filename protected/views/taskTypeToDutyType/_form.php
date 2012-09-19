@@ -1,6 +1,6 @@
 <?php
 
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
 	DutyTypeController::listWidgetRow($model, $form, 'duty_type_id');
 

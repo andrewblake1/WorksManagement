@@ -1,6 +1,6 @@
 <?php
 
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
 	GenericprojectcategoryController::listWidgetRow($model, $form, 'genericprojectcategory_id');
 

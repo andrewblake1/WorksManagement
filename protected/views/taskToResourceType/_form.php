@@ -1,6 +1,6 @@
 <?php
 
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
 	ResourceTypeController::listWidgetRow($model, $form, 'resource_type_id');
 
@@ -10,7 +10,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	$form->textFieldRow('start');
 
-	$form->dropDownListRow('level', Schedule::getLevels());
+	$form->dropDownListRow('level', Schedule::$levels());
 
 $this->endWidget();
 

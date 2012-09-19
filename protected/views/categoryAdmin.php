@@ -132,8 +132,6 @@ echo '
 			// each plugin you have included can have its own config object
 			"core" : { "initially_open" : [ <?php echo $open_nodes ?> ],'open_parents':true}
 			// it makes sense to configure a plugin only if overriding the defaults
-
-			<?php echo $this->checkMove; ?>
 		})
 
 		///EVENTS
@@ -263,14 +261,8 @@ echo '
 									data.inst.refresh(data.inst._get_parent(data.rslt.oc));
 								}
 							}
-							// if need to refresh the whole tree - i.e. re labeled
-							if(<?php echo $this->moveNodeRefresh; ?>)
-							{
-								jQuery("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").jstree("refresh");
-							}
 							//  console.log('OK');
 						}
-
 					}
 				}); //ajax
 

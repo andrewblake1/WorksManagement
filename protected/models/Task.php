@@ -10,6 +10,7 @@
  * @property integer $task_type_id
  * @property string $planned
  * @property string $scheduled
+ * @property string $location
  * @property integer $preferred_mon
  * @property integer $preferred_tue
  * @property integer $preferred_wed
@@ -71,10 +72,10 @@ class Task extends ActiveRecord
 			array('project_id, task_type_id, crew_id, staff_id', 'required'),
 			array('task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
-			array('planned, preferred, scheduled, name', 'safe'),
+			array('planned, preferred, scheduled, name, location', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, searchInCharge, searchEarliest, searchProject, searchTaskType, searchStaff, name, crew_id, planned, scheduled, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
+			array('id, level, searchInCharge, searchEarliest, searchProject, searchTaskType, searchStaff, name, crew_id, planned, scheduled, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -118,6 +119,7 @@ class Task extends ActiveRecord
 			'planned' => 'Planned',
 			'scheduled' => 'Scheduled',
 			'name' => 'Task',
+			'location' => 'Location',
 			'searchEarliest' => 'Earliest',
 			'preferred_mon' => 'Mon',
 			'preferred_tue' => 'Tue',
@@ -142,9 +144,12 @@ class Task extends ActiveRecord
 			't.id',
 			't.task_type_id',
 			'id0.name AS name',
+			't.location',
 			't.planned',
 			't.scheduled',
-			'DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest',
+	//		'duty.lead_in_days',
+//			'DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest',
+			'(SELECT `date` FROM `working_days` WHERE `date` > project.planned LIMIT 5, 1) AS searchEarliest',
 			't.preferred_mon',
 			't.preferred_tue',
 			't.preferred_wed',
@@ -173,6 +178,7 @@ class Task extends ActiveRecord
 		// where
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('t.location',$this->location,true);
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
 		$criteria->compare('t.scheduled',Yii::app()->format->toMysqlDate($this->scheduled));
 		$criteria->compare('searchEarliest',Yii::app()->format->toMysqlDate($this->searchEarliest));
@@ -214,6 +220,7 @@ class Task extends ActiveRecord
 	{
 		$columns[] = 'id';
 		$columns[] = 'name';
+		$columns[] = 'location';
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
         $columns[] = static::linkColumn('searchTaskType', 'TaskType', 'task_type_id');
 		$columns[] = 'planned';
@@ -331,6 +338,17 @@ class Task extends ActiveRecord
 		$this->project_id = $_SESSION['actionAdminGet']['Day']['project_id'];
 		
 		return parent::beforeValidate();
+	}
+
+	// ensure that where possible a pk has been passed from parent
+	// needed to overwrite this here because project has to look thru project type to get to client when doing update but gets client for admin
+	public function assertFromParent()
+	{
+		// if we are in the schdule screen then they may not be a parent foreign key as will be derived when user identifies a node
+		if(!(Yii::app()->controller->id == 'schedule'))
+		{
+			return parent::assertFromParent();
+		}
 	}
 
 }

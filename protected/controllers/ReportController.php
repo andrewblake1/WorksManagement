@@ -37,12 +37,17 @@ class ReportController extends Controller
 		// get this report model
 		self::$_model = Report::model()->findByPk($_GET['id']);
 
-		// NB: most effecicient to ask the datbase directly if this report valid for this user
-		// check if user belongs to a role that has access to this report
-		$sql = 'SELECT COUNT(*) FROM `report_to_AuthItem` JOIN `AuthAssignment` WHERE `userid` = :userid';
-		$command = Yii::app()->db->createCommand($sql);
-		$command->bindParam(":userid", $userid = Yii::app()->user->id, PDO::PARAM_STR);
-		if(0 == $command->queryScalar())
+
+		// determine if this user has access to this report
+		foreach(self::$_model->reportToAuthItems as &$reportToAuthItem)
+		{
+			if(Yii::app()->user->checkAccess($reportToAuthItem->AuthItem_name))
+			{
+				$hasAccess = true;
+			}
+		}
+
+		if(empty($hasAccess))
 		{
 			throw new CHttpException(403,'You do not have permission to view this report.');
 		}
@@ -56,6 +61,11 @@ class ReportController extends Controller
 		}
 
 		// get the primary key if any in play in this context
+		// if pk passed
+		if(!empty($_GET['pk']))
+		{
+			$pk = $_GET['pk'];
+		}
 		if(isset($_SESSION[$_modelName]))
 		{
 			$pk = $_SESSION[$_modelName]['value'];
@@ -145,8 +155,29 @@ class ReportController extends Controller
 			if($subReportModel->format == SubReport::subReportFormatPaged)
 			{
 				$options['pagination'] = array('pageSize'=>10);
+				// Create filter model and set properties
+				$filtersForm=new FiltersForm;
+				if(isset($_GET['FiltersForm']))
+				{
+					$filtersForm->filters = $_GET['FiltersForm'];
+					foreach($attributes as &$attribute)
+					{
+						if(!empty($_GET['FiltersForm'][$attribute]))
+						{
+							$where[$attribute] = " `$attribute` LIKE :$attribute ";
+							$options['params'][":$attribute"] = "%{$_GET['FiltersForm'][$attribute]}%";
+						}
+					}
+					$where = implode(' AND ', $where);
+					$sql = "SELECT * FROM ($sql) t WHERE $where";
+				}
 			}
-			
+			else
+			{
+				// NB: pagination needs to be set to false in order to stop paginating
+				$options['pagination'] =  false;
+			}
+
 			if(!empty($params))
 			{
 				$options['params'] = $params;
@@ -155,14 +186,36 @@ class ReportController extends Controller
 			// the data provider
 			$dataProvider=new CSqlDataProvider($sql, $options);
 
+			
+			// if exporting to xl
+			if(isset($_GET['action']) && $_GET['action'] == 'download')
+			{
+				// Export it
+				Yii::app()->controller->toExcel($dataProvider, $attributes, null, array(), 'CSV'/*'Excel5'*/);
+			}
+	// TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
+	// TODO excel2007 best format however mixed results getting succesfull creations with this = varies across servers likely php_zip issue	thnk
+	// it works on windows machine however not mac nor linux for me so far.
+			
 			// get the grid
 			ob_start();
+
+			// export button
+			echo '<h2>';
+				Yii::app()->controller->widget('bootstrap.widgets.TbButton', array(
+					'label'=>'Download Excel',
+					'url'=>Yii::app()->controller->createUrl("show", $_GET + array('action'=>'download')),
+					'type'=>'primary',
+					'size'=>'small', // '', 'large', 'small' or 'mini'
+				));
+			echo '</h2>';
+
 			// display the grid
 			Yii::app()->controller->widget('bootstrap.widgets.TbGridView',array(
 				'id'=>'report-grid',
 				'type'=>'striped',
 				'dataProvider'=>$dataProvider,
-//				'filter'=>$this->model,
+//				'filter'=>$filtersForm,
 				'columns'=>$attributes,
 			));
 			$html = ob_get_clean();
@@ -198,28 +251,31 @@ class ReportController extends Controller
 		));
 	}
 
-	protected function createRender($_model, $_models)
+	protected function createRender($model, $models, $modalId)
 	{
-		$_modelName = $this->modelName;
+		// don't do this in admin view - this is special case where we don't render as modal in admin view
+		if($this->action->Id == 'create')
+		{
+			$modelName = $this->modelName;
 
-		// set heading
-		if(!$this->heading)
-		{	
-			$this->heading .= $_modelName::getNiceName() . 's';
+			// set heading
+			if(!$this->heading)
+			{	
+				$this->heading .= $modelName::getNiceName() . 's';
+			}
+
+			// set breadcrumbs
+			$this->breadcrumbs = $this->getBreadCrumbTrail('Create');
+
+			// set up tab menu if required - using setter
+			$this->_tabs[0]['label'] = 'Create';
+			$this->_tabs[0]['active'] = true;
+
+			echo $this->render('_form',array(
+				'model'=>$model,
+				'models'=>$models,
+				));
 		}
-
-		// set breadcrumbs
-		$this->breadcrumbs = $this->getBreadCrumbTrail('Create');
-
-		// set up tab menu if required - using setter
-		$this->_tabs[0]['label'] = 'Create';
-		$this->_tabs[0]['active'] = true;
-
-		// NB: using update widget as clear of modal stuff intented on create in admin view
-		$this->widget('UpdateViewWidget', array(
-			'model'=>$_model,
-			'models'=>$_models,
-		));
 	}
 
 	protected function navbar()
@@ -239,7 +295,7 @@ class ReportController extends Controller
 		// hide the reports menu when tinymce is present as drop down menu not working - javascript or css conflict
 		if($this->action->Id == 'update')
 		{
-			return;
+			return null;
 		}
 		
 		return parent::getReportsMenu();
