@@ -31,6 +31,7 @@ class Duty extends ActiveRecord
 	public $searchInCharge;
 	public $generic_id;
 	public $updated;
+	public $due;
 	
 	/**
 	 * @return string the associated database table name
@@ -54,7 +55,7 @@ class Duty extends ActiveRecord
 			array('updated, generic_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchInCharge, searchTask, description, updated, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, due, searchInCharge, searchTask, description, updated, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -106,6 +107,7 @@ class Duty extends ActiveRecord
 		$criteria->select=array(
 			't.task_type_to_duty_type_id',
 			'dutyType.description AS description',
+			'(SELECT `date` FROM working_days WHERE id = (SELECT id - lead_in_days FROM working_days WHERE `date` <= task.scheduled ORDER BY id DESC LIMIT 1)) as due',
 			"COALESCE(
 				IF(LENGTH(CONCAT_WS('$delimiter',
 					user.first_name,
@@ -160,6 +162,7 @@ class Duty extends ActiveRecord
 		$criteria->with = array(
 			'dutyData',
 			'dutyData.schedule.inCharge',
+			'task',
 			'task.project.projectToProjectTypeToAuthItems.authAssignment',
 			'task.project.projectToProjectTypeToAuthItems.authAssignment.user',
 			'taskTypeToDutyType.dutyType',
@@ -172,6 +175,7 @@ class Duty extends ActiveRecord
 	{
         $columns[] = static::linkColumn('description', 'TaskTypeToDutyType', 'task_type_to_duty_type_id');
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'dutyData->schedule->in_charge_id');
+		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
 		
 		return $columns;
@@ -188,7 +192,7 @@ class Duty extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTask', 'description', 'updated');
+		return array('searchTask', 'description', 'updated', 'searchInCharge', 'due');
 	}
 
 	public function beforeValidate()

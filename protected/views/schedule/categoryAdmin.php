@@ -226,7 +226,7 @@ echo '
 											},
 											success: function(data){
 												// change the contents
-												$("#myModal" + targetName + " form").replaceWith(data);
+												$("#form-create" + targetName).replaceWith(data);
 												// set the parent id in the hidden modal
 				//								$('[name="parent_id"]').val(obj.attr("id").replace("node_",""));
 												// display the modal

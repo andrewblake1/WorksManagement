@@ -30,7 +30,8 @@ class CreateViewWidget extends CWidget
 			$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>$this->modalId));
 //		}
 
-		echo '<div id="form-create" class="modal-body">';
+		$modelName = get_class($this->model);
+		echo "<div id=\"form-create$modelName\" class=\"modal-body\">";
 		echo $this->_controller->renderPartial('//'.$this->_controller->modelName.'/_form',array(
 			'model'=>$this->model,
 			'models'=>$this->models,

@@ -85,9 +85,18 @@ abstract class ActiveRecord extends CActiveRecord
 	 */
 	static function getParentForeignKey($referencesModel, $foreignKeys=array())
 	{
-		return isset($foreignKeys[$referencesModel])
-			? $foreignKeys[$referencesModel]
-			: Yii::app()->functions->uncamelize($referencesModel) . '_id';
+		if(isset($foreignKeys[$referencesModel]))
+		{
+			$parentForeignKey = $foreignKeys[$referencesModel];
+		}
+		else
+		{
+			if($parentForeignKey = Yii::app()->functions->uncamelize($referencesModel))
+			{
+				$parentForeignKey .= '_id';
+			}
+		}
+		return $parentForeignKey;
 	}
 	
 	/**
