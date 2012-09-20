@@ -4,9 +4,22 @@
 //date_default_timezone_set('Pacific/Auckland');
 
 require_once(dirname(__FILE__) . '/protected/extensions/yii-environment/Environment.php');
-$env = new Environment();
-//$env = new Environment('PRODUCTION'); //override mode
-//$env = new Environment('DEVELOPMENT'); //override mode
+
+// set the enviroment based on server name
+//$env = new Environment();
+switch($_SERVER['SERVER_NAME'])
+{
+	case 'localhost' :
+	case 'test.wcewm.co.nz' :
+		$env = new Environment('DEVELOPMENT'); //override mode
+		break;
+	case 'wcewm.co.nz' :
+		$env = new Environment('PRODUCTION'); //override mode
+		break;
+	default :
+		throw new Exception("unknown server {$_SERVER['SERVER_NAME']}"); 
+}
+//$env = new Environment('TEST'); //override mode
 
 // set debug and trace level
 defined('YII_DEBUG') or define('YII_DEBUG', $env->yiiDebug);

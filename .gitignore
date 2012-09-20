@@ -1,2 +1,3 @@
 !/protected/config/mode_test.php
 !/protected/config/mode_staging.php
+/protected/config/local.php

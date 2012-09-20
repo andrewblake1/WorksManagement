@@ -11,7 +11,13 @@ return array(
 	//'yiiPath' => dirname(__FILE__) . '/../../../yii/framework/yii.php',
 	//'yiicPath' => dirname(__FILE__) . '/../../../yii/framework/yiic.php',
 	//'yiitPath' => dirname(__FILE__) . '/../../../yii/framework/yiit.php',
-
+	// Set yiiPath (relative to Environment.php)
+// for test.wce.co.nz
+/*
+	'yiiPath' => dirname(__FILE__) . '/../../../../../../yii/yii/framework/yii.php',
+	'yiicPath' => dirname(__FILE__) . '/../../../../../../yii/yii/framework/yiic.php',
+	'yiitPath' => dirname(__FILE__) . '/../../../../../../yii/yii/framework/yiit.php',
+*/
 	// Set YII_DEBUG and YII_TRACE_LEVEL flags
 	//'yiiDebug' => true,
 	//'yiiTraceLevel' => 3,
@@ -28,12 +34,14 @@ return array(
 
 		// Application components
 		'components' => array(
-
-			// Database
-			/*'db' => array(
-				'connectionString' => 'mysql:host=LOCAL_HOST;dbname=LOCAL_DB',
-				'username' => 'USERNAME',
-				'password' => 'PASSWORD',
+// for test.wce.co.nz
+/*			// Database
+			'db'=>array(
+				'connectionString' => 'mysql:host=localhost;dbname=worksmanagement_melbourne_test',
+				'emulatePrepare' => true,
+				'username' => 'root',
+				'password' => '',
+				'charset' => 'utf8',
 			),*/
 
 		),
