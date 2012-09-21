@@ -91,7 +91,10 @@ class WMTbActiveForm extends TbActiveForm
 		// Only do modal if in admin view
 		if(/*$this->_action == 'Create' && */Yii::app()->controller->action->id == 'admin' || Yii::app()->controller->action->id == 'returnForm')
 		{
-			$this->action = $this->controller->createUrl("$modelName/{$this->_action}");	// NB: this needed here but not for update to set the form action from admin as modal
+			if($this->_action != 'Update')
+			{
+				$this->action = $this->controller->createUrl("$modelName/{$this->_action}");	// NB: this needed here but not for update to set the form action from admin as modal
+			}
 			echo '<div class="modal-header">';
 			echo '<a class="close" data-dismiss="modal">&times;</a>';
 			echo "<h3>{$modelName::getNiceName()}</h3>";
@@ -129,6 +132,7 @@ class WMTbActiveForm extends TbActiveForm
 		// if there is a parent foreing key i.e. if there is a level above this in our navigation structure
 		if(!empty($this->parent_fk))
 		{
+$t = $this->model->attributes;
 			// add hidden field so gets carried into the model on submit
 			$this->hiddenField($this->parent_fk);
 		}

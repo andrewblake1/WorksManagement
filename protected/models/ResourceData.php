@@ -115,7 +115,7 @@ class ResourceData extends ActiveRecord
 		$criteria->compare('start',$this->start,true);
 		$criteria->compare('staff_id',$this->staff_id);
 
-		return new CActiveDataProvider($this, array(
+		return new ActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}

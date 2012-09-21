@@ -315,7 +315,7 @@ abstract class ActiveRecord extends CActiveRecord
 		// add all other attributes
 		$sort[] = '*';
 		
-		$dataProvider = new CActiveDataProvider($this, array(
+		$dataProvider = new ActiveDataProvider($this, array(
 			'criteria'=>self::getSearchCriteria($this),
 			'sort'=>array('attributes'=>$sort),
 		));

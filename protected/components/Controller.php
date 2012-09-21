@@ -429,7 +429,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// set up tab menu if required - using setter
 		$this->setTabs($model, false);
 
-		$this->render(strtolower($this->_adminView), array(
+		$this->render(lcfirst($this->_adminView), array(
 			'model'=>$model,
 		));
 	}
@@ -564,14 +564,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	 */
 	protected function createRedirect($model)
 	{
-		if(is_array($_SESSION['actionAdminGet'][$this->modelName]))
-		{
-			$this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
-		}
-		else
-		{
-			$this->redirect(array('admin'));
-		}
+		$this->cuRedirect($model);
 	}
 	
 	/**
@@ -676,16 +669,25 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	 */
 	protected function updateRedirect($model)
 	{
-		// may pass a controller name e.g. for task, crew, day from Scedule admin view
-		$controller = empty($_POST['controller']) ? '' : "{$_POST['controller']}/";
-
-		if(is_array($_SESSION['actionAdminGet'][$this->modelName]))
+		$this->cuRedirect($model);
+	}
+	
+	private function cuRedirect($model)
+	{
+		// if posted a controller then this is where we should return to
+// TODO: identical to create redirect - put into private
+		if(!empty($_POST['controller']))
 		{
-			$this->redirect(array("{$controller}admin", $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
+			$modelName = $_POST['controller'];
+			$this->redirect(array("$modelName/admin", $modelName=>$_SESSION['actionAdminGet'][$modelName]));
+		}
+		elseif(is_array($_SESSION['actionAdminGet'][$this->modelName]))
+		{
+			$this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
 		}
 		else
 		{
-			$this->redirect(array("{$controller}admin"));
+			$this->redirect(array('admin'));
 		}
 	}
 	
@@ -1113,13 +1115,16 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 
 	protected function exportButton()
 	{
-		echo ' ';
-		$this->widget('bootstrap.widgets.TbButton', array(
-			'label'=>'Download Excel',
-			'url'=>$this->createUrl("{$this->modelName}/admin", array('action'=>'download')),
-			'type'=>'primary',
-			'size'=>'small', // '', 'large', 'small' or 'mini'
-		));
+		if(Yii::app()->params['showDownloadButton'])
+		{
+			echo ' ';
+			$this->widget('bootstrap.widgets.TbButton', array(
+				'label'=>'Download Excel',
+				'url'=>$this->createUrl("{$this->modelName}/admin", array('action'=>'download')),
+				'type'=>'primary',
+				'size'=>'small', // '', 'large', 'small' or 'mini'
+			));
+		}
 	}
 
 	protected function newButton()

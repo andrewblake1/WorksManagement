@@ -173,7 +173,7 @@ class CategoryController extends Controller
 		}
 
 		// set the url for the form so that doesn't try to come back here when update is clicked
-		$this->renderPartial('//'.strtolower($modelName).'/_form',
+		$this->renderPartial('//'.lcfirst($modelName).'/_form',
 			array(
 				'model'=>$model,
 				'parent_id'=>!empty($_POST['parent_id'])

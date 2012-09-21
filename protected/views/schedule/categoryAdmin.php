@@ -156,9 +156,9 @@ echo '
 										},
 										success: function(data){
 											// change the contents
-											$("#myModal" + modelName + " form").replaceWith(data);
-											// set the parent id in the hidden modal
-			//								$('[name="parent_id"]').val(obj.attr("id").replace("node_",""));
+											$("#form-create" + modelName).html(data);
+//											$("#myModal" + modelName + " form").replaceWith(data);
+											//$("#form-create" + targetName).replaceWith(data);
 											// display the modal
 											$("#myModal" + modelName).modal('show');
 
@@ -226,9 +226,7 @@ echo '
 											},
 											success: function(data){
 												// change the contents
-												$("#form-create" + targetName).replaceWith(data);
-												// set the parent id in the hidden modal
-				//								$('[name="parent_id"]').val(obj.attr("id").replace("node_",""));
+												$("#form-create" + targetName).html(data);
 												// display the modal
 												$("#myModal" + targetName).modal('show');
 

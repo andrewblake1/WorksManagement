@@ -32,7 +32,7 @@ class CreateViewWidget extends CWidget
 
 		$modelName = get_class($this->model);
 		echo "<div id=\"form-create$modelName\" class=\"modal-body\">";
-		echo $this->_controller->renderPartial('//'.strtolower($this->_controller->modelName).'/_form',array(
+		echo $this->_controller->renderPartial('//'.lcfirst($this->_controller->modelName).'/_form',array(
 			'model'=>$this->model,
 			'models'=>$this->models,
 			'parent_fk'=>$this->parent_fk,
