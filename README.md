@@ -3,9 +3,12 @@ WorksManagement
 
 Project/Works management system for Northpower's Westcoast Energy
 
-Server installation (apache):
-1./
-Ensure mod_rewrite is on in virtual host
+check apache error log if not working for unknown reason. Might be a few instruction missing so need to fix in next install
+
+
+#1./ Server installation (apache):
+#Ensure mod_rewrite is on in virtual host
+a2enmod rewrite
 
 Sample virtual host:
 <VirtualHost *:80>
@@ -22,9 +25,9 @@ Sample virtual host:
 
 </VirtualHost>
 
-restart apache once all changes made
+#restart apache once all changes made
 
-2./ Debian install after following setup including extra stuff on phpmyadmin from http://www.howtoforge.com/installing-apache2-with-php5-and-mysql-support-on-debian-lenny-lamp
+#2./ Debian install after following setup including extra stuff on phpmyadmin from http://www.howtoforge.com/installing-apache2-with-php5-and-mysql-support-on-debian-lenny-lamp
 apt-get update
 apt-get install git-core
 git config --global user.name "Andrew Blake"
@@ -53,7 +56,7 @@ find / -name my.cnf
 #edit my.cnf to allow access from any ip??
 /etc/init.d/mysql restart
 
-4./ Installing application
+#4./ Installing application
 # need to install as user www-data which means www-data needs access to the .ssh folder
 # www-data needs to update into runtime directory and update assets hence doesn't work if installed as root
 # easiest just to chown -R www-data . after pulled down from github as by default www-data has no home directory to store ssh-keys so would need
@@ -70,3 +73,5 @@ cp template.htaccess .htaccess
 cd protected/config
 cp local_template.php local.php
 # set database settings here
+
+#5./ update index.php with correct domains/subdomains in the switch statement that determines the type of environment to run i.e. developmen or production

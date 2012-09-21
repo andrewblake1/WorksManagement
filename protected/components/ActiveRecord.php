@@ -578,7 +578,7 @@ if(count($m = $this->getErrors()))
 		$columns = $this->tableSchema->columns;
 
 		// add any desired formatting i.e. date to unformatted basic items
-		foreach($this->attributes as $attributeName => &$value)
+		foreach($this->attributes as $attributeName => $value)
 		{
 			// see if date column
 			if($columns[$attributeName]->dbType == 'date')

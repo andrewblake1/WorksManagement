@@ -50,7 +50,7 @@ class Functions extends CApplicationComponent
 		return $string; 
 	}
 
-	public function multidimensional_arraySearch(&$array, &$search, $level = 0)
+	public function multidimensional_arraySearch($array, &$search, $level = 0)
 	{
 		static $array_keys = array();
 		

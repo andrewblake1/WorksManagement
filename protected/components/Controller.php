@@ -429,7 +429,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// set up tab menu if required - using setter
 		$this->setTabs($model, false);
 
-		$this->render($this->_adminView, array(
+		$this->render(strtolower($this->_adminView), array(
 			'model'=>$model,
 		));
 	}
@@ -581,6 +581,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	public function actionCreate($modalId = 'myModal')
 	{
 		$model=new $this->modelName;
+		$models=array();
 
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating =$this->performAjaxValidation($model);
@@ -637,11 +638,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			$model->attributes=$_GET[$this->modelName];
 		}
 
-		// add primary key into session so it can be retrieved for future use in breadcrumbs
+/*		// add primary key into session so it can be retrieved for future use in breadcrumbs
 		$_SESSION[$this->modelName] = array(
 			'name'=>$model->tableSchema->primaryKey,
 			'value'=>$id,
-		);
+		);*/
 		
 		$this->createRender($model, $models, $modalId);
 	}

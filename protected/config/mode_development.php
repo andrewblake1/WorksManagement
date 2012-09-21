@@ -19,10 +19,10 @@ return array(
 	//'yiitPath' => dirname(__FILE__) . '/../../../yii/framework/yiit.php',
 
 	// Set YII_DEBUG and YII_TRACE_LEVEL flags
-//	'yiiDebug' => true,
-	'yiiDebug' => false,
-//	'yiiTraceLevel' => 3,
-	'yiiTraceLevel' => 0,
+	'yiiDebug' => true,
+//	'yiiDebug' => false,
+	'yiiTraceLevel' => 3,
+//	'yiiTraceLevel' => 0,
 	
 	// Static function Yii::setPathOfAlias()
 	'yiiSetPathOfAlias' => array(
@@ -64,7 +64,13 @@ return array(
 			'log' => array(
 				'class' => 'CLogRouter',
 				'routes' => array(
-					// Save log messages on file
+					array(
+						'class'=>'CWebLogRoute',
+						'levels'=>'trace',
+						'categories'=>'vardump',
+						'showInFireBug'=>true
+					),
+/*					// Save log messages on file
 					array(
 						'class' => 'CFileLogRoute',
 						'levels' => 'error, warning, trace, info',
@@ -75,7 +81,7 @@ return array(
 						//'categories' => 'system.db.CDbCommand', //queries
 						'levels' => 'error, warning, trace, info',
 						//'showInFireBug' => true,
-					),
+					),*/
 				),
 			),
 

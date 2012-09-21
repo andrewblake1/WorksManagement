@@ -1,7 +1,9 @@
 <?php
-//phpinfo();exit;
-// set environment
-//date_default_timezone_set('Pacific/Auckland');
+// logging variables to firebug
+// http://www.yiiframework.com/wiki/114/how-to-log-and-debug-variables-using-cweblogroute/
+function fb($what){
+  echo Yii::trace(CVarDumper::dumpAsString($what),'vardump');
+}
 
 require_once(dirname(__FILE__) . '/protected/extensions/yii-environment/Environment.php');
 
@@ -10,10 +12,12 @@ require_once(dirname(__FILE__) . '/protected/extensions/yii-environment/Environm
 switch($_SERVER['SERVER_NAME'])
 {
 	case 'localhost' :
-	case 'test.wcewm.co.nz' :
+	case 'test.melbourne.wcewm.co.nz' :
+	case 'test.perth.wcewm.co.nz' :
 		$env = new Environment('DEVELOPMENT'); //override mode
 		break;
-	case 'wcewm.co.nz' :
+	case 'melbourne.wcewm.co.nz' :
+	case 'perth.wcewm.co.nz' :
 		$env = new Environment('PRODUCTION'); //override mode
 		break;
 	default :
