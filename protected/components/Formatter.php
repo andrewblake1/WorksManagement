@@ -3,7 +3,8 @@
 class Formatter extends CFormatter
 {
 	public function formatDate($value) {
-		return $value === null
+
+		return empty($value) 
 			? ''
 			: date('d M, Y', strtotime($value));
 	}

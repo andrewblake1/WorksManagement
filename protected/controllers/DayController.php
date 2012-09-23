@@ -14,16 +14,16 @@ class DayController extends Controller
 
 	static function createSaveStatic($model, &$models=array())
 	{
-		// need to insert a row into the schedule nested set model so that the id can be used here
+		// need to insert a row into the planning nested set model so that the id can be used here
 		
 		// create a root node
 		// NB: the project description is actually the name field in the nested set model
-		$schedule = new Schedule;
-		$schedule->name = $model->name;
-		$schedule->in_charge_id = empty($_POST['Schedule']['in_charge_id']) ? null : $_POST['Schedule']['in_charge_id'];
-		if($saved = $schedule->appendTo(Schedule::model()->findByPk($model->project_id)))
+		$planning = new Planning;
+		$planning->name = $model->name;
+		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
+		if($saved = $planning->appendTo(Planning::model()->findByPk($model->project_id)))
 		{
-			$model->id = $schedule->id;
+			$model->id = $planning->id;
 			$saved = parent::createSave($model, $models);
 
 			// add a Crew
@@ -33,7 +33,7 @@ class DayController extends Controller
 		}
 
 		// put the model into the models array used for showing all errors
-		$models[] = $schedule;
+		$models[] = $planning;
 		
 		return $saved;
 	}
@@ -43,14 +43,14 @@ class DayController extends Controller
 	 */
 	protected function updateSave($model,  &$models=array())
 	{
-		// get the schedule model
-		$schedule = Schedule::model()->findByPk($model->id);
-		$schedule->name = $model->name;
-		$schedule->in_charge_id = empty($_POST['Schedule']['in_charge_id']) ? null : $_POST['Schedule']['in_charge_id'];
+		// get the planning model
+		$planning = Planning::model()->findByPk($model->id);
+		$planning->name = $model->name;
+		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
 		// atempt save
-		$saved = $schedule->saveNode(false);
+		$saved = $planning->saveNode(false);
 		// put the model into the models array used for showing all errors
-		$models[] = $schedule;
+		$models[] = $planning;
 		
 		return $saved & parent::updateSave($model, $models);
 	}

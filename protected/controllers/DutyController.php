@@ -35,8 +35,8 @@ class DutyController extends Controller
 		if(!$assignedTo = $model->task->project->projectToProjectTypeToAuthItems->authAssignment->userid)
 		{
 			// get who is responsible at the target accummulating level for this duty. Because DutyData is at that desired level it links
-			// to correct Schedule to get the in_charge
-			$assignedTo = $model->dutyData->schedule->in_charge_id;
+			// to correct Planning to get the in_charge
+			$assignedTo = $model->dutyData->planning->in_charge_id;
 		}
 
 		// system admin
@@ -86,36 +86,36 @@ class DutyController extends Controller
 	{
 		$saved = true;
 
-		// ensure existance of a related DutyData. First get the desired schedule id which is the desired ancestor of task
+		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
-		if(($level = $model->taskTypeToDutyType->dutyType->level) == Schedule::scheduleLevelTaskInt)
+		if(($level = $model->taskTypeToDutyType->dutyType->level) == Planning::planningLevelTaskInt)
 		{
-			$schedule_id = $model->task_id;
+			$planning_id = $model->task_id;
 		}
 		else
 		{
 			// get the desired ansestor
-			$schedule = Schedule::model()->findByPk($model->task_id);
+			$planning = Planning::model()->findByPk($model->task_id);
 
-			while($schedule = $schedule->parent)
+			while($planning = $planning->parent)
 			{
-				if($schedule->level == $level)
+				if($planning->level == $level)
 				{
 					break;
 				}
 			}
-			if(empty($schedule))
+			if(empty($planning))
 			{
 				throw new Exception();
 			}
 
-			$schedule_id = $schedule->id;
+			$planning_id = $planning->id;
 		}
 		// try insert and catch and dump any error - will ensure existence
 		try
 		{
 			$dutyData = new DutyData;
-			$dutyData->schedule_id = $schedule_id;
+			$dutyData->planning_id = $planning_id;
 			$dutyData->duty_type_id = $model->duty_type_id;
 			$dutyData->level = $level;
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
@@ -128,7 +128,7 @@ class DutyController extends Controller
 		}
 		// retrieve the DutyData
 		$dutyData = DutyData::model()->findByAttributes(array(
-			'schedule_id'=>$schedule_id,
+			'planning_id'=>$planning_id,
 			'duty_type_id'=>$model->duty_type_id,
 		));
 

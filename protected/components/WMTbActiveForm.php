@@ -12,7 +12,7 @@ class WMTbActiveForm extends TbActiveForm
 	private $controller;
 	public $parent_fk;
 	public $enableAjaxValidation=true;
-	public $htmlOptions=array('class'=>'well');
+	public $htmlOptions;
 	public $model;
 	private $_action;
 	public $models=null;
@@ -66,6 +66,11 @@ class WMTbActiveForm extends TbActiveForm
 	 */
     public function init()
     {
+		if(empty($this->htmlOptions))
+		{
+			$this->htmlOptions = array();
+		}
+		$this->htmlOptions += array('class'=>'well');
 		$this->controller = $this->getController();
 		$modelName = get_class($this->model);
 		$this->id="$modelName-form";

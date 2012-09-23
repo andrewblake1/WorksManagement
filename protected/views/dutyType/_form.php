@@ -6,7 +6,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('lead_in_days');
 
-	$form->dropDownListRow('level', Schedule::$levels);
+	$form->dropDownListRow('level', Planning::$levels);
 
 	GenericTypeController::listWidgetRow($model, $form, 'generic_type_id', array(), array(), null);
 

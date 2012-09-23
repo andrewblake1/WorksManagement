@@ -44,12 +44,11 @@
  * @property PurchaseOrder[] $purchaseOrders
  * @property Report[] $reports
  * @property ReportToAuthItem[] $reportToAuthItems
- * @property Reschedule[] $reschedules
  * @property ResourceData[] $resourceDatas
  * @property ResourceType[] $resourceTypes
  * @property Resourcecategory[] $resourcecategories
- * @property Schedule[] $schedules
- * @property Schedule[] $schedules1
+ * @property Planning[] $plannings
+ * @property Planning[] $plannings1
  * @property Staff $staff
  * @property Staff[] $staffs
  * @property Supplier[] $suppliers
@@ -130,12 +129,11 @@
 			'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrder', 'staff_id'),
 			'reports' => array(self::HAS_MANY, 'Report', 'staff_id'),
 			'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'staff_id'),
-			'reschedules' => array(self::HAS_MANY, 'Reschedule', 'staff_id'),
 			'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'staff_id'),
 			'resourceTypes' => array(self::HAS_MANY, 'ResourceType', 'staff_id'),
 			'resourcecategories' => array(self::HAS_MANY, 'Resourcecategory', 'staff_id'),
-			'schedules' => array(self::HAS_MANY, 'Schedule', 'in_charge_id'),
-			'schedules1' => array(self::HAS_MANY, 'Schedule', 'staff_id'),
+			'plannings' => array(self::HAS_MANY, 'Planning', 'in_charge_id'),
+			'plannings1' => array(self::HAS_MANY, 'Planning', 'staff_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'staffs' => array(self::HAS_MANY, 'Staff', 'staff_id'),
 			'suppliers' => array(self::HAS_MANY, 'Supplier', 'staff_id'),

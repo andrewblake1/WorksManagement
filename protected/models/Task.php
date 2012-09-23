@@ -9,7 +9,6 @@
  * @property string $project_id
  * @property integer $task_type_id
  * @property string $planned
- * @property string $scheduled
  * @property string $location
  * @property integer $preferred_mon
  * @property integer $preferred_tue
@@ -24,11 +23,10 @@
  * The followings are the available model relations:
  * @property Duty[] $duties
  * @property MaterialToTask[] $materialToTasks
- * @property Reschedule[] $reschedules
  * @property Project $project
  * @property Staff $staff
  * @property TaskType $taskType
- * @property Schedule $id0
+ * @property Planning $id0
  * @property TaskLevel $level0
  * @property Crew $crew
  * @property TaskToAssembly[] $taskToAssemblies
@@ -72,10 +70,10 @@ class Task extends ActiveRecord
 			array('project_id, task_type_id, crew_id, staff_id', 'required'),
 			array('task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
-			array('planned, preferred, scheduled, name, location', 'safe'),
+			array('planned, preferred, name, location', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, searchInCharge, searchEarliest, searchProject, searchTaskType, searchStaff, name, crew_id, planned, scheduled, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
+			array('id, level, searchInCharge, searchEarliest, searchProject, searchTaskType, searchStaff, name, crew_id, planned, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -89,11 +87,10 @@ class Task extends ActiveRecord
 		return array(
 			'duties' => array(self::HAS_MANY, 'Duty', 'task_id'),
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'task_id'),
-			'reschedules' => array(self::HAS_MANY, 'Reschedule', 'task_id'),
 			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
-			'id0' => array(self::BELONGS_TO, 'Schedule', 'id'),
+			'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
 			'level0' => array(self::BELONGS_TO, 'TaskLevel', 'level'),
 			'crew' => array(self::BELONGS_TO, 'Crew', 'crew_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
@@ -117,7 +114,6 @@ class Task extends ActiveRecord
 			'task_type_id' => 'Task type',
 			'searchTaskType' => 'Task type',
 			'planned' => 'Planned',
-			'scheduled' => 'Scheduled',
 			'name' => 'Task',
 			'location' => 'Location',
 			'searchEarliest' => 'Earliest',
@@ -146,7 +142,6 @@ class Task extends ActiveRecord
 			'id0.name AS name',
 			't.location',
 			't.planned',
-			't.scheduled',
 //			'DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest',
 			'(SELECT `date` FROM working_days WHERE id = (SELECT id + MAX( lead_in_days ) FROM working_days WHERE `date` >= t.planned LIMIT 1)) as searchEarliest',
 			't.preferred_mon',
@@ -179,7 +174,6 @@ class Task extends ActiveRecord
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('t.location',$this->location,true);
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
-		$criteria->compare('t.scheduled',Yii::app()->format->toMysqlDate($this->scheduled));
 		$criteria->compare('searchEarliest',Yii::app()->format->toMysqlDate($this->searchEarliest));
 		$criteria->compare('t.preferred_mon',Yii::app()->format->toMysqlBool($this->preferred_mon));
 		$criteria->compare('t.preferred_tue',Yii::app()->format->toMysqlBool($this->preferred_tue));
@@ -224,7 +218,6 @@ class Task extends ActiveRecord
         $columns[] = static::linkColumn('searchTaskType', 'TaskType', 'task_type_id');
 		$columns[] = 'planned';
 		$columns[] = 'searchEarliest:date';
-		$columns[] = 'scheduled';
 		$columns[] = 'preferred_mon:boolean';
 		$columns[] = 'preferred_tue:boolean';
 		$columns[] = 'preferred_wed:boolean';
@@ -256,13 +249,6 @@ class Task extends ActiveRecord
 	}
 
 	public function beforeSave() {
-
-		// ensure no tampering of scheduling if user doesn't have the rights
-		if(!Yii::app()->user->checkAccess('Schedule'))
-		{
-			// reset
-			$this->scheduled = $this->getOldAttributeValue('scheduled');
-		}
 
 		if(!empty($this->preferred))
 		{
@@ -347,7 +333,7 @@ class Task extends ActiveRecord
 	public function assertFromParent()
 	{
 		// if we are in the schdule screen then they may not be a parent foreign key as will be derived when user identifies a node
-		if(!(Yii::app()->controller->id == 'schedule'))
+		if(!(Yii::app()->controller->id == 'planning'))
 		{
 			return parent::assertFromParent();
 		}

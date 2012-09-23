@@ -107,7 +107,7 @@ class Duty extends ActiveRecord
 		$criteria->select=array(
 			't.task_type_to_duty_type_id',
 			'dutyType.description AS description',
-			'(SELECT `date` FROM working_days WHERE id = (SELECT id - lead_in_days FROM working_days WHERE `date` <= task.scheduled ORDER BY id DESC LIMIT 1)) as due',
+			'(SELECT `date` FROM working_days WHERE id = (SELECT id - lead_in_days FROM working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
 			"COALESCE(
 				IF(LENGTH(CONCAT_WS('$delimiter',
 					user.first_name,
@@ -153,16 +153,16 @@ class Duty extends ActiveRecord
 /*		if(!$assignedTo = $model->task->project->projectToProjectTypeToAuthItems->authAssignment->userid)
 		{
 			// get who is responsible at the target accummulating level for this duty. Because DutyData is at that desired level it links
-			// to correct Schedule to get the in_charge
-			$assignedTo = $model->dutyData->schedule->in_charge_id;
+			// to correct Planning to get the in_charge
+			$assignedTo = $model->dutyData->planning->in_charge_id;
 		}
 		*/
 		
 		// join
 		$criteria->with = array(
 			'dutyData',
-			'dutyData.schedule.inCharge',
-			'task',
+			'dutyData.planning.inCharge',
+			'task.crew.day',
 			'task.project.projectToProjectTypeToAuthItems.authAssignment',
 			'task.project.projectToProjectTypeToAuthItems.authAssignment.user',
 			'taskTypeToDutyType.dutyType',
@@ -174,7 +174,7 @@ class Duty extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('description', 'TaskTypeToDutyType', 'task_type_to_duty_type_id');
-        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'dutyData->schedule->in_charge_id');
+        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'dutyData->planning->in_charge_id');
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
 		

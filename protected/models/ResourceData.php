@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'resource_data':
  * @property string $id
- * @property string $schedule_id
+ * @property string $planning_id
  * @property string $level
  * @property integer $resource_type_id
  * @property integer $quantity
@@ -15,8 +15,8 @@
  *
  * The followings are the available model relations:
  * @property ResourceType $resourceType
- * @property Schedule $schedule
- * @property Schedule $level0
+ * @property Planning $planning
+ * @property Planning $level0
  * @property Staff $staff
  * @property TaskToResourceType[] $taskToResourceTypes
  * @property TaskToResourceType[] $taskToResourceTypes1
@@ -50,13 +50,13 @@ class ResourceData extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('schedule_id, level, resource_type_id, quantity, hours, staff_id', 'required'),
+			array('planning_id, level, resource_type_id, quantity, hours, staff_id', 'required'),
 			array('resource_type_id, quantity, hours, staff_id', 'numerical', 'integerOnly'=>true),
-			array('schedule_id, level', 'length', 'max'=>10),
+			array('planning_id, level', 'length', 'max'=>10),
 			array('start', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, schedule_id, level, resource_type_id, quantity, hours, start, staff_id', 'safe', 'on'=>'search'),
+			array('id, planning_id, level, resource_type_id, quantity, hours, start, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -69,8 +69,8 @@ class ResourceData extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'resourceType' => array(self::BELONGS_TO, 'ResourceType', 'resource_type_id'),
-			'schedule' => array(self::BELONGS_TO, 'Schedule', 'schedule_id'),
-			'level0' => array(self::BELONGS_TO, 'Schedule', 'level'),
+			'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
+			'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'resource_type_id'),
 			'taskToResourceTypes1' => array(self::HAS_MANY, 'TaskToResourceType', 'resource_data_id'),
@@ -85,7 +85,7 @@ class ResourceData extends ActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'schedule_id' => 'Schedule',
+			'planning_id' => 'Planning',
 			'level' => 'Level',
 			'resource_type_id' => 'Resource Type',
 			'quantity' => 'Quantity',
@@ -107,7 +107,7 @@ class ResourceData extends ActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('schedule_id',$this->schedule_id,true);
+		$criteria->compare('planning_id',$this->planning_id,true);
 		$criteria->compare('level',$this->level,true);
 		$criteria->compare('resource_type_id',$this->resource_type_id);
 		$criteria->compare('quantity',$this->quantity);

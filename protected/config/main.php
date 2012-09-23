@@ -156,7 +156,6 @@ return array(
 							'Crew'=>array(
 								'Task'=>array(
 									'Duty',
-									'Reschedule',
 		// TODO: naming orientation is inconsistent here
 									'MaterialToTask',
 									'TaskToAssembly',
@@ -168,7 +167,7 @@ return array(
 						),
 						'ProjectToProjectTypeToAuthItem',
 						'ProjectToGenericProjectType',
-						'Schedule',
+						'Planning',
 					),
 					'ProjectType'=>array(
 						'ProjectTypeToAuthItem',

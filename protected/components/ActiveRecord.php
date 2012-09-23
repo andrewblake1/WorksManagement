@@ -31,8 +31,30 @@ abstract class ActiveRecord extends CActiveRecord
 		return parent::model(get_called_class());
 	}
 
+	static public function evalDisplayAttr($model)
+	{
+		$attributes = array();
+
+		foreach(static::getDisplayAttr() as $relationAttribute)
+		{
+			eval('$value = $model->'.$relationAttribute.';');
+			if(!empty($value))
+			{
+				$attributes[] = $value;
+			}
+		}
+
+		if(!empty($attributes))
+		{
+			// get the value of that attribute
+			$attributes = implode(Yii::app()->params['delimiter']['display'], $attributes);
+		}
+		
+		return $attributes;
+	}
+
 	// get the nice name of the model
-	static public function getNiceName($primaryKey=null)
+	static public function getNiceName($primaryKey=null, $model=null)
 	{
 		
 		if(!empty(static::$niceName))
@@ -49,28 +71,24 @@ abstract class ActiveRecord extends CActiveRecord
 		// if a primary key has been given
 		if($primaryKey)
 		{
-			foreach(static::getDisplayAttr() as $relationAttribute)
+			$model = static::model()->findByPk($primaryKey);
+		}
+		
+		if(!empty($model))
+		{
+			$attributes = static::evalDisplayAttr($model);
+
+			// if the attribute is longer than 30 characters
+			if(strlen($attributes) > 20)
 			{
-				$attributes[] = '{$model->'.$relationAttribute.'}';
+				// shorten to 20 characters total
+				$attributes = substr($attributes, 0, 17) . '...';
 			}
 
-			if(isset($attributes))
+			// make this our nice name - if it isn't empty
+			if($attributes)
 			{
-				// get the value of that attribute
-				$model = static::model()->findByPk($primaryKey);
-				$attributes = implode(Yii::app()->params['delimiter']['display'], $attributes);
-				eval($t ='$value = "'.$attributes.'";');
-				// if the attribute is longer than 30 characters
-				if(strlen($value) > 20)
-				{
-					// shorten to 20 characters total
-					$value = substr($value, 0, 17) . '...';
-				}
-				// make this our nice name - if it isn't empty
-				if($value)
-				{
-					$niceName = $value;
-				}
+				$niceName = $attributes;
 			}
 		}
 		

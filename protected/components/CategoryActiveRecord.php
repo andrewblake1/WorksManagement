@@ -53,7 +53,7 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 	}
 
 	public function behaviors() {
-		return array(
+		return parent::behaviors() + array(
 			'NestedSetBehavior' => array(
 				'class' => 'ext.nestedBehavior.NestedSetBehavior',
 				'leftAttribute' => 'lft',

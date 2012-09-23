@@ -266,10 +266,10 @@ EOD;
 			 $this->_authManager->createOperation('PurchaseOrderRead', 'PurchaseOrder read');
 			 $task->addChild('PurchaseOrderRead');
 
-			 $task=$this->_authManager->createTask('Schedule', 'Schedule task');
-			 $projectManagerRole->addChild('Schedule');
-			 $this->_authManager->createOperation('ScheduleRead', 'Schedule read');
-			 $task->addChild('ScheduleRead');
+			 $task=$this->_authManager->createTask('Planning', 'Planning task');
+			 $projectManagerRole->addChild('Planning');
+			 $this->_authManager->createOperation('PlanningRead', 'Planning read');
+			 $task->addChild('PlanningRead');
 
 			 $task=$this->_authManager->createTask('Task', 'Task task');
 			 $projectManagerRole->addChild('Task');
@@ -291,23 +291,15 @@ EOD;
 			 $this->_authManager->createOperation('TaskToResourceTypeRead', 'TaskToResourceType read');
 			 $task->addChild('TaskToResourceTypeRead');
 
-			 // SCHEDULE SHOULD BE AVAILABLE TO ALL WITH PROJECT READ
-			 $projectReadTask=$this->_authManager->getAuthItem('ProjectRead');
-			 $projectReadTask->addChild('Schedule');
-			 
 			 // SCHEDULER
 			 // NB: this role is hard coded into the task _form view
 			 $schedulerRole=$this->_authManager->createRole('scheduler', 'Scheduler');
 			 // create tasks
-			 $task=$this->_authManager->createTask('Reschedule', 'Reschedule task');
-			 $schedulerRole->addChild('Reschedule');
-			 $this->_authManager->createOperation('RescheduleRead', 'Reschedule read');
-			 $task->addChild('RescheduleRead');
 			 $schedulerRole->addChild('ProjectRead');
+			 $schedulerRole->addChild('ClientRead');
 
 			 // DEFAULT
-			 $defaultRole=$this->_authManager->createRole('default', 'Default',
-					'return !Yii::app()->user->isGuest;');
+			 $defaultRole=$this->_authManager->createRole('default', 'Default', 'return !Yii::app()->user->isGuest;');
 			 // create task to allow update access if user is related to this task - this will use checkAccess in update action
 			 $this->_authManager->createOperation('DutyUpdate', 'Duty update', 'return $params["assignedTo"] == Yii::app()->user->id;');
 			 // attach this to the Duty task so that higher users don't get denied when checking this in Duty update action
@@ -322,13 +314,15 @@ EOD;
 			 $defaultRole->addChild('CrewRead');
 			 $defaultRole->addChild('DayRead');
 			 $defaultRole->addChild('ProjectRead');
+			 $defaultRole->addChild('ClientRead');
+			 $defaultRole->addChild('Planning');
 			 
 			 // Grant project manager project read
 			 $projectManagerRole->addChild('ClientRead');
 			 
 			 // create hierachy amongst roles
 			 $systemAdminRole->addChild('project manager');
-			 $projectManagerRole->addChild('ScheduleRead');
+			 $systemAdminRole->addChild('scheduler');
 
 			 // FIELD MANAGER
 			 $fieldManagerRole=$this->_authManager->createRole('field manager', 'Field manager');
@@ -348,6 +342,7 @@ EOD;
 			 $offieAdministratorRole->addChild('CrewRead');
 			 $offieAdministratorRole->addChild('DayRead');
 			 $offieAdministratorRole->addChild('ProjectRead');
+			 $offieAdministratorRole->addChild('ClientRead');
 
 			 // OUTAGE PLANNER
 			 $outagePlannerRole=$this->_authManager->createRole('outage planner', 'Outage planner');
@@ -355,6 +350,8 @@ EOD;
 			 $outagePlannerRole->addChild('CrewRead');
 			 $outagePlannerRole->addChild('DayRead');
 			 $outagePlannerRole->addChild('ProjectRead');
+			 $outagePlannerRole->addChild('ClientRead');
+			 $outagePlannerRole->addChild('Planning');
 
 			 // FOREMAN
 			 $foremanRole=$this->_authManager->createRole('foreman', 'Foreman');
@@ -362,6 +359,7 @@ EOD;
 			 $foremanRole->addChild('CrewRead');
 			 $foremanRole->addChild('DayRead');
 			 $foremanRole->addChild('ProjectRead');
+			 $foremanRole->addChild('ClientRead');
 			 $foremanRole->addChild('MaterialRead');
 			 $foremanRole->addChild('AssemblyRead');
 			 $foremanRole->addChild('PurchaseOrderRead');
@@ -372,6 +370,7 @@ EOD;
 			 $storemanRole->addChild('CrewRead');
 			 $storemanRole->addChild('DayRead');
 			 $storemanRole->addChild('ProjectRead');
+			 $storemanRole->addChild('ClientRead');
 			 $storemanRole->addChild('Material');
 			 $storemanRole->addChild('Assembly');
 			 $storemanRole->addChild('PurchaseOrderRead');

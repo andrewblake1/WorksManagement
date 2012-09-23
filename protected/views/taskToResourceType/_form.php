@@ -10,7 +10,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('start');
 
-	$form->dropDownListRow('level', Schedule::$levels());
+	$form->dropDownListRow('level', Planning::$levels());
 
 $this->endWidget();
 

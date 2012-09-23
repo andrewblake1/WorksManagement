@@ -20,14 +20,11 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'action' => $a
 	// only allow setting or update of in_charge_id if user has InCharge priveledge
 	if(Yii::app()->user->checkAccess('scheduler'))
 	{
-		StaffController::listWidgetRow($model->id0 ? $model->id0 : new Schedule, $form, 'in_charge_id', array(), array(), 'In charge');
+		StaffController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
 	}
 
 
 	$form->textFieldRow('planned');
-
-	// NB: show as read only unless Schedule rights
-	$form->textFieldRow('scheduled', Yii::app()->user->checkAccess('Schedule') ? array() : array('disabled'=>'disabled'));
 
 //	$form->textFieldRow('earliest')				;
 

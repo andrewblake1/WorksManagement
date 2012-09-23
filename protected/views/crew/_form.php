@@ -1,14 +1,11 @@
 <?php
 
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'action'=>$action, 'parent_fk'=>$parent_fk, 'parent_fk'=>$parent_fk));
+// only editable by scheduler
+$htmlOptions = Yii::app()->user->checkAccess('scheduler') ? array('readonly'=>'readonly') : array();
 
-	// only allow setting or update of in_charge_id if user has InCharge priveledge
-	if(Yii::app()->user->checkAccess('scheduler'))
-	{
-		$form->textFieldRow('name');
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'action'=>$action, 'parent_fk'=>$parent_fk, 'parent_fk'=>$parent_fk, 'htmlOptions'=>$htmlOptions));
 
-		StaffController::listWidgetRow($model->id0 ? $model->id0 : new Schedule, $form, 'in_charge_id', array(), array(), 'In charge');
-	}
+	StaffController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
 
 $this->endWidget();
 

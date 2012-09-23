@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the Nested Set  model class for table "schedule".
+ * This is the Nested Set  model class for table "planning".
  *
- * The followings are the available columns in table 'schedule':
+ * The followings are the available columns in table 'planning':
  * @property string $id
  * @property string $root
  * @property string $lft
@@ -24,31 +24,31 @@
  * @property Staff $staff
  * @property Task $task
  */
-class Schedule extends CategoryActiveRecord {
+class Planning extends CategoryActiveRecord {
 	public $levelName;
 	
 	/**
 	 * Data types. These are the emum values set by the DataType custom type within 
 	 * the database
 	 */
-	const scheduleLevelProject = 'Project';
-	const scheduleLevelTask = 'Task';
-	const scheduleLevelDay = 'Day';
-	const scheduleLevelCrew = 'Crew';
+	const planningLevelProject = 'Project';
+	const planningLevelTask = 'Task';
+	const planningLevelDay = 'Day';
+	const planningLevelCrew = 'Crew';
 
-	const scheduleLevelProjectInt = 1;
-	const scheduleLevelDayInt = 2;
-	const scheduleLevelCrewInt = 3;
-	const scheduleLevelTaskInt = 4;
+	const planningLevelProjectInt = 1;
+	const planningLevelDayInt = 2;
+	const planningLevelCrewInt = 3;
+	const planningLevelTaskInt = 4;
 
 	/**
 	 * @return array duty level value => duty level display name
 	 */
 	static $levels = array(
-		self::scheduleLevelProjectInt=>self::scheduleLevelProject,
-		self::scheduleLevelDayInt=>self::scheduleLevelDay,
-		self::scheduleLevelCrewInt=>self::scheduleLevelCrew,
-		self::scheduleLevelTaskInt=>self::scheduleLevelTask,
+		self::planningLevelProjectInt=>self::planningLevelProject,
+		self::planningLevelDayInt=>self::planningLevelDay,
+		self::planningLevelCrewInt=>self::planningLevelCrew,
+		self::planningLevelTaskInt=>self::planningLevelTask,
 	);
 
 	/**
@@ -73,7 +73,7 @@ class Schedule extends CategoryActiveRecord {
 	 */
 	public function attributeLabels() {
 		return array(
- 			'id' => 'Schedule',
+ 			'id' => 'Planning',
 		) + parent::attributeLabels();
 	}
 
@@ -81,7 +81,7 @@ class Schedule extends CategoryActiveRecord {
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return 'schedule';
+		return 'planning';
 	}
 
 	/**
@@ -93,9 +93,9 @@ class Schedule extends CategoryActiveRecord {
 		return array(
 			'crew' => array(self::HAS_ONE, 'Crew', 'id'),
 			'day' => array(self::HAS_ONE, 'Day', 'id'),
-			'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'schedule_id'),
+			'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'planning_id'),
 			'project' => array(self::HAS_ONE, 'Project', 'id'),
-			'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'schedule_id'),
+			'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'planning_id'),
 			'resourceDatas1' => array(self::HAS_MANY, 'ResourceData', 'level'),
 			'inCharge' => array(self::BELONGS_TO, 'Staff', 'in_charge_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
@@ -105,7 +105,7 @@ class Schedule extends CategoryActiveRecord {
 
 // TODO: either strip this to database trigger or ideally remove the need for day->task_id and crew->day_id completely i.e. run off
 // ajaxtree completely. It is possible for ajax tree not to match these parents hence needs fixing.
-// another alternative is to store parent_id in the schedule table on afterSave but at time of writing not sure of effect on surroundings
+// another alternative is to store parent_id in the planning table on afterSave but at time of writing not sure of effect on surroundings
 	public function afterSave() {
 		
 		// need to ensure that the parent id stays up to date the task and crew tables. task->crew_id and crew->day_id
@@ -113,13 +113,13 @@ class Schedule extends CategoryActiveRecord {
 		// NB: project and day parent id's can't be mucked up in ajax tree (client_id and project_id respectively)
 		switch($this->level)
 		{
-			case scheduleLevelCrew :
+			case planningLevelCrew :
 				$model=Category::model()->findByPk($this->id);
 				$parent=$model->parent;
 				$model->day_id = $parent->id;
 				$model->save();
 				break;
-			case scheduleLevelTask :
+			case planningLevelTask :
 				$model=Category::model()->findByPk($this->id);
 				$parent=$model->parent;
 				$model->crew_id = $parent->id;
@@ -163,34 +163,27 @@ class Schedule extends CategoryActiveRecord {
 
 			echo CHtml::openTag('li', array('id' => 'node_' . $category->id, 'rel' => $category->name));
 			echo CHtml::openTag('a', array('href' => '#', 'class' => "level{$category->level}"));
-			if($category->name)
-			{
-				$label = $category->name;
-			}
-			else
-			{
-				switch($category->level)
-				{
-					case Schedule::scheduleLevelDayInt :
-						$label = 'Day '.++$dayCounter;
-						$crewCounter = 0;
-						break;
-					case Schedule::scheduleLevelCrewInt :
-						$label = 'Crew '.++$crewCounter;
-						break;
-				}
-			}
 			switch($category->level)
 			{
-				case Schedule::scheduleLevelDayInt :
+				case Planning::planningLevelDayInt :
+					$day = Day::model()->findByPk($category->id);
+					++$dayCounter;
+					$label = empty($day->scheduled) ? "Day $dayCounter" : $day->scheduled;
 					$label .= " (D{$category->id})";
+					$crewCounter = 0;
 					break;
-				case Schedule::scheduleLevelCrewInt :
+				case Planning::planningLevelCrewInt :
+					$crew =Crew::model()->findByPk($category->id);
+					++$crewCounter;
+					$label = empty($category->in_charge_id) ? "Crew $crewCounter" : Crew::getNiceName(null, $crew);
 					$label .= " (C{$category->id})";
 					break;
-				case Schedule::scheduleLevelTaskInt :
+				case Planning::planningLevelTaskInt :
+					$label = $category->name;
 					$label .= " (T{$category->id})";
 					break;
+				default :
+					$label = $category->name;
 			}
 			echo CHtml::encode($label);
 			echo CHtml::closeTag('a');
@@ -207,17 +200,17 @@ class Schedule extends CategoryActiveRecord {
 	public function afterFind() {
 		switch($this->level)
 		{
-			case self::scheduleLevelProjectInt;
-				$this->levelName = self::scheduleLevelProject;
+			case self::planningLevelProjectInt;
+				$this->levelName = self::planningLevelProject;
 				break;
-			case self::scheduleLevelDayInt;
-				$this->levelName = self::scheduleLevelDay;
+			case self::planningLevelDayInt;
+				$this->levelName = self::planningLevelDay;
 				break;
-			case self::scheduleLevelCrewInt;
-				$this->levelName = self::scheduleLevelCrew;
+			case self::planningLevelCrewInt;
+				$this->levelName = self::planningLevelCrew;
 				break;
-			case self::scheduleLevelTaskInt;
-				$this->levelName = self::scheduleLevelTask;
+			case self::planningLevelTaskInt;
+				$this->levelName = self::planningLevelTask;
 				break;
 		}
 		parent::afterFind();
@@ -227,7 +220,7 @@ class Schedule extends CategoryActiveRecord {
 	public function beforeSave() {
 		
 		// if user doesn't have scheduler priveledge
-		if(Yii::app()->user->checkAccess('scheduler'))
+		if(!Yii::app()->user->checkAccess('scheduler'))
 		{
 			// reset in_charge_id - not allowed to change
 			$this->in_charge_id = $this->getOldAttributeValue('in_charge_id');
@@ -235,8 +228,8 @@ class Schedule extends CategoryActiveRecord {
 			// not allowed to change description of day or crew
 			switch($this->level)
 			{
-				case Schedule::scheduleLevelCrewInt :
-				case Schedule::scheduleLevelDayInt :
+				case Planning::planningLevelCrewInt :
+				case Planning::planningLevelDayInt :
 					// reset name - not allowed to change
 					$this->name = $this->getOldAttributeValue('name');
 			}
@@ -248,9 +241,9 @@ class Schedule extends CategoryActiveRecord {
 /*	// ensure that where possible a pk has been passed from parent
 	public function assertFromParent()
 	{
-		// assert from parent won't work as normal from within schedule because the parents are all internal in the nested set
+		// assert from parent won't work as normal from within planning because the parents are all internal in the nested set
 		// however we do need to ensure that project_id, and subsequently that client_id are set
-		$project = Project::model()->findByPk($_SESSION['Schedule']['value']);
+		$project = Project::model()->findByPk($_SESSION['Planning']['value']);
 		$_SESSION['Client']['name'] = 'id';
 		$_SESSION['Client']['value'] = $project->projectType->client_id;
 		

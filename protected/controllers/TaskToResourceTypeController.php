@@ -16,39 +16,39 @@ class TaskToResourceTypeController extends Controller
 	{
 		if($model->level === null)
 		{
-			$model->level = Schedule::scheduleLevelTaskInt;
+			$model->level = Planning::planningLevelTaskInt;
 		}
-// TODO: a lot of this repeated in resource controller - abstract out - perhaps into ScheduleController static function
-		// ensure existance of a related ResourceData. First get the desired schedule id which is the desired ancestor of task
+// TODO: a lot of this repeated in resource controller - abstract out - perhaps into PlanningController static function
+		// ensure existance of a related ResourceData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
-		if(($level = $model->level) == Schedule::scheduleLevelTaskInt)
+		if(($level = $model->level) == Planning::planningLevelTaskInt)
 		{
-			$schedule_id = $model->task_id;
+			$planning_id = $model->task_id;
 		}
 		else
 		{
 			// get the desired ansestor
-			$schedule = Schedule::model()->findByPk($model->task_id);
+			$planning = Planning::model()->findByPk($model->task_id);
 
-			while($schedule = $schedule->parent)
+			while($planning = $planning->parent)
 			{
-				if($schedule->level == $level)
+				if($planning->level == $level)
 				{
 					break;
 				}
 			}
-			if(empty($schedule))
+			if(empty($planning))
 			{
 				throw new Exception();
 			}
 
-			$schedule_id = $schedule->id;
+			$planning_id = $planning->id;
 		}
 		// try insert and catch and dump any error - will ensure existence
 		try
 		{
 			$resourceData = new ResourceData;
-			$resourceData->schedule_id = $schedule_id;
+			$resourceData->planning_id = $planning_id;
 			$resourceData->resource_type_id = $model->resource_type_id;
 			$resourceData->level = $level;
 			$resourceData->quantity = $model->quantity;
@@ -64,7 +64,7 @@ class TaskToResourceTypeController extends Controller
 		}
 		// retrieve the ResourceData
 		$resourceData = ResourceData::model()->findByAttributes(array(
-			'schedule_id'=>$schedule_id,
+			'planning_id'=>$planning_id,
 			'resource_type_id'=>$model->resource_type_id,
 		));
 

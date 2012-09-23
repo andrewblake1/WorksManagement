@@ -1041,7 +1041,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			$context = $this->modelName;
 		}
 		
-		// if we arent going to receive the pk as id at run time via Schedule ajaxtree
+		// if we arent going to receive the pk as id at run time via Planning ajaxtree
 		if($reportType == self::reportTypeHtml && !empty($_SESSION[$context]['value']))
 		{
 			// set the primary key

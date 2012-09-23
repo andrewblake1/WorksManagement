@@ -16,7 +16,7 @@
  * @property Day[] $days
  * @property Staff $staff
  * @property ProjectType $projectType
- * @property Schedule $id0
+ * @property Planning $id0
  * @property ProjectLevel $level0
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
  * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
@@ -75,7 +75,7 @@ class Project extends ActiveRecord
 			'days' => array(self::HAS_MANY, 'Day', 'project_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
-			'id0' => array(self::BELONGS_TO, 'Schedule', 'id'),
+			'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
 			'level0' => array(self::BELONGS_TO, 'ProjectLevel', 'level'),
 			'projectToGenericProjectTypes' => array(self::HAS_MANY, 'ProjectToGenericProjectType', 'project_id'),
 			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'project_id'),
@@ -180,7 +180,7 @@ class Project extends ActiveRecord
 	public function assertFromParent()
 	{
 		// if we are in the schdule screen then they may not be a parent foreign key as will be derived when user identifies a node
-		if(Yii::app()->controller->id == 'ScheduleController')
+		if(Yii::app()->controller->id == 'PlanningController')
 		{
 			return;
 		}

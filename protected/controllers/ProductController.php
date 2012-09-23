@@ -206,15 +206,15 @@ class ProductController extends Controller {
 	 */
 	protected function createSave($model, &$models=array())
 	{
-		// need to insert a row into the schedule nested set model so that the id can be used here
+		// need to insert a row into the planning nested set model so that the id can be used here
 		
 		// create a root node
 		// NB: the project description is actually the name field in the nested set model
-		$schedule = new Schedule;
-		$schedule->name = 'testing';
-		if($saved = $schedule->saveNode(true))
+		$planning = new Planning;
+		$planning->name = 'testing';
+		if($saved = $planning->saveNode(true))
 		{
-			$model->id = $schedule->id;
+			$model->id = $planning->id;
 			$saved = parent::createSave($model, $models);
 		}
 		

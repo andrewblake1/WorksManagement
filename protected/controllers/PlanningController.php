@@ -1,6 +1,6 @@
 <?php
 
-class ScheduleController extends CategoryController
+class PlanningController extends CategoryController
 {
 	/**
 	 * @var string the name of the admin view
@@ -24,7 +24,7 @@ class ScheduleController extends CategoryController
 
 	public function actionFetchTree()
 	{
-		parent::actionFetchTree($_SESSION['actionAdminGet']['Schedule']['project_id']);
+		parent::actionFetchTree($_SESSION['actionAdminGet']['Planning']['project_id']);
 	}
 
 	public function actionAddDay()
@@ -59,25 +59,24 @@ class ScheduleController extends CategoryController
 			));
 		}
 	}
-
 	
 	public function actionCreate($modalId = 'myModal')
 	{
-		// can't create a schedule, must create a project, or day or crew or task
+		// can't create a planning, must create a project, or day or crew or task
 		throw new CHttpException(403,'Invalid request.');
 	}
 
 	public function actionUpdate($id)
 	{
-		// can't update a schedule, must update a project, or day or crew or task
+		// can't update a planning, must update a project, or day or crew or task
 		throw new CHttpException(403,'Invalid request.');
 	}
 
 	public function actionRename()
 	{
 		$id=$_POST['id'];
-		$schedule=$this->loadModel($id);
-		if(static::checkAccess(self::accessWrite, Schedule::$levels[$schedule->level]))
+		$planning=$this->loadModel($id);
+		if(static::checkAccess(self::accessWrite, Planning::$levels[$planning->level]))
 		{
 			parent::actionRename();
 		}
@@ -91,8 +90,8 @@ class ScheduleController extends CategoryController
 	public function actionRemove()
 	{
 		$id=$_POST['id'];
-		$schedule=$this->loadModel($id);
-		if(static::checkAccess(self::accessWrite, Schedule::$levels[$schedule->level]))
+		$planning=$this->loadModel($id);
+		if(static::checkAccess(self::accessWrite, Planning::$levels[$planning->level]))
 		{
 			parent::actionRemove();
 		}

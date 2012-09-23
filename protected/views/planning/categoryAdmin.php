@@ -59,6 +59,17 @@ echo '
 <script  type="text/javascript">
 	$(function ()
 	{
+		// get the users rights
+		writeAccessProject = <?php echo Controller::checkAccess(Controller::accessWrite, 'Project'); ?>;
+		writeAccessDay = <?php echo Controller::checkAccess(Controller::accessWrite, 'Day'); ?>;
+		writeAccessCrew = <?php echo Controller::checkAccess(Controller::accessWrite, 'Crew'); ?>;
+		writeAccessTask = <?php echo Controller::checkAccess(Controller::accessWrite, 'Task'); ?>;
+		readAccessProject = <?php echo Controller::checkAccess(Controller::accessRead, 'Project'); ?>;
+		readAccessDay = <?php echo Controller::checkAccess(Controller::accessRead, 'Day'); ?>;
+		readAccessCrew = <?php echo Controller::checkAccess(Controller::accessRead, 'Crew'); ?>;
+		readAccessTask = <?php echo Controller::checkAccess(Controller::accessRead, 'Task'); ?>;
+		isScheduler = <?php echo Yii::app()->user->checkAccess('scheduler'); ?>;
+		
 		$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>")
 		.jstree(
 		{
@@ -93,47 +104,33 @@ echo '
 						level = obj.find('[class^="level"]').first().attr("class").replace("level","");
 					}
 
-					// get the users rights
-					accessProject = <?php echo Controller::checkAccess(Controller::accessWrite, "Project"); ?>;
-					accessDay = <?php echo Controller::checkAccess(Controller::accessWrite, "Day"); ?>;
-					accessCrew = <?php echo Controller::checkAccess(Controller::accessWrite, "Crew"); ?>;
-					accessTask = <?php echo Controller::checkAccess(Controller::accessWrite, "Task"); ?>;
-
 					if(level == 1)
 					{
-						writeAccess = accessProject;
+						writeAccess = writeAccessProject;
 						modelName = "Project";
 						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Project'); ?>;
 					}
 					else if(level == 2)
 					{
-						writeAccess = accessDay;
+						writeAccess = writeAccessDay && isScheduler;
 						modelName = "Day";
 						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Day'); ?>;
 					}
 					else if(level == 3)
 					{
-						writeAccess = accessCrew;
+						writeAccess = writeAccessCrew && isScheduler;
 						modelName = "Crew";
 						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Crew'); ?>;
 					}
 					else if(level == 4)
 					{
-						writeAccess = accessTask;
+						writeAccess = writeAccessTask;
 						modelName = "Task";
 						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Task'); ?>;
 					}
 
 					if(writeAccess)
 					{
-						rename = {
-							"rename" : {
-								"label" : "Rename",
-								"action" : function (obj) { this.rename(obj); }
-							}
-						};//rename
-						$.extend(contextMenu, rename);
-
 						update = {
 							"update" : {
 								"label"	: "Update",
@@ -277,32 +274,6 @@ echo '
 			}
 		})
 
-		///EVENTS
-		.bind("rename.jstree", function (e, data) {
-			$.ajax({
-				type:"POST",
-				url:"<?php echo "$baseUrl/$modelName/rename"; ?>",
-				data:  {
-					"id" : data.rslt.obj.attr("id").replace("node_",""),
-					"new_name" : data.rslt.new_name,
-					"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
-				},
-				beforeSend : function(){
-					$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
-				},
-				complete : function(){
-					$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
-				},
-				success:function (r) {  response= $.parseJSON(r);
-					if(!response.success) {
-						$.jstree.rollback(data.rlbk);
-					}else{
-						data.rslt.obj.attr("rel",data.rslt.new_name);
-					};
-				}
-			});
-		})
-
 		.bind("remove.jstree", function (e, data) {
 			$.ajax({
 				type:"POST",
@@ -440,30 +411,26 @@ echo '
 			}
 			
 			// get the users rights
-			accessProject = <?php echo Controller::checkAccess(Controller::accessRead, "Project"); ?>;
-			accessDay = <?php echo Controller::checkAccess(Controller::accessRead, "Day"); ?>;
-			accessCrew = <?php echo Controller::checkAccess(Controller::accessRead, "Crew"); ?>;
-			accessTask = <?php echo Controller::checkAccess(Controller::accessRead, "Task"); ?>;
 			readAccess = null;
 
 			if(level == 1)
 			{
-				readAccess = accessProject;
+				readAccess = readAccessProject;
 				modelName = "Project";
 			}
 			else if(level == 2)
 			{
-				readAccess = accessDay;
+				readAccess = readAccessDay;
 				modelName = "Day";
 			}
 			else if(level == 3)
 			{
-				readAccess = accessCrew;
+				readAccess = readAccessCrew;
 				modelName = "Crew";
 			}
 			else if(level == 4)
 			{
-				readAccess = accessTask;
+				readAccess = readAccessTask;
 				modelName = "Task";
 			}
 			
