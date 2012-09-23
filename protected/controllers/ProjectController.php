@@ -65,6 +65,26 @@ class ProjectController extends GenericExtensionController
 		return $saved & parent::createSave($model, $models);
 	}
 
+	public function actionUpdate($id) {
+		// ensure access
+		if(!Yii::app()->user->checkAccess('Project', array('primaryKey'=>$id)))
+		{
+			throw new CHttpException(403);
+		}
+		
+		parent::actionUpdate($id);
+	}
+
+	public function actionDelete($id) {
+		// ensure access
+		if(!Yii::app()->user->checkAccess('Project', array('primaryKey'=>$id)))
+		{
+			throw new CHttpException(403);
+		}
+		
+		parent::actionDelete($id);
+	}
+
 }
 
 ?>

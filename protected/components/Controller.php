@@ -99,6 +99,38 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		parent::__construct($id, $module);
 	}
 
+	/**
+	 * @return array action filters
+	 */
+	public function filters()
+	{
+		return array(
+			'accessControl', // perform access control for CRUD operations
+		);
+	}
+
+	/**
+	 * Specifies the access control rules.
+	 * This method is used by the 'accessControl' filter.
+	 * @return array access control rules
+	 */
+	public function accessRules()
+	{
+		return array(
+			array('allow',
+				'actions'=>array('admin','index','view'),
+				'roles'=>array($this->modelName.'Read'),
+			),
+			array('allow',
+				'actions'=>array('create','delete','update','autocomplete'),
+				'roles'=>array($this->modelName),
+			),
+			array('deny',  // deny all users
+				'users'=>array('*'),
+			),
+		);
+	}
+
 	// data provider for EJuiAutoCompleteFkField
 	public function actionAutocomplete()
 	{
@@ -183,38 +215,6 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
             ),
         );
     }
-
-	/**
-	 * @return array action filters
-	 */
-	public function filters()
-	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-		);
-	}
-
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-		return array(
-			array('allow',
-				'actions'=>array('admin','index','view'),
-				'roles'=>array($this->modelName.'Read'),
-			),
-			array('allow',
-				'actions'=>array('create','delete','update','autocomplete'),
-				'roles'=>array($this->modelName),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
 
 	public function getTabs()
 	{
@@ -699,6 +699,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+		$models=array();
 
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating =$this->performAjaxValidation($model);
@@ -757,7 +758,10 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		);
 		
 		// otherwise this is just a get and could be passing paramters
-		$model->attributes=$_GET[$this->modelName];
+		if(!empty($_GET[$this->modelName]))
+		{
+			$model->attributes=$_GET[$this->modelName];
+		}
 		
 		// set heading
 		$modelName = $this->modelName;
@@ -974,7 +978,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		ActiveRecord::$labelOverrides[$fkField] = $label ? $label : $fKModelType::getNiceName();
 		
 		// if more than 20 rows in the lookup table use autotext
-		if($forceAuto || ($fKModelType::model()->count()) > 20)
+		if($fKModelType::model()->count() > 20)
 		{
 			static::autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType, $relName);
 		}

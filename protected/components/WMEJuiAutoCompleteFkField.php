@@ -37,13 +37,16 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 
 		foreach($fKModelType::getDisplayAttr() as $key => $field)
 		{
-			if(is_numeric($key))
+			if(!empty($this->model->$relName))
 			{
-				eval('$this->_display[] = $this->model->$relName->'."$field;");
-			}
-			else
-			{
-				eval('$this->_display[] = $this->model->$relName->'."$key->$field;");
+				if(is_numeric($key))
+				{
+					eval('$this->_display[] = $this->model->$relName->'."$field;");
+				}
+				else
+				{
+					eval('$this->_display[] = $this->model->$relName->'."$key->$field;");
+				}
 			}
 		}
 		

@@ -291,6 +291,10 @@ EOD;
 			 $this->_authManager->createOperation('TaskToResourceTypeRead', 'TaskToResourceType read');
 			 $task->addChild('TaskToResourceTypeRead');
 
+			 // SCHEDULE SHOULD BE AVAILABLE TO ALL WITH PROJECT READ
+			 $projectReadTask=$this->_authManager->getAuthItem('ProjectRead');
+			 $projectReadTask->addChild('Schedule');
+			 
 			 // SCHEDULER
 			 // NB: this role is hard coded into the task _form view
 			 $schedulerRole=$this->_authManager->createRole('scheduler', 'Scheduler');
@@ -299,7 +303,7 @@ EOD;
 			 $schedulerRole->addChild('Reschedule');
 			 $this->_authManager->createOperation('RescheduleRead', 'Reschedule read');
 			 $task->addChild('RescheduleRead');
-			 $schedulerRole->addChild('Schedule');
+			 $schedulerRole->addChild('ProjectRead');
 
 			 // DEFAULT
 			 $defaultRole=$this->_authManager->createRole('default', 'Default',
@@ -315,6 +319,8 @@ EOD;
 			 $defaultRole->addChild('DutyRead');
 			 // Grant read access to tasks and projects
 			 $defaultRole->addChild('TaskRead');
+			 $defaultRole->addChild('CrewRead');
+			 $defaultRole->addChild('DayRead');
 			 $defaultRole->addChild('ProjectRead');
 			 
 			 // Grant project manager project read
@@ -323,23 +329,53 @@ EOD;
 			 // create hierachy amongst roles
 			 $systemAdminRole->addChild('project manager');
 			 $projectManagerRole->addChild('ScheduleRead');
-			 $schedulerRole->addChild('default');
-			 
-			 // OFFICE ADMIN
-			 $offieAdministratorRole=$this->_authManager->createRole('office admin', 'Office administrator');
-			 
+
 			 // FIELD MANAGER
 			 $fieldManagerRole=$this->_authManager->createRole('field manager', 'Field manager');
-			 
+			 // Creating a task which is parent of Project role that has the business rule we
+			 // want to check - params passed by project update, create, delete. This task is then to become child of this role hence
+			 // not interferring with existing project manager role but providing another path of acceptance or denial for field manager
+			 $task=$this->_authManager->createTask(
+					'ProjectFieldManger',
+					'Project update and delete if is field manager assigned to project)',
+					'return Project::checkContext($params["primaryKey"], "field manager");');
+			 $task->addChild('Project');
+			 $fieldManagerRole->addChild('ProjectFieldManger');
+
+			 // OFFICE ADMIN
+			 $offieAdministratorRole=$this->_authManager->createRole('office admin', 'Office administrator');
+			 $offieAdministratorRole->addChild('TaskRead');
+			 $offieAdministratorRole->addChild('CrewRead');
+			 $offieAdministratorRole->addChild('DayRead');
+			 $offieAdministratorRole->addChild('ProjectRead');
+
 			 // OUTAGE PLANNER
 			 $outagePlannerRole=$this->_authManager->createRole('outage planner', 'Outage planner');
-			 
+			 $outagePlannerRole->addChild('TaskRead');
+			 $outagePlannerRole->addChild('CrewRead');
+			 $outagePlannerRole->addChild('DayRead');
+			 $outagePlannerRole->addChild('ProjectRead');
+
 			 // FOREMAN
 			 $foremanRole=$this->_authManager->createRole('foreman', 'Foreman');
-			 
+			 $foremanRole->addChild('TaskRead');
+			 $foremanRole->addChild('CrewRead');
+			 $foremanRole->addChild('DayRead');
+			 $foremanRole->addChild('ProjectRead');
+			 $foremanRole->addChild('MaterialRead');
+			 $foremanRole->addChild('AssemblyRead');
+			 $foremanRole->addChild('PurchaseOrderRead');
+
 			 // STOREMAN
-			 $foremanRole=$this->_authManager->createRole('storeman', 'Stores');
-			 
+			 $storemanRole=$this->_authManager->createRole('storeman', 'Stores');
+			 $storemanRole->addChild('TaskRead');
+			 $storemanRole->addChild('CrewRead');
+			 $storemanRole->addChild('DayRead');
+			 $storemanRole->addChild('ProjectRead');
+			 $storemanRole->addChild('Material');
+			 $storemanRole->addChild('Assembly');
+			 $storemanRole->addChild('PurchaseOrderRead');
+
 		     //provide a message indicating success
 		     echo "Authorization hierarchy successfully generated.";
         } 

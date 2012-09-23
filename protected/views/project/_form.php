@@ -2,9 +2,11 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'models'=>$models, 'action'=>$action, 'parent_fk'=>$parent_fk));
 
-	$form->textFieldRow('name');
-
-	StaffController::listWidgetRow($model->id0 ? $model->id0 : new Schedule, $form, 'in_charge_id', array(), array(), 'In charge');
+	// only allow setting or update of in_charge_id if user has InCharge priveledge
+	if(Yii::app()->user->checkAccess('scheduler'))
+	{
+		StaffController::listWidgetRow($model->id0 ? $model->id0 : new Schedule, $form, 'in_charge_id', array(), array(), 'In charge');
+	}
 
 	// if creating
 	if($model->isNewRecord)

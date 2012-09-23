@@ -16,33 +16,37 @@ class WMTbButtonColumn extends TbButtonColumn
 {
 	public $template;
 
-	/**
-	 * Displays a particular model.
-	 */
     public function __construct($grid)
 	{
 		$controller = Yii::app()->getController();
+
+		// TODO: this id needs fixing
+		$this->afterDelete='function(link,success,data) {
+			if(success)
+			{
+				$("#yw0").html(data);
+			}
+		}';
+		
 		
 		// set buttons based on access rights
-		if($controller->checkAccess(Controller::accessWrite))
-		{
-			$this->template='{update} {delete}';
-			$this->afterDelete='function(link,success,data) {
-				if(success)
-				{
-					$("#yw0").html(data);
-				}
-			}';
-		}
-		elseif($controller->checkAccess(Controller::accessRead))
-		{
- 			$this->template='{view}';
-		}
-		else
-		{
-			$this->template='';
-		}
+//		if($controller->checkAccess(Controller::accessWrite))
+//		{
+			$this->template='{view} {update} {delete}';
+
+	//	}
+//		elseif($controller->checkAccess(Controller::accessRead))
+	//	{
+ //			$this->template='';
+	//	}
+//		else
+//		{
+//			$this->template='';
+//		}
 		
+		
+		
+//		$this->cssClassExpression = 'test';
 		parent::__construct($grid);
  	}
 }

@@ -93,7 +93,7 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
         // after user picks from list, save the ID in model/attr field, and Value in _save field for redisplay
         $this->options['select']="js:function(event, ui){\$('#".$this->_fieldID."').val(ui.item.id);\$('#".$this->_saveID."').val(ui.item.value);}";
         // if onblur not set
-		if(!$this->htmlOptions['onblur'])
+		if(empty($this->htmlOptions['onblur']))
 		{
 			// this is either the previous value if user didn't pick anything; or the new value if they did
 			$this->htmlOptions['onblur']="$(this).val($('#".$this->_saveID."').val());";

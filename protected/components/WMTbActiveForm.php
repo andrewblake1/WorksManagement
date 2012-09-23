@@ -105,7 +105,7 @@ class WMTbActiveForm extends TbActiveForm
 		if(empty($this->parent_fk))
 		{
 			// attmpt to get
-			$this->parent_fk = ActiveRecord::getParentForeignKey($this->controller->getParentCrumb($modelName));
+			$this->parent_fk = /*ActiveRecord*/$modelName::getParentForeignKey($this->controller->getParentCrumb($modelName));
 		}
 
 		// display any validation errors

@@ -223,6 +223,28 @@ class Schedule extends CategoryActiveRecord {
 		parent::afterFind();
 	}
 	
+
+	public function beforeSave() {
+		
+		// if user doesn't have scheduler priveledge
+		if(Yii::app()->user->checkAccess('scheduler'))
+		{
+			// reset in_charge_id - not allowed to change
+			$this->in_charge_id = $this->getOldAttributeValue('in_charge_id');
+			
+			// not allowed to change description of day or crew
+			switch($this->level)
+			{
+				case Schedule::scheduleLevelCrewInt :
+				case Schedule::scheduleLevelDayInt :
+					// reset name - not allowed to change
+					$this->name = $this->getOldAttributeValue('name');
+			}
+		}
+
+		return parent::beforeSave();
+	}
+
 /*	// ensure that where possible a pk has been passed from parent
 	public function assertFromParent()
 	{

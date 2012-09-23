@@ -203,13 +203,29 @@ class Project extends ActiveRecord
 	}
 
 	public function afterFind() {
-$s=		$this->name = $this->id0->name;
-		
+		$this->name = $this->id0->name;
 		$this->client_id = $this->projectType->client_id;
-$t=		$this->client_id;
-$t1 = $this->attributes;		
 		parent::afterFind();
 	}
 
+	/**
+	 * check if the current user is assigned to the given role within this project context
+	 * used within business rule of checkAccess by Project task
+	 */
+	static function checkContext($primaryKey, $role)
+	{
+		// if this role exists for this project
+		$ProjectToProjectTypeToAuthItem = ProjectToProjectTypeToAuthItem::model()->findAllByAttributes(array('project_id'=>$primaryKey, 'itemname'=>$role));
+		if(!empty($ProjectToProjectTypeToAuthItem))
+		{
+			// if this user assigned this role within this project
+			if($ProjectToProjectTypeToAuthItem->authAssignment->userid == Yii::app()->user->id)
+			{
+				 return true;
+			}
+		}
+		
+		return false;
+	}
 }
 ?>

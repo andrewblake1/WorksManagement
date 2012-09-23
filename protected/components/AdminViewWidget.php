@@ -40,7 +40,24 @@ class AdminViewWidget extends CWidget
 		// add the buttons - first determine if there are any!
 //		if($this->_controller->checkAccess(Controller::accessRead))
 //		{
-			$this->columns[]=array('class'=>'WMTbButtonColumn');
+		// show buttons on row by row basis i.e. do access check on context
+			$this->columns[]=array(
+				'class'=>'WMTbButtonColumn',
+                'buttons'=>array(
+					'delete' => array(
+							'visible'=>'Yii::app()->user->checkAccess(get_class($data), array("primaryKey"=>$data->primaryKey))',
+					),
+					'update' => array(
+							'visible'=>'Yii::app()->user->checkAccess(get_class($data), array("primaryKey"=>$data->primaryKey))',
+					),
+					'view' => array(
+							'visible'=>'
+								!Yii::app()->user->checkAccess(get_class($data), array("primaryKey"=>$data->id))
+								&& Yii::app()->user->checkAccess(get_class($data)."Read")
+							',
+					),
+				),
+			);
 //		}
 	
 		// add instructions/ warnings errors via Yii::app()->user->setFlash
