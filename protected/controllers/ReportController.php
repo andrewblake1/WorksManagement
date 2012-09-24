@@ -39,7 +39,7 @@ class ReportController extends Controller
 
 
 		// determine if this user has access to this report
-		foreach(self::$_model->reportToAuthItems as &$reportToAuthItem)
+		foreach(self::$_model->reportToAuthItems as $reportToAuthItem)
 		{
 			if(Yii::app()->user->checkAccess($reportToAuthItem->AuthItem_name))
 			{
@@ -54,7 +54,7 @@ class ReportController extends Controller
 		
 		// verify the context
 		$controller = Yii::app()->controller;
-		$_modelName = $controller->id->modelName;
+		$_modelName = $controller->modelName;
 		if(self::$_model->context && self::$_model->context != $_modelName)
 		{
 			throw new CHttpException(403,'The report isn\'t valid in this context.');
@@ -73,7 +73,7 @@ class ReportController extends Controller
 
 		// do the substituitions
 		$html = self::$_model->template_html;
-		$html = preg_replace_callback('`\[(.*?)\]`', array(self, 'subReportCallback'), $html);
+		$html = preg_replace_callback('`\[(.*?)\]`', array('ReportController', 'subReportCallback'), $html);
 		
 		// if errors
 		if(!empty(self::$_errors))

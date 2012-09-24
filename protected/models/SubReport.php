@@ -153,11 +153,6 @@ class SubReport extends ActiveRecord
 		catch(Exception $e)
 		{
 			$errorMessage = 'There is an error in the setup - please contact the system administrator, the database says:<br> '.$e->getMessage();
-		}
-
-		// if validation failed
-		if($errorMessage)
-		{
 			$this->addError($attribute, $errorMessage);
 		}
 	}

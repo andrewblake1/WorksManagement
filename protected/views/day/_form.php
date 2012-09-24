@@ -1,8 +1,11 @@
 <?php
-// only editable by scheduler
-$htmlOptions = Yii::app()->user->checkAccess('scheduler') ? array('readonly'=>'readonly') : array();
-
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'action'=>$action, 'parent_fk'=>$parent_fk, 'htmlOptions'=>$htmlOptions));
+$form=$this->beginWidget('WMTbActiveForm', array(
+	'model'=>$model,
+	'models'=>$models,
+	'action'=>empty($action) ? null : $action, 
+	'parent_fk'=>$parent_fk,
+	'htmlOptions'=>Yii::app()->user->checkAccess('scheduler') ? array('readonly'=>'readonly') : array(),
+));
 
 	$form->textFieldRow('name');
 

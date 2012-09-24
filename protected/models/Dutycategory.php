@@ -32,7 +32,6 @@ class Dutycategory extends CategoryActiveRecord {
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-	$t = $this->getOldAttributeValue('id');
 		return 'dutycategory';
 	}
 

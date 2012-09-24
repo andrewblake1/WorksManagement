@@ -30,11 +30,6 @@ class Project extends ActiveRecord
 	 */
 	public $searchProjectType;
 	public $searchInCharge;
-	/**
-	 * @var integer $client_id may be passed via get for search
-	 */
-	public $client_id;
-	
 	public $name;
 	public $in_charge_id;
 
@@ -132,7 +127,7 @@ class Project extends ActiveRecord
 		$criteria->compare('t.critical_completion',Yii::app()->format->toMysqlDate($this->critical_completion));
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
 		$criteria->compare('projectType.description', $this->searchProjectType, true);
-		$criteria->compare('client.id', $this->client_id);
+		$criteria->compare('t.client_id', $this->client_id);
 		$this->compositeCriteria($criteria,
 			array(
 				'inCharge.first_name',
@@ -204,7 +199,7 @@ class Project extends ActiveRecord
 
 	public function afterFind() {
 		$this->name = $this->id0->name;
-		$this->client_id = $this->projectType->client_id;
+//		$this->client_id = $this->projectType->client_id;
 		parent::afterFind();
 	}
 
@@ -226,6 +221,16 @@ class Project extends ActiveRecord
 		}
 		
 		return false;
+	}
+	
+	public function beforeSave() {
+		if(!empty($this->project_type_id))
+		{
+			$projectType = ProjectType::model()->findByPk($this->project_type_id);
+		}
+		$this->client_id = $projectType->client_id;
+		
+		return parent::beforeSave();
 	}
 }
 ?>

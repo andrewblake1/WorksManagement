@@ -150,6 +150,7 @@ return array(
 					'Assembly'=>array(
 						'AssemblyToMaterial',
 					),
+					'ClientContact',
 					'Material',
 					'Project'=>array( 
 						'Day'=>array(
@@ -165,6 +166,7 @@ return array(
 								),
 							),
 						),
+						'ProjectToClientContact',
 						'ProjectToProjectTypeToAuthItem',
 						'ProjectToGenericProjectType',
 						'Planning',

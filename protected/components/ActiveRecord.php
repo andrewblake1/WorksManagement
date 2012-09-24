@@ -34,34 +34,63 @@ abstract class ActiveRecord extends CActiveRecord
 	static public function evalDisplayAttr($model)
 	{
 		$attributes = array();
-
+		
 		foreach(static::getDisplayAttr() as $relationAttribute)
 		{
-			eval('$value = $model->'.$relationAttribute.';');
+			$eval = '$model';
+			// would just eval the whole thing but can spit php notice if non existing child class hence this longer way
+			foreach(explode('->', $relationAttribute) as $relationAttribute)
+			{
+				eval('$value = '.$eval.'->'.$relationAttribute.';');
+				if(empty($value))
+				{
+					break;
+				}
+				else
+				{
+					$eval .= '->'.$relationAttribute;
+				}
+			}
+
 			if(!empty($value))
 			{
 				$attributes[] = $value;
 			}
 		}
 
-		if(!empty($attributes))
-		{
-			// get the value of that attribute
-			$attributes = implode(Yii::app()->params['delimiter']['display'], $attributes);
-		}
+		// get the value of that attribute
+		$attributes = implode(Yii::app()->params['delimiter']['display'], $attributes);
 		
 		return $attributes;
 	}
 
+	static public function getNiceNamePlural($primaryKey=null, $model=null)
+	{
+		if(!empty(static::$niceNamePlural))
+		{
+			return static::$niceNamePlural;
+		}
+		
+		$niceName = static::getNiceName($primaryKey, $model);
+		
+		// alter ...ys to ...ies
+		if(substr($niceName, -1) == 'y')
+		{
+			$niceName = substr($niceName,0,-1) .'ie';
+		}
+		
+		return $niceName . 's';
+	}
 	// get the nice name of the model
 	static public function getNiceName($primaryKey=null, $model=null)
 	{
 		
 		if(!empty(static::$niceName))
 		{
-			$niceName = is_string(static::$niceName)
+			$niceName = static::$niceName;
+/*			$niceName = is_string(static::$niceName)
 				? static::$niceName
-				: static::$niceName[Yii::app()->controller->action->id];
+				: static::$niceName[Yii::app()->controller->action->id];*/
 		}
 		else
 		{

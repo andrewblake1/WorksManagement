@@ -200,7 +200,7 @@ $t = $this->model->attributes;
 		
 		// determine if date field
 		$columns = $model->tableSchema->columns;
-		if($columns[$attribute]->dbType == 'date')
+		if(!empty($columns[$attribute]) && $columns[$attribute]->dbType == 'date')
 		{
 			 $this->datepickerRow($attribute, $htmlOptions ,$model);
 		}

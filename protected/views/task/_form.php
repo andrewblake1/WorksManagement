@@ -1,6 +1,10 @@
 <?php
 
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'action' => $action, 'parent_fk'=>$parent_fk));
+$form=$this->beginWidget('WMTbActiveForm', array(
+	'model'=>$model,
+	'action'=>empty($action) ? null : $action, 
+	'parent_fk'=>$parent_fk,
+));
 
 	$form->textFieldRow('name');
 

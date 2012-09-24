@@ -221,6 +221,11 @@ EOD;
 			 $projectManagerRole=$this->_authManager->createRole('project manager', 'Project manager');
 			 // create tasks
 
+			 $task=$this->_authManager->createTask('ClientContact', 'ClientContact task');
+			 $projectManagerRole->addChild('ClientContact');
+			 $this->_authManager->createOperation('ClientContactRead', 'ClientContact read');
+			 $task->addChild('ClientContactRead');
+
 			 $task=$this->_authManager->createTask('Crew', 'Crew task');
 			 $projectManagerRole->addChild('Crew');
 			 $this->_authManager->createOperation('CrewRead', 'Crew read');
@@ -250,6 +255,11 @@ EOD;
 			 $projectManagerRole->addChild('Project');
 			 $this->_authManager->createOperation('ProjectRead', 'Project read');
 			 $task->addChild('ProjectRead');
+
+			 $task=$this->_authManager->createTask('ProjectToClientContact', 'ProjectToClientContact task');
+			 $projectManagerRole->addChild('ProjectToClientContact');
+			 $this->_authManager->createOperation('ProjectToClientContactRead', 'ProjectToClientContact read');
+			 $task->addChild('ProjectToClientContactRead');
 
 			 $task=$this->_authManager->createTask('ProjectToProjectTypeToAuthItem', 'ProjectToProjectTypeToAuthItem task');
 			 $projectManagerRole->addChild('ProjectToProjectTypeToAuthItem');

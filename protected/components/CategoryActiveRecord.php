@@ -39,8 +39,8 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels() {
-		return array(
+	public function attributeLabels($attributeLabels = array()) {
+		return parent::attributeLabels(array(
 			'id' => 'ID',
 			'root' => 'Root',
 			'lft' => 'Lft',
@@ -49,7 +49,7 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 			'name' => 'Name',
 			'deleted' => 'Deleted',
 			'staff_id' => 'Staff',
-		) + parent::attributeLabels();
+		) + $attributeLabels);
 	}
 
 	public function behaviors() {

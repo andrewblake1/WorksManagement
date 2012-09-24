@@ -26,6 +26,8 @@
  */
 class Planning extends CategoryActiveRecord {
 	public $levelName;
+
+	static $niceNamePlural = 'Planning';
 	
 	/**
 	 * Data types. These are the emum values set by the DataType custom type within 
@@ -72,9 +74,9 @@ class Planning extends CategoryActiveRecord {
 	 * @return array customized attribute labels (name=>label)
 	 */
 	public function attributeLabels() {
-		return array(
- 			'id' => 'Planning',
-		) + parent::attributeLabels();
+		return parent::attributeLabels(array(
+			'id' => 'Planning',
+		));
 	}
 
 	/**
@@ -113,17 +115,19 @@ class Planning extends CategoryActiveRecord {
 		// NB: project and day parent id's can't be mucked up in ajax tree (client_id and project_id respectively)
 		switch($this->level)
 		{
-			case planningLevelCrew :
-				$model=Category::model()->findByPk($this->id);
-				$parent=$model->parent;
-				$model->day_id = $parent->id;
-				$model->save();
+			case self::planningLevelCrewInt :
+				if($crew=Crew::model()->findByPk($this->id))
+				{
+					$crew->day_id = $crew->parent->id;
+					$crew->save();
+				}
 				break;
-			case planningLevelTask :
-				$model=Category::model()->findByPk($this->id);
-				$parent=$model->parent;
-				$model->crew_id = $parent->id;
-				$model->save();
+			case self::planningLevelTaskInt :
+				if($task=Task::model()->findByPk($this->id))
+				{
+					$task->crew_id = $task->parent->id;
+					$model->save();
+				}
 				break;
 		}
 		
@@ -200,16 +204,16 @@ class Planning extends CategoryActiveRecord {
 	public function afterFind() {
 		switch($this->level)
 		{
-			case self::planningLevelProjectInt;
+			case self::planningLevelProjectInt :
 				$this->levelName = self::planningLevelProject;
 				break;
-			case self::planningLevelDayInt;
+			case self::planningLevelDayInt :
 				$this->levelName = self::planningLevelDay;
 				break;
-			case self::planningLevelCrewInt;
+			case self::planningLevelCrewInt :
 				$this->levelName = self::planningLevelCrew;
 				break;
-			case self::planningLevelTaskInt;
+			case self::planningLevelTaskInt :
 				$this->levelName = self::planningLevelTask;
 				break;
 		}

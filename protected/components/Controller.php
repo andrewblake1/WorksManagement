@@ -336,7 +336,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					? array()
 					: array($modelName => array($modelName::getParentForeignKey($firstTabModelName) => $keyValue));
 				
-				$this->_tabs[$index]['label'] = $modelName::getNiceName() . 's';
+				$this->_tabs[$index]['label'] = $modelName::getNiceNamePlural();
 				$this->_tabs[$index]['url'] =  array("$modelName/admin") + $urlParams;
 				$index++;
 			}
@@ -415,7 +415,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// set heading
 		if(!$this->heading)
 		{	
-			$this->heading .= $modelName::getNiceName() . 's';
+			$this->heading .= $modelName::getNiceNamePlural();
 		}
 
 		// set breadcrumbs
@@ -503,34 +503,35 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			$queryParamters = !empty($_SESSION['actionAdminGet'][$crumb]) ? array($crumb=>$_SESSION['actionAdminGet'][$crumb]) : array();
 
 			$display = $crumb::getNiceName();
+			$displays = $crumb::getNiceNamePlural();
 			// if this is the last crumb
 			if($modelName == $crumb)
 			{
 				if($lastCrumb == 'Create')
 				{
 					// add crumb to admin view
-					$breadcrumbs[$display.'s'] = array("$crumb/admin") + $queryParamters;
+					$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
 					// add last crumb
 					$breadcrumbs[] = $lastCrumb;
 				}
 				elseif($lastCrumb == 'Update')
 				{
 					// add crumb to admin view. NB using last query paramters to that admin view
-					$breadcrumbs[$display.'s'] = array("$crumb/admin") + $queryParamters;
+					$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
 					// add a crumb with just the primary key nice name but no href
 					$primaryKey = $_SESSION[$crumb];
 					$breadcrumbs[] = $crumb::getNiceName($primaryKey['value']);
 				}
 				else
 				{
-					$breadcrumbs[] = $display.'s';
+					$breadcrumbs[] = $displays;
 				}
 			}
 			// otherwise not last crumb
 			else
 			{
 				// add crumb to admin view
-				$breadcrumbs[$display.'s'] = array("$crumb/admin") + $queryParamters;
+				$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
 			
 				// if there is a primary key for this
 				if(isset($_SESSION[$crumb]))
@@ -1061,19 +1062,21 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		foreach(Report::model()->findAll($criteria) as $report)
 		{
 			// determine if this user has access
-			foreach($report->reportToAuthItems as &$reportToAuthItem)
+			foreach($report->reportToAuthItems as $reportToAuthItem)
 			{
 				if(Yii::app()->user->checkAccess($reportToAuthItem->AuthItem_name))
 				{
+					$params['id'] = $report->id;
+					if(!empty($pk))
+					{
+						$params['pk'] = $pk;
+					}
 					// add menu item
 					$items[$report->description] = array(
 						'label' => $report->description,
-						'url' => Yii::app()->createUrl('Report/show', array(
-							'id' => $report->id,
-							'pk' => $pk,
-						)),
+						'url' => Yii::app()->createUrl('Report/show', $params),
 						'urlJavascript' => Yii::app()->createUrl('Report/show', array('id' => $report->id))."?pk=\" + id",
-						);
+					);
 				}
 			}
 		}

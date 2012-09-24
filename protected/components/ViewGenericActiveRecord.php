@@ -48,12 +48,12 @@ abstract class ViewGenericActiveRecord extends ActiveRecord
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels($attributeLabels = array()) {
 		return parent::attributeLabels(array(
+			'id' => 'Custom type',
 			'description' => 'Custom type',
 			'value' => 'Value',
-		));
+		) + $attributeLabels);
 	}
 
 	/**

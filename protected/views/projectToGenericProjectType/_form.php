@@ -17,7 +17,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		));
 	}
 
-
 $this->endWidget();
 
 ?>
