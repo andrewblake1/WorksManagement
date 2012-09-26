@@ -118,15 +118,15 @@ class Planning extends CategoryActiveRecord {
 			case self::planningLevelCrewInt :
 				if($crew=Crew::model()->findByPk($this->id))
 				{
-					$crew->day_id = $crew->parent->id;
+					$crew->day_id = $this->parent->id;
 					$crew->save();
 				}
 				break;
 			case self::planningLevelTaskInt :
 				if($task=Task::model()->findByPk($this->id))
 				{
-					$task->crew_id = $task->parent->id;
-					$model->save();
+					$task->crew_id = $this->parent->id;
+					$task->save();
 				}
 				break;
 		}

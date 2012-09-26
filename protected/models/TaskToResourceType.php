@@ -12,11 +12,11 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property ResourceData $resourceData
- * @property ResourceData $resourceType
- * @property ResourceData $level0
- * @property Staff $staff
  * @property Task $task
+ * @property Staff $staff
+ * @property ResourceData $resourceData
+ * @property ResourceTypeToSupplier $resourceType
+ * @property ResourceData $level0
  */
 class TaskToResourceType extends ActiveRecord
 {
@@ -24,7 +24,7 @@ class TaskToResourceType extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchTask;
+	public $searchResourceTypeToSupplier;
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -34,6 +34,7 @@ class TaskToResourceType extends ActiveRecord
 	public $hours;
 	public $start;
 	public $description;
+	public $resource_type_to_supplier_id;
 
 	/**
 	 * @return string the associated database table name
@@ -55,10 +56,10 @@ class TaskToResourceType extends ActiveRecord
 			array('level, resource_type_id, quantity, hours, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			array('task_id', 'length', 'max'=>10),
-			array('start', 'safe'),
+			array('start, resource_type_to_supplier_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, task_id, searchTask, description, quantity, hours, start, searchStaff', 'safe', 'on'=>'search'),
+			array('id, level, task_id, searchResourceTypeToSupplier, description, quantity, hours, start, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -86,7 +87,8 @@ class TaskToResourceType extends ActiveRecord
 		return parent::attributeLabels(array(
 			'id' => 'Task to resource type',
 			'task_id' => 'Task',
-			'searchTask' => 'Task',
+			'searchResourceTypeToSupplier' => 'Supplier',
+			'resource_type_to_supplier_id' => 'Supplier',
 			'resource_type_id' => 'Resource type',
 			'description' => 'Resource type',
 			'quantity' => 'Quantity',
@@ -107,6 +109,7 @@ class TaskToResourceType extends ActiveRecord
 		$criteria->select=array(
 			't.resource_type_id',
 			'resourceType.description AS description',
+			'resourceTypeToSupplier.name AS searchResourceTypeToSupplier',
 			'resourceData.quantity AS quantity',
 			'resourceData.hours AS hours',
 			'resourceData.start AS start',
@@ -115,6 +118,7 @@ class TaskToResourceType extends ActiveRecord
 
 		// where
 		$criteria->compare('description',$this->description,true);
+		$criteria->compare('resourceTypeToSupplier.name',$this->searchResourceTypeToSupplier,true);
 		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('hours',$this->hours);
 		$criteria->compare('start',$this->start);
@@ -125,6 +129,7 @@ class TaskToResourceType extends ActiveRecord
 		$criteria->with = array(
 			'resourceData',
 			'resourceData.resourceType',
+			'resourceData.resourceTypeToSupplier',
 			);
 
 		return $criteria;
@@ -133,6 +138,7 @@ class TaskToResourceType extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('description', 'ResourceType', 'resource_type_id');
+        $columns[] = static::linkColumn('searchResourceTypeToSupplier', 'ResourceTypeToSupplier', 'resource_type_to_supplier_id');
 		$columns[] = 'quantity';
 		$columns[] = 'hours';
 		$columns[] = 'start';
@@ -147,7 +153,7 @@ class TaskToResourceType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTask', 'description', 'quantity', 'hours', 'start');
+		return array('searchResourceTypeToSupplier', 'description', 'quantity', 'hours', 'start');
 	}
 	
 	static function getDisplayAttr()
@@ -157,6 +163,7 @@ class TaskToResourceType extends ActiveRecord
 
 	public function beforeSave()
 	{
+		$this->resourceData->resource_type_to_supplier_id = $this->resource_type_to_supplier_id;
 		$this->resourceData->quantity = $this->quantity;
 		$this->resourceData->hours = $this->hours;
 		$this->resourceData->start = $this->start;
@@ -165,6 +172,7 @@ class TaskToResourceType extends ActiveRecord
 	}
 
 	public function afterFind() {
+		$this->resource_type_to_supplier_id = $this->resourceData->resource_type_to_supplier_id;
 		$this->quantity = $this->resourceData->quantity;
 		$this->hours = $this->resourceData->hours;
 		$this->start = $this->resourceData->start;

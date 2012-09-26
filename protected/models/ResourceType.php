@@ -13,9 +13,10 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Staff $staff
+ * @property ResourceData[] $resourceDatas
  * @property Resourcecategory $resourcecategory
- * @property TaskToResourceType[] $taskToResourceTypes
+ * @property Staff $staff
+ * @property ResourceTypeToSupplier[] $resourceTypeToSuppliers
  * @property TaskTypeToResourceType[] $taskTypeToResourceTypes
  */
 class ResourceType extends ActiveRecord
@@ -48,7 +49,7 @@ class ResourceType extends ActiveRecord
 			array('unit_price', 'length', 'max'=>7),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, resourcecategory_id, description, maximum, deleted, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, unit_price, resourcecategory_id, maximum, deleted, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,9 +61,10 @@ class ResourceType extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'resource_type_id'),
 			'resourcecategory' => array(self::BELONGS_TO, 'Resourcecategory', 'resourcecategory_id'),
-			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'resource_type_id'),
+			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'resourceTypeToSuppliers' => array(self::HAS_MANY, 'ResourceTypeToSupplier', 'resource_type_id'),
 			'taskTypeToResourceTypes' => array(self::HAS_MANY, 'TaskTypeToResourceType', 'resource_type_id'),
 		);
 	}

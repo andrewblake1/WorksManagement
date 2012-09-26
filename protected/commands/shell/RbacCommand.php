@@ -197,6 +197,11 @@ EOD;
 			 $this->_authManager->createOperation('ResourceTypeRead', 'ResourceType read');
 			 $task->addChild('ResourceTypeRead');
 
+			 $task=$this->_authManager->createTask('ResourceTypeToSupplier', 'ResourceTypeToSupplier task');
+			 $systemAdminRole->addChild('ResourceTypeToSupplier');
+			 $this->_authManager->createOperation('ResourceTypeToSupplierRead', 'ResourceTypeToSupplier read');
+			 $task->addChild('ResourceTypeToSupplierRead');
+
 			 $task=$this->_authManager->createTask('Resourcecategory', 'Resourcecategory task');
 			 $systemAdminRole->addChild('Resourcecategory');
 			 $this->_authManager->createOperation('ResourcecategoryRead', 'Resourcecategory read');
@@ -212,10 +217,15 @@ EOD;
 			 $this->_authManager->createOperation('SupplierRead', 'Supplier read');
 			 $task->addChild('SupplierRead');
 
-			 $task=$this->_authManager->createTask('TaskToGenericTaskType', 'TaskToGenericTaskType task');
-			 $systemAdminRole->addChild('TaskToGenericTaskType');
-			 $this->_authManager->createOperation('TaskToGenericTaskTypeRead', 'TaskToGenericTaskType read');
-			 $task->addChild('TaskToGenericTaskTypeRead');
+			 $task=$this->_authManager->createTask('SupplierToSupplierContact', 'SupplierToSupplierContact task');
+			 $systemAdminRole->addChild('SupplierToSupplierContact');
+			 $this->_authManager->createOperation('SupplierToSupplierContactRead', 'SupplierToSupplierContact read');
+			 $task->addChild('SupplierToSupplierContactRead');
+
+			 $task=$this->_authManager->createTask('SupplierContact', 'SupplierContact task');
+			 $systemAdminRole->addChild('SupplierContact');
+			 $this->_authManager->createOperation('SupplierContactRead', 'SupplierContact read');
+			 $task->addChild('SupplierContactRead');
 
 			 // project manager
 			 $projectManagerRole=$this->_authManager->createRole('project manager', 'Project manager');
@@ -290,6 +300,11 @@ EOD;
 			 $projectManagerRole->addChild('TaskToAssembly');
 			 $this->_authManager->createOperation('TaskToAssemblyRead', 'TaskToAssembly read');
 			 $task->addChild('TaskToAssemblyRead');
+
+			 $task=$this->_authManager->createTask('TaskToGenericTaskType', 'TaskToGenericTaskType task');
+			 $systemAdminRole->addChild('TaskToGenericTaskType');
+			 $this->_authManager->createOperation('TaskToGenericTaskTypeRead', 'TaskToGenericTaskType read');
+			 $task->addChild('TaskToGenericTaskTypeRead');
 
 			 $task=$this->_authManager->createTask('TaskToPurchaseOrder', 'TaskToPurchaseOrder task');
 			 $projectManagerRole->addChild('TaskToPurchaseOrder');

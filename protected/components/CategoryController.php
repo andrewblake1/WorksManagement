@@ -127,7 +127,19 @@ class CategoryController extends Controller
 		$id=$_POST['id'];
 		$deleted_cat=$this->loadModel($id);
 
-		if($deleted_cat->deleteNode())
+		try
+		{
+			$deleted = $deleted_cat->deleteNode();
+		}
+		catch (Exception $e)
+		{
+			// most likely tying to delete parent of child - could check fo the error here or override the delete method
+			// in nested set behaviour to use our db_callback function to smooth the error and report back but for now until otherwise
+			// determined assuming trying to delete parent and report that
+			$deleted = false; 
+		}
+
+		if($deleted)
 		{
 			echo json_encode (array('success'=>true));
 			exit;

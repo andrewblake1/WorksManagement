@@ -19,6 +19,7 @@
  */
 class Day extends ActiveRecord
 {
+	static $niceNamePlural = 'Days';
 	public $searchInCharge;
 	public $name;
 	public $in_charge_id;

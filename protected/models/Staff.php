@@ -21,6 +21,7 @@
  * @property Assembly[] $assemblies
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property Client[] $clients
+ * @property ClientContact[] $clientContacts
  * @property Crew[] $crews
  * @property Day[] $days
  * @property DefaultValue[] $defaultValues
@@ -37,6 +38,7 @@
  * @property Material[] $materials
  * @property MaterialToTask[] $materialToTasks
  * @property Project[] $projects
+ * @property ProjectToClientContact[] $projectToClientContacts
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
  * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
  * @property ProjectType[] $projectTypes
@@ -46,12 +48,16 @@
  * @property ReportToAuthItem[] $reportToAuthItems
  * @property ResourceData[] $resourceDatas
  * @property ResourceType[] $resourceTypes
+ * @property ResourceTypeToSupplier[] $resourceTypeToSuppliers
  * @property Resourcecategory[] $resourcecategories
  * @property Planning[] $plannings
  * @property Planning[] $plannings1
  * @property Staff $staff
  * @property Staff[] $staffs
+ * @property SubReport[] $subReports
  * @property Supplier[] $suppliers
+ * @property SupplierContact[] $supplierContacts
+ * @property SupplierToSupplierContact[] $supplierToSupplierContacts
  * @property Task[] $tasks
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
@@ -62,7 +68,8 @@
  * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
  * @property TaskTypeToMaterial[] $taskTypeToMaterials
  * @property TaskTypeToResourceType[] $taskTypeToResourceTypes
- */class Staff extends ActiveRecord
+*/
+class Staff extends ActiveRecord
 {
 	/**
 	 * @return string the associated database table name
@@ -106,6 +113,7 @@
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'staff_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'staff_id'),
 			'clients' => array(self::HAS_MANY, 'Client', 'staff_id'),
+			'clientContacts' => array(self::HAS_MANY, 'ClientContact', 'staff_id'),
 			'crews' => array(self::HAS_MANY, 'Crew', 'staff_id'),
 			'days' => array(self::HAS_MANY, 'Day', 'staff_id'),
 			'defaultValues' => array(self::HAS_MANY, 'DefaultValue', 'staff_id'),
@@ -121,7 +129,10 @@
 			'generictaskcategories' => array(self::HAS_MANY, 'Generictaskcategory', 'staff_id'),
 			'materials' => array(self::HAS_MANY, 'Material', 'staff_id'),
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'staff_id'),
+			'plannings' => array(self::HAS_MANY, 'Planning', 'staff_id'),
+			'plannings1' => array(self::HAS_MANY, 'Planning', 'in_charge_id'),
 			'projects' => array(self::HAS_MANY, 'Project', 'staff_id'),
+			'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'staff_id'),
 			'projectToGenericProjectTypes' => array(self::HAS_MANY, 'ProjectToGenericProjectType', 'staff_id'),
 			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'staff_id'),
 			'projectTypes' => array(self::HAS_MANY, 'ProjectType', 'staff_id'),
@@ -131,12 +142,14 @@
 			'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'staff_id'),
 			'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'staff_id'),
 			'resourceTypes' => array(self::HAS_MANY, 'ResourceType', 'staff_id'),
+			'resourceTypeToSuppliers' => array(self::HAS_MANY, 'ResourceTypeToSupplier', 'staff_id'),
 			'resourcecategories' => array(self::HAS_MANY, 'Resourcecategory', 'staff_id'),
-			'plannings' => array(self::HAS_MANY, 'Planning', 'in_charge_id'),
-			'plannings1' => array(self::HAS_MANY, 'Planning', 'staff_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'staffs' => array(self::HAS_MANY, 'Staff', 'staff_id'),
+			'subReports' => array(self::HAS_MANY, 'SubReport', 'staff_id'),
 			'suppliers' => array(self::HAS_MANY, 'Supplier', 'staff_id'),
+			'supplierContacts' => array(self::HAS_MANY, 'SupplierContact', 'staff_id'),
+			'supplierToSupplierContacts' => array(self::HAS_MANY, 'SupplierToSupplierContact', 'staff_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'staff_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'staff_id'),
 			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'staff_id'),

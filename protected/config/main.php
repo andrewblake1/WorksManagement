@@ -198,13 +198,18 @@ return array(
 					'SubReport',
 				),
 				'Resourcecategory'=>array(
-					'ResourceType',
+					'ResourceType'=>array(
+						'ResourceTypeToSupplier',
+					),
 				),
 				'Staff'=>array(
 					'AuthAssignment',
 				),
 				'Supplier'=>array(
 					'PurchaseOrder',
+					'SupplierToSupplierContact'=>array(
+						'SupplierContact',
+					),
 				),
 			),
 		),

@@ -11,7 +11,9 @@
  *
  * The followings are the available model relations:
  * @property PurchaseOrder[] $purchaseOrders
+ * @property ResourceTypeToSupplier[] $resourceTypeToSuppliers
  * @property Staff $staff
+ * @property SupplierToSupplierContact[] $supplierToSupplierContacts
  */
 class Supplier extends ActiveRecord
 {
@@ -49,7 +51,9 @@ class Supplier extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrder', 'supplier_id'),
+			'resourceTypeToSuppliers' => array(self::HAS_MANY, 'ResourceTypeToSupplier', 'supplier_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'supplierToSupplierContacts' => array(self::HAS_MANY, 'SupplierToSupplierContact', 'supplier_id'),
 		);
 	}
 

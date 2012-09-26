@@ -22,6 +22,13 @@ Yii::app()->user->setFlash('info','
 		<li>Root nodes cannot be reordered.Their order is fixed  by id.</li>
 	</ul>');
 
+?>
+
+<div class="alert in alert-block fade alert-error hide"><a data-dismiss="alert" class="close">×</a><strong>Oops!</strong>
+	Unfortunately you can't delete this as at least one other record in the database refers to it.</div>
+
+<?php
+
 $this->widget('bootstrap.widgets.TbAlert');
 
 // as using boostrap modal for create the html for the modal needs to be on
@@ -161,6 +168,7 @@ echo '
 		})
 
 		.bind("remove.jstree", function (e, data) {
+
 			$.ajax({
 				type:"POST",
 				url:"<?php echo "$baseUrl/$modelName/remove"; ?>",
@@ -174,9 +182,15 @@ echo '
 				complete: function(){
 					$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
 				},
-				success:function (r) {  response= $.parseJSON(r);
+				success:function (r) {
+
+					response= $.parseJSON(r);
 					if(!response.success) {
+						$('.alert-error').show();
 						$.jstree.rollback(data.rlbk);
+					}
+					else {
+						$('.alert-error').hide();
 					};
 				}
 			});

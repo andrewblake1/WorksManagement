@@ -1,11 +1,10 @@
 <?php
 
 /**
- * This is the model class for table "client_contact".
+ * This is the model class for table "supplier_contact".
  *
- * The followings are the available columns in table 'client_contact':
+ * The followings are the available columns in table 'supplier_contact':
  * @property integer $id
- * @property integer $client_id
  * @property string $first_name
  * @property string $last_name
  * @property string $email
@@ -24,10 +23,10 @@
  *
  * The followings are the available model relations:
  * @property Staff $staff
- * @property Client $client
- * @property ProjectToClientContact[] $projectToClientContacts
+ * @property Supplier $supplier
+ * @property ProjectToSupplierContact[] $projectToSupplierContacts
  */
-class ClientContact extends ActiveRecord
+class SupplierContact extends ActiveRecord
 {
 
 	/**
@@ -40,7 +39,7 @@ class ClientContact extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'client_contact';
+		return 'supplier_contact';
 	}
 
 	/**
@@ -51,14 +50,14 @@ class ClientContact extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('client_id, first_name, last_name, email, staff_id', 'required'),
-			array('client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('first_name, last_name, email, staff_id', 'required'),
+			array('deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('first_name, last_name, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
 			array('email, address_line1, address_line2', 'length', 'max'=>255),
 			array('post_code', 'length', 'max'=>16),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, client_id, first_name, last_name, email, address_line1, address_line2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, first_name, last_name, email, address_line1, address_line2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -71,8 +70,7 @@ class ClientContact extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
-			'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'client_contact_id'),
+			'projectToSupplierContacts' => array(self::HAS_MANY, 'ProjectToSupplierContact', 'supplier_contact_id'),
 		);
 	}
 
@@ -82,8 +80,7 @@ class ClientContact extends ActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'Client',
-			'client_id' => 'Client',
+			'id' => 'Supplier',
 			'first_name' => 'First name',
 			'last_name' => 'Last name',
 			'email' => 'Email',

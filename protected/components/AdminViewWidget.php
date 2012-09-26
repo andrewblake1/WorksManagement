@@ -45,14 +45,14 @@ class AdminViewWidget extends CWidget
 				'class'=>'WMTbButtonColumn',
                 'buttons'=>array(
 					'delete' => array(
-							'visible'=>'Yii::app()->user->checkAccess(get_class($data), array("primaryKey"=>$data->primaryKey))',
+							'visible'=>'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
 					),
 					'update' => array(
-							'visible'=>'Yii::app()->user->checkAccess(get_class($data), array("primaryKey"=>$data->primaryKey))',
+							'visible'=>'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
 					),
 					'view' => array(
 							'visible'=>'
-								!Yii::app()->user->checkAccess(get_class($data), array("primaryKey"=>$data->id))
+								!Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))
 								&& Yii::app()->user->checkAccess(get_class($data)."Read")
 							',
 					),
@@ -63,6 +63,7 @@ class AdminViewWidget extends CWidget
 		// add instructions/ warnings errors via Yii::app()->user->setFlash
 		// NB: thia won't work on ajax update as in delete hence afterDelete javascript added in WMTbButtonColumn
 		$this->_controller->widget('bootstrap.widgets.TbAlert');
+		
 
 // TODO: figure out how to use this for the error message flash in WMTbButtonColumn - also slow the fade futher
 /*		// add fade out to the flash message

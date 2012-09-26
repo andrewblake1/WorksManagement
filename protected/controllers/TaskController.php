@@ -68,7 +68,7 @@ class TaskController extends GenericExtensionController
 		// put the model into the models array used for showing all errors
 		$models[] = $planning;
 		
-		return $saved & parent::createSave($model, $models);
+		return $saved & parent::updateSave($model, $models);
 	}
 
 
