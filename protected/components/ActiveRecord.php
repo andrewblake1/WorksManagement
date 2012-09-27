@@ -272,19 +272,19 @@ abstract class ActiveRecord extends CActiveRecord
 		if(($trailSize = sizeof($trail)) > 1)
 		{
 			// loop thru trail
-			$skip = false;
+//			$skip = false;
 			foreach($trail = array_reverse($trail) as $crumb)
 			{
 				// if we had to jump up a level
-				if($skip)
-				{
-					$skip = false;
-					continue;
-				}
+//				if($skip)
+//				{
+//					$skip = false;
+//					continue;
+//				}
 				// skip the first one
 				if($crumb == $modelName)
 				{
-					// get this model
+/*					// get this model
 					if(!empty($_SESSION[$crumb]['value']))
 					{
 						$pk = $_SESSION[$crumb]['value'];
@@ -313,12 +313,14 @@ abstract class ActiveRecord extends CActiveRecord
 							throw Exception();
 						}
 					}
-					$model = $crumb::model()->findByPk($pk);
+					$model = $crumb::model()->findByPk($pk);*/
+					$model = $this;
 					continue;
 				}
 
+				$modelName = get_class($model);
 				// get the name of the foreing key field in this model referring to the parent
-				$primaryKeyName = static::getParentForeignKey($crumb);
+				$primaryKeyName = $modelName::getParentForeignKey($crumb);
 				// ensure the primary key is set for this parent crumb
 				$_SESSION[$crumb]['name'] = $crumb::model()->tableSchema->primaryKey;
 
@@ -515,6 +517,14 @@ abstract class ActiveRecord extends CActiveRecord
 			{
 				$this->$name = date('Y-m-d H:i:s', strtotime($value));
 			}
+			// convert time to mysql format - allow for nulls - convert single colon without seconds to seconds
+			if(!empty($value) && $this->metadata->columns[$name]->dbType == 'time')
+			{
+				if(substr_count($value, ':') == 1)
+				{
+					$value .= ':00';
+				}
+			}
 		}
 
 		return parent::beforeSave();
@@ -551,6 +561,7 @@ abstract class ActiveRecord extends CActiveRecord
 		catch(CDbException $e)
 		{
 			$errorMessage = $e->getMessage();
+fb($errorMessage);
 			foreach ($messages as $needle => &$message)
 			{
 				// NB: do not remove the speech marks around needle - converting to string
@@ -560,8 +571,8 @@ abstract class ActiveRecord extends CActiveRecord
 					break;
 				}
 			}
-
 			$this->addError(null, $errorMessage);
+			return;
 		}
 if(count($m = $this->getErrors()))
 {
@@ -570,6 +581,39 @@ if(count($m = $this->getErrors()))
 		return $return;
 	}
 
+	public function delete()
+	{
+		if(!$this->getIsNewRecord())
+		{
+			Yii::trace(get_class($this).'.delete()','system.db.ar.CActiveRecord');
+			if($this->beforeDelete())
+			{
+				// if this model has a deleted attribute
+				if(isset($this->deleted))
+				{
+					// soft delete
+					// mark the row as deleted - increment to allow re-create and re delete later without violating unique constraints combined with deleted
+					$this->deleted = Yii::app()->db->createCommand('SELECT MAX(deleted) + 1 FROM '.$this->tableName())->queryScalar();
+					$result=$this->save();
+				}
+				// otherwise delete the row
+				else
+				{
+					// hard delete
+					$result=$this->deleteByPk($this->getPrimaryKey())>0;;
+				}
+
+				$this->afterDelete();
+				return $result;
+			}
+			else
+				return false;
+		}
+		else
+			throw new CDbException(Yii::t('yii','The active record cannot be deleted because it is new.'));
+	}
+
+	
 	/*
 	 * automatically add max length attribute to inputs to save being in view file
 	 * From http://www.yiiframework.com/forum/index.php/topic/3320-automatic-maxlength-attribute-for-input-fields-type-text-or-password/
@@ -636,6 +680,11 @@ if(count($m = $this->getErrors()))
 			if($columns[$attributeName]->dbType == 'datetime')
 			{
 				$this->$attributeName = Yii::app()->format->datetime($value);
+			}
+			// see if date column
+			if($columns[$attributeName]->dbType == 'time')
+			{
+				$this->$attributeName = Yii::app()->format->time($value);
 			}
 		}
 		

@@ -63,11 +63,13 @@ class Planning extends CategoryActiveRecord {
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
+		$rules = parent::rules();
+		$rules[] = array('project_id, in_charge_id, levelName', 'safe');
+		
+		return $rules;
+/*		return array(
 			array('project_id, in_charge_id, levelName', 'safe'),
-		) + parent::rules();
+		) + parent::rules();*/
 	}
 
 	/**

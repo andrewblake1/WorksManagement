@@ -20,6 +20,8 @@
  */
 class ProjectTypeToAuthItem extends ActiveRecord
 {
+	public $searchAuthItem;	
+	
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -64,7 +66,7 @@ class ProjectTypeToAuthItem extends ActiveRecord
 			array('AuthItem_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, project_type_id, AuthItem_name, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchAuthItem, project_type_id, AuthItem_name, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -93,6 +95,7 @@ class ProjectTypeToAuthItem extends ActiveRecord
 		return parent::attributeLabels(array(
 			'id' => 'Project type to role',
 			'project_type_id' => 'Project type',
+			'searchAuthItem' => 'Role',			
 			'AuthItem_name' => 'Role',
 		));
 	}
@@ -106,19 +109,24 @@ class ProjectTypeToAuthItem extends ActiveRecord
 
 		// select
 		$criteria->select=array(
-			'AuthItem_name',
+			'authItemName.description AS searchAuthItem',
 		);
 
 		// where
-		$criteria->compare('t.AuthItem_name',$this->AuthItem_name,true);
+		$criteria->compare('authItemName.description',$this->searchAuthItem,true);
 		$criteria->compare('t.project_type_id',$this->project_type_id);
+		
+		// join
+		$criteria->with = array(
+			'authItemName',
+		);
 
 		return $criteria;
 	}
 	
 	public function getAdminColumns()
 	{
-		$columns[] = 'AuthItem_name';
+        $columns[] = static::linkColumn('searchAuthItem', 'AuthItem', 'AuthItem_name');
 		
 		return $columns;
 	}
@@ -128,9 +136,18 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		$displaAttr[]='AuthItem_name';
+		$displaAttr[]='authItemName->description';
 
 		return $displaAttr;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchAuthItem');
 	}
 
 }

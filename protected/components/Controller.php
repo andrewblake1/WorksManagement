@@ -250,7 +250,8 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				{
 					break;
 				}
-				$items = $items[$value];
+				// if there are items below
+				$items = isset($items[$value]) ? $items[$value] : null;
 			}
 			// NB: by now items could be empty if looking for next level and nothing below i.e. next level from leaf
 			
@@ -536,6 +537,8 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				// if there is a primary key for this
 				if(isset($_SESSION[$crumb]))
 				{
+fb($crumb);
+fb($_SESSION, true);
 					// add an update crumb to this primary key
 					$primaryKey = $_SESSION[$crumb];
 		//			$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", 'id'=>$primaryKey['value']);
@@ -798,15 +801,16 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	public function actionView($id)
 	{
 		$model=$this->loadModel($id);
-
+		$primaryKeyName = $model->tableSchema->primaryKey;
+		
 		// add primary key into session so it can be retrieved for future use in breadcrumbs
 		$_SESSION[$this->modelName] = array(
-			'name'=>$model->tableSchema->primaryKey,
+			'name'=>$primaryKeyName,
 			'value'=>$id,
 		);
 		
 		// otherwise this is just a get and could be passing paramters
-		$model->attributes=$_GET[$this->modelName];
+		$model->$primaryKeyName=$id;
 		
 		// set heading
 		$modelName = $this->modelName;
@@ -820,7 +824,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 
 		$this->widget('UpdateViewWidget', array(
 			'model'=>$model,
-			'models'=>$models,
+//			'models'=>$models,
 		));
 	}
 
@@ -843,7 +847,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				// we only allow deletion via POST request
 				$model = $this->loadModel($id);
 
-				// if this model has a deleted attribute
+/*				// if this model has a deleted attribute
 				if(isset($model->deleted))
 				{
 					// mark the row as deleted - increment to allow re-create and re delete later without violating unique constraints combined with deleted
@@ -854,7 +858,8 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				else
 				{
 					$model->delete();
-				}
+				}*/
+				$model->delete();
 				
 				// call up any special handling in child class
 				$this->actionAfterDelete($model);

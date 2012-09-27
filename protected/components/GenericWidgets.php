@@ -107,7 +107,7 @@ class GenericWidgets extends CWidget
 				'relationToGenericType'=>"{$this->relation_modelToGenericModelType}->{$this->relation_genericModelType}->genericType",
 			));
 			// add the widget html to the tree branch
-			$categoryTree->add($category->id, ob_get_clean());
+			$categoryTree->add(isset($category->id) ? $category->id : null, ob_get_clean());
 			
 		}
 

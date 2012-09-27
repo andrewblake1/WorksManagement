@@ -52,11 +52,12 @@ class TaskToResourceType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, resource_type_id, quantity, hours, staff_id', 'required'),
+			array('task_id, resource_type_id, quantity, staff_id', 'required'),
 			array('level, resource_type_id, quantity, hours, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			array('task_id', 'length', 'max'=>10),
-			array('start, resource_type_to_supplier_id', 'safe'),
+			array('resource_type_to_supplier_id', 'safe'),
+			array('start, hours', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, level, task_id, searchResourceTypeToSupplier, description, quantity, hours, start, searchStaff', 'safe', 'on'=>'search'),
@@ -120,8 +121,8 @@ class TaskToResourceType extends ActiveRecord
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('resourceTypeToSupplier.name',$this->searchResourceTypeToSupplier,true);
 		$criteria->compare('quantity',$this->quantity);
-		$criteria->compare('hours',$this->hours);
-		$criteria->compare('start',$this->start);
+		$criteria->compare('hours',Yii::app()->format->toMysqlTime($this->hours));
+		$criteria->compare('start',Yii::app()->format->toMysqlTime($this->start));
 		$criteria->compare('t.level',$this->level);
 		$criteria->compare('t.task_id',$this->task_id);
 		

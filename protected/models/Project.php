@@ -52,7 +52,8 @@ class Project extends ActiveRecord
 			array('project_type_id, staff_id', 'required'),
 			array('project_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id', 'length', 'max'=>10),
-			array('travel_time_1_way, critical_completion, planned, client_id, name', 'safe'),
+			array('critical_completion, planned, client_id, name', 'safe'),
+			array('travel_time_1_way', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, level, searchInCharge, travel_time_1_way, critical_completion, planned, name, searchStaff, searchProjectType', 'safe', 'on'=>'search'),
@@ -123,7 +124,7 @@ class Project extends ActiveRecord
 		// where
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('name',$this->name,true);
-		$criteria->compare('t.travel_time_1_way',$this->travel_time_1_way);
+		$criteria->compare('t.travel_time_1_way',Yii::app()->format->toMysqlTime($this->travel_time_1_way));
 		$criteria->compare('t.critical_completion',Yii::app()->format->toMysqlDate($this->critical_completion));
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
 		$criteria->compare('projectType.description', $this->searchProjectType, true);

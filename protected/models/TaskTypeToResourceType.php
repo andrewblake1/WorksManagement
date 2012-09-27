@@ -45,8 +45,9 @@ class TaskTypeToResourceType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_type_id, resource_type_id, quantity, hours, staff_id', 'required'),
-			array('task_type_id, resource_type_id, quantity, hours, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, resource_type_id, quantity, staff_id', 'required'),
+			array('task_type_id, resource_type_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('hours', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, task_type_id, searchTaskType, searchResourceType, quantity, hours, staff_id', 'safe', 'on'=>'search'),
@@ -101,7 +102,7 @@ class TaskTypeToResourceType extends ActiveRecord
 		// where
 		$criteria->compare('resourceType.description',$this->searchResourceType);
 		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.hours',$this->hours);
+		$criteria->compare('t.hours',Yii::app()->format->toMysqlTime($this->hours));
 		$criteria->compare('t.task_type_id',$this->task_type_id);
 
 		// join

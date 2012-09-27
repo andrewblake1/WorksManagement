@@ -28,10 +28,10 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 		$relName = $this->relName;
 
 		CHtml::resolveNameID($this->model, $attr, $tempHtmlOpts);
-        $id = $tempHtmlOpts['id'];
-        $this->_fieldID = $id;
-        $this->_saveID = $id . '_save';
-        $this->_lookupID = $id .'_lookup';
+		$id = $tempHtmlOpts['id'];
+		$this->_fieldID = $id;
+		$this->_saveID = $id . '_save';
+		$this->_lookupID = $id .'_lookup';
 
         $value = CHtml::resolveValue($this->model, $this->attribute);
 

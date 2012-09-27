@@ -52,7 +52,7 @@ cd yii
 git checkout 1.1.12
 
 3./ MySQL - to upload databases straight from workbench need to open mysql to other ip's
-find / -name my.cnf
+find / -name my.cnf. This potential security risk as normally only open to 127.0.0.1 - may require firewall to make safe
 #edit my.cnf to allow access from any ip??
 /etc/init.d/mysql restart
 
@@ -76,4 +76,18 @@ cp local_template.php local.php
 
 #5./ update index.php with correct domains/subdomains in the switch statement that determines the type of environment to run i.e. developmen or production
 
-#6./ to update to repository source go to the document root and type git remote update
+#6./ to update to repository source go to the document root and type
+git remote update
+git checkout - not sure if this step needed
+git merge origin/master
+
+
+CLEANING DATA
+=============
+Cleaning UED & JEN Material catalog for Melbourne
+
+Using sed on Debian as Mac OSX sed doesn't appear to support logical OR (|)
+1./ import the data into mysql first before UPDATE Sheet1 SET A = REPLACE(A, '"', ''); to remove speech marks
+2./ export to CSV with field delimeter " and seperator ; or whatever suits. NB: no good to export CSV from Excel as issues with CR LF pair vs newline required by sed on unix
+
+sed 's/^"\([0-9]*\) ";" \([0-9]*\)";" \(.*\) \(JAR\|BAL\|CM\|PAA\|LTH\|cl\|SHT\|CAN\|CON\|DRM\|DR\|TBE\|BT\|BR\|RL\|EA\|SET\|CAR\|BOX\|BAG\|ROL\|PAC\|M\)[" ].*/"\1";"\2";"\3";"\4";/' Sheet1.csv > Sheet2.csv

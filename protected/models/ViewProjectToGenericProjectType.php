@@ -19,6 +19,8 @@ class ViewProjectToGenericProjectType extends ViewGenericActiveRecord
 	{
 		$rules = parent::rules();
 		$rules[] = array('project_id', 'safe', 'on'=>'search');
+		
+		return $rules;
 	}
 
 	public function getSearchCriteria()

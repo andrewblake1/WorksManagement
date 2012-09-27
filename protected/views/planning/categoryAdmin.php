@@ -24,34 +24,10 @@ Yii::app()->user->setFlash('info','
 
 $this->widget('bootstrap.widgets.TbAlert');
 
-// as using boostrap modal for create the html for the modal needs to be on
-// the calling page i.e. this admin page
-
-// as handling multiple models i.e. tasks, crews and days and possibly projects in future, need a modal for each
-//$projectController = new ProjectController(null);
-//$projectController->actionCreate('myModalProject');
-
-$dayController = new DayController(null);
-$dayController->actionCreate('myModalDay');
-
-$crewController = new CrewController(null);
-$crewController->actionCreate('myModalCrew');
-
-$taskController = new TaskController(null);
-$taskController->actionCreate('myModalTask');
-// as using boostrap modal for create the html for the modal needs to be on
-// the calling page i.e. this admin page
-//$this->actionCreate();
-
-
-
-echo '
-
-	<!--The tree will be rendered in this div-->
-
-	<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" >
-
-	</div>';
+// holder for the modal form
+echo '<div class="modal fade" id="myModal" style="display: block;"><div class="modal-body" id="form-modal"></div></div>';
+// The tree will be rendered in this div-->
+echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 
 ?>
 
@@ -153,11 +129,11 @@ echo '
 										},
 										success: function(data){
 											// change the contents
-											$("#form-create" + modelName).html(data);
+											$("#form-modal").html(data);
 //											$("#myModal" + modelName + " form").replaceWith(data);
 											//$("#form-create" + targetName).replaceWith(data);
 											// display the modal
-											$("#myModal" + modelName).modal('show');
+											$("#myModal").modal('show');
 
 										} //success
 									});//ajax
@@ -223,9 +199,9 @@ echo '
 											},
 											success: function(data){
 												// change the contents
-												$("#form-create" + targetName).html(data);
+												$("#form-modal").html(data);
 												// display the modal
-												$("#myModal" + targetName).modal('show');
+												$("#myModal").modal('show');
 
 											} //success
 										});//ajax

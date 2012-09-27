@@ -21,6 +21,7 @@ class DayController extends Controller
 		$planning = new Planning;
 		$planning->name = $model->name;
 		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
+
 		if($saved = $planning->appendTo(Planning::model()->findByPk($model->project_id)))
 		{
 			$model->id = $planning->id;

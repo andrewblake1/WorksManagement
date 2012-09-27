@@ -71,6 +71,8 @@
 */
 class Staff extends ActiveRecord
 {
+	static $niceNamePlural = 'Staff';
+
 	/**
 	 * @return string the associated database table name
 	 */

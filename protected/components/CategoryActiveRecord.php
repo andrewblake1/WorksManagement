@@ -31,7 +31,7 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 		// NOTE2: Remove ALL rules associated with the nested Behavior:
 		//rgt,lft,root,level,id.
 		return array(
-			array('name, staff_id', 'required'),
+			array('staff_id', 'required'),
 			array('name', 'length', 'max' => 64),
 		);
 	}

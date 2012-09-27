@@ -15,6 +15,12 @@ class Formatter extends CFormatter
 			: date('d M Y, H:i:s', strtotime($value));
 	}
 
+	public function formatTime($value) {
+		return $value === null
+			? ''
+			: date('H:i', strtotime($value));
+	}
+
 	/**
 	 * Convert a string to a bool
 	 * @param type $value 
@@ -70,6 +76,28 @@ class Formatter extends CFormatter
 
 		return '';
 	}
+
+	/**
+	 * Convert a client entered date to a mysql time string
+	 * @param type $value 
+	 * @return mysql formatted date
+	 */
+	function formatToMysqlTime($value)
+	{
+		if(!empty($value))
+		{
+			if(substr_count($value, ':') == 1)
+			{
+				$value .= ':00';
+			}
+
+			// need to clear oiut ,'s first as seems to muck it up
+			return $value;
+		}
+
+		return '';
+	}
+
 }
 
 ?>

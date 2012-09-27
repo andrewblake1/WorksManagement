@@ -52,10 +52,10 @@ class ResourceData extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('planning_id, level, resource_type_id, quantity, hours, staff_id', 'required'),
-			array('resource_type_id, resource_type_to_supplier_id, quantity, hours, staff_id', 'numerical', 'integerOnly'=>true),
+			array('planning_id, level, resource_type_id, quantity, staff_id', 'required'),
+			array('resource_type_id, resource_type_to_supplier_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level', 'length', 'max'=>10),
-			array('start', 'safe'),
+			array('start, hours', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, planning_id, level, resource_type_id, resource_type_to_supplier_id, quantity, hours, start, staff_id', 'safe', 'on'=>'search'),
@@ -116,8 +116,8 @@ class ResourceData extends ActiveRecord
 		$criteria->compare('resource_type_id',$this->resource_type_id);
 		$criteria->compare('resource_type_to_supplier_id',$this->resource_type_to_supplier_id);
 		$criteria->compare('quantity',$this->quantity);
-		$criteria->compare('hours',$this->hours);
-		$criteria->compare('start',$this->start,true);
+		$criteria->compare('hours',Yii::app()->format->toMysqlTime($this->hours));
+		$criteria->compare('start',Yii::app()->format->toMysqlTime($this->start));
 		$criteria->compare('staff_id',$this->staff_id);
 
 		return new CActiveDataProvider($this, array(
