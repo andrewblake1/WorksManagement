@@ -7,12 +7,14 @@
  * @property integer $id
  * @property integer $assembly_id
  * @property integer $material_id
+ * @property integer $client_id
  * @property integer $quantity
  * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Assembly $assembly
+ * @property Material $client
  * @property Material $material
  * @property Staff $staff
  */
@@ -44,8 +46,8 @@ class AssemblyToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('assembly_id, material_id, quantity, staff_id', 'required'),
-			array('assembly_id, material_id, quantity, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, material_id, client_id, quantity, staff_id', 'required'),
+			array('assembly_id, material_id, client_id, quantity, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, assembly_id, searchMaterial, quantity, deleted, staff_id', 'safe', 'on'=>'search'),
@@ -61,6 +63,7 @@ class AssemblyToMaterial extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
+			'client' => array(self::BELONGS_TO, 'Material', 'client_id'),
 			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
@@ -125,8 +128,16 @@ class AssemblyToMaterial extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'assembly->description'
+			'material->description'
 		);
+	}
+	
+	public function beforeValidate()
+	{
+		$assembly = Assembly::model()->findByPk($this->assembly_id);
+		$this->client_id = $assembly->client_id;
+		
+		return parent::beforeValidate();
 	}
 
 }
