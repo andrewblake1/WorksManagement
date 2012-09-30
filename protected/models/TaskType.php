@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $description
  * @property integer $project_type_id
+ * @property integer $client_id
  * @property string $unit_price
  * @property integer $deleted
  * @property integer $staff_id
@@ -16,6 +17,7 @@
  * @property Task[] $tasks
  * @property Staff $staff
  * @property ProjectType $projectType
+ * @property ProjectType $client
  * @property TaskTypeToAssembly[] $taskTypeToAssemblies
  * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
  * @property TaskTypeToMaterial[] $taskTypeToMaterials
@@ -53,8 +55,8 @@ class TaskType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, project_type_id, staff_id', 'required'),
-			array('project_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, project_type_id, client_id, staff_id', 'required'),
+			array('project_type_id, client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			array('unit_price', 'length', 'max'=>7),
 			// The following rule is used by search().
@@ -75,6 +77,7 @@ class TaskType extends ActiveRecord
 			'tasks' => array(self::HAS_MANY, 'Task', 'task_type_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
+			'client' => array(self::BELONGS_TO, 'ProjectType', 'client_id'),
 			'taskTypeToAssemblies' => array(self::HAS_MANY, 'TaskTypeToAssembly', 'task_type_id'),
 			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'task_type_id'),
 			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'task_type_id'),
@@ -121,6 +124,14 @@ class TaskType extends ActiveRecord
 		$columns[] = 'unit_price';
  		
 		return $columns;
+	}
+
+	public function beforeValidate()
+	{
+		$projectType = ProjectType::model()->findByPk($this->project_type_id);
+		$this->client_id = $projectType->client_id;
+		
+		return parent::beforeValidate();
 	}
 
 }

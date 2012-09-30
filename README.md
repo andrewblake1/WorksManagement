@@ -32,7 +32,7 @@ apt-get update
 apt-get install git-core
 git config --global user.name "Andrew Blake"
 git config --global user.email admin@newzealandfishing.com
-
+apt-get install at
 apt-get install curl
 cd /usr/bin
 curl -s -O http://github-media-downloads.s3.amazonaws.com/osx/git-credential-osxkeychain
@@ -69,10 +69,32 @@ chown -R www-data .
 # if installed in domain/subdomain i.e. no supdirectory then .htaccess is fine, otherwise need to modify first RewriteRule e.g. /melbourne/ instead of /
 cd melbourne
 cp template.htaccess .htaccess
+# need to create private uploads directory/s below document root
+mkdir /home/www-data
+mkdir /uploads
+mkdir /uploads/test
+mkdir /uploads/test/melbourne
+mkdir /uploads/test/perth
+mkdir /uploads/test/melbourne/assembly
+mkdir /uploads/test/perth/assembly
+mkdir /uploads/melbourne
+mkdir /uploads/perth
+mkdir /uploads/melbourne/assembly
+mkdir /uploads/perth/assembly
+chown -R www-data /home/www-data
+# need to create public uploads temporary directories
+su www-data
+mkdir /var/www/melbourne/assets/assembly
+mkdir /var/www/perth/assets/assembly
+mkdir /var/www/test/melbourne/assets/assembly
+mkdir /var/www/test/perth/assets/assembly
+exit
+
+
 # need to set local database access
 cd protected/config
 cp local_template.php local.php
-# set database settings here
+# set database settings here - also set directories correct
 
 #5./ update index.php with correct domains/subdomains in the switch statement that determines the type of environment to run i.e. developmen or production
 

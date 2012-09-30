@@ -36,7 +36,7 @@ class ReportController extends Controller
 	{
 		// get this report model
 		self::$_model = Report::model()->findByPk($_GET['id']);
-
+		$context = $_GET['context'];
 
 		// determine if this user has access to this report
 		foreach(self::$_model->reportToAuthItems as $reportToAuthItem)
@@ -54,26 +54,30 @@ class ReportController extends Controller
 		
 		// verify the context
 		$controller = Yii::app()->controller;
-		$_modelName = $controller->modelName;
-		if(self::$_model->context && self::$_model->context != $_modelName)
+		if(self::$_model->context && self::$_model->context != $context)
 		{
 			throw new CHttpException(403,'The report isn\'t valid in this context.');
 		}
 
 		// get the primary key if any in play in this context
+		$pk = null;
 		// if pk passed
 		if(!empty($_GET['pk']))
 		{
 			$pk = $_GET['pk'];
 		}
-		if(isset($_SESSION[$_modelName]))
+		elseif(isset($_SESSION[$_modelName]))
 		{
-			$pk = $_SESSION[$_modelName]['value'];
+			$pk = $_SESSION[$context]['value'];
 		}
 
-		// do the substituitions
+		// adding parameter to callback function - to avoid a global
+		$callback = function( $matches ) use ( $pk ) {
+			return ReportController::subReportCallback($matches, $pk);
+		};
+
 		$html = self::$_model->template_html;
-		$html = preg_replace_callback('`\[(.*?)\]`', array('ReportController', 'subReportCallback'), $html);
+		$html = preg_replace_callback('`\{(.*?)\}`', $callback, $html);
 		
 		// if errors
 		if(!empty(self::$_errors))
@@ -93,8 +97,9 @@ class ReportController extends Controller
 		));
 	}
 
-	private static function subReportCallback($matches)
+	static function subReportCallback($matches, $pk)
 	{
+		$html = '';
 		$subReportDescription = $matches[1];
 
 		// get the sub report model
@@ -105,30 +110,28 @@ class ReportController extends Controller
 
 		// the sql
 		$sql = $subReportModel->select;
-		
-		// need to determine the count ourselves for when using CSqlDataProvider
-		try
-		{
-			$count=Yii::app()->db->createCommand("SELECT COUNT(*) FROM ($sql) alias1")->queryScalar();
-		}
-		catch (CDbException $e)
-		{
-			$this::$_errors[] = $e->getMessage();
-		}
 
+		// create commands
+		$countCommand=Yii::app()->db->createCommand("SELECT COUNT(*) FROM ($sql) alias1");
+		$command=Yii::app()->db->createCommand($sql);
+		
 		// if sql contains :userid
 		if(stripos($sql, ':userid') !== false)
 		{
 			$params[':userid'] = Yii::app()->user->id;
+			$countCommand->bindParam(":userid", $params[':userid'], PDO::PARAM_INT);
+			$command->bindParam(":userid", $params[':userid'], PDO::PARAM_INT);
 		}
 
 		// if sql contains :pk
 		if(stripos($sql, ':pk') !== false)
 		{
 			// get the primary key if any in play in this context
-			if(isset($_SESSION[$_modelName]))
+			if($pk)
 			{
-				$params[':pk'] = $_SESSION[$_modelName]['value'];
+				$params[':pk'] = $pk;
+				$countCommand->bindParam(":pk", $params[':pk'], PDO::PARAM_STR);
+				$command->bindParam(":pk", $params[':pk'], PDO::PARAM_STR);
 			}
 			// otherwise error
 			else
@@ -137,16 +140,26 @@ class ReportController extends Controller
 			}
 		}
 
+		// need to determine the count ourselves for when using CSqlDataProvider
+		try
+		{
+			$count = $countCommand->queryScalar();
+		}
+		catch (CDbException $e)
+		{
+			static::$_errors[] = $e->getMessage();
+		}
+
 		// if not formatting data in grid - assuming scalar
 		if($subReportModel->format == SubReport::subReportFormatNoFormat)
 		{
-			$html = Yii::app()->db->createCommand($sql)->queryScalar();
+			$html = $command->queryScalar();
 		}
 		// otherwise displaying in a grid
-		else
+		elseif($count)
 		{
 			// need to determine our own sort columns also with CSqlDataProvider
-			$attributes=array_keys(Yii::app()->db->createCommand($sql)->queryRow());
+			$attributes=array_keys($command->queryRow());
 
 			$options['totalItemCount'] = $count;
 			$options['sort'] = array('attributes'=>$attributes);
@@ -154,6 +167,8 @@ class ReportController extends Controller
 			// if we need to page
 			if($subReportModel->format == SubReport::subReportFormatPaged)
 			{
+				// set the cgridview template to include paged stuff
+				$template = '{items}\n{pager}';
 				$options['pagination'] = array('pageSize'=>10);
 				// Create filter model and set properties
 				$filtersForm=new FiltersForm;
@@ -176,6 +191,8 @@ class ReportController extends Controller
 			{
 				// NB: pagination needs to be set to false in order to stop paginating
 				$options['pagination'] =  false;
+				// set the cgridview template to exclude paged stuff
+				$template = '{items}';
 			}
 
 			if(!empty($params))
@@ -186,29 +203,32 @@ class ReportController extends Controller
 			// the data provider
 			$dataProvider=new CSqlDataProvider($sql, $options);
 
-			
-			// if exporting to xl
-			if(isset($_GET['action']) && $_GET['action'] == 'download')
-			{
-				// Export it
-				Yii::app()->controller->toExcel($dataProvider, $attributes, null, array(), 'CSV'/*'Excel5'*/);
-			}
-	// TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
-	// TODO excel2007 best format however mixed results getting succesfull creations with this = varies across servers likely php_zip issue	thnk
-	// it works on windows machine however not mac nor linux for me so far.
-			
 			// get the grid
 			ob_start();
 
-			// export button
-			echo '<h2>';
-				Yii::app()->controller->widget('bootstrap.widgets.TbButton', array(
-					'label'=>'Download Excel',
-					'url'=>Yii::app()->controller->createUrl("show", $_GET + array('action'=>'download')),
-					'type'=>'primary',
-					'size'=>'small', // '', 'large', 'small' or 'mini'
-				));
-			echo '</h2>';
+			// if we need to page
+			if($subReportModel->format == SubReport::subReportFormatPaged)
+			{
+				// if exporting to xl
+				if(isset($_GET['action']) && $_GET['action'] == 'download')
+				{
+					// Export it
+					Yii::app()->controller->toExcel($dataProvider, $attributes, null, array(), 'CSV'/*'Excel5'*/);
+				}
+		// TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
+		// TODO excel2007 best format however mixed results getting succesfull creations with this = varies across servers likely php_zip issue	thnk
+		// it works on windows machine however not mac nor linux for me so far.
+
+				// export button
+				echo '<h2>';
+					Yii::app()->controller->widget('bootstrap.widgets.TbButton', array(
+						'label'=>'Download Excel',
+						'url'=>Yii::app()->controller->createUrl("show", $_GET + array('action'=>'download')),
+						'type'=>'primary',
+						'size'=>'small', // '', 'large', 'small' or 'mini'
+					));
+				echo '</h2>';
+			}
 
 			// display the grid
 			Yii::app()->controller->widget('bootstrap.widgets.TbGridView',array(
@@ -217,6 +237,8 @@ class ReportController extends Controller
 				'dataProvider'=>$dataProvider,
 //				'filter'=>$filtersForm,
 				'columns'=>$attributes,
+				'template'=>"{items}\n{pager}",
+
 			));
 			$html = ob_get_clean();
 		}

@@ -182,10 +182,10 @@ $t = $this->model->attributes;
 		echo parent::checkBoxListInlineRow($model ? $model : $this->model, 'preferred', $data, $htmlOptions);
 	}
 
-	public function textAreaRow($attribute, $data = array(), $htmlOptions = array(), $model = NULL)
+	public function textAreaRow($attribute, $htmlOptions = array(), $model = NULL)
 	{
-		echo parent::textAreaRow($model ? $model : $this->model, $attribute, $data,
-				array('rows'=>6, 'cols'=>50, 'class'=>'span8') + $htmlOptions + $this->_htmlOptionReadonly);
+		echo parent::textAreaRow($model ? $model : $this->model, $attribute,
+				array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
 	public function dropDownListRow($attribute, $data = array(), $htmlOptions = array(), $model = NULL)
@@ -240,6 +240,11 @@ $t = $this->model->attributes;
 			$htmlOptions);
 	}
 	
+	public function fileFieldRow($attribute, $htmlOptions = array(), $model = NULL)
+	{
+		echo parent::fileFieldRow($model ? $model : $this->model, $attribute,
+			array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+	}
 }
 
 ?>

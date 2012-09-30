@@ -7,11 +7,13 @@
  * @property integer $id
  * @property integer $task_type_id
  * @property integer $assembly_id
+ * @property integer $client_id
  * @property integer $quantity
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property TaskType $taskType
+ * @property Assembly $client
  * @property Assembly $assembly
  * @property Staff $staff
  */
@@ -44,8 +46,8 @@ class TaskTypeToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_type_id, assembly_id, quantity, staff_id', 'required'),
-			array('task_type_id, assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, assembly_id, client_id, quantity, staff_id', 'required'),
+			array('task_type_id, assembly_id, client_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, task_type_id, searchAssembly, quantity, staff_id', 'safe', 'on'=>'search'),
@@ -61,6 +63,7 @@ class TaskTypeToAssembly extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
+			'client' => array(self::BELONGS_TO, 'Assembly', 'client_id'),
 			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
@@ -134,4 +137,13 @@ class TaskTypeToAssembly extends ActiveRecord
 	{
 		return array('searchAssembly');
 	}
+
+	public function beforeValidate()
+	{
+		$taskType = TaskType::model()->findByPk($this->task_type_id);
+		$this->client_id = $taskType->client_id;
+		
+		return parent::beforeValidate();
+	}
+
 }

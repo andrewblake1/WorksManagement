@@ -3,7 +3,7 @@
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
 	MaterialController::listWidgetRow($model, $form, 'material_id', array(), array(
-		'scopeClient'=>array($model->assembly_id),
+		'scopeClient'=>array('Assembly', $model->assembly_id),
 	));
 
 	$form->textFieldRow('quantity');

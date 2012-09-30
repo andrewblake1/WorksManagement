@@ -44,7 +44,12 @@ return array(
 			'application.extensions.*',
 			'application.controllers.*',
 		),
-		
+
+/*		'aliases' => array(
+			//assuming you extracted the files to the extensions folder
+			'xupload' => 'ext.xupload'
+		),*/
+
 		// Application components
 		'components' => array(
 		

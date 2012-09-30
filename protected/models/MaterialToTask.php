@@ -7,11 +7,13 @@
  * @property string $id
  * @property integer $material_id
  * @property string $task_id
+ * @property integer $client_id
  * @property integer $quantity
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Material $material
+ * @property Task $client
  * @property Task $task
  * @property Staff $staff
  */
@@ -45,8 +47,8 @@ class MaterialToTask extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('material_id, task_id, quantity, staff_id', 'required'),
-			array('material_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('material_id, task_id, client_id, quantity, staff_id', 'required'),
+			array('material_id, client_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -63,6 +65,7 @@ class MaterialToTask extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
+			'client' => array(self::BELONGS_TO, 'Task', 'client_id'),
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
@@ -130,6 +133,14 @@ class MaterialToTask extends ActiveRecord
 	static function getDisplayAttr()
 	{
 		return array('material->description');
+	}
+
+	public function beforeValidate()
+	{
+		$task = Task::model()->findByPk($this->task_id);
+		$this->client_id = $task->client_id;
+$t=$this->attributes;		
+		return parent::beforeValidate();
 	}
 
 }

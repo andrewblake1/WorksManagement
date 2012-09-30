@@ -7,6 +7,7 @@
  * @property string $id
  * @property string $level
  * @property integer $project_type_id
+ * @property integer $client_id
  * @property string $travel_time_1_way
  * @property string $critical_completion
  * @property string $planned
@@ -16,11 +17,15 @@
  * @property Day[] $days
  * @property Staff $staff
  * @property ProjectType $projectType
+ * @property ProjectType $client
  * @property Planning $id0
  * @property ProjectLevel $level0
+ * @property ProjectToClientContact[] $projectToClientContacts
+ * @property ProjectToClientContact[] $projectToClientContacts1
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
  * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
  * @property Task[] $tasks
+ * @property Task[] $tasks1
  */
 class Project extends ActiveRecord
 {
@@ -49,8 +54,8 @@ class Project extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_type_id, staff_id', 'required'),
-			array('project_type_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('project_type_id, client_id, staff_id', 'required'),
+			array('project_type_id, client_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id', 'length', 'max'=>10),
 			array('critical_completion, planned, client_id, name', 'safe'),
 			array('travel_time_1_way', 'date', 'format'=>'H:m'),
@@ -71,11 +76,15 @@ class Project extends ActiveRecord
 			'days' => array(self::HAS_MANY, 'Day', 'project_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
+			'client' => array(self::BELONGS_TO, 'ProjectType', 'client_id'),
 			'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
 			'level0' => array(self::BELONGS_TO, 'ProjectLevel', 'level'),
+			'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'client_id'),
+			'projectToClientContacts1' => array(self::HAS_MANY, 'ProjectToClientContact', 'project_id'),
 			'projectToGenericProjectTypes' => array(self::HAS_MANY, 'ProjectToGenericProjectType', 'project_id'),
 			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'project_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'project_id'),
+			'tasks1' => array(self::HAS_MANY, 'Task', 'client_id'),
 		);
 	}
 

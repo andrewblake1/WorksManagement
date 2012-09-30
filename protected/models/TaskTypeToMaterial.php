@@ -7,11 +7,13 @@
  * @property integer $id
  * @property integer $task_type_id
  * @property integer $material_id
+ * @property integer $client_id
  * @property integer $quantity
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property TaskType $taskType
+ * @property Material $client
  * @property Material $material
  * @property Staff $staff
  */
@@ -45,8 +47,8 @@ class TaskTypeToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_type_id, material_id, quantity, staff_id', 'required'),
-			array('task_type_id, material_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, material_id, client_id, quantity, staff_id', 'required'),
+			array('task_type_id, material_id, client_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, task_type_id, searchTaskType, searchMaterial, quantity, staff_id', 'safe', 'on'=>'search'),
@@ -62,10 +64,12 @@ class TaskTypeToMaterial extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
+			'client' => array(self::BELONGS_TO, 'Material', 'client_id'),
 			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
+
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -136,4 +140,13 @@ class TaskTypeToMaterial extends ActiveRecord
 	{
 		return array('searchMaterial', 'searchTaskType');
 	}
+
+	public function beforeValidate()
+	{
+		$taskType = TaskType::model()->findByPk($this->task_type_id);
+		$this->client_id = $taskType->client_id;
+		
+		return parent::beforeValidate();
+	}
+
 }

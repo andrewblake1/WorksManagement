@@ -575,9 +575,12 @@ fb($_SESSION, true);
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreate($modalId = 'myModal')
+	public function actionCreate($modalId = 'myModal', $model = null)
 	{
-		$model=new $this->modelName;
+		if($model === null)
+		{
+			$model=new $this->modelName;
+		}
 		$models=array();
 
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
@@ -616,9 +619,9 @@ fb($_SESSION, true);
 					}
 					foreach($models as $m)
 					{
-						foreach($m->getErrors() as $attribute=>$errors)
+						foreach($m->getErrors() as $attribute=>$errorS)
 						{
-							$result[CHtml::activeId($m,$attribute)]=$errors;
+							$result[CHtml::activeId($m,$attribute)]=$errorS;
 						}
 					}
 					// return the json encoded data to the client
@@ -640,6 +643,29 @@ fb($_SESSION, true);
 			'name'=>$model->tableSchema->primaryKey,
 			'value'=>$id,
 		);*/
+		
+		// if just failed to save after ajax validation ok'd it - maybe an invalid file upload which can't use ajax validation
+		if(isset($saved) && !$saved)
+		{
+			// get errors
+			$message = '
+				<strong>Sorry, could,\'t save because</strong>
+					<ul>';
+			foreach($models as $m)
+			{
+				foreach($m->getErrors() as $attribute=>$errors)
+				{
+					foreach($errors as $error)
+					{
+						$message.="<li>$error</li>";
+					}
+				}
+			}
+			$message .= '</ul>';
+			Yii::app()->user->setFlash('error', $message);
+			// redirect back to this view - most likely admin but pass paramter to let know about failed validation
+			$this->createRedirect($model);
+		}
 		
 		$this->createRender($model, $models, $modalId);
 	}
@@ -700,9 +726,12 @@ fb($_SESSION, true);
 	 * If update is successful, the browser will be redirected to the 'update' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate($id)
+	public function actionUpdate($id, $model = null)
 	{
-		$model=$this->loadModel($id);
+		if($model === null)
+		{
+			$model=$this->loadModel($id);
+		}
 		$models=array();
 
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
@@ -1072,6 +1101,7 @@ fb($_SESSION, true);
 				if(Yii::app()->user->checkAccess($reportToAuthItem->AuthItem_name))
 				{
 					$params['id'] = $report->id;
+					$params['context'] = $context;
 					if(!empty($pk))
 					{
 						$params['pk'] = $pk;
@@ -1080,7 +1110,7 @@ fb($_SESSION, true);
 					$items[$report->description] = array(
 						'label' => $report->description,
 						'url' => Yii::app()->createUrl('Report/show', $params),
-						'urlJavascript' => Yii::app()->createUrl('Report/show', array('id' => $report->id))."?pk=\" + id",
+						'urlJavascript' => Yii::app()->createUrl('Report/show', array('context'=>$context, 'id' => $report->id))."?pk=\" + id",
 					);
 				}
 			}

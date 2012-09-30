@@ -33,6 +33,15 @@ return array(
 			),
 
 		),
+		
+		'params'=>array(
+			// directory to store uploaded files in that are below document root
+			'privateUploadPath' => '/home/www-data/uploads/test/melbourne/',
+			// directory to store uploaded files in that are above document root
+			'publicUploadPath' => dirname(__FILE__) . '/../../assets/',
+			// web directory to store uploaded files in that are above document root
+			'webUploadPath' => '/assets/',
+		),
 
 	),
 

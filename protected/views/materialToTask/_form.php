@@ -1,9 +1,9 @@
 <?php
 
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));		
 
 	MaterialController::listWidgetRow($model, $form, 'material_id', array(), array(
-		'scopeClient'=>array($model->client_id),
+		'scopeClient'=>array('Task', $model->task_id),
 	));
 
 	$form->textFieldRow('quantity');

@@ -20,6 +20,7 @@
  * @property Client $client
  * @property MaterialToTask[] $materialToTasks
  * @property TaskTypeToMaterial[] $taskTypeToMaterials
+ * @property TaskTypeToMaterial[] $taskTypeToMaterials1
  */
 class Material extends ActiveRecord
 {
@@ -63,7 +64,8 @@ class Material extends ActiveRecord
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'material_id'),
-			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'material_id'),
+			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'client_id'),
+			'taskTypeToMaterials1' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'material_id'),
 		);
 	}
 
@@ -128,17 +130,16 @@ class Material extends ActiveRecord
 		);
 	}
 
-	public function scopeClient($assembly_id)
+	public function scopeClient($parentModelName, $id)
 	{
 		$criteria=new CDbCriteria;
-		$assembly = Assembly::model()->findByPk($assembly_id);
-		$criteria->compare('client_id', $assembly->client_id);
+		$parentModel = $parentModelName::model()->findByPk($id);
+		$criteria->compare('client_id', $parentModel->client_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		
 		return $this;
 	}
-	
 
 }
 
