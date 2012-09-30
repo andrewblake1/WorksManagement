@@ -31,7 +31,7 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	{
 //TODO this and another location that restrict lists need to include the current record if updating rather than excluding it
 // also add deleted to unique indexes and make deleted += 1 so not violating constraints when adding new and removing old multiple times
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 		$criteria->compare('task_type.id',$task_type_id);
 //		$criteria->addCondition('taskTypeToDutyType.id IS NULL');
 		$criteria->join='
@@ -101,11 +101,11 @@ class ProjectTypeToAuthItem extends ActiveRecord
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		// select
 		$criteria->select=array(

@@ -81,11 +81,11 @@ class TaskToPurchaseOrder extends ActiveRecord
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];

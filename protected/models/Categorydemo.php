@@ -101,7 +101,7 @@ class Categorydemo extends CActiveRecord
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('root',$this->root,true);

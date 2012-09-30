@@ -46,7 +46,7 @@ class Assembly extends ActiveRecord
 			array('deleted, client_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description, client_alias', 'length', 'max'=>255),
 			array('unit_price', 'length', 'max'=>7),
-			array('file', 'FileAjax', 'types'=>'jpg, gif, png'),
+			array('file', 'FileAjax', 'types'=>'jpg, gif, png', 'allowEmpty' => true),
 			array('id, description, unit_price, client_id, client_alias, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
@@ -83,11 +83,11 @@ class Assembly extends ActiveRecord
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
@@ -108,18 +108,13 @@ class Assembly extends ActiveRecord
 		$columns[] = 'id';
 		$columns[] = 'description';
 		$columns[] = 'unit_price';
-        $columns[] = array(
-			'name'=>'url',
-			'value'=>'CHtml::link($data->url, $data->url)',
-			'type'=>'raw',
-		);
 		
 		return $columns;
 	}
 
 	public function scopeClient($parentModelName, $id)
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 		$parentModel = $parentModelName::model()->findByPk($id);
 		$criteria->compare('client_id', $parentModel->client_id);
 

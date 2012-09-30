@@ -212,11 +212,11 @@ class GenericType extends ActiveRecord
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.mandatory',Yii::app()->format->toMysqlBool($this->mandatory));

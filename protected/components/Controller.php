@@ -147,35 +147,39 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 
 			foreach($modelName::getDisplayAttr() as $field)
 			{
-				// building display parameter which gets eval'd later
-				$display[] = '{$p->'.$field.'}';
-
-				// building display parameter which gets eval'd later
-				// get term for this column from users entry
-				// with trailing wildcard only; probably a good idea for large volumes of data
-				$term = '%' . (($term = each($terms)) ? trim($term['value']) . '%' : '%');
-
-				/*
-				 * $matches[5] attribute
-				 * $matches[4] alias
-				 * $matches[1] relations
-				 */
-				if(preg_match('/(((.*)->)?(\w*))->(\w*)$/', $field, $matches))
+				// get next term - the extra loop to split the search term again at spaces to do any order like google
+				if($term = each($terms))
 				{
-					$criteria->with[] = $matches[1];
-					$alias = $matches[4];
-					$attribute = $matches[5];
+					// building display parameter which gets eval'd later
+					$display[] = '{$p->'.$field.'}';
+
+					/*
+					* $matches[5] attribute
+					* $matches[4] alias
+					* $matches[1] relations
+					*/
+					if(preg_match('/(((.*)->)?(\w*))->(\w*)$/', $field, $matches))
+					{
+						$criteria->with[] = $matches[1];
+						$alias = $matches[4];
+						$attribute = $matches[5];
+					}
+					else
+					{
+						$alias = 't';
+						$attribute = $field;
+					}
+
+					$cntr = 0;
+					foreach(explode(' ', trim($term['value'])) as $term)
+					{
+						$paramName = ":{$alias}_{$attribute}_$cntr";
+						$criteria->condition .= ($criteria->condition ? " AND " : '')."$alias.$attribute LIKE $paramName";
+						$criteria->params[$paramName] = "%$term%";
+						$cntr++;
+					}
+					$criteria->order[] = "$alias.$attribute ASC";
 				}
-				else
-				{
-					$alias = 't';
-					$attribute = $field;
-				}
-				
-				$criteria->order[] = "$alias.$attribute ASC";
-				$paramName = ":{$alias}_$attribute";
-				$criteria->condition .= ($criteria->condition ? " AND " : '')."$alias.$attribute like $paramName";
-				$criteria->params[$paramName] = $term;
 			}
 
 			// probably a good idea to limit the results
@@ -662,6 +666,8 @@ fb($_SESSION, true);
 				}
 			}
 			$message .= '</ul>';
+// TODO: use jquery show to show the create form on reentry and show the validation error message thefore pass the error message to createrender
+// instead of flash message which is just a quick temporary solution
 			Yii::app()->user->setFlash('error', $message);
 			// redirect back to this view - most likely admin but pass paramter to let know about failed validation
 			$this->createRedirect($model);

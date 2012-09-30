@@ -57,13 +57,13 @@ abstract class ViewGenericActiveRecord extends ActiveRecord
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		$criteria->compare('t.parent_id',$this->parent_id);
 		$criteria->compare('t.description',$this->description,true);

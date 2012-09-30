@@ -47,7 +47,7 @@ class SubReport extends ActiveRecord
 
 	public function scopeSubReportReportId($report_id)
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 		$criteria->compare('report_id',$report_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
@@ -104,11 +104,11 @@ class SubReport extends ActiveRecord
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		// select
 		$criteria->select=array(

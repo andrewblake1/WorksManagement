@@ -84,11 +84,11 @@ class Material extends ActiveRecord
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
@@ -132,7 +132,7 @@ class Material extends ActiveRecord
 
 	public function scopeClient($parentModelName, $id)
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 		$parentModel = $parentModelName::model()->findByPk($id);
 		$criteria->compare('client_id', $parentModel->client_id);
 

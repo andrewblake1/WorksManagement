@@ -37,7 +37,7 @@ class AuthAssignment extends ActiveRecord
 	
 	public function scopeProjectToProjectTypeToAuthItem($project_id)
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 		$criteria->compare('project.id',$project_id);
 		$criteria->addCondition('projectToProjectTypeToAuthItem.id IS NULL');
 		$criteria->join='
@@ -111,11 +111,11 @@ class AuthAssignment extends ActiveRecord
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		// select
 		$criteria->select=array(

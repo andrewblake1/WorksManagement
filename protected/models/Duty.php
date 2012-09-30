@@ -95,11 +95,11 @@ class Duty extends ActiveRecord
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		// select
 		// NB: taking first non null of either the staff assigned to duty at project or staff in charge at target duty level

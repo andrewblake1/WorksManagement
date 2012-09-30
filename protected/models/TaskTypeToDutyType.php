@@ -37,7 +37,7 @@ class TaskTypeToDutyType extends ActiveRecord
 	
 	public function scopeTask($task_id)
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 		$criteria->compare('task.id',$task_id);
 		$criteria->join='JOIN task USING(task_type_id)';
 		
@@ -105,11 +105,11 @@ class TaskTypeToDutyType extends ActiveRecord
 	}
 
 	/**
-	 * @return CDbCriteria the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new CDbCriteria;
+		$criteria=new DbCriteria;
 
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
