@@ -28,6 +28,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 			exec("ln -s -f $source $target");
 			// set symlink expiry
 			$expire = date("H:i" , time() + 120);
+fb("echo 'rm $target' | at $expire");
 			exec("echo 'rm $target' | at $expire");
 //			$expire = date("i H d m *" , time() + 60);
 //			// temporary crontab file name

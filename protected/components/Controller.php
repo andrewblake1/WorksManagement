@@ -541,8 +541,6 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				// if there is a primary key for this
 				if(isset($_SESSION[$crumb]))
 				{
-fb($crumb);
-fb($_SESSION, true);
 					// add an update crumb to this primary key
 					$primaryKey = $_SESSION[$crumb];
 		//			$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", 'id'=>$primaryKey['value']);
@@ -1116,7 +1114,7 @@ fb($_SESSION, true);
 					$items[$report->description] = array(
 						'label' => $report->description,
 						'url' => Yii::app()->createUrl('Report/show', $params),
-						'urlJavascript' => Yii::app()->createUrl('Report/show', array('context'=>$context, 'id' => $report->id))."?pk=\" + id",
+						'urlJavascript' => Yii::app()->createUrl('Report/show', array('context'=>$context, 'id' => $report->id))."&pk=\" + id",
 					);
 				}
 			}
@@ -1140,6 +1138,8 @@ fb($_SESSION, true);
 						// if no items then return null
 						return 'null';
 					}
+					$cntr = 0;
+					$reportTypeJavascript = '';
 					foreach($items as $item)
 					{
 						// append menu item

@@ -83,12 +83,12 @@ class ReportController extends Controller
 		if(!empty(self::$_errors))
 		{
 			$html = '<p>System admin SQL errors in report '.self::$_model->description.':</p>';
-			$html += '<ul>';
-			foreach($this::$_errors as &$error)
+			$html .= '<ul>';
+			foreach(self::$_errors as &$error)
 			{
-				$html += "<li>$error</li>";
+				$html .= "<li>$error</li>";
 			}
-			$html = '</ul>';
+			$html .= '</ul>';
 			throw new CHttpException(403, $html);
 		}
 		
@@ -158,11 +158,43 @@ class ReportController extends Controller
 		// otherwise displaying in a grid
 		elseif($count)
 		{
+$t=array_keys($command->queryRow());
 			// need to determine our own sort columns also with CSqlDataProvider
-			$attributes=array_keys($command->queryRow());
+			$attributes=array();
+			// get any link columns which have :link appended to column name
+			foreach(array_keys($command->queryRow()) as $attribute)
+			{
+				$exploded = explode(':', $attribute);
+				if(sizeof($exploded) >= 2)
+				{
+					$name = $exploded[0];
+					$type = $exploded[1];
+/*					if(!empty($exploded[2]))
+					{
+						$label = $exploded[2];
+					}
+					else
+					{
+						$label = $name;
+					}*/
+					// set attribute
+					$attributes[$name] = array(
+						'name'=>$name,
+						'type'=>'raw',
+					);
+					// set sort
+					$options['sort']['attributes'][] = $name;
+					// fix the sql
+					$sql = str_replace($attribute, $name, $sql);
+				}
+				else
+				{
+					$attributes[$attribute] = $attribute;
+					$options['sort']['attributes'][] = $attribute;
+				}
+			}
 
 			$options['totalItemCount'] = $count;
-			$options['sort'] = array('attributes'=>$attributes);
 
 			// if we need to page
 			if($subReportModel->format == SubReport::subReportFormatPaged)
@@ -229,7 +261,7 @@ class ReportController extends Controller
 					));
 				echo '</h2>';
 			}
-
+			
 			// display the grid
 			Yii::app()->controller->widget('bootstrap.widgets.TbGridView',array(
 				'id'=>'report-grid',

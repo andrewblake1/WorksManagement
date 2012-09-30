@@ -169,6 +169,7 @@ class Planning extends CategoryActiveRecord {
 
 			echo CHtml::openTag('li', array('id' => 'node_' . $category->id, 'rel' => $category->name));
 			echo CHtml::openTag('a', array('href' => '#', 'class' => "level{$category->level}"));
+			$dayCounter = 0;
 			switch($category->level)
 			{
 				case Planning::planningLevelDayInt :

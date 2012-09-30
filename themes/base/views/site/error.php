@@ -9,7 +9,7 @@ $this->breadcrumbs=array(
 
 <?php if ($code === 404) { ?>
 <div class="alert alert-error">
-    <h3><?php echo CHtml::encode($message); ?></h3>
+    <h3><?php echo $message; ?></h3>
     <p>Sorry, but the page you were trying to view does not exist.</p>
     <p>It looks like this was the result of either:</p>
     <ul>
@@ -25,7 +25,7 @@ $this->breadcrumbs=array(
 </div>
 <?php } else { ?>
 <div class="alert alert-error">
-	<?php echo CHtml::encode($message); ?>
+	<?php echo $message; ?>
 </div>
 <?php } ?>
 <br />
