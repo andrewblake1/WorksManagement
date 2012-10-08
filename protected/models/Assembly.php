@@ -5,24 +5,25 @@
  *
  * The followings are the available columns in table 'assembly':
  * @property integer $id
+ * @property integer $supplier_id
  * @property string $description
  * @property string $unit_price
- * @property integer $client_id
- * @property string $client_alias
+ * @property string $alias
  * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Staff $staff
- * @property Client $client
+ * @property Supplier $supplier
+ * @property AssemblyToClient[] $assemblyToClients
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property TaskToAssembly[] $taskToAssemblies
- * @property TaskToAssembly[] $taskToAssemblies1
  * @property TaskTypeToAssembly[] $taskTypeToAssemblies
- * @property TaskTypeToAssembly[] $taskTypeToAssemblies1
  */
 class Assembly extends ActiveRecord
 {
+	public $searchSupplier;
+	
 	public $fileName;
 	public $file;
 	
@@ -42,12 +43,12 @@ class Assembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, client_id, staff_id', 'required'),
-			array('deleted, client_id, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description, client_alias', 'length', 'max'=>255),
+			array('description, supplier_id, staff_id', 'required'),
+			array('deleted, supplier_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, alias', 'length', 'max'=>255),
 			array('unit_price', 'length', 'max'=>7),
 			array('file', 'FileAjax', 'types'=>'jpg, gif, png', 'allowEmpty' => true),
-			array('id, description, unit_price, client_id, client_alias, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, unit_price, searchSupplier, alias, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,12 +61,11 @@ class Assembly extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
+			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
+			'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
-			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'client_id'),
-			'taskToAssemblies1' => array(self::HAS_MANY, 'TaskToAssembly', 'assembly_id'),
-			'taskTypeToAssemblies' => array(self::HAS_MANY, 'TaskTypeToAssembly', 'client_id'),
-			'taskTypeToAssemblies1' => array(self::HAS_MANY, 'TaskTypeToAssembly', 'assembly_id'),
+			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'assembly_id'),
+			'taskTypeToAssemblies' => array(self::HAS_MANY, 'TaskTypeToAssembly', 'assembly_id'),
 		);
 	}
 
@@ -77,8 +77,9 @@ class Assembly extends ActiveRecord
 		return parent::attributeLabels(array(
 			'id' => 'Assembly',
 			'unit_price' => 'Unit price',
-			'client_id' => 'Client',
-			'client_alias' => 'Client Alias',
+			'supplier_id' => 'Supplier',
+			'searchSupplier' => 'Supplier',
+			'alias' => 'Alias',
 		));
 	}
 
@@ -92,13 +93,16 @@ class Assembly extends ActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.unit_price',$this->unit_price,true);
-		$criteria->compare('t.client_id', $this->client_id);
+		$criteria->compare('supplier.name', $this->searchSupplier);
 
 		$criteria->select=array(
 			't.id',
 			't.description',
 			't.unit_price',
+			'supplier.name AS searchSupplier',
 		);
+
+		$criteria->with = array('supplier');
 
 		return $criteria;
 	}
@@ -108,15 +112,27 @@ class Assembly extends ActiveRecord
 		$columns[] = 'id';
 		$columns[] = 'description';
 		$columns[] = 'unit_price';
+        $columns[] = static::linkColumn('searchSupplier', 'supplier', 'supplier_id');
 		
 		return $columns;
 	}
 
-	public function scopeClient($parentModelName, $id)
+	public static function getDisplayAttr()
+	{
+		return array(
+			'description',
+		);
+	}
+ 
+	public function getSearchSort()
+	{
+		return array('searchSupplier');
+	}
+
+	public function scopeSupplier($supplier_id)
 	{
 		$criteria=new DbCriteria;
-		$parentModel = $parentModelName::model()->findByPk($id);
-		$criteria->compare('client_id', $parentModel->client_id);
+		$criteria->compare('supplier_id', $supplier_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		

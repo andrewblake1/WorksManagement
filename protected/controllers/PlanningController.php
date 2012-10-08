@@ -2,24 +2,18 @@
 
 class PlanningController extends CategoryController
 {
-	/**
-	 * @var string the name of the admin view
-	 */
 	protected $_adminView = 'categoryAdmin';
 
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
 	public function accessRules()
 	{
-		return parent::accessRules() + array(
+		$accessRules = parent::accessRules();
+		array_unshift($accessRules,
 			array('allow',
 				'actions'=>array('addDay'),
 				'roles'=>array($this->modelName),
-			),
-		);
+		));
+
+		return $accessRules;
 	}
 
 	public function actionFetchTree()
@@ -101,7 +95,7 @@ class PlanningController extends CategoryController
 			throw new CHttpException(403,'You do not have permission.');
 		}
 	}
-	
+
 }
 
 ?>

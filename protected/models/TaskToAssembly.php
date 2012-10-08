@@ -7,22 +7,16 @@
  * @property string $id
  * @property string $task_id
  * @property integer $assembly_id
- * @property integer $client_id
  * @property integer $quantity
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Task $task
- * @property Assembly $client
  * @property Assembly $assembly
  * @property Staff $staff
  */
 class TaskToAssembly extends ActiveRecord
 {
-	/**
-	 * @var string search variables - foreign key lookups sometimes composite.
-	 * these values are entered by user in admin view to search
-	 */
 	public $searchTask;
 	public $searchAssembly;
 	/**
@@ -46,12 +40,12 @@ class TaskToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, assembly_id, client_id, quantity, staff_id', 'required'),
-			array('assembly_id, client_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_id, assembly_id, quantity, staff_id', 'required'),
+			array('assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchTask, searchAssembly, client_id, quantity, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchTask, searchAssembly, quantity, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,7 +58,6 @@ class TaskToAssembly extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-			'client' => array(self::BELONGS_TO, 'Assembly', 'client_id'),
 			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
@@ -132,14 +125,6 @@ class TaskToAssembly extends ActiveRecord
 	static function getDisplayAttr()
 	{
 		return array('assembly->description');
-	}
-
-	public function beforeValidate()
-	{
-		$task = Task::model()->findByPk($this->task_id);
-		$this->client_id = $task->client_id;
-		
-		return parent::beforeValidate();
 	}
 
 }

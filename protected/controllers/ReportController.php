@@ -261,7 +261,7 @@ $t=array_keys($command->queryRow());
 					));
 				echo '</h2>';
 			}
-			
+
 			// display the grid
 			Yii::app()->controller->widget('bootstrap.widgets.TbGridView',array(
 				'id'=>'report-grid',

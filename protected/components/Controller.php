@@ -1002,7 +1002,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 
 		
 		// get the associated relation - assuming only 1
-  		foreach($model->relations() as $relationName => $relation)
+/*  		foreach($model->relations() as $relationName => $relation)
 		{
 			// if we have found the relation that uses this attribute which is a foreign key
 			if($relation[2] == $fkField)
@@ -1011,7 +1011,9 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				$relName = $relationName;
 				break;
 			}
-		}	
+		}	*/
+		
+		$fKModelType = static::modelName();
 
 		// set label to passed in label if one passed, otherwise to the tables nice name
 		ActiveRecord::$labelOverrides[$fkField] = $label ? $label : $fKModelType::getNiceName();
@@ -1051,7 +1053,6 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// add a blank value at the top to be converted to null later if allowing nulls
 		$listData = $model->metadata->columns[$fkField]->allowNull ? array(' '=>'') : array();
 		$listData += $modelName::getListData($scopes);
-		
 		echo $form->dropDownListRow(
 			$fkField,
 			$listData,

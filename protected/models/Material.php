@@ -5,11 +5,11 @@
  *
  * The followings are the available columns in table 'material':
  * @property integer $id
+ * @property integer $supplier_id
  * @property string $description
  * @property string $unit_price
  * @property string $unit
- * @property string $client_alias
- * @property integer $client_id
+ * @property string $alias
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -17,13 +17,15 @@
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToMaterial[] $assemblyToMaterials1
  * @property Staff $staff
- * @property Client $client
+ * @property Supplier $supplier
+ * @property MaterialToClient[] $materialToClients
  * @property MaterialToTask[] $materialToTasks
  * @property TaskTypeToMaterial[] $taskTypeToMaterials
- * @property TaskTypeToMaterial[] $taskTypeToMaterials1
  */
 class Material extends ActiveRecord
 {
+	public $searchSupplier;
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -40,14 +42,14 @@ class Material extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, client_id, staff_id', 'required'),
-			array('client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description, client_alias', 'length', 'max'=>255),
+			array('description, supplier_id, staff_id', 'required'),
+			array('supplier_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, alias', 'length', 'max'=>255),
 			array('unit_price', 'length', 'max'=>7),
 			array('unit', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, searchStaff, unit_price, unit, client_alias, client_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchSupplier, description, searchStaff, unit_price, unit, alias', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,13 +61,13 @@ class Material extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'client_id'),
+			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'supplier_id'),
 			'assemblyToMaterials1' => array(self::HAS_MANY, 'AssemblyToMaterial', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
+			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
+			'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'material_id'),
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'material_id'),
-			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'client_id'),
-			'taskTypeToMaterials1' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'material_id'),
+			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'material_id'),
 		);
 	}
 
@@ -78,8 +80,9 @@ class Material extends ActiveRecord
 			'id' => 'Material',
 			'unit_price' => 'Unit price',
 			'unit' => 'Unit',
-			'client_alias' => 'Client alias',
-			'client_id' => 'Client',
+			'alias' => 'Alias',
+			'supplier_id' => 'Supplier',
+			'searchSupplier' => 'Supplier',
 		));
 	}
 
@@ -90,19 +93,24 @@ class Material extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.client_alias',$this->client_alias,true);
-		$criteria->compare('t.unit_price',$this->unit_price);
-		$criteria->compare('t.unit',$this->unit);
-		$criteria->compare('t.client_id', $this->client_id);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.description', $this->description,true);
+		$criteria->compare('t.unit_price', $this->unit_price);
+		$criteria->compare('t.unit', $this->unit);
+		$criteria->compare('supplier.name', $this->searchSupplier);
 
 		$criteria->select=array(
 			't.id',
 			't.description',
-			't.client_alias',
+			't.alias',
 			't.unit',
 			't.unit_price',
+			'supplier.name AS searchSupplier',
+		);
+
+		// join
+		$criteria->with = array(
+			'supplier',
 		);
 
 		return $criteria;
@@ -112,9 +120,10 @@ class Material extends ActiveRecord
 	{
 		$columns[] = 'id';
 		$columns[] = 'description';
-		$columns[] = 'client_alias';
+		$columns[] = 'alias';
 		$columns[] = 'unit_price';
 		$columns[] = 'unit';
+        $columns[] = static::linkColumn('searchSupplier', 'supplier', 'supplier_id');
 		
 		return $columns;
 	}
@@ -126,15 +135,22 @@ class Material extends ActiveRecord
 	{
 		return array(
 			'description',
-			'client_alias',
 		);
 	}
 
-	public function scopeClient($parentModelName, $id)
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchSupplier');
+	}
+
+	public function scopeSupplier($supplier_id)
 	{
 		$criteria=new DbCriteria;
-		$parentModel = $parentModelName::model()->findByPk($id);
-		$criteria->compare('client_id', $parentModel->client_id);
+		$criteria->compare('supplier_id', $supplier_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		

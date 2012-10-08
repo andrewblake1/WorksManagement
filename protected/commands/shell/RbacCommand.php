@@ -67,6 +67,11 @@ EOD;
 			 $this->_authManager->createOperation('AssemblyToMaterialRead', 'AssemblyToMaterial read');
 			 $task->addChild('AssemblyToMaterialRead');
 
+			 $task=$this->_authManager->createTask('AssemblyToClient', 'AssemblyToClient task');
+			 $systemAdminRole->addChild('AssemblyToClient');
+			 $this->_authManager->createOperation('AssemblyToClientRead', 'AssemblyToClient read');
+			 $task->addChild('AssemblyToClientRead');
+
 			 $task=$this->_authManager->createTask('AuthAssignment', 'AuthAssignment task');
 			 $systemAdminRole->addChild('AuthAssignment');
 			 $this->_authManager->createOperation('AuthAssignmentRead', 'AuthAssignment read');
@@ -86,6 +91,11 @@ EOD;
 			 $systemAdminRole->addChild('Client');
 			 $this->_authManager->createOperation('ClientRead', 'Client read');
 			 $task->addChild('ClientRead');
+
+			 $task=$this->_authManager->createTask('MaterialToClient', 'MaterialToClient task');
+			 $systemAdminRole->addChild('MaterialToClient');
+			 $this->_authManager->createOperation('MaterialToClientRead', 'MaterialToClient read');
+			 $task->addChild('MaterialToClientRead');
 
 			 $task=$this->_authManager->createTask('TaskType', 'TaskType task');
 			 $systemAdminRole->addChild('TaskType');

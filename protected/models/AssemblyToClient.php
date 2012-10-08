@@ -1,26 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "task_type_to_assembly".
+ * This is the model class for table "assembly_to_client".
  *
- * The followings are the available columns in table 'task_type_to_assembly':
- * @property integer $id
- * @property integer $task_type_id
+ * The followings are the available columns in table 'assembly_to_client':
+ * @property string $id
  * @property integer $assembly_id
- * @property integer $quantity
+ * @property integer $client_id
+ * @property string $alias
+ * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property TaskType $taskType
  * @property Assembly $assembly
+ * @property Client $client
  * @property Staff $staff
  */
-class TaskTypeToAssembly extends ActiveRecord
+class AssemblyToClient extends ActiveRecord
 {
-	/**
-	 * @var string search variables - foreign key lookups sometimes composite.
-	 * these values are entered by user in admin view to search
-	 */
 	public $searchAssembly;
 
 	/**
@@ -33,7 +30,7 @@ class TaskTypeToAssembly extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'task_type_to_assembly';
+		return 'assembly_to_client';
 	}
 
 	/**
@@ -44,11 +41,12 @@ class TaskTypeToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_type_id, assembly_id, quantity, staff_id', 'required'),
-			array('task_type_id, assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('id, assembly_id, client_id, staff_id', 'required'),
+			array('assembly_id, client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('id, alias', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, searchAssembly, quantity, staff_id', 'safe', 'on'=>'search'),
+			array('id, client_id, searchAssembly, alias, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,8 +58,8 @@ class TaskTypeToAssembly extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
 			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
+			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
@@ -72,11 +70,10 @@ class TaskTypeToAssembly extends ActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'task_type_id' => 'Task Type',
+			'id' => 'Assembly',
 			'assembly_id' => 'Assembly',
-			'quantity' => 'Quantity',
-			'staff_id' => 'Staff',
+			'client_id' => 'Client',
+			'alias' => 'Alias',
 		);
 	}
 
@@ -87,23 +84,26 @@ class TaskTypeToAssembly extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			't.assembly_id',
-			'assembly.description AS searchAssembly',
-			't.quantity',
+			"CONCAT_WS('$delimiter',
+				assembly.description,
+				assembly.alias
+				) AS searchAssembly",
+			't.alias',
+			't.client_id',
 		);
 
-		// where
-		$criteria->compare('assembly.description',$this->searchAssembly);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.task_type_id',$this->task_type_id);
-
-		// join
-		$criteria->with = array(
-			'assembly',
+		$this->compositeCriteria($criteria,
+			array(
+			'assembly.description',
+			'assembly.alias'
+			),
+			$this->searchAssembly
 		);
+		$criteria->compare('t.client_id',$this->client_id,true);
+		$criteria->compare('t.alias',$this->alias);
+
+		$criteria->with = array('assembly');
 
 		return $criteria;
 	}
@@ -111,19 +111,9 @@ class TaskTypeToAssembly extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('searchAssembly', 'Assembly', 'assembly_id');
-		$columns[] = 'quantity';
-		
-		return $columns;
-	}
+ 		$columns[] = 'alias';
 
-	/**
-	 * @return array the list of columns to be concatenated for use in drop down lists
-	 */
-	public static function getDisplayAttr()
-	{
-		return array(
-			'assembly->description',
-		);
+		return $columns;
 	}
 
 	/**
@@ -135,4 +125,17 @@ class TaskTypeToAssembly extends ActiveRecord
 		return array('searchAssembly');
 	}
 
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+			'assembly->description',
+			'assembly->alias',
+		);
+	}
+
 }
+
+?>

@@ -1,41 +1,36 @@
 <?php
 
 /**
- * This is the model class for table "assembly_to_material".
+ * This is the model class for table "material_to_client".
  *
- * The followings are the available columns in table 'assembly_to_material':
+ * The followings are the available columns in table 'material_to_client':
  * @property integer $id
- * @property integer $assembly_id
  * @property integer $material_id
- * @property integer $supplier_id
- * @property integer $quantity
+ * @property integer $client_id
+ * @property string $alias
  * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Assembly $assembly
- * @property Material $supplier
  * @property Material $material
+ * @property Client $client
  * @property Staff $staff
  */
-class AssemblyToMaterial extends ActiveRecord
+class MaterialToClient extends ActiveRecord
 {
-	/**
-	 * @var string search variables - foreign key lookups sometimes composite.
-	 * these values are entered by user in admin view to search
-	 */
 	public $searchMaterial;
+
 	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Material';
-
+	
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'assembly_to_material';
+		return 'material_to_client';
 	}
 
 	/**
@@ -46,11 +41,12 @@ class AssemblyToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('assembly_id, material_id, supplier_id, quantity, staff_id', 'required'),
-			array('assembly_id, material_id, supplier_id, quantity, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('material_id, client_id, staff_id', 'required'),
+			array('material_id, client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('alias', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, assembly_id, searchMaterial, quantity, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, client_id, searchMaterial, alias, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -62,9 +58,8 @@ class AssemblyToMaterial extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
-			'supplier' => array(self::BELONGS_TO, 'Material', 'supplier_id'),
 			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
+			'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
@@ -75,11 +70,10 @@ class AssemblyToMaterial extends ActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'assembly_id' => 'Assembly',
+			'id' => 'Material',
 			'material_id' => 'Material',
-			'searchMaterial' => 'Material',
-			'quantity' => 'Quantity',
+			'client_id' => 'Client',
+			'alias' => 'Alias',
 		);
 	}
 
@@ -91,15 +85,24 @@ class AssemblyToMaterial extends ActiveRecord
 		$criteria=new DbCriteria;
 
 		$criteria->select=array(
-			't.assembly_id',
-			'material.description AS searchMaterial',
-			't.quantity',
+			"CONCAT_WS('$delimiter',
+				material.description,
+				material.alias
+				) AS searchMaterial",
+			't.alias',
+			't.client_id',
 		);
 
-		$criteria->compare('material.description',$this->searchMaterial,true);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.assembly_id',$this->assembly_id);
-		
+		$this->compositeCriteria($criteria,
+			array(
+			'material.description',
+			'material.alias'
+			),
+			$this->searchMaterial
+		);
+		$criteria->compare('t.client_id',$this->client_id,true);
+		$criteria->compare('t.alias',$this->alias);
+
 		$criteria->with = array('material');
 
 		return $criteria;
@@ -107,9 +110,9 @@ class AssemblyToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
- 		$columns[] = 'quantity';
-		
+        $columns[] = static::linkColumn('searchMaterial', 'Material', 'assembly_id');
+ 		$columns[] = 'alias';
+
 		return $columns;
 	}
 
@@ -128,16 +131,11 @@ class AssemblyToMaterial extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'material->description'
+			'material->description',
+			'material->alias',
 		);
-	}
-	
-	public function beforeValidate()
-	{
-		$assembly = Assembly::model()->findByPk($this->assembly_id);
-		$this->supplier_id = $assembly->supplier_id;
-		
-		return parent::beforeValidate();
 	}
 
 }
+
+?>

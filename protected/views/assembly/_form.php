@@ -8,6 +8,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('unit_price');
 	
+	$form->textFieldRow('alias');
+
 // TODO: technically breaking mvc here i.e. this should be in controller but will either require global or duplication in accessupdate or 
 // passing paramtere to actionUpdate in Controller that is only ever used by sub classes that have file uploads
 // probably should make this or call a controller method
@@ -28,7 +30,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 			exec("ln -s -f $source $target");
 			// set symlink expiry
 			$expire = date("H:i" , time() + 120);
-fb("echo 'rm $target' | at $expire");
 			exec("echo 'rm $target' | at $expire");
 //			$expire = date("i H d m *" , time() + 60);
 //			// temporary crontab file name

@@ -8,7 +8,6 @@
  * @property string $level
  * @property string $project_id
  * @property integer $task_type_id
- * @property integer $client_id
  * @property string $planned
  * @property string $location
  * @property integer $preferred_mon
@@ -24,9 +23,7 @@
  * The followings are the available model relations:
  * @property Duty[] $duties
  * @property MaterialToTask[] $materialToTasks
- * @property MaterialToTask[] $materialToTasks1
  * @property Project $project
- * @property Project $client
  * @property Staff $staff
  * @property TaskType $taskType
  * @property Planning $id0
@@ -70,8 +67,8 @@ class Task extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_id, task_type_id, client_id, crew_id, staff_id', 'required'),
-			array('task_type_id, client_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('project_id, task_type_id, crew_id, staff_id', 'required'),
+			array('task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
 			array('planned, preferred, name, location', 'safe'),
 			// The following rule is used by search().
@@ -89,10 +86,8 @@ class Task extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'duties' => array(self::HAS_MANY, 'Duty', 'task_id'),
-			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'client_id'),
-			'materialToTasks1' => array(self::HAS_MANY, 'MaterialToTask', 'task_id'),
+			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'task_id'),
 			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
-			'client' => array(self::BELONGS_TO, 'Project', 'client_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
 			'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
@@ -329,9 +324,6 @@ class Task extends ActiveRecord
 		$crew = Crew::model()->findByPk($this->crew_id);
 //		$this->project_id = $_SESSION['actionAdminGet']['Day']['project_id'];
 		$this->project_id = $crew->day->project_id;
-
-		$project = Project::model()->findByPk($this->project_id);
-		$this->client_id = $project->client_id;
 		
 		return parent::beforeValidate();
 	}

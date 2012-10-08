@@ -152,11 +152,9 @@ return array(
 			*/
 			'trail' => array(
 				'Client'=>array(
-					'Assembly'=>array(
-						'AssemblyToMaterial',
-					),
+					'AssemblyToClient',
+					'MaterialToClient',
 					'ClientContact',
-					'Material',
 					'Project'=>array( 
 						'Day'=>array(
 							'Crew'=>array(
@@ -211,6 +209,10 @@ return array(
 					'AuthAssignment',
 				),
 				'Supplier'=>array(
+					'Assembly'=>array(
+						'AssemblyToMaterial',
+					),
+					'Material',
 					'PurchaseOrder',
 					'SupplierToSupplierContact'=>array(
 						'SupplierContact',

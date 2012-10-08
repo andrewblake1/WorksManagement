@@ -271,6 +271,11 @@ class CategoryController extends Controller
 		//  $copied_node_id=$_POST['copied_node'];
 		//  $replaced_node_id=$_POST['replaced_node'];
 
+		if($copy != 'false')
+		{
+			throw Exception();
+		}
+		
 		//the  moved,copied  node
 		$moved_node=$this->loadModel($moved_node_id);
 
@@ -293,6 +298,7 @@ class CategoryController extends Controller
 				{
 					if ($moved_node->moveAsFirst($new_parent))
 					{
+						$moved_node->afterSave();
 						echo json_encode(array('success'=>true));
 						exit;
 					}
@@ -302,6 +308,7 @@ class CategoryController extends Controller
 				{
 					if($moved_node->moveAsFirst($new_parent))
 					{
+						$moved_node->afterSave();
 						echo json_encode(array('success'=>true));
 						exit;
 					}
@@ -311,6 +318,7 @@ class CategoryController extends Controller
 				{
 					if($moved_node->moveAsLast($new_parent))
 					{
+						$moved_node->afterSave();
 						echo json_encode(array('success'=>true));
 						exit;
 					}
@@ -320,29 +328,14 @@ class CategoryController extends Controller
 				{
 					if($moved_node->moveAfter($previous_node))
 					{
+						$moved_node->afterSave();
 						echo json_encode(array('success'=>true));
 						exit;
 					}
 				}
 
 			}
-			//else it is a copy
-			else
-			{
-				//create the copied AR model
-				$copied_node=new $this->modelName;
-				//copy the attributes (only safe attributes will be copied).
-				$copied_node->attributes=$moved_node->attributes;
-				//remove the primary key
-				$copied_node->id=null;
 
-
-				if($copied_node->appendTo($new_parent))
-				{
-					echo json_encode(array('success'=>true, 'id'=>$copied_node->primaryKey));
-					exit;
-				}
-			}
 		}
 		//if the new parent is not root end
 		//else,move it as a new Root
@@ -368,4 +361,5 @@ class CategoryController extends Controller
 		}
 
 	}
+
 }
