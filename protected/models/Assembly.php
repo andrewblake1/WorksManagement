@@ -17,16 +17,12 @@
  * @property Supplier $supplier
  * @property AssemblyToClient[] $assemblyToClients
  * @property AssemblyToMaterial[] $assemblyToMaterials
+ * @property AssemblyToStandardDrawing[] $assemblyToStandardDrawings
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskTypeToAssembly[] $taskTypeToAssemblies
  */
 class Assembly extends ActiveRecord
 {
-	public $searchSupplier;
-	
-	public $fileName;
-	public $file;
-	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -47,8 +43,7 @@ class Assembly extends ActiveRecord
 			array('deleted, supplier_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
 			array('unit_price', 'length', 'max'=>7),
-			array('file', 'FileAjax', 'types'=>'jpg, gif, png', 'allowEmpty' => true),
-			array('id, description, unit_price, searchSupplier, alias, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, unit_price, supplier_id, alias, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,6 +59,7 @@ class Assembly extends ActiveRecord
 			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
 			'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
+			'assemblyToStandardDrawings' => array(self::HAS_MANY, 'AssemblyToStandardDrawing', 'assembly_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'assembly_id'),
 			'taskTypeToAssemblies' => array(self::HAS_MANY, 'TaskTypeToAssembly', 'assembly_id'),
 		);
@@ -93,16 +89,13 @@ class Assembly extends ActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.unit_price',$this->unit_price,true);
-		$criteria->compare('supplier.name', $this->searchSupplier);
+		$criteria->compare('t.supplier_id', $this->supplier_id);
 
 		$criteria->select=array(
 			't.id',
 			't.description',
 			't.unit_price',
-			'supplier.name AS searchSupplier',
 		);
-
-		$criteria->with = array('supplier');
 
 		return $criteria;
 	}
@@ -112,8 +105,7 @@ class Assembly extends ActiveRecord
 		$columns[] = 'id';
 		$columns[] = 'description';
 		$columns[] = 'unit_price';
-        $columns[] = static::linkColumn('searchSupplier', 'supplier', 'supplier_id');
-		
+ 		
 		return $columns;
 	}
 

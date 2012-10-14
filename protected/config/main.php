@@ -45,10 +45,10 @@ return array(
 			'application.controllers.*',
 		),
 
-/*		'aliases' => array(
+		'aliases' => array(
 			//assuming you extracted the files to the extensions folder
 			'xupload' => 'ext.xupload'
-		),*/
+		),
 
 		// Application components
 		'components' => array(
@@ -160,7 +160,7 @@ return array(
 							'Crew'=>array(
 								'Task'=>array(
 									'Duty',
-		// TODO: naming orientation is inconsistent here
+// TODO: naming orientation is inconsistent here
 									'MaterialToTask',
 									'TaskToAssembly',
 									'TaskToGenericTaskType',
@@ -211,9 +211,11 @@ return array(
 				'Supplier'=>array(
 					'Assembly'=>array(
 						'AssemblyToMaterial',
+						'AssemblyToStandardDrawing',
 					),
 					'Material',
 					'PurchaseOrder',
+					'StandardDrawing',
 					'SupplierToSupplierContact'=>array(
 						'SupplierContact',
 					),

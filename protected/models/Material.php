@@ -24,8 +24,6 @@
  */
 class Material extends ActiveRecord
 {
-	public $searchSupplier;
-	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -49,7 +47,7 @@ class Material extends ActiveRecord
 			array('unit', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchSupplier, description, searchStaff, unit_price, unit, alias', 'safe', 'on'=>'search'),
+			array('id, supplier_id, description, searchStaff, unit_price, unit, alias', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -82,7 +80,6 @@ class Material extends ActiveRecord
 			'unit' => 'Unit',
 			'alias' => 'Alias',
 			'supplier_id' => 'Supplier',
-			'searchSupplier' => 'Supplier',
 		));
 	}
 
@@ -97,7 +94,7 @@ class Material extends ActiveRecord
 		$criteria->compare('t.description', $this->description,true);
 		$criteria->compare('t.unit_price', $this->unit_price);
 		$criteria->compare('t.unit', $this->unit);
-		$criteria->compare('supplier.name', $this->searchSupplier);
+		$criteria->compare('t.supplier_id', $this->supplier_id);
 
 		$criteria->select=array(
 			't.id',
@@ -105,12 +102,6 @@ class Material extends ActiveRecord
 			't.alias',
 			't.unit',
 			't.unit_price',
-			'supplier.name AS searchSupplier',
-		);
-
-		// join
-		$criteria->with = array(
-			'supplier',
 		);
 
 		return $criteria;
@@ -123,7 +114,6 @@ class Material extends ActiveRecord
 		$columns[] = 'alias';
 		$columns[] = 'unit_price';
 		$columns[] = 'unit';
-        $columns[] = static::linkColumn('searchSupplier', 'supplier', 'supplier_id');
 		
 		return $columns;
 	}

@@ -11,6 +11,7 @@ class WMTbActiveForm extends TbActiveForm
 {
 	private $controller;
 	public $parent_fk;
+	public $showSubmit = true;
 	public $enableAjaxValidation=true;
 	public $htmlOptions;
 	public $model;
@@ -88,7 +89,7 @@ class WMTbActiveForm extends TbActiveForm
 			$this->_htmlOptionReadonly = array('readonly'=>'readonly');
 			$this->_action = 'View';
 		}
-		else
+		elseif($this->showSubmit)
 		{
 			$this->_action = ($this->model->isNewRecord ? 'Create' : 'Update');
 		}

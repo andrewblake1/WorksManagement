@@ -5,7 +5,7 @@ class AssemblyController extends Controller
 	/*
 	 * using createRedirect to save the file as only called onece after transaction is committed
 	 */
-	protected function createRedirect($model)
+/*	protected function createRedirect($model)
 	{
 		// if a file uploaded
 		if(!empty($model->file))
@@ -66,7 +66,7 @@ class AssemblyController extends Controller
 		
 		return actionDelete($id);
 	}
-
+*/
 }
 
 ?>
