@@ -95,6 +95,19 @@ class PlanningController extends CategoryController
 			throw new CHttpException(403,'You do not have permission.');
 		}
 	}
+	
+	// showing 1 level down from root here hence can never move roots so need to alter a post varialbe for the project id
+	public function actionMoveCopy()
+	{
+		if($_POST['new_parent_root'] == 'root')
+		{
+			$moved_node_id=$_POST['moved_node'];
+			$category=Planning::model()->findByPk($moved_node_id);
+			$parent=$category->parent;
+			$_POST['new_parent'] = $_POST['new_parent_root'] = $parent->id;
+		}
+		return parent::actionMoveCopy();
+	}
 
 }
 

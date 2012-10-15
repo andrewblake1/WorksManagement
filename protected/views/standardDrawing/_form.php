@@ -49,7 +49,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
         'htmlOptions' => array('id'=>'StandardDrawing-form'),
 		'attribute' => 'file',
 		'multiple' => true,
-		'formView' => 'application.views.StandardDrawing._upload',
+		'formView' => 'application.views.standardDrawing._upload',
 	));
 		
 /*

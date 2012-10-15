@@ -14,7 +14,7 @@ $dataProvider = new CActiveDataProvider($modelName);
 $baseUrl = Yii::app()->baseUrl;
 $open_nodes = implode(',', $identifiers);
 
-Yii::app()->user->setFlash('info','
+/*Yii::app()->user->setFlash('info','
 	<ul>
 		<li>If tree is empty,start by creating one or more root nodes.</li>
 		<li>Right Click on a node to see available operations.</li>
@@ -22,7 +22,7 @@ Yii::app()->user->setFlash('info','
 		<li>Root nodes cannot be reordered.Their order is fixed  by id.</li>
 	</ul>');
 
-$this->widget('bootstrap.widgets.TbAlert');
+$this->widget('bootstrap.widgets.TbAlert');*/
 
 // holder for the modal form
 echo '<div class="modal fade" id="myModal" style="display: block;"><div class="modal-body" id="form-modal"></div></div>';
@@ -352,7 +352,7 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 								}
 							}
 							// refresh entire tree to auto update runtime derived lables
-							jQuery("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").jstree("refresh");
+//							jQuery("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").jstree("refresh");
 							//  console.log('OK');
 						}
 

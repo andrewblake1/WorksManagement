@@ -19,13 +19,13 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 	/**
 	 * @var string $relName the relation name.
 	 */
-	public $relName;
+//	public $relName;
 
     public function init()
     {
 		$attr = $this->attribute;
 		$fKModelType = $this->fKModelType;
-		$relName = $this->relName;
+//		$relName = $this->relName;
 
 		CHtml::resolveNameID($this->model, $attr, $tempHtmlOpts);
 		$id = $tempHtmlOpts['id'];
@@ -35,6 +35,18 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 
         $value = CHtml::resolveValue($this->model, $this->attribute);
 
+		// get the associated relation - assuming only 1
+  		foreach($this->model->relations() as $relationName => $relation)
+		{
+			// if we have found the relation that uses this attribute which is a foreign key
+			if($relation[2] == $this->attribute)
+			{
+				$relName = $relationName;
+				break;
+			}
+		}
+		
+		
 		foreach($fKModelType::getDisplayAttr() as $key => $field)
 		{
 			if(!empty($this->model->$relName))

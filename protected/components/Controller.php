@@ -1021,7 +1021,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// if more than 20 rows in the lookup table use autotext
 		if($fKModelType::model()->count() > 20)
 		{
-			static::autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType, $relName);
+			static::autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType/*, $relName*/);
 		}
 		else
 		{
@@ -1030,7 +1030,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		
 	}
 	
-	static function autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType, $relName)
+	static function autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType/*, $relName*/)
 	{
 		Yii::app()->controller->widget('WMEJuiAutoCompleteFkField',
 			array(
@@ -1040,7 +1040,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				'htmlOptions'=>$htmlOptions,
 				'scopes'=>$scopes,
 				'fKModelType'=>$fKModelType,
-				'relName'=>$relName,
+//				'relName'=>$relName,
 			)
 		);
 	}

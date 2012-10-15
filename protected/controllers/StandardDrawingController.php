@@ -10,6 +10,7 @@ class StandardDrawingController extends Controller
 		$uploadDir = Yii::app()->params['privateUploadPath'] . "standard_drawing/$id/";
 		$sessionId = session_id();
 		exec("mkdir " . Yii::app()->params['privateUploadPath'] . "standard_drawing");
+		exec("mkdir " . Yii::app()->params['publicUploadPath'] . "standard_drawing");
 		exec("mkdir $uploadDir");
 		exec("mkdir {$uploadDir}thumbnails/");
 		$this->expose($id);
