@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'standard_drawing':
  * @property integer $id
- * @property integer $supplier_id
+ * @property integer $store_id
  * @property string $description
  * @property integer $deleted
  * @property integer $staff_id
@@ -13,7 +13,7 @@
  * The followings are the available model relations:
  * @property AssemblyToStandardDrawing[] $assemblyToStandardDrawings
  * @property Staff $staff
- * @property Supplier $supplier
+ * @property Store $store
  */
 class StandardDrawing extends ActiveRecord
 {
@@ -35,11 +35,11 @@ class StandardDrawing extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('supplier_id, description, staff_id', 'required'),
-			array('supplier_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('store_id, description, staff_id', 'required'),
+			array('store_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 //			array('file', 'file', 'types'=>'jpg, gif, png, pdf', 'allowEmpty' => true),
-			array('id, supplier_id, description, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, store_id, description, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,7 +53,7 @@ class StandardDrawing extends ActiveRecord
 		return array(
 			'assemblyToStandardDrawings' => array(self::HAS_MANY, 'AssemblyToStandardDrawing', 'standard_drawing_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
+			'store' => array(self::BELONGS_TO, 'Store', 'store_id'),
 		);
 	}
 
@@ -64,7 +64,7 @@ class StandardDrawing extends ActiveRecord
 	{
 		return array(
 			'id' => 'Standard drawing',
-			'supplier_id' => 'Supplier',
+			'store_id' => 'Store',
 			'description' => 'Description',
 			'deleted' => 'Deleted',
 			'staff_id' => 'Staff',
@@ -85,7 +85,7 @@ class StandardDrawing extends ActiveRecord
 
 		// where
 		$criteria->compare('t.description', $this->description, true);
-		$criteria->compare('t.supplier_id', $this->supplier_id);
+		$criteria->compare('t.store_id', $this->store_id);
 
 		return $criteria;
 	}

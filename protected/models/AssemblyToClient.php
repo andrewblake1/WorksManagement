@@ -18,13 +18,14 @@
  */
 class AssemblyToClient extends ActiveRecord
 {
+	public $searchAlias;
 	public $searchAssembly;
 
 	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Assembly';
-	
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -46,7 +47,7 @@ class AssemblyToClient extends ActiveRecord
 			array('id, alias', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, client_id, searchAssembly, alias, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, client_id, searchAssembly, searchAlias, alias, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 

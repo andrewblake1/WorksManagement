@@ -47,9 +47,13 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 		'url' => $this->createUrl("upload"),
 		'model' => new XUploadForm,
         'htmlOptions' => array('id'=>'StandardDrawing-form'),
-		'attribute' => 'file',
+		'attribute' => '',
 		'multiple' => true,
+		'options' => array(
+			'singleFileUploads' => false),
 		'formView' => 'application.views.standardDrawing._upload',
+		'uploadView' => 'application.views.standardDrawing.template_upload',
+
 	));
 		
 /*

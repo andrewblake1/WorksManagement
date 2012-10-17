@@ -7,12 +7,12 @@
  * @property integer $id
  * @property integer $assembly_id
  * @property integer $standard_drawing_id
- * @property integer $supplier_id
+ * @property integer $store_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Assembly $assembly
- * @property Supplier $supplier
+ * @property Store $store
  * @property StandardDrawing $standardDrawing
  * @property Staff $staff
  */
@@ -36,11 +36,11 @@ class AssemblyToStandardDrawing extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('assembly_id, standard_drawing_id, supplier_id, staff_id', 'required'),
-			array('assembly_id, standard_drawing_id, supplier_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, standard_drawing_id, store_id, staff_id', 'required'),
+			array('assembly_id, standard_drawing_id, store_id, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, assembly_id, searchStandardDrawing, supplier_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, assembly_id, searchStandardDrawing, store_id, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,7 +53,7 @@ class AssemblyToStandardDrawing extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
-			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
+			'store' => array(self::BELONGS_TO, 'Store', 'store_id'),
 			'standardDrawing' => array(self::BELONGS_TO, 'StandardDrawing', 'standard_drawing_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
@@ -69,7 +69,7 @@ class AssemblyToStandardDrawing extends ActiveRecord
 			'assembly_id' => 'Assembly',
 			'standard_drawing_id' => 'Standard Drawing',
 			'searchStandardDrawing' => 'Standard Drawing',
-			'supplier_id' => 'Supplier',
+			'store_id' => 'Store',
 			'staff_id' => 'Staff',
 		);
 	}

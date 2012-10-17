@@ -19,6 +19,9 @@ class TaskToAssembly extends ActiveRecord
 {
 	public $searchTask;
 	public $searchAssembly;
+
+	public $supplier_id;
+
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -40,8 +43,8 @@ class TaskToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, assembly_id, quantity, staff_id', 'required'),
-			array('assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('supplier_id, task_id, assembly_id, quantity, staff_id', 'required'),
+			array('supplier_id, assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -127,6 +130,12 @@ class TaskToAssembly extends ActiveRecord
 		return array('assembly->description');
 	}
 
+	public function afterFind() {
+		$this->supplier_id = $this->material->supplier_id;
+		
+		return parent::afterFind();
+	}
+	
 }
 
 ?>

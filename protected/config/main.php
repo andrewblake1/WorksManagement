@@ -208,14 +208,16 @@ return array(
 				'Staff'=>array(
 					'AuthAssignment',
 				),
-				'Supplier'=>array(
+				'Store'=>array(
 					'Assembly'=>array(
 						'AssemblyToMaterial',
 						'AssemblyToStandardDrawing',
 					),
 					'Material',
-					'PurchaseOrder',
 					'StandardDrawing',
+				),
+				'Supplier'=>array(
+					'PurchaseOrder',
 					'SupplierToSupplierContact'=>array(
 						'SupplierContact',
 					),

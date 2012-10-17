@@ -18,6 +18,7 @@
  */
 class MaterialToClient extends ActiveRecord
 {
+	public $searchAlias;
 	public $searchMaterial;
 
 	/**
@@ -44,9 +45,7 @@ class MaterialToClient extends ActiveRecord
 			array('material_id, client_id, staff_id', 'required'),
 			array('material_id, client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('alias', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, client_id, searchMaterial, alias, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, client_id, searchMaterial, searchAlias, alias, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,7 +72,8 @@ class MaterialToClient extends ActiveRecord
 			'id' => 'Material',
 			'material_id' => 'Material',
 			'client_id' => 'Client',
-			'alias' => 'Alias',
+			'alias' => 'Client alias/Material alias',
+			'searchAlias' => 'Client alias/Material alias',
 		);
 	}
 
@@ -84,24 +84,25 @@ class MaterialToClient extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			'material.description AS searchMaterial',
 			"CONCAT_WS('$delimiter',
-				material.description,
+				t.alias,
 				material.alias
-				) AS searchMaterial",
-			't.alias',
+				) AS searchAlias",
 			't.client_id',
 		);
 
 		$this->compositeCriteria($criteria,
 			array(
-			'material.description',
-			'material.alias'
+			't.alias',
+			'material.alias',
 			),
-			$this->searchMaterial
+			$this->searchAlias
 		);
+		$criteria->compare('searchMaterial',$this->searchMaterial,true);
 		$criteria->compare('t.client_id',$this->client_id,true);
-		$criteria->compare('t.alias',$this->alias);
 
 		$criteria->with = array('material');
 
@@ -110,8 +111,8 @@ class MaterialToClient extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchMaterial', 'Material', 'assembly_id');
- 		$columns[] = 'alias';
+        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
+        $columns[] = 'searchAlias';
 
 		return $columns;
 	}
@@ -122,7 +123,7 @@ class MaterialToClient extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchMaterial');
+		return array('searchAlias', 'searchMaterial');
 	}
 
 	/**
@@ -132,6 +133,7 @@ class MaterialToClient extends ActiveRecord
 	{
 		return array(
 			'material->description',
+			't->alias',
 			'material->alias',
 		);
 	}

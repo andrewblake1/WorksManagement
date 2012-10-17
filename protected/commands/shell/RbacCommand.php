@@ -232,6 +232,11 @@ EOD;
 			 $this->_authManager->createOperation('StaffRead', 'Staff read');
 			 $task->addChild('StaffRead');
 
+			 $task=$this->_authManager->createTask('Store', 'Store task');
+			 $systemAdminRole->addChild('Store');
+			 $this->_authManager->createOperation('StoreRead', 'Store read');
+			 $task->addChild('StoreRead');
+
 			 $task=$this->_authManager->createTask('Supplier', 'Supplier task');
 			 $systemAdminRole->addChild('Supplier');
 			 $this->_authManager->createOperation('SupplierRead', 'Supplier read');

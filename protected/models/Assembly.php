@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'assembly':
  * @property integer $id
- * @property integer $supplier_id
+ * @property integer $store_id
  * @property string $description
  * @property string $unit_price
  * @property string $alias
@@ -14,7 +14,7 @@
  *
  * The followings are the available model relations:
  * @property Staff $staff
- * @property Supplier $supplier
+ * @property Store $store
  * @property AssemblyToClient[] $assemblyToClients
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToStandardDrawing[] $assemblyToStandardDrawings
@@ -39,11 +39,11 @@ class Assembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, supplier_id, staff_id', 'required'),
-			array('deleted, supplier_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, store_id, staff_id', 'required'),
+			array('deleted, store_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
 			array('unit_price', 'length', 'max'=>7),
-			array('id, description, unit_price, supplier_id, alias, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, unit_price, store_id, alias, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,7 +56,7 @@ class Assembly extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
+			'store' => array(self::BELONGS_TO, 'Store', 'store_id'),
 			'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
 			'assemblyToStandardDrawings' => array(self::HAS_MANY, 'AssemblyToStandardDrawing', 'assembly_id'),
@@ -73,8 +73,8 @@ class Assembly extends ActiveRecord
 		return parent::attributeLabels(array(
 			'id' => 'Assembly',
 			'unit_price' => 'Unit price',
-			'supplier_id' => 'Supplier',
-			'searchSupplier' => 'Supplier',
+			'store_id' => 'Store',
+			'searchStore' => 'Store',
 			'alias' => 'Alias',
 		));
 	}
@@ -89,7 +89,7 @@ class Assembly extends ActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.unit_price',$this->unit_price,true);
-		$criteria->compare('t.supplier_id', $this->supplier_id);
+		$criteria->compare('t.store_id', $this->store_id);
 
 		$criteria->select=array(
 			't.id',
@@ -118,13 +118,13 @@ class Assembly extends ActiveRecord
  
 	public function getSearchSort()
 	{
-		return array('searchSupplier');
+		return array('searchStore');
 	}
 
-	public function scopeSupplier($supplier_id)
+	public function scopeStore($store_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compare('supplier_id', $supplier_id);
+		$criteria->compare('store_id', $store_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		

@@ -38,7 +38,7 @@ class UploadHandler
             'script_url' => $this->get_full_url().'/',
             'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/files/',
             'upload_url' => $this->get_full_url().'/files/',
-            'param_name' => 'files',
+            'param_name' => 'files[]',
             // Set the following option to 'POST', if your server does not support
             // DELETE requests. This is a parameter sent to the client:
             'delete_type' => 'DELETE',

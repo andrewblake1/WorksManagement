@@ -23,6 +23,9 @@ class TaskTypeToMaterial extends ActiveRecord
 	 */
 	public $searchMaterial;
 	public $searchTaskType;
+
+	public $supplier_id;
+
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -45,8 +48,8 @@ class TaskTypeToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_type_id, material_id, quantity, staff_id', 'required'),
-			array('task_type_id, material_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('supplier_id, task_type_id, material_id, quantity, staff_id', 'required'),
+			array('supplier_id, task_type_id, material_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, task_type_id, searchTaskType, searchMaterial, quantity, staff_id', 'safe', 'on'=>'search'),
@@ -138,4 +141,10 @@ class TaskTypeToMaterial extends ActiveRecord
 		return array('searchMaterial', 'searchTaskType');
 	}
 
+	public function afterFind() {
+		$this->supplier_id = $this->material->supplier_id;
+		
+		return parent::afterFind();
+	}
+	
 }
