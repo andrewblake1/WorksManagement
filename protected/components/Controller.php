@@ -1205,7 +1205,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					'class'=>'bootstrap.widgets.TbMenu',
 					'items'=>array(
 						Yii::app()->user->checkAccess('system admin')
-							? array('label'=>'Database', 'url'=>Yii::app()->request->hostInfo.'/phpMyAdmin')
+							? array('label'=>'Database', 'url'=>Yii::app()->request->hostInfo.'/phpmyadmin')
 							: array(),
 					),
 				),

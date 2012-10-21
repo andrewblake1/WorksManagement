@@ -111,6 +111,7 @@ class SupplierToSupplierContact extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			'supplier_contact_id',
 			'supplierContact.first_name as searchFirst_name',
 			'supplierContact.last_name as searchLast_name',

@@ -109,6 +109,7 @@ class ProjectTypeToAuthItem extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			'authItemName.description AS searchAuthItem',
 		);
 

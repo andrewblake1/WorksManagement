@@ -88,6 +88,7 @@ class DefaultValue extends ActiveRecord
 		$criteria->compare('t.select',$this->select);
 
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.table',
 			't.column',
 			't.select',

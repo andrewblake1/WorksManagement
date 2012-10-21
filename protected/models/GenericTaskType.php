@@ -99,6 +99,7 @@ class GenericTaskType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.generictaskcategory_id',
 			't.generic_type_id',
 			'generictaskcategory.name AS searchGenerictaskcategory',

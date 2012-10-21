@@ -101,6 +101,7 @@ class ProjectToClientContact extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			'client_contact_id',
 			'clientContact.first_name as searchFirst_name',
 			'clientContact.last_name as searchLast_name',

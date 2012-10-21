@@ -90,6 +90,7 @@ class TaskToAssembly extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.assembly_id',
 			'assembly.description AS searchAssembly',
 			't.quantity',

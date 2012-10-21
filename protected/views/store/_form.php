@@ -1,36 +1,9 @@
-<div class="form">
+<?php
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'store-form',
-	'enableAjaxValidation'=>false,
-)); ?>
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	$form->textFieldRow('name');
 
-	<?php echo $form->errorSummary($model); ?>
+$this->endWidget();
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'name'); ?>
-		<?php echo $form->textField($model,'name',array('size'=>60,'maxlength'=>64)); ?>
-		<?php echo $form->error($model,'name'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'deleted'); ?>
-		<?php echo $form->textField($model,'deleted'); ?>
-		<?php echo $form->error($model,'deleted'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'staff_id'); ?>
-		<?php echo $form->textField($model,'staff_id'); ?>
-		<?php echo $form->error($model,'staff_id'); ?>
-	</div>
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
-	</div>
-
-<?php $this->endWidget(); ?>
-
-</div><!-- form -->
+?>

@@ -227,6 +227,7 @@ class GenericType extends ActiveRecord
 		$criteria->compare('t.validation_error',$this->validation_error,true);
 
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.description',
 			't.mandatory',
 			't.allow_new',

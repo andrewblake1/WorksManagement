@@ -104,6 +104,7 @@ class DutyType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.generic_type_id',
 			't.description',
 			't.lead_in_days',

@@ -83,6 +83,7 @@ class AssemblyToStandardDrawing extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			'standardDrawing.description AS searchStandardDrawing',
 		);
 

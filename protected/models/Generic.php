@@ -245,6 +245,7 @@ class Generic extends ActiveRecord
 		$criteria->compare('t.type_text',$this->type_text,true);
 
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.type_int',
 			't.type_float',
 			't.type_time',

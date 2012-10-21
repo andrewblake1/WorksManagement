@@ -93,6 +93,7 @@ class TaskTypeToResourceType extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.resource_type_id',
 			'resourceType.description AS searchResourceType',
 			't.quantity',

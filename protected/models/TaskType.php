@@ -106,6 +106,7 @@ class TaskType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.description',
 			't.unit_price',
 		);

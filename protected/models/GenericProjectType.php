@@ -100,6 +100,7 @@ class GenericProjectType extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.genericprojectcategory_id',
 			't.generic_type_id',
 			'projectType.description AS searchProjectType',

@@ -96,6 +96,7 @@ class ProjectToGenericProjectType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.generic_project_type_id',
 			't.generic_id',
 			'generic.id AS searchGeneric',

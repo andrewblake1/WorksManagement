@@ -42,7 +42,7 @@ class AssemblyToClient extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, assembly_id, client_id, staff_id', 'required'),
+			array('assembly_id, client_id, staff_id', 'required'),
 			array('assembly_id, client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('id, alias', 'length', 'max'=>255),
 			// The following rule is used by search().
@@ -85,12 +85,15 @@ class AssemblyToClient extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			"CONCAT_WS('$delimiter',
 				assembly.description,
 				assembly.alias
 				) AS searchAssembly",
 			't.alias',
+			'assembly_id',
 			't.client_id',
 		);
 

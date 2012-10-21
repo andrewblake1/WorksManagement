@@ -108,6 +108,7 @@ class TaskToResourceType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.resource_type_id',
 			'resourceType.description AS description',
 			'resourceTypeToSupplier.name AS searchResourceTypeToSupplier',

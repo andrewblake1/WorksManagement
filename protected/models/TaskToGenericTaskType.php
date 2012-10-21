@@ -96,6 +96,7 @@ class TaskToGenericTaskType extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.generic_task_type_id',
 			"CONCAT_WS('$delimiter',
 				taskType.description,

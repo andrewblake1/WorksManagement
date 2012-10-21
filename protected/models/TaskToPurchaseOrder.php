@@ -90,6 +90,7 @@ class TaskToPurchaseOrder extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.purchase_order_id',
 			"CONCAT_WS('$delimiter',
 				supplier.name,

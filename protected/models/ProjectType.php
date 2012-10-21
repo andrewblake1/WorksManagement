@@ -83,6 +83,7 @@ class ProjectType extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.description',
 		);
 

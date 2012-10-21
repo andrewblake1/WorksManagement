@@ -114,6 +114,7 @@ class TaskTypeToDutyType extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.project_type_to_AuthItem_id',
 			'dutyType.description AS searchDutyType',
 			'projectTypeToAuthItem.AuthItem_name AS searchProjectTypeToAuthItem',

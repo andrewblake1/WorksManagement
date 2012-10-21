@@ -91,6 +91,7 @@ class AssemblyToMaterial extends ActiveRecord
 		$criteria=new DbCriteria;
 
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.assembly_id',
 			'material.description AS searchMaterial',
 			't.quantity',

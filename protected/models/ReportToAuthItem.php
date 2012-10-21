@@ -82,6 +82,7 @@ class ReportToAuthItem extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			'AuthItem_name',
 		);
 

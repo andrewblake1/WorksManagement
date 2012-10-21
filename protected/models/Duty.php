@@ -105,6 +105,7 @@ class Duty extends ActiveRecord
 		// NB: taking first non null of either the staff assigned to duty at project or staff in charge at target duty level
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.task_type_to_duty_type_id',
 			'dutyType.description AS description',
 			'(SELECT `date` FROM working_days WHERE id = (SELECT id - lead_in_days FROM working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',

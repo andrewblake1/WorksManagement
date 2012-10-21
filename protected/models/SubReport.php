@@ -112,6 +112,7 @@ class SubReport extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.description',
 			't.format',
 			't.select',

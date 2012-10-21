@@ -114,6 +114,7 @@ class SupplierContact extends ActiveRecord
 		$criteria->compare('phone_fax',$this->phone_fax,true);
 
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			'first_name',
 			'last_name',
 			'email',

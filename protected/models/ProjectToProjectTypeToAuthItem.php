@@ -101,6 +101,7 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.AuthAssignment_id',
 			"CONCAT_WS('$delimiter',
 				user.first_name,

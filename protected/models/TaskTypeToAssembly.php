@@ -93,6 +93,7 @@ class TaskTypeToAssembly extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			't.assembly_id',
 			'assembly.description AS searchAssembly',
 			't.quantity',

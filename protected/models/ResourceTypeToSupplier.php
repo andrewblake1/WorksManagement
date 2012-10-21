@@ -95,6 +95,7 @@ class ResourceTypeToSupplier extends ActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			'supplier.name AS searchSupplier',
 		);
 

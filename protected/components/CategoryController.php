@@ -153,6 +153,8 @@ class CategoryController extends Controller
 	
 	public function actionReturnForm()
 	{
+		$returnUrl = null;
+
 		//don't reload these scripts or they will mess up the page
 		//yiiactiveform.js still needs to be loaded that's why we don't use
 		// Yii::app()->clientScript->scriptMap['*.js'] = false;

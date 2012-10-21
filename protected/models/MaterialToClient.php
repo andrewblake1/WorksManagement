@@ -86,6 +86,7 @@ class MaterialToClient extends ActiveRecord
 
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
 			'material.description AS searchMaterial',
 			"CONCAT_WS('$delimiter',
 				t.alias,
