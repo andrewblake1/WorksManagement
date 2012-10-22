@@ -592,7 +592,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		if(isset($_POST[$this->modelName]))
 		{
 			$model->attributes=$_POST[$this->modelName];
-			
+$t = $model->attributes;		
 			// start a transaction
 			$transaction = Yii::app()->db->beginTransaction();
 			

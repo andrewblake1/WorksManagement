@@ -147,6 +147,13 @@ class Material extends ActiveRecord
 		return $this;
 	}
 
+	public function scopeAssembly($assembly_id)
+	{
+		$assembly = Assembly::model()->findByPk($assembly_id);
+		
+		return $this->scopeStore($assembly->store_id);
+	}
+
 }
 
 ?>

@@ -97,4 +97,24 @@ class StandardDrawing extends ActiveRecord
 		
 		return $columns;
 	}
+
+	public function scopeStore($store_id)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('store_id', $store_id);
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+
+	public function scopeAssembly($assembly_id)
+	{
+		$assembly = Assembly::model()->findByPk($assembly_id);
+		
+		return $this->scopeStore($assembly->store_id);
+	}
+
 }
+
+?>

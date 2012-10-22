@@ -19,6 +19,11 @@
 class AssemblyToStandardDrawing extends ActiveRecord
 {
 	public $searchStandardDrawing;
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Standard drawing';
+
 	
 	/**
 	 * @return string the associated database table name
@@ -102,4 +107,13 @@ class AssemblyToStandardDrawing extends ActiveRecord
 		
 		return $columns;
 	}
+	
+	public function beforeValidate()
+	{
+		$assembly = Assembly::model()->findByPk($this->assembly_id);
+		$this->store_id = $assembly->store_id;
+		
+		return parent::beforeValidate();
+	}
+
 }

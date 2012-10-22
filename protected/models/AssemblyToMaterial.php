@@ -137,7 +137,7 @@ class AssemblyToMaterial extends ActiveRecord
 	{
 		$assembly = Assembly::model()->findByPk($this->assembly_id);
 		$this->store_id = $assembly->store_id;
-		
+$t = $this->store_id;		
 		return parent::beforeValidate();
 	}
 
