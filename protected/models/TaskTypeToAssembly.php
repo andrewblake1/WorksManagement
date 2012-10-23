@@ -28,7 +28,7 @@ class TaskTypeToAssembly extends ActiveRecord
 	 */
 	static $niceName = 'Assembly';
 
-	public $supplier_id;
+	public $store_id;
 
 	
 	/**
@@ -47,8 +47,8 @@ class TaskTypeToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('supplier_id, task_type_id, assembly_id, quantity, staff_id', 'required'),
-			array('supplier_id, task_type_id, assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('store_id, task_type_id, assembly_id, quantity, staff_id', 'required'),
+			array('store_id, task_type_id, assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, task_type_id, searchAssembly, quantity, staff_id', 'safe', 'on'=>'search'),
@@ -140,7 +140,7 @@ class TaskTypeToAssembly extends ActiveRecord
 	}
 
 	public function afterFind() {
-		$this->supplier_id = $this->material->supplier_id;
+		$this->store_id = $this->material->store_id;
 		
 		return parent::afterFind();
 	}

@@ -108,6 +108,16 @@ class AssemblyToStandardDrawing extends ActiveRecord
 		return $columns;
 	}
 	
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+			'assembly->description'
+		);
+	}
+	
 	public function beforeValidate()
 	{
 		$assembly = Assembly::model()->findByPk($this->assembly_id);

@@ -3,12 +3,12 @@
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));		
 
 	CHtml::resolveNameID($model, $attribute = 'assembly_id', $htmlOptions);
-	SupplierController::listWidgetRow($model, $form, 'supplier_id',
+	StoreController::listWidgetRow($model, $form, 'store_id',
 		array(
 			'empty'=>'Please select',
 			'ajax' => array(
 			'type'=>'POST',
-			'url'=>CController::createUrl('Supplier/dynamicAssemblys'),
+			'url'=>CController::createUrl('Store/dynamicAssemblys'),
 			'success'=>"function(data) {
 				if(data)
 				{
@@ -21,21 +21,21 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 					lookup = $('#{$htmlOptions['id']}_lookup');
 					if(lookup.length)
 					{
-						supplier_id = $('#{$this->modelName}_supplier_id').val();
-						lookup.autocomplete({'minLength':1,'maxHeight':'100','select':function(event, ui){"."$('#{$htmlOptions['id']}').val(ui.item.id);$('#{$htmlOptions['id']}_save').val(ui.item.value);},'source':'/WorksManagement/Assembly/autocomplete?model={$this->modelName}&attribute=assembly_id&{$this->modelName}%5Btask_id%5D=35&scopes%5BscopeSupplier%5D%5B0%5D=' + supplier_id});
+						store_id = $('#{$this->modelName}_store_id').val();
+						lookup.autocomplete({'minLength':1,'maxHeight':'100','select':function(event, ui){"."$('#{$htmlOptions['id']}').val(ui.item.id);$('#{$htmlOptions['id']}_save').val(ui.item.value);},'source':'/WorksManagement/Assembly/autocomplete?model={$this->modelName}&attribute=assembly_id&{$this->modelName}%5Btask_id%5D=35&scopes%5BscopeStore%5D%5B0%5D=' + store_id});
 					}
 				}
 			}",
 		)),
 		array(),
-		'Supplier');
+		'Store');
 
-	// NB: need to set this here as otherwise in wmfkautocomplete the soure url has supplier_id=, in it which gets stripped
-	if($model->supplier_id === null)
+	// NB: need to set this here as otherwise in wmfkautocomplete the soure url has store_id=, in it which gets stripped
+	if($model->store_id === null)
 	{
-		$model->supplier_id = 0;
+		$model->store_id = 0;
 	}
-	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array(), array('scopeSupplier'=>array($model->supplier_id)));
+	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array(), array('scopeStore'=>array($model->store_id)));
 
 	$form->textFieldRow('quantity');
 
