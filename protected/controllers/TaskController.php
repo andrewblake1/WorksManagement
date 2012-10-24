@@ -96,8 +96,8 @@ class TaskController extends GenericExtensionController
 			$model->attributes = $taskTypeToResourceType->attributes;
 			$model->staff_id = null;
 			$model->task_id = $task->id;
-			$model->resource_type_id = $taskTypeToResourceType->resource_type_id;
-			$saved &= TaskToResourceTypeController::createSaveStatic($model, $models);
+//			$model->resource_type_id = $taskTypeToResourceType->resource_type_id;
+			$saved &= TaskToResourceTypeController::createSaveStatic($model, $models, $taskTypeToResourceType);
 		}
 		
 		return $saved;

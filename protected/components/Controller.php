@@ -1051,7 +1051,9 @@ $t = $model->attributes;
 		$target = new $modelName;
 		
 		// add a blank value at the top to be converted to null later if allowing nulls
-		$listData = $model->metadata->columns[$fkField]->allowNull ? array(' '=>'') : array();
+		$listData = isset($model->metadata->columns[$fkField]) && $model->metadata->columns[$fkField]->allowNull
+			? array(' '=>'')
+			: array();
 		$listData += $modelName::getListData($scopes);
 		echo $form->dropDownListRow(
 			$fkField,

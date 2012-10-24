@@ -15,7 +15,7 @@
  * @property Task $task
  * @property Staff $staff
  * @property ResourceData $resourceData
- * @property ResourceTypeToSupplier $resourceType
+ * @property ResourceData $resourceType1
  * @property ResourceData $level0
  */
 class TaskToResourceType extends ActiveRecord
@@ -52,8 +52,8 @@ class TaskToResourceType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, resource_type_id, quantity, staff_id', 'required'),
-			array('level, resource_type_id, quantity, hours, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_id, resource_type_id, quantity, hours, staff_id', 'required'),
+			array('level, resource_type_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			array('task_id', 'length', 'max'=>10),
 			array('resource_type_to_supplier_id', 'safe'),
@@ -73,7 +73,7 @@ class TaskToResourceType extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'resourceData' => array(self::BELONGS_TO, 'ResourceData', 'resource_data_id'),
-			'resourceType' => array(self::BELONGS_TO, 'ResourceData', 'resource_type_id'),
+			'resourceType1' => array(self::BELONGS_TO, 'ResourceData', 'resource_type_id'),
 			'level0' => array(self::BELONGS_TO, 'ResourceData', 'level'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
@@ -111,7 +111,7 @@ class TaskToResourceType extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.resource_type_id',
 			'resourceType.description AS description',
-			'resourceTypeToSupplier.name AS searchResourceTypeToSupplier',
+			'supplier.name AS searchResourceTypeToSupplier',
 			'resourceData.quantity AS quantity',
 			'resourceData.hours AS hours',
 			'resourceData.start AS start',
@@ -119,8 +119,8 @@ class TaskToResourceType extends ActiveRecord
 		);
 
 		// where
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('resourceTypeToSupplier.name',$this->searchResourceTypeToSupplier,true);
+		$criteria->compare('resourceType.description',$this->description,true);
+		$criteria->compare('supplier.name',$this->searchResourceTypeToSupplier,true);
 		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('hours',Yii::app()->format->toMysqlTime($this->hours));
 		$criteria->compare('start',Yii::app()->format->toMysqlTime($this->start));
@@ -130,8 +130,8 @@ class TaskToResourceType extends ActiveRecord
 		//  join
 		$criteria->with = array(
 			'resourceData',
-			'resourceData.resourceType',
-			'resourceData.resourceTypeToSupplier',
+			'resourceData.resourceTypeToSupplier.resourceType',
+			'resourceData.resourceTypeToSupplier.supplier',
 			);
 
 		return $criteria;
@@ -160,7 +160,7 @@ class TaskToResourceType extends ActiveRecord
 	
 	static function getDisplayAttr()
 	{
-		return array('resourceData->resourceType->description');
+		return array('resourceData->resourceTypeToSupplier->resourceType->description');
 	}
 
 	public function beforeSave()

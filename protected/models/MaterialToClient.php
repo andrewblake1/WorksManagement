@@ -134,7 +134,7 @@ class MaterialToClient extends ActiveRecord
 	{
 		return array(
 			'material->description',
-			't->alias',
+			'alias',
 			'material->alias',
 		);
 	}

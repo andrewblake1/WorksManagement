@@ -51,9 +51,9 @@ class TaskToResourceTypeController extends Controller
 			$resourceData->planning_id = $planning_id;
 			$resourceData->resource_type_id = $model->resource_type_id;
 			$resourceData->level = $level;
-			$resourceData->quantity = $model->quantity;
-			$resourceData->hours = $model->hours;
-			$resourceData->start = $model->start;
+$a=			$resourceData->quantity = $model->quantity;
+$b=			$resourceData->hours = $model->hours;
+$c=			$resourceData->start = $model->start;
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
 			$resourceData->dbCallback('save');
 		}

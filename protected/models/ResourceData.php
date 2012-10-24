@@ -10,7 +10,7 @@
  * @property integer $resource_type_id
  * @property integer $resource_type_to_supplier_id
  * @property integer $quantity
- * @property integer $hours
+ * @property string $hours
  * @property string $start
  * @property integer $staff_id
  *
@@ -52,7 +52,7 @@ class ResourceData extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('planning_id, level, resource_type_id, quantity, staff_id', 'required'),
+			array('planning_id, level, resource_type_id, quantity, hours, staff_id', 'required'),
 			array('resource_type_id, resource_type_to_supplier_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level', 'length', 'max'=>10),
 			array('start, hours', 'date', 'format'=>'H:m'),
