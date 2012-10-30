@@ -52,17 +52,17 @@ protected $_adminShowNew = false;
 	/**
 	 * @var string the flash message to show sort and search instructions
 	 */
-	const messageSortSearch = '<p><strong>To sort,</strong> click on column name.
-		<p><strong>To search,</strong> enter part of any term and click elsewhere.
-		/ in a column heading means you can search the different parts by seperating with /.';
+//	const messageSortSearch = '<p><strong>To sort,</strong> click on column name.
+//		<p><strong>To search,</strong> enter part of any term and click elsewhere.
+//		/ in a column heading means you can search the different parts by seperating with /.';
 	/**
 	 * @var string the flash message to show sort and search adn compare instructions
 	 */
-	const messageSortSearchCompare = "<p><strong>To sort,</strong> click on column name.
-		<p><strong>To search,</strong> enter part of any term and click elsewhere.
-		/ in a column heading means you can search the different parts by seperating with /.
-		<p>You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>,
-		<b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b> or <b>=</b>) at the beginning of each of your search values.";
+//	const messageSortSearchCompare = "<p><strong>To sort,</strong> click on column name.
+//		<p><strong>To search,</strong> enter part of any term and click elsewhere.
+//		/ in a column heading means you can search the different parts by seperating with /.
+//		<p>You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>,
+//		<b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b> or <b>=</b>) at the beginning of each of your search values.";
 	
 	static function modelName()
 	{
@@ -137,56 +137,57 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// if something has been entered
 		if (isset($_GET['term']))
 		{
-			// url parameters
 			$modelName = /*$_GET['fk_model']*/ $this->modelName;
-			$model = $modelName::model();
+	
 			// protect against possible injection
 			$criteria = new CDbCriteria;
-			$criteria->params = array();
-			$terms = explode(Yii::app()->params['delimiter']['search'], $_GET['term']);
-
+			$concat = array();
+				
 			foreach($modelName::getDisplayAttr() as $field)
 			{
-				// get next term - the extra loop to split the search term again at spaces to do any order like google
-				if($term = each($terms))
+				// building display parameter which gets eval'd later
+				$display[] = '{$p->'.$field.'}';
+
+				/*
+				* $matches[5] attribute
+				* $matches[4] alias
+				* $matches[1] relations
+				*/
+				if(preg_match('/(((.*)->)?(\w*))->(\w*)$/', $field, $matches))
 				{
-					// building display parameter which gets eval'd later
-					$display[] = '{$p->'.$field.'}';
-
-					/*
-					* $matches[5] attribute
-					* $matches[4] alias
-					* $matches[1] relations
-					*/
-					if(preg_match('/(((.*)->)?(\w*))->(\w*)$/', $field, $matches))
-					{
-						$criteria->with[] = $matches[1];
-						$alias = $matches[4];
-						$attribute = $matches[5];
-					}
-					else
-					{
-						$alias = 't';
-						$attribute = $field;
-					}
-
-					$cntr = 0;
-					foreach(explode(' ', trim($term['value'])) as $term)
-					{
-						$paramName = ":{$alias}_{$attribute}_$cntr";
-						$criteria->condition .= ($criteria->condition ? " AND " : '')."$alias.$attribute LIKE $paramName";
-						$criteria->params[$paramName] = "%$term%";
-						$cntr++;
-					}
-					$criteria->order[] = "$alias.$attribute ASC";
+					$criteria->with[] = $matches[1];
+					$alias = $matches[4];
+					$attribute = $matches[5];
 				}
+				else
+				{
+					$alias = 't';
+					$attribute = $field;
+				}
+
+				$criteria->order[] = "$alias.$attribute ASC";
+				$concat[] = "$alias.$attribute";
 			}
 
-			// probably a good idea to limit the results
+			// create the search term
+			$concat = "CONCAT_WS(' ', ". implode(', ', $concat) . ")";
+			$cntr = 0;
+			$criteria->params = array();
+			foreach($terms = explode(' ', $_GET['term']) as $term)
+			{
+				$term = trim($term);
+				$paramName = ":param$cntr";
+				$criteria->condition .= ($criteria->condition ? " AND " : '')."$concat LIKE $paramName";
+				$criteria->params[$paramName] = "%$term%";
+				$cntr++;
+			}
+
+			// limit the results
 			$criteria->limit = 20;
 			$criteria->order = implode(', ', $criteria->order);
 			$display = implode(Yii::app()->params['delimiter']['display'], $display);
 			$criteria->scopes = empty($_GET['scopes']) ? null : $_GET['scopes'];
+			$model = $modelName::model();
 			$fKModels = $model->findAll($criteria);
 
 			// if some models founds
@@ -354,7 +355,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	public function actionAdmin($exportColumns = array())
 	{
 		// set the message on how to use the admin screen
-		Yii::app()->user->setFlash('info', self::messageSortSearch);
+//		Yii::app()->user->setFlash('info', self::messageSortSearch);
 
 		$modelName = $this->modelName;
 
@@ -707,16 +708,19 @@ $t = $model->attributes;
 	}
 	
 	private function cuRedirect($model)
-	{
+	{ 
 		// if posted a controller then this is where we should return to
 // TODO: identical to create redirect - put into private
 		if(!empty($_POST['controller']))
 		{
 			$modelName = $_POST['controller'];
+//			$this->redirect(array("$modelName/admin", $modelName=>array($_SESSION[$modelName]['name']=>$_SESSION[$modelName]['value'])));
 			$this->redirect(array("$modelName/admin", $modelName=>$_SESSION['actionAdminGet'][$modelName]));
 		}
 		elseif(is_array($_SESSION['actionAdminGet'][$this->modelName]))
 		{
+//			$modelName = $this->modelName;
+//			$this->redirect(array("$modelName/admin", $modelName=>array($_SESSION[$modelName]['name']=>$_SESSION[$modelName]['value'])));
 			$this->redirect(array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]));
 		}
 		else

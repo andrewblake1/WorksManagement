@@ -131,7 +131,7 @@ class AuthAssignment extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'itemname';
+		$columns[] = $this->linkThisColumn('itemname');
  		
 		return $columns;
 	}

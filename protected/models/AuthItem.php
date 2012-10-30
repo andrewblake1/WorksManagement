@@ -119,7 +119,7 @@ class AuthItem extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'name';
+		$columns[] = $this->linkThisColumn('name');
 		$columns[] = 'description';
 		
 		return $columns;

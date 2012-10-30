@@ -112,7 +112,7 @@ class Crew extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
+		$columns[] = $this->linkThisColumn('id');
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
 		
 		return $columns;

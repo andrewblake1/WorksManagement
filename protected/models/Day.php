@@ -118,8 +118,8 @@ class Day extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
-		$columns[] = 'name';
+		$columns[] = $this->linkThisColumn('id');
+		$columns[] = $this->linkThisColumn('name');
  		$columns[] = 'scheduled:date';
 		$columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
 		

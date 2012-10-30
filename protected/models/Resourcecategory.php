@@ -26,7 +26,6 @@ class Resourcecategory extends CategoryActiveRecord {
 	 */
 	static $niceName = 'Resource category';
 
-
 	/**
 	 * @return string the associated database table name
 	 */

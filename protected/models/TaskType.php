@@ -121,7 +121,7 @@ class TaskType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'description';
+		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'unit_price';
  		
 		return $columns;

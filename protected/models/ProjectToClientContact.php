@@ -131,8 +131,8 @@ class ProjectToClientContact extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[]='searchFirst_name';
-		$columns[]='searchLast_name';
+		$columns[]=$this->linkThisColumn('searchFirst_name');
+		$columns[]=$this->linkThisColumn('searchLast_name');
         $columns[] = array(
 			'name'=>'searchPhone_mobile',
 			'value'=>'CHtml::link($data->searchPhone_mobile, "tel:".$data->searchPhone_mobile)',

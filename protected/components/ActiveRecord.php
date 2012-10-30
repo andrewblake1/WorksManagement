@@ -240,10 +240,27 @@ abstract class ActiveRecord extends CActiveRecord
 	 */
 	public function compositeCriteria($criteria, $columns, $term)
 	{
-		foreach(explode(Yii::app()->params['delimiter']['search'], $term) as $term)
+/*		foreach(explode(Yii::app()->params['delimiter']['search'], $term) as $term)
 		{
 			list($key, $column) = each($columns);
 			$criteria->compare($column, $term, true);
+		}*/
+		
+		// if something has been entered
+		if($term)
+		{
+			// protect against possible injection
+			$concat = "CONCAT_WS(' ', ". implode(', ', $columns) . ")";
+			$cntr = 0;
+			$criteria->params = array();
+			foreach($terms = explode(' ', $term) as $term)
+			{
+				$term = trim($term);
+				$paramName = ":param$cntr";
+				$criteria->condition .= ($criteria->condition ? " AND " : '')."$concat LIKE $paramName";
+				$criteria->params[$paramName] = "%$term%";
+				$cntr++;
+			}
 		}
 	}
 
@@ -323,8 +340,13 @@ abstract class ActiveRecord extends CActiveRecord
 				$primaryKeyName = $modelName::getParentForeignKey($crumb);
 				// ensure the primary key is set for this parent crumb
 				$_SESSION[$crumb]['name'] = $crumb::model()->tableSchema->primaryKey;
-
-				$_SESSION[$crumb]['value'] = $model->$primaryKeyName;
+				// the if clause here is to exclude when model is for search on admin view and has no pk - then assume session variables already set
+				if($model->$primaryKeyName !== null)
+				{
+					$_SESSION[$crumb]['value'] = $model->$primaryKeyName;
+					// ensure that that at least the parents primary key is set for the admin view
+					$_SESSION['actionAdminGet'][$modelName][$crumb] = $_SESSION[$crumb]['value'];
+				}
 				// set the model ready for the next one
 				$model = $crumb::model()->findByPk($_SESSION[$crumb]['value']);
 				
@@ -467,6 +489,11 @@ abstract class ActiveRecord extends CActiveRecord
 			// create text
 			return $name;
 		}
+	}
+	
+	protected function linkThisColumn($name)
+	{
+		return self::linkColumn($name, get_class($this), $this->tableSchema->primaryKey, $this->tableSchema->primaryKey);
 	}
 
 	/**

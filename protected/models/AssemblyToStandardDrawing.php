@@ -103,7 +103,7 @@ class AssemblyToStandardDrawing extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'searchStandardDrawing';
+        $columns[] = static::linkColumn('searchStandardDrawing', 'StandardDrawing', 'standard_drawing_id');
 		
 		return $columns;
 	}

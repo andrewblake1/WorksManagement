@@ -109,8 +109,8 @@ class Material extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
-		$columns[] = 'description';
+//		$columns[] = 'id';
+		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'alias';
 		$columns[] = 'unit_price';
 		$columns[] = 'unit';

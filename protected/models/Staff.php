@@ -206,9 +206,9 @@ class Staff extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
-		$columns[] = 'first_name';
-		$columns[] = 'last_name';
+		$columns[] = $this->linkThisColumn('id');
+		$columns[] = $this->linkThisColumn('first_name');
+		$columns[] = $this->linkThisColumn('last_name');
         $columns[] = array(
 			'name'=>'phone_mobile',
 			'value'=>'CHtml::link($data->phone_mobile, "tel:".$data->phone_mobile)',

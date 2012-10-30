@@ -95,7 +95,7 @@ class ReportToAuthItem extends ActiveRecord
 	
 	public function getAdminColumns()
 	{
-		$columns[] = 'AuthItem_name';
+		$columns[] = $this->linkThisColumn('AuthItem_name');
 		
 		return $columns;
 	}

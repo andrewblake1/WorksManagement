@@ -134,7 +134,7 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'itemname';
+		$columns[] = $this->linkThisColumn('itemname');
         $columns[] = static::linkColumn('searchAuthAssignment', 'AuthAssignment', 'AuthAssignment_id');
 		
 		return $columns;

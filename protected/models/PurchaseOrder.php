@@ -99,9 +99,9 @@ class PurchaseOrder extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
+//		$columns[] = 'id';
         $columns[] = static::linkColumn('searchSupplier', 'Supplier', 'supplier_id');
-		$columns[] = 'number';
+		$columns[] = $this->linkThisColumn('number');
 		
 		return $columns;
 	}

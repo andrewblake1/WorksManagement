@@ -8,7 +8,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 			'empty'=>'Please select',
 			'ajax' => array(
 			'type'=>'POST',
-			'url'=>CController::createUrl('Store/dynamicAssemblys'),
+			'url'=>CController::createUrl('Store/dynamicAssemblies'),
 			'success'=>"function(data) {
 				if(data)
 				{

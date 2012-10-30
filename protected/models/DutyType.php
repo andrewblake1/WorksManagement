@@ -127,7 +127,7 @@ class DutyType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'description';
+		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'lead_in_days';
 		$columns[] = 'level';
         $columns[] = static::linkColumn('searchGenericType', 'GenericType', 'generic_type_id');

@@ -86,9 +86,9 @@ class Client extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
-		$columns[] = 'name';
-		
+//		$columns[] = 'id';
+        $columns[] = $this->linkThisColumn('name');
+
 		return $columns;
 	}
 

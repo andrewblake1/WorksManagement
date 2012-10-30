@@ -7,7 +7,7 @@ class StoreController extends Controller
 		$accessRules = parent::accessRules();
 		array_unshift($accessRules,
 			array('allow',
-				'actions'=>array('dynamicMaterials'),
+				'actions'=>array('dynamicMaterials', 'dynamicAssemblies'),
 				'roles'=>array($this->modelName),
 		));
 

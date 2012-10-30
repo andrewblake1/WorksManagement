@@ -242,7 +242,7 @@ class GenericType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'description';
+		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'mandatory:boolean';
 		$columns[] = 'allow_new:boolean';
 		$columns[] = 'validation_type';

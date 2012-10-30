@@ -211,8 +211,8 @@ class Task extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
-		$columns[] = 'name';
+		$columns[] = $this->linkThisColumn('id');
+		$columns[] = $this->linkThisColumn('name');
 		$columns[] = 'location';
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
         $columns[] = static::linkColumn('searchTaskType', 'TaskType', 'task_type_id');

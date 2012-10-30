@@ -102,8 +102,8 @@ class Assembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
-		$columns[] = 'description';
+//		$columns[] = 'id';
+		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'unit_price';
  		
 		return $columns;

@@ -94,7 +94,7 @@ class AuthItemChild extends ActiveRecord
 
 	public function getAdminColumns()
 	{
- 		$columns[] = 'child';
+ 		$columns[] = $this->linkThisColumn('child');
 		
 		return $columns;
 	}

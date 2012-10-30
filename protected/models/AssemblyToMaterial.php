@@ -78,7 +78,7 @@ class AssemblyToMaterial extends ActiveRecord
 			'id' => 'ID',
 			'assembly_id' => 'Assembly',
 			'material_id' => 'Material',
-			'searchMaterial' => 'Material',
+			'searchMaterial' => 'Material/Alias',
 			'quantity' => 'Quantity',
 		);
 	}
@@ -90,14 +90,24 @@ class AssemblyToMaterial extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.assembly_id',
-			'material.description AS searchMaterial',
+			"CONCAT_WS('$delimiter',
+				material.description,
+				material.alias
+				) AS searchMaterial",
 			't.quantity',
 		);
 
-		$criteria->compare('material.description',$this->searchMaterial,true);
+		$this->compositeCriteria($criteria,
+			array(
+				'material.description',
+				'material.alias',
+			),
+			$this->searchMaterial
+		);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
 		
@@ -126,18 +136,19 @@ class AssemblyToMaterial extends ActiveRecord
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */
-	public static function getDisplayAttr()
+/*	public static function getDisplayAttr()
 	{
 		return array(
-			'material->description'
+			'material->description',
+			'material->alias',
 		);
-	}
+	}*/
 	
 	public function beforeValidate()
 	{
 		$assembly = Assembly::model()->findByPk($this->assembly_id);
 		$this->store_id = $assembly->store_id;
-$t = $this->store_id;		
+		
 		return parent::beforeValidate();
 	}
 

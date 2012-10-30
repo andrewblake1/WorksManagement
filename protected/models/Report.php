@@ -101,7 +101,7 @@ class Report extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'description';
+		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'context';
 		
 		return $columns;

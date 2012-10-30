@@ -160,8 +160,8 @@ class Project extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
-		$columns[] = 'name';
+		$columns[] = $this->linkThisColumn('id');
+		$columns[] = $this->linkThisColumn('name');
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
 		$columns[] = static::linkColumn('searchProjectType', 'ProjectType', 'project_type_id');
 		$columns[] = 'travel_time_1_way';
