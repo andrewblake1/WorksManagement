@@ -29,7 +29,6 @@ class TaskTypeToAssembly extends ActiveRecord
 	static $niceName = 'Assembly';
 
 	public $store_id;
-
 	
 	/**
 	 * @return string the associated database table name
@@ -140,7 +139,7 @@ class TaskTypeToAssembly extends ActiveRecord
 	}
 
 	public function afterFind() {
-		$this->store_id = $this->material->store_id;
+		$this->store_id = $this->assembly->store_id;
 		
 		return parent::afterFind();
 	}

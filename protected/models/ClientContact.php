@@ -108,6 +108,7 @@ class ClientContact extends ActiveRecord
 		$criteria=new DbCriteria;
 
 		$criteria->compare('id',$this->id);
+		$criteria->compare('client_id',$this->client_id);
 		$criteria->compare('first_name',$this->first_name,true);
 		$criteria->compare('last_name',$this->last_name,true);
 		$criteria->compare('email',$this->email,true);

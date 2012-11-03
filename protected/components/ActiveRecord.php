@@ -469,8 +469,13 @@ abstract class ActiveRecord extends CActiveRecord
 	 * @param type $referencesPk
 	 * @return mixed 
 	 */
-	static function linkColumn($name, $modelName, $foreignKey, $referencesPk='id')
+	static function linkColumn($name, $modelName, $foreignKey, $referencesPk=null)
 	{
+		if($referencesPk === null)
+		{
+			$referencesPk = $modelName::model()->tableSchema->primaryKey;
+		}
+
 		// if the user has at least read access
 		$controllerName = "{$modelName}Controller";
 		if($controllerName::checkAccess(Controller::accessRead))
@@ -660,8 +665,9 @@ if(count($m = $this->getErrors()))
 	 */
 	public function init()
 	{
+//$t = $this->safeAttributeNames;
 		// loop thru attributes
-		foreach($this->attributeNames() as $attributeName)
+		foreach($this->safeAttributeNames as $attributeName)
 		{
 			// if system admin has set a default for this attribute
 			if($defaultValue = DefaultValue::model()->findByAttributes(array('table'=>$this->tableName(), 'column'=>$attributeName)))

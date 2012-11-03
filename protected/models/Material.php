@@ -92,6 +92,7 @@ class Material extends ActiveRecord
 
 		$criteria->compare('t.id', $this->id);
 		$criteria->compare('t.description', $this->description,true);
+		$criteria->compare('t.alias', $this->alias,true);
 		$criteria->compare('t.unit_price', $this->unit_price);
 		$criteria->compare('t.unit', $this->unit);
 		$criteria->compare('t.store_id', $this->store_id);
@@ -125,6 +126,7 @@ class Material extends ActiveRecord
 	{
 		return array(
 			'description',
+			'alias',
 		);
 	}
 

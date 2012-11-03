@@ -103,11 +103,21 @@ class AssemblyToStandardDrawing extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchStandardDrawing', 'StandardDrawing', 'standard_drawing_id');
+//        $columns[] = static::linkColumn('searchStandardDrawing', 'StandardDrawing', 'standard_drawing_id');
+		$columns[] = $this->linkThisColumn('searchStandardDrawing');
 		
 		return $columns;
 	}
 	
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array('searchStandardDrawing');
+	}
+
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */

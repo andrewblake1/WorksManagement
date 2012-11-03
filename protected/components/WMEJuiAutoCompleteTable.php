@@ -2,12 +2,12 @@
 /*
  * Autocomplete using a foreign key field
  */
-class WMEJuiAutoCompleteTableColumn extends WMEJuiAutoCompleteField
+class WMEJuiAutoCompleteTable extends WMEJuiAutoCompleteField
 {
 
     public function init()
     {
-        $this->attribute = 'searchTableColumn';
+        $this->attribute = 'table';
         CHtml::resolveNameID($this->model, $this->attribute, $tempHtmlOpts);
         $id = $tempHtmlOpts['id'];
         $this->_fieldID = $id;
@@ -17,10 +17,7 @@ class WMEJuiAutoCompleteTableColumn extends WMEJuiAutoCompleteField
 		// create the ajax url including foreign key model name and existing get parameters
 		$this->sourceUrl = Yii::app()->createUrl("DefaultValue/autocomplete");
 
-		$this->_display[] = $this->model->table;
-		$this->_display[] = $this->model->column;
-		
-		$this->_display=(!empty($value) ? implode(Yii::app()->params['delimiter']['display'], $this->_display) : '');
+		$this->_display = $this->model->table;
 
 		parent::init(); // ensure necessary assets are loaded
 
@@ -32,7 +29,7 @@ class WMEJuiAutoCompleteTableColumn extends WMEJuiAutoCompleteField
  
         parent::run();
 		
-		echo $this->form->error($this->model, $this->model->searchTableColumn);
+		echo $this->form->error($this->model, $this->model->table);
     }
 }
 

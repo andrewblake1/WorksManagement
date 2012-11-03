@@ -77,7 +77,7 @@ class AssemblyToMaterial extends ActiveRecord
 		return array(
 			'id' => 'ID',
 			'assembly_id' => 'Assembly',
-			'material_id' => 'Material',
+			'material_id' => 'Material/Alias',
 			'searchMaterial' => 'Material/Alias',
 			'quantity' => 'Quantity',
 		);
@@ -118,7 +118,8 @@ class AssemblyToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
+//        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
+		$columns[] = $this->linkThisColumn('searchMaterial');
  		$columns[] = 'quantity';
 		
 		return $columns;
@@ -136,13 +137,13 @@ class AssemblyToMaterial extends ActiveRecord
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */
-/*	public static function getDisplayAttr()
+	public static function getDisplayAttr()
 	{
 		return array(
 			'material->description',
 			'material->alias',
 		);
-	}*/
+	}
 	
 	public function beforeValidate()
 	{

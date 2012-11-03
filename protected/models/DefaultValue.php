@@ -16,11 +16,6 @@
 class DefaultValue extends ActiveRecord
 {
 	/**
-	 * @var string search variables - foreign key lookups sometimes composite.
-	 * these values are entered by user in admin view to search
-	 */
-	public $searchTableColumn;
-	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Default';
@@ -46,7 +41,7 @@ class DefaultValue extends ActiveRecord
 			array('table, column', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('searchTableColumn, id, table, column, select, staff_id', 'safe', 'on'=>'search'),
+			array('id, table, column, select, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,8 +65,7 @@ class DefaultValue extends ActiveRecord
 		return parent::attributeLabels(array(
 			'id' => 'Default value',
 			'table' => 'Table',
-			'column' => 'Column',
-			'searchTableColumn' => 'Table/Column',
+			'column' => 'Attribute',
 			'select' => 'Select',
 		));
 	}
@@ -104,6 +98,23 @@ class DefaultValue extends ActiveRecord
 		$columns[] = 'select';
 		
 		return $columns;
+	}
+
+	static function getDisplayAttr()
+	{
+		return array(
+			'select',
+			);
+	}
+	
+	public function scopeTable($table)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('table', $table);
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
 	}
 
 }

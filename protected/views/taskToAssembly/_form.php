@@ -3,6 +3,9 @@
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));		
 
 	CHtml::resolveNameID($model, $attribute = 'assembly_id', $htmlOptions);
+
+	$source = Yii::app()->createUrl("Assembly/autocomplete") . "?model={$this->modelName}&attribute=assembly_id&scopes%5BscopeStore%5D%5B0%5D=";
+
 	StoreController::listWidgetRow($model, $form, 'store_id',
 		array(
 			'empty'=>'Please select',
@@ -22,7 +25,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 					if(lookup.length)
 					{
 						store_id = $('#{$this->modelName}_store_id').val();
-						lookup.autocomplete({'minLength':1,'maxHeight':'100','select':function(event, ui){"."$('#{$htmlOptions['id']}').val(ui.item.id);$('#{$htmlOptions['id']}_save').val(ui.item.value);},'source':'/WorksManagement/Assembly/autocomplete?model={$this->modelName}&attribute=assembly_id&{$this->modelName}%5Btask_id%5D=35&scopes%5BscopeStore%5D%5B0%5D=' + store_id});
+						lookup.autocomplete({'minLength':1,'maxHeight':'100','select':function(event, ui){"."$('#{$htmlOptions['id']}').val(ui.item.id);$('#{$htmlOptions['id']}_save').val(ui.item.value);},'source':'$source' + store_id});
 					}
 				}
 			}",

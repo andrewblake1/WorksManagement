@@ -115,6 +115,7 @@ class TaskTypeToDutyType extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
+			't.duty_type_id',
 			't.project_type_to_AuthItem_id',
 			'dutyType.description AS searchDutyType',
 			'projectTypeToAuthItem.AuthItem_name AS searchProjectTypeToAuthItem',
@@ -139,7 +140,8 @@ class TaskTypeToDutyType extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('searchDutyType', 'DutyType', 'duty_type_id');
-        $columns[] = static::linkColumn('searchProjectTypeToAuthItem', 'AuthItem', 'project_type_to_AuthItem_id');
+//        $columns[] = static::linkColumn('searchProjectTypeToAuthItem', 'ProjectTypeToAuthItem', 'project_type_to_AuthItem_id');
+        $columns[] = 'searchProjectTypeToAuthItem';
 		
 		return $columns;
 	}
