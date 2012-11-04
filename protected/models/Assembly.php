@@ -15,6 +15,8 @@
  * The followings are the available model relations:
  * @property Staff $staff
  * @property Store $store
+ * @property AssemblyToAssembly[] $assemblyToAssemblies
+ * @property AssemblyToAssembly[] $assemblyToAssemblies1
  * @property AssemblyToClient[] $assemblyToClients
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToStandardDrawing[] $assemblyToStandardDrawings
@@ -57,6 +59,8 @@ class Assembly extends ActiveRecord
 		return array(
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'store' => array(self::BELONGS_TO, 'Store', 'store_id'),
+			'assemblyToAssemblies' => array(self::HAS_MANY, 'AssemblyToAssembly', 'parent_assembly_id'),
+			'assemblyToAssemblies1' => array(self::HAS_MANY, 'AssemblyToAssembly', 'child_assembly_id'),
 			'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
 			'assemblyToStandardDrawings' => array(self::HAS_MANY, 'AssemblyToStandardDrawing', 'assembly_id'),

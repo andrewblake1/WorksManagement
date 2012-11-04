@@ -107,7 +107,7 @@ class DefaultValue extends ActiveRecord
 			);
 	}
 	
-	public function scopeTable($table)
+/*	public function scopeTable($table)
 	{
 		$criteria=new DbCriteria;
 		$criteria->compare('table', $table);
@@ -115,6 +115,6 @@ class DefaultValue extends ActiveRecord
 		$this->getDbCriteria()->mergeWith($criteria);
 		
 		return $this;
-	}
+	}*/
 
 }

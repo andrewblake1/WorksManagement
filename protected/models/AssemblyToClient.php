@@ -18,7 +18,6 @@
  */
 class AssemblyToClient extends ActiveRecord
 {
-	public $searchAlias;
 	public $searchAssembly;
 
 	/**
@@ -47,7 +46,7 @@ class AssemblyToClient extends ActiveRecord
 			array('id, alias', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, client_id, searchAssembly, searchAlias, alias, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, client_id, searchAssembly, alias, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,6 +72,7 @@ class AssemblyToClient extends ActiveRecord
 		return array(
 			'id' => 'Assembly',
 			'assembly_id' => 'Assembly',
+			'searchAssembly' => 'Assembly',
 			'client_id' => 'Client',
 			'alias' => 'Alias',
 		);

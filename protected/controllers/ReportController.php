@@ -127,7 +127,7 @@ class ReportController extends Controller
 		if(stripos($sql, ':pk') !== false)
 		{
 			// get the primary key if any in play in this context
-			if($pk)
+			if($pk !== null)
 			{
 				$params[':pk'] = $pk;
 				$countCommand->bindParam(":pk", $params[':pk'], PDO::PARAM_STR);
@@ -158,7 +158,7 @@ class ReportController extends Controller
 		// otherwise displaying in a grid
 		elseif($count)
 		{
-$t=array_keys($command->queryRow());
+//$t=array_keys($command->queryRow());
 			// need to determine our own sort columns also with CSqlDataProvider
 			$attributes=array();
 			// get any link columns which have :link appended to column name

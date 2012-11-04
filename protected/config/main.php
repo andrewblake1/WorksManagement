@@ -210,6 +210,7 @@ return array(
 				),
 				'Store'=>array(
 					'Assembly'=>array(
+						'AssemblyToAssembly',
 						'AssemblyToMaterial',
 						'AssemblyToStandardDrawing',
 					),
