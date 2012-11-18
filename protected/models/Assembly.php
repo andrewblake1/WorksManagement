@@ -92,12 +92,14 @@ class Assembly extends ActiveRecord
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.alias',$this->alias,true);
 		$criteria->compare('t.unit_price',$this->unit_price,true);
 		$criteria->compare('t.store_id', $this->store_id);
 
 		$criteria->select=array(
 			't.id',
 			't.description',
+			't.alias',
 			't.unit_price',
 		);
 
@@ -108,6 +110,7 @@ class Assembly extends ActiveRecord
 	{
 //		$columns[] = 'id';
 		$columns[] = $this->linkThisColumn('description');
+		$columns[] = 'alias';
 		$columns[] = 'unit_price';
  		
 		return $columns;
@@ -117,6 +120,7 @@ class Assembly extends ActiveRecord
 	{
 		return array(
 			'description',
+			'alias',
 		);
 	}
  

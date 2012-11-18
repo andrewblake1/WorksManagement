@@ -17,6 +17,11 @@
 class Store extends ActiveRecord
 {
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Network';
+	
+	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -61,7 +66,7 @@ class Store extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Store',
+			'id' => 'Network',
 			'name' => 'Name',
 		));
 	}

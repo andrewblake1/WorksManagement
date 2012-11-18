@@ -30,15 +30,7 @@ class DutyController extends Controller
 	{
 		// get duty
 		$model = Duty::model()->findByPk($id);
-		// get who the duty is assigned to
-		// if not directly assigned
-		if(!$assignedTo = $model->task->project->projectToProjectTypeToAuthItems->authAssignment->userid)
-		{
-			// get who is responsible at the target accummulating level for this duty. Because DutyData is at that desired level it links
-			// to correct Planning to get the in_charge
-			$assignedTo = $model->dutyData->planning->in_charge_id;
-		}
-
+//$t=$model->assignedTo;
 		// system admin
 		if(Yii::app()->user->checkAccess('system admin'))
 		{
@@ -46,7 +38,7 @@ class DutyController extends Controller
 			parent::actionUpdate($id);
 		}
 		// other users with full Duty access or has DutyUpdate permission - has to be assigned to this duty
-		elseif(Yii::app()->user->checkAccess('Duty') || Yii::app()->user->checkAccess('DutyUpdate', array('assignedTo'=>$assignedTo)))
+		elseif(Yii::app()->user->checkAccess('Duty') || Yii::app()->user->checkAccess('DutyUpdate', array('assignedTo'=>$model->assignedTo)))
 		{
 			// can only update if not completed
 			if(!empty($model->updated))

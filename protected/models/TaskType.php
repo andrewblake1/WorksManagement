@@ -33,13 +33,15 @@ class TaskType extends ActiveRecord
 		return 'task_type';
 	}
 
-	public function scopeProjectType($project_id)
+	public function scopeProjectType($crew_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compare('project.id',$project_id);
+		$criteria->compare('crew.id',$crew_id);
 		$criteria->join='
 			 JOIN project_type on t.project_type_id = project_type.id
 			 JOIN project on project_type.id = project.project_type_id
+			 JOIN day on project.id = day.project_id
+			 JOIN crew on day.id = crew.day_id
 		';
 
 		$this->getDbCriteria()->mergeWith($criteria);

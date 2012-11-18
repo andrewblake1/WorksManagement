@@ -22,6 +22,7 @@
  */
 class Duty extends ActiveRecord
 {
+	public $assignedTo;
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
@@ -90,7 +91,7 @@ class Duty extends ActiveRecord
 			'description' => 'Duty',
 			'updated' => 'Completed',
 			'generic_id' => 'Generic',
-			'searchInCharge' => 'In charge',
+			'searchInCharge' => 'Assigned to',
 		));
 	}
 
@@ -129,7 +130,7 @@ class Duty extends ActiveRecord
 		);
 
 		// where
-		$criteria->compare('dutyType.description',$this->description,true);
+/*		$criteria->compare('dutyType.description',$this->description,true);
 		$this->compositeCriteria(
 			$criteria,
 			array(
@@ -145,7 +146,7 @@ class Duty extends ActiveRecord
 			),
 			$this->searchInCharge
 		);
-		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
+		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));*/
 		$criteria->compare('t.task_id',$this->task_id);
 
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
@@ -160,13 +161,25 @@ class Duty extends ActiveRecord
 		*/
 		
 		// join
+		$criteria->join = '
+			JOIN task_type_to_duty_type taskTypeToDutyType ON t.task_type_to_duty_type_id = taskTypeToDutyType.id
+			JOIN duty_type dutyType ON taskTypeToDutyType.duty_type_id = dutyType.id
+			JOIN project_type_to_AuthItem projectTypeToAuthItem ON taskTypeToDutyType.project_type_to_AuthItem_id = projectTypeToAuthItem.id
+			JOIN project_to_project_type_to_AuthItem projectToProjectTypeToAuthItem ON projectTypeToAuthItem.id = projectToProjectTypeToAuthItem.project_type_to_AuthItem_id
+			JOIN project ON projectToProjectTypeToAuthItem.project_id = project.id
+			JOIN task ON project.id = task.project_id
+			JOIN crew ON task.crew_id = crew.id
+			JOIN day ON crew.day_id = day.id
+			JOIN duty d ON task.id = d.task_id
+			JOIN AuthAssignment ON projectToProjectTypeToAuthItem.AuthAssignment_id = AuthAssignment.id
+			JOIN staff user ON AuthAssignment.userid = user.id
+		';
+//			WHERE t.id =:id
+//			AND d.id =:id
+		// with
 		$criteria->with = array(
 			'dutyData',
 			'dutyData.planning.inCharge',
-			'task.crew.day',
-			'task.project.projectToProjectTypeToAuthItems.authAssignment',
-			'task.project.projectToProjectTypeToAuthItems.authAssignment.user',
-			'taskTypeToDutyType.dutyType',
 		);
 
 		return $criteria;
@@ -175,7 +188,7 @@ class Duty extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('description', 'TaskTypeToDutyType', 'task_type_to_duty_type_id');
-        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'dutyData->planning->in_charge_id');
+        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'assignedTo');
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
 		
@@ -227,6 +240,31 @@ class Duty extends ActiveRecord
 
 	public function afterFind() {
 		$this->updated = $this->dutyData->updated;
+
+		// get who the duty is assigned to
+// TODO: this may be ineffecient - may be better to do a intersecting join on 2 result sets working each way around the circular here instead of back to
+// the start i.e. the duty table		
+		// if duty not directly assigned to project
+		$sql = '
+			SELECT userid
+			FROM duty
+			JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type.id
+			JOIN project_type_to_AuthItem ON task_type_to_duty_type.project_type_to_AuthItem_id = project_type_to_AuthItem.id
+			JOIN project_to_project_type_to_AuthItem ON project_type_to_AuthItem.id = project_to_project_type_to_AuthItem.project_type_to_AuthItem_id
+			JOIN project ON project_to_project_type_to_AuthItem.project_id = project.id
+			JOIN task ON project.id = task.project_id
+			JOIN duty d ON task.id = d.task_id
+			JOIN AuthAssignment ON project_to_project_type_to_AuthItem.AuthAssignment_id = AuthAssignment.id
+			WHERE duty.id =:id
+			AND d.id =:id';
+		$command=Yii::app()->db->createCommand($sql);
+		$command->bindParam(":id", $this->id, PDO::PARAM_STR);
+		if(!$this->assignedTo = $command->queryScalar())
+		{
+			// get who is responsible at the target accummulating level for this duty. Because DutyData is at that desired level it links
+			// to correct Planning to get the in_charge
+			$this->assignedTo = $this->dutyData->planning->in_charge_id;
+		}
 		
 		parent::afterFind();
 	}

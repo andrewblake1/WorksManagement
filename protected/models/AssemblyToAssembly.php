@@ -82,16 +82,7 @@ class AssemblyToAssembly extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.parent_assembly_id',$this->parent_assembly_id);
-		$this->compositeCriteria($criteria,
-			array(
-			'childAssembly.description',
-			'childAssembly.alias'
-			),
-			$this->searchChildAssembly
-		);
-
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
 			't.parent_assembly_id',
@@ -100,6 +91,16 @@ class AssemblyToAssembly extends ActiveRecord
 				childAssembly.description,
 				childAssembly.alias
 				) AS searchChildAssembly",
+		);
+
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.parent_assembly_id',$this->parent_assembly_id);
+		$this->compositeCriteria($criteria,
+			array(
+			'childAssembly.description',
+			'childAssembly.alias'
+			),
+			$this->searchChildAssembly
 		);
 
 		$criteria->with = array(

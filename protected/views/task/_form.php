@@ -14,7 +14,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	if($model->isNewRecord)
 	{
 		TaskTypeController::listWidgetRow($model, $form, 'task_type_id', array(), array(
-			'scopeProjectType'=>array($model->project_id)));
+			'scopeProjectType'=>array($model->crew_id)));
 	}
 	else
 	{

@@ -11,10 +11,16 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	{
 		$this->widget('GenericWidget', array(
 			'form'=>$form,
+			'generic'=>$model->generic,
+			'genericType'=>$model->genericProjectType->genericType,
+			'relationToGenericType'=>'projectToGenericProjectType->genericProjectType->genericType'
+		));
+/*		$this->widget('GenericWidget', array(
+			'form'=>$form,
 			'relation_modelToGenericModelType'=>'taskToGenericProjectType',
 			'toGenericType'=>$model,
 			'relation_genericModelType'=>'genericProjectType',
-		));
+		));*/
 	}
 
 $this->endWidget();

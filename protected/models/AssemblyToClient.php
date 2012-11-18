@@ -114,7 +114,7 @@ class AssemblyToClient extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchAssembly', 'Assembly', 'assembly_id');
+        $columns[] = $this->linkThisColumn('searchAssembly');
  		$columns[] = 'alias';
 
 		return $columns;

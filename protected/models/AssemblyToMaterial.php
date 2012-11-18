@@ -24,7 +24,9 @@ class AssemblyToMaterial extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchMaterial;
+	public $searchMaterialDescription;
+	public $searchMaterialUnit;
+	public $searchMaterialAlias;
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -50,7 +52,7 @@ class AssemblyToMaterial extends ActiveRecord
 			array('assembly_id, material_id, store_id, quantity, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, assembly_id, searchMaterial, quantity, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, assembly_id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -77,8 +79,10 @@ class AssemblyToMaterial extends ActiveRecord
 		return array(
 			'id' => 'ID',
 			'assembly_id' => 'Assembly',
-			'material_id' => 'Material/Alias',
-			'searchMaterial' => 'Material/Alias',
+			'material_id' => 'Material/Unit/Alias',
+			'searchMaterialDescription' => 'Material',
+			'searchMaterialUnit' => 'Unit',
+			'searchMaterialAlias' => 'Alias',
 			'quantity' => 'Quantity',
 		);
 	}
@@ -94,20 +98,16 @@ class AssemblyToMaterial extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.assembly_id',
-			"CONCAT_WS('$delimiter',
-				material.description,
-				material.alias
-				) AS searchMaterial",
+			't.material_id',
+			'material.description AS searchMaterialDescription',
+			'material.unit AS searchMaterialUnit',
+			'material.alias AS searchMaterialAlias',
 			't.quantity',
 		);
 
-		$this->compositeCriteria($criteria,
-			array(
-				'material.description',
-				'material.alias',
-			),
-			$this->searchMaterial
-		);
+		$criteria->compare('material.description',$this->searchMaterialDescription);
+		$criteria->compare('material.unit',$this->searchMaterialUnit);
+		$criteria->compare('material.alias',$this->searchMaterialAlias);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
 		
@@ -118,8 +118,9 @@ class AssemblyToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
-		$columns[] = $this->linkThisColumn('searchMaterial');
+        $columns[] = static::linkColumn('searchMaterialDescription', 'Material', 'material_id');
+ 		$columns[] = 'searchMaterialUnit';
+ 		$columns[] = 'searchMaterialAlias';
  		$columns[] = 'quantity';
 		
 		return $columns;
@@ -131,7 +132,11 @@ class AssemblyToMaterial extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchMaterial');
+		return array(
+			'searchMaterialDescription',
+			'searchMaterialUnit',
+			'searchMaterialAlias',
+		);
 	}
 
 	/**
@@ -141,6 +146,7 @@ class AssemblyToMaterial extends ActiveRecord
 	{
 		return array(
 			'material->description',
+			'material->unit',
 			'material->alias',
 		);
 	}
