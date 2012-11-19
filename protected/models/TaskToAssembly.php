@@ -132,7 +132,7 @@ class TaskToAssembly extends ActiveRecord
 	}
 
 	public function afterFind() {
-		$this->store_id = $this->material->store_id;
+		$this->store_id = $this->assembly->store_id;
 		
 		return parent::afterFind();
 	}

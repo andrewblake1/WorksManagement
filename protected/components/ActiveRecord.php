@@ -289,48 +289,12 @@ abstract class ActiveRecord extends CActiveRecord
 		if(($trailSize = sizeof($trail)) > 1)
 		{
 			// loop thru trail
-//			$skip = false;
 			foreach($trail = array_reverse($trail) as $crumb)
 			{
 				// if we had to jump up a level
-//				if($skip)
-//				{
-//					$skip = false;
-//					continue;
-//				}
 				// skip the first one
 				if($crumb == $modelName)
 				{
-/*					// get this model
-					if(!empty($_SESSION[$crumb]['value']))
-					{
-						$pk = $_SESSION[$crumb]['value'];
-					}
-					// otherwise we don't have a model so must be admin screen via the parent
-					else
-					{
-						// get parent name
-						$crumb = current($trail);
-						// get the name of the foreing key field in this model referring to the parent
-						$parentForeignKey = static::getParentForeignKey($crumb);
-						// see if we can now get a starting point
-						if(!empty($_GET[$modelName][$parentForeignKey]))
-						{
-							// get parent foreign key value
-							$pk = $_GET[$modelName][$parentForeignKey];
-							// set session variables
-							$_SESSION[$crumb]['name'] = $crumb::model()->tableSchema->primaryKey;
-							$_SESSION[$crumb]['value'] = $pk;
-							// make sure we skip over this in the surrounding loop as now one ahead
-							$skip = true;
-						}
-						// otherwise code error
-						else
-						{
-							throw Exception();
-						}
-					}
-					$model = $crumb::model()->findByPk($pk);*/
 					$model = $this;
 					continue;
 				}
@@ -345,7 +309,8 @@ abstract class ActiveRecord extends CActiveRecord
 				{
 					$_SESSION[$crumb]['value'] = $model->$primaryKeyName;
 					// ensure that that at least the parents primary key is set for the admin view
-					$_SESSION['actionAdminGet'][$modelName][$crumb] = $_SESSION[$crumb]['value'];
+//					$_SESSION['actionAdminGet'][$modelName ][$crumb] = $_SESSION[$crumb]['value'];
+					$_SESSION['actionAdminGet'][$modelName ][$primaryKeyName] = $_SESSION[$crumb]['value'];
 				}
 				// set the model ready for the next one
 				$model = $crumb::model()->findByPk($_SESSION[$crumb]['value']);

@@ -196,6 +196,7 @@ class Task extends ActiveRecord
 			),
 			$this->searchTaskType
 		);
+//$t = $this->crew_id;
 		$criteria->compare('t.crew_id',$this->crew_id);
 		
 		// join

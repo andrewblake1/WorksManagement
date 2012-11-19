@@ -9,7 +9,6 @@
  * @property integer $material_id
  * @property integer $store_id
  * @property integer $quantity
- * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -49,10 +48,10 @@ class AssemblyToMaterial extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('assembly_id, material_id, store_id, quantity, staff_id', 'required'),
-			array('assembly_id, material_id, store_id, quantity, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, material_id, store_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, assembly_id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, assembly_id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -118,7 +117,7 @@ class AssemblyToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchMaterialDescription', 'Material', 'material_id');
+        $columns[] = $this->linkThisColumn('searchMaterialDescription');
  		$columns[] = 'searchMaterialUnit';
  		$columns[] = 'searchMaterialAlias';
  		$columns[] = 'quantity';

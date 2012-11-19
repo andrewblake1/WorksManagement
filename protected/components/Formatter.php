@@ -90,6 +90,15 @@ class Formatter extends CFormatter
 			{
 				$value .= ':00';
 			}
+			elseif((substr_count($value, '.') == 1))
+			{
+				$exploded = explode('.', $value);
+				// get value after decimal (last decimal)
+				$decimal = $exploded[sizeof($exploded) - 1];
+				// set it to minutes
+				$exploded[sizeof($exploded) - 1] = float("0.$decimal") * 60;
+				$value = implode(':', $exploded);
+			}
 
 			// need to clear oiut ,'s first as seems to muck it up
 			return $value;

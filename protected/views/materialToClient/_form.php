@@ -6,6 +6,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('alias');
 
+	$form->textFieldRow('unit_price');
+
 $this->endWidget();
 
 ?>

@@ -8,6 +8,7 @@
  * @property integer $parent_assembly_id
  * @property integer $child_assembly_id
  * @property integer $staff_id
+ * @property integer $quantity
  *
  * The followings are the available model relations:
  * @property Assembly $parentAssembly
@@ -40,11 +41,11 @@ class AssemblyToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('parent_assembly_id, child_assembly_id, staff_id', 'required'),
-			array('parent_assembly_id, child_assembly_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('parent_assembly_id, child_assembly_id, quantity, staff_id', 'required'),
+			array('parent_assembly_id, child_assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, staff_id', 'safe', 'on'=>'search'),
+			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, quantity, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,6 +73,7 @@ class AssemblyToAssembly extends ActiveRecord
 			'parent_assembly_id' => 'Parent Assembly',
 			'child_assembly_id' => 'Child assembly',
 			'searchChildAssembly' => 'Child assembly',
+			'quantity' => 'Quantity',
 		);
 	}
 
@@ -91,9 +93,11 @@ class AssemblyToAssembly extends ActiveRecord
 				childAssembly.description,
 				childAssembly.alias
 				) AS searchChildAssembly",
+			't.quantity',
 		);
 
 		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.parent_assembly_id',$this->parent_assembly_id);
 		$this->compositeCriteria($criteria,
 			array(
@@ -114,6 +118,7 @@ class AssemblyToAssembly extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('searchChildAssembly', 'Assembly', 'child_assembly_id');
+ 		$columns[] = 'quantity';
 		
 		return $columns;
 	}

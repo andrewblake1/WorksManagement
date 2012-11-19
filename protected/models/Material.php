@@ -7,7 +7,6 @@
  * @property integer $id
  * @property integer $store_id
  * @property string $description
- * @property string $unit_price
  * @property string $unit
  * @property string $alias
  * @property integer $deleted
@@ -43,11 +42,10 @@ class Material extends ActiveRecord
 			array('description, store_id, staff_id', 'required'),
 			array('store_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
-			array('unit_price', 'length', 'max'=>7),
 			array('unit', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, store_id, description, searchStaff, unit_price, unit, alias', 'safe', 'on'=>'search'),
+			array('id, store_id, description, searchStaff, unit, alias', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,7 +74,6 @@ class Material extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'id' => 'Material',
-			'unit_price' => 'Unit price',
 			'unit' => 'Unit',
 			'alias' => 'Alias',
 			'store_id' => 'Store',
@@ -93,7 +90,6 @@ class Material extends ActiveRecord
 		$criteria->compare('t.id', $this->id);
 		$criteria->compare('t.description', $this->description,true);
 		$criteria->compare('t.alias', $this->alias,true);
-		$criteria->compare('t.unit_price', $this->unit_price);
 		$criteria->compare('t.unit', $this->unit);
 		$criteria->compare('t.store_id', $this->store_id);
 
@@ -102,7 +98,6 @@ class Material extends ActiveRecord
 			't.description',
 			't.alias',
 			't.unit',
-			't.unit_price',
 		);
 
 		return $criteria;
@@ -113,7 +108,6 @@ class Material extends ActiveRecord
 //		$columns[] = 'id';
 		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'alias';
-		$columns[] = 'unit_price';
 		$columns[] = 'unit';
 		
 		return $columns;

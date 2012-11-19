@@ -8,6 +8,7 @@
  * @property integer $material_id
  * @property integer $client_id
  * @property string $alias
+ * @property string $unit_price
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -44,8 +45,9 @@ class MaterialToClient extends ActiveRecord
 		return array(
 			array('material_id, client_id, staff_id', 'required'),
 			array('material_id, client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('unit_price', 'length', 'max'=>7),
 			array('alias', 'length', 'max'=>255),
-			array('id, client_id, searchMaterial, searchAlias, alias, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, client_id, searchMaterial, searchAlias, alias, unit_price, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,6 +72,7 @@ class MaterialToClient extends ActiveRecord
 	{
 		return array(
 			'id' => 'Material',
+			'unit_price' => 'Unit price',
 			'material_id' => 'Material',
 			'client_id' => 'Client',
 			'alias' => 'Client alias/Material alias',
@@ -88,6 +91,7 @@ class MaterialToClient extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			'material.description AS searchMaterial',
+			't.unit_price',
 			"CONCAT_WS('$delimiter',
 				t.alias,
 				material.alias
@@ -104,6 +108,7 @@ class MaterialToClient extends ActiveRecord
 		);
 		$criteria->compare('searchMaterial',$this->searchMaterial,true);
 		$criteria->compare('t.client_id',$this->client_id,true);
+		$criteria->compare('t.unit_price', $this->unit_price);
 
 		$criteria->with = array('material');
 
@@ -114,6 +119,7 @@ class MaterialToClient extends ActiveRecord
 	{
         $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
         $columns[] = 'searchAlias';
+		$columns[] = 'unit_price';
 
 		return $columns;
 	}

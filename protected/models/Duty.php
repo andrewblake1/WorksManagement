@@ -130,7 +130,7 @@ class Duty extends ActiveRecord
 		);
 
 		// where
-/*		$criteria->compare('dutyType.description',$this->description,true);
+		$criteria->compare('dutyType.description',$this->description,true);
 		$this->compositeCriteria(
 			$criteria,
 			array(
@@ -146,7 +146,7 @@ class Duty extends ActiveRecord
 			),
 			$this->searchInCharge
 		);
-		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));*/
+		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
 
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
@@ -187,7 +187,7 @@ class Duty extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('description', 'TaskTypeToDutyType', 'task_type_to_duty_type_id');
+        $columns[] = $this->linkThisColumn('description');
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'assignedTo');
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
@@ -257,8 +257,9 @@ class Duty extends ActiveRecord
 			JOIN AuthAssignment ON project_to_project_type_to_AuthItem.AuthAssignment_id = AuthAssignment.id
 			WHERE duty.id =:id
 			AND d.id =:id';
+		$id = $this->id;
 		$command=Yii::app()->db->createCommand($sql);
-		$command->bindParam(":id", $this->id, PDO::PARAM_STR);
+		$command->bindParam(":id", $id, PDO::PARAM_STR);
 		if(!$this->assignedTo = $command->queryScalar())
 		{
 			// get who is responsible at the target accummulating level for this duty. Because DutyData is at that desired level it links

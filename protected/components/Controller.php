@@ -742,6 +742,9 @@ $t = $model->attributes;
 		}
 		$models=array();
 
+		// ensure that actionadmin is set
+		$model->assertFromParent();
+
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating =$this->performAjaxValidation($model);
 // TODO: this is untested without javascript

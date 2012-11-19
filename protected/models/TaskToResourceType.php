@@ -74,6 +74,7 @@ class TaskToResourceType extends ActiveRecord
 		return array(
 			'resourceData' => array(self::BELONGS_TO, 'ResourceData', 'resource_data_id'),
 			'resourceType1' => array(self::BELONGS_TO, 'ResourceData', 'resource_type_id'),
+			'resourceType' => array(self::BELONGS_TO, 'ResourceType', 'resource_type_id'),
 			'level0' => array(self::BELONGS_TO, 'ResourceData', 'level'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
@@ -130,7 +131,7 @@ class TaskToResourceType extends ActiveRecord
 		//  join
 		$criteria->with = array(
 			'resourceData',
-			'resourceData.resourceTypeToSupplier.resourceType',
+			'resourceType',
 			'resourceData.resourceTypeToSupplier.supplier',
 			);
 
@@ -139,7 +140,7 @@ class TaskToResourceType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('description', 'ResourceType', 'resource_type_id');
+        $columns[] = 'description';
         $columns[] = static::linkColumn('searchResourceTypeToSupplier', 'ResourceTypeToSupplier', 'resource_type_to_supplier_id');
 		$columns[] = 'quantity';
 		$columns[] = 'hours';
