@@ -208,6 +208,7 @@ return array(
 				'Staff'=>array(
 					'AuthAssignment',
 				),
+				'Stage',
 				'Store'=>array(
 					'Assembly'=>array(
 						'AssemblyToAssembly',

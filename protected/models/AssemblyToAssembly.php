@@ -117,12 +117,20 @@ class AssemblyToAssembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchChildAssembly', 'Assembly', 'child_assembly_id');
+        $columns[] = $this->linkThisColumn('searchChildAssembly');
  		$columns[] = 'quantity';
 		
 		return $columns;
 	}
 
+	public static function getDisplayAttr()
+	{
+		return array(
+			'parentAssembly->description',
+			'parentAssembly->alias',
+		);
+	}
+ 
 	/**
 	 * Retrieves a sort array for use in CActiveDataProvider.
 	 * @return array the for data provider that contains the sort condition.

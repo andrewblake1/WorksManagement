@@ -7,6 +7,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('quantity');
 
+	StageController::listWidgetRow($model, $form, 'stage_id');
+	
 $this->endWidget();
 
 ?>

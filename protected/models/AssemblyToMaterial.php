@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $assembly_id
  * @property integer $material_id
+ * @property integer $stage_id
  * @property integer $store_id
  * @property integer $quantity
  * @property integer $staff_id
@@ -16,6 +17,7 @@
  * @property Material $store
  * @property Material $material
  * @property Staff $staff
+ * @property Stage $stage
  */
 class AssemblyToMaterial extends ActiveRecord
 {
@@ -26,6 +28,7 @@ class AssemblyToMaterial extends ActiveRecord
 	public $searchMaterialDescription;
 	public $searchMaterialUnit;
 	public $searchMaterialAlias;
+	public $searchStage;
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -47,11 +50,11 @@ class AssemblyToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('assembly_id, material_id, store_id, quantity, staff_id', 'required'),
-			array('assembly_id, material_id, store_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, material_id, stage_id, store_id, quantity, staff_id', 'required'),
+			array('assembly_id, material_id, stage_id, store_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, assembly_id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, staff_id', 'safe', 'on'=>'search'),
+			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,6 +70,7 @@ class AssemblyToMaterial extends ActiveRecord
 			'store' => array(self::BELONGS_TO, 'Material', 'store_id'),
 			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'stage' => array(self::BELONGS_TO, 'Stage', 'stage_id'),
 		);
 	}
 
@@ -78,11 +82,13 @@ class AssemblyToMaterial extends ActiveRecord
 		return array(
 			'id' => 'ID',
 			'assembly_id' => 'Assembly',
-			'material_id' => 'Material/Unit/Alias',
+			'material_id' => 'Material/Unit/Alias/Stage',
 			'searchMaterialDescription' => 'Material',
 			'searchMaterialUnit' => 'Unit',
 			'searchMaterialAlias' => 'Alias',
 			'quantity' => 'Quantity',
+			'stage_id' => 'Stage',
+			'searchStage' => 'Stage',
 		);
 	}
 
@@ -97,6 +103,7 @@ class AssemblyToMaterial extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.assembly_id',
+			'stage.description AS searchStage',
 			't.material_id',
 			'material.description AS searchMaterialDescription',
 			'material.unit AS searchMaterialUnit',
@@ -105,12 +112,16 @@ class AssemblyToMaterial extends ActiveRecord
 		);
 
 		$criteria->compare('material.description',$this->searchMaterialDescription);
+		$criteria->compare('stage.description',$this->searchStage);
 		$criteria->compare('material.unit',$this->searchMaterialUnit);
 		$criteria->compare('material.alias',$this->searchMaterialAlias);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
 		
-		$criteria->with = array('material');
+		$criteria->with = array(
+			'material',
+			'stage',
+			);
 
 		return $criteria;
 	}
@@ -120,6 +131,7 @@ class AssemblyToMaterial extends ActiveRecord
         $columns[] = $this->linkThisColumn('searchMaterialDescription');
  		$columns[] = 'searchMaterialUnit';
  		$columns[] = 'searchMaterialAlias';
+ 		$columns[] = 'searchStage';
  		$columns[] = 'quantity';
 		
 		return $columns;
@@ -135,6 +147,7 @@ class AssemblyToMaterial extends ActiveRecord
 			'searchMaterialDescription',
 			'searchMaterialUnit',
 			'searchMaterialAlias',
+			'searchStage',
 		);
 	}
 
@@ -147,6 +160,7 @@ class AssemblyToMaterial extends ActiveRecord
 			'material->description',
 			'material->unit',
 			'material->alias',
+			'material->stage->description',
 		);
 	}
 	

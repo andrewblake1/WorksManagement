@@ -111,6 +111,11 @@ EOD;
 			$this->_authManager->createOperation('StandardDrawingRead', 'StandardDrawing read');
 			$task->addChild('StandardDrawingRead');
 
+			$task=$this->_authManager->createTask('Stage', 'Stage task');
+			$systemAdminRole->addChild('Stage');
+			$this->_authManager->createOperation('StageRead', 'Stage read');
+			$task->addChild('StageRead');
+
 			$task=$this->_authManager->createTask('TaskType', 'TaskType task');
 			$systemAdminRole->addChild('TaskType');
 			$this->_authManager->createOperation('TaskTypeRead', 'TaskType read');
