@@ -160,7 +160,7 @@ class AssemblyToMaterial extends ActiveRecord
 			'material->description',
 			'material->unit',
 			'material->alias',
-			'material->stage->description',
+			'stage->description',
 		);
 	}
 	

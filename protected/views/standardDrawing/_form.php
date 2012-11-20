@@ -1,7 +1,10 @@
 <?php
+// NB: edited jquery.fileupload-ui.js - added condition if(filesList.find('.start button').size()) to e.preventDefault() in _initButtonBarEventHandlers
+// fileUploadButtonBar.find('.start'), Which poses an upgrade issue to resolve when updateing XUpload plugin
 
 $form=$this->beginWidget('WMTbActiveForm', array(
 		'id' => 'StandarDrawing-form',
+//		'action' => "/WorksManagement/StandardDrawing/upload",
 		'model'=>$model,
 		'enableAjaxValidation' => false,
 		'showSubmit' => false,
@@ -17,16 +20,16 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 		$form->hiddenField('id');
 		?><script>
 		$(function () {
-				// Load existing files:
-				$('#StandardDrawing-form').each(function () {
-					var that = this;
-					$.getJSON('<?php echo $this->createUrl('getExisting', array('id'=>$model->id)) ?>', function (result) {
-						if (result && result.length) {
-							$(that).fileupload('option', 'done')
-								.call(that, null, {result: result});
-						}
-					});
+			// Load existing files:
+			$('#StandardDrawing-form').each(function () {
+				var that = this;
+				$.getJSON('<?php echo $this->createUrl('getExisting', array('id'=>$model->id)) ?>', function (result) {
+					if (result && result.length) {
+						$(that).fileupload('option', 'done')
+							.call(that, null, {result: result});
+					}
 				});
+			});
 		}) 	
 		</script><?php
 	}
@@ -50,7 +53,8 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 		'attribute' => '',
 		'multiple' => true,
 		'options' => array(
-			'singleFileUploads' => false),
+			'singleFileUploads' => false,
+		),
 		'formView' => 'application.views.standardDrawing._upload',
 		'uploadView' => 'application.views.standardDrawing.template_upload',
 

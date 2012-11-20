@@ -13,7 +13,7 @@
 		</span>
 		<button type="submit" class="btn btn-primary start">
 			<i class="icon-upload icon-white"></i>
-			<span>Start upload</span>
+			<?php echo $model->isNewRecord ? '<span>Start upload</span>' : '<span>Upload / update</span>' ; ?>
 		</button>
 		<button type="reset" class="btn btn-warning cancel">
 			<i class="icon-ban-circle icon-white"></i>

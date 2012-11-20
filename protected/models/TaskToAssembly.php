@@ -43,8 +43,8 @@ class TaskToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('store_id, task_id, assembly_id, quantity, staff_id', 'required'),
-			array('store_id, assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_id, assembly_id, quantity, staff_id', 'required'),
+			array('assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.

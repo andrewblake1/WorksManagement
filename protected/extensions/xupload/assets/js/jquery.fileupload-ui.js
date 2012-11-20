@@ -561,7 +561,11 @@
                 ns = this.options.namespace;
             fileUploadButtonBar.find('.start')
                 .bind('click.' + ns, function (e) {
-                    e.preventDefault();
+// AB hacking added following line to allow submit on Start Upload when no files uploaded so can become upload/update
+if(filesList.find('.start button').size())
+{
+					e.preventDefault();
+}
                     filesList.find('.start button').click();
                 });
             fileUploadButtonBar.find('.cancel')

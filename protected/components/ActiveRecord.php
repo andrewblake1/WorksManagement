@@ -631,47 +631,49 @@ if(count($m = $this->getErrors()))
 	public function init()
 	{
 //$t = $this->safeAttributeNames;
-		$modelName = get_class($this);
-		// loop thru attributes
-		foreach($this->safeAttributeNames as $attributeName)
+		if($this->isNewRecord)
 		{
-			// if system admin has set a default for this attribute
-			if($defaultValue = DefaultValue::model()->findByAttributes(array('table'=>$this->tableName(), 'column'=>$attributeName)))
+			$modelName = get_class($this);
+			// loop thru attributes
+			foreach($this->safeAttributeNames as $attributeName)
 			{
-				// attempt to execute the sql
-				try
+				// if system admin has set a default for this attribute
+				if($defaultValue = DefaultValue::model()->findByAttributes(array('table'=>$this->tableName(), 'column'=>$attributeName)))
 				{
-					$sql = $defaultValue->select;
-					$command=Yii::app()->db->createCommand($sql);
-					// if sql contains :pk (primary key)
-					if(stripos($sql, ':pk') !== false)
+					// attempt to execute the sql
+					try
 					{
-						// get the primary key in play in this context which will be referring to the parent
-						$pk = $_SESSION[Yii::app()->controller->getParentCrumb($modelName)]['value'];
+						$sql = $defaultValue->select;
+						$command=Yii::app()->db->createCommand($sql);
+						// if sql contains :pk (primary key)
+						if(stripos($sql, ':pk') !== false)
+						{
+							// get the primary key in play in this context which will be referring to the parent
+							$pk = $_SESSION[Yii::app()->controller->getParentCrumb($modelName)]['value'];
+							if($pk !== null)
+							{
+								$command->bindParam(":pk", $pk, PDO::PARAM_STR);
+							}
+							// otherwise error
+							else
+							{
+								throw new CHttpException(403,'System admin error. The default isn\'t valid - primary key (:pk) in sql but not in this context. ');
+							}
+						}
+	// TODO: this should be run of connection with restricted sys admin rights rather than main app user rights
 
-						if($pk !== null)
-						{
-							$command->bindParam(":pk", $pk, PDO::PARAM_STR);
-						}
-						// otherwise error
-						else
-						{
-							throw new CHttpException(403,'System admin error. The default isn\'t valid - primary key (:pk) in sql but not in this context. ');
-						}
+						$this->$attributeName = $command->queryScalar();
 					}
-// TODO: this should be run of connection with restricted sys admin rights rather than main app user rights
-
-					$this->$attributeName = $command->queryScalar();
-				}
-				catch (CDbException $e)
-				{
-					// the select failed so assume it is just text with the word 'select' in it - most likely sys admin error but 
-					// deal with it anyway by just doing nothing here and the attribute gets set below anyway
-					$errorMessage = $e->getMessage();
-					throw new CHttpException(404,"
-						System admin error. The default isn\'t valid - Database reports:
-						<br>$errorMessage
-					");
+					catch (CDbException $e)
+					{
+						// the select failed so assume it is just text with the word 'select' in it - most likely sys admin error but 
+						// deal with it anyway by just doing nothing here and the attribute gets set below anyway
+						$errorMessage = $e->getMessage();
+						throw new CHttpException(404,"
+							System admin error. The default isn\'t valid - Database reports:
+							<br>$errorMessage
+						");
+					}
 				}
 			}
 		}

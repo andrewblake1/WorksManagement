@@ -41,9 +41,9 @@ class TaskController extends GenericExtensionController
 				$saved &= $this->createResources($model, $models);
 				// attempt creation of assemblies
 				$saved &= $this->createAssemblys($model, $models);
-				// attempt creation of assemblies
+				// attempt creation of materials
 				$saved &= $this->createMaterials($model, $models);
-				// attempt creation of assemblies
+				// attempt creation of duties
 				$saved &= $this->createDutys($model, $models);
 			}
 		}
