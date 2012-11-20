@@ -354,8 +354,9 @@ abstract class ActiveRecord extends CActiveRecord
 		$dataProvider = new ActiveDataProvider($this, array(
 			'criteria'=>self::getSearchCriteria($this),
 			'sort'=>array('attributes'=>$sort),
+			'pagination' => false,
 		));
-		
+
 		return $dataProvider;
 	}
 
@@ -707,6 +708,17 @@ if(count($m = $this->getErrors()))
 		
 		parent::afterFind();
 	}
+	
+	public function getExportColumns()
+	{
+        foreach($this->adminColumns as $column)
+		{
+			$columns[] = is_string($column) ? $column : $column['name'];
+		}
+		
+		return $columns;
+	}
+
 }
 
 ?>

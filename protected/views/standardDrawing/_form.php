@@ -55,7 +55,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 		'options' => array(
 			'singleFileUploads' => false,
 		),
-		'formView' => 'application.views.standardDrawing._upload',
+		'formView' => $model->isNewRecord ? 'application.views.standardDrawing._upload' : 'application.views.standardDrawing._uploadUpdate',
 		'uploadView' => 'application.views.standardDrawing.template_upload',
 
 	));

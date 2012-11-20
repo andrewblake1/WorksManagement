@@ -412,7 +412,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		if(isset($_GET['action']) && $_GET['action'] == 'download')
 		{
 			// Export it
-			$this->toExcel($model->findAll($model->searchCriteria), $exportColumns, null, array(), 'CSV'/*'Excel5'*/);
+			$this->toExcel($model->search(), $model->exportColumns, null, array(), 'CSV'/*'Excel5'*/);
 		}
 // TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
 // TODO excel2007 best format however mixed results getting succesfull creations with this = varies across servers likely php_zip issue	thnk

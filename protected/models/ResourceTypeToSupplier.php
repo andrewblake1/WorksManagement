@@ -100,6 +100,7 @@ class ResourceTypeToSupplier extends ActiveRecord
 		);
 
 		// where
+		$criteria->compare('resource_type_id',$this->resource_type_id);
 		$criteria->compare('supplier.name',$this->searchSupplier);
 
 		// join

@@ -10,6 +10,7 @@
  * @property integer $stage_id
  * @property integer $store_id
  * @property integer $quantity
+ * @property string $comment
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -52,9 +53,8 @@ class AssemblyToMaterial extends ActiveRecord
 		return array(
 			array('assembly_id, material_id, stage_id, store_id, quantity, staff_id', 'required'),
 			array('assembly_id, material_id, stage_id, store_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, staff_id', 'safe', 'on'=>'search'),
+			array('comment', 'length', 'max'=>255),
+			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, comment, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -89,6 +89,7 @@ class AssemblyToMaterial extends ActiveRecord
 			'quantity' => 'Quantity',
 			'stage_id' => 'Stage',
 			'searchStage' => 'Stage',
+			'comment' => 'Comment',
 		);
 	}
 
@@ -105,17 +106,19 @@ class AssemblyToMaterial extends ActiveRecord
 			't.assembly_id',
 			'stage.description AS searchStage',
 			't.material_id',
+			't.comment',
 			'material.description AS searchMaterialDescription',
 			'material.unit AS searchMaterialUnit',
 			'material.alias AS searchMaterialAlias',
 			't.quantity',
 		);
 
-		$criteria->compare('material.description',$this->searchMaterialDescription);
-		$criteria->compare('stage.description',$this->searchStage);
-		$criteria->compare('material.unit',$this->searchMaterialUnit);
-		$criteria->compare('material.alias',$this->searchMaterialAlias);
+		$criteria->compare('material.description',$this->searchMaterialDescription,true);
+		$criteria->compare('stage.description',$this->searchStage,true);
+		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
+		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
 		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('t.comment',$this->comment,true);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
 		
 		$criteria->with = array(
@@ -129,6 +132,7 @@ class AssemblyToMaterial extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = $this->linkThisColumn('searchMaterialDescription');
+ 		$columns[] = 'comment';
  		$columns[] = 'searchMaterialUnit';
  		$columns[] = 'searchMaterialAlias';
  		$columns[] = 'searchStage';
