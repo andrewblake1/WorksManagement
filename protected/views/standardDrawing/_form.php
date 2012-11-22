@@ -1,6 +1,4 @@
 <?php
-// NB: edited jquery.fileupload-ui.js - added condition if(filesList.find('.start button').size()) to e.preventDefault() in _initButtonBarEventHandlers
-// fileUploadButtonBar.find('.start'), Which poses an upgrade issue to resolve when updateing XUpload plugin
 
 $form=$this->beginWidget('WMTbActiveForm', array(
 		'id' => 'StandarDrawing-form',
@@ -30,6 +28,15 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 					}
 				});
 			});
+			
+			// allow update without having to upload - this courtesy of plugin author
+			$('#StandardDrawing-form .fileupload-buttonbar .start').on('click', function () {
+				var form = $($(this).prop('form'));
+				if (!form.find('.files .start').length) {
+					form.submit();
+				}
+			});
+
 		}) 	
 		</script><?php
 	}

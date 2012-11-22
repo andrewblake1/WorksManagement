@@ -435,7 +435,7 @@ abstract class ActiveRecord extends CActiveRecord
 	 * @param type $referencesPk
 	 * @return mixed 
 	 */
-	static function linkColumn($name, $modelName, $foreignKey, $referencesPk=null)
+	static function linkColumn($name, $modelName, $foreignKey)
 	{
 		if($referencesPk === null)
 		{
@@ -446,11 +446,13 @@ abstract class ActiveRecord extends CActiveRecord
 		$controllerName = "{$modelName}Controller";
 		if($controllerName::checkAccess(Controller::accessRead))
 		{
+			// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
+			// even though this confusing here
 			// create a link
 			return array(
 				'name'=>$name,
 				'value'=>'CHtml::link($data->'.$name.',
-					Yii::app()->createUrl("'.$modelName.'/update", array("'.$referencesPk.'"=>$data->'.$foreignKey.'))
+					Yii::app()->createUrl("'.$modelName.'/update", array("id"=>$data->'.$foreignKey.'))
 				)',
 				'type'=>'raw',
 			);
@@ -464,7 +466,9 @@ abstract class ActiveRecord extends CActiveRecord
 	
 	protected function linkThisColumn($name)
 	{
-		return self::linkColumn($name, get_class($this), $this->tableSchema->primaryKey, $this->tableSchema->primaryKey);
+		// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
+		// even though this confusing here
+		return self::linkColumn($name, get_class($this), $this->tableSchema->primaryKey);
 	}
 
 	/**

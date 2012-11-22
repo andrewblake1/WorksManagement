@@ -107,11 +107,11 @@ class AuthItem extends ActiveRecord
 
 		$criteria->compare('t.name',$this->name,true);
 		$criteria->compare('t.type', self::typeRole);
-		$criteria->compare('t.description',$this->description,true);
+//		$criteria->compare('t.description',$this->description,true);
 
 		$criteria->select=array(
 			't.name',
-			't.description',
+//			't.description',
 		);
 
 		return $criteria;
@@ -120,7 +120,7 @@ class AuthItem extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = $this->linkThisColumn('name');
-		$columns[] = 'description';
+//		$columns[] = 'description';
 		
 		return $columns;
 	}
@@ -131,8 +131,8 @@ class AuthItem extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-//			'name',
-			'description',
+			'name',
+//			'description',
 		);
 	}
 
