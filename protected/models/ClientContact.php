@@ -8,6 +8,7 @@
  * @property integer $client_id
  * @property string $first_name
  * @property string $last_name
+ * @property string $role
  * @property string $email
  * @property string $address_line1
  * @property string $address_line2
@@ -53,12 +54,12 @@ class ClientContact extends ActiveRecord
 		return array(
 			array('client_id, first_name, last_name, email, staff_id', 'required'),
 			array('client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('first_name, last_name, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
+			array('first_name, last_name, role, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
 			array('email, address_line1, address_line2', 'length', 'max'=>255),
 			array('post_code', 'length', 'max'=>16),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, client_id, first_name, last_name, email, address_line1, address_line2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, client_id, first_name, last_name, role, email, address_line1, address_line2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -86,6 +87,7 @@ class ClientContact extends ActiveRecord
 			'client_id' => 'Client',
 			'first_name' => 'First name',
 			'last_name' => 'Last name',
+			'role' => 'Role',
 			'email' => 'Email',
 			'address_line1' => 'Address line 1',
 			'address_line2' => 'Address line 2',
@@ -111,6 +113,7 @@ class ClientContact extends ActiveRecord
 		$criteria->compare('client_id',$this->client_id);
 		$criteria->compare('first_name',$this->first_name,true);
 		$criteria->compare('last_name',$this->last_name,true);
+		$criteria->compare('role',$this->role,true);
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('phone_mobile',$this->phone_mobile,true);
 		$criteria->compare('phone_home',$this->phone_home,true);
@@ -121,6 +124,7 @@ class ClientContact extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			'first_name',
 			'last_name',
+			'role',
 			'email',
 			'phone_mobile',
 			'phone_home',
@@ -135,6 +139,7 @@ class ClientContact extends ActiveRecord
 	{
 		$columns[]=$this->linkThisColumn('first_name');
 		$columns[]=$this->linkThisColumn('last_name');
+		$columns[]='role';
         $columns[] = array(
 			'name'=>'phone_mobile',
 			'value'=>'CHtml::link($data->phone_mobile, "tel:".$data->phone_mobile)',

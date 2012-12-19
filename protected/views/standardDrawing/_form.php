@@ -2,15 +2,71 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array(
 		'id' => 'StandarDrawing-form',
-//		'action' => "/WorksManagement/StandardDrawing/upload",
 		'model'=>$model,
-		'enableAjaxValidation' => false,
-		'showSubmit' => false,
+		'enableAjaxValidation' => true,
+		'showSubmit' => 'hide',
+		'submitOptions' => array('class'=>'form-button btn btn-primary btn-large hide'),
 		'parent_fk'=>$parent_fk,
-		'htmlOptions'=>array('enctype' => 'multipart/form-data'))
-	);
+		'htmlOptions'=>array('enctype' => 'multipart/form-data'),
+		// this the same as the parent widget except overriding afterValidate because want to trigger jquery form uploads click event handler on the
+		// upload button only after the form has been validated CActiveForm. 
+	    'clientOptions'=> array(
+			'validateOnSubmit'=>true,
+			'validateOnChange'=>false,
+			'afterValidate'=>'js: function(form, data, hasError)
+			{
+				// If adding/editing multiple models as a result of what appears visually to be a single model form
+				// then their are errors returned in the json data object but hasError is false as it hasnt detected errors matching inputs
+				// on the form as they dont exist. This function puts those erros into the error block at the top and stops the form being submitted
+				var $lis = "";
+
+				// if afterValidate is being told there are no errors what it really means is no form inputs have errors
+				if(!hasError)
+				{
+					// loop thru json object which is 2 dimensional array
+					$.each(data, function()
+					{
+						$.each(this, function(k, v)
+						{
+							$lis = $lis + "<li>" + v + "</li>";
+						});
+					});
+
+					// if there are errors with the models but not on the form inputs
+					if($lis != "")
+					{
+						$errorhtml = \'<div id="-form_es_" class="alert alert-block alert-error" style="">\
+						<p>Please fix the following input errors:</p><ul>\' + $lis + \'</ul></div>\';
+
+						$("[id*=-form_es_]").replaceWith($errorhtml);
+					}
+					else
+					{
+						// allow update without having to upload - this courtesy of plugin author
+						var form = $(\'form\').first();
+						if (!form.find(\'.files .start\').length)
+						{
+							// allow the CActiveform submit to occur
+							return true;
+						}
+						else
+						{
+							// submit form via the click function of the upload button
+							$("#StandardDrawing-form .fileupload-buttonbar .start").click();
+						}
+					}
+
+					// dont submit through the normal CActiveform submit
+					return false;
+				}
+
+				return true;
+			}'),
+	));
 
 	$form->textFieldRow('description');
+	
+	$form->textFieldRow('comment');
 	
 	// if update
 	if(!$model->isNewRecord)
@@ -28,29 +84,29 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 					}
 				});
 			});
-			
-			// allow update without having to upload - this courtesy of plugin author
-			$('#StandardDrawing-form .fileupload-buttonbar .start').on('click', function () {
-				var form = $($(this).prop('form'));
-				if (!form.find('.files .start').length) {
-					form.submit();
-				}
-			});
-
 		}) 	
 		</script><?php
 	}
-	// else create
-	else
-	{
-		// set redirect
-		?><script>
-		$('#StandardDrawing-form')
-			.bind('fileuploadstop', function (e, data) {
-				window.location.href = '<?php echo Yii::app()->request->requestUri; ?>';
-			})
-		</script><?php
-	}
+	
+	?><script>
+	$(function () {
+		// set call back for when upload process stops
+		$('#StandardDrawing-form').bind('fileuploadstop', function (e)
+		{
+			// allow a redirect to admin view only if there are no upload errors showing
+			if (!$('form .files .error').length)
+			{
+				window.location.href = '<?php
+					// path calculation from CController::redirect
+					$url = array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]);
+					$route=$url[0];
+					echo $this->createUrl($route,array_splice($url,1));
+				?>';
+			}
+		})
+	})
+	</script><?php
+
 
     Yii::import( "xupload.models.XUploadForm" );
 	$this->widget('xupload.XUpload', array(
@@ -67,43 +123,6 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	));
 		
-/*
-// TODO: technically breaking mvc here i.e. this should be in controller but will either require global or duplication in actionUpdate or 
-// passing paramtere to actionUpdate in Controller that is only ever used by sub classes that have file uploads
-// probably should make this or call a controller method
-	// if updating - create a web accessible symlink of this image that lasts until next cron minute
-	if(!$model->isNewRecord)
-	{
-		// see if there is a file uploaded
-		if(file_exists(Yii::app()->params['privateUploadPath'] . 'standard_drawing/' . $model->id))
-		{
-			$sessionId = session_id();
-			// local source
-			$source = Yii::app()->params['privateUploadPath'] . 'standard_drawing/' . $model->id; 
-			// local target
-			$target = Yii::app()->params['publicUploadPath'] . 'standard_drawing/' . $sessionId . $model->id;
-			// web src
-			$src = Yii::app()->baseUrl . Yii::app()->params['webUploadPath'] . 'standard_drawing/' . $sessionId . $model->id;
-			// create the symlink
-			exec("ln -s -f $source $target");
-			// set symlink expiry
-			$expire = date("H:i" , time() + 120);
-			exec("echo 'rm -rf $target' | at $expire");
-
-//			$expire = date("i H d m *" , time() + 60);
-//			// temporary crontab file name
-//			$fileName = "$sessionId.tmp";
-//			exec("crontab -l > $fileName");
-//			exec("echo '$expire rm $target' >>$fileName");
-//			exec("crontab $fileName");
-//			exec("rm $fileName");
-			
-			echo "<img src='$src'>";
-		}
-		
-	}*/
-
-	
 $this->endWidget();
 
 ?>

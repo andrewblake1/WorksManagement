@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $store_id
  * @property string $description
+ * @property string $comment
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -37,9 +38,9 @@ class StandardDrawing extends ActiveRecord
 		return array(
 			array('store_id, description, staff_id', 'required'),
 			array('store_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>255),
+			array('description, comment', 'length', 'max'=>255),
 //			array('file', 'file', 'types'=>'jpg, gif, png, pdf', 'allowEmpty' => true),
-			array('id, store_id, description, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, store_id, description, comment, deleted, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,6 +67,7 @@ class StandardDrawing extends ActiveRecord
 			'id' => 'Standard drawing',
 			'store_id' => 'Store',
 			'description' => 'Description',
+			'comment' => 'Comment',
 			'deleted' => 'Deleted',
 			'staff_id' => 'Staff',
 		);
@@ -82,10 +84,12 @@ class StandardDrawing extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.description',
+			't.comment',
 		);
 
 		// where
 		$criteria->compare('t.description', $this->description, true);
+		$criteria->compare('t.comment', $this->comment, true);
 		$criteria->compare('t.store_id', $this->store_id);
 
 		return $criteria;
@@ -94,6 +98,7 @@ class StandardDrawing extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = $this->linkThisColumn('description');
+		$columns[] = 'comment';
 		
 		return $columns;
 	}

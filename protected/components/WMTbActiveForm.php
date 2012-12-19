@@ -11,7 +11,9 @@ class WMTbActiveForm extends TbActiveForm
 {
 	private $controller;
 	public $parent_fk;
-	public $showSubmit = true;
+	public $showSubmit = true;	// true, false, hide - hide is there for use when file uploading as a hack as this button needs to be there for the
+		// ajax validation and form submit to occur for some reason. Havn't investigated why yet. There will be a cleaner way to do this!
+	public $submitOptions = array('class'=>'form-button btn btn-primary btn-large');
 	public $enableAjaxValidation=true;
 	public $htmlOptions;
 	public $model;
@@ -144,18 +146,29 @@ $t = $this->model->attributes;
 		}
 		
 		// button attributes
-		$buttonOptions = array('class'=>'form-button btn btn-primary btn-large');
 		if(Yii::app()->controller->action->id == 'admin' && ($this->_action == 'Create' || $this->_action == 'Update'))
 		{
-			echo '<div class="modal-footer">';
-				echo CHtml::submitButton($this->_action, $buttonOptions);
-			echo '</div>';
+			if($this->showSubmit != 'hide')
+			{
+				echo '<div class="modal-footer">';
+			}
+			echo CHtml::submitButton($this->_action, $this->submitOptions);
+			if($this->showSubmit != 'hide')
+			{
+				echo '</div>';
+			}
 		}
 		elseif($this->_action == 'Update' || $this->_action == 'Create')	// no modal
 		{
-			echo '<div class="form-actions">';
-				echo CHtml::submitButton($this->_action, $buttonOptions);
-			echo '</div>';
+			if($this->showSubmit != 'hide')
+			{
+				echo '<div class="form-actions">';
+			}
+			echo CHtml::submitButton($this->_action, $this->submitOptions);
+			if($this->showSubmit != 'hide')
+			{
+				echo '</div>';
+			}
 		}
 		
 		parent::run();

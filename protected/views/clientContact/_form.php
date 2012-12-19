@@ -4,6 +4,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('first_name');
 	$form->textFieldRow('last_name');
+	$form->textFieldRow('role');
 	$form->textFieldRow('email');
 	$form->textFieldRow('address_line1');
 	$form->textFieldRow('address_line2');

@@ -99,10 +99,18 @@ class StandardDrawingController extends Controller
 
 	protected function createRedirect($model)
 	{
+		if(Yii::app()->controller->action->id != 'upload')
+		{
+			parent::createRedirect($model);
+		}
 	}
 
 	protected function updateRedirect($model)
 	{
+		if(Yii::app()->controller->action->id != 'upload')
+		{
+			parent::updateRedirect($model);
+		}
 	}
 	
 	private function expose($id)
@@ -173,7 +181,7 @@ class StandardDrawingController extends Controller
 					}
 				}
 				// return the json encoded data to the client
-				echo $t = function_exists('json_encode') ? json_encode($result) : CJSON::encode($result);
+				echo function_exists('json_encode') ? json_encode($result) : CJSON::encode($result);
 				Yii::app()->end();
 			}
 

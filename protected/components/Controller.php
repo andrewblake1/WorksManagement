@@ -412,7 +412,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		if(isset($_GET['action']) && $_GET['action'] == 'download')
 		{
 			// Export it
-			$this->toExcel($model->search(), $model->exportColumns, null, array(), 'CSV'/*'Excel5'*/);
+			$this->toExcel($model->search(false), $model->exportColumns, null, array(), 'CSV'/*'Excel5'*/);
 		}
 // TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
 // TODO excel2007 best format however mixed results getting succesfull creations with this = varies across servers likely php_zip issue	thnk
@@ -593,7 +593,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		if(isset($_POST[$this->modelName]))
 		{
 			$model->attributes=$_POST[$this->modelName];
-$t = $model->attributes;		
+//$t = $model->attributes;		
 			// start a transaction
 			$transaction = Yii::app()->db->beginTransaction();
 			
@@ -646,7 +646,7 @@ $t = $model->attributes;
 			'name'=>$model->tableSchema->primaryKey,
 			'value'=>$id,
 		);*/
-		
+// TODO: check this code might be obsolete		
 		// if just failed to save after ajax validation ok'd it - maybe an invalid file upload which can't use ajax validation
 		if(isset($saved) && !$saved)
 		{
@@ -665,7 +665,7 @@ $t = $model->attributes;
 				}
 			}
 			$message .= '</ul>';
-// TODO: use jquery show to show the create form on reentry and show the validation error message thefore pass the error message to createrender
+// TODO: use jquery show to show the create form on reentry and show the validation error message therefore pass the error message to createrender
 // instead of flash message which is just a quick temporary solution
 			Yii::app()->user->setFlash('error', $message);
 			// redirect back to this view - most likely admin but pass paramter to let know about failed validation
@@ -731,7 +731,7 @@ $t = $model->attributes;
 	
 	/**
 	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'update' page.
+	 * If update is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
 	public function actionUpdate($id, $model = null)

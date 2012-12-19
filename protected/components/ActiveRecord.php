@@ -331,7 +331,7 @@ abstract class ActiveRecord extends CActiveRecord
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
-	public function search()
+	public function search($pagination = array())
 	{
 		// get the sort order
 		foreach($this->searchSort as $attribute)
@@ -354,7 +354,7 @@ abstract class ActiveRecord extends CActiveRecord
 		$dataProvider = new ActiveDataProvider($this, array(
 			'criteria'=>self::getSearchCriteria($this),
 			'sort'=>array('attributes'=>$sort),
-			'pagination' => false,
+			'pagination' => $pagination,
 		));
 
 		return $dataProvider;
@@ -437,10 +437,10 @@ abstract class ActiveRecord extends CActiveRecord
 	 */
 	static function linkColumn($name, $modelName, $foreignKey)
 	{
-		if($referencesPk === null)
-		{
-			$referencesPk = $modelName::model()->tableSchema->primaryKey;
-		}
+//		if($referencesPk === null)
+//		{
+//			$referencesPk = $modelName::model()->tableSchema->primaryKey;
+//		}
 
 		// if the user has at least read access
 		$controllerName = "{$modelName}Controller";
