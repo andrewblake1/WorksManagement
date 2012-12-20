@@ -1,7 +1,7 @@
 <?php
 
 $form=$this->beginWidget('WMTbActiveForm', array(
-		'id' => 'StandarDrawing-form',
+		'id' => 'StandardDrawing-form',
 		'model'=>$model,
 		'enableAjaxValidation' => true,
 		'showSubmit' => 'hide',
@@ -78,7 +78,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 			$('#StandardDrawing-form').each(function () {
 				var that = this;
 				$.getJSON('<?php echo $this->createUrl('getExisting', array('id'=>$model->id)) ?>', function (result) {
-					if (result && result.length) {
+					if (result) {
 						$(that).fileupload('option', 'done')
 							.call(that, null, {result: result});
 					}
@@ -91,7 +91,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	?><script>
 	$(function () {
 		// set call back for when upload process stops
-		$('#StandardDrawing-form').bind('fileuploadstop', function (e)
+		$('#StandardDrawing-form').bind('fileuploadstopped', function (e)
 		{
 			// allow a redirect to admin view only if there are no upload errors showing
 			if (!$('form .files .error').length)
@@ -124,5 +124,4 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	));
 		
 $this->endWidget();
-
 ?>

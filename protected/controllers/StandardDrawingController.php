@@ -17,7 +17,6 @@ class StandardDrawingController extends Controller
 
 		Yii::import("xupload.UploadHandler");
 		$this->uploadHandler = new UploadHandler(array(
-			'param_name' => 'XUploadForm',
 			'upload_dir' => $uploadDir,
 			'upload_url' => Yii::app()->params['webUploadPath'] . "standard_drawing/$sessionId$id/",
 			'script_url' => $this->createUrl('upload', array('id'=>$id)),
@@ -52,7 +51,7 @@ class StandardDrawingController extends Controller
 		header('Access-Control-Allow-Methods: OPTIONS, HEAD, GET, POST, PUT, DELETE');
 		header('Access-Control-Allow-Headers: X-File-Name, X-File-Type, X-File-Size');
 		$this->initUploadHandler($id);
-		$this->uploadHandler->get();
+//		$this->uploadHandler->get();
 	}
 	
 	public function actionUpload()
@@ -60,7 +59,7 @@ class StandardDrawingController extends Controller
 		if(isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE')
 		{
 			$this->initUploadHandler($_GET['id']);
-            $this->uploadHandler->delete();
+//            $this->uploadHandler->delete();
         }
 		else
 		{
@@ -93,7 +92,7 @@ class StandardDrawingController extends Controller
 		{
 			ob_end_clean();
 			$this->initUploadHandler($model->id);
-			$this->uploadHandler->post();
+//			$this->uploadHandler->post();
 		}
 	}
 
@@ -155,7 +154,7 @@ class StandardDrawingController extends Controller
 		if(!$validating && $saved)
 		{
 			$this->initUploadHandler($id);
-			$this->uploadHandler->post();
+//			$this->uploadHandler->post();
 			// commit
 			$transaction->commit();
 			$this->updateRedirect($model);
