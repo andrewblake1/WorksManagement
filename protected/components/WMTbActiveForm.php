@@ -23,7 +23,8 @@ class WMTbActiveForm extends TbActiveForm
 	// put focus to first non datepicker as if goes to datepicker then the datepicker will display
 	// in admin view
 //	public $focus = 'input:not([class="hasDatepicker"]):visible:enabled:first';
-	public $focus = '[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first';
+//	bug in next one, but one above works - however if not from new button then probably update so no need to focus
+//	public $focus = '[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first';
     public $clientOptions = array(
 		'validateOnSubmit'=>true,
 		'validateOnChange'=>false,
@@ -145,27 +146,30 @@ $t = $this->model->attributes;
 			$this->hiddenField($this->parent_fk);
 		}
 		
+		// this complex because if compare bool/string 
+		$showSubmit = !(is_string($this->showSubmit) && $this->showSubmit == 'hide');
+
 		// button attributes
 		if(Yii::app()->controller->action->id == 'admin' && ($this->_action == 'Create' || $this->_action == 'Update'))
 		{
-			if($this->showSubmit != 'hide')
+			if($showSubmit)
 			{
 				echo '<div class="modal-footer">';
 			}
 			echo CHtml::submitButton($this->_action, $this->submitOptions);
-			if($this->showSubmit != 'hide')
+			if($showSubmit)
 			{
 				echo '</div>';
 			}
 		}
 		elseif($this->_action == 'Update' || $this->_action == 'Create')	// no modal
 		{
-			if($this->showSubmit != 'hide')
+			if($showSubmit)
 			{
 				echo '<div class="form-actions">';
 			}
 			echo CHtml::submitButton($this->_action, $this->submitOptions);
-			if($this->showSubmit != 'hide')
+			if($showSubmit)
 			{
 				echo '</div>';
 			}

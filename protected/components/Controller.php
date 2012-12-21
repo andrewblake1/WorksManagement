@@ -363,11 +363,43 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// in building breadcrumbs
 		if(isset($_GET['ajax']))
 		{
-			// restore $_GET
-			if(!isset($_GET[$modelName]))
+			if(isset($_GET[$modelName]))
 			{
+				// store $_GET
+				$_SESSION['actionAdminGet'][$modelName] = $_GET[$modelName];
+			}
+			else
+			{
+				// clear $_GET
 				$_GET[$modelName] = array();
 			}
+
+			// pagination
+			if(isset($_GET["{$modelName}_page"]))
+			{
+				// store pagination
+				$_SESSION['actionAdminGet']["{$modelName}_page"] = $_GET["{$modelName}_page"];
+			}
+			else
+			{
+				// clear pagination
+				$_GET["{$modelName}_page"] = array();
+			}
+
+			// sort
+			if(isset($_GET["{$modelName}_sort"]))
+			{
+				// store sort
+				$_SESSION['actionAdminGet']["{$modelName}_sort"] = $_GET["{$modelName}_sort"];
+			}
+			else
+			{
+				// clear sort
+				$_GET[$_GET["{$modelName}_sort"]] = array();
+			}
+
+			
+			// append to get any past saved get paramters
 			$_GET[$modelName] += isset($_SESSION['actionAdminGet'][$modelName]) ? $_SESSION['actionAdminGet'][$modelName] : array();
 		}
 		elseif(isset($_GET[$modelName]))
@@ -377,8 +409,24 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		}
 		else
 		{
-			// store $_GET
-			$_SESSION['actionAdminGet'][$modelName] = null;
+			// clear stored $_GET
+//			$_SESSION['actionAdminGet'][$modelName] = null;
+		}
+
+		// restore pagination
+		if(isset($_SESSION['actionAdminGet']["{$modelName}_page"]))
+		{
+			$_GET["{$modelName}_page"] = $_SESSION['actionAdminGet']["{$modelName}_page"];
+		}
+		// restore sort
+		if(isset($_SESSION['actionAdminGet']["{$modelName}_sort"]))
+		{
+			$_GET["{$modelName}_sort"] = $_SESSION['actionAdminGet']["{$modelName}_sort"];
+		}
+		// restore filters
+		if(isset($_SESSION['actionAdminGet'][$modelName]))
+		{
+			$_GET[$modelName] = $_SESSION['actionAdminGet'][$modelName];
 		}
 		
 		// may be using a database view instead of main table model
@@ -439,6 +487,15 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			'model'=>$model,
 		));
 	}
+	
+	// reset filtering, paging, and sorting - to be used after successfull creations before returning to admin view
+	public function adminReset()
+	{
+			unset($_SESSION['actionAdminGet']["{$modelName}_page"]);
+			unset($_SESSION['actionAdminGet']["{$modelName}_sort"]);
+			unset($_SESSION['actionAdminGet'][$modelName]);
+	}
+	
 	
 	/**
 	 * Determine if a particular primary key exists in the breadcrumb trail - in any model.
@@ -571,6 +628,9 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	 */
 	protected function createRedirect($model)
 	{
+		// clear filtering and sorting and paging so can see newly inserted row at the top
+		$this->adminReset();
+		
 		$this->cuRedirect($model);
 	}
 	
@@ -1195,7 +1255,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			'size'=>'small', // '', 'large', 'small' or 'mini'
 			'htmlOptions'=>array(
 				'data-toggle'=>'modal',
-				'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').focus();',
+				'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').first().focus();',
 			),
 		)); 
 	}
