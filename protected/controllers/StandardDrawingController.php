@@ -79,23 +79,97 @@ class StandardDrawingController extends Controller
 	/*
 	 * using createRedirect to save the file as only called onece after transaction is committed
 	 */
-
 	public function create($modalId = 'myModal') {
-		ob_start();
-		parent::actionCreate($modalId, $model = new $this->modelName);
+//		ob_start();
+//		parent::actionCreate($modalId, $model = new $this->modelName);
 		// if errors
-		if($model->hasErrors())
-		{
-			ob_end_flush();
-		}
-		else
-		{
-			ob_end_clean();
-			$this->initUploadHandler($model->id);
+//		if($model->hasErrors())
+//		{
+//			ob_end_flush();
+//		}
+//		else
+//		{
+//			ob_end_clean();
+			$this->initUploadHandler($_POST['StandardDrawing']['created']);
 //			$this->uploadHandler->post();
-		}
+//		}
 	}
 
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionCreate($modalId = 'myModal', &$model = null)
+	{
+		if($model === null)
+		{
+			$model=new $this->modelName;
+		}
+		$models=array();
+
+		if(isset($_POST[$this->modelName]))
+		{
+			// saving now in ajax validation
+			// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
+			if(!$validating =$this->performAjaxValidation($model))
+			{
+				throw new CHttpException(400,'You must enable javascript to perform this request.');
+			}
+
+			$model->attributes=$_POST[$this->modelName];
+
+			// start a transaction
+			$transaction = Yii::app()->db->beginTransaction();
+
+			// attempt save
+			$saved = $this->createSave($model, $models);
+
+			// if not validating and successful
+			if($saved)
+			{
+				// commit
+                $transaction->commit();
+				$result = array('id'=>$model->id);
+				echo $t = function_exists('json_encode') ? json_encode($result) : CJSON::encode($result);
+				Yii::app()->end();
+			}
+			// otherwise there has been an error which should be captured in model
+			else
+			{
+				// rollback
+                $transaction->rollBack();
+				// if coming from ajaxvalidate
+				if($validating)
+				{
+					$result=array();
+					if(!is_array($models)) 
+					{
+						$models=array($model);
+					}
+					foreach($models as $m)
+					{
+						foreach($m->getErrors() as $attribute=>$errorS)
+						{
+							$result[CHtml::activeId($m,$attribute)]=$errorS;
+						}
+					}
+					// return the json encoded data to the client
+					echo $t = function_exists('json_encode') ? json_encode($result) : CJSON::encode($result);
+					Yii::app()->end();
+				}
+
+				$model->isNewRecord = TRUE;
+			}
+		}
+		elseif(isset($_GET[$this->modelName]))
+		{
+			// set any url based paramters
+			$model->attributes=$_GET[$this->modelName];
+		}
+
+		$this->createRender($model, $models, $modalId);
+	}
+	
 	protected function createRedirect($model)
 	{
 		if(Yii::app()->controller->action->id != 'upload')

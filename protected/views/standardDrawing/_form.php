@@ -23,14 +23,30 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 				// if afterValidate is being told there are no errors what it really means is no form inputs have errors
 				if(!hasError)
 				{
-					// loop thru json object which is 2 dimensional array
-					$.each(data, function()
+					// if there are no errors then should have received json object with id of inserted row as using ajax validate to actually insert
+					// here because of file upload submit difficulties etc - validation normally on form submit but ajax file upload does special stuff
+					// on submit itself hence hacking to get the desireable functionality of CActiveForms javascript and ajax file upload.
+					if(data.id !== false)
 					{
-						$.each(this, function(k, v)
+						// add a hidden field to contain the new standard drawing id - created - cant use id or will think updating
+						$("<input>").attr({
+							type: "hidden",
+							name: "StandardDrawing[created]",
+							id: "created",
+							value: data.id
+						}).appendTo("form");
+					}
+					else
+					{
+						// loop thru json object which is 2 dimensional array
+						$.each(data, function()
 						{
-							$lis = $lis + "<li>" + v + "</li>";
+							$.each(this, function(k, v)
+							{
+								$lis = $lis + "<li>" + v + "</li>";
+							});
 						});
-					});
+					}
 
 					// if there are errors with the models but not on the form inputs
 					if($lis != "")
@@ -115,9 +131,9 @@ $form=$this->beginWidget('WMTbActiveForm', array(
         'htmlOptions' => array('id'=>'StandardDrawing-form'),
 		'attribute' => '',
 		'multiple' => true,
-		'options' => array(
-			'singleFileUploads' => false,
-		),
+//		'options' => array(
+//			'singleFileUploads' => false,
+//		),
 		'formView' => $model->isNewRecord ? 'application.views.standardDrawing._upload' : 'application.views.standardDrawing._uploadUpdate',
 		'uploadView' => 'application.views.standardDrawing.template_upload',
 
