@@ -5,13 +5,16 @@
  *
  * The followings are the available columns in table 'assembly_to_assembly':
  * @property integer $id
+ * @property integer $store_id
  * @property integer $parent_assembly_id
  * @property integer $child_assembly_id
- * @property integer $staff_id
+ * @property string $comment
  * @property integer $quantity
+ * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Assembly $parentAssembly
+ * @property Assembly $store
  * @property Assembly $childAssembly
  * @property Staff $staff
  */
@@ -41,11 +44,12 @@ class AssemblyToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('parent_assembly_id, child_assembly_id, quantity, staff_id', 'required'),
-			array('parent_assembly_id, child_assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('store_id, parent_assembly_id, child_assembly_id, quantity, staff_id', 'required'),
+			array('store_id, parent_assembly_id, child_assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('comment', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, quantity, staff_id', 'safe', 'on'=>'search'),
+			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, comment, quantity, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,6 +62,7 @@ class AssemblyToAssembly extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'parentAssembly' => array(self::BELONGS_TO, 'Assembly', 'parent_assembly_id'),
+			'store' => array(self::BELONGS_TO, 'Assembly', 'store_id'),
 			'childAssembly' => array(self::BELONGS_TO, 'Assembly', 'child_assembly_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
@@ -70,9 +75,11 @@ class AssemblyToAssembly extends ActiveRecord
 	{
 		return array(
 			'id' => 'Assembly',
+			'store_id' => 'Store',
 			'parent_assembly_id' => 'Parent Assembly',
 			'child_assembly_id' => 'Child assembly',
 			'searchChildAssembly' => 'Child assembly',
+			'comment' => 'Comment',
 			'quantity' => 'Quantity',
 		);
 	}
@@ -89,6 +96,7 @@ class AssemblyToAssembly extends ActiveRecord
 			't.id',
 			't.parent_assembly_id',
 			't.child_assembly_id',
+			't.comment',
 			"CONCAT_WS('$delimiter',
 				childAssembly.description,
 				childAssembly.alias
@@ -99,6 +107,7 @@ class AssemblyToAssembly extends ActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.parent_assembly_id',$this->parent_assembly_id);
+		$criteria->compare('t.comment',$this->comment,true);
 		$this->compositeCriteria($criteria,
 			array(
 			'childAssembly.description',
@@ -119,6 +128,7 @@ class AssemblyToAssembly extends ActiveRecord
 	{
         $columns[] = $this->linkThisColumn('searchChildAssembly');
  		$columns[] = 'quantity';
+ 		$columns[] = 'comment';
 		
 		return $columns;
 	}
@@ -150,4 +160,21 @@ class AssemblyToAssembly extends ActiveRecord
 		return parent::getParentForeignKey($referencesModel, array('Assembly'=>'parent_assembly_id'));
 	}
 	
+	public function scopeStore($store_id)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('store_id', $store_id);
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+
+	public function beforeValidate()
+	{
+		$this->store_id = $this->parentAssembly->store_id;
+		
+		return parent::beforeValidate();
+	}
+
 }

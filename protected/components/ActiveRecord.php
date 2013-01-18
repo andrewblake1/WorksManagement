@@ -127,7 +127,7 @@ abstract class ActiveRecord extends CActiveRecord
 	 * Returns foreign key attribute name within this model that references another model. This is used
 	 * for creating navigational items i.e. tabs.
 	 * @param string $referencesModel the name name of the model that the foreign key references.
-	 * @param string $referencesModel foreign keys array in this model.
+	 * @param string $foreignKeys foreign keys array in this model.
 	 * @return string the foreign key attribute name within this model that references another model
 	 */
 	static function getParentForeignKey($referencesModel, $foreignKeys=array())

@@ -1,4 +1,8 @@
 <?php
+// path calculation from CController::redirect
+$redirectUrl = array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]);
+$route=$redirectUrl[0];
+$redirectUrl = $this->createUrl($route,array_splice($redirectUrl,1));
 
 $form=$this->beginWidget('WMTbActiveForm', array(
 		'id' => 'StandardDrawing-form',
@@ -26,15 +30,17 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 					// if there are no errors then should have received json object with id of inserted row as using ajax validate to actually insert
 					// here because of file upload submit difficulties etc - validation normally on form submit but ajax file upload does special stuff
 					// on submit itself hence hacking to get the desireable functionality of CActiveForms javascript and ajax file upload.
-					if(data.id !== false)
+					if(typeof data.id != "undefined")
 					{
 						// add a hidden field to contain the new standard drawing id - created - cant use id or will think updating
+						// TODO: probaby can use id now??
 						$("<input>").attr({
 							type: "hidden",
 							name: "StandardDrawing[created]",
 							id: "created",
 							value: data.id
 						}).appendTo("form");
+						$("span:contains(\"Create / upload\")").html("Update / upload");
 					}
 					else
 					{
@@ -61,10 +67,12 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 						// allow update without having to upload - this courtesy of plugin author
 						var form = $(\'form\').first();
 						if (!form.find(\'.files .start\').length)
-						{
-							// allow the CActiveform submit to occur
-							return true;
-						}
+						{'.(
+							$model->isNewRecord
+								? 'window.location.href = "'.$redirectUrl.'";'
+								: '// allow the CActiveform submit to occur
+								return true;'
+						).'}
 						else
 						{
 							// submit form via the click function of the upload button
@@ -103,6 +111,21 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 		}) 	
 		</script><?php
 	}
+	// otherwise creating
+	else
+	{
+		$form->hiddenField('id');
+		?><script>
+			// when closing the modal
+			$('#myModal').on('hidden', function ()
+			{
+				// remove id of anything newly created
+				$('#created').remove();
+				// reset the button text
+				$("span:contains(\"Update / upload\")").html("Create / upload");
+			})
+		</script><?php
+	}
 	
 	?><script>
 	$(function () {
@@ -112,12 +135,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 			// allow a redirect to admin view only if there are no upload errors showing
 			if (!$('form .files .error').length)
 			{
-				window.location.href = '<?php
-					// path calculation from CController::redirect
-					$url = array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]);
-					$route=$url[0];
-					echo $this->createUrl($route,array_splice($url,1));
-				?>';
+				window.location.href = '<?php echo $redirectUrl;?>';
 			}
 		})
 	})

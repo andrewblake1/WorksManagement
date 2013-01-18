@@ -288,12 +288,17 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		if(is_array($items))
 		{
 			$index = 0;
+		
 			// carry the important ids for breadcrumbs
-			$get = isset($_GET[$this->modelName]) ? $_GET[$this->modelName] : $_GET;
-			if(is_array($get))
+			$modelName = $this->modelName;
+			if(isset($_GET[$this->modelName]))
 			{
-				$keyValue = each($get);
-				$keyValue = $keyValue['value'];
+				$parentForeignKey = $modelName::getParentForeignKey($this->getParentCrumb($modelName));
+				$keyValue = $_GET[$this->modelName][$parentForeignKey];
+			}
+			elseif(isset($_GET[$modelName::model()->tableSchema->primaryKey]))
+			{
+				$keyValue = $_GET[$modelName::model()->tableSchema->primaryKey];
 			}
 			else
 			{
@@ -365,8 +370,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		{
 			if(isset($_GET[$modelName]))
 			{
-				// store $_GET
-				$_SESSION['actionAdminGet'][$modelName] = $_GET[$modelName];
+				// store $_GET - highest priority is url parameters followed by session
+				$_SESSION['actionAdminGet'][$modelName] = $_GET[$modelName] +
+					(isset($_SESSION['actionAdminGet'][$modelName])
+						? $_SESSION['actionAdminGet'][$modelName]
+						: array());
 			}
 			else
 			{
@@ -383,7 +391,10 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			else
 			{
 				// clear pagination
-				$_GET["{$modelName}_page"] = array();
+				if(isset($_SESSION['actionAdminGet']["{$modelName}_page"]))
+				{
+					unset($_SESSION['actionAdminGet']["{$modelName}_page"]);
+				}
 			}
 
 			// sort
@@ -395,17 +406,22 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			else
 			{
 				// clear sort
-				$_GET[$_GET["{$modelName}_sort"]] = array();
+				if(isset($_SESSION['actionAdminGet']["{$modelName}_sort"]))
+				{
+					unset($_SESSION['actionAdminGet']["{$modelName}_sort"]);
+				}
 			}
 
-			
 			// append to get any past saved get paramters
 			$_GET[$modelName] += isset($_SESSION['actionAdminGet'][$modelName]) ? $_SESSION['actionAdminGet'][$modelName] : array();
 		}
 		elseif(isset($_GET[$modelName]))
 		{
-			// store $_GET
-			$_SESSION['actionAdminGet'][$modelName] = $_GET[$modelName];
+			// store $_GET - highest priority is url parameters followed by session
+			$_SESSION['actionAdminGet'][$modelName] = $_GET[$modelName] +
+				(isset($_SESSION['actionAdminGet'][$modelName])
+					? $_SESSION['actionAdminGet'][$modelName]
+					: array());
 		}
 		else
 		{
@@ -475,7 +491,49 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// set breadcrumbs
 		$this->breadcrumbs = $this->getBreadCrumbTrail();
 
+		if(isset($_GET['clearForwardMemory']))
+		{
+			// clear forward memory i.e. any actionAdminGet models that arn't in current trail
+			$this->clearForwardMemory();
+		}
+		
+		// render the view
 		$this->adminRender($model);
+	}
+
+	/**
+	 * Clear any memory of admin views filters, paging and sorting that arn't in the current breadcrumb trail 
+	 */
+	private function clearForwardMemory()
+	{
+		// this model name
+		$modelName = $this->modelName;
+
+		// models in breadcrumb trail
+		$breadCrumbs = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName);
+
+		// loop thru all saved admin view models
+		if(isset($_SESSION['actionAdminGet'])) 
+		{
+			foreach($_SESSION['actionAdminGet'] as $actionAdminGetModelName => &$params)
+			{
+				// if this is for the _page setting and not actually a model
+				if(substr_compare($actionAdminGetModelName, '_page', -strlen('_page'), strlen('_page')) === 0)
+				{
+					continue;
+				}
+				// otherise if this is for the _sort setting and not actually a model
+				elseif(substr_compare($actionAdminGetModelName, '_sort', -strlen('_page'), strlen('_page')) === 0)
+				{
+					continue;
+				}
+				// otherwise if not in the breadcrumb trail
+				elseif(!in_array($actionAdminGetModelName, $breadCrumbs))
+				{
+					$this->adminReset($actionAdminGetModelName);
+				}
+			}
+		}
 	}
 
 	protected function adminRender($model)
@@ -489,11 +547,39 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	}
 	
 	// reset filtering, paging, and sorting - to be used after successfull creations before returning to admin view
-	public function adminReset()
+	//
+	public function adminReset($modelName = null, $resetParent = true)
 	{
+		if(!$modelName)
+		{
+			$modelName = $this->modelName;
+		}
+		
+		// if we want to retain the foreign key pointing at the parent
+		if(!$resetParent)
+		{
+			$parentForeignKey = $modelName::getParentForeignKey($this->getParentCrumb());
+			$keyValue = $_SESSION['actionAdminGet'][$modelName][$parentForeignKey];
+		}
+
+		if(isset($_SESSION['actionAdminGet']["{$modelName}_page"]))
+		{
 			unset($_SESSION['actionAdminGet']["{$modelName}_page"]);
+		}
+		if(isset($_SESSION['actionAdminGet']["{$modelName}_sort"]))
+		{
 			unset($_SESSION['actionAdminGet']["{$modelName}_sort"]);
+		}
+		if(isset($_SESSION['actionAdminGet'][$modelName]))
+		{
 			unset($_SESSION['actionAdminGet'][$modelName]);
+		}
+
+		// if we want to retain the foreign key pointing at the parent
+		if(!$resetParent)
+		{
+			$_SESSION['actionAdminGet'][$modelName][$parentForeignKey] = $keyValue;
+		}
 	}
 	
 	
@@ -548,7 +634,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		{
 			if(static::checkAccess(self::accessRead))
 			{
-				$breadcrumbs[] = $modelName;
+				$breadcrumbs[] = $modelName::getNiceName();
 			}
 			return $breadcrumbs;
 		}
@@ -594,7 +680,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			else
 			{
 				// add crumb to admin view
-				$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
+				$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters + array('clearForwardMemory'=>1);
 			
 				// if there is a primary key for this
 				if(isset($_SESSION[$crumb]))
@@ -602,7 +688,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					// add an update crumb to this primary key
 					$primaryKey = $_SESSION[$crumb];
 		//			$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", 'id'=>$primaryKey['value']);
-					$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", $primaryKey['name']=>$primaryKey['value']);
+					$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", $primaryKey['name']=>$primaryKey['value'], 'clearForwardMemory'=>1);
 				}
 			}
 		}
@@ -629,7 +715,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	protected function createRedirect($model)
 	{
 		// clear filtering and sorting and paging so can see newly inserted row at the top
-		$this->adminReset();
+		$this->adminReset(null, false);
 		
 		$this->cuRedirect($model);
 	}
@@ -776,7 +862,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			$modelName = $_POST['controller'];
 //			$this->redirect(array("$modelName/admin", $modelName=>array($_SESSION[$modelName]['name']=>$_SESSION[$modelName]['value'])));
 			$this->redirect(array("$modelName/admin", $modelName=>$_SESSION['actionAdminGet'][$modelName]));
-		}
+}
 		elseif(is_array($_SESSION['actionAdminGet'][$this->modelName]))
 		{
 //			$modelName = $this->modelName;
@@ -880,6 +966,13 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// set up tab menu if required - using setter
 		$this->tabs = $model;
 
+		if(isset($_GET['clearForwardMemory']))
+		{
+			// clear forward memory i.e. any actionAdminGet models that arn't in current trail
+			$this->clearForwardMemory();
+		}
+
+		// render the widget
 		$this->widget('UpdateViewWidget', array(
 			'model'=>$model,
 			'models'=>$models,

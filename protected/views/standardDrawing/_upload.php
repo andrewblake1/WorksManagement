@@ -17,7 +17,7 @@
 		</button>
 		<button type="submit" class="btn btn-primary">
 			<i class="icon-upload icon-white"></i>
-			<span>Start upload</span>
+			<span>Create / upload</span>
 		</button>
 		<button type="reset" class="btn btn-warning cancel">
 			<i class="icon-ban-circle icon-white"></i>

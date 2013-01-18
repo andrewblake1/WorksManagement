@@ -98,6 +98,8 @@ class StandardDrawingController extends Controller
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * This differs from parent in that the submit actually done inside the validate - submit should now never occur as aftervalidate will jquery
+	 * will return false after finished processing - allowing jquery file upload's submit to upload files if required.
 	 */
 	public function actionCreate($modalId = 'myModal', &$model = null)
 	{
@@ -117,6 +119,12 @@ class StandardDrawingController extends Controller
 			}
 
 			$model->attributes=$_POST[$this->modelName];
+
+			// if an error occurrs in file upload after ajax validation has already created the standard drawing record then we really wan't actionUpdate
+			if(isset($_POST[$this->modelName]['created']))
+			{
+				$this->actionUpdate($_POST[$this->modelName]['created']);
+			}
 
 			// start a transaction
 			$transaction = Yii::app()->db->beginTransaction();

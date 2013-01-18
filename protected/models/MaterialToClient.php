@@ -91,6 +91,7 @@ class MaterialToClient extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			'material.description AS searchMaterial',
+			't.material_id',
 			't.unit_price',
 			"CONCAT_WS('$delimiter',
 				t.alias,
@@ -101,8 +102,8 @@ class MaterialToClient extends ActiveRecord
 
 		$this->compositeCriteria($criteria,
 			array(
-			't.alias',
-			'material.alias',
+				't.alias',
+				'material.alias',
 			),
 			$this->searchAlias
 		);

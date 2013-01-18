@@ -80,6 +80,7 @@ class AdminViewWidget extends CWidget
 			'dataProvider'=>$this->model->search(),
 			'filter'=>$this->model,
 			'columns'=>$this->columns,
+//			'ajaxUrl'=>Yii::app()->request->requestUri,
 		));
 
 		// as using boostrap modal for create the html for the modal needs to be on
