@@ -118,7 +118,8 @@ class MaterialToClient extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
+ //       $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
+		$columns[] = $this->linkThisColumn('searchMaterial');
         $columns[] = 'searchAlias';
 		$columns[] = 'unit_price';
 

@@ -2,22 +2,11 @@
 
 class AuthItemController extends Controller
 {
-/*
-	public function actionAutocomplete()
+	// this needed to get around primary key not being named id and reflection causing id to be required parameter for actionUpdate
+	public function actionUpdate($name, $model = null)
 	{
-		// set the scope - parent and child in AuthItemChild only but in general only wanting to show roles
-		if($_GET['attribute'] == 'child')
-		{
-			$scopes = array('rights');
-		}
-		else
-		{
-			$scopes = array('roles');
-		}
-
-		parent::actionAutocomplete($scopes);
+		return parent::actionUpdate($name, $model = null);
 	}
-	*/
 }
 
 ?>

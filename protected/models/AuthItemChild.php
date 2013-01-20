@@ -19,7 +19,7 @@ class AuthItemChild extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Priviledge';
+	static $niceName = 'Privilege';
 	
 	/**
 	 * @return string the associated database table name
@@ -109,6 +109,14 @@ class AuthItemChild extends ActiveRecord
 		return parent::getParentForeignKey($referencesModel, array('AuthItem'=>'parent'));
 	}
 	
+	public static function getDisplayAttr()
+	{
+		return array(
+			'parent',
+			'child',
+		);
+	}
+ 
 }
 
 ?>

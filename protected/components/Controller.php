@@ -289,22 +289,6 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		{
 			$index = 0;
 		
-			// carry the important ids for breadcrumbs
-			$modelName = $this->modelName;
-			if(isset($_GET[$this->modelName]))
-			{
-				$parentForeignKey = $modelName::getParentForeignKey($this->getParentCrumb($modelName));
-				$keyValue = $_GET[$this->modelName][$parentForeignKey];
-			}
-			elseif(isset($_GET[$modelName::model()->tableSchema->primaryKey]))
-			{
-				$keyValue = $_GET[$modelName::model()->tableSchema->primaryKey];
-			}
-			else
-			{
-				$keyValue = null;
-			}
-
 			foreach($items as $key => &$value)
 			{
 				// get the model name of this item
@@ -323,20 +307,43 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					$this->_tabs[$index]['active'] = true;
 				}
 				
-				// if first item
+				// if first item in tabs
 				if(!$index)
 				{
 					// store this (first tabs model name)
 					$firstTabModelName = $modelName;
+//					$firstTabPrimaryKeyName = $modelName::model()->tableSchema->primaryKey;
+/*					if(isset($_GET[$firstTabModelName]))
+					{
+						if($parentForeignKey = $modelName::getParentForeignKey($this->getParentCrumb($modelName)))
+						{
+							$keyValue = $_GET[$firstTabModelName][$parentForeignKey];
+						}
+						else
+						{
+							$keyValue = null;
+						}
+					}
+					elseif(isset($_GET[$firstTabPrimaryKeyName]))
+					{
+						$keyValue = $_GET[$firstTabPrimaryKeyName];
+					}
+					else
+					{
+						$keyValue = null;
+					}*/
+					$firstTabPrimaryKeyName = $_SESSION[$firstTabModelName]['name'];
+					$keyValue = $_SESSION[$firstTabModelName]['value'];
 					
+
 					// if nextlevel is true then action should always be update, but also should be update if current model is this model
 					// and not next level
 
 					// create controler/action
-					if($keyValue && (!$nextLevel || ($modelName == $this->modelName)))
+					if($keyValue && (!$nextLevel || ($firstTabModelName == $this->modelName)))
 					{
 						$this->_tabs[$index]['label'] = $modelName::getNiceName($keyValue);
-						$this->_tabs[$index]['url'] = array("$modelName/update", 'id'=>$keyValue);
+						$this->_tabs[$index]['url'] = array("$modelName/update", $firstTabPrimaryKeyName=>$keyValue);
 						$index++;
 						continue;
 					}
@@ -491,11 +498,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// set breadcrumbs
 		$this->breadcrumbs = $this->getBreadCrumbTrail();
 
-		if(isset($_GET['clearForwardMemory']))
-		{
+//		if(isset($_GET['clearForwardMemory']))
+//		{
 			// clear forward memory i.e. any actionAdminGet models that arn't in current trail
-			$this->clearForwardMemory();
-		}
+//			$this->clearForwardMemory();
+//		}
 		
 		// render the view
 		$this->adminRender($model);
@@ -538,9 +545,12 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 
 	protected function adminRender($model)
 	{
-		// set up tab menu if required - using setter
-		$this->setTabs($model, false);
-
+		if(!isset($_GET['ajax']))
+		{
+			// set up tab menu if required - using setter
+			$this->setTabs($model, false);
+		}
+		
 		$this->render(lcfirst($this->_adminView), array(
 			'model'=>$model,
 		));
@@ -680,7 +690,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			else
 			{
 				// add crumb to admin view
-				$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters + array('clearForwardMemory'=>1);
+				$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters/* + array('clearForwardMemory'=>1)*/;
 			
 				// if there is a primary key for this
 				if(isset($_SESSION[$crumb]))
@@ -688,10 +698,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					// add an update crumb to this primary key
 					$primaryKey = $_SESSION[$crumb];
 		//			$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", 'id'=>$primaryKey['value']);
-					$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", $primaryKey['name']=>$primaryKey['value'], 'clearForwardMemory'=>1);
+					$breadcrumbs[$crumb::getNiceName($primaryKey['value'])] = array("$crumb/update", $primaryKey['name']=>$primaryKey['value']/*, 'clearForwardMemory'=>1*/);
 				}
 			}
 		}
+		$this->clearForwardMemory();
 
 		return $breadcrumbs;
 	}
@@ -860,9 +871,14 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		if(!empty($_POST['controller']))
 		{
 			$modelName = $_POST['controller'];
-//			$this->redirect(array("$modelName/admin", $modelName=>array($_SESSION[$modelName]['name']=>$_SESSION[$modelName]['value'])));
-			$this->redirect(array("$modelName/admin", $modelName=>$_SESSION['actionAdminGet'][$modelName]));
-}
+//			$this->redirect(array("$modelName/admin", $modelName=>$_SESSION['actionAdminGet'][$modelName]));
+			$params = array("$modelName/admin");
+			if(isset($_SESSION['actionAdminGet'][$modelName]))
+			{
+				$params[$modelName] = $_SESSION['actionAdminGet'][$modelName];
+			}
+			$this->redirect($params);
+		}
 		elseif(is_array($_SESSION['actionAdminGet'][$this->modelName]))
 		{
 //			$modelName = $this->modelName;
@@ -966,11 +982,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// set up tab menu if required - using setter
 		$this->tabs = $model;
 
-		if(isset($_GET['clearForwardMemory']))
-		{
+//		if(isset($_GET['clearForwardMemory']))
+//		{
 			// clear forward memory i.e. any actionAdminGet models that arn't in current trail
-			$this->clearForwardMemory();
-		}
+//			$this->clearForwardMemory();
+//		}
 
 		// render the widget
 		$this->widget('UpdateViewWidget', array(

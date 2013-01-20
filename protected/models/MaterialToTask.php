@@ -115,7 +115,8 @@ class MaterialToTask extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
+ //       $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
+		$columns[] = $this->linkThisColumn('searchMaterial');
 		$columns[] = 'quantity';
 		
 		return $columns;

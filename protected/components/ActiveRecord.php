@@ -437,10 +437,7 @@ $t = $this->attributes;
 	 */
 	static function linkColumn($name, $modelName, $foreignKey)
 	{
-//		if($referencesPk === null)
-//		{
-//			$referencesPk = $modelName::model()->tableSchema->primaryKey;
-//		}
+		$referencesPk = $modelName::model()->tableSchema->primaryKey;
 
 		// if the user has at least read access
 		$controllerName = "{$modelName}Controller";
@@ -452,7 +449,7 @@ $t = $this->attributes;
 			return array(
 				'name'=>$name,
 				'value'=>'CHtml::link($data->'.$name.',
-					Yii::app()->createUrl("'.$modelName.'/update", array("id"=>$data->'.$foreignKey.'))
+					Yii::app()->createUrl("'.$modelName.'/update", array("'.$referencesPk.'"=>$data->'.$foreignKey.'))
 				)',
 				'type'=>'raw',
 			);
