@@ -40,21 +40,25 @@ class AdminViewWidget extends CWidget
 		// add the buttons - first determine if there are any!
 //		if($this->_controller->checkAccess(Controller::accessRead))
 //		{
+//		// primary key name
+//		$primaryKeyName = $this->model->tableSchema->primaryKey;
+//		
 		// show buttons on row by row basis i.e. do access check on context
 			$this->columns[]=array(
 				'class'=>'WMTbButtonColumn',
                 'buttons'=>array(
 					'delete' => array(
-							'visible'=>'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
+						'visible'=>'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
+						'url'=>'Yii::app()->createUrl("'.$this->_controller->modelName.'/delete", array("'.$this->model->tableSchema->primaryKey.'"=>$data->primaryKey))',
 					),
 					'update' => array(
-							'visible'=>'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
+						'visible'=>'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
 					),
 					'view' => array(
-							'visible'=>'
-								!Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))
-								&& Yii::app()->user->checkAccess(get_class($data)."Read")
-							',
+						'visible'=>'
+							!Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))
+							&& Yii::app()->user->checkAccess(get_class($data)."Read")
+						',
 					),
 				),
 			);

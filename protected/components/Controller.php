@@ -332,11 +332,18 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					{
 						$keyValue = null;
 					}*/
-					$firstTabPrimaryKeyName = $_SESSION[$firstTabModelName]['name'];
-					$keyValue = $_SESSION[$firstTabModelName]['value'];
+					if(isset($_SESSION[$firstTabModelName]))
+					{
+						$firstTabPrimaryKeyName = $_SESSION[$firstTabModelName]['name'];
+						$keyValue = $_SESSION[$firstTabModelName]['value'];
+					}
+					else
+					{
+						$firstTabPrimaryKeyName = $keyValue = null;
+					}
 					
 
-					// if nextlevel is true then action should always be update, but also should be update if current model is this model
+/*					// if nextlevel is true then action should always be update, but also should be update if current model is this model
 					// and not next level
 
 					// create controler/action
@@ -346,7 +353,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 						$this->_tabs[$index]['url'] = array("$modelName/update", $firstTabPrimaryKeyName=>$keyValue);
 						$index++;
 						continue;
-					}
+					}*/
 				}
 				
 				// add relevant url parameters i.e. foreign key to first tab model
@@ -568,8 +575,10 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// if we want to retain the foreign key pointing at the parent
 		if(!$resetParent)
 		{
-			$parentForeignKey = $modelName::getParentForeignKey($this->getParentCrumb());
-			$keyValue = $_SESSION['actionAdminGet'][$modelName][$parentForeignKey];
+			if($parentForeignKey = $modelName::getParentForeignKey($this->getParentCrumb()))
+			{
+				$keyValue = $_SESSION['actionAdminGet'][$modelName][$parentForeignKey];
+			}
 		}
 
 		if(isset($_SESSION['actionAdminGet']["{$modelName}_page"]))
@@ -586,7 +595,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		}
 
 		// if we want to retain the foreign key pointing at the parent
-		if(!$resetParent)
+		if(isset($keyValue))
 		{
 			$_SESSION['actionAdminGet'][$modelName][$parentForeignKey] = $keyValue;
 		}

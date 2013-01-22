@@ -126,7 +126,8 @@ class AssemblyToAssembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = $this->linkThisColumn('searchChildAssembly');
+        $columns[] = static::linkColumn('searchChildAssembly', 'Assembly', 'child_assembly_id');
+//        $columns[] = $this->linkThisColumn('searchChildAssembly');
  		$columns[] = 'quantity';
  		$columns[] = 'comment';
 		

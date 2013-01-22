@@ -89,6 +89,7 @@ class AssemblyToStandardDrawing extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
+			't.standard_drawing_id',
 			'standardDrawing.description AS searchStandardDrawing',
 		);
 
@@ -103,8 +104,8 @@ class AssemblyToStandardDrawing extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//        $columns[] = static::linkColumn('searchStandardDrawing', 'StandardDrawing', 'standard_drawing_id');
-		$columns[] = $this->linkThisColumn('searchStandardDrawing');
+        $columns[] = static::linkColumn('searchStandardDrawing', 'StandardDrawing', 'standard_drawing_id');
+//		$columns[] = $this->linkThisColumn('searchStandardDrawing');
 		
 		return $columns;
 	}

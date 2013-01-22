@@ -37,7 +37,7 @@ class AuthItem extends ActiveRecord
     {
 		return array(
 			'roles'=>array('condition'=>'t.type=' . self::typeRole),
-			'rights'=>array('condition'=>'t.type=' . self::typeRight),
+			'rights'=>array('condition'=>'t.type <= ' . self::typeRight),
 			'tasks'=>array('condition'=>'t.type=' . self::typeTask),
 		);
     }

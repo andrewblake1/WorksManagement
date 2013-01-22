@@ -33,10 +33,16 @@ class StandardDrawingController extends Controller
 	public function accessRules()
 	{
 		$accessRules = parent::accessRules();
-		array_unshift($accessRules, array('allow',
-			'actions' => array('upload', 'getExisting'),
-			'roles' => array($this->modelName),
-		));
+			array_unshift($accessRules,
+				array('allow',
+					'actions' => array('upload'),
+					'roles' => array($this->modelName),
+				),
+				array('allow',
+					'actions' => array('getExisting'),
+					'roles' => array("{$this->modelName}Read"),
+				)
+			);
 
 		return $accessRules;
 	}

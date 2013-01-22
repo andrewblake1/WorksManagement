@@ -141,6 +141,16 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	})
 	</script><?php
 
+	if($this->checkAccess(Controller::accessWrite))
+	{
+		$formView = $model->isNewRecord ? 'application.views.standardDrawing._upload' : 'application.views.standardDrawing._uploadUpdate';
+		$uploadView = 'application.views.standardDrawing._template_upload';
+	}
+	else
+	{
+		$formView = 'application.views.standardDrawing._formViewRead';
+		$uploadView = 'application.views.standardDrawing._uploadViewRead';
+	}
 
     Yii::import( "xupload.models.XUploadForm" );
 	$this->widget('xupload.XUpload', array(
@@ -152,9 +162,8 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 //		'options' => array(
 //			'singleFileUploads' => false,
 //		),
-		'formView' => $model->isNewRecord ? 'application.views.standardDrawing._upload' : 'application.views.standardDrawing._uploadUpdate',
-		'uploadView' => 'application.views.standardDrawing.template_upload',
-
+		'formView' => $formView,
+		'uploadView' => $uploadView,
 	));
 		
 $this->endWidget();

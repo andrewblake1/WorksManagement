@@ -443,13 +443,15 @@ $t = $this->attributes;
 		$controllerName = "{$modelName}Controller";
 		if($controllerName::checkAccess(Controller::accessRead))
 		{
+			// update or view
+			$access = $controllerName::checkAccess(Controller::accessWrite) ? 'update' : 'view';
 			// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
 			// even though this confusing here
 			// create a link
 			return array(
 				'name'=>$name,
 				'value'=>'CHtml::link($data->'.$name.',
-					Yii::app()->createUrl("'.$modelName.'/update", array("'.$referencesPk.'"=>$data->'.$foreignKey.'))
+					Yii::app()->createUrl("'."$modelName/$access".'", array("'.$referencesPk.'"=>$data->'.$foreignKey.'))
 				)',
 				'type'=>'raw',
 			);
