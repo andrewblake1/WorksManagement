@@ -141,15 +141,16 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	})
 	</script><?php
 
+	$uploadView = 'application.views.standardDrawing._uploadView';
 	if($this->checkAccess(Controller::accessWrite))
 	{
 		$formView = $model->isNewRecord ? 'application.views.standardDrawing._upload' : 'application.views.standardDrawing._uploadUpdate';
-		$uploadView = 'application.views.standardDrawing._template_upload';
+		$downloadView = 'download';
 	}
 	else
 	{
 		$formView = 'application.views.standardDrawing._formViewRead';
-		$uploadView = 'application.views.standardDrawing._uploadViewRead';
+		$downloadView = 'application.views.standardDrawing._downloadViewRead';
 	}
 
     Yii::import( "xupload.models.XUploadForm" );
@@ -164,6 +165,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 //		),
 		'formView' => $formView,
 		'uploadView' => $uploadView,
+		'downloadView' => $downloadView,
 	));
 		
 $this->endWidget();
