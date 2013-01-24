@@ -101,6 +101,15 @@ class ProjectType extends ActiveRecord
 		return $columns;
 	}
 
+	public function scopeClient($client_id)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('client_id', $client_id);
+
+		$this->getDbCriteria()->mergeWith($criteria);
+	
+		return $this;
+	}
 }
 
 ?>

@@ -378,6 +378,12 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 
 		$modelName = $this->modelName;
 
+		// clear the primary key set by update
+		if(isset($_SESSION[$modelName]))
+		{
+			unset($_SESSION[$modelName]);
+		}
+		
 		// NB: query string is stripped from ajaxUrl hence this hack, but also used
 		// in building breadcrumbs
 		if(isset($_GET['ajax']))
@@ -549,19 +555,6 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			}
 		}
 	}
-
-	protected function adminRender($model)
-	{
-		if(!isset($_GET['ajax']))
-		{
-			// set up tab menu if required - using setter
-			$this->setTabs($model, false);
-		}
-		
-		$this->render(lcfirst($this->_adminView), array(
-			'model'=>$model,
-		));
-	}
 	
 	// reset filtering, paging, and sorting - to be used after successfull creations before returning to admin view
 	//
@@ -600,7 +593,19 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			$_SESSION['actionAdminGet'][$modelName][$parentForeignKey] = $keyValue;
 		}
 	}
-	
+
+	protected function adminRender($model)
+	{
+		if(!isset($_GET['ajax']))
+		{
+			// set up tab menu if required - using setter
+			$this->setTabs($model, false);
+		}
+		
+		$this->render(lcfirst($this->_adminView), array(
+			'model'=>$model,
+		));
+	}	
 	
 	/**
 	 * Determine if a particular primary key exists in the breadcrumb trail - in any model.
@@ -667,8 +672,20 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				continue;
 			}
 
-			// see if any query paramters
-			$queryParamters = !empty($_SESSION['actionAdminGet'][$crumb]) ? array($crumb=>$_SESSION['actionAdminGet'][$crumb]) : array();
+			// the only query parameter we want to allow is the foreign key to the parent
+			$queryParamters = array();
+			if($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = $this->getParentCrumb()))
+			{
+				// if set in actionadminget
+				if(isset($_SESSION['actionAdminGet'][$modelName][$parentForeignKey]))
+				{
+					$queryParamters[$parentForeignKey] = $_SESSION['actionAdminGet'][$modelName][$parentForeignKey];
+				}
+				elseif(isset($_SESSION[$parentCrumb]))
+				{
+					$queryParamters[$parentForeignKey] = $_SESSION[$parentCrumb]['value'];
+				}
+			}
 
 			$display = $crumb::getNiceName();
 			$displays = $crumb::getNiceNamePlural();
@@ -1222,7 +1239,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				'model'=>$model,
 				'form'=>$form,
 				'attribute'=>$fkField,
-				'htmlOptions'=>$htmlOptions,
+				'htmlOptions'=>$htmlOptions + array ('class'=>'span5'),
 				'scopes'=>$scopes,
 				'fKModelType'=>$fKModelType,
 //				'relName'=>$relName,

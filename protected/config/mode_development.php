@@ -53,7 +53,7 @@ return array(
 
 			// Database
 			'db'=>array(
-				'connectionString' => 'mysql:host=localhost;dbname=worksmanagement_dev',
+				'connectionString' => 'mysql:host=localhost;dbname=worksmanagement_melbourne_test',
 				'emulatePrepare' => true,
 				'username' => 'root',
 				'password' => 'root',

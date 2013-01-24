@@ -7,10 +7,12 @@
  * @property string $id
  * @property integer $material_id
  * @property string $task_id
+ * @property string $task_to_assembly_id
  * @property integer $quantity
  * @property integer $staff_id
  *
  * The followings are the available model relations:
+ * @property TaskToAssembly $taskToAssembly
  * @property Material $material
  * @property Task $task
  * @property Staff $staff
@@ -22,7 +24,7 @@ class MaterialToTask extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchMaterial;
-	public $searchTask;
+	public $searchAssembly;
 
 	public $store_id;
 
@@ -49,10 +51,10 @@ class MaterialToTask extends ActiveRecord
 		return array(
 			array('store_id, material_id, task_id, quantity, staff_id', 'required'),
 			array('store_id, material_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
-			array('task_id', 'length', 'max'=>10),
+			array('task_id, task_to_assembly_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchMaterial, searchTask, quantity, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, task_to_assembly_id, searchMaterial, searchAssembly, quantity, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,6 +66,7 @@ class MaterialToTask extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
 			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
@@ -79,9 +82,11 @@ class MaterialToTask extends ActiveRecord
 			'id' => 'Material to task',
 			'material_id' => 'Material',
 			'searchMaterial' => 'Material',
+			'searchAssembly' => 'Assembly',
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
 			'quantity' => 'Quantity',
+			'task_to_assembly_id' => 'Assembly',
 		));
 	}
 
@@ -98,16 +103,19 @@ class MaterialToTask extends ActiveRecord
 			't.material_id',
 			'material.description AS searchMaterial',
 			't.quantity',
+			'assembly.description AS searchAssembly',
 		);
 		
 		// where
 		$criteria->compare('material.description',$this->searchMaterial,true);
+		$criteria->compare('assembly.description',$this->searchAssembly,true);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.task_id',$this->task_id);
 
 		// join
 		$criteria->with = array(
 			'material',
+			'taskToAssembly->assembly',
 		);
 
 		return $criteria;
@@ -118,6 +126,7 @@ class MaterialToTask extends ActiveRecord
  //       $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
 		$columns[] = $this->linkThisColumn('searchMaterial');
 		$columns[] = 'quantity';
+		$columns[] = static::linkColumn('searchAssembly', 'Assembly', 'taskToAssembly->assembly_id');
 		
 		return $columns;
 	}
