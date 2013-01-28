@@ -135,7 +135,5 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 			echo CHtml::closeTag('ul') . "\n";
 		}
 	}
-
-	
 	
 }

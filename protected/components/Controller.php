@@ -343,7 +343,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					}
 					
 
-/*					// if nextlevel is true then action should always be update, but also should be update if current model is this model
+					// if nextlevel is true then action should always be update, but also should be update if current model is this model
 					// and not next level
 
 					// create controler/action
@@ -353,7 +353,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 						$this->_tabs[$index]['url'] = array("$modelName/update", $firstTabPrimaryKeyName=>$keyValue);
 						$index++;
 						continue;
-					}*/
+					}
 				}
 				
 				// add relevant url parameters i.e. foreign key to first tab model
@@ -362,12 +362,19 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					: array($modelName => array($modelName::getParentForeignKey($firstTabModelName) => $keyValue));
 				
 				$this->_tabs[$index]['label'] = $modelName::getNiceNamePlural();
-				$this->_tabs[$index]['url'] =  array("$modelName/admin") + $urlParams;
+				$this->_tabs[$index]['url'] = array("$modelName/admin") + $urlParams;
 				$index++;
 			}
 		}
 	}
 
+	public function addTab($label, $url)
+	{
+		$index = sizeof($this->_tabs);
+		$this->_tabs[$index]['label'] = $label;
+		$this->_tabs[$index]['url'] = $url;
+	}
+		
 	/**
 	 * Manages all models.
 	 */
@@ -1005,9 +1012,9 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		// set breadcrumbs
 		$this->breadcrumbs = $this->getBreadCrumbTrail('Update');
 		
-		// set up tab menu if required - using setter
-		$this->tabs = $model;
-
+		// set tabs
+		$this->setUpdateTabs($model);
+		
 //		if(isset($_GET['clearForwardMemory']))
 //		{
 			// clear forward memory i.e. any actionAdminGet models that arn't in current trail
@@ -1021,6 +1028,12 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			'parent_fk'=>$parent_fk,
 		));
 
+	}
+	
+	public function setUpdateTabs($model)
+	{
+		// set up tab menu if required - using setter
+		$this->tabs = $model;
 	}
 
 	protected function actionGetHtmlId($model,$attribute)

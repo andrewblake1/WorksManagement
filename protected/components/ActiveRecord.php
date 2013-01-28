@@ -418,11 +418,15 @@ $t = $this->attributes;
 	{
 		// array union plus means duplicated members in the right hand array don't overwrite the left
 		return ActiveRecord::$labelOverrides + $attributeLabels + array(
+			'id' => static::getNiceName(),
 			'naturalKey' => $attributeLabels[$this->tableSchema->primaryKey],
 			'searchStaff' => 'Staff, First/Last/Email',
 			'staff_id' => 'Staff, First/Last/Email',
 			'description' => 'Description',
 			'deleted' => 'Deleted',
+			'parent_id' => static::getNiceName(),
+			'alias' => 'Alias',
+			'quantity' => 'Quantity',
 		);
 	}
 
@@ -453,6 +457,43 @@ $t = $this->attributes;
 				'value'=>'CHtml::link($data->'.$name.',
 					Yii::app()->createUrl("'."$modelName/$access".'", array("'.$referencesPk.'"=>$data->'.$foreignKey.'))
 				)',
+				'type'=>'raw',
+			);
+		}
+		else
+		{
+			// create text
+			return $name;
+		}
+	}
+	
+	/**
+	 * Creates a field for CGridView
+	 * NB: ensure that $foreingKey is included in the select in getSearchCriteria
+	 * @param type $name
+	 * @param type $modelName
+	 * @param type $foreignKey
+	 * @param type $referencesPk
+	 * @return mixed 
+	 */
+	public function linkColumnAdjacencyList($name, $primaryKeyName = 'id', $parentAttrib = 'parent_id')
+	{
+		$modelName = get_class($this);
+
+		// if the user has at least read access
+		$controllerName = "{$modelName}Controller";
+		if($controllerName::checkAccess(Controller::accessRead))
+		{
+			// update or view
+			$access = $controllerName::checkAccess(Controller::accessWrite) ? 'update' : 'view';
+			// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
+			// even though this confusing here
+			// create a link
+			return array(
+				'name'=>$name,
+				'value'=>$modelName.'::model()->findByAttributes(array("'.$parentAttrib.'" => $data->'.$primaryKeyName.')) !== null
+					? CHtml::link($data->'.$name.', Yii::app()->createUrl("'."$modelName/admin".'", array("'.$modelName.'" => array("'.$parentAttrib.'"=>$data->'.$primaryKeyName.'))))
+					: $data->'.$name,
 				'type'=>'raw',
 			);
 		}

@@ -40,7 +40,16 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	}
 	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array(), array('scopeStore'=>array($model->store_id)));
 
-	$form->textFieldRow('quantity');
+	if($model->isNewRecord)
+	{
+		$form->textFieldRow('quantity');
+	}
+	else
+	{
+		// dummy as compulsary when new but not required when updating
+		$model->quantity = 1;
+		$form->hiddenField('quantity');
+	}
 
 $this->endWidget();
 

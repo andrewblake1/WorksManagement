@@ -40,7 +40,7 @@ class TaskController extends GenericExtensionController
 				// attempt creation of resources
 				$saved &= $this->createResources($model, $models);
 				// attempt creation of assemblies
-				$saved &= $this->createAssemblys($model, $models);
+				$saved &= $this->createAssemblies($model, $models);
 				// attempt creation of materials
 				$saved &= $this->createMaterials($model, $models);
 				// attempt creation of duties
@@ -104,33 +104,29 @@ class TaskController extends GenericExtensionController
 	}
 
 	/**
-	 * Creates the intial assembly rows for a task
+	 * Append assemblies to task.
 	 * @param CActiveRecord $model the model (task)
 	 * @param array of CActiveRecord models to extract errors from if necassary
 	 * @return returns 0, or null on error of any inserts
 	 */
-	private function createAssemblys($task, &$models=array())
+	private function createAssemblies($task, &$models=array())
 	{
-		// initialise the saved variable to show no errors in case the are no
-		// model generics - otherwise will return null indicating a save error
+		// initialise the saved variable to show no errors
 		$saved = true;
 		
-		// loop thru all generic model types associated to this models model type
+		// loop thru all all assemblies related to the tasks type
 		foreach($task->taskType->taskTypeToAssemblies as $taskTypeToAssembly)
 		{
-			// create a new assemblys
-			$model = new TaskToAssembly();
-			// copy any useful attributes from
-			$model->attributes = $taskTypeToAssembly->attributes;
-			$model->staff_id = null;
-			$model->task_id = $task->id;
-			$saved &= $model->dbCallback('save');
-			$models[] = $model;
+			// add quantity assemblies
+			for($cntr = 0; $cntr < $taskTypeToAssembly->quantity; $cntr++)
+			{
+				$saved = TaskToAssembly::model()->addAssembly($task->id, $taskTypeToAssembly->assembly_id, null, $models);
+			}
 		}
 		
 		return $saved;
-	}
-
+	} 
+	
 	/**
 	 * Creates the intial material rows for a task
 	 * @param CActiveRecord $model the model (task)

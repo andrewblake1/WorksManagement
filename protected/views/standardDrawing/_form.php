@@ -92,7 +92,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->textFieldRow('description');
 	
-	$form->textFieldRow('comment');
+	$form->textFieldRow('alias');
 	
 	// if update
 	if(!$model->isNewRecord)

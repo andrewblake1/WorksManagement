@@ -6,20 +6,20 @@
  * The followings are the available columns in table 'task_to_assembly':
  * @property string $id
  * @property string $task_id
- * @property integer $parent_assembly_id
- * @property integer $staff_id
  * @property integer $assembly_id
+ * @property string $parent_id
+ * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property MaterialToTask[] $materialToTasks
  * @property Task $task
- * @property Assembly $parentAssembly
- * @property Assembly $assembly
  * @property Staff $staff
+ * @property Assembly $assembly
+ * @property TaskToAssembly $parent
+ * @property TaskToAssembly[] $taskToAssemblies
  */
 class TaskToAssembly extends ActiveRecord
 {
-	public $searchTask;
 	public $searchAssembly;
 
 	public $store_id;
@@ -47,11 +47,11 @@ class TaskToAssembly extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('task_id, quantity, assembly_id, staff_id', 'required'),
-			array('parent_assembly_id, staff_id, assembly_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('parent_id, staff_id, assembly_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchTask, searchAssembly, parent_assembly_id, assembly_id, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchAssembly, parent_id, assembly_id, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,9 +65,10 @@ class TaskToAssembly extends ActiveRecord
 		return array(
 			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'task_to_assembly_id'),
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-			'parentAssembly' => array(self::BELONGS_TO, 'Assembly', 'parent_assembly_id'),
-			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
+			'parent' => array(self::BELONGS_TO, 'TaskToAssembly', 'parent_id'),
+			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'parent_id'),
 		);
 	}
 
@@ -77,13 +78,9 @@ class TaskToAssembly extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task to assembly',
 			'task_id' => 'Task',
-			'searchTask' => 'Task',
-			'parent_assembly_id' => 'Assembly',
 			'assembly_id' => 'Assembly',
 			'searchAssembly' => 'Assembly',
-			'quantity' => 'Quantity',
 		));
 	}
 
@@ -97,16 +94,22 @@ class TaskToAssembly extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.assembly_id',
+			't.parent_id',
 			'assembly.description AS searchAssembly',
-//			't.quantity',
 		);
 
 		// where
 		$criteria->compare('assembly.description',$this->searchAssembly,true);
-//		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.task_id',$this->task_id);
-		$criteria->compare('t.assembly_id',$this->assembly_id);
+		if($this->parent_id === null)
+		{
+			$criteria->addCondition('parent_id IS NULL');
+		}
+		else
+		{
+			$criteria->compare('t.parent_id',$this->parent_id);
+		}
 		
 		// join
 		$criteria->with = array(
@@ -118,8 +121,8 @@ class TaskToAssembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchAssembly', 'Assembly', 'assembly_id');
-//		$columns[] = 'quantity';
+		// link to admin displaying children or if no children then just description without link
+        $columns[] = $this->linkColumnAdjacencyList('searchAssembly');
 		
 		return $columns;
 	}
@@ -130,7 +133,7 @@ class TaskToAssembly extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTask', 'searchAssembly');
+		return array('searchAssembly');
 	}
 	
 	static function getDisplayAttr()

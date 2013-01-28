@@ -101,21 +101,24 @@ class MaterialToTask extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.material_id',
+			't.task_to_assembly_id',
 			'material.description AS searchMaterial',
 			't.quantity',
+			'task_to_assembly_id',
 			'assembly.description AS searchAssembly',
 		);
 		
 		// where
 		$criteria->compare('material.description',$this->searchMaterial,true);
 		$criteria->compare('assembly.description',$this->searchAssembly,true);
+		$criteria->compare('t.task_to_assembly_id',$this->task_to_assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.task_id',$this->task_id);
 
 		// join
 		$criteria->with = array(
 			'material',
-			'taskToAssembly->assembly',
+			'taskToAssembly.assembly',
 		);
 
 		return $criteria;
@@ -126,7 +129,7 @@ class MaterialToTask extends ActiveRecord
  //       $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
 		$columns[] = $this->linkThisColumn('searchMaterial');
 		$columns[] = 'quantity';
-		$columns[] = static::linkColumn('searchAssembly', 'Assembly', 'taskToAssembly->assembly_id');
+		$columns[] = static::linkColumn('searchAssembly', 'Assembly', 'task_to_assembly_id');
 		
 		return $columns;
 	}
@@ -137,7 +140,10 @@ class MaterialToTask extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchMaterial');
+		return array(
+			'searchMaterial',
+			'searchAssembly',
+		);
 	}
 	
 	static function getDisplayAttr()
