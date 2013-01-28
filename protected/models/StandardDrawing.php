@@ -115,7 +115,7 @@ class StandardDrawing extends ActiveRecord
 	public function getAdminColumns()
 	{
  		// link to admin displaying children or if no children then just description without link
-        $columns[] = $this->linkColumnAdjacencyList('description');
+        $this->linkColumnAdjacencyList('description', $columns = array());
 		$columns[] = 'alias';
 		
 		return $columns;

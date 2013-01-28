@@ -106,26 +106,26 @@ class SupplierContact extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('first_name',$this->first_name,true);
-		$criteria->compare('last_name',$this->last_name,true);
-		$criteria->compare('role',$this->role,true);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('phone_mobile',$this->phone_mobile,true);
-		$criteria->compare('phone_home',$this->phone_home,true);
-		$criteria->compare('phone_work',$this->phone_work,true);
-		$criteria->compare('phone_fax',$this->phone_fax,true);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.first_name',$this->first_name,true);
+		$criteria->compare('t.last_name',$this->last_name,true);
+		$criteria->compare('t.role',$this->role,true);
+		$criteria->compare('t.email',$this->email,true);
+		$criteria->compare('t.phone_mobile',$this->phone_mobile,true);
+		$criteria->compare('t.phone_home',$this->phone_home,true);
+		$criteria->compare('t.phone_work',$this->phone_work,true);
+		$criteria->compare('t.phone_fax',$this->phone_fax,true);
 
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'first_name',
-			'last_name',
-			'role',
-			'email',
-			'phone_mobile',
-			'phone_home',
-			'phone_work',
-			'phone_fax',
+			't.first_name',
+			't.last_name',
+			't.role',
+			't.email',
+			't.phone_mobile',
+			't.phone_home',
+			't.phone_work',
+			't.phone_fax',
 		);
 
 		return $criteria;

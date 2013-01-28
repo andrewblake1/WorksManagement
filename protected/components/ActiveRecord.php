@@ -275,7 +275,7 @@ abstract class ActiveRecord extends CActiveRecord
 			'AttributesBackupBehavior' => 'ext.AttributesBackupBehavior',
 		);
 	}
-	
+//TODO: this breaking mvc - contains controller code	
 	// ensure that pk's exist for all in trail
 	public function assertFromParent()
 	{
@@ -284,6 +284,7 @@ abstract class ActiveRecord extends CActiveRecord
 		
 		// get trail
 		$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName);
+		$this->clearForwardMemory($trail);
 		
 		// if not at top level
 		if(($trailSize = sizeof($trail)) > 1)
@@ -302,18 +303,17 @@ abstract class ActiveRecord extends CActiveRecord
 				$modelName = get_class($model);
 				// get the name of the foreing key field in this model referring to the parent
 				$primaryKeyName = $modelName::getParentForeignKey($crumb);
-				// ensure the primary key is set for this parent crumb
-				$_SESSION[$crumb]['name'] = $crumb::model()->tableSchema->primaryKey;
-				// the if clause here is to exclude when model is for search on admin view and has no pk - then assume session variables already set
+				// the if clause here is to exclude when model is for search on admin view and has no pk - then assume nav variables already set
 				if($model->$primaryKeyName !== null)
 				{
-					$_SESSION[$crumb]['value'] = $model->$primaryKeyName;
+					// store the primary key for the model
+					Controller::$nav['update'][$crumb] = $model->$primaryKeyName;
 					// ensure that that at least the parents primary key is set for the admin view
-//					$_SESSION['actionAdminGet'][$modelName ][$crumb] = $_SESSION[$crumb]['value'];
-					$_SESSION['actionAdminGet'][$modelName ][$primaryKeyName] = $_SESSION[$crumb]['value'];
+					Controller::$nav['admin'][$modelName][$primaryKeyName] = $model->$primaryKeyName;
 				}
+
 				// set the model ready for the next one
-				$model = $crumb::model()->findByPk($_SESSION[$crumb]['value']);
+				$model = $crumb::model()->findByPk($model->$primaryKeyName);
 				
 				// capture the first parent only for returning later
 				if(empty($parentForeignKey))
@@ -326,7 +326,44 @@ abstract class ActiveRecord extends CActiveRecord
 			return $parentForeignKey;
 		}
 	}
-	
+
+//TODO: this breaking mvc - contains controller code	
+	// ensure that pk's exist for all in trail
+	/**
+	 * Clear any memory of admin views filters, paging and sorting that arn't in the current breadcrumb trail 
+	 */
+	private function clearForwardMemory(&$trail)
+	{
+		// loop thru all saved admin view models
+		if(isset($_SESSION['admin'])) 
+		{
+			foreach($_SESSION['admin'] as $model => &$params)
+			{
+				if(!in_array($model, $trail))
+				{
+					$this->adminReset($model);
+				}
+			}
+		}
+	}
+
+//TODO: this breaking mvc - contains controller code	
+	// ensure that pk's exist for all in trail
+	// reset filtering, paging, and sorting - to be used after successfull creations before returning to admin view
+	//
+	public function adminReset($modelName = null)
+	{
+		if(!$modelName)
+		{
+			$modelName = $this->modelName;
+		}
+		
+		if(isset($_SESSION['admin'][$modelName]))
+		{
+			unset($_SESSION['admin'][$modelName]);
+		}
+	}
+
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
@@ -476,12 +513,19 @@ $t = $this->attributes;
 	 * @param type $referencesPk
 	 * @return mixed 
 	 */
-	public function linkColumnAdjacencyList($name, $primaryKeyName = 'id', $parentAttrib = 'parent_id')
+	public function linkColumnAdjacencyList($name, &$columns, $primaryKeyName = 'id', $parentAttrib = 'parent_id')
 	{
 		$modelName = get_class($this);
+		$controllerName = "{$modelName}Controller";
+
+		// add addtional columns for managment of the adjacency list if user has write access
+		if($controllerName::checkAccess(Controller::accessWrite))
+		{
+			$columns[] = $primaryKeyName;
+			$columns[] = $parentAttrib;
+		}
 
 		// if the user has at least read access
-		$controllerName = "{$modelName}Controller";
 		if($controllerName::checkAccess(Controller::accessRead))
 		{
 			// update or view
@@ -489,7 +533,7 @@ $t = $this->attributes;
 			// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
 			// even though this confusing here
 			// create a link
-			return array(
+			$columns[] = array(
 				'name'=>$name,
 				'value'=>$modelName.'::model()->findByAttributes(array("'.$parentAttrib.'" => $data->'.$primaryKeyName.')) !== null
 					? CHtml::link($data->'.$name.', Yii::app()->createUrl("'."$modelName/admin".'", array("'.$modelName.'" => array("'.$parentAttrib.'"=>$data->'.$primaryKeyName.'))))
@@ -500,7 +544,7 @@ $t = $this->attributes;
 		else
 		{
 			// create text
-			return $name;
+			$columns[] = $name;
 		}
 	}
 	
@@ -694,7 +738,8 @@ if(count($m = $this->getErrors()))
 						if(stripos($sql, ':pk') !== false)
 						{
 							// get the primary key in play in this context which will be referring to the parent
-							$pk = $_SESSION[Yii::app()->controller->getParentCrumb($modelName)]['value'];
+							$parentName = Yii::app()->controller->getParentCrumb($modelName);
+							$pk = Controller::$nav['update'][$parentName];
 							if($pk !== null)
 							{
 								$command->bindParam(":pk", $pk, PDO::PARAM_STR);

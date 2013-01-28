@@ -8,6 +8,7 @@
  * @property integer $store_id
  * @property string $description
  * @property string $alias
+ * @property integer $parent_id
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -44,9 +45,9 @@ class Assembly extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('description, store_id, staff_id', 'required'),
-			array('deleted, store_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('parent_id, deleted, store_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
-			array('id, description, store_id, alias, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, store_id, alias, parent_id, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,6 +61,8 @@ class Assembly extends ActiveRecord
 		return array(
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'store' => array(self::BELONGS_TO, 'Store', 'store_id'),
+			'parent' => array(self::BELONGS_TO, 'Assembly', 'parent_id'),
+			'assemblies' => array(self::HAS_MANY, 'Assembly', 'parent_id'),
 			'assemblyToAssemblies' => array(self::HAS_MANY, 'AssemblyToAssembly', 'parent_assembly_id'),
 			'assemblyToAssemblies1' => array(self::HAS_MANY, 'AssemblyToAssembly', 'store_id'),
 			'assemblyToAssemblies2' => array(self::HAS_MANY, 'AssemblyToAssembly', 'child_assembly_id'),
@@ -93,9 +96,18 @@ class Assembly extends ActiveRecord
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.alias',$this->alias,true);
 		$criteria->compare('t.store_id',$this->store_id);
+		if($this->parent_id === null)
+		{
+			$criteria->addCondition('parent_id IS NULL');
+		}
+		else
+		{
+			$criteria->compare('t.parent_id',$this->parent_id);
+		}
 
 		$criteria->select=array(
 			't.id',
+			't.parent_id',
 			't.description',
 			't.alias',
 		);
@@ -106,7 +118,7 @@ class Assembly extends ActiveRecord
 	public function getAdminColumns()
 	{
 		// link to admin displaying children or if no children then just description without link
-        $columns[] = $this->linkColumnAdjacencyList('description');
+        $this->linkColumnAdjacencyList('description', $columns = array());
 		$columns[] = 'alias';
  		
 		return $columns;

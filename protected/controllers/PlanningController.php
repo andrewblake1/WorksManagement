@@ -18,7 +18,7 @@ class PlanningController extends CategoryController
 
 	public function actionFetchTree()
 	{
-		parent::actionFetchTree($_SESSION['actionAdminGet']['Planning']['project_id']);
+		parent::actionFetchTree(Controller::$nav['admin']['Planning']['project_id']);
 	}
 
 	public function actionAddDay()

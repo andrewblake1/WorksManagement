@@ -1,8 +1,8 @@
 <?php
-// ensure session variables set containing path - may have lost filtering/paging etc but can calc breadcrumb trail
+// ensure nav variables set containing path
 $model->assertFromParent();
 // path calculation from CController::redirect
-$redirectUrl = array('admin', $this->modelName=>$_SESSION['actionAdminGet'][$this->modelName]);
+$redirectUrl = array('admin', $this->modelName=>Controller::$nav['admin'][$this->modelName]);
 $route=$redirectUrl[0];
 $redirectUrl = $this->createUrl($route,array_splice($redirectUrl,1));
 

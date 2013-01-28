@@ -247,18 +247,6 @@ class Planning extends CategoryActiveRecord {
 		return parent::beforeSave();
 	}
 
-/*	// ensure that where possible a pk has been passed from parent
-	public function assertFromParent()
-	{
-		// assert from parent won't work as normal from within planning because the parents are all internal in the nested set
-		// however we do need to ensure that project_id, and subsequently that client_id are set
-		$project = Project::model()->findByPk($_SESSION['Planning']['value']);
-		$_SESSION['Client']['name'] = 'id';
-		$_SESSION['Client']['value'] = $project->projectType->client_id;
-		
-		return;
-	}*/	
-	
 }
 
 ?>

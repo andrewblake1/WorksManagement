@@ -323,12 +323,10 @@ class Task extends ActiveRecord
 	{
 // TODO: possibly may not need project_id in task unless circular constraint
 		$crew = Crew::model()->findByPk($this->crew_id);
-//		$this->project_id = $_SESSION['actionAdminGet']['Day']['project_id'];
 		$this->project_id = $crew->day->project_id;
 		
 		return parent::beforeValidate();
 	}
-
 
 	// ensure that where possible a pk has been passed from parent
 	// needed to overwrite this here because project has to look thru project type to get to client when doing update but gets client for admin
