@@ -6,7 +6,7 @@ abstract class ActiveRecord extends CActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchStaff;
-//	public $naturalKey;
+	public $naturalKey;
 	/**
 	 * @var array of labels to override or set at run time
 	 */
@@ -179,20 +179,6 @@ abstract class ActiveRecord extends CActiveRecord
 			$criteria->order[] = "$alias.$attribute ASC";
 			$concat_ws[] = "$alias.$attribute";
 		}
-/*		{
-			// if we are using a foreign key lookup
-			if(!is_numeric($key))
-			{
-				$criteria->with[] = $key;
-				$criteria->order[] = "$key.$field asc";
-				$concat_ws[] = "$key.$field";
-			}
-			else
-			{
-				$criteria->order[] = "$field asc";
-				$concat_ws[] = $field;
-			}
-		}*/
 
 		$criteria->order = implode(', ', $criteria->order);
 
@@ -455,7 +441,7 @@ abstract class ActiveRecord extends CActiveRecord
 		// array union plus means duplicated members in the right hand array don't overwrite the left
 		return ActiveRecord::$labelOverrides + $attributeLabels + array(
 			'id' => static::getNiceName(),
-//			'naturalKey' => $attributeLabels[$this->tableSchema->primaryKey],
+			'naturalKey' => static::getNiceName(),
 			'searchStaff' => 'Staff, First/Last/Email',
 			'staff_id' => 'Staff, First/Last/Email',
 			'description' => 'Description',
@@ -543,7 +529,7 @@ abstract class ActiveRecord extends CActiveRecord
 			$columns[] = array(
 				'name'=>$name,
 				'value'=>$modelName.'::model()->findByAttributes(array("'.$parentAttrib.'" => $data->'.$primaryKeyName.')) !== null
-					? CHtml::link($data->'.$name.', Yii::app()->createUrl("'."$modelName/admin".'", '.$params.' + array("'.$parentAttrib.'"=>$data->'.$primaryKeyName.')))
+					? CHtml::link($data->'.$name.', Yii::app()->createUrl("'."$modelName/admin".'", array("'.$parentAttrib.'"=>$data->'.$primaryKeyName.') + '.$params.'))
 					: $data->'.$name,
 				'type'=>'raw',
 			);

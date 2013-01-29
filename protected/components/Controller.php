@@ -215,12 +215,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 
 	/**
 	 * _tabs property setter. Utilises trail to set tab options.
-	 * @param ActiveRecord $model the model to extract primary key information from to build query string
 	 * @param $nextLevel if true uses next level down in trail array from the models level if false uses the models level
 	 * to extract tab options. Admin and create use models level, update uses next level unless
 	 * the current model is a leaf rather than branch (no further branching) in which case popup form will be used to update
 	 */
-	public function setTabs($model, $nextLevel = true)
+	public function setTabs($nextLevel = true)
 	{
 		// multidimensional array search returns from start of search array to target
 		// need to get the next level items from that point only
@@ -459,7 +458,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 
 		// set breadcrumbs
 		$this->breadcrumbs = $this->getBreadCrumbTrail();
-
+$t = $model->attributes;
 		// render the view
 		$this->adminRender($model);
 	}
@@ -469,7 +468,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		if(!isset($_GET['ajax']))
 		{
 			// set up tab menu if required - using setter
-			$this->setTabs($model, false);
+			$this->setTabs(false);
 		}
 		
 		$this->render(lcfirst($this->_adminView), array(
