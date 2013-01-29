@@ -387,7 +387,6 @@ abstract class ActiveRecord extends CActiveRecord
 
 		// add all other attributes
 		$sort[] = '*';
-$t = $this->attributes;		
 		$dataProvider = new ActiveDataProvider($this, array(
 			'criteria'=>self::getSearchCriteria($this),
 			'sort'=>array('attributes'=>$sort),
@@ -540,10 +539,11 @@ $t = $this->attributes;
 			// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
 			// even though this confusing here
 			// create a link
+			$params = var_export(Controller::$nav['admin'][$modelName], true);
 			$columns[] = array(
 				'name'=>$name,
 				'value'=>$modelName.'::model()->findByAttributes(array("'.$parentAttrib.'" => $data->'.$primaryKeyName.')) !== null
-					? CHtml::link($data->'.$name.', Yii::app()->createUrl("'."$modelName/admin".'", array("'.$modelName.'" => array("'.$parentAttrib.'"=>$data->'.$primaryKeyName.'))))
+					? CHtml::link($data->'.$name.', Yii::app()->createUrl("'."$modelName/admin".'", '.$params.' + array("'.$parentAttrib.'"=>$data->'.$primaryKeyName.')))
 					: $data->'.$name,
 				'type'=>'raw',
 			);

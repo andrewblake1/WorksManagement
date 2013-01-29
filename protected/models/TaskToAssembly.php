@@ -122,7 +122,7 @@ class TaskToAssembly extends ActiveRecord
 	public function getAdminColumns()
 	{
 		// link to admin displaying children or if no children then just description without link
-        $this->linkColumnAdjacencyList('searchAssembly');
+        $this->linkColumnAdjacencyList('searchAssembly', $columns);
 		
 		return $columns;
 	}

@@ -316,11 +316,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 						continue;
 					}
 				}
-				
+
 				// add relevant url parameters i.e. foreign key to first tab model
 				$urlParams = ($keyValue === null)
 					? array()
-					: array($modelName => array($modelName::getParentForeignKey($firstTabModelName) => $keyValue));
+					: array($modelName::getParentForeignKey($firstTabModelName) => $keyValue);
 				
 				$this->_tabs[$index]['label'] = $modelName::getNiceNamePlural();
 				$this->_tabs[$index]['url'] = array("$modelName/admin") + $urlParams;
@@ -476,7 +476,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			'model'=>$model,
 		));
 	}
-	
+
 	public function getParentCrumb($modelName = null)
 	{
 		if(empty($modelName))
@@ -491,6 +491,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			return $trail[1];
 		}
 	}
+
 	/**
 	 * Get the breadcrumb trail for this controller.
 	 * return array bread crumb trail for this controller
@@ -499,7 +500,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	{
 		$breadcrumbs = array();
 		$modelName = $this->modelName;
-	
+
 		// if just gone direct to a screen i.e. our memory/history was cleared
 		if(!isset(Controller::$nav['admin'][$modelName]) && !$lastCrumb)
 		{

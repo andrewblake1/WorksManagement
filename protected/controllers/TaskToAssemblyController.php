@@ -9,12 +9,11 @@ class TaskToAssemblyController extends Controller
 
 		// add tab to standard drawings
 		$this->addTab(AssemblyToStandardDrawing::getNiceNamePlural(), array('AssemblyToStandardDrawing/admin',
-			'AssemblyToStandardDrawing' => array('assembly_id' =>
-				TaskToAssembly::model()->findByPk($_GET['id'])->assembly_id)));
+			'assembly_id' => TaskToAssembly::model()->findByPk($_GET['id'])->assembly_id));
 
-		// add tab to materials
+		// add tab t o materials
 		$this->addTab(Material::getNiceNamePlural(), array('MaterialToTask/admin',
-			'MaterialToTask' => array('task_to_assembly_id' => $_GET['id'])));
+			'task_to_assembly_id' => $_GET['id']));
 	}
 	
 	/*

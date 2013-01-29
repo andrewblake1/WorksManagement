@@ -1,6 +1,7 @@
 <?php
 // ensure nav variables set containing path
 $model->assertFromParent();
+$t = Controller::$nav;
 // path calculation from CController::redirect
 $redirectUrl = array('admin', $this->modelName=>Controller::$nav['admin'][$this->modelName]);
 $route=$redirectUrl[0];

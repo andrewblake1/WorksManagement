@@ -118,7 +118,7 @@ class Assembly extends ActiveRecord
 	public function getAdminColumns()
 	{
 		// link to admin displaying children or if no children then just description without link
-        $this->linkColumnAdjacencyList('description');
+        $this->linkColumnAdjacencyList('description', $columns);
 		$columns[] = 'alias';
  		
 		return $columns;
