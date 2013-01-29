@@ -66,8 +66,6 @@ class AuthItemChild extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Auth item child',
-			'parent' => 'Parent',
 			'child' => 'Priveledge',
 		));
 	}

@@ -75,14 +75,11 @@ class ResourceTypeToSupplier extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
 			'resource_type_id' => 'Resource Type',
 			'supplier_id' => 'Supplier',
 			'searchSupplier' => 'Supplier',
-			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**

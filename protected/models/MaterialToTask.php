@@ -79,13 +79,11 @@ class MaterialToTask extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Material to task',
 			'material_id' => 'Material',
 			'searchMaterial' => 'Material',
 			'searchAssembly' => 'Assembly',
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
-			'quantity' => 'Quantity',
 			'task_to_assembly_id' => 'Assembly',
 		));
 	}

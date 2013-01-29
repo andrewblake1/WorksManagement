@@ -222,7 +222,6 @@ class Generic extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Generic',
 			'type_int' => 'Int',
 			'type_float' => 'Float',
 			'type_time' => 'Time',

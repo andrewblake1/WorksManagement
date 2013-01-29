@@ -82,24 +82,10 @@ class ClientContact extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'Client',
+		return parent::attributeLabels(array(
 			'client_id' => 'Client',
-			'first_name' => 'First name',
-			'last_name' => 'Last name',
 			'role' => 'Role',
-			'email' => 'Email',
-			'address_line1' => 'Address line 1',
-			'address_line2' => 'Address line 2',
-			'post_code' => 'Post code',
-			'town_city' => 'Town/city',
-			'state_province' => 'State/province',
-			'country' => 'Country',
-			'phone_mobile' => 'Phone mobile',
-			'phone_home' => 'Phone home',
-			'phone_work' => 'Phone work',
-			'phone_fax' => 'Phone fax',
-		);
+		));
 	}
 
 	/**

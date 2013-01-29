@@ -71,13 +71,12 @@ class TaskToPurchaseOrder extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'Task to purchase order',
+		return parent::attributeLabels(array(
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
 			'purchase_order_id' => 'Supplier/Purchase order',
 			'searchPurchaseOrder' => 'Purchase order',
-		);
+		));
 	}
 
 	/**

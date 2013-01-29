@@ -80,7 +80,6 @@ class GenericProjectType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Generic project type',
 			'project_type_id' => 'Client/Project type',
 			'searchProjectType' => 'Client/Project type',
 			'genericprojectcategory_id' => 'Project category',

@@ -201,7 +201,6 @@ class GenericType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Custom type',
 			'mandatory' => 'Mandatory',
 			'allow_new' => 'Allow new',
 			'validation_type' => 'Validation type',

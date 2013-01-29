@@ -86,17 +86,14 @@ class ResourceData extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
 			'planning_id' => 'Planning',
 			'level' => 'Level',
 			'resource_type_id' => 'Resource Type',
 			'resource_type_to_supplier_id' => 'Resource Type To Supplier',
-			'quantity' => 'Quantity',
 			'hours' => 'Hours',
 			'start' => 'Start',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**

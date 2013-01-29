@@ -69,14 +69,12 @@ class AssemblyToStandardDrawing extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
 			'assembly_id' => 'Assembly',
-			'standard_drawing_id' => 'Standard Drawing',
-			'searchStandardDrawing' => 'Standard Drawing',
+			'standard_drawing_id' => 'Standard drawing',
+			'searchStandardDrawing' => 'Standard drawing',
 			'store_id' => 'Store',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**

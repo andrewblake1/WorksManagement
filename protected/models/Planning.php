@@ -73,15 +73,6 @@ class Planning extends CategoryActiveRecord {
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels() {
-		return parent::attributeLabels(array(
-			'id' => 'Planning',
-		));
-	}
-
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName() {

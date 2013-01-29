@@ -93,7 +93,6 @@ class TaskType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task Type',
 			'project_type_id' => 'Project type',
 			'unit_price' => 'Unit price',
 		));

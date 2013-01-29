@@ -129,6 +129,12 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 		</script><?php
 	}
 	
+	// parent_id
+	if($this->checkAccess(Controller::accessWrite))
+	{
+		static::listWidgetRow($model, $form, 'parent_id', array(), array('scopeStore'=>array($model->store_id)), 'Parent');
+	}
+	
 	?><script>
 	$(function () {
 		// set call back for when upload process stops

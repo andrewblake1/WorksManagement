@@ -73,15 +73,12 @@ class AssemblyToAssembly extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'Assembly',
+		return parent::attributeLabels(array(
 			'store_id' => 'Store',
-			'parent_assembly_id' => 'Parent Assembly',
+			'parent_assembly_id' => 'Parent assembly',
 			'child_assembly_id' => 'Child assembly',
 			'searchChildAssembly' => 'Child assembly',
-			'comment' => 'Comment',
-			'quantity' => 'Quantity',
-		);
+		));
 	}
 
 	/**

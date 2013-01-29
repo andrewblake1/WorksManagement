@@ -171,11 +171,6 @@ class Staff extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Staff',
-			'first_name' => 'First name',
-			'last_name' => 'Last name',
-			'phone_mobile' => 'Phone mobile',
-			'email' => 'Email',
 			'password' => 'Password',
 		));
 	}

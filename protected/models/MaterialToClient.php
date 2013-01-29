@@ -70,14 +70,13 @@ class MaterialToClient extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'Material',
+		return parent::attributeLabels(array(
 			'unit_price' => 'Unit price',
 			'material_id' => 'Material',
 			'client_id' => 'Client',
 			'alias' => 'Client alias/Material alias',
 			'searchAlias' => 'Client alias/Material alias',
-		);
+		));
 	}
 
 	/**

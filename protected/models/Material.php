@@ -73,9 +73,7 @@ class Material extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Material',
 			'unit' => 'Unit',
-			'alias' => 'Alias',
 			'store_id' => 'Store',
 		));
 	}

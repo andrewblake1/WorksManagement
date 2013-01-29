@@ -64,13 +64,12 @@ class Day extends ActiveRecord
 
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'Day',
+		return parent::attributeLabels(array(
 			'in_charge_id' => 'In charge, First/Last/Email',
 			'searchInCharge' => 'In charge, First/Last/Email',
 			'scheduled' => 'Scheduled',
 			'name' => 'Comment',
-		);
+		));
 	}
 
 	/**

@@ -76,13 +76,10 @@ class TaskTypeToMaterial extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
 			'task_type_id' => 'Task Type',
 			'material_id' => 'Material',
-			'quantity' => 'Quantity',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 

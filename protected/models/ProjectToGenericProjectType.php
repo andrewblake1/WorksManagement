@@ -77,7 +77,6 @@ class ProjectToGenericProjectType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Project to generic project type',
 			'generic_project_type_id' => 'Custom type',
 			'searchGenericProjectType' => 'Custom type',
 			'project_id' => 'Client/Project',

@@ -100,8 +100,6 @@ class AuthAssignment extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Role Assignment',
-//			'naturalKey' => 'User/Role (First/Last/Email/Role)',
 			'itemname' => 'Role',
 			'userid' => 'User, First/Last/Email',
 			'searchUser' => 'User, First/Last/Email',

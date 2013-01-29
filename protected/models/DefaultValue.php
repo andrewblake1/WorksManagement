@@ -63,7 +63,6 @@ class DefaultValue extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Default value',
 			'table' => 'Table',
 			'column' => 'Attribute',
 			'select' => 'Select',

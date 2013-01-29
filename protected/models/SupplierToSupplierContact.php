@@ -87,8 +87,7 @@ class SupplierToSupplierContact extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
 			'supplier_id' => 'Supplier',
 			'supplier_contact_id' => 'Contact',
 			'searchFirst_name' => 'First name',
@@ -98,7 +97,7 @@ class SupplierToSupplierContact extends ActiveRecord
 			'searchPhone_home' => 'Phone home',
 			'searchPhone_work' => 'Phone work',
 			'searchPhone_fax' => 'Phone fax',
-		);
+		));
 	}
 
 	/**

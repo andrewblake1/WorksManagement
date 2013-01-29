@@ -93,14 +93,11 @@ class SubReport extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
-			'description' => 'Description',
+		return parent::attributeLabels(array(
 			'select' => 'Select',
 			'report_id' => 'Report',
 			'format' => 'Format',
-			'staff_id' => 'Staff',
-		);
+		));
 	}
 
 	/**

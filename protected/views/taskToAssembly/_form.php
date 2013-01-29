@@ -50,6 +50,12 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		$model->quantity = 1;
 		$form->hiddenField('quantity');
 	}
+	
+	// parent_id
+	if($this->checkAccess(Controller::accessWrite))
+	{
+		static::listWidgetRow($model, $form, 'parent_id', array(), array(), 'Parent');
+	}
 
 $this->endWidget();
 

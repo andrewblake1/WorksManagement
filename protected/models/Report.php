@@ -67,13 +67,11 @@ class Report extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'Report',
-			'description' => 'Description',
+		return parent::attributeLabels(array(
 			'template_html' => 'Template Html',
 			'context' => 'Context',
 			'sub_report_id' => 'Sub report',
-		);
+		));
 	}
 
 	/**

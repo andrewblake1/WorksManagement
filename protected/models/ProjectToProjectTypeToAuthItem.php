@@ -80,7 +80,6 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'ID',
 			'project_id' => 'Client/Project',
 			'searchProject' => 'Client/Project',
 			'project_type_to_AuthItem_id' => 'Project type',

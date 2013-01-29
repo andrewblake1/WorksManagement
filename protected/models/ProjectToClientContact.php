@@ -76,8 +76,7 @@ class ProjectToClientContact extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
 			'project_id' => 'Project',
 			'client_id' => 'Client',
 			'client_contact_id' => 'Contact',
@@ -88,7 +87,7 @@ class ProjectToClientContact extends ActiveRecord
 			'searchPhone_home' => 'Phone home',
 			'searchPhone_work' => 'Phone work',
 			'searchPhone_fax' => 'Phone fax',
-		);
+		));
 	}
 
 	/**

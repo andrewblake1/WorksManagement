@@ -94,7 +94,6 @@ class Project extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Project',
 			'in_charge_id' => 'In charge, First/Last/Email',
 			'searchInCharge' => 'In charge, First/Last/Email',
 			'travel_time_1_way' => 'Travel time 1 way',

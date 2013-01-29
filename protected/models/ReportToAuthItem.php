@@ -66,11 +66,11 @@ class ReportToAuthItem extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
+		return parent::attributeLabels(array(
 			'id' => 'Report to role',
 			'report_id' => 'Report',
 			'AuthItem_name' => 'Role',
-		);
+		));
 	}
 
 	/**

@@ -79,18 +79,15 @@ class AssemblyToMaterial extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
 			'assembly_id' => 'Assembly',
 			'material_id' => 'Material/Unit/Alias/Stage',
 			'searchMaterialDescription' => 'Material',
 			'searchMaterialUnit' => 'Unit',
 			'searchMaterialAlias' => 'Alias',
-			'quantity' => 'Quantity',
 			'stage_id' => 'Stage',
 			'searchStage' => 'Stage',
-			'comment' => 'Comment',
-		);
+		));
 	}
 
 	/**

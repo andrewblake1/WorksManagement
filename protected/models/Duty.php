@@ -83,7 +83,6 @@ class Duty extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Duty',
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
 			'task_type_id' => 'Task type',

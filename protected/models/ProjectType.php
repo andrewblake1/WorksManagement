@@ -68,7 +68,6 @@ class ProjectType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Project type',
 			'client_id' => 'Client',
 			'searchClient' => 'Client',
 		));

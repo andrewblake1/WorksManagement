@@ -67,13 +67,11 @@ class Product extends CActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'ID',
+		return parent::attributeLabels(array(
 			'category_id' => 'Category',
 			'title' => 'Title',
-			'description' => 'Description',
 			'price' => 'Price',
-		);
+		));
 	}
 
 	/**

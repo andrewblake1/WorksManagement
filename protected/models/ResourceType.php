@@ -75,7 +75,6 @@ class ResourceType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Resource type',
 			'resourcecategory_id' => 'Resource category',
 			'unit_price' => 'Unit price',
 			'maximum' => 'Maximum',

@@ -106,7 +106,6 @@ class Task extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task',
 			'in_charge_id' => 'In charge, First/Last/Email',
 			'searchInCharge' => 'In charge, First/Last/Email',
 			'project_id' => 'Project',

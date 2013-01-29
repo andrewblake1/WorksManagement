@@ -76,30 +76,6 @@ class SupplierContact extends ActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'Supplier',
-			'first_name' => 'First name',
-			'last_name' => 'Last name',
-			'role' => 'Role',
-			'email' => 'Email',
-			'address_line1' => 'Address line 1',
-			'address_line2' => 'Address line 2',
-			'post_code' => 'Post code',
-			'town_city' => 'Town/city',
-			'state_province' => 'State/province',
-			'country' => 'Country',
-			'phone_mobile' => 'Phone mobile',
-			'phone_home' => 'Phone home',
-			'phone_work' => 'Phone work',
-			'phone_fax' => 'Phone fax',
-		);
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()

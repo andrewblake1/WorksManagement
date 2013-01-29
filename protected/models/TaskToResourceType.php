@@ -87,16 +87,12 @@ class TaskToResourceType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task to resource type',
 			'task_id' => 'Task',
 			'searchResourceTypeToSupplier' => 'Supplier',
 			'resource_type_to_supplier_id' => 'Supplier',
 			'resource_type_id' => 'Resource type',
 			'description' => 'Resource type',
-			'quantity' => 'Quantity',
 			'hours' => 'Hours',
-			'start' => 'Start',
-			'level' => 'Level',
 		));
 	}
 

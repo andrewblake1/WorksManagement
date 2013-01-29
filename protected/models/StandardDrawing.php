@@ -68,9 +68,9 @@ class StandardDrawing extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
+		return parent::attributeLabels(array(
 			'store_id' => 'Store',
-		);
+		));
 	}
 
 	/**
@@ -107,6 +107,7 @@ class StandardDrawing extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
+			'parent_id',
 			'description',
 			'alias',
 		);
@@ -115,7 +116,7 @@ class StandardDrawing extends ActiveRecord
 	public function getAdminColumns()
 	{
  		// link to admin displaying children or if no children then just description without link
-        $this->linkColumnAdjacencyList('description', $columns = array());
+        $this->linkColumnAdjacencyList('description', $columns);
 		$columns[] = 'alias';
 		
 		return $columns;

@@ -67,7 +67,6 @@ class PurchaseOrder extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Purchase order',
 			'supplier_id' => 'Supplier',
 			'searchSupplier' => 'Supplier',
 			'number' => 'Number',

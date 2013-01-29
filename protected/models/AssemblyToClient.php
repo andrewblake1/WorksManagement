@@ -69,13 +69,11 @@ class AssemblyToClient extends ActiveRecord
 	 */
 	public function attributeLabels()
 	{
-		return array(
-			'id' => 'Assembly',
+		return parent::attributeLabels(array(
 			'assembly_id' => 'Assembly',
 			'searchAssembly' => 'Assembly',
 			'client_id' => 'Client',
-			'alias' => 'Alias',
-		);
+		));
 	}
 
 	/**

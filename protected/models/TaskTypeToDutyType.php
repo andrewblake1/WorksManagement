@@ -94,8 +94,7 @@ class TaskTypeToDutyType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task type to duty type',
-			'naturalKey' => 'Client/Project type/Task type/Duty type/Role',
+//			'naturalKey' => 'Client/Project type/Task type/Duty type/Role',
 			'duty_type_id' => 'Duty type',
 			'searchDutyType' => 'Duty type',
 			'task_type_id' => 'Client/Project type/Task type',

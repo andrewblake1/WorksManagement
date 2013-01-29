@@ -105,8 +105,12 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	{
 		return array(
 			array('allow',
-				'actions'=>array('admin', 'create','delete','update','autocomplete'),
+				'actions'=>array('admin','view'),
 				'roles'=>array($this->modelName.'Read'),
+			),
+			array('allow',
+				'actions'=>array('create','delete','update','autocomplete'),
+				'roles'=>array($this->modelName),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -853,6 +857,41 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		return CHtml::activeId($model,$attribute);
 	}
 
+	/**
+	 * Views a particular model.
+	 * @param integer $id the ID of the model to be viewed
+	 */
+// TODO: the guts of this is duplicated in actionUpdate
+	public function actionView($id)
+	{
+		$model=$this->loadModel($id);
+		$primaryKeyName = $model->tableSchema->primaryKey;
+		
+/*		// add primary key so it can be retrieved for future use in breadcrumbs
+		$_SESSION[$this->modelName] = array(
+			'name'=>$primaryKeyName,
+			'value'=>$id,
+		);
+*/		
+		// otherwise this is just a get and could be passing paramters
+		$model->$primaryKeyName=$id;
+		
+		// set heading
+		$modelName = $this->modelName;
+		$this->heading = $modelName::getNiceName($id);
+
+		// set breadcrumbs
+		$this->breadcrumbs = $this->getBreadCrumbTrail('Update');
+		
+		// set up tab menu if required - using setter
+		$this->tabs = $model;
+
+		$this->widget('UpdateViewWidget', array(
+			'model'=>$model,
+//			'models'=>$models,
+		));
+	}
+
 	protected function actionAfterDelete()
 	{
 		
@@ -964,24 +1003,6 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	
 	static function listWidgetRow($model, $form, $fkField, $htmlOptions = array(), $scopes = array(), $label = null)
 	{
-		// set any required default scope
-		// NB this only applies here to drop down list which is populated now, otherwise scope needs to be passed to parent autocomplete
-		// via child autocomplete - warning, the alias can be confusing
-// TODO: not sure on scopes here
-
-		
-		// get the associated relation - assuming only 1
-/*  		foreach($model->relations() as $relationName => $relation)
-		{
-			// if we have found the relation that uses this attribute which is a foreign key
-			if($relation[2] == $fkField)
-			{
-				$fKModelType = $relation[1];
-				$relName = $relationName;
-				break;
-			}
-		}	*/
-		
 		$fKModelType = static::modelName();
 
 		// set label to passed in label if one passed, otherwise to the tables nice name

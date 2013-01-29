@@ -85,7 +85,6 @@ class DutyType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Duty type',
 			'lead_in_days' => 'Lead in days',
 			'level' => 'Level',
 			'dutycategory_id' => 'Duty category',

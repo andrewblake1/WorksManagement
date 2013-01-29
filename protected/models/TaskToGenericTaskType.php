@@ -76,7 +76,6 @@ class TaskToGenericTaskType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Task to generic task type',
 			'generic_task_type_id' => 'Task type/Custom type)',
 			'searchGenericTaskType' => 'Task type/Custom type)',
 			'task_id' => 'Client/Task',
