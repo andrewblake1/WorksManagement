@@ -10,13 +10,13 @@ class TaskController extends GenericExtensionController
 	protected $relation_modelToGenericModelTypes = 'taskToGenericTaskTypes';
 	protected $relation_modelToGenericModelType = 'taskToGenericTaskType';
 
-	/*
-	 * overidden as because generics added want to edit them after creation
-	 */
-	protected function createRedirect($model)
-	{
-		$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
-	}
+//	/*
+//	 * overidden as because generics added want to edit them after creation
+//	 */
+//	protected function createRedirect($model)
+//	{
+//		$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
+//	}
 
 	/*
 	 * overidden as mulitple models

@@ -437,6 +437,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		}
 		$model->attributes = $attributes;
 
+$t = Controller::$nav;
 		// ensure that where possible a pk has been passed from parent
 		$model->assertFromParent();
 		
@@ -458,7 +459,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 
 		// set breadcrumbs
 		$this->breadcrumbs = $this->getBreadCrumbTrail();
-$t = $model->attributes;
+
 		// render the view
 		$this->adminRender($model);
 	}
@@ -470,7 +471,7 @@ $t = $model->attributes;
 			// set up tab menu if required - using setter
 			$this->setTabs(false);
 		}
-		
+	
 		$this->render(lcfirst($this->_adminView), array(
 			'model'=>$model,
 		));
@@ -589,18 +590,70 @@ $t = $model->attributes;
 		
 		return $saved;
 	}
-	
+
 	/*
-	 * to be overidden if not wanting to redirect to admin
+	 * Look at breadcrumb trail and if this is a leaf node then redirect to admin, otherwise it is likely the user
+	 * will want to edit some of the branches or leaves below hence redirect to update
 	 */
 	protected function createRedirect($model)
 	{
+		$items = Yii::app()->params['trail'];
+		$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $this->modelName);
+		// get tree of items at or below the desired level
+		foreach($trail as $key => &$value)
+		{
+			// if there are items below
+			$items = isset($items[$value]) ? $items[$value] : array();
+		}
+		
+		// if there are some child items
+		if(sizeof($items))
+		{
+			// go to update view
+			$this->redirect(array('update', $model->tableSchema->primaryKey=>$model->getPrimaryKey()));
+		}
+		else
+		{
+			// go to admin view
+				$model->assertFromParent();
+			$this->adminRedirect($model);
+		}
+	}
+
+	/*
+	 * to be overidden if not wanting to redirect to admin
+	 */
+	protected function updateRedirect($model)
+	{
+		$this->adminRedirect($model);
+	}
+
+	// redirect to admin
+	private function adminRedirect($model)
+	{ 
 		// clear filtering and sorting and paging so can see newly inserted row at the top
 		$model->adminReset();
+
+		// if posted a controller then this is where we should return to
+		if(!empty($_POST['controller']))
+		{
+			$modelName = $_POST['controller'];
+		}
+		else
+		{
+			$modelName = $this->modelName;
+		}
 		
-		$this->cuRedirect($model);
-	}
+		$params = array("$modelName/admin");
 	
+		if(isset(Controller::$nav['admin'][$modelName]))
+		{
+			$params[$modelName] = Controller::$nav['admin'][$modelName];
+		}
+		
+		$this->redirect($params);
+	}
+
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -612,6 +665,9 @@ $t = $model->attributes;
 			$model=new $this->modelName;
 		}
 		$models=array();
+		
+		// ensure Controller::$nav is set
+		$model->assertFromParent();
 
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating =$this->performAjaxValidation($model);
@@ -719,36 +775,6 @@ $t = $model->attributes;
 		$models[] = $model;
 		
 		return $saved;
-	}
-	
-	/*
-	 * to be overidden if not wanting to redirect to admin
-	 */
-	protected function updateRedirect($model)
-	{
-		$this->cuRedirect($model);
-	}
-	
-	private function cuRedirect($model)
-	{ 
-		// if posted a controller then this is where we should return to
-		if(!empty($_POST['controller']))
-		{
-			$modelName = $_POST['controller'];
-		}
-		else
-		{
-			$modelName = $this->modelName;
-		}
-		
-		$params = array("$modelName/admin");
-		
-		if(isset(Controller::$nav['admin'][$modelName]))
-		{
-			$params[$modelName] = Controller::$nav['admin'][$modelName];
-		}
-		
-		$this->redirect($params);
 	}
 	
 	/**

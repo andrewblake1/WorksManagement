@@ -341,7 +341,7 @@ abstract class ActiveRecord extends CActiveRecord
 	{
 		if(!$modelName)
 		{
-			$modelName = $this->modelName;
+			$modelName = get_class($this);
 		}
 		
 		if(isset($_SESSION['admin'][$modelName]))

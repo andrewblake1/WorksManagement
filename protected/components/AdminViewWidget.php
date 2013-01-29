@@ -89,7 +89,7 @@ class AdminViewWidget extends CWidget
 
 		// as using boostrap modal for create the html for the modal needs to be on
 		// the calling page
-		$this->_controller->actionCreate();
+		$this->_controller->actionCreate('myModal', $this->model);
 
 		parent::run();
 	}

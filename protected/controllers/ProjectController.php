@@ -10,13 +10,13 @@ class ProjectController extends GenericExtensionController
 	protected $relation_modelToGenericModelTypes = 'projectToGenericProjectTypes';
 	protected $relation_modelToGenericModelType = 'projectToGenericProjectType';
 
-	/*
-	 * overidden as because generics added want to edit them after creation
-	 */
-	protected function createRedirect($model)
-	{
-		$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
-	}
+//	/*
+//	 * overidden as because generics added want to edit them after creation
+//	 */
+//	protected function createRedirect($model)
+//	{
+//		$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
+//	}
 
 	/*
 	 * overidden as mulitple models

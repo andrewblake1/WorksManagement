@@ -57,13 +57,13 @@ class DutyController extends Controller
 		}
 	}
 
-	/*
-	 * overidden as because generic possibly added and want to edit after creation
-	 */
-	protected function createRedirect($model)
-	{
-		$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
-	}
+//	/*
+//	 * overidden as because generic possibly added and want to edit after creation
+//	 */
+//	protected function createRedirect($model)
+//	{
+//		$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
+//	}
 
 	/*
 	 * overidden as mulitple models
