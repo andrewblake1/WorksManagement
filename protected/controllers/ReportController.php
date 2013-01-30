@@ -59,25 +59,22 @@ class ReportController extends Controller
 			throw new CHttpException(403,'The report isn\'t valid in this context.');
 		}
 
+		$html = self::$_model->template_html;
+		
 		// get the primary key if any in play in this context
 		$pk = null;
 		// if pk passed
 		if(!empty($_GET['pk']))
 		{
 			$pk = $_GET['pk'];
-		}
-		elseif(isset($_SESSION[$_modelName]))
-		{
-			$pk = $_SESSION[$context]['value'];
+			// adding parameter to callback function - to avoid a global
+			$callback = function( $matches ) use ( $pk ) {
+				return ReportController::subReportCallback($matches, $pk);
+			};
+
+			$html = preg_replace_callback('`\{(.*?)\}`', $callback, $html);
 		}
 
-		// adding parameter to callback function - to avoid a global
-		$callback = function( $matches ) use ( $pk ) {
-			return ReportController::subReportCallback($matches, $pk);
-		};
-
-		$html = self::$_model->template_html;
-		$html = preg_replace_callback('`\{(.*?)\}`', $callback, $html);
 		
 		// if errors
 		if(!empty(self::$_errors))

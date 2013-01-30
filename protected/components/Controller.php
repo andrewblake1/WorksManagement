@@ -665,9 +665,6 @@ $t = Controller::$nav;
 			$model=new $this->modelName;
 		}
 		$models=array();
-		
-		// ensure Controller::$nav is set
-		$model->assertFromParent();
 
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating =$this->performAjaxValidation($model);
@@ -676,7 +673,8 @@ $t = Controller::$nav;
 		if(isset($_POST[$this->modelName]))
 		{
 			$model->attributes=$_POST[$this->modelName];
-//$t = $model->attributes;		
+			// ensure Controller::$nav is set
+			$model->assertFromParent();
 			// start a transaction
 			$transaction = Yii::app()->db->beginTransaction();
 			
@@ -722,6 +720,8 @@ $t = Controller::$nav;
 		{
 			// set any url based paramters
 			$model->attributes=$_GET[$this->modelName];
+			// ensure Controller::$nav is set
+			$model->assertFromParent();
 		}
 
 // TODO: check this code might be obsolete		
@@ -906,6 +906,11 @@ $t = Controller::$nav;
 		$modelName = $this->modelName;
 		$this->heading = $modelName::getNiceName($id);
 
+		// add primary key into global so it can be retrieved for future use in breadcrumbs
+		Controller::$nav['update'][$modelName] = $id;
+		$model->assertFromParent();
+//$t = Controller::$nav;		
+		
 		// set breadcrumbs
 		$this->breadcrumbs = $this->getBreadCrumbTrail('Update');
 		

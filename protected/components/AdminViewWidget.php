@@ -53,12 +53,13 @@ class AdminViewWidget extends CWidget
 					),
 					'update' => array(
 						'visible'=>'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
+						'url'=>'Yii::app()->createUrl("'.$this->_controller->modelName.'/update", array("'.$this->model->tableSchema->primaryKey.'"=>$data->primaryKey))',
 					),
 					'view' => array(
 						'visible'=>'
 							!Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))
-							&& Yii::app()->user->checkAccess(get_class($data)."Read")
-						',
+							&& Yii::app()->user->checkAccess(get_class($data)."Read")',
+						'url'=>'Yii::app()->createUrl("'.$this->_controller->modelName.'/view", array("'.$this->model->tableSchema->primaryKey.'"=>$data->primaryKey))',
 					),
 				),
 			);

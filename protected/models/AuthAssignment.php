@@ -9,7 +9,6 @@
  * @property integer $userid
  * @property string $bizrule
  * @property string $data
- * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -69,7 +68,7 @@ class AuthAssignment extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('itemname, userid, staff_id', 'required'),
-			array('userid, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('userid, staff_id', 'numerical', 'integerOnly'=>true),
 			array('itemname', 'length', 'max'=>64),
 			array('bizrule, data', 'safe'),
 			// The following rule is used by search().

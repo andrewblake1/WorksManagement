@@ -98,7 +98,7 @@ class Assembly extends ActiveRecord
 		$criteria->compare('t.store_id',$this->store_id);
 		if($this->parent_id === null)
 		{
-			$criteria->addCondition('parent_id IS NULL');
+			$criteria->addCondition('t.parent_id IS NULL');
 		}
 		else
 		{

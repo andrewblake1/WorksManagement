@@ -12,6 +12,9 @@ foreach($modelName::model()->findAll(array('order'=>'lft')) as $n=>$category)
 
 $dataProvider = new CActiveDataProvider($modelName);
 $baseUrl = Yii::app()->baseUrl;
+$queryString = Yii::app()->request->queryString
+	? '?'.Yii::app()->request->queryString
+	: '';
 $open_nodes = implode(',', $identifiers);
 
 /*Yii::app()->user->setFlash('info','
@@ -54,7 +57,7 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 				"ajax" :
 					{
 					"type":"POST",
-					"url" : "<?php echo "$baseUrl/$modelName/fetchTree"; ?>",
+					"url" : "<?php echo "$baseUrl/$modelName/fetchTree$queryString"; ?>",
 					"data" : function (n)
 					{
 						return{
@@ -115,7 +118,7 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 									// need to re-read modal contents first as selecting a different record
 									$.ajax({
 										type: "POST",
-										url: "<?php echo "$baseUrl/$modelName/returnForm"; ?>",
+										url: "<?php echo "$baseUrl/$modelName/returnForm$queryString"; ?>",
 										data:{
 											'update_id':  id,
 											'model_name':  modelName,
@@ -189,7 +192,7 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 										// need to re-read modal contents first as selecting a different record
 										$.ajax({
 											type: "POST",
-											url: "<?php echo "$baseUrl/$modelName/returnForm"; ?>",
+											url: "<?php echo "$baseUrl/$modelName/returnForm$queryString"; ?>",
 											data: ajaxdata,
 											'beforeSend' : function(){
 												$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
@@ -253,7 +256,7 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 		.bind("remove.jstree", function (e, data) {
 			$.ajax({
 				type:"POST",
-				url:"<?php echo "$baseUrl/$modelName/remove"; ?>",
+				url:"<?php echo "$baseUrl/$modelName/remove$queryString"; ?>",
 				data:{
 					"id" : data.rslt.obj.attr("id").replace("node_",""),
 					"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
@@ -316,7 +319,7 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 				$.ajax({
 					async : false,
 					type: 'POST',
-					url: "<?php echo "$baseUrl/$modelName/moveCopy"; ?>",
+					url: "<?php echo "$baseUrl/$modelName/moveCopy$queryString"; ?>",
 
 					data : {
 						"moved_node" : moved_node,
@@ -413,7 +416,7 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 			if(readAccess !== null)
 			{
 				// go to the admin screen - filtering by this parent id
-				window.location = encodeURI("<?php echo "$baseUrl/"; ?>" + modelName + "/update/" + id);
+				window.location = encodeURI("<?php echo "$baseUrl/"; ?>" + modelName + "/update/" + id + "<?php echo $queryString; ?>");
 			}
 			
 		});

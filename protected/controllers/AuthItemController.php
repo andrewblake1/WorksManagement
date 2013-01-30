@@ -8,6 +8,12 @@ class AuthItemController extends Controller
 		return parent::actionUpdate($name, $model = null);
 	}
 
+	// this needed to get around primary key not being named id and reflection causing id to be required parameter for actionUpdate
+	public function actionView($name, $model = null)
+	{
+		return parent::actionView($name, $model = null);
+	}
+
 	// this needed to get around primary key not being named id and reflection causing id to be required parameter for actionDelete
 	public function actionDelete($name)
 	{

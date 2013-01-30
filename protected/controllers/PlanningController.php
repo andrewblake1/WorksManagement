@@ -18,7 +18,16 @@ class PlanningController extends CategoryController
 
 	public function actionFetchTree()
 	{
-		parent::actionFetchTree(Controller::$nav['admin']['Planning']['project_id']);
+		if(isset($_GET['project_id']))
+		{
+			$id = $_GET['project_id'];
+		}
+		else
+		{
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+		}
+
+		parent::actionFetchTree($id);
 	}
 
 	public function actionAddDay()
@@ -29,9 +38,11 @@ class PlanningController extends CategoryController
 			$_POST[$this->modelName]['description'] = '';
 
 			$day = new Day();
-			$day->project_id = $_SESSION['Project']['value'];
+			$day->project_id = $_GET['project_id'];
+			// create 
 			DayController::createSaveStatic($day);
-			parent::actionCreate();
+//			parent::actionCreate();
+			$this->redirect(array('admin'.'?'.Yii::app()->request->queryString));
 		}
 		// otherwise doesn't have permission to be here
 		else
@@ -47,7 +58,7 @@ class PlanningController extends CategoryController
 			echo ' ';
 			$this->widget('bootstrap.widgets.TbButton', array(
 				'label'=>'New day',
-				'url'=>$this->createUrl("{$this->modelName}/addDay"),
+				'url'=>$this->createUrl("{$this->modelName}/addDay".'?'.Yii::app()->request->queryString),
 				'type'=>'primary',
 				'size'=>'small', // '', 'large', 'small' or 'mini'
 			));

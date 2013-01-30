@@ -104,7 +104,7 @@ class TaskToAssembly extends ActiveRecord
 		$criteria->compare('t.task_id',$this->task_id);
 		if($this->parent_id === null)
 		{
-			$criteria->addCondition('parent_id IS NULL');
+			$criteria->addCondition('t.parent_id IS NULL');
 		}
 		else
 		{

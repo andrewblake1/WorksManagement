@@ -12,6 +12,9 @@ foreach($modelName::model()->findAll(array('order'=>'lft')) as $n=>$category)
 
 $dataProvider = new CActiveDataProvider($modelName);
 $baseUrl = Yii::app()->baseUrl;
+$queryString = Yii::app()->request->queryString
+	? '?'.Yii::app()->request->queryString
+	: '';
 $open_nodes = implode(',', $identifiers);
 
 Yii::app()->user->setFlash('info','
@@ -57,7 +60,7 @@ echo '
 				"ajax" :
 					{
 					"type":"POST",
-					"url" : "<?php echo "$baseUrl/$modelName/fetchTree"; ?>",
+					"url" : "<?php echo "$baseUrl/$modelName/fetchTree$queryString"; ?>",
 					"data" : function (n)
 					{
 						return{
@@ -81,7 +84,7 @@ echo '
 							// need to re-read modal contents first as selecting a different record
 							$.ajax({
 								type: "POST",
-								url: "<?php echo "$baseUrl/$modelName/returnForm"; ?>",
+								url: "<?php echo "$baseUrl/$modelName/returnForm$queryString"; ?>",
 								data:{
 									'update_id':  id,
 									"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
@@ -145,7 +148,7 @@ echo '
 		.bind("rename.jstree", function (e, data) {
 			$.ajax({
 				type:"POST",
-				url:"<?php echo "$baseUrl/$modelName/rename"; ?>",
+				url:"<?php echo "$baseUrl/$modelName/rename$queryString"; ?>",
 				data:  {
 					"id" : data.rslt.obj.attr("id").replace("node_",""),
 					"new_name" : data.rslt.new_name,
@@ -171,7 +174,7 @@ echo '
 
 			$.ajax({
 				type:"POST",
-				url:"<?php echo "$baseUrl/$modelName/remove"; ?>",
+				url:"<?php echo "$baseUrl/$modelName/remove$queryString"; ?>",
 				data:{
 					"id" : data.rslt.obj.attr("id").replace("node_",""),
 					"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
@@ -240,7 +243,7 @@ echo '
 				$.ajax({
 					async : false,
 					type: 'POST',
-					url: "<?php echo "$baseUrl/$modelName/moveCopy"; ?>",
+					url: "<?php echo "$baseUrl/$modelName/moveCopy$queryString"; ?>",
 
 					data : {
 						"moved_node" : moved_node,
