@@ -715,7 +715,15 @@ if(count($m = $this->getErrors()))
 //$t = $this->safeAttributeNames;
 		if($this->isNewRecord)
 		{
+			// this model name
 			$modelName = get_class($this);
+			// the parent model name
+			$parentName = Yii::app()->controller->getParentCrumb($modelName);
+			// get the name of the foreing key field in this model referring to the parent
+			$primaryKeyName = $modelName::getParentForeignKey($parentName);
+			// get the primary key in play in this context which will be referring to the parent
+			$pk = isset($_GET[$primaryKeyName]) ? $_GET[$primaryKeyName] : null;
+		
 			// loop thru attributes
 			foreach($this->safeAttributeNames as $attributeName)
 			{
@@ -730,9 +738,6 @@ if(count($m = $this->getErrors()))
 						// if sql contains :pk (primary key)
 						if(stripos($sql, ':pk') !== false)
 						{
-							// get the primary key in play in this context which will be referring to the parent
-							$parentName = Yii::app()->controller->getParentCrumb($modelName);
-							$pk = Controller::$nav['update'][$parentName];
 							if($pk !== null)
 							{
 								$command->bindParam(":pk", $pk, PDO::PARAM_STR);
