@@ -1,7 +1,6 @@
 <?php
 class DBCriteria extends CDbCriteria
 {
-	
 	// turn compare into unordered search when term has spaces - i.e. like google etc
 	public function compare($column, $value, $partialMatch=false, $operator='AND', $escape=true)
 	{
