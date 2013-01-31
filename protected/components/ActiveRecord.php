@@ -15,12 +15,10 @@ abstract class ActiveRecord extends CActiveRecord
 	 * @var string nice model name for use in output
 	 */
 	static $niceName;
-/**
-	 * @var array defaultScopes that can be set and used at run time. This is basically a global
-	 * variable within the class context that allows other classes to filter query results without
-	 * having to pass thru several method arguments. Not tigtly coupled but convenient.
-	 
-	static $defaultScope = array();/*
+	/**
+	 * @var string default attribute to sort by
+	 */
+	protected $defaultSort = null;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -515,8 +513,14 @@ abstract class ActiveRecord extends CActiveRecord
 		// add addtional columns for managment of the adjacency list if user has write access
 		if($controllerName::checkAccess(Controller::accessWrite))
 		{
-			$columns[] = $primaryKeyName;
-			$columns[] = $parentAttrib;
+			if(!is_array($columns) || !in_array($primaryKeyName, $columns))
+			{
+				$columns[] = $primaryKeyName;
+			}
+			if(!in_array($parentAttrib, $columns))
+			{
+				$columns[] = $parentAttrib;
+			}
 		}
 
 		// if the user has at least read access
@@ -566,10 +570,33 @@ abstract class ActiveRecord extends CActiveRecord
 			$searchCriteria->select[] = "CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff";
 		}
 
-		if(!isset($_GET[get_class($model).'_sort']))
+		$modelName = get_class($model);
+		if(!isset($_GET["{$modelName}_sort"]))
 		{
-			// this if clause in case a view with no primary key
-			$searchCriteria->order = 't.'.$model->tableSchema->primaryKey." DESC";
+			// if default sort order given at model level
+			if($this->defaultSort)
+			{
+				$displayAttr = $this->defaultSort;
+			}
+			else
+			{
+				// get first display attribute to use for inititial sort
+				foreach($modelName::getDisplayAttr() as $key => $displayAttr);
+				if(preg_match('/(((.*)->)?(\w*))->(\w*)$/', $displayAttr, $matches))
+				{
+					$displayAttr = "{$matches[4]}.{$matches[5]}";
+				}
+			}
+
+			// set default sort
+			$searchCriteria->order = "$displayAttr ASC";
+		}
+		// set default sort
+		if(!$this->defaultSort)
+		{
+			// get first display attribute to use for inititial sort
+			foreach($modelName::getDisplayAttr() as $key => $displayAttr);
+			$this->defaultSort = $displayAttr;
 		}
 
 		return $searchCriteria;

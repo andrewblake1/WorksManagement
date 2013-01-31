@@ -28,6 +28,8 @@
  */
 class Assembly extends ActiveRecord
 {
+	protected $defaultSort = 't.description';
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -123,6 +125,7 @@ class Assembly extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
+			'id',
 			'description',
 			'alias',
 		);

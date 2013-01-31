@@ -1,11 +1,17 @@
 <?php
 // ensure nav variables set containing path
 $model->assertFromParent();
-$t = Controller::$nav;
 // path calculation from CController::redirect
-$redirectUrl = array('admin', $this->modelName=>Controller::$nav['admin'][$this->modelName]);
-$route=$redirectUrl[0];
-$redirectUrl = $this->createUrl($route,array_splice($redirectUrl,1));
+//$redirectUrl = array('admin') + $this->modelName=>Controller::$nav['admin'][$this->modelName]);
+//$route=$redirectUrl[0];
+$redirectParams = Controller::$nav['admin'][$this->modelName];
+// if create
+if($model->isNewRecord)
+{
+	$redirectParams += array($this->modelName.'_sort' => 'id.desc');
+}
+
+$redirectUrl = $this->createUrl('admin', $redirectParams);
 
 $form=$this->beginWidget('WMTbActiveForm', array(
 		'id' => 'StandardDrawing-form',

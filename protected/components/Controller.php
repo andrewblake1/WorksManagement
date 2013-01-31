@@ -125,6 +125,8 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		if (isset($_GET['term']))
 		{
 			$modelName = /*$_GET['fk_model']*/ $this->modelName;
+			$model = $modelName::model();
+			$columns = $model->tableSchema->columns;
 	
 			// protect against possible injection
 			$criteria = new CDbCriteria;
@@ -153,7 +155,16 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				}
 
 				$criteria->order[] = "$alias.$attribute ASC";
-				$concat[] = "$alias.$attribute";
+				
+				$column = "$alias.$attribute";
+
+				// if non character field then need to cast and we only use varchar
+				if(strpos($columns[$attribute]->dbType, 'varchar') === FALSE)
+				{
+					$column = "CONVERT($column USING utf8) COLLATE utf8_unicode_ci";
+				}
+
+				$concat[] = $column;
 			}
 
 			// create the search term
@@ -174,7 +185,6 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			$criteria->order = implode(', ', $criteria->order);
 			$display = implode(Yii::app()->params['delimiter']['display'], $display);
 			$criteria->scopes = empty($_GET['scopes']) ? null : $_GET['scopes'];
-			$model = $modelName::model();
 			$fKModels = $model->findAll($criteria);
 
 			// if some models founds
@@ -615,8 +625,8 @@ $t = Controller::$nav;
 		else
 		{
 			// go to admin view
-				$model->assertFromParent();
-			$this->adminRedirect($model);
+			$model->assertFromParent();
+			$this->adminRedirect($model, true);
 		}
 	}
 
@@ -629,15 +639,11 @@ $t = Controller::$nav;
 	}
 
 	// redirect to admin
-	private function adminRedirect($model)
+	private function adminRedirect($model, $sortByNewest = false)
 	{ 
 		// clear filtering and sorting and paging so can see newly inserted row at the top
 		$model->adminReset();
-
 		$modelName = get_class($model);
-		
-		// sort by the first field in display attributes
-//		$displayAttributes = $modelName::displayAttributes();
 		
 		// if posted a controller then this is where we should return to
 		if(!empty($_POST['controller']))
@@ -653,7 +659,13 @@ $t = Controller::$nav;
 	
 		if(isset(Controller::$nav['admin'][$modelName]))
 		{
-			$params[$modelName] = Controller::$nav['admin'][$modelName];
+			$params += Controller::$nav['admin'][$modelName];
+		}
+		
+		// if we want to sort by the newest record first
+		if($sortByNewest)
+		{
+			$params["{$modelName}_sort"] = $modelName::model()->tableSchema->primaryKey.'.desc';
 		}
 		
 		$this->redirect($params);

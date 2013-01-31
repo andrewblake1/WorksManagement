@@ -21,7 +21,7 @@
 class TaskToAssembly extends ActiveRecord
 {
 	public $searchAssembly;
-
+	protected $defaultSort = 'assembly.description';
 	public $store_id;
 	public $quantity;
 	
@@ -112,6 +112,8 @@ class TaskToAssembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
+		$columns[] = 't.id';
+		$columns[] = 't.parent_id';
 		// link to admin displaying children or if no children then just description without link
         $this->linkColumnAdjacencyList('searchAssembly', $columns);
 		
@@ -124,7 +126,10 @@ class TaskToAssembly extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchAssembly');
+		return array(
+			'id',
+			'searchAssembly',
+		);
 	}
 	
 	static function getDisplayAttr()

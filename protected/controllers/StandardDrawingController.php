@@ -86,19 +86,7 @@ class StandardDrawingController extends Controller
 	 * using createRedirect to save the file as only called onece after transaction is committed
 	 */
 	public function create($modalId = 'myModal') {
-//		ob_start();
-//		parent::actionCreate($modalId, $model = new $this->modelName);
-		// if errors
-//		if($model->hasErrors())
-//		{
-//			ob_end_flush();
-//		}
-//		else
-//		{
-//			ob_end_clean();
-			$this->initUploadHandler($_POST['StandardDrawing']['created']);
-//			$this->uploadHandler->post();
-//		}
+		$this->initUploadHandler($_POST['StandardDrawing']['created']);
 	}
 
 	/**

@@ -21,7 +21,7 @@
  */
 class StandardDrawing extends ActiveRecord
 {
-//	public $file;
+	protected $defaultSort = 't.description';
 
 	/**
 	 * @return string the associated database table name
@@ -103,7 +103,7 @@ class StandardDrawing extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'parent_id',
+			'id',
 			'description',
 			'alias',
 		);
