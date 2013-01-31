@@ -99,7 +99,7 @@ cp local_template.php local.php
 #5./ update index.php with correct domains/subdomains in the switch statement that determines the type of environment to run i.e. developmen or production
 
 #6./ to update to repository source go to the document root and type
-cd /var/www/test/melbournegi
+cd /var/www/test/melbourne
 git remote update
 git stash
 git merge origin/master

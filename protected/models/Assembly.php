@@ -96,7 +96,10 @@ class Assembly extends ActiveRecord
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.alias',$this->alias,true);
 		$criteria->compare('t.store_id',$this->store_id);
-		$criteria->compareNull('t.parent_id',$this->parent_id);
+		if(!empty($this->parent_id))
+		{
+			$criteria->compare('t.parent_id',$this->parent_id);
+		}
 
 		$criteria->select=array(
 			't.id',

@@ -637,7 +637,7 @@ $t = Controller::$nav;
 		$modelName = get_class($model);
 		
 		// sort by the first field in display attributes
-		$displayAttributes = $modelName::displayAttributes();
+//		$displayAttributes = $modelName::displayAttributes();
 		
 		// if posted a controller then this is where we should return to
 		if(!empty($_POST['controller']))

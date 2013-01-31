@@ -102,7 +102,10 @@ class TaskToAssembly extends ActiveRecord
 		$criteria->compare('assembly.description',$this->searchAssembly,true);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.task_id',$this->task_id);
-		$criteria->compareNull('t.parent_id',$this->parent_id);
+		if(!empty($this->parent_id))
+		{
+			$criteria->compare('t.parent_id',$this->parent_id);
+		}
 
 		return $criteria;
 	}
