@@ -70,7 +70,7 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 			) + $_GET + ($this->scopes ? array('scopes'=>$this->scopes) : array())
 		); 
 
-		$this->_display=(!empty($value) ? implode(Yii::app()->params['delimiter']['display'], $this->_display) : '');
+		$this->_display=(empty($value) ? '' : implode(Yii::app()->params['delimiter']['display'], $this->_display));
 
 
 //		echo CHtml::label($fKModelType::getNiceName(), $id);

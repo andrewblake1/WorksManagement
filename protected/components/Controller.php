@@ -343,7 +343,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		$modelName = $this->modelName;
 
 		// clear the primary key set by update
-		if(isset(Controller::$nav['update'][$modelName]))
+		if(isset(Controller::$nav[ 'update'][$modelName]))
 		{
 			unset(Controller::$nav['update'][$modelName]);
 		}
@@ -634,6 +634,11 @@ $t = Controller::$nav;
 		// clear filtering and sorting and paging so can see newly inserted row at the top
 		$model->adminReset();
 
+		$modelName = get_class($model);
+		
+		// sort by the first field in display attributes
+		$displayAttributes = $modelName::displayAttributes();
+		
 		// if posted a controller then this is where we should return to
 		if(!empty($_POST['controller']))
 		{
