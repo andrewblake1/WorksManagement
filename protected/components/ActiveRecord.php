@@ -285,7 +285,7 @@ abstract class ActiveRecord extends CActiveRecord
 					$model = $this;
 					continue;
 				}
-
+$t = $this->attributes;
 				$modelName = get_class($model);
 				// get the name of the foreing key field in this model referring to the parent
 				$primaryKeyName = $modelName::getParentForeignKey($crumb);
@@ -743,13 +743,29 @@ if(count($m = $this->getErrors()))
 		{
 			// this model name
 			$modelName = get_class($this);
-			// the parent model name
-			$parentName = Controller::getParentCrumb($modelName);
-			// get the name of the foreing key field in this model referring to the parent
-			$primaryKeyName = $modelName::getParentForeignKey($parentName);
-			// get the primary key in play in this context which will be referring to the parent
-			$pk = isset($_GET[$primaryKeyName]) ? $_GET[$primaryKeyName] : null;
-		
+			// get the primary key name for this model
+			$primaryKeyName = $modelName::model()->tableSchema->primaryKey;
+			if(isset($_GET[$primaryKeyName]))
+			{
+				$pk = $_GET[$primaryKeyName];
+			}
+			elseif(isset($_POST[$modelName][$primaryKeyName]))
+			{
+				$pk = $_GET[$primaryKeyName];
+			}
+			else
+			{
+				// the parent model name
+				$parentName = Controller::getParentCrumb($modelName);
+				// get the name of the foreing key field in this model referring to the parent
+				$parentForeignKeyName = $modelName::getParentForeignKey($parentName);
+				// get the primary key in play in this context which will be referring to the parent
+				if(!$pk = isset($_GET[$parentForeignKeyName]) ? $_GET[$parentForeignKeyName] : null)
+				{
+					$pk = isset($_POST[$modelName][$parentForeignKeyName]) ? $_POST[$modelName][$parentForeignKeyName] : null;
+				}
+			}
+
 			// loop thru attributes
 			foreach($this->safeAttributeNames as $attributeName)
 			{

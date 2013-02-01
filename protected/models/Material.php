@@ -134,7 +134,7 @@ class Material extends ActiveRecord
 	public function scopeStore($store_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compare('store_id', $store_id);
+		$criteria->compareNull('store_id', $store_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		

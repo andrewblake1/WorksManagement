@@ -122,7 +122,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	public function actionAutocomplete()
 	{
 		// if something has been entered
-		if (isset($_GET['term']))
+		if(isset($_GET['term']))
 		{
 			$modelName = /*$_GET['fk_model']*/ $this->modelName;
 			$model = $modelName::model();
@@ -449,7 +449,8 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 
 		// ensure that where possible a pk has been passed from parent
 		$model->assertFromParent($this->modelName);
-		
+$t = Controller::$nav;
+
 		// if exporting to xl
 		if(isset($_GET['action']) && $_GET['action'] == 'download')
 		{
@@ -531,7 +532,7 @@ $t = Controller::$nav;
 
 			// the only query parameter we want to allow is the foreign key to the parent
 			$queryParamters = array();
-			if($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = static::getParentCrumb()))
+			if($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = static::getParentCrumb($crumb)))
 			{
 				if(isset(Controller::$nav['admin'][$modelName][$parentForeignKey]))
 				{
