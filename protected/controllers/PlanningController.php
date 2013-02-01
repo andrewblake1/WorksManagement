@@ -4,6 +4,11 @@ class PlanningController extends CategoryController
 {
 	protected $_adminView = 'categoryAdmin';
 
+	static function getBreadCrumbTrail($lastCrumb = NULL)
+	{
+		return ProjectController::getBreadCrumbTrail('Update');
+	}
+	
 	public function accessRules()
 	{
 		$accessRules = parent::accessRules();

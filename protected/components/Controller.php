@@ -447,9 +447,8 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		}
 		$model->attributes = $attributes;
 
-$t = Controller::$nav;
 		// ensure that where possible a pk has been passed from parent
-		$model->assertFromParent();
+		$model->assertFromParent($this->modelName);
 		
 		// if exporting to xl
 		if(isset($_GET['action']) && $_GET['action'] == 'download')
@@ -468,7 +467,7 @@ $t = Controller::$nav;
 		}
 
 		// set breadcrumbs
-		$this->breadcrumbs = $this->getBreadCrumbTrail();
+		$this->breadcrumbs = static::getBreadCrumbTrail();
 
 		// render the view
 		$this->adminRender($model);
@@ -487,11 +486,11 @@ $t = Controller::$nav;
 		));
 	}
 
-	public function getParentCrumb($modelName = null)
+	static function getParentCrumb($modelName = null)
 	{
 		if(empty($modelName))
 		{
-			$modelName = $this->modelName;
+			$modelName = static::modelName();
 		}
 
 		$trail = array_reverse(Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName));
@@ -506,10 +505,10 @@ $t = Controller::$nav;
 	 * Get the breadcrumb trail for this controller.
 	 * return array bread crumb trail for this controller
 	 */
-	public function getBreadCrumbTrail($lastCrumb = NULL)
+	static function getBreadCrumbTrail($lastCrumb = NULL)
 	{
 		$breadcrumbs = array();
-		$modelName = $this->modelName;
+		$modelName = static::modelName();
 
 		// if just gone direct to a screen i.e. our memory/history was cleared
 		if(!isset(Controller::$nav['admin'][$modelName]) && !$lastCrumb)
@@ -520,7 +519,7 @@ $t = Controller::$nav;
 			}
 			return $breadcrumbs;
 		}
-
+$t = Controller::$nav;
 		// loop thru the trail for this model
 		foreach(Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName) as $crumb)
 		{
@@ -532,7 +531,7 @@ $t = Controller::$nav;
 
 			// the only query parameter we want to allow is the foreign key to the parent
 			$queryParamters = array();
-			if($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = $this->getParentCrumb()))
+			if($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = static::getParentCrumb()))
 			{
 				if(isset(Controller::$nav['admin'][$modelName][$parentForeignKey]))
 				{
@@ -562,7 +561,7 @@ $t = Controller::$nav;
 					$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
 					// add a crumb with just the primary key nice name but no href
 					$primaryKey = Controller::$nav['update'][$crumb];
-					$breadcrumbs[] = $crumb::getNiceName($primaryKey['value']);
+					$breadcrumbs[] = $crumb::getNiceName($primaryKey);
 				}
 				else
 				{
@@ -875,7 +874,7 @@ $t = Controller::$nav;
 		$this->heading = $modelName::getNiceName($id);
 
 		// set breadcrumbs
-		$this->breadcrumbs = $this->getBreadCrumbTrail('Update');
+		$this->breadcrumbs = static::getBreadCrumbTrail('Update');
 		
 		// set tabs
 		$this->setUpdateTabs($model);
@@ -910,12 +909,6 @@ $t = Controller::$nav;
 		$model=$this->loadModel($id);
 		$primaryKeyName = $model->tableSchema->primaryKey;
 		
-/*		// add primary key so it can be retrieved for future use in breadcrumbs
-		$_SESSION[$this->modelName] = array(
-			'name'=>$primaryKeyName,
-			'value'=>$id,
-		);
-*/		
 		// otherwise this is just a get and could be passing paramters
 		$model->$primaryKeyName=$id;
 		
@@ -929,7 +922,7 @@ $t = Controller::$nav;
 //$t = Controller::$nav;		
 		
 		// set breadcrumbs
-		$this->breadcrumbs = $this->getBreadCrumbTrail('Update');
+		$this->breadcrumbs = static::getBreadCrumbTrail('Update');
 		
 		// set up tab menu if required - using setter
 		$this->tabs = $model;

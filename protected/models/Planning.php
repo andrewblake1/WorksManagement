@@ -238,6 +238,12 @@ class Planning extends CategoryActiveRecord {
 		return parent::beforeSave();
 	}
 
+	public function assertFromParent() {
+		
+		$project = Project::model()->findByPk($this->project_id);
+		Controller::$nav['update']['Project'] = $this->project_id;
+		return $project->assertFromParent();
+	}
 }
 
 ?>

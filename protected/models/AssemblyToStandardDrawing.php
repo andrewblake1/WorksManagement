@@ -24,6 +24,7 @@ class AssemblyToStandardDrawing extends ActiveRecord
 	 */
 	static $niceName = 'Standard drawing';
 
+	protected $defaultSort = 'standardDrawing.description';
 	
 	/**
 	 * @return string the associated database table name

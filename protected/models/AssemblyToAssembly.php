@@ -27,6 +27,7 @@ class AssemblyToAssembly extends ActiveRecord
 	static $niceName = 'Sub assembly';
 
 	public $searchChildAssembly;
+	protected $defaultSort = 'childAssembly.description';
 
 	/**
 	 * @return string the associated database table name

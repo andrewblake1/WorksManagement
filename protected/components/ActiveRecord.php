@@ -261,10 +261,12 @@ abstract class ActiveRecord extends CActiveRecord
 	}
 //TODO: this breaking mvc - contains controller code	
 	// ensure that pk's exist for all in trail
-	public function assertFromParent()
+	public function assertFromParent($modelName = null)
 	{
-		// this model name
-		$modelName = get_called_class();
+		if(!$modelName)
+		{
+			$modelName = get_called_class();
+		}
 		
 		// get trail
 		$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName);
@@ -586,17 +588,14 @@ abstract class ActiveRecord extends CActiveRecord
 				{
 					$displayAttr = "{$matches[4]}.{$matches[5]}";
 				}
+				else
+				{
+					$displayAttr = "t.$displayAttr";
+				}
 			}
 
 			// set default sort
 			$searchCriteria->order = "$displayAttr ASC";
-		}
-		// set default sort
-		if(!$this->defaultSort)
-		{
-			// get first display attribute to use for inititial sort
-			foreach($modelName::getDisplayAttr() as $key => $displayAttr);
-			$this->defaultSort = $displayAttr;
 		}
 
 		return $searchCriteria;
@@ -745,7 +744,7 @@ if(count($m = $this->getErrors()))
 			// this model name
 			$modelName = get_class($this);
 			// the parent model name
-			$parentName = Yii::app()->controller->getParentCrumb($modelName);
+			$parentName = Controller::getParentCrumb($modelName);
 			// get the name of the foreing key field in this model referring to the parent
 			$primaryKeyName = $modelName::getParentForeignKey($parentName);
 			// get the primary key in play in this context which will be referring to the parent

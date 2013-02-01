@@ -24,6 +24,8 @@ class TaskToAssembly extends ActiveRecord
 	protected $defaultSort = 'assembly.description';
 	public $store_id;
 	public $quantity;
+
+	protected $defaultSort = 'searchAssembly';
 	
 	/**
 	 * @var string nice model name for use in output
