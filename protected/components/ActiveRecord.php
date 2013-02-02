@@ -551,7 +551,8 @@ $t = $this->attributes;
 	{
 		// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
 		// even though this confusing here
-		return self::linkColumn($name, get_class($this), $this->tableSchema->primaryKey);
+//		return self::linkColumn($name, get_class($this), $this->tableSchema->primaryKey);
+		return $name;
 	}
 
 	/**

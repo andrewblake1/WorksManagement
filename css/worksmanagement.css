@@ -1,0 +1,17 @@
+/* 
+    Document   : worksmanagement
+    Created on : Feb 2, 2013, 3:11:51 PM
+    Author     : Andrew
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* override some twitter bootstrap styles to enlarge the clickable area of icons in the admin view without altering the visible view in any way */
+td.button-column {
+vertical-align: middle;
+white-space: nowrap;
+}
+
+.button-column a {
+padding: 8px;
+}

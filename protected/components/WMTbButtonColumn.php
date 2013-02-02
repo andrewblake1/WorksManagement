@@ -32,7 +32,7 @@ class WMTbButtonColumn extends TbButtonColumn
 		// set buttons based on access rights
 //		if($controller->checkAccess(Controller::accessWrite))
 //		{
-			$this->template='{view} {update} {delete}';
+			$this->template='{view}{update}{delete}';
 
 	//	}
 //		elseif($controller->checkAccess(Controller::accessRead))

@@ -232,6 +232,8 @@ $t = $this->model->attributes;
 
 	public function datepickerRow($attribute, $htmlOptions = array(), $model = NULL)
 	{
+		$model = $model ? $model : $this->model;
+
 		// NB: the cool boostrap looking datepicker not working
 // TODO: get working with the correct js and css which might be conflicting with something - isn't working anyway
 		$cs = Yii::app()->clientScript;
@@ -239,9 +241,15 @@ $t = $this->model->attributes;
 		$cs->registerCssFile($cs->getCoreScriptUrl(). '/jui/css/base/jquery-ui.css');
 
 		$htmlOptions['options']['dateFormat'] = 'd M, yy';
+		// if no write access
+		if(!Controller::checkAccess(Controller::accessRead, get_class($model)))
+		{
+			// disable the datepicker so calendar doesn't pop up when user points
+			$htmlOptions['options']['disabled'] = 'true';
+		}
 		$htmlOptions['id'] = $attribute;
 
-		echo parent::datepickerRow($model ? $model : $this->model, $attribute,
+		echo parent::datepickerRow($model, $attribute,
 			array('class'=>'') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	

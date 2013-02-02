@@ -580,7 +580,10 @@ $t = Controller::$nav;
 				{
 					// add an update crumb to this primary key
 					$primaryKey = Controller::$nav['update'][$crumb];
-					$breadcrumbs[$crumb::getNiceName($primaryKey)] = array("$crumb/update", $crumb::model()->tableSchema->primaryKey=>$primaryKey);
+					$breadcrumbs[$crumb::getNiceName($primaryKey)] = array("$crumb/"
+						.(static::checkAccess(self::accessWrite, $crumb) ? 'update' : 'view'),
+						$crumb::model()->tableSchema->primaryKey=>$primaryKey,
+					);
 				}
 			}
 		}
@@ -642,7 +645,6 @@ $t = Controller::$nav;
 	private function adminRedirect($model, $sortByNewest = false)
 	{ 
 		// clear filtering and sorting and paging so can see newly inserted row at the top
-		$model->adminReset();
 		$modelName = get_class($model);
 		
 		// if posted a controller then this is where we should return to
@@ -665,6 +667,7 @@ $t = Controller::$nav;
 		// if we want to sort by the newest record first
 		if($sortByNewest)
 		{
+			$model->adminReset();
 			$params["{$modelName}_sort"] = $modelName::model()->tableSchema->primaryKey.'.desc';
 		}
 		
