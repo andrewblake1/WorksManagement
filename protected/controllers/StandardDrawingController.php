@@ -1,6 +1,6 @@
 <?php
 
-class StandardDrawingController extends Controller
+class StandardDrawingController extends AdjacencyListController
 {
 	private $uploadHandler;
 

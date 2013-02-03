@@ -1,6 +1,6 @@
 <?php
 
-class AssemblyController extends Controller
+class AssemblyController extends AdjacencyListController
 {
 
 }

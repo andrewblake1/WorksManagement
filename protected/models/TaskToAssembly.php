@@ -18,7 +18,7 @@
  * @property TaskToAssembly $parent
  * @property TaskToAssembly[] $taskToAssemblies
  */
-class TaskToAssembly extends ActiveRecord
+class TaskToAssembly extends AdjacencyListActiveRecord
 {
 	public $searchAssembly;
 	protected $defaultSort = 'assembly.description';

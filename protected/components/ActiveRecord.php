@@ -752,7 +752,7 @@ if(count($m = $this->getErrors()))
 			}
 			elseif(isset($_POST[$modelName][$primaryKeyName]))
 			{
-				$pk = $_GET[$primaryKeyName];
+				$pk = $_POST[$modelName][$primaryKeyName];
 			}
 			else
 			{

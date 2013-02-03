@@ -19,7 +19,7 @@
  * @property StandardDrawing $parent
  * @property StandardDrawing[] $standardDrawings
  */
-class StandardDrawing extends ActiveRecord
+class StandardDrawing extends AdjacencyListActiveRecord
 {
 	protected $defaultSort = 't.description';
 

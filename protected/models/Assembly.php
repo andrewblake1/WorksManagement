@@ -26,7 +26,7 @@
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskTypeToAssembly[] $taskTypeToAssemblies
  */
-class Assembly extends ActiveRecord
+class Assembly extends AdjacencyListActiveRecord
 {
 	protected $defaultSort = 't.description';
 

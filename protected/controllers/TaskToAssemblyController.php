@@ -1,6 +1,6 @@
 <?php
 
-class TaskToAssemblyController extends Controller
+class TaskToAssemblyController extends AdjacencyListController
 {
 	public function setUpdateTabs($model)
 	{
