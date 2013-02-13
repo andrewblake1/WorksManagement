@@ -120,7 +120,7 @@ class TaskController extends GenericExtensionController
 			// add quantity assemblies
 			for($cntr = 0; $cntr < $taskTypeToAssembly->quantity; $cntr++)
 			{
-				$saved = TaskToAssembly::model()->addAssembly($task->id, $taskTypeToAssembly->assembly_id, null, $models);
+				$saved = TaskToAssemblyController::addAssembly($task->id, $taskTypeToAssembly->assembly_id, null, $models);
 			}
 		}
 		
@@ -148,6 +148,8 @@ class TaskController extends GenericExtensionController
 			$model->attributes = $taskTypeToMaterial->attributes;
 			$model->staff_id = null;
 			$model->task_id = $task->id;
+			// need dummy store id to get around rules
+			$model->store_id = 0;
 			$saved &= $model->dbCallback('save');
 			$models[] = $model;
 		}

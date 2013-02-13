@@ -26,7 +26,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		
 		for($cntr = 0; $cntr < $model->quantity; $cntr++)
 		{
-			$saved = $this->addAssembly($model->task_id, $model->assembly_id, null, $models);
+			$saved = static::addAssembly($model->task_id, $model->assembly_id, null, $models);
 		}
 		
 		return $saved;
@@ -39,7 +39,7 @@ class TaskToAssemblyController extends AdjacencyListController
 	 * @param int $parent_id the id of the parent within this model - adjacency list
 	 * @return returns 0, or null on error of any inserts
 	 */
-	public function addAssembly($task_id, $assembly_id, $parent_id = null, &$models=array())
+	static function addAssembly($task_id, $assembly_id, $parent_id = null, &$models=array())
 	{
 		// initialise the saved variable to show no errors
 		$saved = true;
@@ -72,7 +72,7 @@ class TaskToAssemblyController extends AdjacencyListController
 			// add quantity sub-assemblies
 			for($cntr = 0; $cntr < $subAssembly->quantity; $cntr++)
 			{
-				$saved &= $this->addAssembly($task_id, $subAssembly->child_assembly_id, $taskToAssembly->id, $models);
+				$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, $taskToAssembly->id, $models);
 			}
 		}
 		

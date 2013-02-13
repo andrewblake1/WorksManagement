@@ -785,10 +785,15 @@ if(count($m = $this->getErrors()))
 							{
 								$command->bindParam(":pk", $pk, PDO::PARAM_STR);
 							}
-							// otherwise error
-							else
+							// otherwise if error - only considered error if current context is a match otherwise could be
+							// another controller creating this model
+							elseif(strcasecmp(Yii::app()->controller->id, $modelName) == 0)
 							{
 								throw new CHttpException(403,'System admin error. The default isn\'t valid - primary key (:pk) in sql but not in this context. ');
+							}
+							else
+							{
+								continue;
 							}
 						}
 	// TODO: this should be run of connection with restricted sys admin rights rather than main app user rights

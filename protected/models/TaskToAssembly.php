@@ -21,12 +21,10 @@
 class TaskToAssembly extends AdjacencyListActiveRecord
 {
 	public $searchAssembly;
-	protected $defaultSort = 'assembly.description';
 	public $store_id;
 	public $quantity;
-
 	protected $defaultSort = 'searchAssembly';
-	
+
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -95,27 +93,30 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 
 		// select
 		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.parent_id',
+			'id',	// needed for delete and update buttons
+			'parent_id',
 			'assembly.description AS searchAssembly',
 		);
 
 		// where
-		$criteria->compare('assembly.description',$this->searchAssembly,true);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.task_id',$this->task_id);
+		$criteria->compare('searchAssembly',$this->searchAssembly,true);
 		if(!empty($this->parent_id))
 		{
-			$criteria->compare('t.parent_id',$this->parent_id);
+			$criteria->compare('parent_id',$this->parent_id);
 		}
+
+		// join
+		$criteria->with = array(
+			'assembly',
+		);
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-		$columns[] = 't.id';
-		$columns[] = 't.parent_id';
+		$columns[] = 'id';
+		$columns[] = 'parent_id';
 		// link to admin displaying children or if no children then just description without link
         $this->linkColumnAdjacencyList('searchAssembly', $columns);
 		
