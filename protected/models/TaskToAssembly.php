@@ -47,8 +47,8 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		// will receive user inputs.
 		return array(
 			array('task_id, quantity, assembly_id, staff_id', 'required'),
-			array('parent_id, staff_id, assembly_id, quantity', 'numerical', 'integerOnly'=>true),
-			array('task_id', 'length', 'max'=>10),
+			array('staff_id, assembly_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('parent_id, task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, task_id, searchAssembly, parent_id, assembly_id, searchStaff', 'safe', 'on'=>'search'),
@@ -93,8 +93,8 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 
 		// select
 		$criteria->select=array(
-			'id',	// needed for delete and update buttons
-			'parent_id',
+			't.id',	// needed for delete and update buttons
+			't.parent_id',
 			'assembly.description AS searchAssembly',
 		);
 
@@ -102,7 +102,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		$criteria->compare('searchAssembly',$this->searchAssembly,true);
 		if(!empty($this->parent_id))
 		{
-			$criteria->compare('parent_id',$this->parent_id);
+			$criteria->compare('t.parent_id',$this->parent_id);
 		}
 
 		// join
@@ -130,7 +130,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	public function getSearchSort()
 	{
 		return array(
-			'id',
+			't.id',
 			'searchAssembly',
 		);
 	}

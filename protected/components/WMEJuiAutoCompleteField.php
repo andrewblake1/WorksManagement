@@ -108,7 +108,19 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
 		if(empty($this->htmlOptions['onblur']))
 		{
 			// this is either the previous value if user didn't pick anything; or the new value if they did
-			$this->htmlOptions['onblur']="$(this).val($('#".$this->_saveID."').val());";
+			$this->htmlOptions['onblur']="
+				if($(this).val())
+				{
+				console.log(2);
+					$(this).val($('#".$this->_saveID."').val());
+				}
+				else
+				{
+					$('#".$this->_saveID."').val('');
+					$('#".$this->_fieldID."').val('');
+				console.log(4);
+				}
+			";
 		}
 
 		parent::init(); // ensure necessary assets are loaded
@@ -133,6 +145,25 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
         $this->htmlOptions['id'] = $this->_lookupID;
         $this->htmlOptions['name'] = $this->_lookupID;   
 		$this->htmlOptions['value'] = $this->_display;   
+
+ /*       // fouth, an image button to empty all three fields
+        // JJD 1/2/13 v1.6 use relNameLabel if present
+        $label=Yii::t('DR','Remove '). ucfirst((!empty($this->relNameLabel) ? $this->relNameLabel : $this->relName));
+        $deleteImageURL = '/images/text_field_remove.png'; 
+ 			echo CHtml::link('<i class="'.$button['icon'].'"></i>', $deleteImageURL, array('title'=>$label,
+                'name' => 'remove'.$this->_fieldID,
+                'style'=>'margin-left:6px;',
+                // JJD 4/27/12 #1350 trigger onchange event for display field, in case there's an event attached (e.g. unsaved-changes-warning)
+                'onclick'=>"$('#".$this->_fieldID."').val('').trigger('change');$('#".$this->_saveID."').val('');$('#".$this->_lookupID."').val('');",
+            ));
+       echo CHtml::image($deleteImageURL, $label,
+            array('title'=>$label,
+                'name' => 'remove'.$this->_fieldID,
+                'style'=>'margin-left:6px;',
+                // JJD 4/27/12 #1350 trigger onchange event for display field, in case there's an event attached (e.g. unsaved-changes-warning)
+                'onclick'=>"$('#".$this->_fieldID."').val('').trigger('change');$('#".$this->_saveID."').val('');$('#".$this->_lookupID."').val('');",
+            )
+        );*/
 
         parent::run();
     }

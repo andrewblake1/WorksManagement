@@ -30,7 +30,7 @@ class DutyController extends Controller
 	{
 		// get duty
 		$model = Duty::model()->findByPk($id);
-//$t=$model->assignedTo;
+
 		// system admin
 		if(Yii::app()->user->checkAccess('system admin'))
 		{
@@ -57,14 +57,6 @@ class DutyController extends Controller
 		}
 	}
 
-//	/*
-//	 * overidden as because generic possibly added and want to edit after creation
-//	 */
-//	protected function createRedirect($model)
-//	{
-//		$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
-//	}
-
 	/*
 	 * overidden as mulitple models
 	 */
@@ -77,7 +69,12 @@ class DutyController extends Controller
 	static function createSaveStatic($model, &$models=array())
 	{
 		$saved = true;
-
+		
+		// this is repeated in before validate but variables arn't held so need recalc here
+		$taskTypeToDutyType = TaskTypeToDutyType::model()->findByPk($model->task_type_to_duty_type_id);
+		$model->task_type_id = $taskTypeToDutyType->task_type_id ;
+		$model->duty_type_id = $taskTypeToDutyType->duty_type_id ;
+		
 		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
 		if(($level = $model->taskTypeToDutyType->dutyType->level) == Planning::planningLevelTaskInt)

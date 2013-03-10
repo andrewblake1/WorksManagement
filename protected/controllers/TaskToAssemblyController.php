@@ -8,12 +8,17 @@ class TaskToAssemblyController extends AdjacencyListController
 		$this->tabs = $model;
 
 		// add tab to standard drawings
-		$this->addTab(AssemblyToStandardDrawing::getNiceNamePlural(), array('AssemblyToStandardDrawing/admin',
-			'assembly_id' => TaskToAssembly::model()->findByPk($_GET['id'])->assembly_id));
+		$this->addTab(AssemblyToStandardDrawing::getNiceNamePlural(), array(
+			'AssemblyToStandardDrawing/admin',
+			'assembly_id' => $model->assembly_id,
+			));
 
 		// add tab t o materials
-		$this->addTab(Material::getNiceNamePlural(), array('MaterialToTask/admin',
-			'task_to_assembly_id' => $_GET['id']));
+		$this->addTab(Material::getNiceNamePlural(), array(
+			'MaterialToTask/admin',
+			'task_to_assembly_id' => $_GET['id'],
+			'task_id' => $model->task_id,
+		));
 	}
 	
 	/*

@@ -123,6 +123,7 @@ class Project extends ActiveRecord
 				inCharge.email
 				) AS searchInCharge",
 			'travel_time_1_way',
+			'id0.in_charge_id AS in_charge_id',
 			't.critical_completion',
 			't.planned',
 			't.project_type_id',	// though not displayed, needed to get id for link field

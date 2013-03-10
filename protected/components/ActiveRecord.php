@@ -314,7 +314,6 @@ $t = $this->attributes;
 	}
 
 //TODO: this breaking mvc - contains controller code	
-	// ensure that pk's exist for all in trail
 	/**
 	 * Clear any memory of admin views filters, paging and sorting that arn't in the current breadcrumb trail 
 	 */
@@ -334,7 +333,6 @@ $t = $this->attributes;
 	}
 
 //TODO: this breaking mvc - contains controller code	
-	// ensure that pk's exist for all in trail
 	// reset filtering, paging, and sorting - to be used after successfull creations before returning to admin view
 	//
 	public function adminReset($modelName = null)

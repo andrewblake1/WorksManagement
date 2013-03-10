@@ -6,19 +6,17 @@
  * The followings are the available columns in table 'duty':
  * @property string $id
  * @property string $task_id
- * @property integer $task_type_id
  * @property integer $duty_type_id
- * @property integer $task_type_to_duty_type_id
  * @property string $duty_data_id
+ * @property integer $responsible
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property Task $task
- * @property TaskTypeToDutyType $taskType
- * @property Staff $staff
- * @property TaskTypeToDutyType $taskTypeToDutyType
- * @property DutyData $dutyType
  * @property DutyData $dutyData
+ * @property DutyType $dutyType
+ * @property Staff $responsible0
+ * @property Staff $staff
  */
 class Duty extends ActiveRecord
 {
@@ -30,6 +28,7 @@ class Duty extends ActiveRecord
 	public $searchTask;
 	public $description;
 	public $searchInCharge;
+	public $searchImportance;
 	public $generic_id;
 	public $updated;
 	public $due;
@@ -50,13 +49,13 @@ class Duty extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, task_type_id, duty_type_id, task_type_to_duty_type_id, duty_data_id, staff_id', 'required'),
-			array('task_type_id, duty_type_id, task_type_to_duty_type_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_id, duty_type_id, responsible, staff_id', 'required'),
+			array('duty_type_id, responsible, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('updated, generic_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, due, searchInCharge, searchTask, description, updated, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, due, searchImportance, searchInCharge, searchTask, description, updated, searchStaff', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -69,11 +68,10 @@ class Duty extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-			'taskType' => array(self::BELONGS_TO, 'TaskTypeToDutyType', 'task_type_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'taskTypeToDutyType' => array(self::BELONGS_TO, 'TaskTypeToDutyType', 'task_type_to_duty_type_id'),
-			'dutyType' => array(self::BELONGS_TO, 'DutyData', 'duty_type_id'),
 			'dutyData' => array(self::BELONGS_TO, 'DutyData', 'duty_data_id'),
+			'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
+			'responsible0' => array(self::BELONGS_TO, 'Staff', 'responsible'),
+			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
 
@@ -85,12 +83,13 @@ class Duty extends ActiveRecord
 		return parent::attributeLabels(array(
 			'task_id' => 'Task',
 			'searchTask' => 'Task',
-			'task_type_id' => 'Task type',
-			'task_type_to_duty_type_id' => 'Duty/Role/First/Last/Email',
+			'duty_type_id' => 'Duty/Role/First/Last/Email',
 			'description' => 'Duty',
+			'responsible' => 'Responsible',
 			'updated' => 'Completed',
 			'generic_id' => 'Generic',
 			'searchInCharge' => 'Assigned to',
+			'searchImportance' => 'Importance',
 		));
 	}
 
@@ -106,18 +105,26 @@ class Duty extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.task_type_to_duty_type_id',
 			'dutyType.description AS description',
 			'(SELECT `date` FROM working_days WHERE id = (SELECT id - lead_in_days FROM working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
 			"COALESCE(
 				IF(LENGTH(CONCAT_WS('$delimiter',
-					user.first_name,
-					user.last_name,
-					user.email
+					responsible.first_name,
+					responsible.last_name,
+					responsible.email
 					))=0, NULL, CONCAT_WS('$delimiter',
-					user.first_name,
-					user.last_name,
-					user.email
+					responsible.first_name,
+					responsible.last_name,
+					responsible.email
+					)),
+				IF(LENGTH(CONCAT_WS('$delimiter',
+					duty_default.first_name,
+					duty_default.last_name,
+					duty_default.email
+					))=0, NULL, CONCAT_WS('$delimiter',
+					duty_default.first_name,
+					duty_default.last_name,
+					duty_default.email
 					)),
 				CONCAT_WS('$delimiter',
 					inCharge.first_name,
@@ -126,16 +133,18 @@ class Duty extends ActiveRecord
 					)
 				) AS searchInCharge",
 			'dutyData.updated AS updated',
+			'taskTypeToDutyType.importance AS searchImportance',
 		);
 
 		// where
 		$criteria->compare('dutyType.description',$this->description,true);
+		$criteria->compare('taskTypeToDutyType.importance',$this->searchImportance,true);
 		$this->compositeCriteria(
 			$criteria,
 			array(
-				'user.first_name',
-				'user.last_name',
-				'user.email',
+				'duty_default.first_name',
+				'duty_default.last_name',
+				'duty_default.email',
 			), $this->searchInCharge);
 		$this->compositeCriteria($criteria,
 			array(
@@ -161,20 +170,20 @@ class Duty extends ActiveRecord
 		
 		// join
 		$criteria->join = '
-			JOIN task_type_to_duty_type taskTypeToDutyType ON t.task_type_to_duty_type_id = taskTypeToDutyType.id
-			JOIN duty_type dutyType ON taskTypeToDutyType.duty_type_id = dutyType.id
-			JOIN project_type_to_AuthItem projectTypeToAuthItem ON taskTypeToDutyType.project_type_to_AuthItem_id = projectTypeToAuthItem.id
-			JOIN project_to_project_type_to_AuthItem projectToProjectTypeToAuthItem ON projectTypeToAuthItem.id = projectToProjectTypeToAuthItem.project_type_to_AuthItem_id
-			JOIN project ON projectToProjectTypeToAuthItem.project_id = project.id
-			JOIN task ON project.id = task.project_id
+			JOIN task ON t.task_id = task.id
+			JOIN project ON task.project_id = project.id
 			JOIN crew ON task.crew_id = crew.id
 			JOIN day ON crew.day_id = day.id
-			JOIN duty d ON task.id = d.task_id
-			JOIN AuthAssignment ON projectToProjectTypeToAuthItem.AuthAssignment_id = AuthAssignment.id
-			JOIN staff user ON AuthAssignment.userid = user.id
+			JOIN duty_type dutyType ON t.duty_type_id = dutyType.id
+			LEFT JOIN task_type_to_duty_type taskTypeToDutyType
+			USING ( task_type_id, duty_type_id )
+			LEFT JOIN project_type_to_AuthItem projectTypeToAuthItem ON taskTypeToDutyType.project_type_to_AuthItem_id = projectTypeToAuthItem.id
+			LEFT JOIN project_to_project_type_to_AuthItem projectToProjectTypeToAuthItem ON projectTypeToAuthItem.id = projectToProjectTypeToAuthItem.project_type_to_AuthItem_id
+			LEFT JOIN AuthAssignment ON projectToProjectTypeToAuthItem.AuthAssignment_id = AuthAssignment.id
+			LEFT JOIN staff duty_default ON AuthAssignment.userid = duty_default.id
+			LEFT JOIN staff responsible ON t.responsible = responsible.id
 		';
-//			WHERE t.id =:id
-//			AND d.id =:id
+		
 		// with
 		$criteria->with = array(
 			'dutyData',
@@ -188,15 +197,16 @@ class Duty extends ActiveRecord
 	{
         $columns[] = $this->linkThisColumn('description');
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'assignedTo');
+        $columns[] = 'searchImportance';
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
-		
+
 		return $columns;
 	}
 
 	static function getDisplayAttr()
 	{
-		return array('taskTypeToDutyType->dutyType->description');
+		return array('dutyType->description');
 	}
 
 	/**
@@ -205,16 +215,17 @@ class Duty extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTask', 'description', 'updated', 'searchInCharge', 'due');
+		return array('searchTask', 'description', 'updated', 'searchInCharge', 'searchImportance', 'due');
 	}
 
 	public function beforeValidate()
 	{
-		if(isset($this->task_type_to_duty_type_id))
-		{
-			$model = TaskTypeToDutyType::model()->findByPk($this->task_type_to_duty_type_id);
-			$this->task_type_id = $model->task_type_id ;
-		}
+//		if(isset($this->task_type_to_duty_type_id))
+//		{
+//			$model = TaskTypeToDutyType::model()->findByPk($this->task_type_to_duty_type_id);
+//			$this->task_type_id = $model->task_type_id ;
+//			$this->duty_type_id = $model->duty_type_id ;
+//		}
 		
 		return parent::beforeValidate();
 	}
@@ -244,7 +255,7 @@ class Duty extends ActiveRecord
 // TODO: this may be ineffecient - may be better to do a intersecting join on 2 result sets working each way around the circular here instead of back to
 // the start i.e. the duty table		
 		// if duty not directly assigned to project
-		$sql = '
+/*		$sql = '
 			SELECT userid
 			FROM duty
 			JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type.id
@@ -264,7 +275,7 @@ class Duty extends ActiveRecord
 			// get who is responsible at the target accummulating level for this duty. Because DutyData is at that desired level it links
 			// to correct Planning to get the in_charge
 			$this->assignedTo = $this->dutyData->planning->in_charge_id;
-		}
+		}*/
 		
 		parent::afterFind();
 	}

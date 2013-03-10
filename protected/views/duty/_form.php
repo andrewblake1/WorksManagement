@@ -4,7 +4,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	if($model->isNewRecord)
 	{
-		TaskTypeToDutyTypeController::listWidgetRow($model, $form, 'task_type_to_duty_type_id', array(), array('scopeTask'=>array($model->task_id)));
+		DutyTypeController::listWidgetRow($model, $form, 'duty_type_id');
+		StaffController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Responsible');
 	}
 	else
 	{
@@ -16,6 +17,12 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		else
 		{
 			$form->checkBoxRow('updated');
+			
+			// allow system admin and original creator of duty to be able to alter who it is assigned to
+			if($model->staff_id == Yii::app()->user->id || Yii::app()->user->checkAccess('system admin'))
+			{
+				StaffController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Responsible');
+			}
 		}
 
 		if(!empty($model->dutyData->generic_id))
@@ -23,8 +30,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 			$this->widget('GenericWidget', array(
 				'form'=>$form,
 				'generic'=>$model->dutyData->generic,
-				'genericType'=>$model->taskTypeToDutyType->dutyType->genericType,
-				'relationToGenericType'=>'duty->taskTypeToDutyType->dutyType->genericType',
+				'genericType'=>$model->dutyType->genericType,
+				'relationToGenericType'=>'duty->dutyType->genericType',
 			));
 		}
 	}

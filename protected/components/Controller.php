@@ -126,7 +126,6 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		{
 			$modelName = /*$_GET['fk_model']*/ $this->modelName;
 			$model = $modelName::model();
-			$columns = $model->tableSchema->columns;
 	
 			// protect against possible injection
 			$criteria = new CDbCriteria;
@@ -147,11 +146,16 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					$criteria->with[] = $matches[1];
 					$alias = $matches[4];
 					$attribute = $matches[5];
+					$relations = $model->relations();
+					$className = $relations[$alias][1];
+					$relation = $className::model();
+					$columns = $relation->tableSchema->columns;
 				}
 				else
 				{
 					$alias = 't';
 					$attribute = $field;
+					$columns = $model->tableSchema->columns;
 				}
 
 				$criteria->order[] = "$alias.$attribute ASC";
@@ -306,6 +310,11 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 				// if first item in tabs
 				if(!$index)
 				{
+					// set whether action is update or view
+					$action = static::checkAccess(self::accessWrite, $modelName)
+						? 'update'
+						: 'view';
+
 					// store this (first tabs model name)
 					$firstTabModelName = $modelName;
 					$firstTabPrimaryKeyName = $firstTabModelName::model()->tableSchema->primaryKey;
@@ -320,7 +329,7 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 					if($keyValue && (!$nextLevel || ($firstTabModelName == $this->modelName)))
 					{
 						$this->_tabs[$index]['label'] = $modelName::getNiceName($keyValue);
-						$this->_tabs[$index]['url'] = array("$modelName/update", $firstTabPrimaryKeyName=>$keyValue);
+						$this->_tabs[$index]['url'] = array("$modelName/$action", $firstTabPrimaryKeyName=>$keyValue);
 						$index++;
 						continue;
 					}
@@ -351,6 +360,10 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	public function actionAdmin($exportColumns = array())
 	{
 		$modelName = $this->modelName;
+		// may be using a database view instead of main table model
+		$adminViewModel = $this->_adminViewModel;
+		$model=new $adminViewModel('search');
+		$model->unsetAttributes();  // clear any default values
 
 		// clear the primary key set by update
 		if(isset(Controller::$nav[ 'update'][$modelName]))
@@ -403,6 +416,8 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		{
 			// store admin url paramters
 			Controller::$nav['admin'][$modelName] = $_GET;
+			// clear any filtering, paging, sorting
+			$model->adminReset();
 		}
 
 		// restore pagination
@@ -428,10 +443,6 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 			}
 		}
 		
-		// may be using a database view instead of main table model
-		$adminViewModel = $this->_adminViewModel;
-		$model=new $adminViewModel('search');
-		$model->unsetAttributes();  // clear any default values
 		$attributes = array();
 		if(!empty($_GET))
 		{
@@ -689,7 +700,7 @@ $t = Controller::$nav;
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating =$this->performAjaxValidation($model);
 // TODO: this is untested without javascript
-
+$t = $model->attributes;
 		if(isset($_POST[$this->modelName]))
 		{
 			$model->attributes=$_POST[$this->modelName];

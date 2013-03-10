@@ -2,7 +2,7 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));		
 
-/*	CHtml::resolveNameID($model, $attribute = 'assembly_id', $htmlOptions);
+	CHtml::resolveNameID($model, $attribute = 'assembly_id', $htmlOptions);
 
 	$source = Yii::app()->createUrl("Assembly/autocomplete") . "?model={$this->modelName}&attribute=assembly_id&scopes%5BscopeStore%5D%5B0%5D=";
 
@@ -42,7 +42,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	}
 	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array(), array('scopeStore'=>array($model->store_id)));
 
-	$form->textFieldRow('quantity');*/
+	$form->textFieldRow('quantity');
 
 $this->endWidget();
 
