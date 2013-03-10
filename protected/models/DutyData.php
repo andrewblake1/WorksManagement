@@ -81,4 +81,22 @@ class DutyData extends ActiveRecord
 		));
 	}
 
+	public function beforeSave()
+	{
+		// if the updated attribute was null but is now being set
+		if($this->updated == 1 && $this->getOldAttributeValue('updated') == null)
+		{
+			// set to current datetime
+			$this->updated = date('Y-m-d H:i:s');
+		}
+		// system admin clear
+		elseif(empty($this->updated) && Yii::app()->user->checkAccess('system admin'))
+		{
+			// clear
+			$this->updated = null;
+		}
+		
+		return parent::beforeSave();
+	}
+
 }

@@ -36,6 +36,7 @@ abstract class ActiveRecord extends CActiveRecord
 		foreach(static::getDisplayAttr() as $relationAttribute)
 		{
 			$eval = '$model';
+
 			// would just eval the whole thing but can spit php notice if non existing child class hence this longer way
 			foreach(explode('->', $relationAttribute) as $relationAttribute)
 			{

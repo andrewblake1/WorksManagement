@@ -12,11 +12,11 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Task $task
  * @property DutyData $dutyData
  * @property DutyType $dutyType
- * @property Staff $responsible0
  * @property Staff $staff
+ * @property Staff $responsible0
+ * @property Task $task
  */
 class Duty extends ActiveRecord
 {
@@ -49,7 +49,7 @@ class Duty extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, duty_type_id, responsible, staff_id', 'required'),
+			array('task_id, duty_type_id, staff_id', 'required'),
 			array('duty_type_id, responsible, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('updated, generic_id', 'safe'),
@@ -67,11 +67,11 @@ class Duty extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
 			'dutyData' => array(self::BELONGS_TO, 'DutyData', 'duty_data_id'),
 			'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
-			'responsible0' => array(self::BELONGS_TO, 'Staff', 'responsible'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'responsible0' => array(self::BELONGS_TO, 'Staff', 'responsible'),
+			'task' => array(self::BELONGS_TO,'Task', 'task_id'),
 		);
 	}
 
@@ -206,7 +206,9 @@ class Duty extends ActiveRecord
 
 	static function getDisplayAttr()
 	{
-		return array('dutyType->description');
+		return array(
+			'dutyType->description',
+		);
 	}
 
 	/**
@@ -230,25 +232,8 @@ class Duty extends ActiveRecord
 		return parent::beforeValidate();
 	}
 
-	public function beforeSave()
-	{
-		// if the updated attribute was null but is now being set
-		if($this->updated == 1 && $this->dutyData->getOldAttributeValue('updated') == null)
-		{
-			// set to current datetime
-			$this->dutyData->updated = date('Y-m-d H:i:s');
-		}
-		// system admin clear
-		elseif(empty($this->updated) && Yii::app()->user->checkAccess('system admin'))
-		{
-			// clear
-			$this->dutyData->updated = null;
-		}
-		
-		return parent::beforeSave();
-	}
-
 	public function afterFind() {
+
 		$this->updated = $this->dutyData->updated;
 
 		// get who the duty is assigned to

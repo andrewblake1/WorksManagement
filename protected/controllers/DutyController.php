@@ -163,6 +163,7 @@ class DutyController extends Controller
 		}
 
 		// attempt save of related DutyData
+$t = $model->dutyData->attributes;
 		$saved &= parent::updateSave($model->dutyData, $models);
 		
 		return $saved & parent::updateSave($model, $models);
