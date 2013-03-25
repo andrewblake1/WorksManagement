@@ -29,6 +29,14 @@ abstract class ActiveRecord extends CActiveRecord
 		return parent::model(get_called_class());
 	}
 
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return Yii::app()->functions->uncamelize(get_called_class());
+	}
+	
 	static public function evalDisplayAttr($model)
 	{
 		$attributes = array();
@@ -288,29 +296,30 @@ abstract class ActiveRecord extends CActiveRecord
 				}
 $t = $this->attributes;
 				$modelName = get_class($model);
-				// get the name of the foreing key field in this model referring to the parent
-				$primaryKeyName = $modelName::getParentForeignKey($crumb);
+				// get the name of the foreign key field in this model referring to the parent
+				$parentForeignKeyName = $modelName::getParentForeignKey($crumb);
 				// the if clause here is to exclude when model is for search on admin view and has no pk - then assume nav variables already set
-				if($model->$primaryKeyName !== null)
+				if($model->$parentForeignKeyName !== null)
 				{
 					// store the primary key for the model
-					Controller::$nav['update'][$crumb] = $model->$primaryKeyName;
+					Controller::$nav['update'][$crumb] = $model->$parentForeignKeyName;
 					// ensure that that at least the parents primary key is set for the admin view
-					Controller::$nav['admin'][$modelName][$primaryKeyName] = $model->$primaryKeyName;
+					Controller::$nav['admin'][$modelName][$parentForeignKeyName] = $model->$parentForeignKeyName;
 				}
 
 				// set the model ready for the next one
-				$model = $crumb::model()->findByPk($model->$primaryKeyName);
+$t = Controller::$nav;
+				$model = $crumb::model()->findByPk($model->$parentForeignKeyName);
 				
 				// capture the first parent only for returning later
-				if(empty($parentForeignKey))
+				if(empty($firstParentForeignKeyName))
 				{
-					$parentForeignKey = $primaryKeyName;
+					$firstParentForeignKeyName = $parentForeignKeyName;
 				}
 			}
 			
 			// return the first parent
-			return $parentForeignKey;
+			return $firstParentForeignKeyName;
 		}
 	}
 
@@ -448,6 +457,8 @@ $t = $this->attributes;
 			'parent_id' => 'Parent',
 			'alias' => 'Alias',
 			'quantity' => 'Quantity',
+			'minimum' => 'Minimum',
+			'maximum' => 'Maximum',
 			'name' => 'Name',
 			'first_name' => 'First name',
 			'last_name' => 'Last name',
@@ -563,7 +574,7 @@ $t = $this->attributes;
 	{
 		$searchCriteria = $model->searchCriteria;
 		
-		// if this model has a deleted property
+		// if this model has a staff_id property
 		if(in_array('staff_id', $model->tableSchema->getColumnNames()))
 		{
 			$this->compositeCriteria($searchCriteria, array('staff.first_name','staff.last_name','staff.email'), $model->searchStaff);

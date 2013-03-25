@@ -8,6 +8,7 @@
  * @property integer $assembly_id
  * @property integer $standard_drawing_id
  * @property integer $store_id
+ * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -27,14 +28,6 @@ class AssemblyToStandardDrawing extends ActiveRecord
 	protected $defaultSort = 'standardDrawing.description';
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'assembly_to_standard_drawing';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -42,11 +35,11 @@ class AssemblyToStandardDrawing extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('assembly_id, standard_drawing_id, store_id, staff_id', 'required'),
-			array('assembly_id, standard_drawing_id, store_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, standard_drawing_id, store_id', 'required'),
+			array('assembly_id, standard_drawing_id, store_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, assembly_id, searchStandardDrawing, store_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, assembly_id, searchStandardDrawing, store_id', 'safe', 'on'=>'search'),
 		);
 	}
 

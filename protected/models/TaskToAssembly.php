@@ -11,7 +11,7 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property MaterialToTask[] $materialToTasks
+ * @property TaskToMaterial[] $taskToMaterials
  * @property Task $task
  * @property Staff $staff
  * @property Assembly $assembly
@@ -21,6 +21,7 @@
 class TaskToAssembly extends AdjacencyListActiveRecord
 {
 	public $searchAssembly;
+	public $searchComment;
 	public $store_id;
 	public $quantity;
 	protected $defaultSort = 'searchAssembly';
@@ -31,14 +32,6 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	static $niceName = 'Assembly';
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'task_to_assembly';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -46,12 +39,12 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, quantity, assembly_id, staff_id', 'required'),
-			array('staff_id, assembly_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('task_id, quantity, assembly_id', 'required'),
+			array('assembly_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('parent_id, task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchAssembly, parent_id, assembly_id, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchComment, searchAssembly, parent_id, assembly_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -63,7 +56,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'task_to_assembly_id'),
+			'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_to_assembly_id'),
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
@@ -81,6 +74,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 			'task_id' => 'Task',
 			'assembly_id' => 'Assembly',
 			'searchAssembly' => 'Assembly',
+			'searchComment' => 'Comment',
 		));
 	}
 
@@ -96,15 +90,28 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.parent_id',
 			'assembly.description AS searchAssembly',
+			'assemblyToAssembly.comment AS searchComment',
 		);
 
 		// where
-		$criteria->compare('searchAssembly',$this->searchAssembly,true);
+		$criteria->compare('t.task_id',$this->task_id,false);
+		$criteria->compare('assembly.description',$this->searchAssembly,true);
+		$criteria->compare('assemblyToAssembly.comment',$this->searchComment,true);
 		if(!empty($this->parent_id))
 		{
 			$criteria->compare('t.parent_id',$this->parent_id);
 		}
 
+		// join
+		// This join is to get at the comment contained within the sub assembly (assembly to assembly) table but realizing there is
+		// a relationship between a parent child relationship in this table and the sub assembly table
+		$criteria->join = '
+			LEFT JOIN task_to_assembly taskToAssemblyParent ON t.parent_id = taskToAssemblyParent.id
+			LEFT JOIN assembly_to_assembly assemblyToAssembly
+				ON taskToAssemblyParent.assembly_id = assemblyToAssembly.parent_assembly_id
+				AND t.assembly_id = assemblyToAssembly.child_assembly_id
+		';
+		
 		// join
 		$criteria->with = array(
 			'assembly',
@@ -119,6 +126,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		$columns[] = 'parent_id';
 		// link to admin displaying children or if no children then just description without link
         $this->linkColumnAdjacencyList('searchAssembly', $columns);
+		$columns[] = 'searchComment';
 		
 		return $columns;
 	}
@@ -132,6 +140,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		return array(
 			't.id',
 			'searchAssembly',
+			'searchComment',
 		);
 	}
 	

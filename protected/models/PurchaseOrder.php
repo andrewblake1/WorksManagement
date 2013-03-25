@@ -23,14 +23,6 @@ class PurchaseOrder extends ActiveRecord
 	public $searchSupplier;
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'purchase_order';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -38,12 +30,12 @@ class PurchaseOrder extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('supplier_id, number, staff_id', 'required'),
-			array('supplier_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('supplier_id, number', 'required'),
+			array('supplier_id', 'numerical', 'integerOnly'=>true),
 			array('number', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchSupplier, number, searchStaff', 'safe', 'on'=>'search'),
+			array('id, searchSupplier, number', 'safe', 'on'=>'search'),
 		);
 	}
 

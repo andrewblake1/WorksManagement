@@ -22,6 +22,7 @@
  * @property AssemblyToAssembly[] $assemblyToAssemblies2
  * @property AssemblyToClient[] $assemblyToClients
  * @property AssemblyToMaterial[] $assemblyToMaterials
+ * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
  * @property AssemblyToStandardDrawing[] $assemblyToStandardDrawings
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskTypeToAssembly[] $taskTypeToAssemblies
@@ -31,14 +32,6 @@ class Assembly extends AdjacencyListActiveRecord
 	protected $defaultSort = 't.description';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'assembly';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -46,10 +39,10 @@ class Assembly extends AdjacencyListActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, store_id, staff_id', 'required'),
-			array('parent_id, deleted, store_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, store_id', 'required'),
+			array('parent_id, store_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
-			array('id, description, store_id, alias, parent_id, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, store_id, alias, parent_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,6 +63,7 @@ class Assembly extends AdjacencyListActiveRecord
 			'assemblyToAssemblies2' => array(self::HAS_MANY, 'AssemblyToAssembly', 'child_assembly_id'),
 			'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
+			'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'assembly_id'),
 			'assemblyToStandardDrawings' => array(self::HAS_MANY, 'AssemblyToStandardDrawing', 'assembly_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'assembly_id'),
 			'taskTypeToAssemblies' => array(self::HAS_MANY, 'TaskTypeToAssembly', 'assembly_id'),
@@ -83,7 +77,6 @@ class Assembly extends AdjacencyListActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'store_id' => 'Store',
-			'searchStore' => 'Store',
 		));
 	}
 
@@ -131,11 +124,6 @@ class Assembly extends AdjacencyListActiveRecord
 		);
 	}
  
-	public function getSearchSort()
-	{
-		return array('searchStore');
-	}
-
 	public function scopeStore($store_id)
 	{
 		$criteria=new DbCriteria;

@@ -25,14 +25,6 @@ class Day extends ActiveRecord
 	public $in_charge_id;
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'day';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -40,13 +32,12 @@ class Day extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_id, staff_id', 'required'),
-			array('staff_id', 'numerical', 'integerOnly'=>true),
+			array('project_id', 'required'),
 			array('id, level, project_id, in_charge_id', 'length', 'max'=>10),
 			array('name, scheduled', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, level, searchInCharge, project_id, scheduled, staff_id', 'safe', 'on'=>'search'),
+			array('id, name, level, searchInCharge, project_id, scheduled', 'safe', 'on'=>'search'),
 		);
 	}
 

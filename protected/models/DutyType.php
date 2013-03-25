@@ -36,14 +36,6 @@ class DutyType extends ActiveRecord
 	public $searchGenericType;
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'duty_type';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -51,14 +43,14 @@ class DutyType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, staff_id', 'required'),
-			array('lead_in_days, dutycategory_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description', 'required'),
+			array('lead_in_days, dutycategory_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			array('level', 'length', 'max'=>10),
 			array('generic_type_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, lead_in_days, level, dutycategory_id, searchDutycategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, lead_in_days, level, dutycategory_id, searchDutycategory, searchGenericType', 'safe', 'on'=>'search'),
 		);
 	}
 

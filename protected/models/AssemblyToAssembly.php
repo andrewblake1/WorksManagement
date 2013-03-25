@@ -30,14 +30,6 @@ class AssemblyToAssembly extends ActiveRecord
 	protected $defaultSort = 'childAssembly.description';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'assembly_to_assembly';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -45,12 +37,12 @@ class AssemblyToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('store_id, parent_assembly_id, child_assembly_id, quantity, staff_id', 'required'),
-			array('store_id, parent_assembly_id, child_assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('store_id, parent_assembly_id, child_assembly_id, quantity', 'required'),
+			array('store_id, parent_assembly_id, child_assembly_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('comment', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, comment, quantity, staff_id', 'safe', 'on'=>'search'),
+			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, comment, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 

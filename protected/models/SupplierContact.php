@@ -36,14 +36,6 @@ class SupplierContact extends ActiveRecord
 	static $niceName = 'Contact';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'supplier_contact';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -51,14 +43,13 @@ class SupplierContact extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('first_name, last_name, email, staff_id', 'required'),
-			array('deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('first_name, last_name, email', 'required'),
 			array('first_name, last_name, role, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
 			array('email, address_line1, address_line2', 'length', 'max'=>255),
 			array('post_code', 'length', 'max'=>16),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, first_name, last_name, role, email, address_line1, address_line2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, first_name, last_name, role, email, address_line1, address_line2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'safe', 'on'=>'search'),
 		);
 	}
 

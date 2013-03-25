@@ -73,13 +73,6 @@ class Planning extends CategoryActiveRecord {
 	}
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName() {
-		return 'planning';
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()	{

@@ -35,13 +35,6 @@ class Dutycategory extends CategoryActiveRecord {
 	}
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName() {
-		return 'dutycategory';
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations() {

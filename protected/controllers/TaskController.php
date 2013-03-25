@@ -10,14 +10,6 @@ class TaskController extends GenericExtensionController
 	protected $relation_modelToGenericModelTypes = 'taskToGenericTaskTypes';
 	protected $relation_modelToGenericModelType = 'taskToGenericTaskType';
 
-//	/*
-//	 * overidden as because generics added want to edit them after creation
-//	 */
-//	protected function createRedirect($model)
-//	{
-//		$this->redirect(array('update', 'id'=>$model->getPrimaryKey()));
-//	}
-
 	/*
 	 * overidden as mulitple models
 	 */
@@ -30,6 +22,7 @@ class TaskController extends GenericExtensionController
 		$planning = new Planning;
 		$planning->name = $model->name;
 		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
+
 		if($saved = $planning->appendTo(Planning::model()->findByPk($model->crew_id)))
 		{
 			$model->id = $planning->id;
@@ -143,7 +136,7 @@ class TaskController extends GenericExtensionController
 		foreach($task->taskType->taskTypeToMaterials as $taskTypeToMaterial)
 		{
 			// create a new materials
-			$model = new MaterialToTask();
+			$model = new TaskToMaterial();
 			// copy any useful attributes from
 			$model->attributes = $taskTypeToMaterial->attributes;
 			$model->staff_id = null;
@@ -178,20 +171,7 @@ class TaskController extends GenericExtensionController
 			$model->attributes = $taskTypeToDutyType->attributes;
 			$model->staff_id = null;
 			$model->task_id = $task->id;
-			$model->task_type_to_duty_type_id = $taskTypeToDutyType->id;
 			$saved &= DutyController::createSaveStatic($model, $models);
-/*			// if we need to create a generic
-			if(!empty($taskTypeToDutyType->dutyType->generic_type_id))
-			{
-				// create a new generic item to hold value
-				$saved &= Generic::createGeneric($taskTypeToDutyType->dutyType->genericType, $models, $generic);
-				// associate the new generic to this duty
-				$model->generic_id = $generic->id;
-			}
-			// attempt save
-			$saved &= $model->dbCallback('save');
-			// record any errors
-			$models[] = $model;*/
 		}
 		
 		return $saved;

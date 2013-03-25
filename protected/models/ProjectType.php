@@ -20,13 +20,6 @@
  */
 class ProjectType extends ActiveRecord
 {
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'project_type';
-	}
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -36,12 +29,12 @@ class ProjectType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, client_id, staff_id', 'required'),
-			array('client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, client_id', 'required'),
+			array('client_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, client_id, deleted, searchClient, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, client_id, searchClient', 'safe', 'on'=>'search'),
 		);
 	}
 

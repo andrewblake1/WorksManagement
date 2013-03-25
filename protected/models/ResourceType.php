@@ -26,15 +26,6 @@ class ResourceType extends ActiveRecord
 	 */
 	static $niceName = 'Resource';
 
-	
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'resource_type';
-	}
-
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -43,13 +34,13 @@ class ResourceType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, staff_id', 'required'),
-			array('resourcecategory_id, maximum, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description', 'required'),
+			array('resourcecategory_id, maximum', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			array('unit_price', 'length', 'max'=>7),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, unit_price, resourcecategory_id, maximum, deleted, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, unit_price, resourcecategory_id, maximum', 'safe', 'on'=>'search'),
 		);
 	}
 

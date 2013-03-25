@@ -37,13 +37,12 @@ class ReportToAuthItem extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('report_id, AuthItem_name, staff_id', 'required'),
-			array('staff_id', 'numerical', 'integerOnly'=>true),
+			array('report_id, AuthItem_name', 'required'),
 			array('report_id', 'length', 'max'=>10),
 			array('AuthItem_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, report_id, AuthItem_name, staff_id', 'safe', 'on'=>'search'),
+			array('id, report_id, AuthItem_name', 'safe', 'on'=>'search'),
 		);
 	}
 

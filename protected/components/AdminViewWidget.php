@@ -9,6 +9,7 @@ class AdminViewWidget extends CWidget
 {
 	private $_controller;
 	public $model;
+	public $createModel;
 	public $columns;
 
 	/**
@@ -24,25 +25,6 @@ class AdminViewWidget extends CWidget
  
     public function run()
     {
-/*		// if system admin user and audit scenario
-		if(Yii::app()->user->checkAccess('system admin'))
-		{
-			// add the staff column
-			$this->columns[]=array(
-					'name'=>'searchStaff',
-					'value'=>'CHtml::link($data->searchStaff,
-						Yii::app()->createUrl("Staff/update", array("id"=>$data->staff_id))
-					)',
-					'type'=>'raw',
-				);
-		}*/
-
-		// add the buttons - first determine if there are any!
-//		if($this->_controller->checkAccess(Controller::accessRead))
-//		{
-//		// primary key name
-//		$primaryKeyName = $this->model->tableSchema->primaryKey;
-//		
 		// show buttons on row by row basis i.e. do access check on context
 		array_unshift($this->columns, array(
 			'class'=>'WMTbButtonColumn',
@@ -63,20 +45,10 @@ class AdminViewWidget extends CWidget
 				),
 			),
 		));
-//		}
 	
 		// add instructions/ warnings errors via Yii::app()->user->setFlash
 		// NB: thia won't work on ajax update as in delete hence afterDelete javascript added in WMTbButtonColumn
 		$this->_controller->widget('bootstrap.widgets.TbAlert');
-		
-
-// TODO: figure out how to use this for the error message flash in WMTbButtonColumn - also slow the fade futher
-/*		// add fade out to the flash message
-		Yii::app()->clientScript->registerScript(
-			'myHideEffect',
-			'$(".alert-info").animate({opacity: 1.0}, 10000).fadeOut("slow");',
-			CClientScript::POS_READY
-		);*/
 		
 		// display the grid
 		$this->_controller->widget('bootstrap.widgets.TbGridView',array(
@@ -85,12 +57,11 @@ class AdminViewWidget extends CWidget
 			'dataProvider'=>$this->model->search(),
 			'filter'=>$this->model,
 			'columns'=>$this->columns,
-//			'ajaxUrl'=>Yii::app()->request->requestUri,
 		));
 
 		// as using boostrap modal for create the html for the modal needs to be on
 		// the calling page
-		$this->_controller->actionCreate('myModal', $this->model);
+		$this->_controller->actionCreate('myModal', $this->createModel);
 
 		// add css overrides
 		$sourceFolder = YiiBase::getPathOfAlias('webroot.css');

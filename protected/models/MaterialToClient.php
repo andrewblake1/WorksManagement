@@ -28,14 +28,6 @@ class MaterialToClient extends ActiveRecord
 	static $niceName = 'Material';
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'material_to_client';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -43,11 +35,11 @@ class MaterialToClient extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('material_id, client_id, staff_id', 'required'),
-			array('material_id, client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('material_id, client_id', 'required'),
+			array('material_id, client_id', 'numerical', 'integerOnly'=>true),
 			array('unit_price', 'length', 'max'=>7),
 			array('alias', 'length', 'max'=>255),
-			array('id, client_id, searchMaterial, searchAlias, alias, unit_price, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, client_id, searchMaterial, searchAlias, alias, unit_price', 'safe', 'on'=>'search'),
 		);
 	}
 

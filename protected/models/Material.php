@@ -18,18 +18,12 @@
  * @property Staff $staff
  * @property Store $store
  * @property MaterialToClient[] $materialToClients
- * @property MaterialToTask[] $materialToTasks
+ * @property MaterialGroupToMaterial[] $materialGroupToMaterials
+ * @property TaskToMaterial[] $taskToMaterials
  * @property TaskTypeToMaterial[] $taskTypeToMaterials
  */
 class Material extends ActiveRecord
 {
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'material';
-	}
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -39,13 +33,13 @@ class Material extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, store_id, staff_id', 'required'),
-			array('store_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, store_id', 'required'),
+			array('store_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
 			array('unit', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, store_id, description, searchStaff, unit, alias', 'safe', 'on'=>'search'),
+			array('id, store_id, description, unit, alias', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -62,7 +56,8 @@ class Material extends ActiveRecord
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'store' => array(self::BELONGS_TO, 'Store', 'store_id'),
 			'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'material_id'),
-			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'material_id'),
+			'materialGroupToMaterials' => array(self::HAS_MANY, 'MaterialGroupToMaterial', 'material_id'),
+			'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'material_id'),
 			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'material_id'),
 		);
 	}
@@ -141,13 +136,20 @@ class Material extends ActiveRecord
 		return $this;
 	}
 
-	public function scopeAssembly($assembly_id)
+/*	public function scopeAssembly($assembly_id)
 	{
 		$assembly = Assembly::model()->findByPk($assembly_id);
 		
 		return $this->scopeStore($assembly->store_id);
 	}
 
+	public function scopeMaterialGroup($material_group_id)
+	{
+		$assembly = MaterialGroup::model()->findByPk($assembly_id);
+		
+		return $this->scopeStore($assembly->store_id);
+	}
+*/
 }
 
 ?>

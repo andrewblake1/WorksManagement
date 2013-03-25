@@ -22,7 +22,7 @@
  *
  * The followings are the available model relations:
  * @property Duty[] $duties
- * @property MaterialToTask[] $materialToTasks
+ * @property TaskToMaterial[] $taskToMaterials
  * @property Project $project
  * @property Staff $staff
  * @property TaskType $taskType
@@ -52,14 +52,6 @@ class Task extends ActiveRecord
 	public $preferred = array();
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'task';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -67,13 +59,13 @@ class Task extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_id, task_type_id, crew_id, staff_id', 'required'),
-			array('task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('project_id, task_type_id, crew_id', 'required'),
+			array('task_type_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
 			array('planned, preferred, name, location', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, searchInCharge, searchEarliest, searchProject, searchTaskType, searchStaff, name, crew_id, planned, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
+			array('id, level, searchInCharge, searchEarliest, searchProject, searchTaskType, name, crew_id, planned, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -86,7 +78,7 @@ class Task extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'duties' => array(self::HAS_MANY, 'Duty', 'task_id'),
-			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'task_id'),
+			'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_id'),
 			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
@@ -165,8 +157,7 @@ class Task extends ActiveRecord
 		// join 
 		$criteria->join='
 			LEFT JOIN duty ON t.id = duty.task_id
-			LEFT JOIN task_type_to_duty_type ON duty.task_type_to_duty_type_id = task_type_to_duty_type_id
-			LEFT JOIN duty_type ON task_type_to_duty_type.duty_type_id = duty_type.id';
+			LEFT JOIN duty_type dutyType ON duty.duty_type_id = dutyType.id';
 
 		// where
 		$criteria->compare('t.id',$this->id);

@@ -52,7 +52,7 @@ EOD;
 			$systemAdminRole=$this->_authManager->createRole('system admin', 'System Administrator');
 			 
 			Yii::app()->db->createCommand("
-				INSERT INTO `AuthAssignment` (`id`, `itemname`, `userid`, `bizrule`, `data`, `deleted`, `staff_id`) VALUES (NULL, 'system admin', '1', NULL, NULL, '0', '1');
+				INSERT INTO `AuthAssignment` (`id`, `itemname`, `userid`, `bizrule`, `data`, `staff_id`) VALUES (NULL, 'system admin', '1', NULL, NULL, '1');
 			")->execute();
 
 			// create tasks
@@ -70,6 +70,11 @@ EOD;
 			$systemAdminRole->addChild('AssemblyToMaterial');
 			$this->_authManager->createOperation('AssemblyToMaterialRead', 'AssemblyToMaterial read');
 			$task->addChild('AssemblyToMaterialRead');
+
+			$task=$this->_authManager->createTask('AssemblyToMaterialGroup', 'AssemblyToMaterialGroup task');
+			$systemAdminRole->addChild('AssemblyToMaterialGroup');
+			$this->_authManager->createOperation('AssemblyToMaterialGroupRead', 'AssemblyToMaterialGroup read');
+			$task->addChild('AssemblyToMaterialGroupRead');
 
 			$task=$this->_authManager->createTask('AssemblyToClient', 'AssemblyToClient task');
 			$systemAdminRole->addChild('AssemblyToClient');
@@ -100,6 +105,16 @@ EOD;
 			$systemAdminRole->addChild('Client');
 			$this->_authManager->createOperation('ClientRead', 'Client read');
 			$task->addChild('ClientRead');
+
+			$task=$this->_authManager->createTask('MaterialGroup', 'MaterialGroup task');
+			$systemAdminRole->addChild('MaterialGroup');
+			$this->_authManager->createOperation('MaterialGroupRead', 'MaterialGroup read');
+			$task->addChild('MaterialGroupRead');
+
+			$task=$this->_authManager->createTask('MaterialGroupToMaterial', 'MaterialGroupToMaterial task');
+			$systemAdminRole->addChild('MaterialGroupToMaterial');
+			$this->_authManager->createOperation('MaterialGroupToMaterialRead', 'MaterialGroupToMaterial read');
+			$task->addChild('MaterialGroupToMaterialRead');
 
 			$task=$this->_authManager->createTask('MaterialToClient', 'MaterialToClient task');
 			$systemAdminRole->addChild('MaterialToClient');
@@ -290,10 +305,10 @@ EOD;
 			$this->_authManager->createOperation('GenericRead', 'Generic read');
 			$task->addChild('GenericRead');
 
-			$task=$this->_authManager->createTask('MaterialToTask', 'MaterialToTask task');
-			$projectManagerRole->addChild('MaterialToTask');
-			$this->_authManager->createOperation('MaterialToTaskRead', 'MaterialToTask read');
-			$task->addChild('MaterialToTaskRead');
+			$task=$this->_authManager->createTask('TaskToMaterial', 'TaskToMaterial task');
+			$projectManagerRole->addChild('TaskToMaterial');
+			$this->_authManager->createOperation('TaskToMaterialRead', 'TaskToMaterial read');
+			$task->addChild('TaskToMaterialRead');
 
 			$task=$this->_authManager->createTask('Project', 'Project task');
 			$projectManagerRole->addChild('Project');

@@ -34,14 +34,6 @@ class GenericProjectType extends ActiveRecord
 	public $searchGenericType;
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'generic_project_type';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -49,12 +41,12 @@ class GenericProjectType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_type_id, generic_type_id, staff_id', 'required'),
-			array('project_type_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('project_type_id, generic_type_id', 'required'),
+			array('project_type_id, generic_type_id,', 'numerical', 'integerOnly'=>true),
 			array('genericprojectcategory_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, project_type_id, searchProjectType, searchGenericprojectcategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
+			array('id, project_type_id, searchProjectType, searchGenericprojectcategory, searchGenericType', 'safe', 'on'=>'search'),
 		);
 	}
 

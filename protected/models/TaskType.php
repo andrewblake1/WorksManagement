@@ -25,13 +25,6 @@
  */
 class TaskType extends ActiveRecord
 {
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'task_type';
-	}
 
 	public function scopeProjectType($crew_id)
 	{
@@ -57,13 +50,13 @@ class TaskType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, project_type_id, client_id, staff_id', 'required'),
-			array('project_type_id, client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, project_type_id, client_id', 'required'),
+			array('project_type_id, client_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			array('unit_price', 'length', 'max'=>7),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, project_type_id, deleted, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, project_type_id', 'safe', 'on'=>'search'),
 		);
 	}
 

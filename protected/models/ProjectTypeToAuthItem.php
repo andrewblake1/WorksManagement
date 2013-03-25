@@ -61,12 +61,12 @@ class ProjectTypeToAuthItem extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_type_id, AuthItem_name, staff_id', 'required'),
-			array('project_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('project_type_id, AuthItem_name', 'required'),
+			array('project_type_id', 'numerical', 'integerOnly'=>true),
 			array('AuthItem_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchAuthItem, project_type_id, AuthItem_name, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchAuthItem, project_type_id, AuthItem_name', 'safe', 'on'=>'search'),
 		);
 	}
 

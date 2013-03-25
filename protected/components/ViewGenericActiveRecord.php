@@ -12,12 +12,8 @@
  * The followings are the available model relations:
  * @property Staff $staff
  */
-abstract class ViewGenericActiveRecord extends ActiveRecord
+abstract class ViewGenericActiveRecord extends ViewActiveRecord
 {
-	public function primaryKey()
-	{
-		return 'id';
-	}
 		
 	/**
 	 * @return array validation rules for model attributes.
@@ -30,18 +26,6 @@ abstract class ViewGenericActiveRecord extends ActiveRecord
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('parent_id, description, value', 'safe', 'on'=>'search'),
-		);
-	}
-
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
 

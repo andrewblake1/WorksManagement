@@ -31,14 +31,6 @@ class TaskToGenericTaskType extends ActiveRecord
 	static $niceName = 'Custom type';
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'task_to_generic_task_type';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -46,12 +38,12 @@ class TaskToGenericTaskType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('generic_task_type_id, task_id, staff_id', 'required'),
-			array('generic_task_type_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('generic_task_type_id, task_id', 'required'),
+			array('generic_task_type_id', 'numerical', 'integerOnly'=>true),
 			array('task_id, generic_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchGenericTaskType, searchTask, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, searchGenericTaskType, searchTask, searchGeneric', 'safe', 'on'=>'search'),
 		);
 	}
 

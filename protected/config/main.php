@@ -161,7 +161,7 @@ return array(
 								'Task'=>array(
 									'Duty',
 // TODO: naming orientation is inconsistent here
-									'MaterialToTask',
+									'TaskToMaterial',
 									'TaskToAssembly',
 									'TaskToGenericTaskType',
 									'TaskToPurchaseOrder',
@@ -213,9 +213,13 @@ return array(
 					'Assembly'=>array(
 						'AssemblyToAssembly',
 						'AssemblyToMaterial',
+						'AssemblyToMaterialGroup',
 						'AssemblyToStandardDrawing',
 					),
 					'Material',
+					'MaterialGroup'=>array(
+						'MaterialGroupToMaterial',
+					),
 					'StandardDrawing',
 				),
 				'Supplier'=>array(

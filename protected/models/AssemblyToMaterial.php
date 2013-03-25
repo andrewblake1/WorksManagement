@@ -10,7 +10,10 @@
  * @property integer $stage_id
  * @property integer $store_id
  * @property integer $quantity
+ * @property integer $minimum
+ * @property integer $maximum
  * @property string $comment
+ * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -36,14 +39,6 @@ class AssemblyToMaterial extends ActiveRecord
 	static $niceName = 'Material';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'assembly_to_material';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -51,10 +46,10 @@ class AssemblyToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('assembly_id, material_id, stage_id, store_id, quantity, staff_id', 'required'),
-			array('assembly_id, material_id, stage_id, store_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, material_id, stage_id, store_id, quantity', 'required'),
+			array('assembly_id, material_id, stage_id, store_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('comment', 'length', 'max'=>255),
-			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, comment, staff_id', 'safe', 'on'=>'search'),
+			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, minimum, maximum, comment', 'safe', 'on'=>'search'),
 		);
 	}
 

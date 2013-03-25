@@ -30,14 +30,6 @@ class TaskTypeToResourceType extends ActiveRecord
 	static $niceName = 'Resource';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'task_type_to_resource_type';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -45,12 +37,12 @@ class TaskTypeToResourceType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_type_id, resource_type_id, quantity, staff_id', 'required'),
-			array('task_type_id, resource_type_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, resource_type_id, quantity', 'required'),
+			array('task_type_id, resource_type_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('hours', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, searchTaskType, searchResourceType, quantity, hours, staff_id', 'safe', 'on'=>'search'),
+			array('id, task_type_id, searchTaskType, searchResourceType, quantity, hours', 'safe', 'on'=>'search'),
 		);
 	}
 

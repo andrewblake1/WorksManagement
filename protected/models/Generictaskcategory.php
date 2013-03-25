@@ -24,13 +24,6 @@ class Generictaskcategory extends CategoryActiveRecord {
 	static $niceName = 'Task category';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName() {
-		return 'generictaskcategory';
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations() {

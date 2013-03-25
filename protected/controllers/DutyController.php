@@ -70,14 +70,9 @@ class DutyController extends Controller
 	{
 		$saved = true;
 		
-		// this is repeated in before validate but variables arn't held so need recalc here
-		$taskTypeToDutyType = TaskTypeToDutyType::model()->findByPk($model->task_type_to_duty_type_id);
-		$model->task_type_id = $taskTypeToDutyType->task_type_id ;
-		$model->duty_type_id = $taskTypeToDutyType->duty_type_id ;
-		
 		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
-		if(($level = $model->taskTypeToDutyType->dutyType->level) == Planning::planningLevelTaskInt)
+		if(($level = $model->dutyType->level) == Planning::planningLevelTaskInt)
 		{
 			$planning_id = $model->task_id;
 		}
@@ -122,10 +117,10 @@ class DutyController extends Controller
 		));
 
 		// if there isn't already a generic item to hold value and there should be
-		if(empty($dutyData->generic) && !empty($model->taskTypeToDutyType->dutyType->generic_type_id))
+		if(empty($dutyData->generic) && !empty($model->dutyType->generic_type_id))
 		{
 			// create a new generic item to hold value
-			$saved &= Generic::createGeneric($model->taskTypeToDutyType->dutyType->genericType, $models, $generic);
+			$saved &= Generic::createGeneric($model->dutyType->genericType, $models, $generic);
 			// associate the new generic to this duty
 			$dutyData->generic_id = $generic->id;
 			// attempt save

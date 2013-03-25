@@ -11,7 +11,10 @@
  *
  * The followings are the available model relations:
  * @property Assembly[] $assemblies
+ * @property AssemblyToStandardDrawing[] $assemblyToStandardDrawings
  * @property Material[] $materials
+ * @property MaterialGroup[] $materialGroups
+ * @property StandardDrawing[] $standardDrawings
  * @property Staff $staff
  */
 class Store extends ActiveRecord
@@ -22,14 +25,6 @@ class Store extends ActiveRecord
 	static $niceName = 'Network';
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'store';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -37,12 +32,11 @@ class Store extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, staff_id', 'required'),
-			array('deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('name', 'required'),
 			array('name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, deleted, searchStaff', 'safe', 'on'=>'search'),
+			array('id, name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -55,7 +49,10 @@ class Store extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'store_id'),
+			'assemblyToStandardDrawings' => array(self::HAS_MANY, 'AssemblyToStandardDrawing', 'store_id'),
 			'materials' => array(self::HAS_MANY, 'Material', 'store_id'),
+			'materialGroups' => array(self::HAS_MANY, 'MaterialGroup', 'store_id'),
+			'standardDrawings' => array(self::HAS_MANY, 'StandardDrawing', 'store_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}

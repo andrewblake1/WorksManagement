@@ -37,12 +37,11 @@ class AuthItemChild extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('parent, child, staff_id', 'required'),
-			array('staff_id', 'numerical', 'integerOnly'=>true),
+			array('parent, child', 'required'),
 			array('parent, child', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, parent, child, staff_id', 'safe', 'on'=>'search'),
+			array('id, parent, child', 'safe', 'on'=>'search'),
 		);
 	}
 

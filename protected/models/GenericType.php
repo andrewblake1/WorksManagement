@@ -92,14 +92,6 @@ class GenericType extends ActiveRecord
 	}
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'generic_type';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -107,15 +99,15 @@ class GenericType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, validation_type, data_type, staff_id', 'required'),
-			array('mandatory, allow_new, staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, validation_type, data_type', 'required'),
+			array('mandatory, allow_new', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			array('validation_type', 'length', 'max'=>10),
 			array('data_type', 'length', 'max'=>5),
 			array('validation_text, validation_error', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, mandatory, allow_new, validation_type, data_type, validation_text, validation_error, searchStaff', 'safe', 'on'=>'search'),
+			array('id, description, mandatory, allow_new, validation_type, data_type, validation_text, validation_error', 'safe', 'on'=>'search'),
 			array('validation_text', 'validationText'),
 		);
 	}

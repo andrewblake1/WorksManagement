@@ -21,7 +21,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 			// allow system admin and original creator of duty to be able to alter who it is assigned to
 			if($model->staff_id == Yii::app()->user->id || Yii::app()->user->checkAccess('system admin'))
 			{
-				StaffController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Responsible');
+				StaffController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Assigned to');
 			}
 		}
 

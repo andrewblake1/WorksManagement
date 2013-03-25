@@ -31,14 +31,6 @@ class TaskTypeToAssembly extends ActiveRecord
 	public $store_id;
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'task_type_to_assembly';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -46,11 +38,11 @@ class TaskTypeToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('store_id, task_type_id, assembly_id, quantity, staff_id', 'required'),
-			array('store_id, task_type_id, assembly_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('store_id, task_type_id, assembly_id, quantity', 'required'),
+			array('store_id, task_type_id, assembly_id, quantity', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, searchAssembly, quantity, staff_id', 'safe', 'on'=>'search'),
+			array('id, task_type_id, searchAssembly, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 

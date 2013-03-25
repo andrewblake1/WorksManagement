@@ -77,14 +77,6 @@ class TaskTypeToDutyType extends ActiveRecord
 	}
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'task_type_to_duty_type';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -92,12 +84,12 @@ class TaskTypeToDutyType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_type_id, project_type_id, duty_type_id, project_type_to_AuthItem_id, importance, staff_id', 'required'),
-			array('task_type_id, project_type_id, duty_type_id, project_type_to_AuthItem_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, project_type_id, duty_type_id, project_type_to_AuthItem_id, importance', 'required'),
+			array('task_type_id, project_type_id, duty_type_id, project_type_to_AuthItem_id', 'numerical', 'integerOnly'=>true),
 			array('importance', 'length', 'max'=>8),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, importance, searchDutyType, searchTaskType, searchStaff, searchProjectTypeToAuthItem', 'safe', 'on'=>'search'),
+			array('id, task_type_id, importance, searchDutyType, searchTaskType, searchProjectTypeToAuthItem', 'safe', 'on'=>'search'),
 		);
 	}
 

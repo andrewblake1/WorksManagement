@@ -25,32 +25,10 @@ class SupplierToSupplierContact extends ActiveRecord
 	public $searchPhone_work;
 	public $searchPhone_fax;
 
-/*	public $first_name;
-	public $last_name;
-	public $email;
-	public $address_line1;
-	public $address_line2;
-	public $post_code;
-	public $town_city;
-	public $state_province;
-	public $country;
-	public $phone_mobile;
-	public $phone_home;
-	public $phone_work;
-	public $phone_fax;*/
-	
 	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Contact';
-
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'supplier_to_supplier_contact';
-	}
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -60,11 +38,10 @@ class SupplierToSupplierContact extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('staff_id', 'required'),
-			array('supplier_id, supplier_contact_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('supplier_id, supplier_contact_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchFirst_name, searchLast_name, searchEmail, searchPhone_mobile, searchPhone_home, searchPhone_work, searchPhone_fax, supplier_id, supplier_contact_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchFirst_name, searchLast_name, searchEmail, searchPhone_mobile, searchPhone_home, searchPhone_work, searchPhone_fax, supplier_id, supplier_contact_id', 'safe', 'on'=>'search'),
 		);
 	}
 

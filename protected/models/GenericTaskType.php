@@ -34,14 +34,6 @@ class GenericTaskType extends ActiveRecord
 	public $searchGenericType;
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'generic_task_type';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -49,12 +41,12 @@ class GenericTaskType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_type_id, generic_type_id, staff_id', 'required'),
-			array('task_type_id, generic_type_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, generic_type_id', 'required'),
+			array('task_type_id, generic_type_id', 'numerical', 'integerOnly'=>true),
 			array('generictaskcategory_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, searchTaskType, searchGenerictaskcategory, searchGenericType, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_type_id, searchTaskType, searchGenerictaskcategory, searchGenericType', 'safe', 'on'=>'search'),
 		);
 	}
 

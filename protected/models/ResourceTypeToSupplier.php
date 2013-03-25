@@ -31,14 +31,6 @@ class ResourceTypeToSupplier extends ActiveRecord
 	static $niceName = 'Supplier';
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'resource_type_to_supplier';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -46,11 +38,11 @@ class ResourceTypeToSupplier extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('resource_type_id, supplier_id, staff_id', 'required'),
-			array('resource_type_id, supplier_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
+			array('resource_type_id, supplier_id', 'required'),
+			array('resource_type_id, supplier_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchSupplier, resource_type_id, supplier_id, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchSupplier, resource_type_id, supplier_id,', 'safe', 'on'=>'search'),
 		);
 	}
 

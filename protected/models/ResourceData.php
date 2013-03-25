@@ -37,14 +37,6 @@ class ResourceData extends ActiveRecord
 	}
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'resource_data';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -52,13 +44,13 @@ class ResourceData extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('planning_id, level, resource_type_id, quantity, hours, staff_id', 'required'),
-			array('resource_type_id, resource_type_to_supplier_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('planning_id, level, resource_type_id, quantity, hours', 'required'),
+			array('resource_type_id, resource_type_to_supplier_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level', 'length', 'max'=>10),
 			array('start, hours', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, planning_id, level, resource_type_id, resource_type_to_supplier_id, quantity, hours, start, staff_id', 'safe', 'on'=>'search'),
+			array('id, planning_id, level, resource_type_id, resource_type_to_supplier_id, quantity, hours, start', 'safe', 'on'=>'search'),
 		);
 	}
 

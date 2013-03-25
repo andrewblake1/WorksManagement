@@ -15,7 +15,7 @@ class TaskToAssemblyController extends AdjacencyListController
 
 		// add tab t o materials
 		$this->addTab(Material::getNiceNamePlural(), array(
-			'MaterialToTask/admin',
+			'TaskToMaterial/admin',
 			'task_to_assembly_id' => $_GET['id'],
 			'task_id' => $model->task_id,
 		));
@@ -26,9 +26,6 @@ class TaskToAssemblyController extends AdjacencyListController
 	 */
 	protected function createSave($model, &$models=array())
 	{
-		// atempt save
-//		$saved = $model->dbCallback('save');
-		
 		for($cntr = 0; $cntr < $model->quantity; $cntr++)
 		{
 			$saved = static::addAssembly($model->task_id, $model->assembly_id, null, $models);
@@ -58,17 +55,17 @@ class TaskToAssemblyController extends AdjacencyListController
 		$saved &= $taskToAssembly->dbCallback('save');
 		$models[] = $taskToAssembly;
 		
-		// insert materials into material_to_task table
+		// insert materials into task_to_material table
 		foreach(AssemblyToMaterial::model()->findAllByAttributes(array('assembly_id'=>$assembly_id)) as $assemblyToMaterial)
 		{
-			$materialToTask = new MaterialToTask();
-			$materialToTask->task_id = $task_id;
-			$materialToTask->material_id = $assemblyToMaterial->material_id;
-			$materialToTask->task_to_assembly_id = $taskToAssembly->id;
-			$materialToTask->store_id = $taskToAssembly->assembly->store_id;
-			$materialToTask->quantity = $assemblyToMaterial->quantity;
-			$saved &= $materialToTask->dbCallback('save');
-			$models[] = $materialToTask;
+			$taskToMaterial = new TaskToMaterial();
+			$taskToMaterial->task_id = $task_id;
+			$taskToMaterial->material_id = $assemblyToMaterial->material_id;
+			$taskToMaterial->task_to_assembly_id = $taskToAssembly->id;
+			$taskToMaterial->store_id = $taskToAssembly->assembly->store_id;
+			$taskToMaterial->quantity = $assemblyToMaterial->quantity;
+			$saved &= $taskToMaterial->dbCallback('save');
+			$models[] = $taskToMaterial;
 		}
 
 		// recurse thru sub assemblies

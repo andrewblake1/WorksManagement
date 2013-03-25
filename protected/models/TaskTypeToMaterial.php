@@ -31,15 +31,6 @@ class TaskTypeToMaterial extends ActiveRecord
 	 */
 	static $niceName = 'Material';
 
-
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'task_type_to_material';
-	}
-
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -48,11 +39,11 @@ class TaskTypeToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('store_id, task_type_id, material_id, quantity, staff_id', 'required'),
-			array('store_id, task_type_id, material_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('store_id, task_type_id, material_id, quantity', 'required'),
+			array('store_id, task_type_id, material_id, quantity', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, searchTaskType, searchMaterial, quantity, staff_id', 'safe', 'on'=>'search'),
+			array('id, task_type_id, searchTaskType, searchMaterial, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 

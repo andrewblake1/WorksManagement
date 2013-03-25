@@ -37,14 +37,6 @@ class SubReport extends ActiveRecord
 		);
 	}
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'sub_report';
-	}
-
 	public function scopeSubReportReportId($report_id)
 	{
 		$criteria=new DbCriteria;
@@ -63,15 +55,14 @@ class SubReport extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, select, report_id, format, staff_id', 'required'),
-			array('staff_id', 'numerical', 'integerOnly'=>true),
+			array('description, select, report_id, format', 'required'),
 			array('description', 'length', 'max'=>255),
 			array('report_id', 'length', 'max'=>10),
 			array('format', 'length', 'max'=>9),
 			array('select', 'validationReport'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, select, report_id, format, staff_id', 'safe', 'on'=>'search'),
+			array('id, description, select, report_id, format', 'safe', 'on'=>'search'),
 		);
 	}
 

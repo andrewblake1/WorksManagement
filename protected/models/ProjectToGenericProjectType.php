@@ -30,15 +30,6 @@ class ProjectToGenericProjectType extends ActiveRecord
 	 */
 	static $niceName = 'Custom type';
 
-	
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'project_to_generic_project_type';
-	}
-
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -47,12 +38,12 @@ class ProjectToGenericProjectType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('generic_project_type_id, project_id, staff_id', 'required'),
-			array('generic_project_type_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('generic_project_type_id, project_id', 'required'),
+			array('generic_project_type_id', 'numerical', 'integerOnly'=>true),
 			array('project_id, generic_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, project_id, searchGenericProjectType, searchProject, searchGeneric, searchStaff', 'safe', 'on'=>'search'),
+			array('id, project_id, searchGenericProjectType, searchProject, searchGeneric', 'safe', 'on'=>'search'),
 		);
 	}
 

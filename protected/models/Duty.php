@@ -34,14 +34,6 @@ class Duty extends ActiveRecord
 	public $due;
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'duty';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -49,13 +41,13 @@ class Duty extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, duty_type_id, staff_id', 'required'),
-			array('duty_type_id, responsible, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_id, duty_type_id', 'required'),
+			array('duty_type_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('updated, generic_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, due, searchImportance, searchInCharge, searchTask, description, updated, searchStaff', 'safe', 'on'=>'search'),
+			array('id, task_id, due, searchImportance, searchInCharge, searchTask, description, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,7 +77,7 @@ class Duty extends ActiveRecord
 			'searchTask' => 'Task',
 			'duty_type_id' => 'Duty/Role/First/Last/Email',
 			'description' => 'Duty',
-			'responsible' => 'Responsible',
+			'responsible' => 'Assigned to',
 			'updated' => 'Completed',
 			'generic_id' => 'Generic',
 			'searchInCharge' => 'Assigned to',
@@ -160,14 +152,6 @@ class Duty extends ActiveRecord
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
 
-/*		if(!$assignedTo = $model->task->project->projectToProjectTypeToAuthItems->authAssignment->userid)
-		{
-			// get who is responsible at the target accummulating level for this duty. Because DutyData is at that desired level it links
-			// to correct Planning to get the in_charge
-			$assignedTo = $model->dutyData->planning->in_charge_id;
-		}
-		*/
-		
 		// join
 		$criteria->join = '
 			JOIN task ON t.task_id = task.id

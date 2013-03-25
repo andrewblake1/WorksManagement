@@ -32,14 +32,6 @@ class ProjectToClientContact extends ActiveRecord
 	static $niceName = 'Contact';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'project_to_client_contact';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -47,12 +39,12 @@ class ProjectToClientContact extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_id, client_contact_id, staff_id', 'required'),
-			array('client_id, client_contact_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('project_id, client_contact_id', 'required'),
+			array('client_id, client_contact_id', 'numerical', 'integerOnly'=>true),
 			array('project_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchFirst_name, searchLast_name, searchEmail, searchPhone_mobile, searchPhone_home, searchPhone_work, searchPhone_fax, project_id, client_id, client_contact_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, searchFirst_name, searchLast_name, searchEmail, searchPhone_mobile, searchPhone_home, searchPhone_work, searchPhone_fax, project_id, client_id, client_contact_id', 'safe', 'on'=>'search'),
 		);
 	}
 

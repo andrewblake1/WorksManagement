@@ -23,13 +23,6 @@
  */
 class DutyData extends ActiveRecord
 {
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'duty_data';
-	}
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -39,13 +32,13 @@ class DutyData extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('planning_id, duty_type_id, level, staff_id', 'required'),
-			array('duty_type_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('planning_id, duty_type_id, level', 'required'),
+			array('duty_type_id', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level, generic_id', 'length', 'max'=>10),
 			array('updated', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, planning_id, duty_type_id, level, updated, generic_id, staff_id', 'safe', 'on'=>'search'),
+			array('id, planning_id, duty_type_id, level, updated, generic_id', 'safe', 'on'=>'search'),
 		);
 	}
 

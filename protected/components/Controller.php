@@ -361,8 +361,10 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 	{
 		$modelName = $this->modelName;
 		// may be using a database view instead of main table model
-		$adminViewModel = $this->_adminViewModel;
-		$model=new $adminViewModel('search');
+		$adminViewModelName = $this->_adminViewModel;
+		$adminViewModel=new $adminViewModelName('search');
+		$adminViewModel->unsetAttributes();  // clear any default values
+		$model=new $modelName('search');
 		$model->unsetAttributes();  // clear any default values
 
 		// clear the primary key set by update
@@ -456,17 +458,16 @@ Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll();*/
 		{
 			$attributes += $_POST[$this->_adminViewModel];
 		}
-		$model->attributes = $attributes;
+		$model->attributes = $adminViewModel->attributes = $attributes;
 
 		// ensure that where possible a pk has been passed from parent
-		$model->assertFromParent($this->modelName);
-$t = Controller::$nav;
+		$model->assertFromParent();
 
 		// if exporting to xl
 		if(isset($_GET['action']) && $_GET['action'] == 'download')
 		{
 			// Export it
-			$this->toExcel($model->search(false), $model->exportColumns, null, array(), 'CSV'/*'Excel5'*/);
+			$this->toExcel($adminViewModel->search(false), $adminViewModel->exportColumns, null, array(), 'CSV'/*'Excel5'*/);
 		}
 // TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
 // TODO excel2007 best format however mixed results getting succesfull creations with this = varies across servers likely php_zip issue	thnk
@@ -482,10 +483,10 @@ $t = Controller::$nav;
 		$this->breadcrumbs = static::getBreadCrumbTrail();
 
 		// render the view
-		$this->adminRender($model);
+		$this->adminRender($adminViewModel, $model);
 	}
 
-	protected function adminRender($model)
+	protected function adminRender($adminViewModel, $createModel=NULL)
 	{
 		if(!isset($_GET['ajax']))
 		{
@@ -493,8 +494,14 @@ $t = Controller::$nav;
 			$this->setTabs(false);
 		}
 	
+		if($createModel===NULL)
+		{
+			$createModel = $adminViewModel;
+		}
+
 		$this->render(lcfirst($this->_adminView), array(
-			'model'=>$model,
+			'model'=>$adminViewModel,
+			'createModel'=>$createModel,
 		));
 	}
 

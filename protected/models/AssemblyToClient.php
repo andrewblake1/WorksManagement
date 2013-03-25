@@ -26,14 +26,6 @@ class AssemblyToClient extends ActiveRecord
 	static $niceName = 'Assembly';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'assembly_to_client';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -41,12 +33,12 @@ class AssemblyToClient extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('assembly_id, client_id, staff_id', 'required'),
-			array('assembly_id, client_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('id, alias', 'length', 'max'=>255),
+			array('assembly_id, client_id', 'required'),
+			array('assembly_id, client_id', 'numerical', 'integerOnly'=>true),
+			array('alias', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, client_id, searchAssembly, alias, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, client_id, searchAssembly, alias', 'safe', 'on'=>'search'),
 		);
 	}
 

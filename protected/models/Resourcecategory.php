@@ -27,13 +27,6 @@ class Resourcecategory extends CategoryActiveRecord {
 	static $niceName = 'Resource category';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName() {
-		return 'resourcecategory';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules() {
@@ -42,7 +35,7 @@ class Resourcecategory extends CategoryActiveRecord {
 		// NOTE2: Remove ALL rules associated with the nested Behavior:
 		//rgt,lft,root,level,id.
 		return array(
-			array('name, staff_id', 'required'),
+			array('name', 'required'),
 			array('dutycategory_id', 'safe'),
 			array('name', 'length', 'max' => 64),
 		);

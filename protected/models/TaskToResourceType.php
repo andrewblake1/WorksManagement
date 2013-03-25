@@ -37,14 +37,6 @@ class TaskToResourceType extends ActiveRecord
 	public $resource_type_to_supplier_id;
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'task_to_resource_type';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -52,15 +44,15 @@ class TaskToResourceType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_id, resource_type_id, quantity, hours, staff_id', 'required'),
-			array('level, resource_type_id, quantity, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_id, resource_type_id, quantity, hours', 'required'),
+			array('level, resource_type_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			array('task_id', 'length', 'max'=>10),
 			array('resource_type_to_supplier_id', 'safe'),
 			array('start, hours', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, task_id, searchResourceTypeToSupplier, description, quantity, hours, start, searchStaff', 'safe', 'on'=>'search'),
+			array('id, level, task_id, searchResourceTypeToSupplier, description, quantity, hours, start', 'safe', 'on'=>'search'),
 		);
 	}
 

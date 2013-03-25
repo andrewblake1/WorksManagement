@@ -25,13 +25,6 @@ class Genericprojectcategory extends CategoryActiveRecord {
 	static $niceName = 'Project category';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName() {
-		return 'genericprojectcategory';
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations() {

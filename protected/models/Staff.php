@@ -19,13 +19,18 @@
  * @property AuthItem[] $authItems
  * @property AuthItemChild[] $authItemchildren
  * @property Assembly[] $assemblies
+ * @property AssemblyToAssembly[] $assemblyToAssemblies
+ * @property AssemblyToClient[] $assemblyToClients
  * @property AssemblyToMaterial[] $assemblyToMaterials
+ * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
+ * @property AssemblyToStandardDrawing[] $assemblyToStandardDrawings
  * @property Client[] $clients
  * @property ClientContact[] $clientContacts
  * @property Crew[] $crews
  * @property Day[] $days
  * @property DefaultValue[] $defaultValues
  * @property Duty[] $duties
+ * @property Duty[] $duties1
  * @property DutyData[] $dutyDatas
  * @property DutyType[] $dutyTypes
  * @property Dutycategory[] $dutycategories
@@ -36,7 +41,12 @@
  * @property Genericprojectcategory[] $genericprojectcategories
  * @property Generictaskcategory[] $generictaskcategories
  * @property Material[] $materials
- * @property MaterialToTask[] $materialToTasks
+ * @property MaterialGroup[] $materialGroups
+ * @property MaterialGroupToMaterial[] $materialGroupToMaterials
+ * @property MaterialToClient[] $materialToClients
+ * @property TaskToMaterial[] $taskToMaterials
+ * @property Planning[] $plannings
+ * @property Planning[] $plannings1
  * @property Project[] $projects
  * @property ProjectToClientContact[] $projectToClientContacts
  * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
@@ -50,10 +60,11 @@
  * @property ResourceType[] $resourceTypes
  * @property ResourceTypeToSupplier[] $resourceTypeToSuppliers
  * @property Resourcecategory[] $resourcecategories
- * @property Planning[] $plannings
- * @property Planning[] $plannings1
  * @property Staff $staff
  * @property Staff[] $staffs
+ * @property Stage[] $stages
+ * @property StandardDrawing[] $standardDrawings
+ * @property Store[] $stores
  * @property SubReport[] $subReports
  * @property Supplier[] $suppliers
  * @property SupplierContact[] $supplierContacts
@@ -74,14 +85,6 @@ class Staff extends ActiveRecord
 	static $niceNamePlural = 'Staff';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'staff';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -90,13 +93,12 @@ class Staff extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('first_name, last_name, email', 'required'),
-			array('deleted, staff_id', 'numerical', 'integerOnly'=>true),
 			array('first_name, last_name, phone_mobile', 'length', 'max'=>64),
 			array('email', 'length', 'max'=>255),
 			array('password', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, first_name, last_name, phone_mobile, email, deleted, staff_id', 'safe', 'on'=>'search'),
+			array('id, first_name, last_name, phone_mobile, email', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -113,13 +115,18 @@ class Staff extends ActiveRecord
 			'authItems' => array(self::HAS_MANY, 'AuthItem', 'staff_id'),
 			'authItemchildren' => array(self::HAS_MANY, 'AuthItemChild', 'staff_id'),
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'staff_id'),
+			'assemblyToAssemblies' => array(self::HAS_MANY, 'AssemblyToAssembly', 'staff_id'),
+			'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'staff_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'staff_id'),
+			'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'staff_id'),
+			'assemblyToStandardDrawings' => array(self::HAS_MANY, 'AssemblyToStandardDrawing', 'staff_id'),
 			'clients' => array(self::HAS_MANY, 'Client', 'staff_id'),
 			'clientContacts' => array(self::HAS_MANY, 'ClientContact', 'staff_id'),
 			'crews' => array(self::HAS_MANY, 'Crew', 'staff_id'),
 			'days' => array(self::HAS_MANY, 'Day', 'staff_id'),
 			'defaultValues' => array(self::HAS_MANY, 'DefaultValue', 'staff_id'),
 			'duties' => array(self::HAS_MANY, 'Duty', 'staff_id'),
+			'duties1' => array(self::HAS_MANY, 'Duty', 'responsible'),
 			'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'staff_id'),
 			'dutyTypes' => array(self::HAS_MANY, 'DutyType', 'staff_id'),
 			'dutycategories' => array(self::HAS_MANY, 'Dutycategory', 'staff_id'),
@@ -130,7 +137,10 @@ class Staff extends ActiveRecord
 			'genericprojectcategories' => array(self::HAS_MANY, 'Genericprojectcategory', 'staff_id'),
 			'generictaskcategories' => array(self::HAS_MANY, 'Generictaskcategory', 'staff_id'),
 			'materials' => array(self::HAS_MANY, 'Material', 'staff_id'),
-			'materialToTasks' => array(self::HAS_MANY, 'MaterialToTask', 'staff_id'),
+			'materialGroups' => array(self::HAS_MANY, 'MaterialGroup', 'staff_id'),
+			'materialGroupToMaterials' => array(self::HAS_MANY, 'MaterialGroupToMaterial', 'staff_id'),
+			'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'staff_id'),
+			'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'staff_id'),
 			'plannings' => array(self::HAS_MANY, 'Planning', 'staff_id'),
 			'plannings1' => array(self::HAS_MANY, 'Planning', 'in_charge_id'),
 			'projects' => array(self::HAS_MANY, 'Project', 'staff_id'),
@@ -148,6 +158,9 @@ class Staff extends ActiveRecord
 			'resourcecategories' => array(self::HAS_MANY, 'Resourcecategory', 'staff_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'staffs' => array(self::HAS_MANY, 'Staff', 'staff_id'),
+			'stages' => array(self::HAS_MANY, 'Stage', 'staff_id'),
+			'standardDrawings' => array(self::HAS_MANY, 'StandardDrawing', 'staff_id'),
+			'stores' => array(self::HAS_MANY, 'Store', 'staff_id'),
 			'subReports' => array(self::HAS_MANY, 'SubReport', 'staff_id'),
 			'suppliers' => array(self::HAS_MANY, 'Supplier', 'staff_id'),
 			'supplierContacts' => array(self::HAS_MANY, 'SupplierContact', 'staff_id'),

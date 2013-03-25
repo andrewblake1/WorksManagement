@@ -24,14 +24,6 @@ class StandardDrawing extends AdjacencyListActiveRecord
 	protected $defaultSort = 't.description';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'standard_drawing';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -39,11 +31,11 @@ class StandardDrawing extends AdjacencyListActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('store_id, description, staff_id', 'required'),
-			array('parent_id, store_id, deleted, staff_id', 'numerical', 'integerOnly'=>true),
-			array('description alias, comment', 'length', 'max'=>255),
+			array('store_id, description', 'required'),
+			array('parent_id, store_id', 'numerical', 'integerOnly'=>true),
+			array('description alias', 'length', 'max'=>255),
 //			array('file', 'file', 'types'=>'jpg, gif, png, pdf', 'allowEmpty' => true),
-			array('id, store_id, parent_id, description, comment, deleted, alias, searchStaff', 'safe', 'on'=>'search'),
+			array('id, store_id, parent_id, description, alias', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -126,13 +118,6 @@ class StandardDrawing extends AdjacencyListActiveRecord
 		$this->getDbCriteria()->mergeWith($criteria);
 		
 		return $this;
-	}
-
-	public function scopeAssembly($assembly_id)
-	{
-		$assembly = Assembly::model()->findByPk($assembly_id);
-		
-		return $this->scopeStore($assembly->store_id);
 	}
 
 }

@@ -21,14 +21,6 @@ class DefaultValue extends ActiveRecord
 	static $niceName = 'Default';
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'default_value';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -36,12 +28,11 @@ class DefaultValue extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('table, column, select, staff_id', 'required'),
-			array('staff_id', 'numerical', 'integerOnly'=>true),
+			array('table, column, select', 'required'),
 			array('table, column', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, table, column, select, staff_id', 'safe', 'on'=>'search'),
+			array('id, table, column, select', 'safe', 'on'=>'search'),
 		);
 	}
 
