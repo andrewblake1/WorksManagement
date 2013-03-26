@@ -40,14 +40,16 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.material_id',
+			't.task_id',
 			't.material_group_id',
 			'stage.description AS searchStage',
 			't.task_to_assembly_id',
 			'material.description AS searchMaterial',
-			'searchComment',
+			't.searchComment',
 			't.quantity',
-			'searchAssembly',
-			'searchAssemblyId',
+			't.searchAssembly',
+			't.searchAssemblyId',
+			't.searchTaskToMaterialToMaterialGroupToMaterialId',
 			'materialGroup.description as searchMaterialGroup',
 		);
 		

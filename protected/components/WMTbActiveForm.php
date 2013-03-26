@@ -12,7 +12,7 @@ class WMTbActiveForm extends TbActiveForm
 	private $controller;
 	public $parent_fk;
 	public $showSubmit = true;	// true, false, hide - hide is there for use when file uploading as a hack as this button needs to be there for the
-		// ajax validation and form submit to occur for some reason. Havn't investigated why yet. There will be a cleaner way to do this!
+	// ajax validation and form submit to occur for some reason. Havn't investigated why yet. There will be a cleaner way to do this!
 	public $submitOptions = array('class'=>'form-button btn btn-primary btn-large');
 	public $enableAjaxValidation=true;
 	public $htmlOptions;
@@ -22,9 +22,6 @@ class WMTbActiveForm extends TbActiveForm
 	private $_htmlOptionReadonly = array();
 	// put focus to first non datepicker as if goes to datepicker then the datepicker will display
 	// in admin view
-//	public $focus = 'input:not([class="hasDatepicker"]):visible:enabled:first';
-//	bug in next one, but one above works - however if not from new button then probably update so no need to focus
-//	public $focus = '[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first';
     public $clientOptions = array(
 		'validateOnSubmit'=>true,
 		'validateOnChange'=>false,
@@ -125,15 +122,7 @@ class WMTbActiveForm extends TbActiveForm
  
     public function run()
     {
-/*		// only show the staff field when updating and if user is system admin in audit scenario
-		if(!$this->model->isNewRecord && Yii::app()->user->checkAccess('system admin'))
-		{
-			StaffController::listWidgetRow($this->model, $this, 'staff_id', array('readonly'=>'readonly'));
-		}
-		else*/
-		{
-			$this->hiddenField('staff_id');
-		}
+		$this->hiddenField('staff_id');
 		
 		// pass thru the original controller so we know can potentially return here
 		echo CHtml::hiddenField('controller', Yii::app()->controller->modelName);
@@ -141,7 +130,6 @@ class WMTbActiveForm extends TbActiveForm
 		// if there is a parent foreing key i.e. if there is a level above this in our navigation structure
 		if(!empty($this->parent_fk))
 		{
-$t = $this->model->attributes;
 			// add hidden field so gets carried into the model on submit
 			$this->hiddenField($this->parent_fk);
 		}

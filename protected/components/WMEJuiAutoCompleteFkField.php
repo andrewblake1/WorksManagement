@@ -16,16 +16,38 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 	 * @var string $fKModelType the referenced model.
 	 */
 	public $fKModelType;
-	/**
-	 * @var string $relName the relation name.
-	 */
-//	public $relName;
 
+	// recursive to find our way thru relations to target fk model
+	private function getRelation($model, $fKModelType, &$level)
+	{
+		// ensure recursion ends at 5 levels
+		if($level < 5)
+		{
+			// get the associated relation - assuming only 1
+			foreach($model->relations() as $relationName => $relation)
+			{
+				// if we have found the relation that uses this attribute which is a foreign key
+				if($relation[2] == $this->attribute)
+				{
+					// if this takes us to our end model
+					if($relation[1] == $fKModelType)
+					{
+						return $model->$relationName;
+					}
+					// otherwise we need to dig a level deeper
+					elseif(!empty($model->$relationName))
+					{
+						return $this->getRelation($model->$relationName, $fKModelType, ++$level);
+					}
+				}
+			}
+		}
+	}
+		
     public function init()
     {
 		$attr = $this->attribute;
 		$fKModelType = $this->fKModelType;
-//		$relName = $this->relName;
 
 		CHtml::resolveNameID($this->model, $attr, $tempHtmlOpts);
 		$id = $tempHtmlOpts['id'];
@@ -35,29 +57,21 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 
         $value = CHtml::resolveValue($this->model, $this->attribute);
 
-		// get the associated relation - assuming only 1
-  		foreach($this->model->relations() as $relationName => $relation)
-		{
-			// if we have found the relation that uses this attribute which is a foreign key
-			if($relation[2] == $this->attribute)
-			{
-				$relName = $relationName;
-				break;
-			}
-		}
-		
+		$model = $this->getRelation($this->model, $fKModelType, $level = 0);
+	
+		// find our way down to the end model
 		
 		foreach($fKModelType::getDisplayAttr() as $key => $field)
 		{
-			if(!empty($this->model->$relName))
+			if(!empty($model))
 			{
 				if(is_numeric($key))
 				{
-					eval('$this->_display[] = $this->model->$relName->'."$field;");
+					eval('$this->_display[] = $model->'."$field;");
 				}
 				else
 				{
-					eval('$this->_display[] = $this->model->$relName->'."$key->$field;");
+					eval('$this->_display[] = $model->'."$key->$field;");
 				}
 			}
 		}
@@ -73,8 +87,6 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 		//NB: need to check _display not empty as in the case of foreign key field that allows nulls otherwise implode will crash
 		$this->_display=((empty($value) && empty($this->_display)) ? '' : implode(Yii::app()->params['delimiter']['display'], $this->_display));
 
-
-//		echo CHtml::label($fKModelType::getNiceName(), $id);
 		echo $this->form->labelEx($this->model, $this->attribute);
 
 		parent::init(); // ensure necessary assets are loaded
@@ -83,7 +95,6 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 	
     public function run()
     {
- 
         parent::run();
 		
 		echo $this->form->error($this->model, $this->attribute);

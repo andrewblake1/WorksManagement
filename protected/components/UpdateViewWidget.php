@@ -26,7 +26,7 @@ class UpdateViewWidget extends CWidget
 			'model'=>$this->model,
 			'models'=>$this->models,
 			'parent_fk'=>$this->parent_fk,
-			));
+		));
 	}
 }
 

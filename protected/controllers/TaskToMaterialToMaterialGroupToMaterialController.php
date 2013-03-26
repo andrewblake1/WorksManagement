@@ -2,175 +2,82 @@
 
 class TaskToMaterialToMaterialGroupToMaterialController extends Controller
 {
-	/**
-	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-	 * using two-column layout. See 'protected/views/layouts/column2.php'.
-	 */
-	public $layout='//layouts/column2';
-
-	/**
-	 * @return array action filters
-	 */
-	public function filters()
+	protected function createRender($model, $models, $modalId)
 	{
-		return array(
-			'accessControl', // perform access control for CRUD operations
-		);
-	}
+		// set heading
+		$this->heading = TaskToMaterial::getNiceName();
 
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules()
-	{
-		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
+		$taskToMaterial = new TaskToMaterial;
+		$taskToMaterial->attributes = $_GET['TaskToMaterialToMaterialGroupToMaterial'];
+		$taskToMaterial->assertFromParent();
 
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionView($id)
-	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
-	}
-
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionCreate()
-	{
-		$model=new TaskToMaterialToMaterialGroupToMaterial;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['TaskToMaterialToMaterialGroupToMaterial']))
-		{
-			$model->attributes=$_POST['TaskToMaterialToMaterialGroupToMaterial'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
-
-		$this->render('create',array(
+		// set breadcrumbs
+		$this->breadcrumbs = TaskToMaterialController::getBreadCrumbTrail('Create');
+		
+		// set tabs
+		$this->setUpdateTabs($taskToMaterial);
+		
+		echo $this->render('_form',array(
 			'model'=>$model,
+			'models'=>$models,
 		));
 	}
 
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionUpdate($id)
+	protected function createSave($model, &$models=array())
 	{
-		$model=$this->loadModel($id);
+	
+		$taskToMaterial = new TaskToMaterial;
+		$taskToMaterial->attributes = $_POST['TaskToMaterialToMaterialGroupToMaterial'];
+		// filler - unused in this context but necassary in Material model
+		$taskToMaterial->store_id = 0;
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['TaskToMaterialToMaterialGroupToMaterial']))
+		if($saved = parent::createSave($taskToMaterial, $models))
 		{
-			$model->attributes=$_POST['TaskToMaterialToMaterialGroupToMaterial'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			$model->task_to_material_id = $taskToMaterial->id;
+			$saved &= parent::createSave($model, $models);
 		}
 
-		$this->render('update',array(
-			'model'=>$model,
-		));
+		return $saved;
 	}
 
-	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
-	 */
-	public function actionDelete($id)
+	protected function updateRedirect($model) {
+		$this->createRedirect($model);
+	}
+	protected function createRedirect($model)
 	{
-		if(Yii::app()->request->isPostRequest)
-		{
-			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
+		// go to admin view
+		$taskToMaterial = TaskToMaterial::model()->findByPk($model->task_to_material_id);
+		$taskToMaterial->assertFromParent();
+		
+		$params = array("TaskToMaterial/admin");
 
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		if (isset(Controller::$nav['admin']['TaskToMaterial'])) {
+			$params += Controller::$nav['admin']['TaskToMaterial'];
 		}
-		else
-			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+
+		$this->redirect($params);
 	}
-
+	
+	
 	/**
-	 * Lists all models.
+	 * Get the breadcrumb trail for this controller.
+	 * return array bread crumb trail for this controller
 	 */
-	public function actionIndex()
+	static function getBreadCrumbTrail($lastCrumb = NULL)
 	{
-		$dataProvider=new CActiveDataProvider('TaskToMaterialToMaterialGroupToMaterial');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+		return TaskToMaterialController::getBreadCrumbTrail('Update');
 	}
-
-	/**
-	 * Manages all models.
-	 */
-	public function actionAdmin()
-	{
-		$model=new TaskToMaterialToMaterialGroupToMaterial('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['TaskToMaterialToMaterialGroupToMaterial']))
-			$model->attributes=$_GET['TaskToMaterialToMaterialGroupToMaterial'];
-
-		$this->render('admin',array(
-			'model'=>$model,
-		));
-	}
-
-	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer the ID of the model to be loaded
-	 */
-	public function loadModel($id)
-	{
-		$model=TaskToMaterialToMaterialGroupToMaterial::model()->findByPk($id);
-		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
-		return $model;
-	}
-
-	/**
-	 * Performs the AJAX validation.
-	 * @param CModel the model to be validated
-	 */
-	protected function performAjaxValidation($model)
-	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='task-to-material-to-material-group-to-material-form')
+	
+	
+	function setUpdateTabs($model) {
+		if(!empty($model->task_to_material_id))
 		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
+			// need to trick it here into using task to material model instead as this model not in navigation hierachy
+			$taskToMaterial = TaskToMaterial::model()->findByPk($model->task_to_material_id);
+			return parent::setUpdateTabs($taskToMaterial);
 		}
+		
+		return parent::setUpdateTabs($model);
 	}
+
 }

@@ -95,9 +95,6 @@ abstract class ActiveRecord extends CActiveRecord
 		if(!empty(static::$niceName))
 		{
 			$niceName = static::$niceName;
-/*			$niceName = is_string(static::$niceName)
-				? static::$niceName
-				: static::$niceName[Yii::app()->controller->action->id];*/
 		}
 		else
 		{

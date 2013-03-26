@@ -24,11 +24,7 @@ class CreateViewWidget extends CWidget
 
     public function run()
     {
-//		// ajax submit set in WMTbActiveForm as url paramter for the ajax submit validate url
-//		if(!isset($_GET['ajaxsubmit']))
-//		{
-			$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>$this->modalId));
-//		}
+		$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>$this->modalId));
 
 		$modelName = get_class($this->model);
 		echo "<div id=\"form-create$modelName\" class=\"modal-body\">";
@@ -39,10 +35,7 @@ class CreateViewWidget extends CWidget
 		));
 		echo '</div>';
  
-//		if(!isset($_GET['ajaxsubmit']))
-//		{
-			$this->endWidget(); 
-//		}
+		$this->endWidget(); 
 	}
 }
 

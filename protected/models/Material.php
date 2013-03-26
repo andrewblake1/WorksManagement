@@ -136,6 +136,23 @@ class Material extends ActiveRecord
 		return $this;
 	}
 
+	public function scopeMaterialGroup($material_group_id)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('materialGroupToMaterial.material_group_id', $material_group_id);
+
+		// join
+		// This join is to get at the comment contained within the sub assembly (assembly to assembly) table but realizing there is
+		// a relationship between a parent child relationship in this table and the sub assembly table
+		$criteria->join = '
+			JOIN material_group_to_material materialGroupToMaterial ON materialGroupToMaterial.material_id = t.id
+		';
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+
 /*	public function scopeAssembly($assembly_id)
 	{
 		$assembly = Assembly::model()->findByPk($assembly_id);
