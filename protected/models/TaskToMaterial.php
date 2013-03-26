@@ -77,7 +77,7 @@ class TaskToMaterial extends ActiveRecord
 
 	static function getDisplayAttr()
 	{
-		return array('searchMaterial');
+		return array('material->description');
 	}
 
 	public function afterFind() {

@@ -26,25 +26,7 @@ class AdminViewWidget extends CWidget
     public function run()
     {
 		// show buttons on row by row basis i.e. do access check on context
-		array_unshift($this->columns, array(
-			'class'=>'WMTbButtonColumn',
-			'buttons'=>array(
-				'delete' => array(
-					'visible'=>'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
-					'url'=>'Yii::app()->createUrl("'.$this->_controller->modelName.'/delete", array("'.$this->model->tableSchema->primaryKey.'"=>$data->primaryKey))',
-				),
-				'update' => array(
-					'visible'=>'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
-					'url'=>'Yii::app()->createUrl("'.$this->_controller->modelName.'/update", array("'.$this->model->tableSchema->primaryKey.'"=>$data->primaryKey))',
-				),
-				'view' => array(
-					'visible'=>'
-						!Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))
-						&& Yii::app()->user->checkAccess(get_class($data)."Read")',
-					'url'=>'Yii::app()->createUrl("'.$this->_controller->modelName.'/view", array("'.$this->model->tableSchema->primaryKey.'"=>$data->primaryKey))',
-				),
-			),
-		));
+		array_unshift($this->columns, $this->_controller->getButtons($this->model));
 	
 		// add instructions/ warnings errors via Yii::app()->user->setFlash
 		// NB: thia won't work on ajax update as in delete hence afterDelete javascript added in WMTbButtonColumn

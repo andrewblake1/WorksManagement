@@ -40,9 +40,10 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.material_id',
+			't.material_group_id',
 			'stage.description AS searchStage',
 			't.task_to_assembly_id',
-			'searchMaterial',
+			'material.description AS searchMaterial',
 			'searchComment',
 			't.quantity',
 			'searchAssembly',
@@ -54,6 +55,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$criteria->join = '
 			LEFT JOIN stage on t.stage_id = stage.id
 			LEFT JOIN material_group materialGroup ON t.material_group_id = materialGroup.id
+			LEFT JOIN material ON t.material_id = material.id
 		';
 		
 		// where

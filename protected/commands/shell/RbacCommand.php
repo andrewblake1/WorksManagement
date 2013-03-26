@@ -306,9 +306,15 @@ EOD;
 			$task->addChild('GenericRead');
 
 			$task=$this->_authManager->createTask('TaskToMaterial', 'TaskToMaterial task');
+			$task2=$this->_authManager->createTask('TaskToMaterialToMaterialGroupToMaterial', 'TaskToMaterialToMaterialGroupToMaterial task');
 			$projectManagerRole->addChild('TaskToMaterial');
+			$projectManagerRole->addChild('TaskToMaterialToMaterialGroupToMaterial');
+			$task->addChild('TaskToMaterialToMaterialGroupToMaterial');
 			$this->_authManager->createOperation('TaskToMaterialRead', 'TaskToMaterial read');
 			$task->addChild('TaskToMaterialRead');
+			$this->_authManager->createOperation('TaskToMaterialToMaterialGroupToMaterialRead', 'TaskToMaterialToMaterialGroupToMaterial read');
+			$task->addChild('TaskToMaterialToMaterialGroupToMaterialRead');
+			$task2->addChild('TaskToMaterialToMaterialGroupToMaterialRead');
 
 			$task=$this->_authManager->createTask('Project', 'Project task');
 			$projectManagerRole->addChild('Project');
