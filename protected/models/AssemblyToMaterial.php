@@ -12,6 +12,7 @@
  * @property integer $quantity
  * @property integer $minimum
  * @property integer $maximum
+ * @property string $select
  * @property string $comment
  * @property integer $deleted
  * @property integer $staff_id
@@ -49,7 +50,8 @@ class AssemblyToMaterial extends ActiveRecord
 			array('assembly_id, material_id, stage_id, store_id, quantity', 'required'),
 			array('assembly_id, material_id, stage_id, store_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('comment', 'length', 'max'=>255),
-			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, minimum, maximum, comment', 'safe', 'on'=>'search'),
+			array('select', 'safe'),
+			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, minimum, maximum, comment, select', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -97,21 +99,27 @@ class AssemblyToMaterial extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.assembly_id',
 			'stage.description AS searchStage',
-			't.material_id',
-			't.comment',
 			'material.description AS searchMaterialDescription',
 			'material.unit AS searchMaterialUnit',
 			'material.alias AS searchMaterialAlias',
+			't.material_id',
+			't.select',
+			't.comment',
 			't.quantity',
+			't.minimum',
+			't.maximum',
 		);
 
 		$criteria->compare('material.description',$this->searchMaterialDescription,true);
 		$criteria->compare('stage.description',$this->searchStage,true);
 		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
 		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.comment',$this->comment,true);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
+		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('t.minimium',$this->minimum);
+		$criteria->compare('t.maximum',$this->maximum);
+		$criteria->compare('t.comment',$this->comment,true);
+		$criteria->compare('t.select',$this->select,true);
 		
 		$criteria->with = array(
 			'material',
@@ -124,11 +132,14 @@ class AssemblyToMaterial extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = $this->linkThisColumn('searchMaterialDescription');
- 		$columns[] = 'comment';
  		$columns[] = 'searchMaterialUnit';
  		$columns[] = 'searchMaterialAlias';
  		$columns[] = 'searchStage';
  		$columns[] = 'quantity';
+ 		$columns[] = 'minimum';
+ 		$columns[] = 'maximum';
+ 		$columns[] = 'comment';
+ 		$columns[] = 'select';
 		
 		return $columns;
 	}

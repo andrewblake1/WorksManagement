@@ -7,10 +7,18 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	MaterialGroupController::listWidgetRow($model, $form, 'material_group_id', array(),
 		array('scopeStore'=>array($assembly->store_id)));
 
+	StageController::listWidgetRow($model, $form, 'stage_id');
+
 	$form->textFieldRow('quantity');
 
-	StageController::listWidgetRow($model, $form, 'stage_id');
- 
+	$form->textFieldRow('minimum');
+
+	$form->textFieldRow('maximum');
+
+	$form->textAreaRow('comment');
+
+	$form->textAreaRow('select');
+
 $this->endWidget();
 
 ?>
