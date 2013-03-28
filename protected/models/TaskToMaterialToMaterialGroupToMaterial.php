@@ -8,12 +8,14 @@
  * @property string $task_to_material_id
  * @property integer $material_group_id
  * @property integer $material_id
+ * @property integer $assembly_to_material_group_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property TaskToMaterial $taskToMaterial
  * @property MaterialGroupToMaterial $material
  * @property Staff $staff
+ * @property AssemblyToMaterialGroup $assemblyToMaterialGroup
  * @property MaterialGroupToMaterial $materialGroup
  */
 class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
@@ -35,8 +37,8 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('task_to_assembly_id, quantity, task_id, material_group_id, material_id, staff_id', 'required'),
-			array('quantity, material_group_id, material_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_to_material_group_id, task_to_assembly_id, quantity, task_id, material_group_id, material_id, staff_id', 'required'),
+			array('assembly_to_material_group_id, quantity, material_group_id, material_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_to_assembly_id, task_id, task_to_material_id', 'length', 'max'=>10),
 		);
 	}
@@ -52,6 +54,7 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 			'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
 			'material' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'assemblyToMaterialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'assembly_to_material_group_id'),
 			'materialGroup' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_id'),
 		);
 	}

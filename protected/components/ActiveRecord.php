@@ -456,6 +456,7 @@ $t = Controller::$nav;
 			'quantity' => 'Quantity',
 			'minimum' => 'Minimum',
 			'maximum' => 'Maximum',
+			'select' => 'Select',
 			'name' => 'Name',
 			'first_name' => 'First name',
 			'last_name' => 'Last name',

@@ -50,6 +50,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			't.searchAssembly',
 			't.searchAssemblyId',
 			't.searchTaskToMaterialToMaterialGroupToMaterialId',
+			't.assembly_to_material_group_id',
 			'materialGroup.description as searchMaterialGroup',
 		);
 		

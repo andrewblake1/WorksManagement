@@ -32,6 +32,7 @@ class TaskToMaterialController extends Controller
 										"material_id"=>$data->material_id,
 										"task_id"=>$data->task_id,
 										"task_to_assembly_id"=>$data->task_to_assembly_id,
+										"assembly_to_material_group_id"=>$data->assembly_to_material_group_id,
 										))
 									: array("id"=>$data->id)
 							)',
