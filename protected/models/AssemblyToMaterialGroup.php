@@ -96,7 +96,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			'stage.description AS searchStage',
 			't.material_group_id',
 			'materialGroup.description AS searchMaterialGroupDescription',
-			't.material_id',
+	//		't.material_id',
 			't.select',
 			't.comment',
 			't.quantity',

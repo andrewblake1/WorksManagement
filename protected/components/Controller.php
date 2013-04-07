@@ -344,34 +344,39 @@ class Controller extends CController {
 			unset(Controller::$nav['update'][$modelName]);
 		}
 
+		if(isset($_SESSION['admin'][$modelName]))
+		{
+			$_SESSION['admin'][$adminViewModelName] = $_SESSION['admin'][$modelName];
+		}
+
 		// NB: query string is stripped from ajaxUrl hence this hack, but also used
 		// in building breadcrumbs
 		if (isset($_GET['ajax'])) {
 			// if some filters
-			if (isset($_GET[$modelName])) {
+			if (isset($_GET[$adminViewModelName])) {
 				// store filters
-				$_SESSION['admin'][$modelName]['filter'] = $_GET[$modelName];
-			} elseif (isset($_SESSION['admin'][$modelName]['filter'])) {
+				$_SESSION['admin'][$adminViewModelName]['filter'] = $_GET[$adminViewModelName];
+			} elseif (isset($_SESSION['admin'][$adminViewModelName]['filter'])) {
 				// clear filters
-				unset($_SESSION['admin'][$modelName]['filter']);
+				unset($_SESSION['admin'][$adminViewModelName]['filter']);
 			}
 
 			// if pagination
-			if (isset($_GET["{$modelName}_page"])) {
+			if (isset($_GET["{$adminViewModelName}_page"])) {
 				// store pagination
-				$_SESSION['admin'][$modelName]['page'] = $_GET["{$modelName}_page"];
-			} elseif (isset($_SESSION['admin'][$modelName]['page'])) {
+				$_SESSION['admin'][$adminViewModelName]['page'] = $_GET["{$adminViewModelName}_page"];
+			} elseif (isset($_SESSION['admin'][$adminViewModelName]['page'])) {
 				// clear filters
-				unset($_SESSION['admin'][$modelName]['page']);
+				unset($_SESSION['admin'][$adminViewModelName]['page']);
 			}
 
 			// if sorting
-			if (isset($_GET["{$modelName}_sort"])) {
+			if (isset($_GET["{$adminViewModelName}_sort"])) {
 				// store sorting
-				$_SESSION['admin'][$modelName]['sort'] = $_GET["{$modelName}_sort"];
-			} elseif (isset($_SESSION['admin'][$modelName]['sort'])) {
+				$_SESSION['admin'][$adminViewModelName]['sort'] = $_GET["{$adminViewModelName}_sort"];
+			} elseif (isset($_SESSION['admin'][$adminViewModelName]['sort'])) {
 				// clear sorting
-				unset($_SESSION['admin'][$modelName]['sort']);
+				unset($_SESSION['admin'][$adminViewModelName]['sort']);
 			}
 		}
 		// otherwise non ajax call
@@ -383,19 +388,19 @@ class Controller extends CController {
 		}
 
 		// restore pagination
-		if (isset($_SESSION['admin'][$modelName]['page'])) {
-			$_GET["{$modelName}_page"] = $_SESSION['admin'][$modelName]['page'];
+		if (isset($_SESSION['admin'][$adminViewModelName]['page'])) {
+			$_GET["{$adminViewModelName}_page"] = $_SESSION['admin'][$adminViewModelName]['page'];
 		}
 		// restore sort
-		if (isset($_SESSION['admin'][$modelName]['sort'])) {
-			$_GET["{$modelName}_sort"] = $_SESSION['admin'][$modelName]['sort'];
+		if (isset($_SESSION['admin'][$adminViewModelName]['sort'])) {
+			$_GET["{$adminViewModelName}_sort"] = $_SESSION['admin'][$adminViewModelName]['sort'];
 		}
 		// restore filters
-		if (isset($_SESSION['admin'][$modelName]['filter'])) {
-			if (isset($_GET["{$modelName}"])) {
-				$_GET["{$modelName}"] += $_SESSION['admin'][$modelName]['filter'];
+		if (isset($_SESSION['admin'][$adminViewModelName]['filter'])) {
+			if (isset($_GET["{$adminViewModelName}"])) {
+				$_GET["{$adminViewModelName}"] += $_SESSION['admin'][$adminViewModelName]['filter'];
 			} else {
-				$_GET["{$modelName}"] = $_SESSION['admin'][$modelName]['filter'];
+				$_GET["{$adminViewModelName}"] = $_SESSION['admin'][$adminViewModelName]['filter'];
 			}
 		}
 
@@ -411,8 +416,16 @@ class Controller extends CController {
 		}
 		$model->attributes = $adminViewModel->attributes = $attributes;
 
+		if(isset($_SESSION['admin'][$adminViewModelName]))
+		{
+			$_SESSION['admin'][$modelName] = $_SESSION['admin'][$adminViewModelName];
+		}
 		// ensure that where possible a pk has been passed from parent
 		$model->assertFromParent();
+		if(isset($_SESSION['admin'][$modelName]))
+		{
+			$_SESSION['admin'][$adminViewModelName] = $_SESSION['admin'][$modelName];
+		}
 
 		// if exporting to xl
 		if (isset($_GET['action']) && $_GET['action'] == 'download') {
@@ -1086,7 +1099,7 @@ $t = Controller::$nav;
 			echo ' ';
 			$this->widget('bootstrap.widgets.TbButton', array(
 				'label' => 'Download Excel',
-				'url' => $this->createUrl("{$this->modelName}/admin", array('action' => 'download')),
+				'url' => $this->createUrl("{$this->modelName}/admin", $_GET + array('action' => 'download')),
 				'type' => 'primary',
 				'size' => 'small', // '', 'large', 'small' or 'mini'
 			));

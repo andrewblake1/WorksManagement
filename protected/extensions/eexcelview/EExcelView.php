@@ -254,7 +254,7 @@ Yii::import('zii.widgets.grid.CGridView');
 			{
 				if(!$this->filename)
 					$this->filename = $this->title;
-				ob_end_clean();
+				@ob_end_clean();
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 				header('Pragma: public');
 				header('Content-type: '.$this->mimeTypes[$this->exportType]['Content-type']);

@@ -291,7 +291,7 @@ abstract class ActiveRecord extends CActiveRecord
 					$model = $this;
 					continue;
 				}
-$t = $this->attributes;
+$t = $model->attributes;
 				$modelName = get_class($model);
 				// get the name of the foreign key field in this model referring to the parent
 				$parentForeignKeyName = $modelName::getParentForeignKey($crumb);
