@@ -34,13 +34,20 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		'Store');
 
 	// NB: need to set this here as otherwise in wmfkautocomplete the soure url has store_id=, in it which gets stripped
-	if($model->store_id === null)
+	if($model->store_id === NULL)
 	{
 		$model->store_id = 0;
 	}
 	MaterialController::listWidgetRow($model, $form, 'material_id', array(), array('scopeStore'=>array($model->store_id)));
+	
+	// get quantity tooltip if part of assembly
+	if(!empty($model->taskToMaterialToAssemblyToMaterials))
+	{
+		// there ia a unique constraint here so there will only be 1 relating row
+		$quantity_tootip = $model->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial->quantity_tootip;
+	}
 
-	$form->textFieldRow('quantity');
+	$form->textFieldRow('quantity', array('data-original-title'=>$quantity_tootip));
 
 $this->endWidget();
 

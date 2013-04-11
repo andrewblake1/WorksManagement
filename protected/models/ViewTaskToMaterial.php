@@ -25,7 +25,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, task_to_assembly_id, searchMaterialGroup, searchStage, searchMaterial, searchComment, searchAssembly, quantity', 'safe', 'on'=>'search'),
+			array('id, task_id, task_to_assembly_id, searchMaterialGroup, searchStage, searchMaterial, searchQuantityTooltip, searchAssembly, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -45,7 +45,6 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			'stage.description AS searchStage',
 			't.task_to_assembly_id',
 			'material.description AS searchMaterial',
-			't.searchComment',
 			't.quantity',
 			't.searchAssembly',
 			't.searchAssemblyId',
@@ -65,7 +64,6 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$criteria->compare('searchMaterial',$this->searchMaterial,true);
 		$criteria->compare('materialGroup.description',$this->searchMaterialGroup,true);
 		$criteria->compare('searchAssembly',$this->searchAssembly,true);
-		$criteria->compare('searchComment',$this->searchComment,true);
 		$criteria->compare('t.task_to_assembly_id',$this->task_to_assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.task_id',$this->task_id);
@@ -77,7 +75,6 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	{
  		$columns[] = $this->linkThisColumn('searchMaterial');
 		$columns[] = 'searchMaterialGroup';
-		$columns[] = 'searchComment';
 		$columns[] = 'searchStage';
 		$columns[] = 'quantity';
 		$columns[] = static::linkColumn('searchAssembly', 'Assembly', 'searchAssemblyId');
@@ -94,7 +91,6 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		return array(
 			'searchMaterial',
 			'searchMaterialGroup',
-			'searchComment',
 			'searchAssembly',
 			'searchStage',
 		);

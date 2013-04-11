@@ -81,6 +81,7 @@ class StandardDrawing extends AdjacencyListActiveRecord
 		);
 
 		// where
+		$criteria->compare('t.id', $this->id);
 		$criteria->compare('t.description', $this->description, true);
 		$criteria->compare('t.alias', $this->alias,true);
 		$criteria->compare('t.store_id', $this->store_id);

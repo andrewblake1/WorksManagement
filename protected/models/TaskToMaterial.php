@@ -5,18 +5,20 @@
  *
  * The followings are the available columns in table 'task_to_material':
  * @property string $id
- * @property integer $material_id
- * @property string $task_id
- * @property string $task_to_assembly_id
  * @property integer $quantity
+ * @property string $task_id
+ * @property integer $material_id
+ * @property string $task_to_assembly_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Material $material
  * @property Task $task
+ * @property Material $material
  * @property Staff $staff
  * @property TaskToAssembly $taskToAssembly
+ * @property TaskToMaterialToAssemblyToMaterial[] $taskToMaterialToAssemblyToMaterials
  * @property TaskToMaterialToMaterialGroupToMaterial[] $taskToMaterialToMaterialGroupToMaterials
+ * @property TaskToMaterialToMaterialGroupToMaterial[] $taskToMaterialToMaterialGroupToMaterials1
  */
 class TaskToMaterial extends ActiveRecord
 {
@@ -49,11 +51,13 @@ class TaskToMaterial extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
+			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
-			'taskToMaterialToMaterialGroupToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToMaterialGroupToMaterial', 'task_to_material_id'),
+			'taskToMaterialToAssemblyToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterial', 'task_to_material_id'),
+			'taskToMaterialToMaterialGroupToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToMaterialGroupToMaterial', 'material_id'),
+			'taskToMaterialToMaterialGroupToMaterials1' => array(self::HAS_MANY, 'TaskToMaterialToMaterialGroupToMaterial', 'task_to_material_id'),
 		);
 	}
 
@@ -68,7 +72,7 @@ class TaskToMaterial extends ActiveRecord
 			'searchMaterial' => 'Material',
 			'searchMaterialGroup' => 'Group',
 			'searchAssembly' => 'Assembly',
-			'searchComment' => 'Comment',
+//			'searchQuantityTooltip' => 'Comment',
 			'searchStage' => 'Stage',
 			'task_id' => 'Task',
 			'task_to_assembly_id' => 'Assembly',

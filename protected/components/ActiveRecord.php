@@ -112,10 +112,10 @@ abstract class ActiveRecord extends CActiveRecord
 			$attributes = static::evalDisplayAttr($model);
 
 			// if the attribute is longer than 30 characters
-			if(strlen($attributes) > 20)
+			if(mb_strlen($attributes) > 20)
 			{
 				// shorten to 20 characters total
-				$attributes = substr($attributes, 0, 17) . '...';
+				$attributes = mb_substr($attributes, 0, 17) . '...';
 			}
 
 			// make this our nice name - if it isn't empty
@@ -475,7 +475,8 @@ $t = Controller::$nav;
 			'level' => 'Level',
 			'hours' => 'Hours',
 			'start' => 'Start',
-			);
+			'quantity_tooltip' => 'Quantity tooltip',
+		);
 	}
 
 	/**

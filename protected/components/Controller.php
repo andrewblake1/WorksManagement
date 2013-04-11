@@ -531,7 +531,6 @@ $t = Controller::$nav;
 				}
 			}
 
-			$display = $crumb::getNiceName();
 			$displays = $crumb::getNiceNamePlural();
 			// if this is the last crumb
 			if ($modelName == $crumb) {

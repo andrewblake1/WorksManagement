@@ -90,13 +90,13 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.parent_id',
 			'assembly.description AS searchAssembly',
-			'assemblyToAssembly.comment AS searchComment',
+			'subAssembly.comment AS searchComment',
 		);
 
 		// where
 		$criteria->compare('t.task_id',$this->task_id,false);
 		$criteria->compare('assembly.description',$this->searchAssembly,true);
-		$criteria->compare('assemblyToAssembly.comment',$this->searchComment,true);
+		$criteria->compare('subAssembly.comment',$this->searchComment,true);
 		if(!empty($this->parent_id))
 		{
 			$criteria->compare('t.parent_id',$this->parent_id);
@@ -107,9 +107,9 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		// a relationship between a parent child relationship in this table and the sub assembly table
 		$criteria->join = '
 			LEFT JOIN task_to_assembly taskToAssemblyParent ON t.parent_id = taskToAssemblyParent.id
-			LEFT JOIN assembly_to_assembly assemblyToAssembly
-				ON taskToAssemblyParent.assembly_id = assemblyToAssembly.parent_assembly_id
-				AND t.assembly_id = assemblyToAssembly.child_assembly_id
+			LEFT JOIN sub_assembly subAssembly
+				ON taskToAssemblyParent.assembly_id = subAssembly.parent_assembly_id
+				AND t.assembly_id = subAssembly.child_assembly_id
 		';
 		
 		// join

@@ -17,9 +17,9 @@
  * @property Store $store
  * @property Assembly $parent
  * @property Assembly[] $assemblies
- * @property AssemblyToAssembly[] $assemblyToAssemblies
- * @property AssemblyToAssembly[] $assemblyToAssemblies1
- * @property AssemblyToAssembly[] $assemblyToAssemblies2
+ * @property SubAssembly[] $assemblyToAssemblies
+ * @property SubAssembly[] $assemblyToAssemblies1
+ * @property SubAssembly[] $assemblyToAssemblies2
  * @property AssemblyToClient[] $assemblyToClients
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
@@ -58,9 +58,9 @@ class Assembly extends AdjacencyListActiveRecord
 			'store' => array(self::BELONGS_TO, 'Store', 'store_id'),
 			'parent' => array(self::BELONGS_TO, 'Assembly', 'parent_id'),
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'parent_id'),
-			'assemblyToAssemblies' => array(self::HAS_MANY, 'AssemblyToAssembly', 'parent_assembly_id'),
-			'assemblyToAssemblies1' => array(self::HAS_MANY, 'AssemblyToAssembly', 'store_id'),
-			'assemblyToAssemblies2' => array(self::HAS_MANY, 'AssemblyToAssembly', 'child_assembly_id'),
+			'assemblyToAssemblies' => array(self::HAS_MANY, 'SubAssembly', 'parent_assembly_id'),
+			'assemblyToAssemblies1' => array(self::HAS_MANY, 'SubAssembly', 'store_id'),
+			'assemblyToAssemblies2' => array(self::HAS_MANY, 'SubAssembly', 'child_assembly_id'),
 			'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
 			'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'assembly_id'),

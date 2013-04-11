@@ -13,7 +13,7 @@
  * @property integer $minimum
  * @property integer $maximum
  * @property string $select
- * @property string $comment
+ * @property string $quantity_tooltip
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -49,9 +49,9 @@ class AssemblyToMaterial extends ActiveRecord
 		return array(
 			array('assembly_id, material_id, stage_id, store_id, quantity', 'required'),
 			array('assembly_id, material_id, stage_id, store_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
-			array('comment', 'length', 'max'=>255),
+			array('quantity_tooltip', 'length', 'max'=>255),
 			array('select', 'safe'),
-			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, minimum, maximum, comment, select', 'safe', 'on'=>'search'),
+			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -104,7 +104,7 @@ class AssemblyToMaterial extends ActiveRecord
 			'material.alias AS searchMaterialAlias',
 			't.material_id',
 			't.select',
-			't.comment',
+			't.quantity_tooltip',
 			't.quantity',
 			't.minimum',
 			't.maximum',
@@ -118,7 +118,7 @@ class AssemblyToMaterial extends ActiveRecord
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.minimium',$this->minimum);
 		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('t.comment',$this->comment,true);
+		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
 		$criteria->compare('t.select',$this->select,true);
 		
 		$criteria->with = array(
@@ -138,7 +138,7 @@ class AssemblyToMaterial extends ActiveRecord
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
- 		$columns[] = 'comment';
+ 		$columns[] = 'quantity_tooltip';
  		$columns[] = 'select';
 		
 		return $columns;

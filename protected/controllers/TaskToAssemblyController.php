@@ -56,6 +56,8 @@ class TaskToAssemblyController extends AdjacencyListController
 		$models[] = $taskToAssembly;
 		
 		// insert materials into task_to_material table
+		
+		// from AssemblyToMaterial
 		foreach(AssemblyToMaterial::model()->findAllByAttributes(array('assembly_id'=>$assembly_id)) as $assemblyToMaterial)
 		{
 			$taskToMaterial = new TaskToMaterial();
@@ -64,12 +66,19 @@ class TaskToAssemblyController extends AdjacencyListController
 			$taskToMaterial->task_to_assembly_id = $taskToAssembly->id;
 			$taskToMaterial->store_id = $taskToAssembly->assembly->store_id;
 			$taskToMaterial->quantity = $assemblyToMaterial->quantity;
-			$saved &= $taskToMaterial->dbCallback('save');
+			if($saved &= $taskToMaterial->dbCallback('save'))
+			{
+				// add a row into pivot table so can join to get quantity comment and stage etc
+				$taskToMaterialToAssemblyToMaterial = new TaskToMaterialToAssemblyToMaterial();
+				$taskToMaterialToAssemblyToMaterial->task_to_material_id = $taskToMaterial->id;
+				$taskToMaterialToAssemblyToMaterial->assembly_to_material_id = $assemblyToMaterial->id;
+				$taskToMaterialToAssemblyToMaterial->dbCallback('save');
+			}
 			$models[] = $taskToMaterial;
 		}
 
 		// recurse thru sub assemblies
-		foreach(AssemblyToAssembly::model()->findAllByAttributes(array('parent_assembly_id'=>$assembly_id)) as $subAssembly)
+		foreach(SubAssembly::model()->findAllByAttributes(array('parent_assembly_id'=>$assembly_id)) as $subAssembly)
 		{
 			// add quantity sub-assemblies
 			for($cntr = 0; $cntr < $subAssembly->quantity; $cntr++)

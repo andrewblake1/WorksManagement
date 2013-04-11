@@ -88,8 +88,14 @@ mkdir /var/www/melbourne/assets/assembly
 mkdir /var/www/perth/assets/assembly
 mkdir /var/www/test/melbourne/assets/assembly
 mkdir /var/www/test/perth/assets/assembly
-exit
+nano /etc/php5/apache2/php.ini
+#edit php.ini 
+post_max_size = 40M
+upload_max_filesize = 30M
+max_file_uploads = 20
+memory_limit = 256M
 
+exit
 
 # need to set local database access
 cd protected/config

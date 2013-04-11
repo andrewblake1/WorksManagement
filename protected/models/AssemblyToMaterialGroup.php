@@ -13,7 +13,8 @@
  * @property integer $minimum
  * @property integer $maximum
  * @property string $select
- * @property string $comment
+ * @property string $quantity_tooltip
+ * @property string $selection_tooltip
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -48,7 +49,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			array('assembly_id, material_group_id, stage_id, store_id, quantity', 'required'),
 			array('assembly_id, material_group_id, stage_id, store_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('select', 'safe'),
-			array('id, assembly_id, searchStage, searchMaterialGroupDescription, quantity, minimum, maximum, comment, select', 'safe', 'on'=>'search'),
+			array('id, assembly_id, searchStage, searchMaterialGroupDescription, quantity, minimum, maximum, quantity_tooltip, selection_tooltip, select', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,6 +79,8 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			'material_group_id' => 'Material group/Stage',
 			'searchMaterialGroupDescription' => 'Material group',
 			'stage_id' => 'Stage',
+			'quantity_tooltip' => 'Quantity tooltip',
+			'selection_tooltip' => 'Selection tooltip',
 			'searchStage' => 'Stage',
 		));
 	}
@@ -98,7 +101,8 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			'materialGroup.description AS searchMaterialGroupDescription',
 	//		't.material_id',
 			't.select',
-			't.comment',
+			't.quantity_tooltip',
+			't.selection_tooltip',
 			't.quantity',
 			't.minimum',
 			't.maximum',
@@ -111,8 +115,9 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.minimium',$this->minimum);
 		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('t.comment',$this->comment,true);
 		$criteria->compare('t.select',$this->select,true);
+		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
+		$criteria->compare('t.selection_tooltip',$this->selection_tooltip,true);
 		
 		$criteria->with = array(
 			'materialGroup',
@@ -128,8 +133,9 @@ class AssemblyToMaterialGroup extends ActiveRecord
  		$columns[] = 'searchStage';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
- 		$columns[] = 'comment';
  		$columns[] = 'select';
+ 		$columns[] = 'quantity_tooltip';
+ 		$columns[] = 'selection_tooltip';
 		
 		return $columns;
 	}

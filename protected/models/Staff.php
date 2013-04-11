@@ -19,7 +19,7 @@
  * @property AuthItem[] $authItems
  * @property AuthItemChild[] $authItemchildren
  * @property Assembly[] $assemblies
- * @property AssemblyToAssembly[] $assemblyToAssemblies
+ * @property SubAssembly[] $assemblyToAssemblies
  * @property AssemblyToClient[] $assemblyToClients
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
@@ -115,7 +115,7 @@ class Staff extends ActiveRecord
 			'authItems' => array(self::HAS_MANY, 'AuthItem', 'staff_id'),
 			'authItemchildren' => array(self::HAS_MANY, 'AuthItemChild', 'staff_id'),
 			'assemblies' => array(self::HAS_MANY, 'Assembly', 'staff_id'),
-			'assemblyToAssemblies' => array(self::HAS_MANY, 'AssemblyToAssembly', 'staff_id'),
+			'assemblyToAssemblies' => array(self::HAS_MANY, 'SubAssembly', 'staff_id'),
 			'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'staff_id'),
 			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'staff_id'),
 			'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'staff_id'),

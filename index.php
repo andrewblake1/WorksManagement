@@ -25,6 +25,11 @@ switch($_SERVER['SERVER_NAME'])
 }
 //$env = new Environment('TEST'); //override mode
 
+// set character coding to what is used in database. Without this there can be errors in functions like substr which can
+// break a muli-byte character midway thru and return garbage. This also means that we should use the mb_ version of string functions
+// e.g. mb_substr and mb_strlen instead of substr etc.
+mb_internal_encoding("UTF-8");
+
 // set debug and trace level
 defined('YII_DEBUG') or define('YII_DEBUG', $env->yiiDebug);
 defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $env->yiiTraceLevel);

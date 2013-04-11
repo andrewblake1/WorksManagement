@@ -1,15 +1,19 @@
 <?php
 
 /**
- * This is the model class for table "assembly_to_assembly".
+ * This is the model class for table "sub_assembly".
  *
- * The followings are the available columns in table 'assembly_to_assembly':
+ * The followings are the available columns in table 'sub_assembly':
  * @property integer $id
  * @property integer $store_id
  * @property integer $parent_assembly_id
  * @property integer $child_assembly_id
- * @property string $comment
  * @property integer $quantity
+ * @property integer $minimum
+ * @property integer $maximum
+ * @property string $select
+ * @property string $quantity_tooltip
+ * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -18,7 +22,7 @@
  * @property Assembly $childAssembly
  * @property Staff $staff
  */
-class AssemblyToAssembly extends ActiveRecord
+class SubAssembly extends ActiveRecord
 {
 
 	/**
@@ -38,11 +42,12 @@ class AssemblyToAssembly extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('store_id, parent_assembly_id, child_assembly_id, quantity', 'required'),
-			array('store_id, parent_assembly_id, child_assembly_id, quantity', 'numerical', 'integerOnly'=>true),
-			array('comment', 'length', 'max'=>255),
+			array('store_id, parent_assembly_id, child_assembly_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
+			array('quantity_tooltip', 'length', 'max'=>255),
+			array('select', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, comment, quantity', 'safe', 'on'=>'search'),
+			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -86,18 +91,24 @@ class AssemblyToAssembly extends ActiveRecord
 			't.id',
 			't.parent_assembly_id',
 			't.child_assembly_id',
-			't.comment',
 			"CONCAT_WS('$delimiter',
 				childAssembly.description,
 				childAssembly.alias
 				) AS searchChildAssembly",
+			't.select',
+			't.quantity_tooltip',
 			't.quantity',
+			't.minimum',
+			't.maximum',
 		);
 
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.parent_assembly_id',$this->parent_assembly_id);
-		$criteria->compare('t.comment',$this->comment,true);
+		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('t.minimium',$this->minimum);
+		$criteria->compare('t.maximum',$this->maximum);
+		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
+		$criteria->compare('t.select',$this->select,true);
 		$this->compositeCriteria($criteria,
 			array(
 			'childAssembly.description',
@@ -113,13 +124,14 @@ class AssemblyToAssembly extends ActiveRecord
 		return $criteria;
 	}
 
-
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('searchChildAssembly', 'Assembly', 'child_assembly_id');
-//        $columns[] = $this->linkThisColumn('searchChildAssembly');
  		$columns[] = 'quantity';
- 		$columns[] = 'comment';
+ 		$columns[] = 'minimum';
+ 		$columns[] = 'maximum';
+ 		$columns[] = 'quantity_tooltip';
+ 		$columns[] = 'select';
 		
 		return $columns;
 	}

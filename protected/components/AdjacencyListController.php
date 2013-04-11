@@ -90,6 +90,16 @@ class AdjacencyListController extends Controller {
 
 		return $breadcrumbs;
 	}
-	
+
+	public function actionUpdate($id, $model = null) {
+		$modelName = $this->modelName;
+		// set the parent_id which is needed when returning to admin view to return to the same place
+		$adjacenyListModel = $modelName::model()->findByPk($id);
+		
+		Controller::$nav['admin'][$modelName]['parent_id'] = $adjacenyListModel->parent_id;
+
+		parent::actionUpdate($id, $model);
+	}
+
 }
 ?>

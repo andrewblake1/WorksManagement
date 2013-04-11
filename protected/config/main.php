@@ -211,10 +211,14 @@ return array(
 				'Stage',
 				'Store'=>array(
 					'Assembly'=>array(
-						'AssemblyToAssembly',
+						'SubAssembly',
+						'AssemblyToAssemblyGroup',
 						'AssemblyToMaterial',
 						'AssemblyToMaterialGroup',
 						'AssemblyToStandardDrawing',
+					),
+					'AssemblyGroup'=>array(
+						'AssemblyGroupToAssembly',
 					),
 					'Material',
 					'MaterialGroup'=>array(

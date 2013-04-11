@@ -61,10 +61,25 @@ EOD;
 			$this->_authManager->createOperation('AssemblyRead', 'Assembly read');
 			$task->addChild('AssemblyRead');
 
-			$task=$this->_authManager->createTask('AssemblyToAssembly', 'AssemblyToAssembly task');
-			$systemAdminRole->addChild('AssemblyToAssembly');
-			$this->_authManager->createOperation('AssemblyToAssemblyRead', 'AssemblyToAssembly read');
-			$task->addChild('AssemblyToAssemblyRead');
+			$task=$this->_authManager->createTask('AssemblyGroup', 'AssemblyGroup task');
+			$systemAdminRole->addChild('AssemblyGroup');
+			$this->_authManager->createOperation('AssemblyGroupRead', 'AssemblyGroup read');
+			$task->addChild('AssemblyGroupRead');
+
+			$task=$this->_authManager->createTask('AssemblyGroupToAssembly', 'AssemblyGroupToAssembly task');
+			$systemAdminRole->addChild('AssemblyGroupToAssembly');
+			$this->_authManager->createOperation('AssemblyGroupToAssemblyRead', 'AssemblyGroupToAssembly read');
+			$task->addChild('AssemblyGroupToAssemblyRead');
+
+			$task=$this->_authManager->createTask('SubAssembly', 'SubAssembly task');
+			$systemAdminRole->addChild('SubAssembly');
+			$this->_authManager->createOperation('SubAssemblyRead', 'SubAssembly read');
+			$task->addChild('SubAssemblyRead');
+
+			$task=$this->_authManager->createTask('AssemblyToAssemblyGroup', 'AssemblyToAssemblyGroup task');
+			$systemAdminRole->addChild('AssemblyToAssemblyGroup');
+			$this->_authManager->createOperation('AssemblyToAssemblyGroupRead', 'AssemblyToAssemblyGroup read');
+			$task->addChild('AssemblyToAssemblyGroupRead');
 
 			$task=$this->_authManager->createTask('AssemblyToMaterial', 'AssemblyToMaterial task');
 			$systemAdminRole->addChild('AssemblyToMaterial');
@@ -352,9 +367,15 @@ EOD;
 			$task->addChild('TaskRead');
 
 			$task=$this->_authManager->createTask('TaskToAssembly', 'TaskToAssembly task');
+			$task2=$this->_authManager->createTask('TaskToAssemblyToAssemblyGroupToAssembly', 'TaskToAssemblyToAssemblyGroupToAssembly task');
 			$projectManagerRole->addChild('TaskToAssembly');
+			$projectManagerRole->addChild('TaskToAssemblyToAssemblyGroupToAssembly');
+			$task->addChild('TaskToAssemblyToAssemblyGroupToAssembly');
 			$this->_authManager->createOperation('TaskToAssemblyRead', 'TaskToAssembly read');
 			$task->addChild('TaskToAssemblyRead');
+			$this->_authManager->createOperation('TaskToAssemblyToAssemblyGroupToAssemblyRead', 'TaskToAssemblyToAssemblyGroupToAssembly read');
+			$task->addChild('TaskToAssemblyToAssemblyGroupToAssemblyRead');
+			$task2->addChild('TaskToAssemblyToAssemblyGroupToAssemblyRead');
 
 			$task=$this->_authManager->createTask('TaskToGenericTaskType', 'TaskToGenericTaskType task');
 			$systemAdminRole->addChild('TaskToGenericTaskType');

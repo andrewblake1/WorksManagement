@@ -8,8 +8,14 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		array('scopeStore'=>array($assembly->store_id)));
 
 	$form->textFieldRow('quantity');
-	
-	$form->textAreaRow('comment');
+
+	$form->textFieldRow('minimum');
+
+	$form->textFieldRow('maximum');
+
+	$form->textAreaRow('quantity_tooltip');
+
+	$form->textAreaRow('select');
 
 $this->endWidget();
 
