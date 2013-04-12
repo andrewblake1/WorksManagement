@@ -32,7 +32,7 @@ class ProjectToProjectTypeToAuthItem extends ActiveRecord
 	 */
 	static $niceName = 'Role';
 
-	protected $defaultSort = 't.itemname';
+	protected $defaultSort = array('t.itemname');
 	
 	/**
 	 * @return string the associated database table name

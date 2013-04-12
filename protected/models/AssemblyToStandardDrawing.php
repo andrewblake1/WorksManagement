@@ -25,7 +25,7 @@ class AssemblyToStandardDrawing extends ActiveRecord
 	 */
 	static $niceName = 'Standard drawing';
 
-	protected $defaultSort = 'standardDrawing.description';
+	protected $defaultSort = array('standardDrawing.description');
 	
 	/**
 	 * @return array validation rules for model attributes.

@@ -29,7 +29,7 @@
  */
 class Assembly extends AdjacencyListActiveRecord
 {
-	protected $defaultSort = 't.description';
+	protected $defaultSort = array('t.description');
 
 	/**
 	 * @return array validation rules for model attributes.

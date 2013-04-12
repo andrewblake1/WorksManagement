@@ -456,7 +456,7 @@ $t = Controller::$nav;
 			'quantity' => 'Quantity',
 			'minimum' => 'Minimum',
 			'maximum' => 'Maximum',
-			'select' => 'Select',
+			'select' => 'Specific values',
 			'name' => 'Name',
 			'first_name' => 'First name',
 			'last_name' => 'Last name',
@@ -476,6 +476,7 @@ $t = Controller::$nav;
 			'hours' => 'Hours',
 			'start' => 'Start',
 			'quantity_tooltip' => 'Quantity tooltip',
+			'selection_tooltip' => 'Selection tooltip',
 		);
 	}
 
@@ -585,27 +586,42 @@ $t = Controller::$nav;
 		$modelName = get_class($model);
 		if(!isset($_GET["{$modelName}_sort"]))
 		{
+			// set default sort
+
 			// if default sort order given at model level
 			if($this->defaultSort)
 			{
-				$displayAttr = $this->defaultSort;
+				$defaultSort = array();
+	
+				foreach($this->defaultSort as $key => $value)
+				{
+					if(is_int($key))
+					{
+						$defaultSort[] = "$value ASC";
+					}
+					else
+					{
+						$defaultSort[] = "$key $value";
+					}
+				}
+				
+				$searchCriteria->order = explode(', ', $defaultSort);
 			}
 			else
 			{
 				// get first display attribute to use for inititial sort
 				foreach($modelName::getDisplayAttr() as $key => $displayAttr);
+				
 				if(preg_match('/(((.*)->)?(\w*))->(\w*)$/', $displayAttr, $matches))
 				{
-					$displayAttr = "{$matches[4]}.{$matches[5]}";
+					$searchCriteria->order = "{$matches[4]}.{$matches[5]}  ASC";
 				}
 				else
 				{
-					$displayAttr = "t.$displayAttr";
+					$searchCriteria->order = "t.$displayAttr  ASC";
 				}
 			}
 
-			// set default sort
-			$searchCriteria->order = "$displayAttr ASC";
 		}
 
 		return $searchCriteria;

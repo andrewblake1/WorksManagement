@@ -31,7 +31,7 @@ class SubAssembly extends ActiveRecord
 	static $niceName = 'Sub assembly';
 
 	public $searchChildAssembly;
-	protected $defaultSort = 'childAssembly.description';
+	protected $defaultSort = array('childAssembly.description');
 
 	/**
 	 * @return array validation rules for model attributes.

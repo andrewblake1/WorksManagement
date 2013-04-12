@@ -476,6 +476,22 @@ EOD;
 			$storemanRole->addChild('Assembly');
 			$storemanRole->addChild('PurchaseOrderRead');
 
+			// DATAENTRY
+			$dataentryRole=$this->_authManager->createRole('dataentry', 'Data entry');
+			$dataentryRole->addChild('Store');
+			$dataentryRole->addChild('Assembly');
+			$dataentryRole->addChild('SubAssembly');
+			$dataentryRole->addChild('AssemblyToAssemblyGroup');
+			$dataentryRole->addChild('AssemblyToMaterial');
+			$dataentryRole->addChild('AssemblyToMaterialGroup');
+			$dataentryRole->addChild('AssemblyToStandardDrawing');
+			$dataentryRole->addChild('AssemblyGroup');
+			$dataentryRole->addChild('AssemblyGroupToAssembly');
+			$dataentryRole->addChild('Material');
+			$dataentryRole->addChild('MaterialGroup');
+			$dataentryRole->addChild('MaterialGroupToMaterial');
+			$dataentryRole->addChild('StandardDrawing');
+
 			//provide a message indicating success
 			echo "Authorization hierarchy successfully generated.";
         } 

@@ -24,7 +24,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	public $searchComment;
 	public $store_id;
 	public $quantity;
-	protected $defaultSort = 'searchAssembly';
+	protected $defaultSort = array('t.parent_id', 'searchAssembly');
 
 	/**
 	 * @var string nice model name for use in output
