@@ -67,7 +67,7 @@ class WMTbActiveForm extends TbActiveForm
 	 */
     public function init()
     {
-		// add in tootip functionality for input and select elements elements - using attrib data-original-title
+		// add in tooltip functionality for input and select elements elements - using attrib data-original-title
 		Yii::app()->clientScript->registerScript('tooltip','$("input, select").tooltip();',CClientScript::POS_READY);
 
 		if(empty($this->htmlOptions))

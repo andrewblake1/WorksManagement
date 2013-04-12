@@ -8,7 +8,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	$form->hiddenField('assembly_to_material_group_id');
 
 	$assemblyToMaterialGroup = AssemblyToMaterialGroup::model()->findByPk($model->assembly_to_material_group_id);
-	$quantity_tootip = $assemblyToMaterialGroup->quantity_tootip;
+	$quantity_tooltip = $assemblyToMaterialGroup->quantity_tooltip;
 	
 	if($model->isNewRecord)
 	{
@@ -23,9 +23,9 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		$model->quantity = $taskToMaterialId->quantity;
 	}
 
-	MaterialController::listWidgetRow($model, $form, 'material_id', array('data-original-title'=>$assemblyToMaterialGroup->selection_tootip), array('scopeMaterialGroup'=>array($model->material_group_id)));
+	MaterialController::listWidgetRow($model, $form, 'material_id', array('data-original-title'=>$assemblyToMaterialGroup->selection_tooltip), array('scopeMaterialGroup'=>array($model->material_group_id)));
 
-	$form->textFieldRow('quantity', array('data-original-title'=>$assemblyToMaterialGroup->quantity_tootip));
+	$form->textFieldRow('quantity', array('data-original-title'=>$assemblyToMaterialGroup->quantity_tooltip));
 
 $this->endWidget();
 

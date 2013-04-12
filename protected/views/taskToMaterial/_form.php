@@ -44,10 +44,10 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	if(!empty($model->taskToMaterialToAssemblyToMaterials))
 	{
 		// there ia a unique constraint here so there will only be 1 relating row
-		$quantity_tootip = $model->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial->quantity_tootip;
+		$quantity_tooltip = $model->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial->quantity_tooltip;
 	}
 
-	$form->textFieldRow('quantity', array('data-original-title'=>$quantity_tootip));
+	$form->textFieldRow('quantity', array('data-original-title'=>$quantity_tooltip));
 
 $this->endWidget();
 
