@@ -21,7 +21,7 @@
 class TaskToAssembly extends AdjacencyListActiveRecord
 {
 	public $searchAssembly;
-	public $searchComment;
+	public $searchQuantity;
 	public $store_id;
 	public $quantity;
 	protected $defaultSort = array('t.parent_id', 'searchAssembly');
@@ -44,7 +44,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 			array('parent_id, task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchComment, searchAssembly, parent_id, assembly_id', 'safe', 'on'=>'search'),
+			array('id, task_id, searchQuantity, searchAssembly, parent_id, assembly_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -74,7 +74,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 			'task_id' => 'Task',
 			'assembly_id' => 'Assembly',
 			'searchAssembly' => 'Assembly',
-			'searchComment' => 'Comment',
+			'searchQuantity' => 'quantity',
 		));
 	}
 
@@ -89,33 +89,18 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.parent_id',
-			'assembly.description AS searchAssembly',
-			'subAssembly.comment AS searchComment',
+			't.description AS searchAssembly',
+			'subAssembly.quantity AS searchQuantity',
 		);
 
 		// where
 		$criteria->compare('t.task_id',$this->task_id,false);
 		$criteria->compare('assembly.description',$this->searchAssembly,true);
-		$criteria->compare('subAssembly.comment',$this->searchComment,true);
+		$criteria->compare('subAssembly.quantity',$this->searchQuantity,true);
 		if(!empty($this->parent_id))
 		{
 			$criteria->compare('t.parent_id',$this->parent_id);
 		}
-
-		// join
-		// This join is to get at the comment contained within the sub assembly (assembly to assembly) table but realizing there is
-		// a relationship between a parent child relationship in this table and the sub assembly table
-		$criteria->join = '
-			LEFT JOIN task_to_assembly taskToAssemblyParent ON t.parent_id = taskToAssemblyParent.id
-			LEFT JOIN sub_assembly subAssembly
-				ON taskToAssemblyParent.assembly_id = subAssembly.parent_assembly_id
-				AND t.assembly_id = subAssembly.child_assembly_id
-		';
-		
-		// join
-		$criteria->with = array(
-			'assembly',
-		);
 
 		return $criteria;
 	}
@@ -126,7 +111,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		$columns[] = 'parent_id';
 		// link to admin displaying children or if no children then just description without link
         $this->linkColumnAdjacencyList('searchAssembly', $columns);
-		$columns[] = 'searchComment';
+		$columns[] = 'searchQuantity';
 		
 		return $columns;
 	}
@@ -139,8 +124,8 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	{
 		return array(
 			't.id',
-			'searchAssembly',
-			'searchComment',
+//			'searchAssembly',
+//			'searchQuantity',
 		);
 	}
 	

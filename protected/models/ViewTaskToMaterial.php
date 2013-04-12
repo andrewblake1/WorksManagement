@@ -25,7 +25,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, task_to_assembly_id, searchMaterialGroup, searchStage, searchMaterial, searchQuantityTooltip, searchAssembly, quantity', 'safe', 'on'=>'search'),
+			array('id, task_id, task_to_assembly_id, searchMaterialGroup, searchStage, searchMaterial, searchAssembly, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 

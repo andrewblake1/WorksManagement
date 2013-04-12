@@ -605,7 +605,7 @@ $t = Controller::$nav;
 					}
 				}
 				
-				$searchCriteria->order = explode(', ', $defaultSort);
+				$searchCriteria->order = implode(', ', $defaultSort);
 			}
 			else
 			{
