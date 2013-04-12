@@ -2,6 +2,11 @@
 
 class TaskToAssemblyController extends AdjacencyListController
 {
+	/**
+	 * @var string the name of the model to use in the admin view - the model may serve a database view as opposed to a table  
+	 */
+	protected $_adminViewModel = 'ViewTaskToAssembly';
+
 	public function setUpdateTabs($model)
 	{
 		// set up tab menu if required - using setter

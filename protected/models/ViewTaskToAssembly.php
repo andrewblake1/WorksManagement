@@ -7,6 +7,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchAssemblyGroup;
+	public $searchAssembly;
 
 	/**
 	 * @return string the associated database table name
@@ -24,7 +25,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, searchAssemblyGroup, description', 'safe', 'on'=>'search'),
+			array('id, task_id, searchAssemblyGroup, searchAssembly', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -40,7 +41,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.task_id',
 			't.parent_id',
-			't.description',
+			'assembly.description AS searchAssembly',
 			't.quantity',
 			't.assembly_group_id',
 			'assemblyGroup.description as searchAssemblyGroup',
@@ -51,10 +52,11 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		// join
 		$criteria->join = '
 			LEFT JOIN assembly_group assemblyGroup ON t.assembly_group_id = assemblyGroup.id
+			LEFT JOIN assembly ON t.assembly_id = assembly.id
 		';
 		
 		// where
-		$criteria->compare('description',$this->description,true);
+		$criteria->compare('searchAssembly',$this->searchAssembly,true);
 		$criteria->compare('assemblyGroup.description',$this->searchAssemblyGroup,true);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.task_id',$this->task_id);
@@ -64,11 +66,11 @@ class ViewTaskToAssembly extends ViewActiveRecord
 
 	public function getAdminColumns()
 	{
- 		$columns[] = $this->linkThisColumn('description');
+ 		$columns[] = $this->linkThisColumn('searchAssembly');
 		$columns[] = 'searchAssemblyGroup';
 		$columns[] = 'parent_id';
 		$columns[] = 'quantity';
-        $this->linkColumnAdjacencyList('searchAssembly', $columns, 'searchAssemblyId');
+ //       $this->linkColumnAdjacencyList('searchAssembly', $columns, 'searchAssemblyId');
 
 		return $columns;
 	}
@@ -80,7 +82,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	public function getSearchSort()
 	{
 		return array(
-			'description',
+			'searchAssembly',
 			'searchAssemblyGroup',
 			'parent_id',
 			'quantity',
