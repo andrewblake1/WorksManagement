@@ -41,7 +41,11 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	MaterialController::listWidgetRow($model, $form, 'material_id', array(), array('scopeStore'=>array($model->store_id)));
 	
 	// get quantity tooltip if part of assembly
-	if(!empty($model->taskToMaterialToAssemblyToMaterials))
+	if(empty($model->taskToMaterialToAssemblyToMaterials))
+	{
+		$quantity_tooltip = '';
+	}
+	else
 	{
 		// there ia a unique constraint here so there will only be 1 relating row
 		$quantity_tooltip = $model->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial->quantity_tooltip;
