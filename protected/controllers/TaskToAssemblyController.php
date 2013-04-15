@@ -7,6 +7,47 @@ class TaskToAssemblyController extends AdjacencyListController
 	 */
 	protected $_adminViewModel = 'ViewTaskToAssembly';
 
+	// called within AdminViewWidget
+	public function getButtons($model)
+	{
+		return array(
+			'class'=>'WMTbButtonColumn',
+			'buttons'=>array(
+				'delete' => array(
+					'visible'=>'Yii::app()->user->checkAccess($data->id ? "TaskToAssembly" : "TaskToAssemblyToAssemblyGroupToAssembly", array("primaryKey"=>$data->id ? $data->id : $data->assembly_group_id))',
+					'url'=>'Yii::app()->createUrl(($data->id ? "TaskToAssembly" : "TaskToAssemblylToAssemblyGroupToAssembly" ).
+							"/delete", array("id"=>$data->id ? $data->id : $data->assembly_group_id))',
+				),
+				'update' => array(
+					'visible'=>'Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyGroupToAssembly" : "TaskToAssembly", array("primaryKey"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))',
+					'url'=>'Yii::app()->createUrl(
+						$data->assembly_group_id
+							? $data->id
+								? "TaskToAssemblyToAssemblyGroupToAssembly/update"
+								: "TaskToAssemblyToAssemblyGroupToAssembly/create"
+							: "TaskToAssembly/update",
+						$data->assembly_group_id
+							? array("id"=>$data->searchTaskToAssemblyToAssemblyGroupToAssemblyId, "TaskToAssemblyToAssemblyGroupToAssembly"=>array(
+								"assembly_group_id"=>$data->assembly_group_id,
+								"task_id"=>$data->task_id,
+								"task_to_assembly_id"=>($data->id
+									? $data->id
+									: $data->parent_id),
+								"assembly_to_assembly_group_id"=>$data->assembly_to_assembly_group_id,
+								))
+							: array("id"=>$data->id)
+					)',
+				),
+				'view' => array(
+					'visible'=>'!Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyGroupToAssembly" : "TaskToAssembly", array("primaryKey"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))
+						&& Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyGroupToAssemblyRead" : "TaskToAssemblyRead")',
+				'url'=>'Yii::app()->createUrl(($data->assembly_group_id ? "TaskToAssemblyToAssemblyGroupToAssembly" : "TaskToAssembly" ).
+					"/view", array("id"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))',
+				),
+			),
+		);
+	}
+
 	public function setUpdateTabs($model)
 	{
 		// set up tab menu if required - using setter
@@ -31,12 +72,7 @@ class TaskToAssemblyController extends AdjacencyListController
 	 */
 	protected function createSave($model, &$models=array())
 	{
-		for($cntr = 0; $cntr < $model->quantity; $cntr++)
-		{
-			$saved = static::addAssembly($model->task_id, $model->assembly_id, null, $models);
-		}
-		
-		return $saved;
+		return static::addAssembly($model->task_id, $model->assembly_id, $model->quantity, null, $models);
 	}
 	
 	/**
@@ -46,7 +82,7 @@ class TaskToAssemblyController extends AdjacencyListController
 	 * @param int $parent_id the id of the parent within this model - adjacency list
 	 * @return returns 0, or null on error of any inserts
 	 */
-	static function addAssembly($task_id, $assembly_id, $parent_id = null, &$models=array())
+	static function addAssembly($task_id, $assembly_id, $quantity, $parent_id = null, &$models=array())
 	{
 		// initialise the saved variable to show no errors
 		$saved = true;
@@ -56,7 +92,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		$taskToAssembly->task_id = $task_id;
 		$taskToAssembly->assembly_id = $assembly_id;
 		$taskToAssembly->parent_id = $parent_id;
-		$taskToAssembly->quantity = 1;	// dummy value as always 1 but quanity used on the create form and required
+		$taskToAssembly->quantity = $quantity;
 		$saved &= $taskToAssembly->dbCallback('save');
 		$models[] = $taskToAssembly;
 		
@@ -88,7 +124,7 @@ class TaskToAssemblyController extends AdjacencyListController
 			// add quantity sub-assemblies
 			for($cntr = 0; $cntr < $subAssembly->quantity; $cntr++)
 			{
-				$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, $taskToAssembly->id, $models);
+				$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, $subAssembly->quantity, $taskToAssembly->id, $models);
 			}
 		}
 		

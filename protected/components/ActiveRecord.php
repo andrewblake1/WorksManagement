@@ -123,6 +123,10 @@ abstract class ActiveRecord extends CActiveRecord
 			{
 				$niceName = $attributes;
 			}
+			elseif($primaryKey)
+			{
+				$niceName .= " $primaryKey";
+			}
 		}
 		
 		return $niceName;
@@ -516,10 +520,11 @@ $t = Controller::$nav;
 			return $name;
 		}
 	}
-	
+
+// TODO: probably breaking mvc here again calling controller code	
 	public function linkColumnAdjacencyList($name, &$columns, $primaryKeyName = 'id', $parentAttrib = 'parent_id')
 	{
-		$modelName = get_class($this);
+		$modelName = str_replace('View', '', get_class($this));
 		$controllerName = "{$modelName}Controller";
 
 		// add addtional columns for managment of the adjacency list if user has write access

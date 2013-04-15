@@ -40,6 +40,19 @@ class TaskToMaterialToMaterialGroupToMaterialController extends Controller
 		return $saved;
 	}
 
+	protected function updateSave($model, &$models = array()) {
+		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
+		$taskToMaterial = TaskToMaterial::model()->findByPk($model->task_to_material_id);
+		$taskToMaterial->material_id = $model->material_id;
+		
+		if($saved = parent::updateSave($taskToMaterial, $models))
+		{
+			$saved &= parent::updateSave($model, $models);
+		}
+
+		return $saved;
+	}
+
 	protected function updateRedirect($model) {
 		$this->createRedirect($model);
 	}

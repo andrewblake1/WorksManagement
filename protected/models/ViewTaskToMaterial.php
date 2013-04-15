@@ -37,6 +37,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$criteria=new DbCriteria;
 
 		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.material_id',
@@ -50,7 +51,10 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			't.searchAssemblyId',
 			't.searchTaskToMaterialToMaterialGroupToMaterialId',
 			't.assembly_to_material_group_id',
-			'materialGroup.description as searchMaterialGroup',
+			"CONCAT_WS('$delimiter',
+				materialGroup.description,
+				t.searchAssemblyToMaterialGroupComment
+				) AS searchMaterialGroup",
 		);
 		
 		// join
@@ -62,7 +66,13 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		
 		// where
 		$criteria->compare('searchMaterial',$this->searchMaterial,true);
-		$criteria->compare('materialGroup.description',$this->searchMaterialGroup,true);
+		$this->compositeCriteria($criteria,
+			array(
+			'materialGroup.description',
+			't.searchAssemblyToMaterialGroupComment'
+			),
+			$this->searchMaterialGroup
+		);
 		$criteria->compare('searchAssembly',$this->searchAssembly,true);
 		$criteria->compare('t.task_to_assembly_id',$this->task_to_assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);

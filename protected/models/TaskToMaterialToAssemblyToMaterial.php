@@ -24,12 +24,9 @@ class TaskToMaterialToAssemblyToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_to_material_id, assembly_to_material_id, staff_id', 'required'),
-			array('id, assembly_to_material_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('task_to_material_id, assembly_to_material_id, staff_id', 'required'),
+			array('assembly_to_material_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_to_material_id', 'length', 'max'=>10),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, task_to_material_id, assembly_to_material_id, staff_id', 'safe', 'on'=>'search'),
 		);
 	}
 

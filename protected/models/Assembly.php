@@ -124,6 +124,21 @@ class Assembly extends AdjacencyListActiveRecord
 		);
 	}
  
+	public function scopeAssemblyGroup($assembly_group_id)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('assemblyGroupToAssembly.assembly_group_id', $assembly_group_id);
+
+		// join
+		$criteria->join = '
+			JOIN assembly_group_to_assembly assemblyGroupToAssembly ON assemblyGroupToAssembly.assembly_id = t.id
+		';
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+
 	public function scopeStore($store_id)
 	{
 		$criteria=new DbCriteria;

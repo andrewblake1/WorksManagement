@@ -110,11 +110,7 @@ class TaskController extends GenericExtensionController
 		// loop thru all all assemblies related to the tasks type
 		foreach($task->taskType->taskTypeToAssemblies as $taskTypeToAssembly)
 		{
-			// add quantity assemblies
-			for($cntr = 0; $cntr < $taskTypeToAssembly->quantity; $cntr++)
-			{
-				$saved = TaskToAssemblyController::addAssembly($task->id, $taskTypeToAssembly->assembly_id, null, $models);
-			}
+			$saved = TaskToAssemblyController::addAssembly($task->id, $taskTypeToAssembly->assembly_id, $taskTypeToAssembly->quantity, null, $models);
 		}
 		
 		return $saved;

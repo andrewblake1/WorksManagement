@@ -8,23 +8,23 @@
  * @property string $task_id
  * @property integer $assembly_id
  * @property string $parent_id
+ * @property integer $quantity
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property TaskToMaterial[] $taskToMaterials
  * @property Task $task
  * @property Staff $staff
  * @property Assembly $assembly
  * @property TaskToAssembly $parent
  * @property TaskToAssembly[] $taskToAssemblies
+ * @property TaskToAssemblyToAssemblyGroupToAssembly[] $taskToAssemblyToAssemblyGroupToAssemblies
+ * @property TaskToMaterial[] $taskToMaterials
  */
 class TaskToAssembly extends AdjacencyListActiveRecord
 {
 	public $searchAssembly;
 	public $searchQuantity;
 	public $store_id;
-	public $quantity;
-	protected $defaultSort = array('t.parent_id', 'searchAssembly');
 
 	/**
 	 * @var string nice model name for use in output
@@ -44,7 +44,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 			array('parent_id, task_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, searchQuantity, searchAssembly, parent_id, assembly_id', 'safe', 'on'=>'search'),
+//			array('id, task_id, searchQuantity, searchAssembly, parent_id, assembly_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -75,37 +75,11 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 			'assembly_id' => 'Assembly',
 			'searchAssembly' => 'Assembly',
 			'searchQuantity' => 'quantity',
+			'searchAssemblyGroup' => 'Group/comment',
 		));
 	}
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.parent_id',
-			't.description AS searchAssembly',
-			'subAssembly.quantity AS searchQuantity',
-		);
-
-		// where
-		$criteria->compare('t.task_id',$this->task_id,false);
-		$criteria->compare('assembly.description',$this->searchAssembly,true);
-		$criteria->compare('subAssembly.quantity',$this->searchQuantity,true);
-		if(!empty($this->parent_id))
-		{
-			$criteria->compare('t.parent_id',$this->parent_id);
-		}
-
-		return $criteria;
-	}
-
-	public function getAdminColumns()
+/*	public function getAdminColumns()
 	{
 		$columns[] = 'id';
 		$columns[] = 'parent_id';
@@ -114,20 +88,20 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		$columns[] = 'searchQuantity';
 		
 		return $columns;
-	}
+	}*/
 
 	/**
 	 * Retrieves a sort array for use in CActiveDataProvider.
 	 * @return array the for data provider that contains the sort condition.
 	 */
-	public function getSearchSort()
+/*	public function getSearchSort()
 	{
 		return array(
 			't.id',
 //			'searchAssembly',
 //			'searchQuantity',
 		);
-	}
+	}*/
 	
 	static function getDisplayAttr()
 	{

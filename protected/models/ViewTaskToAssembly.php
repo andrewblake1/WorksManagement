@@ -8,6 +8,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	 */
 	public $searchAssemblyGroup;
 	public $searchAssembly;
+	protected $defaultSort = array('searchAssemblyGroup'=>'DESC', 't.parent_id', 'searchAssembly');
 
 	/**
 	 * @return string the associated database table name
@@ -37,17 +38,23 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		$criteria=new DbCriteria;
 
 		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.task_id',
 			't.parent_id',
+			't.assembly_id',
 			'assembly.description AS searchAssembly',
 			't.quantity',
 			't.assembly_group_id',
-			'assemblyGroup.description as searchAssemblyGroup',
+	//		'assemblyGroup.description as searchAssemblyGroup',
 			't.searchTaskToAssemblyToAssemblyGroupToAssemblyId',
 			't.assembly_to_assembly_group_id',
-		);
+			"CONCAT_WS('$delimiter',
+					assemblyGroup.description,
+					t.searchAssemblyToAssemblyGroupComment
+					) AS searchAssemblyGroup",
+				);
 				
 		// join
 		$criteria->join = '
@@ -57,7 +64,13 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		
 		// where
 		$criteria->compare('searchAssembly',$this->searchAssembly,true);
-		$criteria->compare('assemblyGroup.description',$this->searchAssemblyGroup,true);
+		$this->compositeCriteria($criteria,
+			array(
+			'assemblyGroup.description',
+			't.searchAssemblyToAssemblyGroupComment'
+			),
+			$this->searchAssemblyGroup
+		);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.task_id',$this->task_id);
 
@@ -66,11 +79,11 @@ class ViewTaskToAssembly extends ViewActiveRecord
 
 	public function getAdminColumns()
 	{
- 		$columns[] = $this->linkThisColumn('searchAssembly');
-		$columns[] = 'searchAssemblyGroup';
+		$columns[] = 'id';
 		$columns[] = 'parent_id';
+		$columns[] = 'searchAssemblyGroup';
 		$columns[] = 'quantity';
- //       $this->linkColumnAdjacencyList('searchAssembly', $columns, 'searchAssemblyId');
+        $this->linkColumnAdjacencyList('searchAssembly', $columns);
 
 		return $columns;
 	}

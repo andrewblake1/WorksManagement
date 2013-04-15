@@ -17,7 +17,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	}
 	else
 	{
-		$form->hiddenField('assembly_id');
 		// otherwise our previous saved quantity
 		$taskToAssemblyId = TaskToAssembly::model()->findByPk($model->task_to_assembly_id);
 		$model->quantity = $taskToAssemblyId->quantity;

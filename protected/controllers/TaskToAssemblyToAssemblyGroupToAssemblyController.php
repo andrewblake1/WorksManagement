@@ -28,6 +28,7 @@ class TaskToAssemblyToAssemblyGroupToAssemblyController extends Controller
 	
 		$taskToAssembly = new TaskToAssembly;
 		$taskToAssembly->attributes = $_POST['TaskToAssemblyToAssemblyGroupToAssembly'];
+		$taskToAssembly->parent_id = $_POST['TaskToAssemblyToAssemblyGroupToAssembly']['task_to_assembly_id'];
 		// filler - unused in this context but necassary in Assembly model
 		$taskToAssembly->store_id = 0;
 
@@ -39,10 +40,24 @@ class TaskToAssemblyToAssemblyGroupToAssemblyController extends Controller
 
 		return $saved;
 	}
+	
+	protected function updateSave($model, &$models = array()) {
+		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
+		$taskToAssembly = TaskToAssembly::model()->findByPk($model->task_to_assembly_id);
+		$taskToAssembly->assembly_id = $model->assembly_id;
+		
+		if($saved = parent::updateSave($taskToAssembly, $models))
+		{
+			$saved &= parent::updateSave($model, $models);
+		}
+
+		return $saved;
+	}
 
 	protected function updateRedirect($model) {
 		$this->createRedirect($model);
 	}
+
 	protected function createRedirect($model)
 	{
 		// go to admin view

@@ -738,8 +738,6 @@ $t = Controller::$nav;
 		));
 	}
 
-// TODO: huge duplication between actionUpdate and actionCreate - remove duplication  - and in the respective redirect and save methods
-
 	/*
 	 * to be overidden if using mulitple models
 	 */
@@ -776,7 +774,7 @@ $t = Controller::$nav;
 // TODO: this is untested without javascript
 
 		if (isset($_POST[$modelName])) {
-			$model->attributes = $_POST[$modelName];
+$t=			$model->attributes = $_POST[$modelName];
 
 			// start a transaction
 			$transaction = Yii::app()->db->beginTransaction();

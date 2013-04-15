@@ -6,15 +6,16 @@
  * The followings are the available columns in table 'assembly_to_material_group':
  * @property integer $id
  * @property integer $assembly_id
- * @property integer $material_group_id
  * @property integer $stage_id
  * @property integer $store_id
+ * @property integer $material_group_id
  * @property integer $quantity
  * @property integer $minimum
  * @property integer $maximum
  * @property string $select
  * @property string $quantity_tooltip
  * @property string $selection_tooltip
+ * @property string $comment
  * @property integer $deleted
  * @property integer $staff_id
  *
@@ -24,6 +25,7 @@
  * @property Assembly $assembly
  * @property MaterialGroup $store
  * @property MaterialGroup $materialGroup
+ * @property TaskToMaterialToMaterialGroupToMaterial[] $taskToMaterialToMaterialGroupToMaterials
  */
 class AssemblyToMaterialGroup extends ActiveRecord
 {
@@ -48,8 +50,9 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		return array(
 			array('assembly_id, material_group_id, stage_id, store_id, quantity', 'required'),
 			array('assembly_id, material_group_id, stage_id, store_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
+			array('quantity_tooltip, selection_tooltip, comment', 'length', 'max'=>255),
 			array('select', 'safe'),
-			array('id, assembly_id, searchStage, searchMaterialGroupDescription, quantity, minimum, maximum, quantity_tooltip, selection_tooltip, select', 'safe', 'on'=>'search'),
+			array('id, assembly_id, searchStage, searchMaterialGroupDescription, quantity, minimum, maximum, quantity_tooltip, selection_tooltip, select, comment', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,6 +69,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
 			'store' => array(self::BELONGS_TO, 'MaterialGroup', 'store_id'),
 			'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
+			'taskToMaterialToMaterialGroupToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToMaterialGroupToMaterial', 'assembly_to_material_group_id'),
 		);
 	}
 
@@ -99,10 +103,10 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			'stage.description AS searchStage',
 			't.material_group_id',
 			'materialGroup.description AS searchMaterialGroupDescription',
-	//		't.material_id',
 			't.select',
 			't.quantity_tooltip',
 			't.selection_tooltip',
+			't.comment',
 			't.quantity',
 			't.minimum',
 			't.maximum',
@@ -118,6 +122,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		$criteria->compare('t.select',$this->select,true);
 		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
 		$criteria->compare('t.selection_tooltip',$this->selection_tooltip,true);
+		$criteria->compare('t.comment',$this->comment,true);
 		
 		$criteria->with = array(
 			'materialGroup',
@@ -130,6 +135,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = $this->linkThisColumn('searchMaterialGroupDescription');
+ 		$columns[] = 'comment';
  		$columns[] = 'searchStage';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
@@ -159,6 +165,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	{
 		return array(
 			'materialGroup->description',
+			'comment',
 			'stage->description',
 		);
 	}

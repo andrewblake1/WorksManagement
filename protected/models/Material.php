@@ -142,8 +142,6 @@ class Material extends ActiveRecord
 		$criteria->compare('materialGroupToMaterial.material_group_id', $material_group_id);
 
 		// join
-		// This join is to get at the comment contained within the sub assembly (assembly to assembly) table but realizing there is
-		// a relationship between a parent child relationship in this table and the sub assembly table
 		$criteria->join = '
 			JOIN material_group_to_material materialGroupToMaterial ON materialGroupToMaterial.material_id = t.id
 		';

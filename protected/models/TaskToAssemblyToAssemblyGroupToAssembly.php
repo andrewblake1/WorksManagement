@@ -8,15 +8,15 @@
  * @property string $task_to_assembly_id
  * @property integer $assembly_group_id
  * @property integer $assembly_id
- * @property integer $assembly_to_assembly_group_id
+ * @property string $assembly_to_assembly_group_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
  * @property TaskToAssembly $taskToAssembly
  * @property AssemblyGroupToAssembly $assembly
- * @property Staff $staff
+ * @property AssemblyToAssemblyGroup $assemblyGroup
  * @property AssemblyToAssemblyGroup $assemblyToAssemblyGroup
- * @property AssemblyGroupToAssembly $assemblyGroup
+ * @property Staff $staff
  */
 class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
 {
@@ -53,9 +53,9 @@ class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
 		return array(
 			'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
 			'assembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyToAssemblyGroup', 'assembly_group_id'),
 			'assemblyToAssemblyGroup' => array(self::BELONGS_TO, 'AssemblyToAssemblyGroup', 'assembly_to_assembly_group_id'),
-			'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_id'),
+			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 		);
 	}
 

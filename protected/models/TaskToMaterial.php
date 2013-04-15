@@ -70,7 +70,7 @@ class TaskToMaterial extends ActiveRecord
 			'material_id' => 'Material',
 			'searchTask' => 'Task',
 			'searchMaterial' => 'Material',
-			'searchMaterialGroup' => 'Group',
+			'searchMaterialGroup' => 'Group/comment',
 			'searchAssembly' => 'Assembly',
 //			'searchQuantityTooltip' => 'Comment',
 			'searchStage' => 'Stage',
