@@ -19,6 +19,11 @@ abstract class ActiveRecord extends CActiveRecord
 	 * @var string default attribute to sort by
 	 */
 	protected $defaultSort = null;
+	/*
+	 * array of validation rules appended to rules at run time as determined
+	 * by the related GenericType
+	 */
+	public $customValidators = array();
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -749,6 +754,36 @@ if(count($m = $this->getErrors()))
 			throw new CDbException(Yii::t('yii','The active record cannot be deleted because it is new.'));
 	}
 
+	/**
+	 * Override of this necassary because _validators is private var of CModel and populated
+	 * on construct or sometime before our call to dynamically add validators - where needed.
+	 */
+	public function getValidators($attribute=null, $force=false)
+	{
+		static $_validators = NULL;
+
+		if($force)
+		{
+			$_validators = $this->createValidators();
+		}
+		elseif($_validators === NULL)
+		{
+			$_validators = parent::getValidators($attribute);
+		}
+
+		$validators=array();
+		$scenario=$this->getScenario();
+		foreach($_validators as $validator)
+		{
+			if($validator->applyTo($scenario))
+			{
+				if($attribute===null || in_array($attribute, $validator->attributes,true))
+					$validators[]=$validator;
+			}
+		}
+
+		return $validators;
+	}
 	
 	/*
 	 * automatically add max length attribute to inputs to save being in view file

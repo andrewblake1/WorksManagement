@@ -180,7 +180,7 @@ class Controller extends CController {
 			}
 
 			// limit the results
-			$criteria->limit = 20;
+			$criteria->limit = Yii::app()->params->listMax;
 			$criteria->order = implode(', ', $criteria->order);
 			$display = implode(Yii::app()->params['delimiter']['display'], $display);
 			$criteria->scopes = empty($_GET['scopes']) ? null : $_GET['scopes'];
@@ -739,7 +739,7 @@ $t = Controller::$nav;
 	}
 
 	/*
-	 * to be overidden if using mulitple models
+	 * to be overidden if using mulitple models or custom validators
 	 */
 	protected function updateSave($model, &$models = array()) {
 		// atempt save
@@ -968,15 +968,15 @@ $t=			$model->attributes = $_POST[$modelName];
 		// set label to passed in label if one passed, otherwise to the tables nice name
 		ActiveRecord::$labelOverrides[$fkField] = $label ? $label : $fKModelType::getNiceName();
 
-		// if more than 20 rows in the lookup table use autotext
-		if ($fKModelType::model()->count() > 20) {
-			static::autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType/* , $relName */);
+		// if more than x rows in the lookup table use autotext
+		if ($fKModelType::model()->count() > Yii::app()->params->listMax) {
+			static::autoCompleteFKFieldRow($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType/* , $relName */);
 		} else {
-			static::dropDownListWidget($model, $form, $fkField, $htmlOptions, $scopes);
+			static::dropDownListFKfieldRow($model, $form, $fkField, $htmlOptions, $scopes);
 		}
 	}
 
-	static function autoTextWidget($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType/* , $relName */) {
+	static function autoCompleteFKFieldRow($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType/* , $relName */) {
 		Yii::app()->controller->widget('WMEJuiAutoCompleteFkField', array(
 			'model' => $model,
 			'form' => $form,
@@ -989,7 +989,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		);
 	}
 
-	static function dropDownListWidget($model, $form, $fkField, $htmlOptions = array(), $scopes = array()) {
+	static function dropDownListFKfieldRow($model, $form, $fkField, $htmlOptions = array(), $scopes = array()) {
 		$modelName = str_replace('Controller', '', get_called_class());
 		$target = new $modelName;
 

@@ -47,6 +47,22 @@ class TaskToMaterialController extends Controller
 		);
 	}
 	
+// todo: this repeated in tasktoassembly controller - make RangeController trait when can use php 5.4
+	protected function updateSave($model, &$models = array())
+	{
+		$model->setCustomValidators();
+
+		// NB: only saving the generic here as nothing else should change
+		return parent::updateSave($generic, $models);
+	}
+
+	protected function createSave($model, &$models=array())
+	{
+		$model->setCustomValidators();
+
+		return parent::createSave($model, $models);;
+	}
+
 }
 
 ?>

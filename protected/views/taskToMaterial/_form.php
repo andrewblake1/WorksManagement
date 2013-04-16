@@ -43,15 +43,28 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	// get quantity tooltip if part of assembly
 	if(empty($model->taskToMaterialToAssemblyToMaterials))
 	{
-		$quantity_tooltip = '';
+		$form->textFieldRow('quantity');
 	}
 	else
 	{
 		// there ia a unique constraint here so there will only be 1 relating row
-		$quantity_tooltip = $model->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial->quantity_tooltip;
+		$assemblyToMaterial = $this->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial;
+		
+		$htmlOptions = array('data-original-title'=>$assemblyToMaterial->quantity_tooltip);
+
+		if(empty($assemblyToMaterial->select))
+		{
+			$form->rangeFieldRow('quantity', $assemblyToMaterial->min, $assemblyToMaterial->max, $htmlOptions, $model);
+		}
+		else
+		{
+			// first need to get a list where array keys are the same as the display members
+			$list = explode(',', $assemblyToMaterial->select);
+
+			$form->dropDownListRow('quantity', array_combine($list, $list), $htmlOptions, $model);
+		}
 	}
 
-	$form->textFieldRow('quantity', array('data-original-title'=>$quantity_tooltip));
 
 $this->endWidget();
 

@@ -36,13 +36,33 @@ class TaskToMaterial extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return $this->customValidators + array(
 			array('store_id, material_id, task_id, quantity', 'required'),
 			array('store_id, material_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('task_id, task_to_assembly_id', 'length', 'max'=>10),
 		);
 	}
 
+	public function setCustomValidators()
+	{
+		if(!empty($this->taskToMaterialToAssemblyToMaterials))
+		{
+			$assemblyToMaterial = $this->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial;
+
+			if(empty($assemblyToMaterial->select))
+			{
+				$this->customValidators[] = array('quantity', 'numerical', 'min'=>$assemblyToMaterial->min, 'max'=>$assemblyToMaterial->max);
+			}
+			else
+			{
+				$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $assemblyToMaterial->select));
+			}
+
+			// force a re-read of validators
+			$this->getValidators(NULL, TRUE);
+		}
+	}
+	
 	/**
 	 * @return array relational rules.
 	 */

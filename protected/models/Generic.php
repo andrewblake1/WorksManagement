@@ -20,11 +20,6 @@
  */
 class Generic extends ActiveRecord
 {
-	/*
-	 * array of validation rules appended to rules at run time as determined
-	 * by the related GenericType
-	 */
-	public $customValidators = array();
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -91,38 +86,6 @@ class Generic extends ActiveRecord
 		// force a re-read of validators
 		$this->getValidators(NULL, TRUE);
 	}
-
-	/**
-	 * Override of this necassary because _validators is private var of CModel and populated
-	 * on construct or sometime before our call to dynamically add validators.
-	 */
-	public function getValidators($attribute=null, $force=false)
-	{
-		static $_validators = NULL;
-
-		if($force)
-		{
-			$_validators = $this->createValidators();
-		}
-		elseif($_validators === NULL)
-		{
-			$_validators = parent::getValidators($attribute);
-		}
-
-		$validators=array();
-		$scenario=$this->getScenario();
-		foreach($_validators as $validator)
-		{
-			if($validator->applyTo($scenario))
-			{
-				if($attribute===null || in_array($attribute, $validator->attributes,true))
-					$validators[]=$validator;
-			}
-		}
-
-		return $validators;
-	}
-
 
 	/**
 	 * This method shouldn't be necassary but here for security. This stops evil system admin injection

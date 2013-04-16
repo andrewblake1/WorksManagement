@@ -93,6 +93,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		$taskToAssembly->assembly_id = $assembly_id;
 		$taskToAssembly->parent_id = $parent_id;
 		$taskToAssembly->quantity = $quantity;
+		$taskToAssembly->setCustomValidators();
 		$saved &= $taskToAssembly->dbCallback('save');
 		$models[] = $taskToAssembly;
 		
@@ -131,6 +132,15 @@ class TaskToAssemblyController extends AdjacencyListController
 		return $saved;
 	}
 
+// todo: this repeated in tasktomaterial controller - make RangeController trait when can use php 5.4
+	protected function updateSave($model, &$models = array())
+	{
+		$model->setCustomValidators();
+
+		// NB: only saving the generic here as nothing else should change
+		return parent::updateSave($generic, $models);
+	}
+	
 }
 
 ?>

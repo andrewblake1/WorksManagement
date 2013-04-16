@@ -146,6 +146,9 @@ return array(
 			'adminEmail'=>'Hawea.George@westcoastenergy.com.au',
 			// delimiter - used when searching and autoseleting as break between fields
 			'delimiter'=>array('search'=>'/', 'display'=>' '),
+			// maximum number of items to show in list before switching to autotext widget
+			'listMax'=>20,
+			// show download button or not
 			'showDownloadButton'=>true,
 			/**
 			* @var array provides the hierachy for a breadcrumb trail

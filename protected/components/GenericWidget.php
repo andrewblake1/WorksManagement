@@ -56,15 +56,12 @@ class GenericWidget extends CWidget
 
 			case GenericType::validationTypeRange :
 				$range = explode('-', $genericType->validation_text);
-				$min = $range[0];
-				$max = $range[1];
-				// Drop down list widget 
-				echo $this->form->dropDownListRow($attribute, array_combine(range($min, $max), range($min, $max)), $htmlOptions, $generic);
+				$this->form->rangeFieldRow($attribute, $range[0], $range[1], $htmlOptions, $generic);
 				break;
 
 			case GenericType::validationTypeSQLSelect :
 				$sql = $genericType->validation_text;
-				if(10 >= Yii::app()->db->createCommand("SELECT COUNT(*) FROM ($sql) alias1")->queryScalar())
+				if(Yii::app()->params->listMax >= Yii::app()->db->createCommand("SELECT COUNT(*) FROM ($sql) alias1")->queryScalar())
 				{
 					// Drop down list widget
 					echo $this->form->dropDownListRow($attribute, Yii::app()->db->createCommand($sql)->query(), $htmlOptions, $generic);
