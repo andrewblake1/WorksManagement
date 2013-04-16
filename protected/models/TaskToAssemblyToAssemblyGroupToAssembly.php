@@ -36,11 +36,28 @@ class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return $this->customValidators + array(
 			array('assembly_to_assembly_group_id, task_to_assembly_id, quantity, task_id, assembly_group_id, assembly_id, staff_id', 'required'),
 			array('assembly_to_assembly_group_id, quantity, assembly_group_id, assembly_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_to_assembly_id, task_id, task_to_assembly_id', 'length', 'max'=>10),
 		);
+	}
+
+	public function setCustomValidators()
+	{
+		$assemblyToAssemblyGroup = AssemblyToAssemblyGroup::model()->findByPk($model->assembly_to_Assembly_group_id);
+
+		if(empty($assemblyToAssemblyGroup->select))
+		{
+			$this->customValidators[] = array('quantity', 'numerical', 'min'=>$assemblyToAssemblyGroup->minimum, 'max'=>$assemblyToAssemblyGroup->maximum);
+		}
+		else
+		{
+			$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $assemblyToAssemblyGroup->select));
+		}
+
+		// force a re-read of validators
+		$this->getValidators(NULL, TRUE);
 	}
 
 	/**

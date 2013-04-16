@@ -40,7 +40,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	}
 	MaterialController::listWidgetRow($model, $form, 'material_id', array(), array('scopeStore'=>array($model->store_id)));
 	
-	// get quantity tooltip if part of assembly
 	if(empty($model->taskToMaterialToAssemblyToMaterials))
 	{
 		$form->textFieldRow('quantity');

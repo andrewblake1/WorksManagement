@@ -36,13 +36,30 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return $this->customValidators + array(
 			array('assembly_to_material_group_id, task_to_assembly_id, quantity, task_id, material_group_id, material_id, staff_id', 'required'),
 			array('assembly_to_material_group_id, quantity, material_group_id, material_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_to_assembly_id, task_id, task_to_material_id', 'length', 'max'=>10),
 		);
 	}
 
+	public function setCustomValidators()
+	{
+		$assemblyToMaterialGroup = AssemblyToMaterialGroup::model()->findByPk($model->assembly_to_material_group_id);
+
+		if(empty($assemblyToMaterialGroup->select))
+		{
+			$this->customValidators[] = array('quantity', 'numerical', 'min'=>$assemblyToMaterialGroup->minimum, 'max'=>$assemblyToMaterialGroup->maximum);
+		}
+		else
+		{
+			$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $assemblyToMaterialGroup->select));
+		}
+
+		// force a re-read of validators
+		$this->getValidators(NULL, TRUE);
+	}
+	
 	/**
 	 * @return array relational rules.
 	 */
@@ -92,5 +109,14 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 		}
 		
 		return parent::assertFromParent($modelName);
+	}
+	
+	public function afterFind() {
+		
+		// otherwise our previous saved quantity
+		$taskToMaterialId = TaskToMaterial::model()->findByPk($this->task_to_material_id);
+		$this->quantity = $taskToMaterialId->quantity;
+
+		parent::afterFind();
 	}
 }
