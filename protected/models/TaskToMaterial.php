@@ -51,7 +51,7 @@ class TaskToMaterial extends ActiveRecord
 
 			if(empty($assemblyToMaterial->select))
 			{
-				$this->customValidators[] = array('quantity', 'numerical', 'min'=>$assemblyToMaterial->min, 'max'=>$assemblyToMaterial->max);
+				$this->customValidators[] = array('quantity', 'numerical', 'min'=>$assemblyToMaterial->minimum, 'max'=>$assemblyToMaterial->maximum);
 			}
 			else
 			{

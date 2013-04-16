@@ -48,6 +48,26 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		);
 	}
 
+	public function setCustomValidators()
+	{
+		if(!empty($this->taskToAssemblyToAssemblyGroupToAssemblies))
+		{
+			$assemblyToAssemblyGroup = $this->$taskToAssemblyToAssemblyGroupToAssemblies[0]->assemblyToAssemblyGroup;
+
+			if(empty($assemblyToAssemblyGroup->select))
+			{
+				$this->customValidators[] = array('quantity', 'numerical', 'min'=>$assemblyToAssemblyGroup->minimum, 'max'=>$assemblyToAssemblyGroup->maximum);
+			}
+			else
+			{
+				$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $assemblyToAssemblyGroup->select));
+			}
+
+			// force a re-read of validators
+			$this->getValidators(NULL, TRUE);
+		}
+	}
+	
 	/**
 	 * @return array relational rules.
 	 */

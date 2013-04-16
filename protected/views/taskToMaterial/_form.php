@@ -48,13 +48,13 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	else
 	{
 		// there ia a unique constraint here so there will only be 1 relating row
-		$assemblyToMaterial = $this->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial;
+		$assemblyToMaterial = $model->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial;
 		
 		$htmlOptions = array('data-original-title'=>$assemblyToMaterial->quantity_tooltip);
 
 		if(empty($assemblyToMaterial->select))
 		{
-			$form->rangeFieldRow('quantity', $assemblyToMaterial->min, $assemblyToMaterial->max, $htmlOptions, $model);
+			$form->rangeFieldRow('quantity', $assemblyToMaterial->minimum, $assemblyToMaterial->maximum, $htmlOptions, $model);
 		}
 		else
 		{
@@ -64,7 +64,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 			$form->dropDownListRow('quantity', array_combine($list, $list), $htmlOptions, $model);
 		}
 	}
-
 
 $this->endWidget();
 

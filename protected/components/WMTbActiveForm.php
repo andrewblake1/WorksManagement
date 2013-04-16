@@ -68,7 +68,7 @@ class WMTbActiveForm extends TbActiveForm
     public function init()
     {
 		// add in tooltip functionality for input and select elements elements - using attrib data-original-title
-		Yii::app()->clientScript->registerScript('tooltip','$("*").tooltip();',CClientScript::POS_READY);
+		Yii::app()->clientScript->registerScript('tooltip','$("input, select").tooltip();',CClientScript::POS_READY);
 
 		if(empty($this->htmlOptions))
 		{
@@ -263,7 +263,7 @@ class WMTbActiveForm extends TbActiveForm
 			array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
-	public function rangeFieldRow($attribute, $start, $end, $htmlOptions = array(), $model = NULL, $scopes = array()) {
+	public function rangeFieldRow($attribute, $start, $end, $htmlOptions = array(), $model = NULL) {
 		// if nothing given
 		if($start === NULL || $end === NULL)
 		{
@@ -277,9 +277,9 @@ class WMTbActiveForm extends TbActiveForm
 		}
 		else
 		{
-			abs($max - $end) > Yii::app()->params->listMax
-				? $this->textFieldRow($attribute, $htmlOptions, $generic)
-				: $this->dropDownListRow($attribute, array_combine(range($start, $end), range($start, $end)), $htmlOptions, $generic);
+			abs($start - $end) > Yii::app()->params->listMax
+				? $this->textFieldRow($attribute, $htmlOptions, $model)
+				: $this->dropDownListRow($attribute, array_combine(range($start, $end), range($start, $end)), $htmlOptions, $model);
 		}
 	}
 

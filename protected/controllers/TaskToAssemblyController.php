@@ -138,7 +138,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		$model->setCustomValidators();
 
 		// NB: only saving the generic here as nothing else should change
-		return parent::updateSave($generic, $models);
+		return parent::updateSave($model, $models);
 	}
 	
 }

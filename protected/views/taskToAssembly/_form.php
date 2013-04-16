@@ -40,15 +40,29 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	}
 	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array(), array('scopeStore'=>array($model->store_id)));
 
-	if($model->isNewRecord)
+	// get quantity tooltip if part of assembly
+	if(empty($model->$taskToAssemblyToAssemblyGroupToAssemblies))
 	{
 		$form->textFieldRow('quantity');
 	}
 	else
 	{
-		// dummy as compulsary when new but not required when updating
-		$model->quantity = 1;
-		$form->hiddenField('quantity');
+		// there ia a unique constraint here so there will only be 1 relating row
+		$assemblyToAssemblyGroup = $model->$taskToAssemblyToAssemblyGroupToAssemblies[0]->assemblyToAssemblyGroup;
+		
+		$htmlOptions = array('data-original-title'=>$assemblyToAssemblyGroup->quantity_tooltip);
+
+		if(empty($assemblyToAssemblyGroup->select))
+		{
+			$form->rangeFieldRow('quantity', $assemblyToAssemblyGroup->minimum, $assemblyToAssemblyGroup->maximimum, $htmlOptions, $model);
+		}
+		else
+		{
+			// first need to get a list where array keys are the same as the display members
+			$list = explode(',', $assemblyToAssemblyGroup->select);
+
+			$form->dropDownListRow('quantity', array_combine($list, $list), $htmlOptions, $model);
+		}
 	}
 	
 	// parent_id
