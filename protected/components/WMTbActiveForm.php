@@ -267,13 +267,13 @@ class WMTbActiveForm extends TbActiveForm
 		// if nothing given
 		if($start === NULL || $end === NULL)
 		{
-			$this->textFieldRow($attribute, $htmlOptions, $generic);
+			$this->textFieldRow($attribute, $htmlOptions, $model);
 		}
 		// if single value
 		elseif($start == $end)
 		{
 			$htmlOptions['options']['disabled'] = 'true';
-			$this->textFieldRow($attribute, $htmlOptions, $generic);
+			$this->textFieldRow($attribute, $htmlOptions, $model);
 		}
 		else
 		{
