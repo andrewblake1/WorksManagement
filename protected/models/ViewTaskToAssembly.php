@@ -26,7 +26,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, searchAssemblyGroup, searchAssembly', 'safe', 'on'=>'search'),
+			array('id, task_id, parent_id, quantity, searchAssemblyGroup, searchAssembly', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -63,7 +63,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		';
 		
 		// where
-		$criteria->compare('searchAssembly',$this->searchAssembly,true);
+		$criteria->compare('assembly.description',$this->searchAssembly,true);
 		$this->compositeCriteria($criteria,
 			array(
 			'assemblyGroup.description',
@@ -72,7 +72,9 @@ class ViewTaskToAssembly extends ViewActiveRecord
 			$this->searchAssemblyGroup
 		);
 		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.task_id',$this->task_id);
+		$criteria->compare('t.parent_id',$this->parent_id);
 
 		return $criteria;
 	}

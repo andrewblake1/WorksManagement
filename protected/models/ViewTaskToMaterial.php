@@ -65,7 +65,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		';
 		
 		// where
-		$criteria->compare('searchMaterial',$this->searchMaterial,true);
+		$criteria->compare('material.description',$this->searchMaterial,true);
 		$this->compositeCriteria($criteria,
 			array(
 			'materialGroup.description',
@@ -74,6 +74,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			$this->searchMaterialGroup
 		);
 		$criteria->compare('searchAssembly',$this->searchAssembly,true);
+		$criteria->compare('stage.description',$this->searchStage,true);
 		$criteria->compare('t.task_to_assembly_id',$this->task_to_assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.task_id',$this->task_id);

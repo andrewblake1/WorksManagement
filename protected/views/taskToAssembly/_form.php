@@ -41,14 +41,14 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array(), array('scopeStore'=>array($model->store_id)));
 
 	// get quantity tooltip if part of assembly
-	if(empty($model->$taskToAssemblyToAssemblyGroupToAssemblies))
+	if(empty($model->taskToAssemblyToAssemblyGroupToAssemblies))
 	{
 		$form->textFieldRow('quantity');
 	}
 	else
 	{
 		// there ia a unique constraint here so there will only be 1 relating row
-		$assemblyToAssemblyGroup = $model->$taskToAssemblyToAssemblyGroupToAssemblies[0]->assemblyToAssemblyGroup;
+		$assemblyToAssemblyGroup = $model->taskToAssemblyToAssemblyGroupToAssemblies[0]->assemblyToAssemblyGroup;
 		
 		$htmlOptions = array('data-original-title'=>$assemblyToAssemblyGroup->quantity_tooltip);
 

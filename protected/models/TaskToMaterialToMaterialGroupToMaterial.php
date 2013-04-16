@@ -113,7 +113,6 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 	
 	public function afterFind() {
 		
-		// otherwise our previous saved quantity
 		$taskToMaterialId = TaskToMaterial::model()->findByPk($this->task_to_material_id);
 		$this->quantity = $taskToMaterialId->quantity;
 

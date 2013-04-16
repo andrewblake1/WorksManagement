@@ -11,20 +11,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	
 	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array('data-original-title'=>$assemblyToAssemblyGroup->selection_tooltip), array('scopeAssemblyGroup'=>array($model->assembly_group_id)));
 
-	if($model->isNewRecord)
-	{
-		// get the default quantity
-		$model->quantity = $assemblyToAssemblyGroup->quantity;
-	}
-	else
-	{
-		// otherwise our previous saved quantity
-		$taskToAssemblyId = TaskToAssembly::model()->findByPk($model->task_to_assembly_id);
-		$model->quantity = $taskToAssemblyId->quantity;
-	}
-
-	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array('data-original-title'=>$assemblyToAssemblyGroup->selection_tooltip), array('scopeAssemblyGroup'=>array($model->assembly_group_id)));
-
 	$htmlOptions = array('data-original-title'=>$assemblyToAssemblyGroup->quantity_tooltip);
 	if(empty($assemblyToAssemblyGroup->select))
 	{

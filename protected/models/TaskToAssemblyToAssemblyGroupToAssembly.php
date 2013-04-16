@@ -110,4 +110,14 @@ class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
 		
 		return parent::assertFromParent($modelName);
 	}
+	
+	public function afterFind() {
+		
+		// otherwise our previous saved quantity
+		$taskToAssemblyId = TaskToAssembly::model()->findByPk($model->task_to_assembly_id);
+		$model->quantity = $taskToAssemblyId->quantity;
+
+		parent::afterFind();
+	}
+
 }
