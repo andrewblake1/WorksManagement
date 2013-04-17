@@ -193,8 +193,8 @@ class TaskTypeToDutyType extends ActiveRecord
 		// need to set project_type_id which is an extra foreign key to make circular foreign key constraint
 		if(isset($this->project_type_to_AuthItem_id))
 		{
-			$model = ProjectTypeToAuthItem::model()->findByPk($this->project_type_to_AuthItem_id);
-			$this->project_type_id = $model->project_type_id;
+			$projectTypeToAuthItem = ProjectTypeToAuthItem::model()->findByPk($this->project_type_to_AuthItem_id);
+			$this->project_type_id = $projectTypeToAuthItem->project_type_id;
 		}
 
 		return parent::beforeValidate();

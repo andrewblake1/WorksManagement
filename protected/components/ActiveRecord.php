@@ -918,6 +918,35 @@ if(count($m = $this->getErrors()))
 		
 		return $columns;
 	}
+	
+	protected function getHtmlId($attribute) {
+		return CHtml::activeId($this, $attribute);
+	}
+
+	/*
+	 * to be overidden if using mulitple models or custom validators
+	 */
+	public function updateSave(&$models = array()) {
+		// atempt save
+		$saved = $this->dbCallback('save');
+		// put the model into the models array used for showing all errors
+		$models[] = $this;
+
+		return $saved;
+	}
+
+	/*
+	 * to be overidden if using mulitple models
+	 */
+
+	public function createSave(&$models = array()) {
+		// atempt save
+		$saved = $this->dbCallback('save');
+		// put the model into the models array used for showing all errors
+		$models[] = $this;
+
+		return $saved;
+	}
 
 }
 

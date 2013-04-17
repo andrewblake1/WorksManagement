@@ -67,14 +67,6 @@ class TaskToAssemblyController extends AdjacencyListController
 		));
 	}
 	
-	/*
-	 * to be overidden if using mulitple models
-	 */
-	protected function createSave($model, &$models=array())
-	{
-		return static::addAssembly($model->task_id, $model->assembly_id, $model->quantity, null, $models);
-	}
-	
 	/**
 	 * Recursive function to add assembly with sub assemblies to task. Inserts row into task_to_assembly and also appends materials to task_to_materials
 	 * @param int $task_id the task id to add assembly to
@@ -93,9 +85,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		$taskToAssembly->assembly_id = $assembly_id;
 		$taskToAssembly->parent_id = $parent_id;
 		$taskToAssembly->quantity = $quantity;
-		$taskToAssembly->setCustomValidators();
-		$saved &= $taskToAssembly->dbCallback('save');
-		$models[] = $taskToAssembly;
+		$saved &= $taskToAssembly->createSave($models);
 		
 		// insert materials into task_to_material table
 		
@@ -108,39 +98,25 @@ class TaskToAssemblyController extends AdjacencyListController
 			$taskToMaterial->task_to_assembly_id = $taskToAssembly->id;
 			$taskToMaterial->store_id = $taskToAssembly->assembly->store_id;
 			$taskToMaterial->quantity = $assemblyToMaterial->quantity;
-			if($saved &= $taskToMaterial->dbCallback('save'))
+			if($saved &= $taskToMaterial->createSave($models))
 			{
 				// add a row into pivot table so can join to get quantity comment and stage etc
 				$taskToMaterialToAssemblyToMaterial = new TaskToMaterialToAssemblyToMaterial();
 				$taskToMaterialToAssemblyToMaterial->task_to_material_id = $taskToMaterial->id;
 				$taskToMaterialToAssemblyToMaterial->assembly_to_material_id = $assemblyToMaterial->id;
-				$taskToMaterialToAssemblyToMaterial->dbCallback('save');
+				$taskToMaterialToAssemblyToMaterial->createSave($models);
 			}
-			$models[] = $taskToMaterial;
 		}
 
 		// recurse thru sub assemblies
 		foreach(SubAssembly::model()->findAllByAttributes(array('parent_assembly_id'=>$assembly_id)) as $subAssembly)
 		{
-			// add quantity sub-assemblies
-			for($cntr = 0; $cntr < $subAssembly->quantity; $cntr++)
-			{
-				$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, $subAssembly->quantity, $taskToAssembly->id, $models);
-			}
+			$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, $subAssembly->quantity, $taskToAssembly->id, $models);
 		}
 		
 		return $saved;
 	}
 
-// todo: this repeated in tasktomaterial controller - make RangeController trait when can use php 5.4
-	protected function updateSave($model, &$models = array())
-	{
-		$model->setCustomValidators();
-
-		// NB: only saving the generic here as nothing else should change
-		return parent::updateSave($model, $models);
-	}
-	
 }
 
 ?>

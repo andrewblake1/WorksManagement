@@ -45,19 +45,7 @@ class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
 
 	public function setCustomValidators()
 	{
-		$assemblyToAssemblyGroup = AssemblyToAssemblyGroup::model()->findByPk($model->assembly_to_Assembly_group_id);
-
-		if(empty($assemblyToAssemblyGroup->select))
-		{
-			$this->customValidators[] = array('quantity', 'numerical', 'min'=>$assemblyToAssemblyGroup->minimum, 'max'=>$assemblyToAssemblyGroup->maximum);
-		}
-		else
-		{
-			$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $assemblyToAssemblyGroup->select));
-		}
-
-		// force a re-read of validators
-		$this->getValidators(NULL, TRUE);
+		$this->setCustomValidatorsRange(AssemblyToAssemblyGroup::model()->findByPk($this->assembly_to_Assembly_group_id));
 	}
 
 	/**
@@ -114,10 +102,41 @@ class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
 	public function afterFind() {
 		
 		// otherwise our previous saved quantity
-		$taskToAssemblyId = TaskToAssembly::model()->findByPk($model->task_to_assembly_id);
-		$model->quantity = $taskToAssemblyId->quantity;
+		$taskToAssemblyId = TaskToAssembly::model()->findByPk($this->task_to_assembly_id);
+		$this->quantity = $taskToAssemblyId->quantity;
 
 		parent::afterFind();
 	}
+	
+	public function updateSave(&$models = array()) {
+		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
+		$taskToAssembly = TaskToAssembly::model()->findByPk($this->task_to_assembly_id);
+		$taskToAssembly->assembly_id = $this->assembly_id;
+		
+		if($saved = $taskToAssembly->updateSave($models))
+		{
+			$saved &= parent::updateSave($models);
+		}
 
+		return $saved;
+	}
+
+	public function createSave(&$models=array())
+	{
+	
+		$taskToAssembly = new TaskToAssembly;
+		$taskToAssembly->attributes = $_POST['TaskToAssemblyToAssemblyGroupToAssembly'];
+		$taskToAssembly->parent_id = $_POST['TaskToAssemblyToAssemblyGroupToAssembly']['task_to_assembly_id'];
+		// filler - unused in this context but necassary in Assembly model
+		$taskToAssembly->store_id = 0;
+
+		if($saved = $taskToAssembly->createSave($models))
+		{
+			$this->task_to_assembly_id = $taskToAssembly->id;
+			$saved &= parent::createSave($models);
+		}
+
+		return $saved;
+	}
+	
 }

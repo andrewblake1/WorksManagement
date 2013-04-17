@@ -45,19 +45,7 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 
 	public function setCustomValidators()
 	{
-		$assemblyToMaterialGroup = AssemblyToMaterialGroup::model()->findByPk($model->assembly_to_material_group_id);
-
-		if(empty($assemblyToMaterialGroup->select))
-		{
-			$this->customValidators[] = array('quantity', 'numerical', 'min'=>$assemblyToMaterialGroup->minimum, 'max'=>$assemblyToMaterialGroup->maximum);
-		}
-		else
-		{
-			$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $assemblyToMaterialGroup->select));
-		}
-
-		// force a re-read of validators
-		$this->getValidators(NULL, TRUE);
+		$this->setCustomValidatorsRange(AssemblyToMaterialGroup::model()->findByPk($this->assembly_to_material_group_id));
 	}
 	
 	/**
@@ -118,4 +106,34 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 
 		parent::afterFind();
 	}
+	
+	public function updateSave(&$models = array()) {
+		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
+		$taskToMaterial = TaskToMaterial::model()->findByPk($this->task_to_material_id);
+		$taskToMaterial->material_id = $this->material_id;
+		
+		if($saved = $taskToMaterial->updateSave($models))
+		{
+			$saved &= parent::updateSave($models);
+		}
+
+		return $saved;
+	}
+
+	public function createSave(&$models=array())
+	{
+		$taskToMaterial = new TaskToMaterial;
+		$taskToMaterial->attributes = $_POST['TaskToMaterialToMaterialGroupToMaterial'];
+		// filler - unused in this context but necassary in Material model
+		$taskToMaterial->store_id = 0;
+
+		if($saved = $taskToMaterial->createSave($models))
+		{
+			$this->task_to_material_id = $taskToMaterial->id;
+			$saved &= parent::createSave($models);
+		}
+
+		return $saved;
+	}
+
 }

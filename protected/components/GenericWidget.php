@@ -33,7 +33,10 @@ class GenericWidget extends CWidget
 		
 		// set Generic custom validators as per the associated generic type
 		// NB: the array is just the relations names used in validationLookup for sql type to get at the genericType model from the generic model
-		$generic->setCustomValidators($genericType, array('relationToGenericType'=>$this->relationToGenericType));
+		$generic->setCustomValidators(array(
+			'genericType' => $genericType,
+			'params' => array('relationToGenericType'=>$this->relationToGenericType),
+		));		
 		
 //TODO: should probably be sub-classing here and using inheritance instead of switch. Potentially GenericWidgers could be abstract base with a
 // factory method or static factory method to create the sub types.
@@ -56,7 +59,7 @@ class GenericWidget extends CWidget
 
 			case GenericType::validationTypeRange :
 				$range = explode('-', $genericType->validation_text);
-				$this->form->rangeFieldRow($attribute, $range[0], $range[1], $htmlOptions, $generic);
+				$this->form->rangeFieldRow($attribute, $range[0], $range[1], NULL, NULL, NULL, $htmlOptions, $generic);
 				break;
 
 			case GenericType::validationTypeSQLSelect :

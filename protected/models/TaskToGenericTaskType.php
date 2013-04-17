@@ -131,6 +131,35 @@ class TaskToGenericTaskType extends ActiveRecord
 	{
 		return array('searchGenericTaskType', 'searchTask', 'searchGeneric');
 	}
+	
+	/*
+	 * overidden as mulitple models i.e. nothing to save in this model as this model can either be deleted or created as the data item resides in generic
+	 */
+	public function updateSave(&$models = array())
+	{
+		$generic = $this->generic;
+
+		// massive assignement
+		$generic->attributes=$_POST['Generic'][$generic->id];
+
+		// validate and save NB: only saving the generic here as nothing else should change
+		return $generic->updateSave($models, array(
+			'genericType' => $this->genericTaskType->genericType,
+			'params' => array('relationToGenericType'=>'taskToGenericTaskType->genericTaskType->genericType'),
+		));
+	}
+
+	/*
+	 * overidden as mulitple models i.e. nothing to save in this model as this model can either be deleted or created as the data item resides in generic
+	 */
+	public function createSave(&$models = array())
+	{
+		$saved = Generic::createGeneric($this->genericTaskType->genericType, $models, $generic);
+		$this->generic_id = $generic->id;
+
+		return $saved & parent::createSave($models);
+	}
+
 }
 
 ?>

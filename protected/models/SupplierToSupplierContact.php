@@ -182,6 +182,37 @@ class SupplierToSupplierContact extends ActiveRecord
 		);
 	}
 
+	/*
+	 * overidden as mulitple models
+	 */
+	public function updateSave(&$models=array())
+	{
+		$supplierContact = $this->supplierContact;
+		$supplierContact->attributes = $_POST['SupplierContact'];
+		if($saved = $supplierContact->updateSave($models))
+		{
+			$saved &= parent::updateSave($models);
+		}
+
+		return $saved;
+	}
+
+	/*
+	 * overidden as mulitple models
+	 */
+	public function createSave(&$models=array())
+	{
+	
+		$supplierContact = new SupplierContact;
+		$supplierContact->attributes = $_POST['SupplierContact'];
+		if($saved = $supplierContact->createSave($models))
+		{
+			$this->supplier_contact_id = $supplierContact->id;
+			$saved &= parent::createSave($models);
+		}
+
+		return $saved;
+	}
 }
 
 ?>

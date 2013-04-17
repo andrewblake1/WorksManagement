@@ -38,34 +38,34 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return $this->customValidators + array(
 			array('task_id, quantity, assembly_id', 'required'),
 			array('assembly_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('parent_id, task_id', 'length', 'max'=>10),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, task_id, searchQuantity, searchAssembly, parent_id, assembly_id', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function setCustomValidators()
 	{
-		if(!empty($this->taskToAssemblyToAssemblyGroupToAssemblies))
+		// if not in assembly group
+		if(empty($this->taskToAssemblyToAssemblyGroupToAssemblies))
 		{
-			$assemblyToAssemblyGroup = $this->$taskToAssemblyToAssemblyGroupToAssemblies[0]->assemblyToAssemblyGroup;
-
-			if(empty($assemblyToAssemblyGroup->select))
+			// if sub assembly
+			if($this->parent_id)
 			{
-				$this->customValidators[] = array('quantity', 'numerical', 'min'=>$assemblyToAssemblyGroup->minimum, 'max'=>$assemblyToAssemblyGroup->maximum);
+				// parent id in sub_assembly table
+				$parent_id = $model->parent->assembly_id;
+				// child id in sub_assembly table
+				$child_id = $model->assembly_id;
+				$this->setCustomValidatorsRange(SubAssembly::model()->findByAttributes(array('child_id'=>$child_id, 'parent_id'=>$parent_id)));
 			}
-			else
-			{
-				$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $assemblyToAssemblyGroup->select));
-			}
-
-			// force a re-read of validators
-			$this->getValidators(NULL, TRUE);
 		}
+		else	// assembly group
+		{
+			// 1:1 relationship hence can assume [0] is correct and only array member
+			$this->setCustomValidatorsRange($this->$taskToAssemblyToAssemblyGroupToAssemblies[0]->assemblyToAssemblyGroup);
+		}
+		
 	}
 	
 	/**
@@ -132,6 +132,14 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		$this->store_id = $this->assembly->store_id;
 		
 		return parent::afterFind();
+	}
+	
+	/*
+	 * to be overidden if using mulitple models
+	 */
+	public function createSave(&$models=array())
+	{
+		return TaskToAssemblyController::addAssembly($this->task_id, $this->assembly_id, $this->quantity, null, $models);
 	}
 	
 }

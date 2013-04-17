@@ -39,8 +39,11 @@ class Generic extends ActiveRecord
 		);
 	}
 
-	public function setCustomValidators($genericType, $params)
+	public function setCustomValidators($customValidatorParams = array())
 	{
+		$genericType = $customValidatorParams['genericType'];
+		$params = $customValidatorParams['params'];
+		
 		// Get GenericType column names
 		$dataTypeColumnNames = GenericType::getDataTypeColumnNames();
 

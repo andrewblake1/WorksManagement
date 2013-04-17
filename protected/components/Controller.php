@@ -570,19 +570,6 @@ $t = Controller::$nav;
 	}
 
 	/*
-	 * to be overidden if using mulitple models
-	 */
-
-	protected function createSave($model, &$models = array()) {
-		// atempt save
-		$saved = $model->dbCallback('save');
-		// put the model into the models array used for showing all errors
-		$models[] = $model;
-
-		return $saved;
-	}
-
-	/*
 	 * Look at breadcrumb trail and if this is a leaf node then redirect to admin, otherwise it is likely the user
 	 * will want to edit some of the branches or leaves below hence redirect to update
 	 */
@@ -668,7 +655,7 @@ $t = Controller::$nav;
 			$transaction = Yii::app()->db->beginTransaction();
 
 			// attempt save
-			$saved = $this->createSave($model, $models);
+			$saved = $model->createSave($models);
 
 			// if not validating and successful
 			if (!$validating && $saved) {
@@ -738,18 +725,6 @@ $t = Controller::$nav;
 		));
 	}
 
-	/*
-	 * to be overidden if using mulitple models or custom validators
-	 */
-	protected function updateSave($model, &$models = array()) {
-		// atempt save
-		$saved = $model->dbCallback('save');
-		// put the model into the models array used for showing all errors
-		$models[] = $model;
-
-		return $saved;
-	}
-
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'admin' page.
@@ -780,7 +755,7 @@ $t=			$model->attributes = $_POST[$modelName];
 			$transaction = Yii::app()->db->beginTransaction();
 
 			// attempt save
-			$saved = $this->updateSave($model, $models);
+			$saved = $model->updateSave($models);
 
 			// if not validating and successful
 			if (!$validating && $saved) {
@@ -800,7 +775,7 @@ $t=			$model->attributes = $_POST[$modelName];
 					}
 					foreach ($models as $m) {
 						foreach ($m->getErrors() as $attribute => $errors) {
-							$result[$this->actionGetHtmlId($m, $attribute)] = $errors;
+							$result[$m->getHtmlId($attribute)] = $errors;
 						}
 					}
 					// return the json encoded data to the client
@@ -837,10 +812,6 @@ $t=			$model->attributes = $_POST[$modelName];
 	public function setUpdateTabs($model) {
 		// set up tab menu if required - using setter
 		$this->tabs = $model;
-	}
-
-	protected function actionGetHtmlId($model, $attribute) {
-		return CHtml::activeId($model, $attribute);
 	}
 
 	/**

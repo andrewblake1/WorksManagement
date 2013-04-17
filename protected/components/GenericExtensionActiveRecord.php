@@ -1,6 +1,6 @@
 <?php
 
-abstract class GenericExtensionController extends Controller
+abstract class GenericExtensionActiveRecord extends ActiveRecord
 {
 	protected $class_ModelToGenericModelType;
 	protected $attribute_generic_model_type_id;
@@ -14,17 +14,17 @@ abstract class GenericExtensionController extends Controller
 	/*
 	 * overidden as mulitple models
 	 */
-	protected function createSave($model,  &$models=array())
+	public function createSave(&$models=array())
 	{
-		if($saved = $model->dbCallback('save'))
+		if($saved = $this->dbCallback('save'))
 		{
 			// attempt creation of generics
-			$saved &= $this->createGenerics($model, $models);
+			$saved &= $this->createGenerics($models);
 		}
 		else
 		{
 			// put the model into the models array used for showing all errors
-			$models[] = $model;
+			$models[] = $this;
 		}
 		
 		return $saved;
@@ -33,17 +33,17 @@ abstract class GenericExtensionController extends Controller
 	/*
 	 * overidden as mulitple models
 	 */
-	protected function updateSave($model,  &$models=array())
+	public function updateSave(&$models=array())
 	{
-		if($saved = $model->dbCallback('save'))
+		if($saved = $this->dbCallback('save'))
 		{
 			// attempt creation of generics
-			$saved &= $this->updateGenerics($model, $models);
+			$saved &= $this->updateGenerics($models);
 		}
 		else
 		{
 			// put the model into the models array used for showing all errors
-			$models[] = $model;
+			$models[] = $this;
 		}
 		
 		return $saved;
@@ -57,21 +57,21 @@ abstract class GenericExtensionController extends Controller
 	 * @param array of CActiveRecord models to extract errors from if necassary
 	 * @return returns 0, or null on error of any inserts
 	 */
-	protected function createGenerics($model, &$models=array())
+	protected function createGenerics(&$models=array())
 	{
 		// initialise the saved variable to show no errors in case the are no
 		// model generics - otherwise will return null indicating a save error
 		$saved = true;
 		
 		// loop thru all generic model types associated to this models model type
-		foreach($model->{$this->relation_modelType}->{$this->relation_genericModelTypes} as $genericModelType)
+		foreach($this->{$this->relation_modelType}->{$this->relation_genericModelTypes} as $genericModelType)
 		{
 			// create a new generic item to hold value
 			$saved &= Generic::createGeneric($genericModelType->genericType, $models, $generic);
 			// create new modelToGenericModelType
 			$modelToGenericModelType = new $this->class_ModelToGenericModelType();
 			$modelToGenericModelType->{$this->attribute_generic_model_type_id} = $genericModelType->id;
-			$modelToGenericModelType->{$this->attribute_model_id} = $model->id;
+			$modelToGenericModelType->{$this->attribute_model_id} = $this->id;
 			$modelToGenericModelType->generic_id = $generic->id;
 			// attempt save
 			$saved &= $modelToGenericModelType->dbCallback('save');
@@ -88,49 +88,41 @@ abstract class GenericExtensionController extends Controller
 	 * @param array of CActiveRecord models to extract errors from if necassary
 	 * @return returns 0, or null on error of any inserts
 	 */
-	private function updateGenerics($model, &$models=array())
+	private function updateGenerics(&$models=array())
 	{
 		// initialise the saved variable to show no errors in case the are no
 		// model generics - otherwise will return null indicating a save error
 		$saved = true;
 		
 		// loop thru all generic model types associated to this models model type
-		foreach($model->{$this->relation_modelToGenericModelTypes} as $modelToGenericModelType)
+		foreach($this->{$this->relation_modelToGenericModelTypes} as $modelToGenericModelType)
 		{
 			$generic = $modelToGenericModelType->generic;
 			
 			// massive assignement
 			$generic->attributes=$_POST['Generic'][$generic->id];
-			
-			// set Generic custom validators as per the associated generic type
-			$generic->setCustomValidators($modelToGenericModelType->{$this->relation_genericModelType}->genericType,
-				array(
+
+			// validate and save
+			$saved &= $generic->updateSave($models, array(
+				'genericType' => $modelToGenericModelType->{$this->relation_genericModelType}->genericType,
+				'params' => array(
 					'relation_modelToGenericModelType'=>$this->relation_modelToGenericModelType,
 					'relation_genericModelType'=>$this->relation_genericModelType,
-
-				)
-			);
-
-			// attempt to save
-			$saved &= $generic->dbCallback('save');
-			
-			// collect model for possible error extraction
-			$models[] = $generic;
+				),
+			));
 		}
 
 		return $saved;
 	}
 
-	protected function actionGetHtmlId($model,$attribute)
+	protected function getHtmlId($attribute)
 	{
-		$modelName = get_class($model);
-		
-		if($modelName == 'Generic')
+		if(($modelName = get_class($this)) == 'Generic')
 		{
-			return get_class($model)."_{$model->primaryKey}_$attribute";
+			return "{$modelName_}{$model->primaryKey}_$attribute";
 		}
 		
-		return parent::actionGetHtmlId($model,$attribute);
+		return parent::getHtmlId($attribute);
 	}
 
 }

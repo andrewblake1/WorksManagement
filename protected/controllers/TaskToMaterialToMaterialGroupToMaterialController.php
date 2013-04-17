@@ -23,43 +23,10 @@ class TaskToMaterialToMaterialGroupToMaterialController extends Controller
 		));
 	}
 
-	protected function createSave($model, &$models=array())
-	{
-	
-		$taskToMaterial = new TaskToMaterial;
-		$taskToMaterial->attributes = $_POST['TaskToMaterialToMaterialGroupToMaterial'];
-		// filler - unused in this context but necassary in Material model
-		$taskToMaterial->store_id = 0;
-		$taskToMaterial->setCustomValidators();
-
-		if($saved = parent::createSave($taskToMaterial, $models))
-		{
-			$model->task_to_material_id = $taskToMaterial->id;
-			$model->setCustomValidators();
-			$saved &= parent::createSave($model, $models);
-		}
-
-		return $saved;
-	}
-
-	protected function updateSave($model, &$models = array()) {
-		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
-		$taskToMaterial = TaskToMaterial::model()->findByPk($model->task_to_material_id);
-		$taskToMaterial->material_id = $model->material_id;
-		$taskToMaterial->setCustomValidators();
-		
-		if($saved = parent::updateSave($taskToMaterial, $models))
-		{
-			$model->setCustomValidators();
-			$saved &= parent::updateSave($model, $models);
-		}
-
-		return $saved;
-	}
-
 	protected function updateRedirect($model) {
 		$this->createRedirect($model);
 	}
+
 	protected function createRedirect($model)
 	{
 		// go to admin view

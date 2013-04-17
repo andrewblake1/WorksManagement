@@ -47,7 +47,6 @@ class ViewTaskToAssembly extends ViewActiveRecord
 			'assembly.description AS searchAssembly',
 			't.quantity',
 			't.assembly_group_id',
-	//		'assemblyGroup.description as searchAssemblyGroup',
 			't.searchTaskToAssemblyToAssemblyGroupToAssemblyId',
 			't.assembly_to_assembly_group_id',
 			"CONCAT_WS('$delimiter',

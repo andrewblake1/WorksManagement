@@ -27,7 +27,7 @@
  * @property Task[] $tasks
  * @property Task[] $tasks1
  */
-class Project extends ActiveRecord
+class Project extends GenericExtensionActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
@@ -37,6 +37,15 @@ class Project extends ActiveRecord
 	public $searchInCharge;
 	public $name;
 	public $in_charge_id;
+
+	protected $class_ModelToGenericModelType = 'ProjectToGenericProjectType';
+	protected $attribute_generic_model_type_id = 'generic_project_type_id';
+	protected $attribute_model_id = 'project_id';
+	protected $relation_genericModelType = 'genericProjectType';
+	protected $relation_genericModelTypes = 'genericProjectTypes';
+	protected $relation_modelType = 'projectType';
+	protected $relation_modelToGenericModelTypes = 'projectToGenericProjectTypes';
+	protected $relation_modelToGenericModelType = 'projectToGenericProjectType';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -234,5 +243,53 @@ class Project extends ActiveRecord
 		
 		return parent::beforeSave();
 	}
+	
+	/*
+	 * overidden as mulitple models
+	 */
+	public function updateSave(&$models=array())
+	{
+		// get the planning model
+		$planning = Planning::model()->findByPk($this->id);
+		$planning->name = $this->name;
+		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
+		// atempt save
+		$saved = $planning->saveNode(false);
+		// put the model into the models array used for showing all errors
+		$models[] = $planning;
+
+		return $saved & parent::updateSave($models);
+	}
+
+	/*
+	 * overidden as mulitple models
+	 */
+	public function createSave(&$models=array())
+	{
+		// need to insert a row into the planning nested set model so that the id can be used here
+
+		// create a root node
+		// NB: the project description is actually the name field in the nested set model
+		$planning = new Planning;
+		$planning->name = $this->name;
+		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
+		if($saved = $planning->saveNode(true))
+		{
+			// add the Project
+			$this->id = $planning->id;
+			$saved = parent::createSave($models);
+
+			// add a Day
+			$day = new Day;
+			$day->project_id = $this->id;
+			$saved = $day->createSave($models);
+		}
+
+		// put the model into the models array used for showing all errors
+		$models[] = $planning;
+
+		return $saved;
+	}
+	
 }
 ?>

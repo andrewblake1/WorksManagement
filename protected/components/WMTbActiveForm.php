@@ -263,26 +263,43 @@ class WMTbActiveForm extends TbActiveForm
 			array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
-	public function rangeFieldRow($attribute, $start, $end, $htmlOptions = array(), $model = NULL) {
-		// if nothing given
-		if($start === NULL || $end === NULL)
+	public function rangeFieldRow($attribute, $minimum, $maximum, $select = '', $quantity_tooltip = '', $selection_tooltip = '', $htmlOptions = array(), $model = NULL) {
+		
+		$model = $model ? $model : $this->model;
+		
+		if(empty($select))
 		{
-			$this->textFieldRow($attribute, $htmlOptions, $model);
-		}
-		// if single value
-		elseif($start == $end)
-		{
-			$htmlOptions['options']['disabled'] = 'true';
-			$this->textFieldRow($attribute, $htmlOptions, $model);
+			// if nothing given
+			if($minimum === NULL || $maximum === NULL)
+			{
+				$this->textFieldRow($attribute, $htmlOptions, $model);
+			}
+			// if single value
+			elseif($minimum == $maximum)
+			{
+				$htmlOptions['options']['disabled'] = 'true';
+				$this->textFieldRow($attribute, $htmlOptions, $model);
+			}
+			else
+			{
+				$htmlOptions['data-original-title'] = $quantity_tooltip;
+
+				abs($minimum - $maximum) > Yii::app()->params->listMax
+					? $this->textFieldRow($attribute, $htmlOptions, $model)
+					: $this->dropDownListRow($attribute, array_combine(range($minimum, $maximum), range($minimum, $maximum)), $htmlOptions, $model);
+			}
 		}
 		else
 		{
-			abs($start - $end) > Yii::app()->params->listMax
-				? $this->textFieldRow($attribute, $htmlOptions, $model)
-				: $this->dropDownListRow($attribute, array_combine(range($start, $end), range($start, $end)), $htmlOptions, $model);
+			// first need to get a list where array keys are the same as the display members
+			$list = explode(',', $select);
+			// tooltip
+			$htmlOptions['data-original-title'] = $selection_tooltip;
+
+			$form->dropDownListRow($attribute, array_combine($list, $list), $htmlOptions, $model);
 		}
 	}
-
+	
 }
 
 ?>

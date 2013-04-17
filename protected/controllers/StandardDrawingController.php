@@ -124,7 +124,7 @@ class StandardDrawingController extends AdjacencyListController
 			$transaction = Yii::app()->db->beginTransaction();
 
 			// attempt save
-			$saved = $this->createSave($model, $models);
+			$saved = $model->createSave($models);
 
 			// if not validating and successful
 			if($saved)
@@ -224,7 +224,7 @@ class StandardDrawingController extends AdjacencyListController
 		$transaction = Yii::app()->db->beginTransaction();
 			
 		// attempt save
-		$saved = $this->updateSave($model, $models);
+		$saved = $model->updateSave($models);
 
 		// if not validating and successful
 		if(!$validating && $saved)
@@ -252,7 +252,7 @@ class StandardDrawingController extends AdjacencyListController
 				{
 					foreach($m->getErrors() as $attribute=>$errors)
 					{
-						$result[$this->actionGetHtmlId($m,$attribute)]=$errors;
+						$result[$m->getHtmlId($attribute)]=$errors;
 					}
 				}
 				// return the json encoded data to the client

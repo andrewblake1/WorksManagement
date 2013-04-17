@@ -45,8 +45,7 @@ class PlanningController extends CategoryController
 			$day = new Day();
 			$day->project_id = $_GET['project_id'];
 			// create 
-			DayController::createSaveStatic($day);
-//			parent::actionCreate();
+			$day->createSave();
 			$this->redirect(array('admin'.'?'.Yii::app()->request->queryString));
 		}
 		// otherwise doesn't have permission to be here

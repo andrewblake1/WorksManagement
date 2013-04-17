@@ -171,6 +171,94 @@ class TaskToResourceType extends ActiveRecord
 		parent::afterFind();
 	}
 
+	public function insertResourceData()
+	{
+		if($this->level === null)
+		{
+			$this->level = Planning::planningLevelTaskInt;
+		}
+// TODO: a lot of this repeated in resource controller - abstract out - perhaps into PlanningController static function
+		// ensure existance of a related ResourceData. First get the desired planning id which is the desired ancestor of task
+		// if this is task level
+		if(($level = $this->level) == Planning::planningLevelTaskInt)
+		{
+			$planning_id = $this->task_id;
+		}
+		else
+		{
+			// get the desired ansestor
+			$planning = Planning::model()->findByPk($this->task_id);
+
+			while($planning = $planning->parent)
+			{
+				if($planning->level == $level)
+				{
+					break;
+				}
+			}
+			if(empty($planning))
+			{
+				throw new Exception();
+			}
+
+			$planning_id = $planning->id;
+		}
+		// try insert and catch and dump any error - will ensure existence
+		try
+		{
+			$resourceData = new ResourceData;
+			$resourceData->planning_id = $planning_id;
+			$resourceData->resource_type_id = $this->resource_type_id;
+			$resourceData->level = $level;
+			$resourceData->quantity = $this->quantity;
+			$resourceData->hours = $this->hours;
+			$resourceData->start = $this->start;
+			// NB not recording return here as might fail deliberately if already exists - though will go to catch
+			$resourceData->dbCallback('save');
+		}
+		catch (CDbException $e)
+		{
+			// dump
+
+		}
+		// retrieve the ResourceData
+		$resourceData = ResourceData::model()->findByAttributes(array(
+			'planning_id'=>$planning_id,
+			'resource_type_id'=>$this->resource_type_id,
+		));
+
+		// link this Resource to the ResourceData
+		$this->resource_data_id = $resourceData->id;
+	}
+
+
+	/*
+	 * overidden as mulitple models
+	 */
+	public function updateSave(&$models=array())
+	{
+		$saved = true;
+		
+		// ensure the related items are set
+		$this->beforeSave();
+		$oldResourceDataId = $this->resourceData->id;
+
+		// ensure the ResourceData has correct level by inserting a new one if necassary or linking to correct
+		$this->insertResourceData();
+
+		return $saved & parent::updateSave($models);
+	}
+
+	/*
+	 * overidden as mulitple models
+	 */
+	public function createSave(&$models=array())
+	{
+		$this->insertResourceData();
+	
+		return parent::createSave($models);
+	}
+
 }
 
 ?>

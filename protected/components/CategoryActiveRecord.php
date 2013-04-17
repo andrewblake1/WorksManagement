@@ -136,4 +136,43 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 		}
 	}
 	
+// Todo: override updateRedirect and createRedirect to ajax refresh of the the tree
+	/*
+	 * to be overidden if using mulitple models
+	 */
+	public function updateSave(&$models=array())
+	{
+		// atempt save
+		$saved = $this->saveNode(false);
+		// put the model into the models array used for showing all errors
+		$models[] = $this;
+		
+		return $saved;
+	}
+	
+	/*
+	 * to be overidden if using mulitple models
+	 */
+	public function createSave(&$models=array())
+	{
+		// if new root
+		if(empty($_POST['parent_id']))
+		{
+			// atempt save
+			$saved = $this->saveNode(true);
+		}
+		// otherwise appending to a node
+		else
+		{
+			$parent=$this->loadModel($_POST['parent_id']);
+			$saved = $this->appendTo($parent);
+		}
+		// put the model into the models array used for showing all errors
+		$models[] = $this;
+		
+		return $saved;
+	}
+	
+	
+
 }

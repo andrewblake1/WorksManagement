@@ -219,42 +219,6 @@ class CategoryController extends Controller
 
 		$this->renderPartial('view', array('model'=>$model),false,true);
 	}
-	/*
-	 * to be overidden if using mulitple models
-	 */
-	protected function createSave($model, &$models=array())
-	{
-		// if new root
-		if(empty($_POST['parent_id']))
-		{
-			// atempt save
-			$saved = $model->saveNode(true);
-		}
-		// otherwise appending to a node
-		else
-		{
-			$parent=$this->loadModel($_POST['parent_id']);
-			$saved = $model->appendTo($parent);
-		}
-		// put the model into the models array used for showing all errors
-		$models[] = $model;
-		
-		return $saved;
-	}
-	
-// Todo: override updateRedirect and createRedirect to ajax refresh of the the tree
-	/*
-	 * to be overidden if using mulitple models
-	 */
-	protected function updateSave($model, &$models=array())
-	{
-		// atempt save
-		$saved = $model->saveNode(false);
-		// put the model into the models array used for showing all errors
-		$models[] = $model;
-		
-		return $saved;
-	}
 
 	public function actionMoveCopy()
 	{

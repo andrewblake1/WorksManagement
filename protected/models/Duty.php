@@ -248,6 +248,104 @@ class Duty extends ActiveRecord
 		
 		parent::afterFind();
 	}
+	
+	/*
+	 * overidden as mulitple models
+	 */
+	public function updateSave(&$models=array())
+	{
+		$saved = true;
+		$this->dutyData->updated = $this->updated;
+
+		// if we need to update a generic
+		if($generic = $this->dutyData->generic)
+		{
+			// massive assignement
+			$generic->attributes=$_POST['Generic'][$generic->id];
+
+			// validate and save
+			$saved &= $generic->updateSave($models, array(
+				'genericType' => $this->taskTypeToDutyType->dutyType->genericType,
+				'params' => array('relationToGenericType'=>'duty->taskTypeToDutyType->dutyType->genericType'),
+			));
+		}
+
+		// attempt save of related DutyData
+		$saved &= $this->dutyData->updateSave($models);
+		
+		return $saved & parent::updateSave($models);
+	}
+	
+	/*
+	 * overidden as mulitple models
+	 */
+	public function createSave(&$models=array())
+	{
+		$saved = true;
+		
+		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
+		// if this is task level
+		if(($level = $this->dutyType->level) == Planning::planningLevelTaskInt)
+		{
+			$planning_id = $this->task_id;
+		}
+		else
+		{
+			// get the desired ansestor
+			$planning = Planning::model()->findByPk($this->task_id);
+
+			while($planning = $planning->parent)
+			{
+				if($planning->level == $level)
+				{
+					break;
+				}
+			}
+			if(empty($planning))
+			{
+				throw new Exception();
+			}
+
+			$planning_id = $planning->id;
+		}
+		// try insert and catch and dump any error - will ensure existence
+		try
+		{
+			$dutyData = new DutyData;
+			$dutyData->planning_id = $planning_id;
+			$dutyData->duty_type_id = $this->duty_type_id;
+			$dutyData->level = $level;
+			// NB not recording return here as might fail deliberately if already exists - though will go to catch
+			$dutyData->dbCallback('save');
+		}
+		catch (CDbException $e)
+		{
+			// dump
+
+		}
+		// retrieve the DutyData
+		$dutyData = DutyData::model()->findByAttributes(array(
+			'planning_id'=>$planning_id,
+			'duty_type_id'=>$this->duty_type_id,
+		));
+
+		// if there isn't already a generic item to hold value and there should be
+		if(empty($dutyData->generic) && !empty($this->dutyType->generic_type_id))
+		{
+			// create a new generic item to hold value
+			$saved &= Generic::createGeneric($this->dutyType->genericType, $models, $generic);
+			// associate the new generic to this duty
+			$dutyData->generic_id = $generic->id;
+			// attempt save
+			$saved &= $dutyData->createSave($models);
+		}
+
+		// link this Duty to the DutyData
+		$this->duty_data_id = $dutyData->id;
+
+		return $saved & parent::createSave($models);
+	}
+
 }
 
 ?>

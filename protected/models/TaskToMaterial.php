@@ -47,19 +47,8 @@ class TaskToMaterial extends ActiveRecord
 	{
 		if(!empty($this->taskToMaterialToAssemblyToMaterials))
 		{
-			$assemblyToMaterial = $this->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial;
-
-			if(empty($assemblyToMaterial->select))
-			{
-				$this->customValidators[] = array('quantity', 'numerical', 'min'=>$assemblyToMaterial->minimum, 'max'=>$assemblyToMaterial->maximum);
-			}
-			else
-			{
-				$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $assemblyToMaterial->select));
-			}
-
-			// force a re-read of validators
-			$this->getValidators(NULL, TRUE);
+			// validate quantity against related assemblyToMaterial record
+			$this->setCustomValidatorsRange($this->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial);
 		}
 	}
 	
@@ -109,6 +98,7 @@ class TaskToMaterial extends ActiveRecord
 		
 		return parent::afterFind();
 	}
+	
 }
 
 ?>

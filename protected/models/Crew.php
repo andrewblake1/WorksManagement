@@ -149,6 +149,44 @@ class Crew extends ActiveRecord
 		return parent::beforeSave();
 	}
 
+	/*
+	 * overidden as mulitple models
+	 */
+	public function updateSave(&$models=array())
+	{
+		// get the planning model
+		$planning = Planning::model()->findByPk($this->id);
+		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
+		// atempt save
+		$saved = $planning->saveNode(false);
+		// put the model into the models array used for showing all errors
+		$models[] = $planning;
+		
+		return $saved & parent::updateSave($models);
+	}
+
+	/*
+	 * overidden as mulitple models
+	 */
+	public function createSave(&$models=array())
+	{
+		// need to insert a row into the planning nested set model so that the id can be used here
+		
+		// create a root node
+		$planning = new Planning;
+		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
+		if($saved = $planning->appendTo(Planning::model()->findByPk($this->day_id)))
+		{
+			$this->id = $planning->id;
+			$saved = parent::createSave($models);
+		}
+
+		// put the model into the models array used for showing all errors
+		$models[] = $planning;
+		
+		return $saved;
+	}
+
 }
 
 ?>

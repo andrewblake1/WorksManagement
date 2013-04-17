@@ -40,31 +40,31 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	}
 	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array(), array('scopeStore'=>array($model->store_id)));
 
-	// get quantity tooltip if part of assembly
+	// if not in assembly group
 	if(empty($model->taskToAssemblyToAssemblyGroupToAssemblies))
 	{
-		$form->textFieldRow('quantity');
-	}
-	else
-	{
-		// there ia a unique constraint here so there will only be 1 relating row
-		$assemblyToAssemblyGroup = $model->taskToAssemblyToAssemblyGroupToAssemblies[0]->assemblyToAssemblyGroup;
-		
-		$htmlOptions = array('data-original-title'=>$assemblyToAssemblyGroup->quantity_tooltip);
-
-		if(empty($assemblyToAssemblyGroup->select))
+		// if sub assembly
+		if($model->parent_id)
 		{
-			$form->rangeFieldRow('quantity', $assemblyToAssemblyGroup->minimum, $assemblyToAssemblyGroup->maximimum, $htmlOptions, $model);
+			// parent id in sub_assembly table
+			$parent_id = $model->parent->assembly_id;
+			// child id in sub_assembly table
+			$child_id = $model->assembly_id;
+			$subAssembly = SubAssembly::model()->findByAttributes(array('child_id'=>$child_id, 'parent_id'=>$parent_id));
+			$form->rangeFieldRow('quantity', $subAssembly->minimum, $subAssembly->maximimum, $subAssembly->select, $subAssembly->quantity_tooltip, $subAssembly->selection_tooltip);
 		}
 		else
 		{
-			// first need to get a list where array keys are the same as the display members
-			$list = explode(',', $assemblyToAssemblyGroup->select);
-
-			$form->dropDownListRow('quantity', array_combine($list, $list), $htmlOptions, $model);
+			$form->textFieldRow('quantity');
 		}
 	}
-	
+	else	// assembly group
+	{
+		// there ia a unique constraint here so there will only be 1 relating row
+		$assemblyToAssemblyGroup = $model->taskToAssemblyToAssemblyGroupToAssemblies[0]->assemblyToAssemblyGroup;
+		$form->rangeFieldRow('quantity', $assemblyToAssemblyGroup->minimum, $assemblyToAssemblyGroup->maximimum, $assemblyToAssemblyGroup->select, NULL, $assemblyToAssemblyGroup->selection_tooltip);
+	}
+
 	// parent_id
 	if($this->checkAccess(Controller::accessWrite))
 	{
