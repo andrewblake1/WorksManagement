@@ -263,10 +263,12 @@ class WMTbActiveForm extends TbActiveForm
 			array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
-	public function rangeFieldRow($attribute, $minimum, $maximum, $select = '', $quantity_tooltip = '', $selection_tooltip = '', $htmlOptions = array(), $model = NULL) {
+	public function rangeFieldRow($attribute, $minimum, $maximum, $select = '', $quantity_tooltip = '', $htmlOptions = array(), $model = NULL) {
 		
 		$model = $model ? $model : $this->model;
 		
+		$htmlOptions['data-original-title'] = $quantity_tooltip;
+
 		if(empty($select))
 		{
 			// if nothing given
@@ -282,8 +284,6 @@ class WMTbActiveForm extends TbActiveForm
 			}
 			else
 			{
-				$htmlOptions['data-original-title'] = $quantity_tooltip;
-
 				abs($minimum - $maximum) > Yii::app()->params->listMax
 					? $this->textFieldRow($attribute, $htmlOptions, $model)
 					: $this->dropDownListRow($attribute, array_combine(range($minimum, $maximum), range($minimum, $maximum)), $htmlOptions, $model);
@@ -293,9 +293,6 @@ class WMTbActiveForm extends TbActiveForm
 		{
 			// first need to get a list where array keys are the same as the display members
 			$list = explode(',', $select);
-			// tooltip
-			$htmlOptions['data-original-title'] = $selection_tooltip;
-
 			$form->dropDownListRow($attribute, array_combine($list, $list), $htmlOptions, $model);
 		}
 	}

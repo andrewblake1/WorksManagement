@@ -40,29 +40,19 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	}
 	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array(), array('scopeStore'=>array($model->store_id)));
 
-	// if not in assembly group
-	if(empty($model->taskToAssemblyToAssemblyGroupToAssemblies))
+	// if sub assembly
+	if($model->parent_id)
 	{
-		// if sub assembly
-		if($model->parent_id)
-		{
-			// parent id in sub_assembly table
-			$parent_id = $model->parent->assembly_id;
-			// child id in sub_assembly table
-			$child_id = $model->assembly_id;
-			$subAssembly = SubAssembly::model()->findByAttributes(array('child_id'=>$child_id, 'parent_id'=>$parent_id));
-			$form->rangeFieldRow('quantity', $subAssembly->minimum, $subAssembly->maximimum, $subAssembly->select, $subAssembly->quantity_tooltip, $subAssembly->selection_tooltip);
-		}
-		else
-		{
-			$form->textFieldRow('quantity');
-		}
+		// parent id in sub_assembly table
+		$parent_id = $model->parent->assembly_id;
+		// child id in sub_assembly table
+		$child_id = $model->assembly_id;
+		$subAssembly = SubAssembly::model()->findByAttributes(array('child_id'=>$child_id, 'parent_id'=>$parent_id));
+		$form->rangeFieldRow('quantity', $subAssembly->minimum, $subAssembly->maximimum, $subAssembly->select, $subAssembly->quantity_tooltip);
 	}
-	else	// assembly group
+	else
 	{
-		// there ia a unique constraint here so there will only be 1 relating row
-		$assemblyToAssemblyGroup = $model->taskToAssemblyToAssemblyGroupToAssemblies[0]->assemblyToAssemblyGroup;
-		$form->rangeFieldRow('quantity', $assemblyToAssemblyGroup->minimum, $assemblyToAssemblyGroup->maximimum, $assemblyToAssemblyGroup->select, NULL, $assemblyToAssemblyGroup->selection_tooltip);
+		$form->textFieldRow('quantity');
 	}
 
 	// parent_id

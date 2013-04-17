@@ -59,7 +59,7 @@ class GenericWidget extends CWidget
 
 			case GenericType::validationTypeRange :
 				$range = explode('-', $genericType->validation_text);
-				$this->form->rangeFieldRow($attribute, $range[0], $range[1], NULL, NULL, NULL, $htmlOptions, $generic);
+				$this->form->rangeFieldRow($attribute, $range[0], $range[1], NULL, NULL, $htmlOptions, $generic);
 				break;
 
 			case GenericType::validationTypeSQLSelect :

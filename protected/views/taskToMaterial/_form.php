@@ -40,16 +40,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	}
 	MaterialController::listWidgetRow($model, $form, 'material_id', array(), array('scopeStore'=>array($model->store_id)));
 	
-	if(empty($model->taskToMaterialToAssemblyToMaterials))
-	{
-		$form->textFieldRow('quantity');
-	}
-	else
-	{
-		// there ia a unique constraint here so there will only be 1 relating row
-		$assemblyToMaterial = $model->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial;
-		$form->rangeFieldRow('quantity', $assemblyToMaterial->minimum, $assemblyToMaterial->maximimum, $assemblyToMaterial->select, $assemblyToMaterial->quantity_tooltip, $assemblyToMaterial->selection_tooltip);
-	}
+	$form->textFieldRow('quantity');
 
 $this->endWidget();
 

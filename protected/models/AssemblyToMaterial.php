@@ -103,11 +103,11 @@ class AssemblyToMaterial extends ActiveRecord
 			'material.unit AS searchMaterialUnit',
 			'material.alias AS searchMaterialAlias',
 			't.material_id',
-			't.select',
-			't.quantity_tooltip',
 			't.quantity',
 			't.minimum',
 			't.maximum',
+			't.select',
+			't.quantity_tooltip',
 		);
 
 		$criteria->compare('material.description',$this->searchMaterialDescription,true);

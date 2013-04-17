@@ -8,6 +8,11 @@
  * @property integer $task_type_id
  * @property integer $assembly_id
  * @property integer $quantity
+ * @property integer $minimum
+ * @property integer $maximum
+ * @property string $select
+ * @property string $quantity_tooltip
+ * @property integer $deleted
  * @property integer $staff_id
  *
  * The followings are the available model relations:
@@ -39,10 +44,10 @@ class TaskTypeToAssembly extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('store_id, task_type_id, assembly_id, quantity', 'required'),
-			array('store_id, task_type_id, assembly_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('store_id, task_type_id, assembly_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, searchAssembly, quantity', 'safe', 'on'=>'search'),
+			array('id, task_type_id, searchAssembly, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,12 +90,20 @@ class TaskTypeToAssembly extends ActiveRecord
 			't.assembly_id',
 			'assembly.description AS searchAssembly',
 			't.quantity',
+			't.minimum',
+			't.maximum',
+			't.select',
+			't.quantity_tooltip',
 		);
 
 		// where
 		$criteria->compare('assembly.description',$this->searchAssembly);
-		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.task_type_id',$this->task_type_id);
+		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('t.minimium',$this->minimum);
+		$criteria->compare('t.maximum',$this->maximum);
+		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
+		$criteria->compare('t.select',$this->select,true);
 
 		// join
 		$criteria->with = array(
@@ -103,7 +116,11 @@ class TaskTypeToAssembly extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('searchAssembly', 'Assembly', 'assembly_id');
-		$columns[] = 'quantity';
+ 		$columns[] = 'quantity';
+ 		$columns[] = 'minimum';
+ 		$columns[] = 'maximum';
+ 		$columns[] = 'quantity_tooltip';
+ 		$columns[] = 'select';
 		
 		return $columns;
 	}

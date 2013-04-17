@@ -44,6 +44,14 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('quantity');
 
+	$form->textFieldRow('minimum');
+
+	$form->textFieldRow('maximum');
+
+	$form->textAreaRow('quantity_tooltip');
+
+	$form->textAreaRow('select');
+
 $this->endWidget();
 
 ?>

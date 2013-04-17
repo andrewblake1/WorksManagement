@@ -47,25 +47,15 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 
 	public function setCustomValidators()
 	{
-		// if not in assembly group
-		if(empty($this->taskToAssemblyToAssemblyGroupToAssemblies))
+		// if sub assembly
+		if($this->parent_id)
 		{
-			// if sub assembly
-			if($this->parent_id)
-			{
-				// parent id in sub_assembly table
-				$parent_id = $model->parent->assembly_id;
-				// child id in sub_assembly table
-				$child_id = $model->assembly_id;
-				$this->setCustomValidatorsRange(SubAssembly::model()->findByAttributes(array('child_id'=>$child_id, 'parent_id'=>$parent_id)));
-			}
+			// parent id in sub_assembly table
+			$parent_id = $model->parent->assembly_id;
+			// child id in sub_assembly table
+			$child_id = $model->assembly_id;
+			$this->setCustomValidatorsRange(SubAssembly::model()->findByAttributes(array('child_id'=>$child_id, 'parent_id'=>$parent_id)));
 		}
-		else	// assembly group
-		{
-			// 1:1 relationship hence can assume [0] is correct and only array member
-			$this->setCustomValidatorsRange($this->$taskToAssemblyToAssemblyGroupToAssemblies[0]->assemblyToAssemblyGroup);
-		}
-		
 	}
 	
 	/**
