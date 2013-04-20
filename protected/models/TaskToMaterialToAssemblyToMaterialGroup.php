@@ -1,11 +1,12 @@
 <?php
 
 /**
- * This is the model class for table "task_to_material_to_material_group_to_material".
+ * This is the model class for table "task_to_material_to_assembly_to_material_group".
  *
- * The followings are the available columns in table 'task_to_material_to_material_group_to_material':
+ * The followings are the available columns in table 'task_to_material_to_assembly_to_material_group':
  * @property string $id
  * @property string $task_to_material_id
+ * @property integer $material_group_to_material_id
  * @property integer $material_group_id
  * @property integer $material_id
  * @property integer $assembly_to_material_group_id
@@ -17,8 +18,9 @@
  * @property Staff $staff
  * @property AssemblyToMaterialGroup $assemblyToMaterialGroup
  * @property MaterialGroupToMaterial $materialGroup
+ * @property MaterialGroupToMaterial $materialGroupToMaterial
  */
-class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
+class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 {
 	public $task_id;
 	public $quantity;
@@ -37,8 +39,8 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return $this->customValidators + array(
-			array('assembly_to_material_group_id, task_to_assembly_id, quantity, task_id, material_group_id, material_id, staff_id', 'required'),
-			array('assembly_to_material_group_id, quantity, material_group_id, material_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_to_material_group_id, task_to_assembly_id, quantity, task_id, material_group_to_material_id, material_group_id, material_id, staff_id', 'required'),
+			array('assembly_to_material_group_id, quantity, material_group_id, material_id, material_group_to_material_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_to_assembly_id, task_id, task_to_material_id', 'length', 'max'=>10),
 		);
 	}
@@ -61,6 +63,7 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'assemblyToMaterialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'assembly_to_material_group_id'),
 			'materialGroup' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_id'),
+			'materialGroupToMaterial' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_to_material_id'),
 		);
 	}
 
@@ -82,6 +85,7 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 		return array(
 			'task_to_material_id' => 'Task To Material',
 			'material_group_id' => 'Material Group',
+			'material_group_to_material_id' => 'Material Group',
 			'material_id' => 'Material',
 		);
 	}
@@ -123,7 +127,7 @@ class TaskToMaterialToMaterialGroupToMaterial extends ActiveRecord
 	public function createSave(&$models=array())
 	{
 		$taskToMaterial = new TaskToMaterial;
-		$taskToMaterial->attributes = $_POST['TaskToMaterialToMaterialGroupToMaterial'];
+		$taskToMaterial->attributes = $_POST['TaskToMaterialToAssemblyToMaterialGroup'];
 		// filler - unused in this context but necassary in Material model
 		$taskToMaterial->store_id = 0;
 

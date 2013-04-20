@@ -1,12 +1,11 @@
 <?php
 
 /**
- * This is the model class for table "assembly_to_material_group".
+ * This is the model class for table "task_type_to_material_group".
  *
- * The followings are the available columns in table 'assembly_to_material_group':
+ * The followings are the available columns in table 'task_type_to_material_group':
  * @property integer $id
- * @property integer $assembly_id
- * @property integer $stage_id
+ * @property integer $task_type_id
  * @property integer $store_id
  * @property integer $material_group_id
  * @property integer $quantity
@@ -20,21 +19,20 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property Staff $staff
- * @property Stage $stage
- * @property Assembly $assembly
- * @property MaterialGroup $store
+ * @property TaskToMaterialToTaskTypeToMaterialGroup[] $taskToMaterialToTaskTypeToMaterialGroups
+ * @property TaskToMaterialToTaskTypeToMaterialGroup[] $taskToMaterialToTaskTypeToMaterialGroups1
  * @property MaterialGroup $materialGroup
- * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
+ * @property MaterialGroup $store
+ * @property TaskType $taskType
+ * @property Staff $staff
  */
-class AssemblyToMaterialGroup extends ActiveRecord
+class TaskTypeToMaterialGroup extends ActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchMaterialGroupDescription;
-	public $searchStage;
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -48,11 +46,11 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('assembly_id, material_group_id, stage_id, store_id, quantity', 'required'),
-			array('assembly_id, material_group_id, stage_id, store_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, material_group_id, store_id, quantity', 'required'),
+			array('task_type_id, material_group_id, store_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('quantity_tooltip, selection_tooltip, comment', 'length', 'max'=>255),
 			array('select', 'safe'),
-			array('id, assembly_id, searchStage, searchMaterialGroupDescription, quantity, minimum, maximum, quantity_tooltip, selection_tooltip, select, comment', 'safe', 'on'=>'search'),
+			array('id, task_type_id, searchMaterialGroupDescription, quantity, minimum, maximum, quantity_tooltip, selection_tooltip, select, comment', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,18 +58,18 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'stage' => array(self::BELONGS_TO, 'Stage', 'stage_id'),
-			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
-			'store' => array(self::BELONGS_TO, 'MaterialGroup', 'store_id'),
-			'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
-			'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'assembly_to_material_group_id'),
-		);
-	}
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'taskToMaterialToTaskTypeToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTypeToMaterialGroup', 'material_group_id'),
+            'taskToMaterialToTaskTypeToMaterialGroups1' => array(self::HAS_MANY, 'TaskToMaterialToTaskTypeToMaterialGroup', 'task_type_to_material_group_id'),
+            'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
+            'store' => array(self::BELONGS_TO, 'MaterialGroup', 'store_id'),
+            'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
+            'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -79,13 +77,9 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'assembly_id' => 'Assembly',
-			'material_group_id' => 'Material group/Stage',
+			'task_type_id' => 'Assembly',
+			'material_group_id' => 'Material group',
 			'searchMaterialGroupDescription' => 'Material group',
-			'stage_id' => 'Stage',
-			'quantity_tooltip' => 'Quantity tooltip',
-			'selection_tooltip' => 'Selection tooltip',
-			'searchStage' => 'Stage',
 		));
 	}
 
@@ -99,8 +93,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.assembly_id',
-			'stage.description AS searchStage',
+			't.task_type_id',
 			't.material_group_id',
 			'materialGroup.description AS searchMaterialGroupDescription',
 			't.select',
@@ -113,9 +106,8 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		);
 
 		$criteria->compare('materialGroup.description',$this->searchMaterialGroupDescription,true);
-		$criteria->compare('stage.description',$this->searchStage,true);
-		$criteria->compare('t.assembly_id',$this->assembly_id);
-		$criteria->compare('t.assembly_id',$this->assembly_id);
+		$criteria->compare('t.task_type_id',$this->task_type_id);
+		$criteria->compare('t.task_type_id',$this->task_type_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.minimium',$this->minimum);
 		$criteria->compare('t.maximum',$this->maximum);
@@ -126,7 +118,6 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		
 		$criteria->with = array(
 			'materialGroup',
-			'stage',
 			);
 
 		return $criteria;
@@ -136,7 +127,6 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	{
         $columns[] = $this->linkThisColumn('searchMaterialGroupDescription');
  		$columns[] = 'comment';
- 		$columns[] = 'searchStage';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
  		$columns[] = 'select';
@@ -154,7 +144,6 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	{
 		return array(
 			'searchMaterialGroupDescription',
-			'searchStage',
 		);
 	}
 
@@ -166,16 +155,22 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		return array(
 			'materialGroup->description',
 			'comment',
-			'stage->description',
 		);
 	}
 	
 	public function beforeValidate()
 	{
-		$assembly = Assembly::model()->findByPk($this->assembly_id);
-		$this->store_id = $assembly->store_id;
+		$materialGroup = MaterialGroup::model()->findByPk($this->material_group_id);
+		$this->store_id = $materialGroup->store_id;
 		
 		return parent::beforeValidate();
+	}
+	
+	public function afterFind() {
+		$materialGroup = MaterialGroup::model()->findByPk($this->material_group_id);
+		$this->store_id = $materialGroup->store_id;
+		
+		parent::afterFind();
 	}
 
 }

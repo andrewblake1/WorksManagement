@@ -23,8 +23,8 @@
  * @property AssemblyGroup $store
  * @property AssemblyGroup $assemblyGroup
  * @property Staff $staff
- * @property TaskToAssemblyToAssemblyGroupToAssembly[] $taskToAssemblyToAssemblyGroupToAssemblies
- * @property TaskToAssemblyToAssemblyGroupToAssembly[] $taskToAssemblyToAssemblyGroupToAssemblies1
+ * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyGroupToAssemblies
+ * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyGroupToAssemblies1
  */
 class AssemblyToAssemblyGroup extends ActiveRecord
 {
@@ -66,8 +66,8 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 			'store' => array(self::BELONGS_TO, 'AssemblyGroup', 'store_id'),
 			'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup', 'assembly_group_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'taskToAssemblyToAssemblyGroupToAssemblies' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyGroupToAssembly', 'assembly_group_id'),
-			'taskToAssemblyToAssemblyGroupToAssemblies1' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyGroupToAssembly', 'assembly_to_assembly_group_id'),
+			'taskToAssemblyToAssemblyGroupToAssemblies' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'assembly_group_id'),
+			'taskToAssemblyToAssemblyGroupToAssemblies1' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'assembly_to_assembly_group_id'),
 		);
 	}
 

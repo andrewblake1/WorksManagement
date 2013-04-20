@@ -4,7 +4,7 @@
  * This is the model class for table "assembly_group_to_assembly".
  *
  * The followings are the available columns in table 'assembly_group_to_assembly':
- * @property integer $id
+ * @property string $id
  * @property integer $assembly_group_id
  * @property integer $assembly_id
  * @property integer $store_id
@@ -12,12 +12,15 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
+ * @property Staff $staff
  * @property AssemblyGroup $assemblyGroup
  * @property Assembly $store
  * @property Assembly $assembly
- * @property Staff $staff
- * @property TaskToAssemblyToAssemblyGroupToAssembly[] $taskToAssemblyToAssemblyGroupToAssemblys
- * @property TaskToAssemblyToAssemblyGroupToAssembly[] $taskToAssemblyToAssemblyGroupToAssemblys1
+ * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups
+ * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups1
+ * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups2
+ * @property TaskToAssemblyToTaskTypeToAssemblyGroup[] $taskToAssemblyToTaskTypeToAssemblyGroups
+ * @property TaskToAssemblyToTaskTypeToAssemblyGroup[] $taskToAssemblyToTaskTypeToAssemblyGroups1
  */
 class AssemblyGroupToAssembly extends ActiveRecord
 {
@@ -52,18 +55,21 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup', 'assembly_group_id'),
-			'store' => array(self::BELONGS_TO, 'Assembly', 'store_id'),
-			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'taskToAssemblyToAssemblyGroupToAssemblys' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyGroupToAssembly', 'assembly_id'),
-			'taskToAssemblyToAssemblyGroupToAssemblys1' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyGroupToAssembly', 'assembly_group_id'),
-		);
-	}
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+            'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup', 'assembly_group_id'),
+            'store' => array(self::BELONGS_TO, 'Assembly', 'store_id'),
+            'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
+            'taskToAssemblyToAssemblyToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'assembly_id'),
+            'taskToAssemblyToAssemblyToAssemblyGroups1' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'assembly_group_id'),
+            'taskToAssemblyToAssemblyToAssemblyGroups2' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'assembly_group_to_assembly_id'),
+            'taskToAssemblyToTaskTypeToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToTaskTypeToAssemblyGroup', 'assembly_id'),
+            'taskToAssemblyToTaskTypeToAssemblyGroups1' => array(self::HAS_MANY, 'TaskToAssemblyToTaskTypeToAssemblyGroup', 'assembly_group_to_assembly_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)

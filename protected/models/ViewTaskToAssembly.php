@@ -46,12 +46,13 @@ class ViewTaskToAssembly extends ViewActiveRecord
 			't.assembly_id',
 			'assembly.description AS searchAssembly',
 			't.quantity',
+			't.assembly_group_to_assembly_id',
 			't.assembly_group_id',
-			't.searchTaskToAssemblyToAssemblyGroupToAssemblyId',
+			't.searchTaskToAssemblyToAssemblyToAssemblyGroupId',
 			't.assembly_to_assembly_group_id',
 			"CONCAT_WS('$delimiter',
 					assemblyGroup.description,
-					t.searchAssemblyToAssemblyGroupComment
+					t.comment
 					) AS searchAssemblyGroup",
 				);
 				
@@ -66,7 +67,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		$this->compositeCriteria($criteria,
 			array(
 			'assemblyGroup.description',
-			't.searchAssemblyToAssemblyGroupComment'
+			't.comment'
 			),
 			$this->searchAssemblyGroup
 		);

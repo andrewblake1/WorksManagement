@@ -12,12 +12,15 @@
  * @property integer $staff_id
  *
  * The followings are the available model relations:
- * @property MaterialGroup $materialGroup
- * @property Material $store
  * @property Material $material
+ * @property MaterialGroup $store
+ * @property MaterialGroup $materialGroup
  * @property Staff $staff
- * @property TaskToMaterialToMaterialGroupToMaterial[] $taskToMaterialToMaterialGroupToMaterials
- * @property TaskToMaterialToMaterialGroupToMaterial[] $taskToMaterialToMaterialGroupToMaterials1
+ * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
+ * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups1
+ * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups2
+ * @property TaskToMaterialToTaskTypeToMaterialGroup[] $taskToMaterialToTaskTypeToMaterialGroups
+ * @property TaskToMaterialToTaskTypeToMaterialGroup[] $taskToMaterialToTaskTypeToMaterialGroups1
  */
 class MaterialGroupToMaterial extends ActiveRecord
 {
@@ -52,18 +55,21 @@ class MaterialGroupToMaterial extends ActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
-			'store' => array(self::BELONGS_TO, 'Material', 'store_id'),
-			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'taskToMaterialToMaterialGroupToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToMaterialGroupToMaterial', 'material_id'),
-			'taskToMaterialToMaterialGroupToMaterials1' => array(self::HAS_MANY, 'TaskToMaterialToMaterialGroupToMaterial', 'material_group_id'),
-		);
-	}
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
+            'store' => array(self::BELONGS_TO, 'MaterialGroup', 'store_id'),
+            'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
+            'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+            'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'material_id'),
+            'taskToMaterialToAssemblyToMaterialGroups1' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'material_group_id'),
+            'taskToMaterialToAssemblyToMaterialGroups2' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'material_group_to_material_id'),
+            'taskToMaterialToTaskTypeToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTypeToMaterialGroup', 'material_id'),
+            'taskToMaterialToTaskTypeToMaterialGroups1' => array(self::HAS_MANY, 'TaskToMaterialToTaskTypeToMaterialGroup', 'material_group_to_material_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)

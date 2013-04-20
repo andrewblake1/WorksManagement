@@ -14,20 +14,21 @@ class TaskToAssemblyController extends AdjacencyListController
 			'class'=>'WMTbButtonColumn',
 			'buttons'=>array(
 				'delete' => array(
-					'visible'=>'Yii::app()->user->checkAccess($data->id ? "TaskToAssembly" : "TaskToAssemblyToAssemblyGroupToAssembly", array("primaryKey"=>$data->id ? $data->id : $data->assembly_group_id))',
+					'visible'=>'Yii::app()->user->checkAccess($data->id ? "TaskToAssembly" : "TaskToAssemblyToAssemblyToAssemblyGroup", array("primaryKey"=>$data->id ? $data->id : $data->assembly_group_id))',
 					'url'=>'Yii::app()->createUrl(($data->id ? "TaskToAssembly" : "TaskToAssemblylToAssemblyGroupToAssembly" ).
 							"/delete", array("id"=>$data->id ? $data->id : $data->assembly_group_id))',
 				),
 				'update' => array(
-					'visible'=>'Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyGroupToAssembly" : "TaskToAssembly", array("primaryKey"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))',
+					'visible'=>'Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyToAssemblyGroup" : "TaskToAssembly", array("primaryKey"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))',
 					'url'=>'Yii::app()->createUrl(
 						$data->assembly_group_id
 							? $data->id
-								? "TaskToAssemblyToAssemblyGroupToAssembly/update"
-								: "TaskToAssemblyToAssemblyGroupToAssembly/create"
+								? "TaskToAssemblyToAssemblyToAssemblyGroup/update"
+								: "TaskToAssemblyToAssemblyToAssemblyGroup/create"
 							: "TaskToAssembly/update",
 						$data->assembly_group_id
-							? array("id"=>$data->searchTaskToAssemblyToAssemblyGroupToAssemblyId, "TaskToAssemblyToAssemblyGroupToAssembly"=>array(
+							? array("id"=>$data->searchTaskToAssemblyToAssemblyToAssemblyGroupId, "TaskToAssemblyToAssemblyToAssemblyGroup"=>array(
+								"assembly_group_to_assembly_id"=>$data->assembly_group_to_assembly_id,
 								"assembly_group_id"=>$data->assembly_group_id,
 								"task_id"=>$data->task_id,
 								"task_to_assembly_id"=>($data->id
@@ -39,9 +40,9 @@ class TaskToAssemblyController extends AdjacencyListController
 					)',
 				),
 				'view' => array(
-					'visible'=>'!Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyGroupToAssembly" : "TaskToAssembly", array("primaryKey"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))
-						&& Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyGroupToAssemblyRead" : "TaskToAssemblyRead")',
-				'url'=>'Yii::app()->createUrl(($data->assembly_group_id ? "TaskToAssemblyToAssemblyGroupToAssembly" : "TaskToAssembly" ).
+					'visible'=>'!Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyToAssemblyGroup" : "TaskToAssembly", array("primaryKey"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))
+						&& Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyToAssemblyGroupRead" : "TaskToAssemblyRead")',
+				'url'=>'Yii::app()->createUrl(($data->assembly_group_id ? "TaskToAssemblyToAssemblyToAssemblyGroup" : "TaskToAssembly" ).
 					"/view", array("id"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))',
 				),
 			),
@@ -89,7 +90,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		
 		// insert materials into task_to_material table
 		
-		// from AssemblyToMaterial
+		// AssemblyToMaterial
 		foreach(AssemblyToMaterial::model()->findAllByAttributes(array('assembly_id'=>$assembly_id)) as $assemblyToMaterial)
 		{
 			$taskToMaterial = new TaskToMaterial();

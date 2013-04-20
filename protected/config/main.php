@@ -183,8 +183,10 @@ return array(
 						'TaskType'=>array(
 							'GenericTaskType',
 							'TaskTypeToAssembly',
+							'TaskTypeToAssemblyGroup',
 							'TaskTypeToDutyType',
 							'TaskTypeToMaterial',
+							'TaskTypeToMaterialGroup',
 							'TaskTypeToResourceType',
 						),
 					),

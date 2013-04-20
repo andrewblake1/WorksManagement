@@ -1,28 +1,30 @@
 <?php
 
 /**
- * This is the model class for table "task_to_assembly_to_assembly_group_to_assembly".
+ * This is the model class for table "task_to_assembly_to_assembly_to_assembly_group".
  *
- * The followings are the available columns in table 'task_to_assembly_to_assembly_group_to_assembly':
+ * The followings are the available columns in table 'task_to_assembly_to_assembly_to_assembly_group':
  * @property string $id
  * @property string $task_to_assembly_id
+ * @property string $assembly_group_to_assembly_id
  * @property integer $assembly_group_id
  * @property integer $assembly_id
  * @property string $assembly_to_assembly_group_id
  * @property integer $staff_id
  *
  * The followings are the available model relations:
+ * @property Staff $staff
  * @property TaskToAssembly $taskToAssembly
  * @property AssemblyGroupToAssembly $assembly
- * @property AssemblyToAssemblyGroup $assemblyGroup
  * @property AssemblyToAssemblyGroup $assemblyToAssemblyGroup
- * @property Staff $staff
+ * @property AssemblyGroupToAssembly $assemblyGroup
+ * @property AssemblyGroupToAssembly $assemblyGroupToAssembly
  */
-class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
+class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 {
 	public $task_id;
 	public $quantity;
-	public $task_to_assembly_id;
+//	public $task_to_assembly_id;
 
 	/**
 	 * @var string nice model name for use in output
@@ -37,9 +39,9 @@ class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return $this->customValidators + array(
-			array('assembly_to_assembly_group_id, task_to_assembly_id, quantity, task_id, assembly_group_id, assembly_id, staff_id', 'required'),
+			array('assembly_to_assembly_group_id, task_to_assembly_id, assembly_group_to_assembly_id, quantity, task_id, assembly_group_id, assembly_id, staff_id', 'required'),
 			array('assembly_to_assembly_group_id, quantity, assembly_group_id, assembly_id, staff_id', 'numerical', 'integerOnly'=>true),
-			array('task_to_assembly_id, task_id, task_to_assembly_id', 'length', 'max'=>10),
+			array('task_to_assembly_id, task_id, task_to_assembly_id, assembly_group_to_assembly_id', 'length', 'max'=>10),
 		);
 	}
 
@@ -56,13 +58,15 @@ class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
 			'assembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_id'),
-			'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyToAssemblyGroup', 'assembly_group_id'),
 			'assemblyToAssemblyGroup' => array(self::BELONGS_TO, 'AssemblyToAssemblyGroup', 'assembly_to_assembly_group_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_id'),
+			'assemblyGroupToAssembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_to_assembly_id'),
 		);
 	}
+
 
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
@@ -80,8 +84,8 @@ class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'task_to_assembly_id' => 'Task To Assembly',
 			'assembly_group_id' => 'Assembly Group',
+			'assembly_group_to_assembly_id' => 'Assembly Group',
 			'assembly_id' => 'Assembly',
 		);
 	}
@@ -125,8 +129,8 @@ class TaskToAssemblyToAssemblyGroupToAssembly extends ActiveRecord
 	{
 	
 		$taskToAssembly = new TaskToAssembly;
-		$taskToAssembly->attributes = $_POST['TaskToAssemblyToAssemblyGroupToAssembly'];
-		$taskToAssembly->parent_id = $_POST['TaskToAssemblyToAssemblyGroupToAssembly']['task_to_assembly_id'];
+		$taskToAssembly->attributes = $_POST['TaskToAssemblyToAssemblyToAssemblyGroup'];
+		$taskToAssembly->parent_id = $_POST['TaskToAssemblyToAssemblyToAssemblyGroup']['task_to_assembly_id'];
 		// filler - unused in this context but necassary in Assembly model
 		$taskToAssembly->store_id = 0;
 

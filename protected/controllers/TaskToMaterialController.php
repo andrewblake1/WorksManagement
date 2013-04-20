@@ -14,20 +14,21 @@ class TaskToMaterialController extends Controller
 			'class'=>'WMTbButtonColumn',
 			'buttons'=>array(
 				'delete' => array(
-					'visible'=>'Yii::app()->user->checkAccess($data->id ? "TaskToMaterial" : "TaskToMaterialToMaterialGroupToMaterial", array("primaryKey"=>$data->id ? $data->id : $data->material_group_id))',
-					'url'=>'Yii::app()->createUrl(($data->id ? "TaskToMaterial" : "TaskToMaterialToMaterialGroupToMaterial" ).
+					'visible'=>'Yii::app()->user->checkAccess($data->id ? "TaskToMaterial" : "TaskToMaterialToAssemblyToMaterialGroup", array("primaryKey"=>$data->id ? $data->id : $data->material_group_id))',
+					'url'=>'Yii::app()->createUrl(($data->id ? "TaskToMaterial" : "TaskToMaterialToAssemblyToMaterialGroup" ).
 							"/delete", array("id"=>$data->id ? $data->id : $data->material_group_id))',
 				),
 				'update' => array(
-					'visible'=>'Yii::app()->user->checkAccess($data->material_group_id ? "TaskToMaterialToMaterialGroupToMaterial" : "TaskToMaterial", array("primaryKey"=>$data->material_group_id ? $data->material_group_id : $data->id))',
+					'visible'=>'Yii::app()->user->checkAccess($data->material_group_id ? "TaskToMaterialToAssemblyToMaterialGroup" : "TaskToMaterial", array("primaryKey"=>$data->material_group_id ? $data->material_group_id : $data->id))',
 					'url'=>'Yii::app()->createUrl(
 								$data->material_group_id
 									? $data->id
-										? "TaskToMaterialToMaterialGroupToMaterial/update"
-										: "TaskToMaterialToMaterialGroupToMaterial/create"
+										? "TaskToMaterialToAssemblyToMaterialGroup/update"
+										: "TaskToMaterialToAssemblyToMaterialGroup/create"
 									: "TaskToMaterial/update",
 								$data->material_group_id
-									? array("id"=>$data->searchTaskToMaterialToMaterialGroupToMaterialId, "TaskToMaterialToMaterialGroupToMaterial"=>array(
+									? array("id"=>$data->searchTaskToMaterialToAssemblyToMaterialGroupId, "TaskToMaterialToAssemblyToMaterialGroup"=>array(
+										"material_group_to_material_id"=>$data->material_group_to_material_id,
 										"material_group_id"=>$data->material_group_id,
 										"material_id"=>$data->material_id,
 										"task_id"=>$data->task_id,
@@ -38,9 +39,9 @@ class TaskToMaterialController extends Controller
 							)',
 				),
 				'view' => array(
-					'visible'=>'!Yii::app()->user->checkAccess($data->material_group_id ? "TaskToMaterialToMaterialGroupToMaterial" : "TaskToMaterial", array("primaryKey"=>$data->material_group_id ? $data->material_group_id : $data->id))
-						&& Yii::app()->user->checkAccess($data->material_group_id ? "TaskToMaterialToMaterialGroupToMaterialRead" : "TaskToMaterialRead")',
-				'url'=>'Yii::app()->createUrl(($data->material_group_id ? "TaskToMaterialToMaterialGroupToMaterial" : "TaskToMaterial" ).
+					'visible'=>'!Yii::app()->user->checkAccess($data->material_group_id ? "TaskToMaterialToAssemblyToMaterialGroup" : "TaskToMaterial", array("primaryKey"=>$data->material_group_id ? $data->material_group_id : $data->id))
+						&& Yii::app()->user->checkAccess($data->material_group_id ? "TaskToMaterialToAssemblyToMaterialGroupRead" : "TaskToMaterialRead")',
+				'url'=>'Yii::app()->createUrl(($data->material_group_id ? "TaskToMaterialToAssemblyToMaterialGroup" : "TaskToMaterial" ).
 							"/view", array("id"=>$data->material_group_id ? $data->material_group_id : $data->id))',
 					),
 			),

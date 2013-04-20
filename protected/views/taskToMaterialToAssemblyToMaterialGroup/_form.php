@@ -2,6 +2,7 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));		
 
+	$form->hiddenField('material_group_to_material_id');
 	$form->hiddenField('material_group_id');
 	$form->hiddenField('task_id');
 	$form->hiddenField('task_to_assembly_id');

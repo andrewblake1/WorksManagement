@@ -112,7 +112,7 @@ class Controller extends CController {
 				'roles' => array($this->modelName . 'Read'),
 			),
 			array('allow',
-				'actions' => array('create', 'delete', 'update', 'autocomplete'),
+				'actions' => array('create', 'delete', 'update', 'autocomplete', 'dependantList'),
 				'roles' => array($this->modelName),
 			),
 			array('deny', // deny all users
@@ -1113,6 +1113,58 @@ $t=			$model->attributes = $_POST[$modelName];
 				),
 			),
 		));
+	}
+
+	static function dependantListWidgetRow($model, $form, $fkField, $dependantOnModelName, $dependantOnAttribute, $htmlOptions, $scopes = array(), $label = null) {
+		$modelName = get_class($model);
+		$listModelName = static::modelName();
+
+		CHtml::resolveNameID($model, $attribute = $fkField, $htmlOptions);
+
+		$source = Yii::app()->createUrl("$listModelName/autocomplete") . "?model=$modelName&attribute=$fkField&scopes%5Bscope$dependantOnModelName%5D%5B0%5D=";
+
+		$dependantOnControllerName = $dependantOnModelName.'Controller';
+
+		$dependantOnControllerName::listWidgetRow($model, $form, $dependantOnAttribute,
+			array(
+				'empty'=>'Please select',
+				'ajax' => array(
+				'type'=>'POST',
+				'url'=>Yii::app()->createUrl("$listModelName/DependantList", array('fkField'=>$fkField, 'dependantOnModelName'=>$dependantOnModelName, 'dependantOnAttribute'=>$dependantOnAttribute)),
+				'success'=>"function(data) {
+					if(data)
+					{
+						$('[for=\"{$htmlOptions['id']}\"]').remove();
+						$('#{$htmlOptions['id']}_save').remove();
+						$('#{$htmlOptions['id']}_em_').remove();
+						$('#{$htmlOptions['id']}_lookup').remove();
+						$('#{$htmlOptions['id']}').replaceWith(data);
+						// if this is autotext
+						lookup = $('#{$htmlOptions['id']}_lookup');
+						if(lookup.length)
+						{
+							$dependantOnAttribute = $('#{$modelName}_$dependantOnAttribute').val();
+							lookup.autocomplete({'minLength':1,'maxHeight':'100','select':function(event, ui){"."$('#{$htmlOptions['id']}').val(ui.item.id);$('#{$htmlOptions['id']}_save').val(ui.item.value);},'source':'$source' + $dependantOnAttribute});
+						}
+					}
+				}",
+			)),
+			array(),
+			$label
+		);
+							
+		// NB: need to set this here as otherwise in wmfkautocomplete the soure url has store_id=, in it which gets stripped
+		static::listWidgetRow($model, $form, $fkField, $htmlOptions, $scopes);
+	}
+
+	public function actionDependantList()
+	{
+		$modelName = $_POST['controller'];
+		ob_start();
+		$form=$this->beginWidget('WMTbActiveForm', array('model'=>Material::model(), 'parent_fk'=>$_GET['fkField']));
+		ob_end_clean();
+		self::listWidgetRow($modelName::model(), $form, $_GET['fkField'], array(),
+			array('scope'.$_GET['dependantOnModelName']=>array($_POST[$modelName][$_GET['dependantOnAttribute']])));
 	}
 
 }

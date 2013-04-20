@@ -17,7 +17,8 @@
  * @property Assembly $assembly
  * @property TaskToAssembly $parent
  * @property TaskToAssembly[] $taskToAssemblies
- * @property TaskToAssemblyToAssemblyGroupToAssembly[] $taskToAssemblyToAssemblyGroupToAssemblies
+ * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups
+ * @property TaskToAssemblyToTaskTypeToAssemblyGroup[] $taskToAssemblyToTaskTypeToAssemblyGroups
  * @property TaskToMaterial[] $taskToMaterials
  */
 class TaskToAssembly extends AdjacencyListActiveRecord
@@ -66,12 +67,14 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_to_assembly_id'),
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
 			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
 			'parent' => array(self::BELONGS_TO, 'TaskToAssembly', 'parent_id'),
 			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'parent_id'),
+			'taskToAssemblyToAssemblyToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'task_to_assembly_id'),
+			'taskToAssemblyToTaskTypeToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToTaskTypeToAssemblyGroup', 'task_to_assembly_id'),
+			'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_to_assembly_id'),
 		);
 	}
 

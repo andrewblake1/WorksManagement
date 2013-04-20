@@ -47,13 +47,14 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			't.task_to_assembly_id',
 			'material.description AS searchMaterial',
 			't.quantity',
+			't.material_group_to_material_id',
 			't.searchAssembly',
 			't.searchAssemblyId',
-			't.searchTaskToMaterialToMaterialGroupToMaterialId',
+			't.searchTaskToMaterialToAssemblyToMaterialGroupId',
 			't.assembly_to_material_group_id',
 			"CONCAT_WS('$delimiter',
 				materialGroup.description,
-				t.searchAssemblyToMaterialGroupComment
+				t.comment
 				) AS searchMaterialGroup",
 		);
 		
@@ -69,7 +70,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$this->compositeCriteria($criteria,
 			array(
 			'materialGroup.description',
-			't.searchAssemblyToMaterialGroupComment'
+			't.comment'
 			),
 			$this->searchMaterialGroup
 		);

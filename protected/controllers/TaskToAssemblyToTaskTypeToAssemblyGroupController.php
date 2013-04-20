@@ -1,6 +1,6 @@
 <?php
 
-class TaskToAssemblyToAssemblyGroupToAssemblyController extends Controller
+class TaskToAssemblyToTaskTypeToAssemblyGroupController extends Controller
 {
 	protected function createRender($model, $models, $modalId)
 	{
@@ -8,7 +8,7 @@ class TaskToAssemblyToAssemblyGroupToAssemblyController extends Controller
 		$this->heading = TaskToAssembly::getNiceName();
 
 		$taskToAssembly = new TaskToAssembly;
-		$taskToAssembly->attributes = $_GET['TaskToAssemblyToAssemblyGroupToAssembly'];
+		$taskToAssembly->attributes = $_GET['TaskToAssemblyToTaskTypeToAssemblyGroup'];
 		$taskToAssembly->assertFromParent();
 
 		// set breadcrumbs
@@ -51,7 +51,6 @@ class TaskToAssemblyToAssemblyGroupToAssemblyController extends Controller
 	{
 		return TaskToAssemblyController::getBreadCrumbTrail('Update');
 	}
-	
 	
 	function setUpdateTabs($model) {
 		if(!empty($model->task_to_assembly_id))

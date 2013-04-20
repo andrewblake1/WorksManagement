@@ -2,7 +2,7 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
-	AssemblyGroupController::listWidgetRow($model, $form, 'assembly_group_id', array(), array('scopeStore'=>array($this->store_id)));
+	AssemblyGroupController::dependantListWidgetRow($model, $form, 'assembly_group_id', 'Store', 'store_id', array(), array('scopeStore'=>array($model->store_id === null ? 0 : $model->store_id)));
 
 	$form->textFieldRow('quantity');
 

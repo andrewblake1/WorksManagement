@@ -2,7 +2,6 @@
 
 class AssemblyController extends AdjacencyListController
 {
-
 }
 
 ?>

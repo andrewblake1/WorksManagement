@@ -1,6 +1,6 @@
 <?php
 
-class TaskToMaterialToMaterialGroupToMaterialController extends Controller
+class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 {
 	protected function createRender($model, $models, $modalId)
 	{
@@ -8,7 +8,7 @@ class TaskToMaterialToMaterialGroupToMaterialController extends Controller
 		$this->heading = TaskToMaterial::getNiceName();
 
 		$taskToMaterial = new TaskToMaterial;
-		$taskToMaterial->attributes = $_GET['TaskToMaterialToMaterialGroupToMaterial'];
+		$taskToMaterial->attributes = $_GET['TaskToMaterialToAssemblyToMaterialGroup'];
 		$taskToMaterial->assertFromParent();
 
 		// set breadcrumbs

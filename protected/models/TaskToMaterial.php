@@ -13,12 +13,12 @@
  *
  * The followings are the available model relations:
  * @property Task $task
- * @property Material $material
- * @property Staff $staff
  * @property TaskToAssembly $taskToAssembly
+ * @property Staff $staff
+ * @property Material $material
  * @property TaskToMaterialToAssemblyToMaterial[] $taskToMaterialToAssemblyToMaterials
- * @property TaskToMaterialToMaterialGroupToMaterial[] $taskToMaterialToMaterialGroupToMaterials
- * @property TaskToMaterialToMaterialGroupToMaterial[] $taskToMaterialToMaterialGroupToMaterials1
+ * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
+ * @property TaskToMaterialToTaskTypeToMaterialGroup[] $taskToMaterialToTaskTypeToMaterialGroups
  */
 class TaskToMaterial extends ActiveRecord
 {
@@ -61,14 +61,15 @@ class TaskToMaterial extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
 			'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
+			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'taskToMaterialToAssemblyToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterial', 'task_to_material_id'),
-			'taskToMaterialToMaterialGroupToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToMaterialGroupToMaterial', 'material_id'),
-			'taskToMaterialToMaterialGroupToMaterials1' => array(self::HAS_MANY, 'TaskToMaterialToMaterialGroupToMaterial', 'task_to_material_id'),
+			'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'task_to_material_id'),
+			'taskToMaterialToTaskTypeToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup','TaskToMaterialToTaskTypeToMaterialGroup', 'task_to_material_id'),
 		);
 	}
+
 
 	/**
 	 * @return array customized attribute labels (name=>label)
