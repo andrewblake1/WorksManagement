@@ -42,11 +42,12 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.material_id',
 			't.task_id',
+			't.task_to_assembly_id',
 			't.material_group_id',
 			'stage.description AS searchStage',
 			't.task_to_assembly_id',
 			'material.description AS searchMaterial',
-			't.quantity',
+			"IF(taskToAssembly.quantity IS NOT NULL, CONCAT_WS(' * ', t.quantity, taskToAssembly.quantity), t.quantity) AS quantity",
 			't.material_group_to_material_id',
 			't.searchAssembly',
 			't.searchAssemblyId',
@@ -63,6 +64,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			LEFT JOIN stage on t.stage_id = stage.id
 			LEFT JOIN material_group materialGroup ON t.material_group_id = materialGroup.id
 			LEFT JOIN material ON t.material_id = material.id
+			LEFT JOIN task_to_assembly taskToAssembly ON t.task_to_assembly_id = taskToAssembly.id
 		';
 		
 		// where
@@ -89,8 +91,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$columns[] = 'searchMaterialGroup';
 		$columns[] = 'searchStage';
 		$columns[] = 'quantity';
-		$columns[] = 'searchAssembly';
-//		$columns[] = static::linkColumn('searchAssembly', 'Assembly', 'searchAssemblyId');
+		$columns[] = static::linkColumn('searchAssembly', 'TaskToAssembly', 'task_to_assembly_id');
 		
 		return $columns;
 	}
