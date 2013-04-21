@@ -89,7 +89,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$columns[] = 'searchMaterialGroup';
 		$columns[] = 'searchStage';
 		$columns[] = 'quantity';
-		$columns[] = static::linkColumn('searchAssembly', 'Assembly', 'searchAssemblyId');
+		$columns[] = 'searchAssembly';
+//		$columns[] = static::linkColumn('searchAssembly', 'Assembly', 'searchAssemblyId');
 		
 		return $columns;
 	}

@@ -5,12 +5,6 @@ class ReportController extends Controller
 	private static $_model;
 	private static $_errors;
 	
-	/**
-	 * Specifies the access control rules.
-	 * NB: need to override this to open up so can shift access control into actionUpdate method to pass params for bizrule
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
 	public function accessRules()
 	{
 		return array(
@@ -319,8 +313,8 @@ class ReportController extends Controller
 			$this->breadcrumbs = $this->getBreadCrumbTrail('Create');
 
 			// set up tab menu if required - using setter
-			$this->_tabs[0]['label'] = 'Create';
-			$this->_tabs[0]['active'] = true;
+			$this->_tabs[0][0]['label'] = 'Create';
+			$this->_tabs[0][0]['active'] = true;
 
 			echo $this->render('_form',array(
 				'model'=>$model,

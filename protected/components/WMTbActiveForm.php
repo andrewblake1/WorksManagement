@@ -293,7 +293,7 @@ class WMTbActiveForm extends TbActiveForm
 		{
 			// first need to get a list where array keys are the same as the display members
 			$list = explode(',', $select);
-			$form->dropDownListRow($attribute, array_combine($list, $list), $htmlOptions, $model);
+			$this->dropDownListRow($attribute, array_combine($list, $list), $htmlOptions, $model);
 		}
 	}
 	

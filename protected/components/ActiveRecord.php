@@ -498,7 +498,7 @@ $t = Controller::$nav;
 	 * @param type $referencesPk
 	 * @return mixed 
 	 */
-	static function linkColumn($name, $modelName, $foreignKey)
+	static function linkColumn($name, $modelName, $foreignKey, $extraParams = array())
 	{
 		$referencesPk = $modelName::model()->tableSchema->primaryKey;
 
@@ -510,11 +510,17 @@ $t = Controller::$nav;
 			$access = $controllerName::checkAccess(Controller::accessWrite) ? 'update' : 'view';
 			// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
 			// even though this confusing here
+			// create query string with any extra paramters
+			if($extraParams = http_build_query($extraParams))
+			{
+				$extraParams = '?'.$extraParams;
+			}
 			// create a link
 			return array(
 				'name'=>$name,
 				'value'=>'CHtml::link($data->'.$name.',
 					Yii::app()->createUrl("'."$modelName/$access".'", array("'.$referencesPk.'"=>$data->'.$foreignKey.'))
+						."'.$extraParams.'"
 				)',
 				'type'=>'raw',
 			);

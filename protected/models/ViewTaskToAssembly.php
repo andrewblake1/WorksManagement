@@ -85,7 +85,8 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		$columns[] = 'parent_id';
 		$columns[] = 'searchAssemblyGroup';
 		$columns[] = 'quantity';
-        $this->linkColumnAdjacencyList('searchAssembly', $columns);
+		$columns[] = 'searchAssembly';
+//        $this->linkColumnAdjacencyList('searchAssembly', $columns);
 
 		return $columns;
 	}

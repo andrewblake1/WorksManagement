@@ -49,23 +49,41 @@ class TaskToAssemblyController extends AdjacencyListController
 		);
 	}
 
-	public function setUpdateTabs($model)
+	public function getChildTabs($model, $last = FALSE)
 	{
-		// set up tab menu if required - using setter
-		$this->tabs = $model;
+		$tabs = array();
+		
+		// add tab to  update TaskToAssembly
+		$this->addTab(TaskToAssembly::getNiceName(NULL, $model),array(
+			'TaskToAssembly/update',
+			'id' => $model->id,
+		), $tabs);
+
+		// add tab to sub assemblies
+		$this->addTab(SubAssembly::getNiceNamePlural(), array(
+			'TaskToAssembly/admin',
+			'parent_id' => $model->id,
+			'task_id' => $model->task_id,
+		), $tabs, !$last);
+
+		// add tab to materials
+		$this->addTab(Material::getNiceNamePlural(), array(
+			'TaskToMaterial/admin',
+			'task_to_assembly_id' => $model->id,
+			'parent_id' => $model->id,	// needed for breadcrumb trail calc for adjacency list
+			'task_id' => $model->task_id,
+		), $tabs);
 
 		// add tab to standard drawings
 		$this->addTab(AssemblyToStandardDrawing::getNiceNamePlural(), array(
 			'AssemblyToStandardDrawing/admin',
 			'assembly_id' => $model->assembly_id,
-			));
-
-		// add tab t o materials
-		$this->addTab(Material::getNiceNamePlural(), array(
-			'TaskToMaterial/admin',
-			'task_to_assembly_id' => $_GET['id'],
+			'parent_id' => $model->id,	// needed for breadcrumb trail calc for adjacency list
 			'task_id' => $model->task_id,
-		));
+			'task_to_assembly_id' => $model->id,
+		), $tabs);
+
+		return $tabs;
 	}
 	
 	/**
@@ -116,6 +134,22 @@ class TaskToAssemblyController extends AdjacencyListController
 		}
 		
 		return $saved;
+	}
+
+	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
+	public function setTabs($nextLevel = true) {
+		parent::setTabs($nextLevel);
+		// if in a sub assembly
+		if(isset($_GET['parent_id']))
+		{
+			// set breadcrumbs
+			Controller::$nav['update'][$this->modelName] = $_GET['parent_id'];
+			$this->breadcrumbs = self::getBreadCrumbTrail();
+			array_pop($this->breadcrumbs);
+			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
+			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
+			$this->breadcrumbs[] = SubAssembly::getNiceName();
+		}
 	}
 
 }

@@ -51,13 +51,18 @@
 
 			<!-- tabs -->
 			<?php
-			if($t = $this->tabs)
+			$tabs = $this->tabs;
+			if($tabs)
 			{
-				$this->widget('bootstrap.widgets.TbMenu', array(
-					'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
-					'stacked'=>false, // whether this is a stacked menu
-					'items'=>$this->tabs,
-				));
+				// tabs is multi-dimensional i.e. multiple layers
+				foreach($tabs as $tabMenu)
+				{
+					$this->widget('bootstrap.widgets.TbMenu', array(
+						'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
+						'stacked'=>false, // whether this is a stacked menu
+						'items'=>$tabMenu,
+					));
+				}
 			}
 			?>
 				

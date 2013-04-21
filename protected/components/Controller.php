@@ -225,6 +225,7 @@ class Controller extends CController {
 	 * the current model is a leaf rather than branch (no further branching) in which case popup form will be used to update
 	 */
 	public function setTabs($nextLevel = true) {
+		$level = sizeof($this->_tabs);
 		
 		if($nextLevel)
 		{
@@ -288,7 +289,7 @@ class Controller extends CController {
 				// if this item matches the main model
 				if ($modelName == $thisModelName) {
 					// make this the active tab
-					$this->_tabs[$index]['active'] = true;
+					$this->_tabs[$level][$index]['active'] = true;
 				}
 
 				// if first item in tabs
@@ -305,8 +306,8 @@ class Controller extends CController {
 					// and not next level
 					// create controler/action
 					if ($keyValue && (!$nextLevel || ($firstTabModelName == $thisModelName))) {
-						$this->_tabs[$index]['label'] = $modelName::getNiceName($keyValue);
-						$this->_tabs[$index]['url'] = array("$modelName/$action", $firstTabPrimaryKeyName => $keyValue);
+						$this->_tabs[$level][$index]['label'] = $modelName::getNiceName($keyValue);
+						$this->_tabs[$level][$index]['url'] = array("$modelName/$action", $firstTabPrimaryKeyName => $keyValue);
 						$index++;
 						continue;
 					}
@@ -315,17 +316,22 @@ class Controller extends CController {
 				// add relevant url parameters i.e. foreign key to first tab model
 				$urlParams = ($keyValue === null) ? array() : array($modelName::getParentForeignKey($firstTabModelName) => $keyValue);
 
-				$this->_tabs[$index]['label'] = $modelName::getNiceNamePlural();
-				$this->_tabs[$index]['url'] = array("$modelName/admin") + $urlParams;
+				$this->_tabs[$level][$index]['label'] = $modelName::getNiceNamePlural();
+				$this->_tabs[$level][$index]['url'] = array("$modelName/admin") + $urlParams;
 				$index++;
 			}
 		}
 	}
 
-	public function addTab($label, $url) {
-		$index = sizeof($this->_tabs);
-		$this->_tabs[$index]['label'] = $label;
-		$this->_tabs[$index]['url'] = $url;
+	public function addTab($label, $url, &$tabs, $active = FALSE) {
+		$index = sizeof($tabs);
+		$tabs[$index]['label'] = $label;
+		$tabs[$index]['url'] = $url;
+		// NB: last one active taken care of somewhere by matching url - unless blocked here
+		if($active)
+		{
+			$tabs[$index]['active'] = $active;
+		}
 	}
 
 	/**
@@ -907,11 +913,17 @@ $t=			$model->attributes = $_POST[$modelName];
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer the ID of the model to be loaded
 	 */
-	public function loadModel($id) {
+	public function loadModel($id, $model = null) {
 		$modelName = $this->modelName;
-		$model = $modelName::model()->findByPk($id);
 		if ($model === null)
-			throw new CHttpException(404, 'The requested page does not exist.');
+		{
+			$model = $modelName::model()->findByPk($id);
+			if ($model === null)
+			{
+				throw new CHttpException(404, 'The requested page does not exist.');
+			}
+		}
+
 		return $model;
 	}
 

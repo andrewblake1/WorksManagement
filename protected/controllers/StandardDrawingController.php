@@ -205,6 +205,7 @@ class StandardDrawingController extends AdjacencyListController
 	}
 	
 	public function actionUpdate($id, $model = null) {
+		$model = $this->loadModel($id, $model);
 		$this->expose($id);
 		
 		parent::actionUpdate($id, $model);
@@ -278,6 +279,44 @@ class StandardDrawingController extends AdjacencyListController
 		exec("rm -rf $source");
 
 		return parent::actionDelete($id);
+	}
+
+	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
+	public function setUpdateTabs($nextLevel = true) {
+
+		// control extra rows of tabs if action is 
+		if(isset($_GET['task_to_assembly_id']))
+		{
+			$taskToAssemblyController= new TaskToAssemblyController(NULL);
+			$taskToAssembly = TaskToAssembly::model()->findByPk($_GET['task_to_assembly_id']);
+			$taskToAssembly->assertFromParent();
+			$taskToAssemblyController->setTabs(false);
+			$this->_tabs = $taskToAssemblyController->tabs;
+			$this->_tabs[sizeof($this->_tabs) - 1][3]['active'] = TRUE;
+			
+			$tabs=array();
+			$this->addTab(StandardDrawing::getNiceName($_GET['id']), Yii::app()->request->requestUri, $tabs, TRUE);
+			$this->_tabs = array_merge($this->_tabs, array($tabs));
+			
+			// set breadcrumbs
+			Controller::$nav['update']['TaskToAssembly'] = NULL;
+			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
+			array_pop($this->breadcrumbs);
+			
+			
+			// the update tab
+			$updateTab = $this->_tabs[sizeof($this->_tabs) - 2][3];
+			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
+			// the standard drawings tab
+			$updateTab = $this->_tabs[sizeof($this->_tabs) - 2][0];
+			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
+			// last tab with no link
+			$this->breadcrumbs[] = StandardDrawing::getNiceName($_GET['id']);
+		}
+		else
+		{
+			parent::setTabs($nextLevel);
+		}
 	}
 
 }

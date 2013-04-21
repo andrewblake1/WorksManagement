@@ -48,6 +48,36 @@ class TaskToMaterialController extends Controller
 		);
 	}
 	
+	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
+	public function setTabs($nextLevel = true) {
+		parent::setTabs($nextLevel);
+		// control extra rows of tabs if action is 
+		if($this->action->id == 'admin')
+		{
+			if(isset($_GET['task_to_assembly_id']))
+			{
+				$taskToAssemblyController= new TaskToAssemblyController(NULL);
+				$taskToAssembly = TaskToAssembly::model()->findByPk($_GET['task_to_assembly_id']);
+				$this->_tabs =  array_merge($this->_tabs, $taskToAssemblyController->setChildTabs($taskToAssembly));
+				if(sizeof($this->_tabs > 1))
+				{
+					// adjust active tab from material to sub assembly
+					// beware this obviously tab order dependant
+					$this->_tabs[0][3]['active'] = TRUE;
+					$this->_tabs[0][2]['active'] = FALSE;
+				}
+			}
+			
+			// set breadcrumbs
+			Controller::$nav['update']['TaskToAssembly'] = NULL;
+			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
+			array_pop($this->breadcrumbs);
+			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
+			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
+			$this->breadcrumbs[] = TaskToAssembly::getNiceName();
+		}
+	}
+
 }
 
 ?>

@@ -93,12 +93,54 @@ class AdjacencyListController extends Controller {
 
 	public function actionUpdate($id, $model = null) {
 		$modelName = $this->modelName;
-		// set the parent_id which is needed when returning to admin view to return to the same place
-		$adjacenyListModel = $modelName::model()->findByPk($id);
+		$model = $this->loadModel($id, $model);
 		
-		Controller::$nav['admin'][$modelName]['parent_id'] = $adjacenyListModel->parent_id;
+		Controller::$nav['admin'][$modelName]['parent_id'] = $model->parent_id;
 
 		parent::actionUpdate($id, $model);
+	}
+	
+	public function setUpdateTabs($model) {
+		// set top level tabs as per normal
+		parent::setTabs(false);
+		
+		$this->setChildTabs($this->loadModel(Controller::$nav['update'][$this->modelName]));
+	}
+
+	public function setChildTabs($model)
+	{
+		$models = array();
+
+		for($models[] = $model; $model = $model->parent; $models[] = $model);
+		$size = sizeof($models);
+		$cntr = 0;
+		foreach(array_reverse($models) as $model)
+		{
+			$cntr++;
+			if($tabs = $this->getChildTabs($model, $cntr == $size))
+			{
+				$this->_tabs[] = $tabs;
+			}
+		}
+
+		return $this->_tabs;
+	}
+
+	public function getChildTabs($model, $last = FALSE)
+	{
+
+	}
+	
+	public function setTabs($nextLevel = true) {
+		parent::setTabs($nextLevel);
+		// control extra rows of tabs if action is 
+//		if($this->action->id == 'admin')
+//		{
+			if(isset($_GET['parent_id']))
+			{
+				$this->setChildTabs($this->loadModel($_GET['parent_id']));
+			}
+//		}
 	}
 
 }

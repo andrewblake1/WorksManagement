@@ -66,7 +66,7 @@ class TaskToMaterial extends ActiveRecord
 			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
 			'taskToMaterialToAssemblyToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterial', 'task_to_material_id'),
 			'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'task_to_material_id'),
-			'taskToMaterialToTaskTypeToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup','TaskToMaterialToTaskTypeToMaterialGroup', 'task_to_material_id'),
+			'taskToMaterialToTaskTypeToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTypeToMaterialGroup', 'task_to_material_id'),
 		);
 	}
 

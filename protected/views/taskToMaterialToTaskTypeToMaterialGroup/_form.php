@@ -18,7 +18,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	MaterialController::listWidgetRow($model, $form, 'material_id', array('data-original-title'=>$taskTypeToMaterialGroup->selection_tooltip), array('scopeMaterialGroup'=>array($model->material_group_id)));
 
-	$form->rangeFieldRow('quantity', $taskTypeToMaterialGroup->minimum, $taskTypeToMaterialGroup->maximimum, $taskTypeToMaterialGroup->select, $taskTypeToMaterialGroup->quantity_tooltip);
+	$form->rangeFieldRow('quantity', $taskTypeToMaterialGroup->minimum, $taskTypeToMaterialGroup->maximum, $taskTypeToMaterialGroup->select, $taskTypeToMaterialGroup->quantity_tooltip);
 
 $this->endWidget();
 

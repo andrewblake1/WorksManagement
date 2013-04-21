@@ -12,7 +12,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	
 	AssemblyController::listWidgetRow($model, $form, 'assembly_id', array('data-original-title'=>$taskTypeToAssemblyGroup->selection_tooltip), array('scopeAssemblyGroup'=>array($model->assembly_group_id)));
 
-	$form->rangeFieldRow('quantity', $taskTypeToAssemblyGroup->minimum, $taskTypeToAssemblyGroup->maximimum, $taskTypeToAssemblyGroup->select, $taskTypeToAssemblyGroup->quantity_tooltip);
+	$form->rangeFieldRow('quantity', $taskTypeToAssemblyGroup->minimum, $taskTypeToAssemblyGroup->maximum, $taskTypeToAssemblyGroup->select, $taskTypeToAssemblyGroup->quantity_tooltip);
 
 $this->endWidget();
 
