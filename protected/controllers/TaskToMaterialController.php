@@ -50,7 +50,53 @@ class TaskToMaterialController extends Controller
 	
 	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
 	public function setTabs($nextLevel = true) {
+		$modelName = $this->modelName;
+		$update = FALSE;
+			
 		parent::setTabs($nextLevel);
+
+		if(!empty($nextLevel->taskToAssembly->id))
+		{
+			$update = $parent_id = $nextLevel->taskToAssembly->id;
+		}
+		elseif(isset($_GET['task_to_assembly_id']))
+		{
+			$parent_id = $_GET['task_to_assembly_id'];
+		}
+		if(!empty($parent_id))
+		{
+			$_GET['parent_id'] = $task_to_assembly_id = $parent_id;
+			$taskToAssemblyController= new TaskToAssemblyController(NULL);
+			$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
+			$taskToAssembly->assertFromParent();
+			$taskToAssemblyController->setTabs(false);
+			$taskToAssemblyController->setActiveTabs(NULL, $modelName::getNiceNamePlural());
+			$this->_tabs = $taskToAssemblyController->tabs;
+
+			Controller::$nav['update']['TaskToAssembly'] = NULL;
+			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
+
+			$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
+
+			if($update)
+			{
+				$tabs=array();
+				$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
+				$this->_tabs = array_merge($this->_tabs, array($tabs));
+				array_pop($this->breadcrumbs);
+				$this->breadcrumbs[$modelName::getNiceNamePlural()] = Yii::app()->request->requestUri;
+				$this->breadcrumbs[] = $lastLabel;
+			}
+			else
+			{
+				array_pop($this->breadcrumbs);
+				$this->breadcrumbs[] = $modelName::getNiceNamePlural();
+			}
+
+		}
+		
+/*		
+		
 		// control extra rows of tabs if action is 
 		if($this->action->id == 'admin')
 		{
@@ -75,7 +121,7 @@ class TaskToMaterialController extends Controller
 			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
 			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
 			$this->breadcrumbs[] = TaskToAssembly::getNiceName();
-		}
+		}*/
 	}
 
 }

@@ -652,7 +652,7 @@ $t = Controller::$nav;
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating = $this->performAjaxValidation($model);
 // TODO: this is untested without javascript
-		$t = $model->attributes;
+$t = $model->attributes;
 		if (isset($_POST[$this->modelName])) {
 			$model->attributes = $_POST[$this->modelName];
 			// ensure Controller::$nav is set
@@ -724,6 +724,9 @@ $t = Controller::$nav;
 	}
 
 	protected function createRender($model, $models, $modalId) {
+		// set tabs
+		$this->setCreateTabs($model);
+
 		$this->widget('CreateViewWidget', array(
 			'model' => $model,
 			'models' => $models,
@@ -818,6 +821,66 @@ $t=			$model->attributes = $_POST[$modelName];
 	public function setUpdateTabs($model) {
 		// set up tab menu if required - using setter
 		$this->tabs = $model;
+	}
+
+	public function setCreateTabs($model) {
+	}
+
+	/**
+	 * 
+	 * @param type $niceName	text to look for
+	 * @param type $first
+	 * @param type $last
+	 * @param type $middle 
+	 */
+	public function setActiveTabs($first = NULL, $last = NULL, $middle = NULL)
+	{
+		$success = FALSE;
+
+		$sizeofTabs = sizeof($this->_tabs);
+		
+		if($first)
+		{
+			$this->setActiveTab($this->_tabs[0], $first);
+		}
+		if($last)
+		{
+			$this->setActiveTab($this->_tabs[$sizeofTabs - 1], $last);
+		}
+		if($middle)
+		{
+			for($cntr = 1; $cntr < ($sizeofTabs - 1); $cntr++)
+			{
+				$this->setActiveTab($this->_tabs[$cntr], $middle);
+			}
+		}
+
+	}
+
+	public function setActiveTab(&$tabsRow, $niceName = NULL)
+	{
+		// no value passed to look for
+		if($niceName === NULL)
+		{
+			$modelName = $this->modelName;
+			$niceName = $modelName::getNiceName();
+		}
+
+		// loop thru tabs
+		foreach($tabsRow as &$tab)
+		{
+			// if we have a match
+			if($tab['label'] == $niceName)
+			{
+				$tab['active'] = TRUE;
+			}
+			// othersise make inactive
+			else
+			{
+				$tab['active'] = FALSE;
+			}
+		}
+
 	}
 
 	/**

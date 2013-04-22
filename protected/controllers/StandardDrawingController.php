@@ -282,7 +282,7 @@ class StandardDrawingController extends AdjacencyListController
 	}
 
 	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
-	public function setUpdateTabs($nextLevel = true) {
+	public function setUpdateTabs($model) {
 
 		// control extra rows of tabs if action is 
 		if(isset($_GET['task_to_assembly_id']))
@@ -315,7 +315,7 @@ class StandardDrawingController extends AdjacencyListController
 		}
 		else
 		{
-			parent::setTabs($nextLevel);
+			parent::setTabs($model);
 		}
 	}
 

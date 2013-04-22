@@ -92,30 +92,6 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		));
 	}
 
-/*	public function getAdminColumns()
-	{
-		$columns[] = 'id';
-		$columns[] = 'parent_id';
-		// link to admin displaying children or if no children then just description without link
-        $this->linkColumnAdjacencyList('searchAssembly', $columns);
-		$columns[] = 'searchQuantity';
-		
-		return $columns;
-	}*/
-
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-/*	public function getSearchSort()
-	{
-		return array(
-			't.id',
-//			'searchAssembly',
-//			'searchQuantity',
-		);
-	}*/
-	
 	static function getDisplayAttr()
 	{
 		return array('assembly->description');
@@ -132,7 +108,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	 */
 	public function createSave(&$models=array())
 	{
-		return TaskToAssemblyController::addAssembly($this->task_id, $this->assembly_id, $this->quantity, null, $models);
+		return TaskToAssemblyController::addAssembly($this->task_id, $this->assembly_id, $this->quantity, $this->parent_id, $models, $this);
 	}
 	
 }

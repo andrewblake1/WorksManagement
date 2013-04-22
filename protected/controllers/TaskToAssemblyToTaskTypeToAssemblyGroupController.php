@@ -39,6 +39,8 @@ class TaskToAssemblyToTaskTypeToAssemblyGroupController extends Controller
 			$params += Controller::$nav['admin']['TaskToAssembly'];
 		}
 
+		$params['parent_id'] = $taskToAssembly->parent_id;
+		
 		$this->redirect($params);
 	}
 	

@@ -39,7 +39,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return $this->customValidators + array(
-			array('assembly_to_assembly_group_id, task_to_assembly_id, assembly_group_to_assembly_id, quantity, task_id, assembly_group_id, assembly_id, staff_id', 'required'),
+			array('assembly_to_assembly_group_id, task_to_assembly_id, quantity, task_id, assembly_group_id, assembly_id, staff_id', 'required'),
 			array('assembly_to_assembly_group_id, quantity, assembly_group_id, assembly_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_to_assembly_id, task_id, task_to_assembly_id, assembly_group_to_assembly_id', 'length', 'max'=>10),
 		);
@@ -119,6 +119,10 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 		
 		if($saved = $taskToAssembly->updateSave($models))
 		{
+			// need to get assembly_group_to_assembly_id which is complicated by the deleted attribute which means that more
+			// than one matching row could be returned - if not for deleted attrib
+			$assemblyGroupToAssembly = AssemblyGroupToAssembly::model()->findByAttributes(array('assembly_group_id'=>$this->assembly_group_id, 'assembly_id'=>$this->assembly_id));
+			$this->assembly_group_to_assembly_id = $assemblyGroupToAssembly->id;
 			$saved &= parent::updateSave($models);
 		}
 
@@ -133,10 +137,13 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 		$taskToAssembly->parent_id = $_POST['TaskToAssemblyToAssemblyToAssemblyGroup']['task_to_assembly_id'];
 		// filler - unused in this context but necassary in Assembly model
 		$taskToAssembly->store_id = 0;
-
 		if($saved = $taskToAssembly->createSave($models))
 		{
 			$this->task_to_assembly_id = $taskToAssembly->id;
+			// need to get assembly_group_to_assembly_id which is complicated by the deleted attribute which means that more
+			// than one matching row could be returned - if not for deleted attrib
+			$assemblyGroupToAssembly = AssemblyGroupToAssembly::model()->findByAttributes(array('assembly_group_id'=>$this->assembly_group_id, 'assembly_id'=>$this->assembly_id));
+			$this->assembly_group_to_assembly_id = $assemblyGroupToAssembly->id;
 			$saved &= parent::createSave($models);
 		}
 

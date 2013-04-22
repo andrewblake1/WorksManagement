@@ -100,13 +100,6 @@ class AdjacencyListController extends Controller {
 		parent::actionUpdate($id, $model);
 	}
 	
-	public function setUpdateTabs($model) {
-		// set top level tabs as per normal
-		parent::setTabs(false);
-		
-		$this->setChildTabs($this->loadModel(Controller::$nav['update'][$this->modelName]));
-	}
-
 	public function setChildTabs($model)
 	{
 		$models = array();
@@ -131,17 +124,13 @@ class AdjacencyListController extends Controller {
 
 	}
 	
-	public function setTabs($nextLevel = true) {
+/*	public function setTabs($nextLevel = true) {
 		parent::setTabs($nextLevel);
-		// control extra rows of tabs if action is 
-//		if($this->action->id == 'admin')
-//		{
-			if(isset($_GET['parent_id']))
-			{
-				$this->setChildTabs($this->loadModel($_GET['parent_id']));
-			}
-//		}
-	}
+		if(isset($_GET['parent_id']))
+		{
+			$this->setChildTabs($this->loadModel($_GET['parent_id']));
+		}
+	}*/
 
 }
 ?>

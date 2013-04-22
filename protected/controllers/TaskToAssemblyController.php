@@ -93,18 +93,23 @@ class TaskToAssemblyController extends AdjacencyListController
 	 * @param int $parent_id the id of the parent within this model - adjacency list
 	 * @return returns 0, or null on error of any inserts
 	 */
-	static function addAssembly($task_id, $assembly_id, $quantity, $parent_id = null, &$models=array())
+	static function addAssembly($task_id, $assembly_id, $quantity, $parent_id = null, &$models=array(), &$taskToAssembly=NULL)
 	{
 		// initialise the saved variable to show no errors
 		$saved = true;
 		
 		// insert assembly into task_to_assembly table
-		$taskToAssembly = new TaskToAssembly();
+		if($taskToAssembly === NULL)
+		{
+			$taskToAssembly = new TaskToAssembly();
+		}
 		$taskToAssembly->task_id = $task_id;
 		$taskToAssembly->assembly_id = $assembly_id;
 		$taskToAssembly->parent_id = $parent_id;
 		$taskToAssembly->quantity = $quantity;
-		$saved &= $taskToAssembly->createSave($models);
+		// NB: can't call createSave due to recursion so this is internals
+		$saved = $taskToAssembly->dbCallback('save');
+		$models[] = $taskToAssembly;
 		
 		// insert materials into task_to_material table
 		
@@ -142,16 +147,24 @@ class TaskToAssemblyController extends AdjacencyListController
 		// if in a sub assembly
 		if(isset($_GET['parent_id']))
 		{
+			$this->setChildTabs($this->loadModel($_GET['parent_id']));
 			// set breadcrumbs
 			Controller::$nav['update'][$this->modelName] = $_GET['parent_id'];
 			$this->breadcrumbs = self::getBreadCrumbTrail();
 			array_pop($this->breadcrumbs);
 			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
 			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
-			$this->breadcrumbs[] = SubAssembly::getNiceName();
+			$this->breadcrumbs[] = SubAssembly::getNiceNamePlural();
 		}
 	}
 
+	public function setUpdateTabs($model) {
+		// set top level tabs as per normal admin view
+		parent::setTabs(false);
+		
+		$this->setChildTabs($this->loadModel(Controller::$nav['update'][$this->modelName]));
+	}
+	
 }
 
 ?>
