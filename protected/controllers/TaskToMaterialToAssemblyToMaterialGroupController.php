@@ -39,6 +39,8 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 			$params += Controller::$nav['admin']['TaskToMaterial'];
 		}
 
+		$params['parent_id'] =$taskToMaterial->taskToAssembly->parent_id;
+		
 		$this->redirect($params);
 	}
 	
@@ -53,15 +55,33 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 	}
 	
 	
-	function setUpdateTabs($model) {
-		if(!empty($model->task_to_material_id))
-		{
-			// need to trick it here into using task to material model instead as this model not in navigation hierachy
-			$taskToMaterial = TaskToMaterial::model()->findByPk($model->task_to_material_id);
-			return parent::setUpdateTabs($taskToMaterial);
-		}
-		
-		return parent::setUpdateTabs($model);
+	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
+	public function setTabs($nextLevel = true) {
+		$modelName = $this->modelName;
+		$update = FALSE;
+			
+		parent::setTabs($nextLevel);
+
+		// if create otherwise update
+		$_GET['parent_id'] = $task_to_assembly_id = (isset($nextLevel->taskToAssembly) ? $nextLevel->taskToAssembly->id : $nextLevel->taskToMaterial->taskToAssembly->id);
+		$taskToAssemblyController= new TaskToAssemblyController(NULL);
+		$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
+		$taskToAssembly->assertFromParent();
+		$taskToAssemblyController->setTabs(false);
+		$taskToAssemblyController->setActiveTabs(NULL, $modelName::getNiceNamePlural());
+		$this->_tabs = $taskToAssemblyController->tabs;
+
+		Controller::$nav['update']['TaskToAssembly'] = NULL;
+		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
+
+		$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
+
+		$tabs=array();
+		$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
+		$this->_tabs = array_merge($this->_tabs, array($tabs));
+		array_pop($this->breadcrumbs);
+		$this->breadcrumbs[$modelName::getNiceNamePlural()] = Yii::app()->request->requestUri;
+		$this->breadcrumbs[] = $lastLabel;
 	}
 	
 }

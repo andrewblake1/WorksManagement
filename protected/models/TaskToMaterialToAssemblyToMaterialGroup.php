@@ -39,7 +39,7 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return $this->customValidators + array(
-			array('assembly_to_material_group_id, task_to_assembly_id, quantity, task_id, material_group_to_material_id, material_group_id, material_id, staff_id', 'required'),
+			array('assembly_to_material_group_id, task_to_assembly_id, quantity, task_id, material_group_id, material_id, staff_id', 'required'),
 			array('assembly_to_material_group_id, quantity, material_group_id, material_id, material_group_to_material_id, staff_id', 'numerical', 'integerOnly'=>true),
 			array('task_to_assembly_id, task_id, task_to_material_id', 'length', 'max'=>10),
 		);
@@ -134,6 +134,10 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 		if($saved = $taskToMaterial->createSave($models))
 		{
 			$this->task_to_material_id = $taskToMaterial->id;
+			// need to get material_group_to_material_id which is complicated by the deleted attribute which means that more
+			// than one matching row could be returned - if not for deleted attrib
+			$materialGroupToMaterial = MaterialGroupToMaterial::model()->findByAttributes(array('material_group_id'=>$this->material_group_id, 'material_id'=>$this->material_id));
+			$this->material_group_to_material_id = $materialGroupToMaterial->id;
 			$saved &= parent::createSave($models);
 		}
 
