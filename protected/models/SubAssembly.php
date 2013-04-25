@@ -74,7 +74,7 @@ class SubAssembly extends ActiveRecord
 		return parent::attributeLabels(array(
 			'store_id' => 'Store',
 			'parent_assembly_id' => 'Parent assembly',
-			'child_assembly_id' => 'Child assembly',
+			'child_assembly_id' => 'Sub assembly',
 			'searchChildAssembly' => 'Child assembly',
 		));
 	}

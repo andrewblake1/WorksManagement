@@ -967,7 +967,7 @@ $t=			$model->attributes = $_POST[$modelName];
 				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin', $this->modelName => Controller::$nav['admin'][$this->modelName]));
 			}
 		} else {
-			throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+			throw new CHttpException(400, 'Invalid request.');
 		}
 	}
 
@@ -1014,8 +1014,10 @@ $t=			$model->attributes = $_POST[$modelName];
 		// set label to passed in label if one passed, otherwise to the tables nice name
 		ActiveRecord::$labelOverrides[$fkField] = $label ? $label : $fKModelType::getNiceName();
 
+		$criteria = new CDbCriteria();
+		$criteria->scopes = $scopes;
 		// if more than x rows in the lookup table use autotext
-		if ($fKModelType::model()->count() > Yii::app()->params->listMax) {
+		if ($fKModelType::model()->count($criteria) > Yii::app()->params->listMax) {
 			static::autoCompleteFKFieldRow($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType/* , $relName */);
 		} else {
 			static::dropDownListFKfieldRow($model, $form, $fkField, $htmlOptions, $scopes);

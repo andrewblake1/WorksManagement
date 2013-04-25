@@ -128,13 +128,13 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = $this->linkThisColumn('searchAssemblyGroupDescription');
+ 		$columns[] = 'comment';
+ 		$columns[] = 'selection_tooltip';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
  		$columns[] = 'select';
  		$columns[] = 'quantity_tooltip';
- 		$columns[] = 'selection_tooltip';
- 		$columns[] = 'comment';
 		
 		return $columns;
 	}

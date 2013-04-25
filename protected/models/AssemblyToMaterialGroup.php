@@ -136,12 +136,13 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	{
         $columns[] = $this->linkThisColumn('searchMaterialGroupDescription');
  		$columns[] = 'comment';
+ 		$columns[] = 'selection_tooltip';
  		$columns[] = 'searchStage';
+ 		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
  		$columns[] = 'select';
  		$columns[] = 'quantity_tooltip';
- 		$columns[] = 'selection_tooltip';
 		
 		return $columns;
 	}

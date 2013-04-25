@@ -154,7 +154,17 @@ class ClientContact extends ActiveRecord
 			'email',
 		);
 	}
+
+	public function scopeClient($client_id)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('client_id', $client_id);
+
+		$this->getDbCriteria()->mergeWith($criteria);
 	
+		return $this;
+	}
+
 }
 
 ?>

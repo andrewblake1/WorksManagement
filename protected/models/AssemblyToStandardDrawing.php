@@ -79,14 +79,25 @@ class AssemblyToStandardDrawing extends ActiveRecord
 		$criteria=new DbCriteria;
 
 		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.standard_drawing_id',
-			'standardDrawing.description AS searchStandardDrawing',
+			"CONCAT_WS('$delimiter',
+				standardDrawing.description,
+				standardDrawing.alias
+				) AS searchStandardDrawing",
 		);
 
 		// where
 		$criteria->compare('standardDrawing.description', $this->searchStandardDrawing, true);
+		$this->compositeCriteria($criteria,
+			array(
+				'standardDrawing.description',
+				'standardDrawing.alias'
+			),
+			$this->searchStandardDrawing
+		);
 		$criteria->compare('t.assembly_id', $this->assembly_id);
 
 		$criteria->with = array('standardDrawing');
@@ -123,7 +134,8 @@ class AssemblyToStandardDrawing extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'assembly->description'
+			'standardDrawing->description',
+			'standardDrawing->alias',
 		);
 	}
 	

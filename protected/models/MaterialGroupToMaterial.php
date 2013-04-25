@@ -94,6 +94,7 @@ class MaterialGroupToMaterial extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
+			't.material_id',
 			'material.description AS searchMaterial',
 		);
 

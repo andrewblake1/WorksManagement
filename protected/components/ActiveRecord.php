@@ -315,7 +315,10 @@ $t = $model->attributes;
 
 				// set the model ready for the next one
 $t = Controller::$nav;
-				$model = $crumb::model()->findByPk($model->$parentForeignKeyName);
+				if(!$model = $crumb::model()->findByPk($model->$parentForeignKeyName))
+				{
+					throw new CHttpException(400, 'Invalid request.');
+				}
 				
 				// capture the first parent only for returning later
 				if(empty($firstParentForeignKeyName))

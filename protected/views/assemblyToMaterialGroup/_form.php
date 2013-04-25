@@ -9,6 +9,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	StageController::listWidgetRow($model, $form, 'stage_id');
 
+	$form->textFieldRow('comment');
+
 	$form->textFieldRow('quantity');
 
 	$form->textFieldRow('minimum');
