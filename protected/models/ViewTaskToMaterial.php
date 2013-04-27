@@ -9,6 +9,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	public $searchStage;
 	public $searchMaterialGroup;
 	public $searchMaterialAlias;
+	public $searchTaskQuantity;
+	public $searchTotalQuantity;
 
 	/**
 	 * @return string the associated database table name
@@ -26,7 +28,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, task_to_assembly_id, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterial, searchAssembly, quantity', 'safe', 'on'=>'search'),
+			array('id, task_id, task_to_assembly_id, searchTotalQuantity, searchTaskQuantity, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterial, searchAssembly, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -48,6 +50,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			'stage.description AS searchStage',
 			't.task_to_assembly_id',
 			'material.description AS searchMaterial',
+			't.searchTaskQuantity',
+			't.searchTotalQuantity',
 			"CONCAT_WS('$delimiter',
 				materialToClient.alias,
 				material.alias
@@ -96,6 +100,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		);
 		$criteria->compare('t.task_to_assembly_id',$this->task_to_assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('t.searchTaskQuantity',$this->searchTaskQuantity);
+		$criteria->compare('t.searchTotalQuantity',$this->searchTotalQuantity);
 		$criteria->compare('t.task_id',$this->task_id);
 
 		return $criteria;
@@ -108,6 +114,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$columns[] = 'searchMaterialGroup';
 		$columns[] = 'searchStage';
 		$columns[] = 'quantity';
+		$columns[] = 'searchTaskQuantity';
+		$columns[] = 'searchTotalQuantity';
 		$columns[] = static::linkColumn('searchAssembly', 'TaskToAssembly', 'task_to_assembly_id');
 		
 		return $columns;

@@ -18,6 +18,7 @@
  */
 class ProjectToClientContact extends ActiveRecord
 {
+	public $searchRole;
 	public $searchFirst_name;
 	public $searchLast_name;
 	public $searchEmail;
@@ -44,7 +45,7 @@ class ProjectToClientContact extends ActiveRecord
 			array('project_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchFirst_name, searchLast_name, searchEmail, searchPhone_mobile, searchPhone_home, searchPhone_work, searchPhone_fax, project_id, client_id, client_contact_id', 'safe', 'on'=>'search'),
+			array('id, searchRole, searchFirst_name, searchLast_name, searchEmail, searchPhone_mobile, searchPhone_home, searchPhone_work, searchPhone_fax, project_id, client_id, client_contact_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,6 +73,7 @@ class ProjectToClientContact extends ActiveRecord
 			'project_id' => 'Project',
 			'client_id' => 'Client',
 			'client_contact_id' => 'Contact',
+			'searchRole' => 'Role',
 			'searchFirst_name' => 'First name',
 			'searchLast_name' => 'Last name',
 			'searchEmail' => 'Email',
@@ -93,17 +95,19 @@ class ProjectToClientContact extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'client_contact_id',
-			'clientContact.first_name as searchFirst_name',
-			'clientContact.last_name as searchLast_name',
-			'clientContact.email as searchEmail',
-			'clientContact.phone_mobile as searchPhone_mobile',
-			'clientContact.phone_home as searchPhone_home',
-			'clientContact.phone_work as searchPhone_work',
-			'clientContact.phone_fax as searchPhone_fax',
+			't.client_contact_id',
+			'clientContact.role AS searchRole',
+			'clientContact.first_name AS searchFirst_name',
+			'clientContact.last_name AS searchLast_name',
+			'clientContact.email AS searchEmail',
+			'clientContact.phone_mobile AS searchPhone_mobile',
+			'clientContact.phone_home AS searchPhone_home',
+			'clientContact.phone_work AS searchPhone_work',
+			'clientContact.phone_fax AS searchPhone_fax',
 		);
 
 		$criteria->compare('project_id',$this->project_id);
+		$criteria->compare('clientContact.role',$this->searchRole,true);
 		$criteria->compare('clientContact.first_name',$this->searchFirst_name,true);
 		$criteria->compare('clientContact.last_name',$this->searchLast_name,true);
 		$criteria->compare('clientContact.email',$this->searchEmail,true);
@@ -122,6 +126,7 @@ class ProjectToClientContact extends ActiveRecord
 
 	public function getAdminColumns()
 	{
+		$columns[]='searchRole';
 		$columns[]=$this->linkThisColumn('searchFirst_name');
 		$columns[]=$this->linkThisColumn('searchLast_name');
         $columns[] = array(

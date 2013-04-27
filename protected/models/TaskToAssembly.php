@@ -89,6 +89,8 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 			'searchAssembly' => 'Assembly',	
 			'searchMaterialAlias' => 'Client alias/Assembly alias',
 			'searchQuantity' => 'quantity',
+			'searchTaskQuantity' => 'Task quantity',
+			'searchTotalQuantity' => 'Total',
 			'searchAssemblyGroup' => 'Group/Comment',
 		));
 	}

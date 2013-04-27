@@ -340,6 +340,7 @@ $t = $model->attributes;
 		// loop thru all saved admin view models
 		if(isset($_SESSION['admin'])) 
 		{
+			$t = $_SESSION['admin'];
 			foreach($_SESSION['admin'] as $model => &$params)
 			{
 				if(!in_array($model, $trail))

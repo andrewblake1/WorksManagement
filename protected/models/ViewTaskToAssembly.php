@@ -9,6 +9,8 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	public $searchAssemblyGroup;
 	public $searchAssembly;
 	public $searchAssemblyAlias;
+	public $searchTaskQuantity;
+	public $searchTotalQuantity;
 	protected $defaultSort = array('searchAssemblyGroup'=>'DESC', 't.parent_id', 'searchAssembly');
 
 	/**
@@ -27,7 +29,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, parent_id, quantity, searchAssemblyAlias, searchAssemblyGroup, searchAssembly', 'safe', 'on'=>'search'),
+			array('id, task_id, parent_id, quantity, searchTotalQuantity, searchTaskQuantity, searchAssemblyAlias, searchAssemblyGroup, searchAssembly', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,6 +53,8 @@ class ViewTaskToAssembly extends ViewActiveRecord
 				assembly.alias
 				) AS searchAssemblyAlias",
 			't.quantity',
+			'task.quantity AS searchTaskQuantity',
+			't.quantity * task.quantity AS searchTotalQuantity',
 			't.assembly_group_to_assembly_id',
 			't.assembly_group_id',
 			't.searchTaskToAssemblyToAssemblyToAssemblyGroupId',
@@ -88,6 +92,8 @@ class ViewTaskToAssembly extends ViewActiveRecord
 			$this->searchAssemblyGroup
 		);
 		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('task.quantity',$this->searchTaskQuantity);
+		$criteria->compare('t.quantity * task.quantity',$this->searchTotalQuantity);
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.task_id',$this->task_id);
 		$criteria->compare('t.parent_id',$this->parent_id);
@@ -101,6 +107,8 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		$columns[] = 'parent_id';
 		$columns[] = 'searchAssemblyGroup';
 		$columns[] = 'quantity';
+		$columns[] = 'searchTaskQuantity';
+		$columns[] = 'searchTotalQuantity';
 		$columns[] = 'searchAssembly';
 		$columns[] = 'searchAssemblyAlias';
 
@@ -119,6 +127,8 @@ class ViewTaskToAssembly extends ViewActiveRecord
 			'searchAssemblyGroup',
 			'parent_id',
 			'quantity',
+			'searchTaskQuantity',
+			'searchTotalQuantity',
 		);
 	}
 

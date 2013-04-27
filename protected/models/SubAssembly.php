@@ -130,8 +130,8 @@ class SubAssembly extends ActiveRecord
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
- 		$columns[] = 'quantity_tooltip';
  		$columns[] = 'select';
+ 		$columns[] = 'quantity_tooltip';
 		
 		return $columns;
 	}

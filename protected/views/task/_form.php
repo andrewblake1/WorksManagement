@@ -3,7 +3,6 @@
 $form=$this->beginWidget('WMTbActiveForm', array(
 	'model'=>$model,
 	'action'=>empty($action) ? null : $action, 
-//	'parent_fk'=>$parent_fk,
 ));
 
 	$form->textFieldRow('name');
@@ -19,9 +18,11 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	else
 	{
 		$form->hiddenField('task_type_id');
+		$taskType = $model->taskType;
+		$form->rangeFieldRow('quantity', $taskType->minimum, $taskType->maximum, $taskType->select, $taskType->quantity_tooltip);
 	}
 
-	// only allow setting or update of in_charge_id if user has InCharge priveledge
+	// only allow setting or update of in_charge_id if user has correct priveledge
 	if(Yii::app()->user->checkAccess('scheduler'))
 	{
 		StaffController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');

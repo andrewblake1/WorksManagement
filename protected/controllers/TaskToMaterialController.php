@@ -68,7 +68,7 @@ class TaskToMaterialController extends Controller
 			$_GET['parent_id'] = $task_to_assembly_id = $parent_id;
 			$taskToAssemblyController= new TaskToAssemblyController(NULL);
 			$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
-			$taskToAssembly->assertFromParent();
+//			$taskToAssembly->assertFromParent();
 			$taskToAssemblyController->setTabs(NULL);
 			$taskToAssemblyController->setActiveTabs(TaskToAssembly::getNiceNamePlural(), $modelName::getNiceNamePlural());
 			$this->_tabs = $taskToAssemblyController->tabs;

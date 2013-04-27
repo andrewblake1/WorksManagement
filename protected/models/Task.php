@@ -8,6 +8,7 @@
  * @property string $level
  * @property string $project_id
  * @property integer $task_type_id
+ * @property integer $quantity
  * @property string $planned
  * @property string $location
  * @property integer $preferred_mon
@@ -22,13 +23,12 @@
  *
  * The followings are the available model relations:
  * @property Duty[] $duties
- * @property TaskToMaterial[] $taskToMaterials
+ * @property Crew $crew
+ * @property Planning $id0
+ * @property TaskLevel $level0
  * @property Project $project
  * @property Staff $staff
  * @property TaskType $taskType
- * @property Planning $id0
- * @property TaskLevel $level0
- * @property Crew $crew
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
  * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
@@ -70,12 +70,12 @@ class Task extends GenericExtensionActiveRecord
 		// will receive user inputs.
 		return array(
 			array('project_id, task_type_id, crew_id', 'required'),
-			array('task_type_id', 'numerical', 'integerOnly'=>true),
+			array('task_type_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
 			array('planned, preferred, name, location', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, searchInCharge, searchEarliest, searchProject, searchTaskType, name, crew_id, planned, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
+			array('id, level, quantity, searchInCharge, searchEarliest, searchProject, searchTaskType, name, crew_id, planned, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -140,9 +140,10 @@ class Task extends GenericExtensionActiveRecord
 		$criteria->select=array(
 			't.id',
 			't.task_type_id',
-			'id0.name AS name',
+			't.task_type_id',
+			't.quantity',
 			't.location',
-			't.planned',
+			'COALESCE(t.planned, project.planned) AS planned',
 //			'DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest',
 			'(SELECT `date` FROM working_days WHERE id = (SELECT id + MAX( lead_in_days ) FROM working_days WHERE `date` >= t.planned LIMIT 1)) as searchEarliest',
 			't.preferred_mon',
@@ -173,7 +174,8 @@ class Task extends GenericExtensionActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('t.location',$this->location,true);
-		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
+		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('planned',Yii::app()->format->toMysqlDate($this->planned));
 		$criteria->compare('searchEarliest',Yii::app()->format->toMysqlDate($this->searchEarliest));
 		$criteria->compare('t.preferred_mon',Yii::app()->format->toMysqlBool($this->preferred_mon));
 		$criteria->compare('t.preferred_tue',Yii::app()->format->toMysqlBool($this->preferred_tue));
@@ -214,6 +216,7 @@ class Task extends GenericExtensionActiveRecord
 	{
 		$columns[] = $this->linkThisColumn('id');
 		$columns[] = $this->linkThisColumn('name');
+		$columns[] = 'quantity';
 		$columns[] = 'location';
         $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
         $columns[] = static::linkColumn('searchTaskType', 'TaskType', 'task_type_id');
@@ -372,6 +375,7 @@ class Task extends GenericExtensionActiveRecord
 		if($saved = $planning->appendTo(Planning::model()->findByPk($this->crew_id)))
 		{
 			$this->id = $planning->id;
+			$this->quantity = $this->taskType->quantity;
 			// parent create save will add generics -- all we need to do is take care care of adding the other things if no errors
 			// NB: by calling the parent this is added into $models
 			if($saved = parent::createSave($models))

@@ -86,6 +86,7 @@ class TaskTypeToResourceType extends ActiveRecord
 			'resourceType.description AS searchResourceType',
 			't.quantity',
 			't.hours',
+			'hours' => 'Time on-site (HH:mm)',
 		);
 
 		// where

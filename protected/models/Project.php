@@ -97,7 +97,7 @@ class Project extends GenericExtensionActiveRecord
 		return parent::attributeLabels(array(
 			'in_charge_id' => 'In charge, First/Last/Email',
 			'searchInCharge' => 'In charge, First/Last/Email',
-			'travel_time_1_way' => 'Travel time 1 way',
+			'travel_time_1_way' => 'Travel time 1 way (HH:mm)',
 			'critical_completion' => 'Critical completion',
 			'planned' => 'Planned',
 			'project_type_id' => 'Project type',

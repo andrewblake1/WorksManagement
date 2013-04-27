@@ -25,6 +25,8 @@ class TaskToResourceType extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchResourceTypeToSupplier;
+	public $searchTaskQuantity;
+	public $searchTotalHours;
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -52,7 +54,7 @@ class TaskToResourceType extends ActiveRecord
 			array('start, hours', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, task_id, searchResourceTypeToSupplier, description, quantity, hours, start', 'safe', 'on'=>'search'),
+			array('id, level, task_id, searchResourceTypeToSupplier, description, quantity, searchTotalHours, searchTaskQuantity, hours, start', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -84,7 +86,10 @@ class TaskToResourceType extends ActiveRecord
 			'resource_type_to_supplier_id' => 'Supplier',
 			'resource_type_id' => 'Resource type',
 			'description' => 'Resource type',
-			'hours' => 'Hours',
+			'hours' => 'Time on-site (HH:mm)',
+			'start' => 'Start (HH:mm)',
+			'searchTaskQuantity' => 'Task quantity',
+			'searchTotalQuantity' => 'Total hours',
 		));
 	}
 
@@ -102,6 +107,8 @@ class TaskToResourceType extends ActiveRecord
 			'resourceType.description AS description',
 			'supplier.name AS searchResourceTypeToSupplier',
 			'resourceData.quantity AS quantity',
+			'task.quantity AS searchTaskQuantity',
+			't.quantity * task.quantity AS searchTotalHours',
 			'resourceData.hours AS hours',
 			'resourceData.start AS start',
 			't.level',
@@ -111,6 +118,8 @@ class TaskToResourceType extends ActiveRecord
 		$criteria->compare('resourceType.description',$this->description,true);
 		$criteria->compare('supplier.name',$this->searchResourceTypeToSupplier,true);
 		$criteria->compare('quantity',$this->quantity);
+		$criteria->compare('t.searchTaskQuantity',$this->searchTaskQuantity);
+		$criteria->compare('t.searchTotalHours',$this->searchTotalHours);
 		$criteria->compare('hours',Yii::app()->format->toMysqlTime($this->hours));
 		$criteria->compare('start',Yii::app()->format->toMysqlTime($this->start));
 		$criteria->compare('t.level',$this->level);
@@ -118,6 +127,7 @@ class TaskToResourceType extends ActiveRecord
 		
 		//  join
 		$criteria->with = array(
+			'task',
 			'resourceData',
 			'resourceType',
 			'resourceData.resourceTypeToSupplier.supplier',
@@ -131,7 +141,9 @@ class TaskToResourceType extends ActiveRecord
         $columns[] = 'description';
         $columns[] = static::linkColumn('searchResourceTypeToSupplier', 'ResourceTypeToSupplier', 'resource_type_to_supplier_id');
 		$columns[] = 'quantity';
+		$columns[] = 'searchTaskQuantity';
 		$columns[] = 'hours';
+		$columns[] = 'searchTotalHours';
 		$columns[] = 'start';
 		$columns[] = 'level';
 		
@@ -230,7 +242,6 @@ class TaskToResourceType extends ActiveRecord
 		// link this Resource to the ResourceData
 		$this->resource_data_id = $resourceData->id;
 	}
-
 
 	/*
 	 * overidden as mulitple models

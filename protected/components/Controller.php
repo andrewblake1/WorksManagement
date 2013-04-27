@@ -334,7 +334,7 @@ class Controller extends CController {
 		}
 	}
 
-	protected function restoreAdminSettings($modelName, &$container = NULL)
+	protected function restoreAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
 	{
 		if($container === NULL)
 		{
@@ -343,23 +343,23 @@ class Controller extends CController {
 		
 		// restore pagination
 		if (isset($container['page'])) {
-			$_GET["{$modelName}_page"] = $container['page'];
+			$_GET["{$viewModelName}_page"] = $container['page'];
 		}
 		// restore sort
 		if (isset($container['sort'])) {
-			$_GET["{$modelName}_sort"] = $container['sort'];
+			$_GET["{$viewModelName}_sort"] = $container['sort'];
 		}
 		// restore filters
 		if (isset($container['filter'])) {
-			if (isset($_GET["{$modelName}"])) {
-				$_GET["{$modelName}"] += $container['filter'];
+			if (isset($_GET["{$viewModelName}"])) {
+				$_GET["{$viewModelName}"] += $container['filter'];
 			} else {
-				$_GET["{$modelName}"] = $container['filter'];
+				$_GET["{$viewModelName}"] = $container['filter'];
 			}
 		}
 	}	
 	
-	protected function storeAdminSettings($modelName, &$container = NULL)
+	protected function storeAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
 	{
 		if($container === NULL)
 		{
@@ -367,27 +367,27 @@ class Controller extends CController {
 		}
 		
 		// if some filters
-		if (isset($_GET[$modelName])) {
+		if (isset($_GET[$viewModelName])) {
 			// store filters
-			$container['filter'] = $_GET[$modelName];
+			$container['filter'] = $_GET[$viewModelName];
 		} elseif (isset($container['filter'])) {
 			// clear filters
 			unset($container['filter']);
 		}
 
 		// if pagination
-		if (isset($_GET["{$modelName}_page"])) {
+		if (isset($_GET["{$viewModelName}_page"])) {
 			// store pagination
-			$container['page'] = $_GET["{$modelName}_page"];
+			$container['page'] = $_GET["{$viewModelName}_page"];
 		} elseif (isset($container['page'])) {
 			// clear filters
 			unset($container['page']);
 		}
 
 		// if sorting
-		if (isset($_GET["{$modelName}_sort"])) {
+		if (isset($_GET["{$viewModelName}_sort"])) {
 			// store sorting
-			$container['sort'] = $_GET["{$modelName}_sort"];
+			$container['sort'] = $_GET["{$viewModelName}_sort"];
 		} elseif (isset($container['sort'])) {
 			// clear sorting
 			unset($container['sort']);
@@ -405,23 +405,16 @@ class Controller extends CController {
 		// clear the primary key set by update
 		static::setUpdateId(NULL, $modelName);
 
-		if(isset($_SESSION['admin'][$modelName]))
-		{
-			$_SESSION['admin'][$adminViewModelName] = $_SESSION['admin'][$modelName];
-		}
-
 		if(isset($_GET['ajax'])) {
-			$this->storeAdminSettings($adminViewModelName);
+			$this->storeAdminSettings($adminViewModelName, $modelName);
 		}
 		// otherwise non ajax call
-		elseif (isset($_GET)) {
+		elseif(isset($_GET)) {
 			// store admin url paramters
-			static::setAdminParams($_GET, $modelName);
-//			// clear any filtering, paging, sorting
-//			$model->adminReset();
+			static::setAdminParams($_GET, $adminViewModelName);
 		}
 
-		$this->restoreAdminSettings($adminViewModelName);
+		$this->restoreAdminSettings($adminViewModelName, $modelName);
 
 		$attributes = array();
 		if (!empty($_GET)) {
@@ -435,16 +428,8 @@ class Controller extends CController {
 		}
 		$model->attributes = $adminViewModel->attributes = $attributes;
 
-		if(isset($_SESSION['admin'][$adminViewModelName]))
-		{
-			$_SESSION['admin'][$modelName] = $_SESSION['admin'][$adminViewModelName];
-		}
 		// ensure that where possible a pk has been passed from parent
 		$model->assertFromParent();
-		if(isset($_SESSION['admin'][$modelName]))
-		{
-			$_SESSION['admin'][$adminViewModelName] = $_SESSION['admin'][$modelName];
-		}
 
 		// if exporting to xl
 		if (isset($_GET['action']) && $_GET['action'] == 'download') {
