@@ -11,16 +11,18 @@ class AdjacencyListController extends Controller {
 		$modelName = static::modelName();
 
 		// the only query parameter we want to allow is the foreign key to the parent
-		$queryParamters = array();
+		$queryParameters = array();
 		if($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = static::getParentCrumb($modelName)))
 		{
-			if(isset(Controller::$nav['admin'][$modelName][$parentForeignKey]))
+			// starting from the beginning
+			$paramsLevel0 = static::getAdminParams();
+			if(isset($paramsLevel0[$parentForeignKey]))
 			{
-				$queryParamters[$parentForeignKey] = Controller::$nav['admin'][$modelName][$parentForeignKey];
+				$queryParamters[$parentForeignKey] = $paramsLevel0[$parentForeignKey];
 			}
-			elseif(isset(Controller::$nav['update'][$parentCrumb]))
+			elseif(static::getUpdateId($parentCrumb) !== NULL)
 			{
-				$queryParamters[$parentForeignKey] = Controller::$nav['update'][$parentCrumb];
+				$queryParameters[$parentForeignKey] = static::getUpdateId($parentCrumb);
 			}
 		}
 
@@ -29,11 +31,11 @@ class AdjacencyListController extends Controller {
 		
 		if(!$parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
 		{
-			// if there is a primary key for this
-			if(isset(Controller::$nav['update'][$modelName]))
+			// if there is a primary key for this -- starting from beginning
+			if(($updateId = static::getUpdateId(NULL, 0)) !== NULL)
 			{
 				// get the update models parent id
-				$parent_id = $modelName::model()->findByPk(Controller::$nav['update'][$modelName])->parent_id;
+					$parent_id = $modelName::model()->findByPk($updateId)->parent_id;
 			}
 		}	
 		
@@ -55,17 +57,17 @@ class AdjacencyListController extends Controller {
 					// add last crumb
 					$adjacencyListCrumbs[] = $lastCrumb;
 					// add crumb to admin view
-					$adjacencyListCrumbs[$text] = array("$modelName/admin") + $queryParamters + array('parent_id'=>$parent_id);
+					$adjacencyListCrumbs[$text] = array("$modelName/admin") + $queryParameters + array('parent_id'=>$parent_id);
 				}
 				elseif($lastCrumb == 'Update')
 				{
 					// remove last item in existing breadcrumbs
 					array_pop($breadcrumbs);
 					// add a crumb with just the primary key nice name but no href
-					$primaryKey = Controller::$nav['update'][$modelName];
+					$primaryKey = static::getUpdateId($modelName);
 					$adjacencyListCrumbs[] = $modelName::getNiceName($primaryKey);
 					// add crumb to admin view. NB using last query paramters to that admin view
-					$adjacencyListCrumbs[$text] = array("$modelName/admin") + $queryParamters + array('parent_id'=>$parent_id);
+					$adjacencyListCrumbs[$text] = array("$modelName/admin") + $queryParameters + array('parent_id'=>$parent_id);
 				}
 				else
 				{
@@ -76,14 +78,14 @@ class AdjacencyListController extends Controller {
 			else
 			{
 				// add crumb to admin view
-				$adjacencyListCrumbs[$text] = array("$modelName/admin") + $queryParamters + array('parent_id'=>$parent_id);
+				$adjacencyListCrumbs[$text] = array("$modelName/admin") + $queryParameters + array('parent_id'=>$parent_id);
 			}
 		}
 		
 		// if there is at least one parent
 		if(count($adjacencyListCrumbs))
 		{
-			$breadcrumbs[$displays] = array("$modelName/admin") + $queryParamters;
+			$breadcrumbs[$displays] = array("$modelName/admin") + $queryParameters;
 			// append the breadcrumbs for the adjacency list
 			$breadcrumbs += array_reverse($adjacencyListCrumbs);
 		}
@@ -95,7 +97,7 @@ class AdjacencyListController extends Controller {
 		$modelName = $this->modelName;
 		$model = $this->loadModel($id, $model);
 		
-		Controller::$nav['admin'][$modelName]['parent_id'] = $model->parent_id;
+		static::setAdminParam('parent_id', $model->parent_id, $modelName);
 
 		parent::actionUpdate($id, $model);
 	}
@@ -124,13 +126,139 @@ class AdjacencyListController extends Controller {
 
 	}
 	
-/*	public function setTabs($nextLevel = true) {
-		parent::setTabs($nextLevel);
-		if(isset($_GET['parent_id']))
-		{
-			$this->setChildTabs($this->loadModel($_GET['parent_id']));
-		}
-	}*/
+	static function getParentIds()
+	{
+		$controllerName = get_called_class();
+		$modelName = $controllerName::modelName();
 
+		if(!$parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
+		{
+			// if there is a primary key for this -- starting from beginning
+			if(($updateId = static::getUpdateId(NULL, 0)) !== NULL)
+			{
+				// get the update models parent id
+				$parent_id = $modelName::model()->findByPk($updateId)->parent_id;
+			}
+		}
+		
+		$ids = array();
+
+		// if there is a parent
+		for(; $model = $modelName::model()->findByPk($parent_id); $parent_id = $model->parent_id)
+		{
+			$ids[] = $parent_id;
+		}
+		
+		return $ids;
+	}
+	
+	static function currentTabLevel()
+	{
+		// get the target level
+		$parentIds = static::getParentIds();
+
+		return sizeof($parentIds);
+	}
+	
+	protected function restoreAdminSettings($modelName, &$container = NULL)
+	{
+		parent::restoreAdminSettings($modelName, $_SESSION['admin'][$modelName][static::currentTabLevel()]);
+	}	
+	
+	protected function storeAdminSettings($modelName, &$container = NULL)
+	{
+		$tabLevel = static::currentTabLevel();
+		
+		if(!isset($_SESSION['admin'][$modelName][$tabLevel]))
+		{
+			$_SESSION['admin'][$modelName][$tabLevel] = array();
+		}
+
+		parent::storeAdminSettings($modelName, $_SESSION['admin'][$modelName][$tabLevel]);
+	}
+	
+/*	// return last or specified level of update id
+	static function getUpdateId($modelName = NULL, $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if($level === NULL)
+		{
+			$level = isset(Controller::$nav['update'][$modelName])
+				? sizeof(Controller::$nav['update'][$modelName]) - 1
+				: 0;
+		}
+$t = Controller::$nav;
+		return isset(Controller::$nav['update'][$modelName][$level]) ? Controller::$nav['update'][$modelName][$level] : NULL;
+	}
+	
+	// return last or specified level of update id
+	static function setUpdateId($updateId, $modelName = NULL, $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if($level === NULL)
+		{
+			$level = isset(Controller::$nav['update'][$modelName])
+				? sizeof(Controller::$nav['update'][$modelName])
+				: 0;
+		}
+
+		Controller::$nav['update'][$modelName][$level] = $updateId;
+	}
+	
+	// return last or specified level of admin params
+	static function getAdminParam($paramName, $modelName = NULL, int $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if(isset(Controller::$nav['admin'][$modelName]))
+		{
+			$adminParam = &Controller::$nav['admin'][$modelName];
+
+			if($level === NULL)
+			{
+				$level = sizeof($adminParam);
+			}
+
+			return isset($adminParams[$level - 1][$paramName]) ? $adminParams[$level - 1][$paramName] : NULL;
+		}
+	}
+
+	// return last or specified level of admin params
+	static function getAdminParams($modelName = NULL, int $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if(isset(Controller::$nav['admin'][$modelName]))
+		{
+			$adminParams = &Controller::$nav['admin'][$modelName];
+
+			if($level === NULL)
+			{
+				$level = sizeof($adminParams);
+			}
+
+			return isset($adminParams[$level - 1]) ? $adminParams[$level - 1] : array();
+		}
+		
+		return array();
+	}
+
+	// level is array index i.e. starts at 0 and not 1
+	static function setAdminParams($params, $modelName = NULL, int $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if($level === NULL)
+		{
+			$level = isset(Controller::$nav['admin'][$modelName])
+				? sizeof(Controller::$nav['admin'][$modelName])
+				: 0;
+		}
+		
+		Controller::$nav['admin'][$modelName][$level] = $params;
+	}
+*/
 }
 ?>

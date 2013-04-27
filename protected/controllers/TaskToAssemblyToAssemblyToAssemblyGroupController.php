@@ -4,12 +4,14 @@ class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 {
 	protected function createRender($model, $models, $modalId)
 	{
+// TODO: repeated
+		$taskToAssembly = new TaskToAssembly;
+		$taskToAssembly->attributes = $_GET[$this->modelName];
+		$taskToAssembly->id = $model->task_to_assembly_id;
+		$taskToAssembly->assertFromParent();
+
 		// set heading
 		$this->heading = TaskToAssembly::getNiceName();
-
-		$taskToAssembly = new TaskToAssembly;
-		$taskToAssembly->attributes = $_GET['TaskToAssemblyToAssemblyToAssemblyGroup'];
-		$taskToAssembly->assertFromParent();
 
 		// set breadcrumbs
 		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Create');
@@ -33,12 +35,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 		$taskToAssembly = TaskToAssembly::model()->findByPk($model->task_to_assembly_id);
 		$taskToAssembly->assertFromParent();
 		
-		$params = array("TaskToAssembly/admin");
-
-		if (isset(Controller::$nav['admin']['TaskToAssembly'])) {
-			$params += Controller::$nav['admin']['TaskToAssembly'];
-		}
-
+		$params = array("TaskToAssembly/admin") + static::getAdminParams('TaskToAssembly');
 		$params['parent_id'] = $taskToAssembly->parent_id;
 		
 		$this->redirect($params);

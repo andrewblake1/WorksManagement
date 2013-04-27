@@ -2,14 +2,16 @@
 
 class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 {
+// TODO: Repeated in TaskToMaterialToTaskTypeToMaterialGroupController	
 	protected function createRender($model, $models, $modalId)
 	{
+		$taskToMaterial = new TaskToMaterial;
+		$taskToMaterial->attributes = $_GET[$this->modelName];
+		$taskToMaterial->id = $model->task_to_material_id;
+		$taskToMaterial->assertFromParent();
+
 		// set heading
 		$this->heading = TaskToMaterial::getNiceName();
-
-		$taskToMaterial = new TaskToMaterial;
-		$taskToMaterial->attributes = $_GET['TaskToMaterialToAssemblyToMaterialGroup'];
-		$taskToMaterial->assertFromParent();
 
 		// set breadcrumbs
 		$this->breadcrumbs = TaskToMaterialController::getBreadCrumbTrail('Create');
@@ -33,12 +35,7 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 		$taskToMaterial = TaskToMaterial::model()->findByPk($model->task_to_material_id);
 		$taskToMaterial->assertFromParent();
 		
-		$params = array("TaskToMaterial/admin");
-
-		if (isset(Controller::$nav['admin']['TaskToMaterial'])) {
-			$params += Controller::$nav['admin']['TaskToMaterial'];
-		}
-
+		$params = array("TaskToMaterial/admin") + static::getAdminParams('TaskToMaterial');
 		$params['parent_id'] =$taskToMaterial->taskToAssembly->parent_id;
 		
 		$this->redirect($params);
@@ -66,12 +63,12 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 		$_GET['parent_id'] = $task_to_assembly_id = (isset($nextLevel->taskToAssembly) ? $nextLevel->taskToAssembly->id : $nextLevel->taskToMaterial->taskToAssembly->id);
 		$taskToAssemblyController= new TaskToAssemblyController(NULL);
 		$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
-		$taskToAssembly->assertFromParent();
+		$taskToAssembly->assertFromParent('TaskToMaterial');
 		$taskToAssemblyController->setTabs(false);
 		$taskToAssemblyController->setActiveTabs(NULL, $modelName::getNiceNamePlural());
 		$this->_tabs = $taskToAssemblyController->tabs;
 
-		Controller::$nav['update']['TaskToAssembly'] = NULL;
+		static::setUpdateId(NULL, 'TaskToAssembly');
 		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
 
 		$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);

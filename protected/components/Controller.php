@@ -57,7 +57,7 @@ class Controller extends CController {
 	 * @var string the name of the admin view
 	 */
 	protected $_adminView = '/admin';
-	static $nav = array();
+	private static $nav = array();
 
 	static function modelName() {
 		return str_replace('Controller', '', get_called_class());
@@ -300,7 +300,7 @@ class Controller extends CController {
 					// store this (first tabs model name)
 					$firstTabModelName = $modelName;
 					$firstTabPrimaryKeyName = $firstTabModelName::model()->tableSchema->primaryKey;
-					$keyValue = isset(Controller::$nav['update'][$firstTabModelName]) ? Controller::$nav['update'][$firstTabModelName] : null;
+					$keyValue = static::getUpdateId($firstTabModelName) !== NULL ? static::getUpdateId($firstTabModelName) : NULL;
 
 					// if nextlevel is true then action should always be update, but also should be update if current model is this model
 					// and not next level
@@ -334,9 +334,66 @@ class Controller extends CController {
 		}
 	}
 
-	/**
-	 * Manages all models.
-	 */
+	protected function restoreAdminSettings($modelName, &$container = NULL)
+	{
+		if($container === NULL)
+		{
+			$container = &$_SESSION['admin'][$modelName];
+		}
+		
+		// restore pagination
+		if (isset($container['page'])) {
+			$_GET["{$modelName}_page"] = $container['page'];
+		}
+		// restore sort
+		if (isset($container['sort'])) {
+			$_GET["{$modelName}_sort"] = $container['sort'];
+		}
+		// restore filters
+		if (isset($container['filter'])) {
+			if (isset($_GET["{$modelName}"])) {
+				$_GET["{$modelName}"] += $container['filter'];
+			} else {
+				$_GET["{$modelName}"] = $container['filter'];
+			}
+		}
+	}	
+	
+	protected function storeAdminSettings($modelName, &$container = NULL)
+	{
+		if($container === NULL)
+		{
+			$container = &$_SESSION['admin'][$modelName];
+		}
+		
+		// if some filters
+		if (isset($_GET[$modelName])) {
+			// store filters
+			$container['filter'] = $_GET[$modelName];
+		} elseif (isset($container['filter'])) {
+			// clear filters
+			unset($container['filter']);
+		}
+
+		// if pagination
+		if (isset($_GET["{$modelName}_page"])) {
+			// store pagination
+			$container['page'] = $_GET["{$modelName}_page"];
+		} elseif (isset($container['page'])) {
+			// clear filters
+			unset($container['page']);
+		}
+
+		// if sorting
+		if (isset($_GET["{$modelName}_sort"])) {
+			// store sorting
+			$container['sort'] = $_GET["{$modelName}_sort"];
+		} elseif (isset($container['sort'])) {
+			// clear sorting
+			unset($container['sort']);
+		}
+	}
+
 	public function actionAdmin($exportColumns = array()) {
 		$modelName = $this->modelName;
 		// may be using a database view instead of main table model
@@ -346,69 +403,25 @@ class Controller extends CController {
 		$model = new $modelName('search');
 		$model->unsetAttributes();  // clear any default values
 		// clear the primary key set by update
-		if (isset(Controller::$nav['update'][$modelName])) {
-			unset(Controller::$nav['update'][$modelName]);
-		}
+		static::setUpdateId(NULL, $modelName);
 
 		if(isset($_SESSION['admin'][$modelName]))
 		{
 			$_SESSION['admin'][$adminViewModelName] = $_SESSION['admin'][$modelName];
 		}
 
-		// NB: query string is stripped from ajaxUrl hence this hack, but also used
-		// in building breadcrumbs
-		if (isset($_GET['ajax'])) {
-			// if some filters
-			if (isset($_GET[$adminViewModelName])) {
-				// store filters
-				$_SESSION['admin'][$adminViewModelName]['filter'] = $_GET[$adminViewModelName];
-			} elseif (isset($_SESSION['admin'][$adminViewModelName]['filter'])) {
-				// clear filters
-				unset($_SESSION['admin'][$adminViewModelName]['filter']);
-			}
-
-			// if pagination
-			if (isset($_GET["{$adminViewModelName}_page"])) {
-				// store pagination
-				$_SESSION['admin'][$adminViewModelName]['page'] = $_GET["{$adminViewModelName}_page"];
-			} elseif (isset($_SESSION['admin'][$adminViewModelName]['page'])) {
-				// clear filters
-				unset($_SESSION['admin'][$adminViewModelName]['page']);
-			}
-
-			// if sorting
-			if (isset($_GET["{$adminViewModelName}_sort"])) {
-				// store sorting
-				$_SESSION['admin'][$adminViewModelName]['sort'] = $_GET["{$adminViewModelName}_sort"];
-			} elseif (isset($_SESSION['admin'][$adminViewModelName]['sort'])) {
-				// clear sorting
-				unset($_SESSION['admin'][$adminViewModelName]['sort']);
-			}
+		if(isset($_GET['ajax'])) {
+			$this->storeAdminSettings($adminViewModelName);
 		}
 		// otherwise non ajax call
 		elseif (isset($_GET)) {
 			// store admin url paramters
-			Controller::$nav['admin'][$modelName] = $_GET;
-			// clear any filtering, paging, sorting
-			$model->adminReset();
+			static::setAdminParams($_GET, $modelName);
+//			// clear any filtering, paging, sorting
+//			$model->adminReset();
 		}
 
-		// restore pagination
-		if (isset($_SESSION['admin'][$adminViewModelName]['page'])) {
-			$_GET["{$adminViewModelName}_page"] = $_SESSION['admin'][$adminViewModelName]['page'];
-		}
-		// restore sort
-		if (isset($_SESSION['admin'][$adminViewModelName]['sort'])) {
-			$_GET["{$adminViewModelName}_sort"] = $_SESSION['admin'][$adminViewModelName]['sort'];
-		}
-		// restore filters
-		if (isset($_SESSION['admin'][$adminViewModelName]['filter'])) {
-			if (isset($_GET["{$adminViewModelName}"])) {
-				$_GET["{$adminViewModelName}"] += $_SESSION['admin'][$adminViewModelName]['filter'];
-			} else {
-				$_GET["{$adminViewModelName}"] = $_SESSION['admin'][$adminViewModelName]['filter'];
-			}
-		}
+		$this->restoreAdminSettings($adminViewModelName);
 
 		$attributes = array();
 		if (!empty($_GET)) {
@@ -513,13 +526,13 @@ class Controller extends CController {
 		$modelName = static::modelName();
 
 		// if just gone direct to a screen i.e. our memory/history was cleared
-		if (!isset(Controller::$nav['admin'][$modelName]) && !$lastCrumb) {
+		if (static::getAdminParams() === NULL && !$lastCrumb) {
 			if (static::checkAccess(self::accessRead)) {
 				$breadcrumbs[] = $modelName::getNiceName();
 			}
 			return $breadcrumbs;
 		}
-$t = Controller::$nav;
+
 		// loop thru the trail for this model
 		foreach (Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName) as $crumb) {
 			// check access
@@ -530,10 +543,10 @@ $t = Controller::$nav;
 			// the only query parameter we want to allow is the foreign key to the parent
 			$queryParamters = array();
 			if ($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = static::getParentCrumb($crumb))) {
-				if (isset(Controller::$nav['admin'][$modelName][$parentForeignKey])) {
-					$queryParamters[$parentForeignKey] = Controller::$nav['admin'][$modelName][$parentForeignKey];
-				} elseif (isset(Controller::$nav['update'][$parentCrumb])) {
-					$queryParamters[$parentForeignKey] = Controller::$nav['update'][$parentCrumb];
+				if (static::getAdminParam($parentForeignKey, $modelName) !== NULL) {
+					$queryParamters[$parentForeignKey] = static::getAdminParam($parentForeignKey, $modelName);
+				} elseif (static::getUpdateId($parentCrumb)) {
+					$queryParamters[$parentForeignKey] = static::getUpdateId($parentCrumb);
 				}
 			}
 
@@ -549,7 +562,7 @@ $t = Controller::$nav;
 					// add crumb to admin view. NB using last query paramters to that admin view
 					$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
 					// add a crumb with just the primary key nice name but no href
-					$primaryKey = Controller::$nav['update'][$crumb];
+					$primaryKey = static::getUpdateId($crumb);
 					$breadcrumbs[] = $crumb::getNiceName($primaryKey);
 				} else {
 					$breadcrumbs[] = $displays;
@@ -561,9 +574,9 @@ $t = Controller::$nav;
 				$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
 
 				// if there is a primary key for this
-				if (isset(Controller::$nav['update'][$crumb])) {
+				if (static::getUpdateId($crumb) !== NULL) {
 					// add an update crumb to this primary key
-					$primaryKey = Controller::$nav['update'][$crumb];
+					$primaryKey = static::getUpdateId($crumb);
 					$breadcrumbs[$crumb::getNiceName($primaryKey)] = array("$crumb/"
 						. (static::checkAccess(self::accessWrite, $crumb) ? 'update' : 'view'),
 						$crumb::model()->tableSchema->primaryKey => $primaryKey,
@@ -620,15 +633,10 @@ $t = Controller::$nav;
 		}
 		else
 		{
-//			$modelName = $this->modelName;
 			$modelName = get_class($model);
 		}
 
-		$params = array("$modelName/admin");
-
-		if (isset(Controller::$nav['admin'][$modelName])) {
-			$params += Controller::$nav['admin'][$modelName];
-		}
+		$params = array("$modelName/admin") + static::getAdminParams($modelName);
 
 		// if we want to sort by the newest record first
 		if ($sortByNewest) {
@@ -748,7 +756,7 @@ $t = $model->attributes;
 		$models = array();
 
 		// add primary key into global so it can be retrieved for future use in breadcrumbs
-		Controller::$nav['update'][$modelName] = $id;
+		static::setUpdateId($id, $modelName);
 
 		// ensure that where possible a pk has been passed from parent and get that fk name if possible
 		$parent_fk = $model->assertFromParent();
@@ -900,7 +908,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		$this->heading = $modelName::getNiceName($id);
 
 		// add primary key into global so it can be retrieved for future use in breadcrumbs
-		Controller::$nav['update'][$modelName] = $id;
+		static::setUpdateId($id, $modelName);
 		$model->assertFromParent();
 //$t = Controller::$nav;		
 		// set breadcrumbs
@@ -964,7 +972,7 @@ $t=			$model->attributes = $_POST[$modelName];
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if (!isset($_GET['ajax'])) {
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin', $this->modelName => Controller::$nav['admin'][$this->modelName]));
+				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin', $this->modelName => static::getAdminParams($this->modelName)));
 			}
 		} else {
 			throw new CHttpException(400, 'Invalid request.');
@@ -1068,9 +1076,9 @@ $t=			$model->attributes = $_POST[$modelName];
 		}
 
 		// if we arent going to receive the pk as id at run time via Planning ajaxtree
-		if ($reportType == self::reportTypeHtml && !empty(Controller::$nav['update'][$context])) {
+		if ($reportType == self::reportTypeHtml && (static::getUpdateId($context) !== NULL)) {
 			// set the primary key
-			$pk = Controller::$nav['update'][$context];
+			$pk = static::getUpdateId($context);
 		}
 
 		$criteria = new CDbCriteria;
@@ -1243,6 +1251,156 @@ $t=			$model->attributes = $_POST[$modelName];
 		self::listWidgetRow($modelName::model(), $form, $_GET['fkField'], array(),
 			array('scope'.$_GET['dependantOnModelName']=>array($_POST[$modelName][$_GET['dependantOnAttribute']])));
 	}
+
+	static function getAdminParam($paramName, $modelName = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if(isset(Controller::$nav['admin'][$modelName][$paramName]))
+		{
+			return Controller::$nav['admin'][$modelName][$paramName];
+		}
+	}
+
+	static function getAdminParams($modelName = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+		
+		if(isset(Controller::$nav['admin'][$modelName]))
+		{
+			return Controller::$nav['admin'][$modelName];
+		}
+		
+		return array();
+	}
+
+	static function setAdminParam($paramName, $value, $modelName = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		Controller::$nav['admin'][$modelName][$paramName] = $value;
+	}
+
+	static function setAdminParams($params, $modelName = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		Controller::$nav['admin'][$modelName] = $params;
+	}
+
+	// return last or specified level of update id
+	static function getUpdateId($modelName = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		return isset(Controller::$nav['update'][$modelName]) ? Controller::$nav['update'][$modelName] : NULL;
+	}
+	
+	// return last or specified level of update id
+	static function setUpdateId($updateId, $modelName = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		Controller::$nav['update'][$modelName] = $updateId;
+	}
+
+/*	// return last or specified level of update id
+	static function getUpdateId($modelName = NULL, $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if($level === NULL)
+		{
+			$level = isset(Controller::$nav['update'][$modelName])
+				? sizeof(Controller::$nav['update'][$modelName]) - 1
+				: 0;
+		}
+$t = Controller::$nav;
+		return isset(Controller::$nav['update'][$modelName][$level]) ? Controller::$nav['update'][$modelName][$level] : NULL;
+	}
+	
+	// return last or specified level of update id
+	static function setUpdateId($updateId, $modelName = NULL, $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if($level === NULL)
+		{
+			$level = isset(Controller::$nav['update'][$modelName])
+				? sizeof(Controller::$nav['update'][$modelName])
+				: 0;
+		}
+
+		Controller::$nav['update'][$modelName][$level] = $updateId;
+	}
+	
+	// return last or specified level of admin params
+	static function getAdminParam($paramName, $modelName = NULL, int $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if(isset(Controller::$nav['admin'][$modelName]))
+		{
+			$adminParam = &Controller::$nav['admin'][$modelName];
+
+			if($level === NULL)
+			{
+				$level = sizeof($adminParam);
+			}
+
+			return isset($adminParams[$level - 1][$paramName]) ? $adminParams[$level - 1][$paramName] : NULL;
+		}
+	}
+
+	// return last or specified level of admin params
+	static function getAdminParams($modelName = NULL, int $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if(isset(Controller::$nav['admin'][$modelName]))
+		{
+			$adminParams = &Controller::$nav['admin'][$modelName];
+
+			if($level === NULL)
+			{
+				$level = sizeof($adminParams);
+			}
+
+			return isset($adminParams[$level - 1]) ? $adminParams[$level - 1] : array();
+		}
+		
+		return array();
+	}
+
+	// level is array index i.e. starts at 0 and not 1
+	static function setAdminParam($paramName, $value, $modelName = NULL, int $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if($level === NULL)
+		{
+			$level = isset(Controller::$nav['admin'][$modelName])
+				? sizeof(Controller::$nav['admin'][$modelName])
+				: 0;
+		}
+		
+		Controller::$nav['admin'][$modelName][$level][$paramName] = $value;
+	}
+
+	// level is array index i.e. starts at 0 and not 1
+	static function setAdminParams($params, $modelName = NULL, int $level = NULL)
+	{
+		$modelName = $modelName ? $modelName : static::modelName();
+
+		if($level === NULL)
+		{
+			$level = isset(Controller::$nav['admin'][$modelName])
+				? sizeof(Controller::$nav['admin'][$modelName])
+				: 0;
+		}
+		
+		Controller::$nav['admin'][$modelName][$level] = $params;
+	}*/
 
 }
 

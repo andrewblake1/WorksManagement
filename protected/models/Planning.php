@@ -234,7 +234,7 @@ class Planning extends CategoryActiveRecord {
 	public function assertFromParent() {
 		
 		$project = Project::model()->findByPk($this->project_id);
-		Controller::$nav['update']['Project'] = $this->project_id;
+		Controller::setUpdateId($this->project_id, 'Project');
 		return $project->assertFromParent();
 	}
 }

@@ -299,7 +299,7 @@ class StandardDrawingController extends AdjacencyListController
 			$this->_tabs = array_merge($this->_tabs, array($tabs));
 			
 			// set breadcrumbs
-			Controller::$nav['update']['TaskToAssembly'] = NULL;
+			static::setUpdateId(NULL, 'TaskToAssembly');
 			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
 			array_pop($this->breadcrumbs);
 			

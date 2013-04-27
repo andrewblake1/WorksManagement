@@ -8,6 +8,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	 */
 	public $searchStage;
 	public $searchMaterialGroup;
+	public $searchMaterialAlias;
 
 	/**
 	 * @return string the associated database table name
@@ -25,7 +26,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, task_to_assembly_id, searchMaterialGroup, searchStage, searchMaterial, searchAssembly, quantity', 'safe', 'on'=>'search'),
+			array('id, task_id, task_to_assembly_id, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterial, searchAssembly, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -47,6 +48,10 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			'stage.description AS searchStage',
 			't.task_to_assembly_id',
 			'material.description AS searchMaterial',
+			"CONCAT_WS('$delimiter',
+				materialToClient.alias,
+				material.alias
+				) AS searchMaterialAlias",
 			"IF(taskToAssembly.quantity IS NOT NULL, CONCAT_WS(' * ', t.quantity, taskToAssembly.quantity), t.quantity) AS quantity",
 			't.material_group_to_material_id',
 			't.searchAssembly',
@@ -56,7 +61,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			"CONCAT_WS('$delimiter',
 				materialGroup.description,
 				t.comment
-				) AS searchMaterialGroup",
+			) AS searchMaterialGroup",
 		);
 		
 		// join
@@ -65,10 +70,23 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			LEFT JOIN material_group materialGroup ON t.material_group_id = materialGroup.id
 			LEFT JOIN material ON t.material_id = material.id
 			LEFT JOIN task_to_assembly taskToAssembly ON t.task_to_assembly_id = taskToAssembly.id
+			LEFT JOIN task ON t.task_id = task.id
+			LEFT JOIN project on task.project_id = project.id
+			LEFT JOIN material_to_client materialToClient ON project.client_id = materialToClient.client_id
+				AND t.material_id = materialToClient.material_id
 		';
 		
 		// where
 		$criteria->compare('material.description',$this->searchMaterial,true);
+		$this->compositeCriteria($criteria,
+			array(
+				'material_to_client.alias',
+				'material.alias'
+			),
+			$this->searchMaterialAlias
+		);
+		$criteria->compare('searchAssembly',$this->searchAssembly,true);
+		$criteria->compare('stage.description',$this->searchStage,true);
 		$this->compositeCriteria($criteria,
 			array(
 			'materialGroup.description',
@@ -76,8 +94,6 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			),
 			$this->searchMaterialGroup
 		);
-		$criteria->compare('searchAssembly',$this->searchAssembly,true);
-		$criteria->compare('stage.description',$this->searchStage,true);
 		$criteria->compare('t.task_to_assembly_id',$this->task_to_assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.task_id',$this->task_id);
@@ -88,6 +104,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	public function getAdminColumns()
 	{
  		$columns[] = $this->linkThisColumn('searchMaterial');
+ 		$columns[] = $this->linkThisColumn('searchMaterialAlias');
 		$columns[] = 'searchMaterialGroup';
 		$columns[] = 'searchStage';
 		$columns[] = 'quantity';
@@ -104,6 +121,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	{
 		return array(
 			'searchMaterial',
+			'searchMaterialAlias',
 			'searchMaterialGroup',
 			'searchAssembly',
 			'searchStage',

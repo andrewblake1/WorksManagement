@@ -1,10 +1,7 @@
 <?php
 // ensure nav variables set containing path
 $model->assertFromParent();
-// path calculation from CController::redirect
-//$redirectUrl = array('admin') + $this->modelName=>Controller::$nav['admin'][$this->modelName]);
-//$route=$redirectUrl[0];
-$redirectParams = Controller::$nav['admin'][$this->modelName];
+$redirectParams = static::getAdminParams();
 // if create
 if($model->isNewRecord)
 {

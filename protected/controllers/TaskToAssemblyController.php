@@ -145,11 +145,11 @@ class TaskToAssemblyController extends AdjacencyListController
 	public function setTabs($nextLevel = true) {
 		parent::setTabs($nextLevel);
 		// if in a sub assembly
-		if(isset($_GET['parent_id']))
+		if($parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
 		{
-			$this->setChildTabs($this->loadModel($_GET['parent_id']));
+			$this->setChildTabs($this->loadModel($parent_id));
 			// set breadcrumbs
-			Controller::$nav['update'][$this->modelName] = $_GET['parent_id'];
+			static::setUpdateId($parent_id);
 			$this->breadcrumbs = self::getBreadCrumbTrail();
 			array_pop($this->breadcrumbs);
 			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
@@ -162,7 +162,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		// set top level tabs as per normal admin view
 		parent::setTabs(false);
 		
-		$this->setChildTabs($this->loadModel(Controller::$nav['update'][$this->modelName]));
+		$this->setChildTabs($this->loadModel(static::getUpdateId()));
 	}
 	
 }

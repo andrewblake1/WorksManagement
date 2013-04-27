@@ -308,13 +308,12 @@ $t = $model->attributes;
 				if($model->$parentForeignKeyName !== null)
 				{
 					// store the primary key for the model
-					Controller::$nav['update'][$crumb] = $model->$parentForeignKeyName;
+					Controller::setUpdateId($model->$parentForeignKeyName, $crumb);
 					// ensure that that at least the parents primary key is set for the admin view
-					Controller::$nav['admin'][$modelName][$parentForeignKeyName] = $model->$parentForeignKeyName;
+					Controller::setAdminParam($parentForeignKeyName, $model->$parentForeignKeyName, $modelName);
 				}
 
 				// set the model ready for the next one
-$t = Controller::$nav;
 				if(!$model = $crumb::model()->findByPk($model->$parentForeignKeyName))
 				{
 					throw new CHttpException(400, 'Invalid request.');
@@ -322,7 +321,7 @@ $t = Controller::$nav;
 				
 				// capture the first parent only for returning later
 				if(empty($firstParentForeignKeyName))
-				{
+					{
 					$firstParentForeignKeyName = $parentForeignKeyName;
 				}
 			}
@@ -336,7 +335,7 @@ $t = Controller::$nav;
 	/**
 	 * Clear any memory of admin views filters, paging and sorting that arn't in the current breadcrumb trail 
 	 */
-	private function clearForwardMemory(&$trail)
+	protected function clearForwardMemory(&$trail)
 	{
 		// loop thru all saved admin view models
 		if(isset($_SESSION['admin'])) 
@@ -560,7 +559,7 @@ $t = Controller::$nav;
 			// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
 			// even though this confusing here
 			// create a link
-			$params = var_export(Controller::$nav['admin'][$modelName], true);
+			$params = var_export(Controller::getAdminParams($modelName), true);
 			$columns[] = array(
 				'name'=>$name,
 				'value'=>$modelName.'::model()->findByAttributes(array("'.$parentAttrib.'" => $data->'.$primaryKeyName.')) !== null

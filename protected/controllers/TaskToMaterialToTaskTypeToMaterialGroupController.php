@@ -4,12 +4,13 @@ class TaskToMaterialToTaskTypeToMaterialGroupController extends Controller
 {
 	protected function createRender($model, $models, $modalId)
 	{
+		$taskToMaterial = new TaskToMaterial;
+		$taskToMaterial->attributes = $_GET[$this->modelName];
+		$taskToMaterial->id = $model->task_to_material_id;
+		$taskToMaterial->assertFromParent();
+
 		// set heading
 		$this->heading = TaskToMaterial::getNiceName();
-
-		$taskToMaterial = new TaskToMaterial;
-		$taskToMaterial->attributes = $_GET['TaskToMaterialToTaskTypeToMaterialGroup'];
-		$taskToMaterial->assertFromParent();
 
 		// set breadcrumbs
 		$this->breadcrumbs = TaskToMaterialController::getBreadCrumbTrail('Create');
@@ -33,13 +34,7 @@ class TaskToMaterialToTaskTypeToMaterialGroupController extends Controller
 		$taskToMaterial = TaskToMaterial::model()->findByPk($model->task_to_material_id);
 		$taskToMaterial->assertFromParent();
 		
-		$params = array("TaskToMaterial/admin");
-
-		if (isset(Controller::$nav['admin']['TaskToMaterial'])) {
-			$params += Controller::$nav['admin']['TaskToMaterial'];
-		}
-
-//		$params['parent_id'] =$taskToMaterial->taskToAssembly->parent_id;
+		$params = array("TaskToMaterial/admin") + static::getAdminParams('TaskToMaterial');
 		
 		$this->redirect($params);
 	}
