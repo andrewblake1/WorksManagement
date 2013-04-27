@@ -16,7 +16,7 @@ class TaskToMaterialToTaskTypeToMaterialGroupController extends Controller
 		$this->breadcrumbs = TaskToMaterialController::getBreadCrumbTrail('Create');
 		
 		// set tabs
-		$this->setUpdateTabs($taskToMaterial);
+		$this->tabs = $taskToMaterial;
 		
 		echo $this->render('_form',array(
 			'model'=>$model,

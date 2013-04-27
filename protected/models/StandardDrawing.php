@@ -21,6 +21,11 @@
  */
 class StandardDrawing extends AdjacencyListActiveRecord
 {
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Drawing';
+
 	protected $defaultSort = array('t.description');
 
 	/**

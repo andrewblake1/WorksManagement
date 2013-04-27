@@ -220,16 +220,16 @@ class Controller extends CController {
 
 	/**
 	 * _tabs property setter. Utilises trail to set tab options.
-	 * @param $nextLevel if true uses next level down in trail array from the models level if false uses the models level
+	 * @param $model if set uses next level down in trail array from the models level if false uses the models level
 	 * to extract tab options. Admin and create use models level, update uses next level unless
 	 * the current model is a leaf rather than branch (no further branching) in which case popup form will be used to update
 	 */
-	public function setTabs($nextLevel = true) {
+	public function setTabs($model) {
 		$level = sizeof($this->_tabs);
 		
-		if($nextLevel)
+		if($model)
 		{
-			$thisModelName = get_class($nextLevel);
+			$thisModelName = get_class($model);
 		}
 		else
 		{
@@ -241,14 +241,14 @@ class Controller extends CController {
 		// step thru the trail to our target
 		$items = Yii::app()->params['trail'];
 		// if we should return this level NB: this is empty deliberately to keep condition the same as below
-		if (!$nextLevel && (isset($items[$thisModelName]))) {
+		if (!$model && (isset($items[$thisModelName]))) {
 			
 		} else {
 			$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $thisModelName);
 			// get tree of items at or below the desired level
 			foreach ($trail as $key => &$value) {
 				// if we should return this level
-				if (!$nextLevel && (isset($items[$thisModelName]) || in_array($thisModelName, $items))) {
+				if (!$model && (isset($items[$thisModelName]) || in_array($thisModelName, $items))) {
 					break;
 				}
 				// if there are items below
@@ -257,7 +257,7 @@ class Controller extends CController {
 			// NB: by now items could be empty if looking for next level and nothing below i.e. next level from leaf
 			// if there are items
 			if ($items) {
-				if ($nextLevel) { // true for create and update
+				if ($model) { // true for create and update
 					// still want to show this model in tabs
 					array_unshift($items, $thisModelName);
 				}
@@ -305,7 +305,7 @@ class Controller extends CController {
 					// if nextlevel is true then action should always be update, but also should be update if current model is this model
 					// and not next level
 					// create controler/action
-					if ($keyValue && (!$nextLevel || ($firstTabModelName == $thisModelName))) {
+					if ($keyValue && (!$model || ($firstTabModelName == $thisModelName))) {
 						$this->_tabs[$level][$index]['label'] = $modelName::getNiceName($keyValue);
 						$this->_tabs[$level][$index]['url'] = array("$modelName/$action", $firstTabPrimaryKeyName => $keyValue);
 						$index++;
@@ -469,7 +469,7 @@ class Controller extends CController {
 	protected function adminRender($adminViewModel, $createModel = NULL) {
 		if (!isset($_GET['ajax'])) {
 			// set up tab menu if required - using setter
-			$this->setTabs(false);
+			$this->tabs = false;
 		}
 
 		if ($createModel === NULL) {
@@ -733,7 +733,7 @@ $t = $model->attributes;
 
 	protected function createRender($model, $models, $modalId) {
 		// set tabs
-		$this->setCreateTabs($model);
+//		$this->tabs = $model;
 
 		$this->widget('CreateViewWidget', array(
 			'model' => $model,
@@ -816,7 +816,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		$this->breadcrumbs = static::getBreadCrumbTrail('Update');
 
 		// set tabs
-		$this->setUpdateTabs($model);
+		$this->tabs = $model;
 
 		// render the widget
 		$this->widget('UpdateViewWidget', array(
@@ -824,14 +824,6 @@ $t=			$model->attributes = $_POST[$modelName];
 			'models' => $models,
 			'parent_fk' => $parent_fk,
 		));
-	}
-
-	public function setUpdateTabs($model) {
-		// set up tab menu if required - using setter
-		$this->tabs = $model;
-	}
-
-	public function setCreateTabs($model) {
 	}
 
 	/**

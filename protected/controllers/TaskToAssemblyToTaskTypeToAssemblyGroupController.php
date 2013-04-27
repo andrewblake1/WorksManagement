@@ -15,7 +15,7 @@ class TaskToAssemblyToTaskTypeToAssemblyGroupController extends Controller
 		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Create');
 		
 		// set tabs
-		$this->setUpdateTabs($taskToAssembly);
+		$this->tabs = $taskToAssembly;
 		
 		echo $this->render('_form',array(
 			'model'=>$model,
@@ -52,21 +52,21 @@ class TaskToAssemblyToTaskTypeToAssemblyGroupController extends Controller
 	}
 	
 	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
-	public function setUpdateTabs($model) {
-		$modelName = $this->modelName;
+	public function setTabs($model) {
 	
 		// control extra rows of tabs if action is update or create
-		if(isset($_GET['TaskToAssemblyToTaskTypeToAssemblyGroup']['task_to_assembly_id']))
+		if($model && isset($_GET['TaskToAssemblyToTaskTypeToAssemblyGroup']['task_to_assembly_id']))
 		{
 			$task_to_assembly_id = $_GET['parent_id'] = $_GET['TaskToAssemblyToTaskTypeToAssemblyGroup']['task_to_assembly_id'];
 			$taskToAssemblyController= new TaskToAssemblyController(NULL);
 			$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
 			$taskToAssembly->assertFromParent();
-			$taskToAssemblyController->setTabs(false);
+			$taskToAssemblyController->setTabs(NULL);
 			$taskToAssemblyController->setActiveTabs(NULL, SubAssembly::getNiceNamePlural());
 			$this->_tabs = $taskToAssemblyController->tabs;
 			
 			$tabs=array();
+			$modelName = $this->modelName;
 			$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
 			$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
 			$this->_tabs = array_merge($this->_tabs, array($tabs));

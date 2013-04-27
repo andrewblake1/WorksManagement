@@ -49,15 +49,15 @@ class TaskToMaterialController extends Controller
 	}
 	
 	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
-	public function setTabs($nextLevel = true) {
+	public function setTabs($model) {
 		$modelName = $this->modelName;
 		$update = FALSE;
 			
-		parent::setTabs($nextLevel);
+		parent::setTabs($model);
 
-		if(!empty($nextLevel->taskToAssembly->id))
+		if(!empty($model->taskToAssembly->id))
 		{
-			$update = $parent_id = $nextLevel->taskToAssembly->id;
+			$update = $parent_id = $model->taskToAssembly->id;
 		}
 		elseif(isset($_GET['task_to_assembly_id']))
 		{
@@ -69,7 +69,7 @@ class TaskToMaterialController extends Controller
 			$taskToAssemblyController= new TaskToAssemblyController(NULL);
 			$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
 			$taskToAssembly->assertFromParent();
-			$taskToAssemblyController->setTabs(false);
+			$taskToAssemblyController->setTabs(NULL);
 			$taskToAssemblyController->setActiveTabs(TaskToAssembly::getNiceNamePlural(), $modelName::getNiceNamePlural());
 			$this->_tabs = $taskToAssemblyController->tabs;
 

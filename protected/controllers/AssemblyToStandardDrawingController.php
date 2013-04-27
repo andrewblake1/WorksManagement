@@ -4,7 +4,7 @@ class AssemblyToStandardDrawingController extends Controller
 {
 	
 	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
-	public function setTabs($nextLevel = true) {
+	public function setTabs($model) {
 
 		// control extra rows of tabs if action is 
 		if(isset($_GET['task_to_assembly_id']))
@@ -12,7 +12,7 @@ class AssemblyToStandardDrawingController extends Controller
 			$taskToAssemblyController= new TaskToAssemblyController(NULL);
 			$taskToAssembly = TaskToAssembly::model()->findByPk($_GET['task_to_assembly_id']);
 			$taskToAssembly->assertFromParent();
-			$taskToAssemblyController->setTabs(false);
+			$taskToAssemblyController->setTabs(NULL);
 			$this->_tabs = $taskToAssemblyController->tabs;
 			
 			// set breadcrumbs
@@ -25,7 +25,7 @@ class AssemblyToStandardDrawingController extends Controller
 		}
 		else
 		{
-			parent::setTabs($nextLevel);
+			parent::setTabs($model);
 		}
 	}
 

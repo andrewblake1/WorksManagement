@@ -22,7 +22,7 @@ class Store extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Network';
+	static $niceName = 'Standard';
 	
 	/**
 	 * @return array validation rules for model attributes.

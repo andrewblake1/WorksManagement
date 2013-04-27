@@ -142,28 +142,36 @@ class TaskToAssemblyController extends AdjacencyListController
 	}
 
 	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
-	public function setTabs($nextLevel = true) {
-		parent::setTabs($nextLevel);
-		// if in a sub assembly
-		if($parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
+	public function setTabs($model) {
+		if($model)
 		{
-			$this->setChildTabs($this->loadModel($parent_id));
-			// set breadcrumbs
-			static::setUpdateId($parent_id);
-			$this->breadcrumbs = self::getBreadCrumbTrail();
-			array_pop($this->breadcrumbs);
-			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
-			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
-			$this->breadcrumbs[] = SubAssembly::getNiceNamePlural();
+			parent::setTabs(NULL);
+			$this->setChildTabs($this->loadModel(static::getUpdateId()));
+		}
+		else
+		{
+			parent::setTabs($model);
+			// if in a sub assembly
+			if($parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
+			{
+				$this->setChildTabs($this->loadModel($parent_id));
+				// set breadcrumbs
+				static::setUpdateId($parent_id);
+				$this->breadcrumbs = self::getBreadCrumbTrail();
+				array_pop($this->breadcrumbs);
+				$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
+				$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
+				$this->breadcrumbs[] = SubAssembly::getNiceNamePlural();
+			}
 		}
 	}
 
-	public function setUpdateTabs($model) {
+/*	public function setUpdateTabs($model) {
 		// set top level tabs as per normal admin view
 		parent::setTabs(false);
 		
 		$this->setChildTabs($this->loadModel(static::getUpdateId()));
-	}
+	}*/
 	
 }
 

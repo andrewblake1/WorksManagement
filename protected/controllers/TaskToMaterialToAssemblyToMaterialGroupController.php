@@ -17,7 +17,7 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 		$this->breadcrumbs = TaskToMaterialController::getBreadCrumbTrail('Create');
 		
 		// set tabs
-		$this->setUpdateTabs($taskToMaterial);
+		$this->tabs = $taskToMaterial;
 		
 		echo $this->render('_form',array(
 			'model'=>$model,
@@ -53,18 +53,18 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 	
 	
 	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
-	public function setTabs($nextLevel = true) {
+	public function setTabs($model) {
 		$modelName = $this->modelName;
 		$update = FALSE;
 			
-		parent::setTabs($nextLevel);
+		parent::setTabs($model);
 
 		// if create otherwise update
-		$_GET['parent_id'] = $task_to_assembly_id = (isset($nextLevel->taskToAssembly) ? $nextLevel->taskToAssembly->id : $nextLevel->taskToMaterial->taskToAssembly->id);
+		$_GET['parent_id'] = $task_to_assembly_id = (isset($model->taskToAssembly) ? $model->taskToAssembly->id : $model->taskToMaterial->taskToAssembly->id);
 		$taskToAssemblyController= new TaskToAssemblyController(NULL);
 		$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
 		$taskToAssembly->assertFromParent('TaskToMaterial');
-		$taskToAssemblyController->setTabs(false);
+		$taskToAssemblyController->setTabs(NULL);
 		$taskToAssemblyController->setActiveTabs(NULL, $modelName::getNiceNamePlural());
 		$this->_tabs = $taskToAssemblyController->tabs;
 
