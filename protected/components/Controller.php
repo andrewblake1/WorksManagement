@@ -426,16 +426,20 @@ class Controller extends CController {
 		if (!empty($_POST[$this->_adminViewModel])) {
 			$attributes += $_POST[$this->_adminViewModel];
 		}
-		$model->attributes = $adminViewModel->attributes = $attributes;
 
+		$model->attributes = $adminViewModel->attributes = $attributes;
 		// ensure that where possible a pk has been passed from parent
 		$model->assertFromParent();
+		$adminViewModel->attributes = $model->attributes;
 
+$t=$adminViewModel->attributes;
+$t2=$model->attributes;
 		// if exporting to xl
 		if (isset($_GET['action']) && $_GET['action'] == 'download') {
 			// Export it
 			$this->toExcel($adminViewModel->search(false), $adminViewModel->exportColumns, null, array(), 'CSV'/* 'Excel5' */);
 		}
+
 // TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
 // TODO excel2007 best format however mixed results getting succesfull creations with this = varies across servers likely php_zip issue	thnk
 // it works on windows machine however not mac nor linux for me so far.

@@ -343,7 +343,7 @@ $t = $model->attributes;
 			$t = $_SESSION['admin'];
 			foreach($_SESSION['admin'] as $model => &$params)
 			{
-				if(!in_array($model, $trail))
+				if($model && !in_array($model, $trail))
 				{
 					$this->adminReset($model);
 				}
@@ -387,7 +387,8 @@ $t = $model->attributes;
 					'asc'=>" searchStaff ",
 					'desc'=>" searchStaff DESC",
 				);
-
+$t=self::getSearchCriteria($this);
+$t=$this->attributes;
 		// add all other attributes
 		$sort[] = '*';
 		$dataProvider = new ActiveDataProvider($this, array(
@@ -395,7 +396,6 @@ $t = $model->attributes;
 			'sort'=>array('attributes'=>$sort),
 			'pagination' => $pagination,
 		));
-
 		return $dataProvider;
 	}
 
