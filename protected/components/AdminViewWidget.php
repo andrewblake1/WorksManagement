@@ -33,25 +33,97 @@ class AdminViewWidget extends CWidget
 		$this->_controller->widget('bootstrap.widgets.TbAlert');
 		
 		// display the grid
-		$this->_controller->widget('bootstrap.widgets.TbGridView',array(
+		$this->_controller->widget('bootstrap.widgets.TbExtendedGridView',array(
 			'id'=>$this->_controller->modelName.'-grid',
 			'type'=>'striped',
 			'dataProvider'=>$this->model->search(),
 			'filter'=>$this->model,
 			'columns'=>$this->columns,
+			'bulkActions' => array(
+				'actionButtons' => array(
+					array(
+						'buttonType' => 'link',
+						'type' => 'primary',
+						'size' => 'small',
+						'label' => 'Delete Selected',
+						'id' => 'bulk_delete_button_1',
+						'url' => array('batchDelete'),
+						'htmlOptions' => array(
+							'class'=>'bulk-action'
+						),
+						'click' => 'js:batchActions',
+					),
+				),
+				// if grid doesn't have a checkbox column type, it will attach
+				// one and this configuration will be part of it
+				'checkBoxColumnConfig' => array(
+					'name' => 'id'
+				),
+			),
 		));
 
 		// as using boostrap modal for create the html for the modal needs to be on
 		// the calling page
 		$this->_controller->actionCreate('myModal', $this->createModel);
-
+		
 		// add css overrides
 		$sourceFolder = YiiBase::getPathOfAlias('webroot.css');
 		$publishedFile = Yii::app()->assetManager->publish($sourceFolder . '/worksmanagement.css');
 		Yii::app()->clientScript->registerCssFile($publishedFile);
 		
 		parent::run();
+		
+		?>
+		<script type="text/javascript">
+			// as a global variable
+			var gridId = "yiisession-grid";
+
+			$(function(){
+				// prevent the click event
+				$(document).on('click','#yiisession-grid a.bulk-action',function() {
+					return false;
+				});
+			});
+
+			function batchActions(values){
+				var url = "http://localhost/WorksManagement/<?php echo $this->_controller->modelName; ?>/batchDelete";
+				var ids = new Array();
+				if(values.size()>0){
+					values.each(function(idx){
+						ids.push($(this).val());
+					});
+
+					bootbox.confirm("Delete selected rows?",
+						function(confirmed){
+							if(confirmed)
+							{
+								$.ajax({
+									type: "POST",
+									url: url,
+									data: {"ids":ids},
+									dataType:'json',
+									success: function(resp){
+										//alert( "Data Saved: " + resp);
+										if(resp.status == "success"){
+											if(resp.msg) {
+												$('#yw0').html(resp.msg);
+											}
+											$.fn.yiiGridView.update("Assembly-grid");
+										} else {
+											alert(resp.msg);
+										}
+									}
+								});
+							}
+						}
+					);
+
+				}
+			}
+		</script>
+		<?php
 	}
 }
 
 ?>
+

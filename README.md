@@ -15,8 +15,8 @@ Sample virtual host:
 
 	ServerName test.melbourne.wcewm.co.nz
 
-	DocumentRoot /var/www/test/melbourne
-	<Directory /var/www/test/melbourne/>
+	DocumentRoot /var/www/dev/melbourne
+	<Directory /var/www/dev/melbourne/>
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride All
 		Order allow,deny
@@ -93,7 +93,9 @@ nano /etc/php5/apache2/php.ini
 post_max_size = 40M
 upload_max_filesize = 30M
 max_file_uploads = 20
-memory_limit = 256M
+# high memory limit needed for phpexcel otherwise it crashes leaving a blank screen with no file. So far with materials
+# export of just over 6000 rows, requiring somewhere between 256M and 384M
+memory_limit = 384M
 
 exit
 

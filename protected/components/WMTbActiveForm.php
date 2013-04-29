@@ -225,13 +225,8 @@ class WMTbActiveForm extends TbActiveForm
 	{
 		$model = $model ? $model : $this->model;
 
-		// NB: the cool boostrap looking datepicker not working
-// TODO: get working with the correct js and css which might be conflicting with something - isn't working anyway
-		$cs = Yii::app()->clientScript;
-		$cs->registerCoreScript('jquery.ui');
-		$cs->registerCssFile($cs->getCoreScriptUrl(). '/jui/css/base/jquery-ui.css');
+		$htmlOptions['options']['format'] = 'd M, yyyy';
 
-		$htmlOptions['options']['dateFormat'] = 'd M, yy';
 		// if no write access
 		if(!Controller::checkAccess(Controller::accessRead, get_class($model)))
 		{
@@ -240,8 +235,7 @@ class WMTbActiveForm extends TbActiveForm
 		}
 		$htmlOptions['id'] = $attribute;
 
-		echo parent::datepickerRow($model, $attribute,
-			array('class'=>'') + $htmlOptions + $this->_htmlOptionReadonly);
+		echo parent::datepickerRow($model, $attribute, $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
 	public function passwordFieldRow($attribute, $htmlOptions = array(), $model = NULL)

@@ -12,18 +12,37 @@ require_once(dirname(__FILE__) . '/protected/extensions/yii-environment/Environm
 switch($_SERVER['SERVER_NAME'])
 {
 	case 'localhost' :
-	case 'test.melbourne.wcewm.co.nz' :
-	case 'test.perth.wcewm.co.nz' :
-		$env = new Environment('DEVELOPMENT'); //override mode
+		$wceBusiness = 'melbourne';
+		$wceEnvironment = 'DEVELOPMENT';
+		break;
+	case 'dev.melbourne.wcewm.co.nz' :
+		$wceBusiness = 'melbourne';
+		$wceEnvironment = 'DEVELOPMENT';
+		break;
+	case 'dev.perth.wcewm.co.nz' :
+		$wceBusiness = 'perth';
+		$wceEnvironment = 'DEVELOPMENT';
 		break;
 	case 'melbourne.wcewm.co.nz' :
+		$wceBusiness = 'melbourne';
+		$wceEnvironment = 'PRODUCTION';
+		break;
 	case 'perth.wcewm.co.nz' :
-		$env = new Environment('PRODUCTION'); //override mode
+		$wceBusiness = 'perth';
+		$wceEnvironment = 'PRODUCTION';
 		break;
 	default :
 		throw new Exception("unknown server {$_SERVER['SERVER_NAME']}"); 
 }
-//$env = new Environment('TEST'); //override mode
+
+$wceDatabaseName = "worksmanagement_{$wceBusiness}";
+if('DEVELOPMENT' == $wceEnvironment)
+{
+	$wceDatabaseName .= '_dev';
+}
+
+$env = new Environment($wceEnvironment); //override mode
+
 
 // set character coding to what is used in database. Without this there can be errors in functions like substr which can
 // break a muli-byte character midway thru and return garbage. This also means that we should use the mb_ version of string functions
@@ -41,19 +60,4 @@ $env->runYiiStatics(); // like Yii::setPathOfAlias()
 
 Yii::createWebApplication($env->configWeb)->run();
 
-
-/*
-
-// change the following paths if necessary
-$yii=dirname(__FILE__).'/../../yii-1.1.10.r3566/framework/yii.php';
-$config=dirname(__FILE__).'/protected/config/main.php';
-
-// remove the following lines when in production mode
-defined('YII_DEBUG') or define('YII_DEBUG',true);
-// specify how many levels of call stack should be shown in each log message
-defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
-
-require_once($yii);
-Yii::createWebApplication($config)->run();
-*/
 ?>

@@ -136,6 +136,7 @@ abstract class ActiveRecord extends CActiveRecord
 		
 		return $niceName;
 	}
+
 	/**
 	 * Returns foreign key attribute name within this model that references another model. This is used
 	 * for creating navigational items i.e. tabs.

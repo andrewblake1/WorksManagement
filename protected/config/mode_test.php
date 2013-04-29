@@ -34,10 +34,10 @@ return array(
 
 			// Database
 			'db'=>array(
-				'connectionString' => 'mysql:host=localhost;dbname=lawdirect_test',
+				'connectionString' => 'mysql:host=localhost;dbname=worksmanagement_test',
 				'emulatePrepare' => true,
 				'username' => 'root',
-				'password' => 'root',
+				'password' => '2w0c1e2_',
 				'charset' => 'utf8',
 		    ),
 

@@ -12,35 +12,27 @@ return array(
 	'yiicPath' => dirname(__FILE__) . '/../../../../../../var/yii/yii/framework/yiic.php',
 	'yiitPath' => dirname(__FILE__) . '/../../../../../../var/yii/yii/framework/yiit.php',
 
-	// Set YII_DEBUG and YII_TRACE_LEVEL flags
-	'yiiDebug' => true,
-	'yiiTraceLevel' => 3,
-	
 	// This is the specific Web application configuration for this mode.
 	// Supplied config elements will be merged into the main config array.
 	'configWeb' => array(
 
 		// Application components
 		'components' => array(
-			// for test.wce.co.nz
 			// Database
 			'db'=>array(
-				'connectionString' => 'mysql:host=localhost;dbname=',
-				'emulatePrepare' => true,
-				'username' => '',
-				'password' => '',
-				'charset' => 'utf8',
+				'username' => 'root',
+				'password' => '2w0c1e2_',
 			),
 
 		),
 		
 		'params'=>array(
-			// directory to store uploaded files in that are below document root
-			'privateUploadPath' => '/home/www-data/uploads/test/melbourne/',
 			// directory to store uploaded files in that are above document root
 			'publicUploadPath' => dirname(__FILE__) . '/../../assets/',
 			// web directory to store uploaded files in that are above document root
 			'webUploadPath' => '/assets/',
+			// database name
+			'databaseName' => $wceDatabaseName,
 		),
 
 	),

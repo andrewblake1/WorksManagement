@@ -238,6 +238,7 @@ class Task extends GenericExtensionActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
+		$displaAttr[]='id';
 		$displaAttr[]='id0->name';
 
 		return $displaAttr;
@@ -502,6 +503,8 @@ class Task extends GenericExtensionActiveRecord
 		
 		return $saved;
 	}
+	
+
 
 }
 

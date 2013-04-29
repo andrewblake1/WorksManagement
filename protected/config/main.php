@@ -3,13 +3,9 @@
  * Main configuration.
  * All properties can be overridden in mode_<mode>.php files
  */
+global $wceDatabaseName;
 
 return array(
-
-	// Set yiiPath (relative to Environment.php)
-	'yiiPath' => dirname(__FILE__) . '/../../../../yii-1.1.10.r3566/framework/yii.php',
-	'yiicPath' => dirname(__FILE__) . '/../../../../yii-1.1.10.r3566/framework/yiic.php',
-	'yiitPath' => dirname(__FILE__) . '/../../../../yii-1.1.10.r3566/framework/yiit.php',
 
 	// Set YII_DEBUG and YII_TRACE_LEVEL flags
 	'yiiDebug' => true,
@@ -93,10 +89,10 @@ return array(
 			
 			// Database
 			'db' => array(
-				'connectionString' => '', //override in config/mode_<mode>.php
+				'connectionString' => "mysql:host=localhost;dbname=$wceDatabaseName",
 				'emulatePrepare' => true,
-				'username' => '', //override in config/mode_<mode>.php
-				'password' => '', //override in config/mode_<mode>.php
+				'username' => '',
+				'password' => '',
 				'charset' => 'utf8',
 			),
 

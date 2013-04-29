@@ -8,6 +8,7 @@
  * @property integer $store_id
  * @property integer $parent_assembly_id
  * @property integer $child_assembly_id
+ * @property string $comment
  * @property integer $quantity
  * @property integer $minimum
  * @property integer $maximum
@@ -43,7 +44,7 @@ class SubAssembly extends ActiveRecord
 		return array(
 			array('store_id, parent_assembly_id, child_assembly_id, quantity', 'required'),
 			array('store_id, parent_assembly_id, child_assembly_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
-			array('quantity_tooltip', 'length', 'max'=>255),
+			array('quantity_tooltip, comment', 'length', 'max'=>255),
 			array('select', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -100,6 +101,7 @@ class SubAssembly extends ActiveRecord
 			't.quantity',
 			't.minimum',
 			't.maximum',
+			't.comment',
 		);
 
 		$criteria->compare('t.id',$this->id);
@@ -109,6 +111,7 @@ class SubAssembly extends ActiveRecord
 		$criteria->compare('t.maximum',$this->maximum);
 		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
 		$criteria->compare('t.select',$this->select,true);
+		$criteria->compare('t.comment',$this->comment,true);
 		$this->compositeCriteria($criteria,
 			array(
 			'childAssembly.description',
@@ -127,7 +130,8 @@ class SubAssembly extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('searchChildAssembly', 'Assembly', 'child_assembly_id');
- 		$columns[] = 'quantity';
+  		$columns[] = 'comment';
+		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
  		$columns[] = 'select';
@@ -140,6 +144,7 @@ class SubAssembly extends ActiveRecord
 	{
 		return array(
 			'parentAssembly->description',
+			'comment',
 			'parentAssembly->alias',
 		);
 	}

@@ -7,14 +7,10 @@
  * - Production DB
  * - Standard production error pages (404, 500, etc.)
  */
+global $wceEnvironment;
 
 return array(
 	
-	// Set yiiPath (relative to Environment.php)
-	'yiiPath' => dirname(__FILE__) . '/../../../../private/yii-1.1.10.r3566/framework/yii.php',
-	'yiicPath' => dirname(__FILE__) . '/../../../../private/yii-1.1.10.r3566/framework/yiic.php',
-	'yiitPath' => dirname(__FILE__) . '/../../../../private/yii-1.1.10.r3566/framework/yiit.php',
-
 	// Set YII_DEBUG and YII_TRACE_LEVEL flags
 	'yiiDebug' => false,
 	'yiiTraceLevel' => 0,
@@ -29,17 +25,13 @@ return array(
 	// Supplied config elements will be merged into the main config array.
 	'configWeb' => array(
 
+		'params'=>array(
+			// directory to store uploaded files in that are below document root
+			'privateUploadPath' => "/home/www-data/uploads/$wceEnvironment/",
+		),
+
 		// Application components
 		'components' => array(
-
-			'db'=>array(
-				'connectionString' => 'mysql:host=mysql1.openhost.net.nz;dbname=lawdirect_dev',
-				'emulatePrepare' => true,
-				'username' => 'isabel',
-				'password' => 'Nirvana%1_',
-				'charset' => 'utf8',
-				//'schemaCachingDuration' => 3600,
-			),
 
 			// Application Log
 			'log' => array(
@@ -54,7 +46,7 @@ return array(
 					array(
 						'class' => 'CEmailLogRoute',
 						'levels' => 'error, warning',
-						'emails' => 'webadmin@example.com',
+						'emails' => 'andrewjblake73@gmail.com',
 					),
 				),
 			),

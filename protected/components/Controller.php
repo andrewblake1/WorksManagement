@@ -112,7 +112,14 @@ class Controller extends CController {
 				'roles' => array($this->modelName . 'Read'),
 			),
 			array('allow',
-				'actions' => array('create', 'delete', 'update', 'autocomplete', 'dependantList'),
+				'actions' => array(
+					'create',
+					'delete',
+					'update',
+					'autocomplete',
+					'dependantList',
+					'batchDelete'
+				),
 				'roles' => array($this->modelName),
 			),
 			array('deny', // deny all users
@@ -914,8 +921,10 @@ $t=			$model->attributes = $_POST[$modelName];
 	 * @param integer $id the ID of the model to be deleted
 	 */
 	public function actionDelete($id) {
-		if (Yii::app()->request->isPostRequest) {
-			try {
+		if(Yii::app()->request->isPostRequest)
+		{
+			try
+			{
 				// we only allow deletion via POST request
 				$model = $this->loadModel($id);
 
@@ -923,20 +932,9 @@ $t=			$model->attributes = $_POST[$modelName];
 
 				// call up any special handling in child class
 				$this->actionAfterDelete($model);
-
-				if (!isset($_GET['ajax'])) {
-					Yii::app()->user->setFlash('error', '<strong>Success!</strong>
-						The row has been succesfully deleted.');
-				} else {
-					echo "
-						<div class='alert alert-block alert-error fade in'>
-							<a class='close' data-dismiss='alert'>×</a>
-							<strong>Success!</strong>
-							The row has been succesfully deleted.
-						</div>
-					";
-				}
-			} catch (CDbException $e) {
+			}
+			catch (CDbException $e)
+			{
 				if (!isset($_GET['ajax'])) {
 					Yii::app()->user->setFlash('error', '<strong>Oops!</strong>
 						Unfortunately you can&#39;t delete this as at least one other record in the database refers to it.');
@@ -952,14 +950,58 @@ $t=			$model->attributes = $_POST[$modelName];
 			}
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if (!isset($_GET['ajax'])) {
+			if (!isset($_GET['ajax']))
+			{
 				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin', $this->modelName => static::getAdminParams($this->modelName)));
 			}
-		} else {
+		}
+		else
+		{
 			throw new CHttpException(400, 'Invalid request.');
 		}
 	}
 
+	// from http://www.yiiframework.com/forum/index.php/topic/37941-how-to-use-bulk-action-in-yiibooster/
+	public function actionBatchDelete()
+    {
+        //  print_r($_POST);
+        $request = Yii::app()->getRequest();
+		
+        if($request->getIsPostRequest())
+		{
+            if(isset($_POST['ids']))
+			{
+                $ids = $_POST['ids'];
+            }
+			
+            $successCount = $failureCount = 0;
+            foreach ($ids as $id)
+			{
+                $model = $this->loadModel($id);
+                ($model->delete() == true) ? $successCount++ : $failureCount++;
+            }
+
+            echo CJSON::encode(array(
+				'status' => 'success',
+				'msg' => $failureCount
+					? "
+						<div class='alert alert-block alert-error fade in'>
+							<a class='close' data-dismiss='alert'>×</a>
+							<strong>Oops!</strong>
+							Errors occurred. $successCount deleted but
+							$failureCount failed to be deleted - contact system admin, this is a bug.
+						</div>"
+					: '',
+               ));
+
+            die();
+        }
+		else
+		{
+            throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+        }
+    }
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -1021,7 +1063,6 @@ $t=			$model->attributes = $_POST[$modelName];
 			'htmlOptions' => $htmlOptions + array('class' => 'span5'),
 			'scopes' => $scopes,
 			'fKModelType' => $fKModelType,
-//				'relName'=>$relName,
 			)
 		);
 	}

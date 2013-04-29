@@ -108,7 +108,7 @@ class TaskToResourceType extends ActiveRecord
 			'supplier.name AS searchResourceTypeToSupplier',
 			'resourceData.quantity AS quantity',
 			'task.quantity AS searchTaskQuantity',
-			't.quantity * task.quantity AS searchTotalHours',
+			'resourceData.quantity * task.quantity AS searchTotalHours',
 			'resourceData.hours AS hours',
 			'resourceData.start AS start',
 			't.level',
@@ -119,7 +119,7 @@ class TaskToResourceType extends ActiveRecord
 		$criteria->compare('supplier.name',$this->searchResourceTypeToSupplier,true);
 		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('t.searchTaskQuantity',$this->searchTaskQuantity);
-		$criteria->compare('t.searchTotalHours',$this->searchTotalHours);
+		$criteria->compare('resourceData.quantity * task.quantity',$this->searchTotalHours);
 		$criteria->compare('hours',Yii::app()->format->toMysqlTime($this->hours));
 		$criteria->compare('start',Yii::app()->format->toMysqlTime($this->start));
 		$criteria->compare('t.level',$this->level);
@@ -156,7 +156,15 @@ class TaskToResourceType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchResourceTypeToSupplier', 'description', 'quantity', 'hours', 'start');
+		return array(
+			'searchResourceTypeToSupplier',
+			'description',
+			'quantity',
+			'searchTaskQuantity',
+			'hours',
+			'searchTotalHours',
+			'start',
+		);
 	}
 	
 	static function getDisplayAttr()

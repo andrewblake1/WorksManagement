@@ -6,32 +6,31 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<!-- Nb: Andrew Blake shifted this line from bottom to here as although meant to be faster to load scripts at bottom
-		nested set admin gui extension needs it up here for some reason -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	<?php
-		// Suppress Yii's autoload of JQuery
-		// We're loading it at bottom of page (best practice)
-		// from Google's CDN with fallback to local version 
+	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
+	
+<?php
+// Suppress Yii's autoload of JQuery
+// We're loading it at bottom of page (best practice)
+// from Google's CDN with fallback to local version 
+
 		Yii::app()->clientScript->scriptMap=array(
-			'jquery.js'=>false,
-			'jquery.min.js'=>false,
+			// TODO: remove this once the bug is fixed in future release of yiibooster
+			/* NB: currently version 1.9 of jqueryUI introduces tootip which conflicts with bootstrap.
+			 * new version of bootstrap or yiibooster will resolve it - several people working on it
+			 * There is a jquery-ui solution evidently using $.widget.bridge from https://github.com/twitter/bootstrap/issues/6303
+			 */
+			'jquery-ui.min.js'=>'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js',
 		);
-		
+
 		// Load Yii's generated javascript at bottom of page
 		// instead of the 'head', ensuring it loads after JQuery
-		Yii::app()->getClientScript()->coreScriptPosition = CClientScript::POS_END;
+//		Yii::app()->getClientScript()->coreScriptPosition = CClientScript::POS_END;
 	?>
-	
-	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 	<meta name="description" content="">
 	<meta name="author" content="">
-
 	<meta name="viewport" content="width=device-width">
-	
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap-and-responsive.min.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" />
-	<script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
 </head>
 <body>
 
@@ -47,7 +46,6 @@
 					'links'=>$this->breadcrumbs,
 				)); ?>
 			<?php endif?>
-
 
 			<!-- tabs -->
 			<?php
@@ -88,11 +86,12 @@
 		</div>
 	</div>
 
-</div><!-- container -->
-<script>window.jQuery || document.write('<script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/libs/jquery-1.7.2.min.js"><\/script>')</script>
-<!-- container -->
-<script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/libs/bootstrap/bootstrap.min.js"></script>
-
-<script src="<?php echo Yii::app()->theme->baseUrl; ?>/js/script.js"></script>
+</div>
+	
+<!--<script type="text/javascript">
+// handle jQuery plugin naming conflict between jQuery UI and Bootstrap
+$.widget.bridge('uibutton', $.ui.button);
+$.widget.bridge('uitooltip', $.ui.tooltip);
+</script>-->
 </body>
 </html>
