@@ -7,11 +7,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	// if sub assembly
 	if(!$model->isNewRecord && $model->parent_id)
 	{
-		// parent id in sub_assembly table
-		$parent_assembly_id = $model->parent->assembly_id;
-		// child id in sub_assembly table
-		$child_assembly_id = $model->assembly_id;
-		$subAssembly = SubAssembly::model()->findByAttributes(array('child_assembly_id'=>$child_assembly_id, 'parent_assembly_id'=>$parent_assembly_id));
+		$subAssembly = $model->subAssembly;
 		$form->rangeFieldRow('quantity', $subAssembly->minimum, $subAssembly->maximum, $subAssembly->select, $subAssembly->quantity_tooltip);
 	}
 	else

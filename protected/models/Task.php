@@ -442,7 +442,7 @@ class Task extends GenericExtensionActiveRecord
 		// loop thru all all assemblies related to the tasks type
 		foreach($this->taskType->taskTypeToAssemblies as $taskTypeToAssembly)
 		{
-			$saved = TaskToAssemblyController::addAssembly($this->id, $taskTypeToAssembly->assembly_id, $taskTypeToAssembly->quantity, null, $models);
+			$saved = TaskToAssemblyController::addAssembly($this->id, $taskTypeToAssembly->assembly_id, $taskTypeToAssembly->quantity, null, null, $models);
 		}
 		
 		return $saved;

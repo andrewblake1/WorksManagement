@@ -93,7 +93,7 @@ class TaskToAssemblyController extends AdjacencyListController
 	 * @param int $parent_id the id of the parent within this model - adjacency list
 	 * @return returns 0, or null on error of any inserts
 	 */
-	static function addAssembly($task_id, $assembly_id, $quantity, $parent_id = null, &$models=array(), &$taskToAssembly=NULL)
+	static function addAssembly($task_id, $assembly_id, $quantity, $parent_id = NULL, $sub_assembly_id = NULL, &$models=array(), &$taskToAssembly=NULL)
 	{
 		// initialise the saved variable to show no errors
 		$saved = true;
@@ -106,6 +106,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		$taskToAssembly->task_id = $task_id;
 		$taskToAssembly->assembly_id = $assembly_id;
 		$taskToAssembly->parent_id = $parent_id;
+		$taskToAssembly->sub_assembly_id = $sub_assembly_id;
 		$taskToAssembly->quantity = $quantity;
 		// NB: can't call createSave due to recursion so this is internals
 		$saved = $taskToAssembly->dbCallback('save');
@@ -135,7 +136,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		// recurse thru sub assemblies
 		foreach(SubAssembly::model()->findAllByAttributes(array('parent_assembly_id'=>$assembly_id)) as $subAssembly)
 		{
-			$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, $subAssembly->quantity, $taskToAssembly->id, $models);
+			$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, $subAssembly->quantity, $taskToAssembly->id, $subAssembly->id, $models);
 		}
 		
 		return $saved;
