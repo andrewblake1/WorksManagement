@@ -18,7 +18,7 @@ class AdjacencyListController extends Controller {
 			$paramsLevel0 = static::getAdminParams();
 			if(isset($paramsLevel0[$parentForeignKey]))
 			{
-				$queryParamters[$parentForeignKey] = $paramsLevel0[$parentForeignKey];
+				$queryParameters[$parentForeignKey] = $paramsLevel0[$parentForeignKey];
 			}
 			elseif(static::getUpdateId($parentCrumb) !== NULL)
 			{
@@ -35,14 +35,14 @@ class AdjacencyListController extends Controller {
 			if(($updateId = static::getUpdateId(NULL, 0)) !== NULL)
 			{
 				// get the update models parent id
-					$parent_id = $modelName::model()->findByPk($updateId)->parent_id;
+				$parent_id = $modelName::model()->findByPk($updateId)->parent_id;
 			}
 		}	
 		
 		// if there is a parent
 		for(; $model = $modelName::model()->findByPk($parent_id); $parent_id = $model->parent_id)
 		{
-			// get the text to display in the bread rum
+			// get the text to display in the bread crumb
 			$text = isset($model->{$model->crumbAttribute}) ? $model->{$model->crumbAttribute} : $modelName::getNiceName($parent_id);
 
 			// if this is the last crumb
