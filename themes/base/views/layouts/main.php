@@ -73,6 +73,7 @@
 				{
 					$this->exportButton();
 					$this->newButton();
+//					$this->deleteSelectedButton();
 				}
 				echo '</h2>';
 			}

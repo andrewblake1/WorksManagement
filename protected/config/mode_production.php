@@ -7,7 +7,7 @@
  * - Production DB
  * - Standard production error pages (404, 500, etc.)
  */
-global $wceEnvironment;
+global $wceBusiness;
 
 return array(
 	
@@ -27,7 +27,7 @@ return array(
 
 		'params'=>array(
 			// directory to store uploaded files in that are below document root
-			'privateUploadPath' => "/home/www-data/uploads/$wceEnvironment/",
+			'privateUploadPath' => "/home/www-data/uploads/$wceBusiness/",
 		),
 
 		// Application components

@@ -63,14 +63,15 @@ find / -name my.cnf. This potential security risk as normally only open to 127.0
 # to muck around with this whereas already setup for root hence just do as root and chown after
 cd /var/www
 git init test
+cd test
 git clone git@github.com:andrewblake1/WorksManagement.git
 mv WorksManagement melbourne
-chown -R www-data .
 # if installed in domain/subdomain i.e. no supdirectory then .htaccess is fine, otherwise need to modify first RewriteRule e.g. /melbourne/ instead of /
 cd melbourne
 cp template.htaccess .htaccess
 # need to create private uploads directory/s below document root
 mkdir /home/www-data
+cd /home/www-data
 mkdir /uploads
 mkdir /uploads/test
 mkdir /uploads/test/melbourne
@@ -81,13 +82,15 @@ mkdir /uploads/melbourne
 mkdir /uploads/perth
 mkdir /uploads/melbourne/assembly
 mkdir /uploads/perth/assembly
-chown -R www-data /home/www-data
+
 # need to create public uploads temporary directories
-su www-data
 mkdir /var/www/melbourne/assets/assembly
 mkdir /var/www/perth/assets/assembly
 mkdir /var/www/test/melbourne/assets/assembly
 mkdir /var/www/test/perth/assets/assembly
+mkdir /var/www/dev/melbourne/assets/assembly
+mkdir /var/www/dev/perth/assets/assembly
+
 nano /etc/php5/apache2/php.ini
 #edit php.ini 
 post_max_size = 40M
@@ -99,12 +102,15 @@ memory_limit = 384M
 
 exit
 
+chown -R www-data /home/www-data
+chown -R www-data /var/www
+
 # need to set local database access
 cd protected/config
 cp local_template.php local.php
 # set database settings here - also set directories correct
 
-#5./ update index.php with correct domains/subdomains in the switch statement that determines the type of environment to run i.e. developmen or production
+#5./ 
 
 #6./ to update to repository source go to the document root and type
 cd /var/www/test/melbourne

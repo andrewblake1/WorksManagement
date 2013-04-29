@@ -1181,6 +1181,22 @@ $t=			$model->attributes = $_POST[$modelName];
 		}
 	}
 
+/*	protected function deleteSelectedButton() {
+		if (Yii::app()->params['showDeleteSelectedButton']) {
+			echo ' ';
+			$this->widget('bootstrap.widgets.TbButton', array(
+				'label' => 'Delete Selected',
+				'id' => 'bulk_delete_button_1',
+				'type' => 'primary',
+				'size' => 'small', // '', 'large', 'small' or 'mini'
+				'htmlOptions' => array(
+					'class'=>'bulk-actions-btn',
+					'onClick' => 'js:batchActions',
+				),
+			));
+		}
+	}*/
+
 	protected function newButton() {
 		echo ' ';
 		$this->widget('bootstrap.widgets.TbButton', array(

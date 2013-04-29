@@ -31,15 +31,13 @@ class AdminViewWidget extends CWidget
 		// add instructions/ warnings errors via Yii::app()->user->setFlash
 		// NB: thia won't work on ajax update as in delete hence afterDelete javascript added in WMTbButtonColumn
 		$this->_controller->widget('bootstrap.widgets.TbAlert');
-		
-		// display the grid
-		$this->_controller->widget('bootstrap.widgets.TbExtendedGridView',array(
-			'id'=>$this->_controller->modelName.'-grid',
-			'type'=>'striped',
-			'dataProvider'=>$this->model->search(),
-			'filter'=>$this->model,
-			'columns'=>$this->columns,
-			'bulkActions' => array(
+
+		// should we allow bulk delete
+		// determine whether form elements should be enabled or disabled by on access rights
+		$controllerName = get_class($this->_controller);
+		$bulkActions = $controllerName::checkAccess(Controller::accessWrite)
+			? array(
+				'align'=>'left',
 				'actionButtons' => array(
 					array(
 						'buttonType' => 'link',
@@ -48,8 +46,9 @@ class AdminViewWidget extends CWidget
 						'label' => 'Delete Selected',
 						'id' => 'bulk_delete_button_1',
 						'url' => array('batchDelete'),
+							'align'=>'left',
 						'htmlOptions' => array(
-							'class'=>'bulk-action'
+							'class'=>'bulk-action',
 						),
 						'click' => 'js:batchActions',
 					),
@@ -58,8 +57,18 @@ class AdminViewWidget extends CWidget
 				// one and this configuration will be part of it
 				'checkBoxColumnConfig' => array(
 					'name' => 'id'
-				),
-			),
+				))
+			: NULL;
+//Yii::app()->params['showDeleteSelectedButton'] = TRUE;	
+		
+		// display the grid
+		$this->_controller->widget('bootstrap.widgets.TbExtendedGridView',array(
+			'id'=>$this->_controller->modelName.'-grid',
+			'type'=>'striped',
+			'dataProvider'=>$this->model->search(),
+			'filter'=>$this->model,
+			'columns'=>$this->columns,
+			'bulkActions' => $bulkActions,
 		));
 
 		// as using boostrap modal for create the html for the modal needs to be on
@@ -103,12 +112,11 @@ class AdminViewWidget extends CWidget
 									data: {"ids":ids},
 									dataType:'json',
 									success: function(resp){
-										//alert( "Data Saved: " + resp);
 										if(resp.status == "success"){
 											if(resp.msg) {
 												$('#yw0').html(resp.msg);
 											}
-											$.fn.yiiGridView.update("Assembly-grid");
+											$.fn.yiiGridView.update("<?php echo $this->_controller->modelName; ?>-grid");
 										} else {
 											alert(resp.msg);
 										}

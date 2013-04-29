@@ -10,7 +10,7 @@
  */
 // TODO: AB examine correct error reporting - should fix up to strict level ideally
 //ini_set('error_reporting', E_NOTICE);
-global $wceEnvironment;
+global $wceBusiness;
 
 return array(
 
@@ -31,7 +31,7 @@ return array(
 
 		'params'=>array(
 			// directory to store uploaded files in that are below document root
-			'privateUploadPath' => "/home/www-data/uploads/dev/$wceEnvironment/",
+			'privateUploadPath' => "/home/www-data/uploads/dev/$wceBusiness/",
 		),
 
 		// Modules
