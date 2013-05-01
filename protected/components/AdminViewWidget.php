@@ -69,6 +69,7 @@ class AdminViewWidget extends CWidget
 			'filter'=>$this->model,
 			'columns'=>$this->columns,
 			'bulkActions' => $bulkActions,
+			'ajaxUrl' => Yii::app()->request->getUrl(),
 		));
 
 		// as using boostrap modal for create the html for the modal needs to be on

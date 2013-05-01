@@ -110,8 +110,8 @@ class AssemblyToMaterial extends ActiveRecord
 			't.quantity_tooltip',
 		);
 
-		$criteria->compare('material.description',$this->searchMaterialDescription,true);
 		$criteria->compare('stage.description',$this->searchStage,true);
+		$criteria->compare('material.description',$this->searchMaterialDescription,true);
 		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
 		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
@@ -131,7 +131,7 @@ class AssemblyToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = $this->linkThisColumn('searchMaterialDescription');
+		$columns[] = 'searchMaterialDescription';
  		$columns[] = 'searchMaterialUnit';
  		$columns[] = 'searchMaterialAlias';
  		$columns[] = 'searchStage';

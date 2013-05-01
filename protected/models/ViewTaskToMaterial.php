@@ -7,6 +7,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchStage;
+	public $searchMaterialDescription;
+	public $searchMaterialUnit;
 	public $searchMaterialGroup;
 	public $searchMaterialAlias;
 	public $searchTaskQuantity;
@@ -28,7 +30,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, task_to_assembly_id, searchTotalQuantity, searchTaskQuantity, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterial, searchAssembly, quantity', 'safe', 'on'=>'search'),
+			array('id, task_id, task_to_assembly_id, searchMaterialUnit, searchTotalQuantity, searchTaskQuantity, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterialDescription, searchAssembly, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,7 +51,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			't.material_group_id',
 			'stage.description AS searchStage',
 			't.task_to_assembly_id',
-			'material.description AS searchMaterial',
+			'material.description AS searchMaterialDescription',
+			'material.unit AS searchMaterialUnit',
 			't.searchTaskQuantity',
 			't.searchTotalQuantity',
 			"CONCAT_WS('$delimiter',
@@ -81,7 +84,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		';
 		
 		// where
-		$criteria->compare('material.description',$this->searchMaterial,true);
+		$criteria->compare('material.description',$this->searchMaterialDescription,true);
+		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
 		$this->compositeCriteria($criteria,
 			array(
 				'material_to_client.alias',
@@ -109,8 +113,9 @@ class ViewTaskToMaterial extends ViewActiveRecord
 
 	public function getAdminColumns()
 	{
- 		$columns[] = $this->linkThisColumn('searchMaterial');
- 		$columns[] = $this->linkThisColumn('searchMaterialAlias');
+ 		$columns[] = 'searchMaterialDescription';
+ 		$columns[] = 'searchMaterialUnit';
+ 		$columns[] = 'searchMaterialAlias';
 		$columns[] = 'searchMaterialGroup';
 		$columns[] = 'searchStage';
 		$columns[] = 'quantity';
@@ -128,7 +133,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	public function getSearchSort()
 	{
 		return array(
-			'searchMaterial',
+			'searchMaterialDescription',
+			'searchMaterialUnit',
 			'searchMaterialAlias',
 			'searchMaterialGroup',
 			'searchAssembly',

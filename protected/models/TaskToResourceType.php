@@ -86,10 +86,10 @@ class TaskToResourceType extends ActiveRecord
 			'resource_type_to_supplier_id' => 'Supplier',
 			'resource_type_id' => 'Resource type',
 			'description' => 'Resource type',
-			'hours' => 'Time on-site (HH:mm)',
-			'start' => 'Start (HH:mm)',
+			'hours' => 'Duration (HH:mm)',
+			'start' => 'Start time (HH:mm)',
 			'searchTaskQuantity' => 'Task quantity',
-			'searchTotalQuantity' => 'Total hours',
+			'searchTotalHours' => 'Total time',
 		));
 	}
 

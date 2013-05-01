@@ -70,7 +70,6 @@ class TaskToMaterial extends ActiveRecord
 		);
 	}
 
-
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -79,7 +78,8 @@ class TaskToMaterial extends ActiveRecord
 		return parent::attributeLabels(array(
 			'material_id' => 'Material',
 			'searchTask' => 'Task',
-			'searchMaterial' => 'Material',
+			'searchMaterialDescription' => 'Material',
+			'searchMaterialUnit' => 'Unit',
 			'searchMaterialAlias' => 'Client alias/Material alias',
 			'searchTaskQuantity' => 'Task quantity',
 			'searchTotalQuantity' => 'Total',
@@ -93,7 +93,11 @@ class TaskToMaterial extends ActiveRecord
 
 	static function getDisplayAttr()
 	{
-		return array('material->description');
+		return array(
+			'material->description',
+			'material->unit',
+			'material->alias',
+		);
 	}
 
 	public function afterFind() {

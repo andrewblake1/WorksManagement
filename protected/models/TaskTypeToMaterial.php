@@ -26,10 +26,12 @@ class TaskTypeToMaterial extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchMaterial;
-	public $searchTaskType;
+	public $searchMaterialDescription;
+	public $searchMaterialUnit;
+	public $searchMaterialAlias;
 
 	public $store_id;
+	public $client_alias;
 
 	/**
 	 * @var string nice model name for use in output
@@ -48,7 +50,7 @@ class TaskTypeToMaterial extends ActiveRecord
 			array('store_id, task_type_id, material_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, searchTaskType, searchMaterial, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
+			array('id, task_type_id, client_alias, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -74,10 +76,12 @@ class TaskTypeToMaterial extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'task_type_id' => 'Task Type',
-			'material_id' => 'Material',
+//			'material_id' => 'Material',
+			'searchMaterialDescription' => 'Material',
+			'searchMaterialUnit' => 'Unit',
+			'searchMaterialAlias' => 'Alias',
 		));
 	}
-
 
 	/**
 	 * @return DbCriteria the search/filter conditions.
@@ -91,7 +95,13 @@ class TaskTypeToMaterial extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.material_id',
-			'material.description AS searchMaterial',
+			'material.description AS searchMaterialDescription',
+			'material.unit AS searchMaterialUnit',
+			'material.alias AS searchMaterialAlias',
+			"CONCAT_WS('$delimiter',
+				material.alias,
+				materialToClient.alias
+			) AS searchMaterialAlias",
 			't.quantity',
 			't.minimum',
 			't.maximum',
@@ -99,9 +109,18 @@ class TaskTypeToMaterial extends ActiveRecord
 			't.quantity_tooltip',
 		);
 
+		// join
+		$criteria->join = '
+			LEFT JOIN task_type taskType ON t.task_type_id = taskType.id
+			LEFT JOIN material_to_client materialToClient ON t.material_id = materialToClient_material_id
+				AND taskType.client_id = materialToClient.client_id
+		';
+		
 		// where
-		$criteria->compare('material.description',$this->searchMaterial);
 		$criteria->compare('t.task_type_id',$this->task_type_id);
+		$criteria->compare('material.description',$this->searchMaterialDescription,true);
+		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
+		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.minimium',$this->minimum);
 		$criteria->compare('t.maximum',$this->maximum);
@@ -118,7 +137,9 @@ class TaskTypeToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
+		$columns[] = 'searchMaterialDescription';
+ 		$columns[] = 'searchMaterialUnit';
+ 		$columns[] = 'searchMaterialAlias';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
@@ -134,7 +155,10 @@ class TaskTypeToMaterial extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
+			'taskType->description',
 			'material->description',
+			'material->unit',
+			'material->alias',
 		);
 	}
 
@@ -144,11 +168,22 @@ class TaskTypeToMaterial extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchMaterial', 'searchTaskType');
+		return array(
+			'searchMaterialDescription',
+			'searchMaterialUnit',
+			'searchMaterialAlias',
+		);
 	}
 
 	public function afterFind() {
 		$this->store_id = $this->material->store_id;
+		if($materialToClient = MaterialToClient::model()->findByAttributes(array(
+			'material_id'=>$this->material_id,
+			'client_id'=>$this->taskType->client,
+		)))
+		{
+			$this->client_alias = $materialToClient->alias;
+		}
 		
 		return parent::afterFind();
 	}

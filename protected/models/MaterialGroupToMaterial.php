@@ -28,7 +28,9 @@ class MaterialGroupToMaterial extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchMaterial;
+	public $searchMaterialDescription;
+	public $searchMaterialUnit;
+	public $searchMaterialAlias;
 
 	/**
 	 * @var string nice model name for use in output
@@ -47,7 +49,7 @@ class MaterialGroupToMaterial extends ActiveRecord
 			array('material_id, material_group_id, store_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchMaterial, material_id, material_group_id', 'safe', 'on'=>'search'),
+			array('id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, material_id, material_group_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,8 +80,10 @@ class MaterialGroupToMaterial extends ActiveRecord
 	{
 		return array(
 			'material_group_id' => 'Material Group',
-			'material_id' => 'Material',
-			'searchMaterial' => 'Material',
+//			'material_id' => 'Material group/Material/Unit/Alias',
+			'searchMaterialDescription' => 'Material',
+			'searchMaterialUnit' => 'Unit',
+			'searchMaterialAlias' => 'Alias',
 		);
 	}
 
@@ -94,14 +98,18 @@ class MaterialGroupToMaterial extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.material_id',
-			'material.description AS searchMaterial',
+			't.material_group_id',
+			'material.description AS searchMaterialDescription',
+			'material.unit AS searchMaterialUnit',
+			'material.alias AS searchMaterialAlias',
 		);
 
 		// where
 		$criteria->compare('material_group_id',$this->material_group_id);
-		$criteria->compare('material.description',$this->searchMaterial);
-
+		$criteria->compare('material.description',$this->searchMaterialDescription,true);
+		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
+		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
+ 
 		// join
 		$criteria->with = array(
 			'material',
@@ -112,7 +120,9 @@ class MaterialGroupToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
+		$columns[] = 'searchMaterialDescription';
+ 		$columns[] = 'searchMaterialUnit';
+ 		$columns[] = 'searchMaterialAlias';
 		
 		return $columns;
 	}
@@ -123,7 +133,10 @@ class MaterialGroupToMaterial extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
+			'materialGroup->description',
 			'material->description',
+			'material->unit',
+			'material->alias',
 		);
 	}
 
@@ -133,7 +146,11 @@ class MaterialGroupToMaterial extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchMaterial');
+		return array(
+			'searchMaterialDescription',
+			'searchMaterialUnit',
+			'searchMaterialAlias',
+		);
 	}
 	
 	public function beforeValidate()

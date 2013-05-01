@@ -138,8 +138,7 @@ class Task extends GenericExtensionActiveRecord
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			't.id',
-			't.task_type_id',
+			't.id AS id',
 			't.task_type_id',
 			't.quantity',
 			't.location',

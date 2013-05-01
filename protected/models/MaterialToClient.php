@@ -19,8 +19,9 @@
  */
 class MaterialToClient extends ActiveRecord
 {
-	public $searchAlias;
-	public $searchMaterial;
+	public $searchMaterialDescription;
+	public $searchMaterialUnit;
+	public $searchMaterialAlias;
 
 	/**
 	 * @var string nice model name for use in output
@@ -39,7 +40,7 @@ class MaterialToClient extends ActiveRecord
 			array('material_id, client_id', 'numerical', 'integerOnly'=>true),
 			array('unit_price', 'length', 'max'=>7),
 			array('alias', 'length', 'max'=>255),
-			array('id, client_id, searchMaterial, searchAlias, alias, unit_price', 'safe', 'on'=>'search'),
+			array('id, client_id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, alias, unit_price', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,10 +65,12 @@ class MaterialToClient extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'unit_price' => 'Unit price',
-			'material_id' => 'Material',
+			'material_id' => 'Material/Unit/Alias',
 			'client_id' => 'Client',
-			'alias' => 'Client alias/Material alias',
-			'searchAlias' => 'Client alias/Material alias',
+			'alias' => 'Client alias',
+			'searchMaterialDescription' => 'Material',
+			'searchMaterialUnit' => 'Unit',
+			'searchMaterialAlias' => 'Alias',
 		));
 	}
 
@@ -81,25 +84,20 @@ class MaterialToClient extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'material.description AS searchMaterial',
 			't.material_id',
+			'material.description AS searchMaterialDescription',
+			'material.unit AS searchMaterialUnit',
+			'material.alias AS searchMaterialAlias',
 			't.unit_price',
-			"CONCAT_WS('$delimiter',
-				t.alias,
-				material.alias
-				) AS searchAlias",
+			"t.alias",
 			't.client_id',
 		);
 
-		$this->compositeCriteria($criteria,
-			array(
-				't.alias',
-				'material.alias',
-			),
-			$this->searchAlias
-		);
-		$criteria->compare('searchMaterial',$this->searchMaterial,true);
-		$criteria->compare('t.client_id',$this->client_id,true);
+		$criteria->compare('material.description',$this->searchMaterialDescription,true);
+		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
+		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
+		$criteria->compare('t.alias',$this->alias,true);
+ 		$criteria->compare('t.client_id',$this->client_id,true);
 		$criteria->compare('t.unit_price', $this->unit_price);
 
 		$criteria->with = array('material');
@@ -109,9 +107,10 @@ class MaterialToClient extends ActiveRecord
 
 	public function getAdminColumns()
 	{
- //       $columns[] = static::linkColumn('searchMaterial', 'Material', 'material_id');
-		$columns[] = $this->linkThisColumn('searchMaterial');
-        $columns[] = 'searchAlias';
+ 		$columns[] = 'searchMaterialDescription';
+ 		$columns[] = 'searchMaterialUnit';
+ 		$columns[] = 'searchMaterialAlias';
+ 		$columns[] = 'alias';
 		$columns[] = 'unit_price';
 
 		return $columns;
@@ -123,7 +122,12 @@ class MaterialToClient extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchAlias', 'searchMaterial');
+		return array(
+			'material->description',
+			'material->unit',
+			'material->alias',
+			'alias',
+		);
 	}
 
 	/**
@@ -133,8 +137,9 @@ class MaterialToClient extends ActiveRecord
 	{
 		return array(
 			'material->description',
-			'alias',
+			'material->unit',
 			'material->alias',
+			'alias',
 		);
 	}
 
