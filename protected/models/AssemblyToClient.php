@@ -18,7 +18,9 @@
  */
 class AssemblyToClient extends ActiveRecord
 {
-	public $searchAssembly;
+	public $searchAssemblyDescription;
+	public $searchAssemblyUnit;
+	public $searchAssemblyAlias;
 
 	/**
 	 * @var string nice model name for use in output
@@ -38,7 +40,7 @@ class AssemblyToClient extends ActiveRecord
 			array('alias', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, client_id, searchAssembly, alias', 'safe', 'on'=>'search'),
+			array('id, client_id, searchAssemblyDescription, searchAssemblyUnit, searchAssemblyAlias, alias', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -63,7 +65,9 @@ class AssemblyToClient extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'assembly_id' => 'Assembly',
-			'searchAssembly' => 'Assembly',
+			'searchAssemblyDescription' => 'Assembly',
+			'searchAssemblyUnit' => 'Unit',
+			'searchAssemblyAlias' => 'Alias',
 			'client_id' => 'Client',
 		));
 	}
@@ -78,22 +82,17 @@ class AssemblyToClient extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			"CONCAT_WS('$delimiter',
-				assembly.description,
-				assembly.alias
-				) AS searchAssembly",
+			'assembly.description AS searchAssemblyDescription',
+			'assembly.unit AS searchAssemblyUnit',
+			'assembly.alias AS searchAssemblyAlias',
 			't.alias',
 			'assembly_id',
 			't.client_id',
 		);
 
-		$this->compositeCriteria($criteria,
-			array(
-			'assembly.description',
-			'assembly.alias'
-			),
-			$this->searchAssembly
-		);
+		$criteria->compare('assembly.description',$this->searchAssemblyDescription,true);
+		$criteria->compare('assembly.unit',$this->searchAssemblyUnit,true);
+		$criteria->compare('assembly.alias',$this->searchAssemblyAlias,true);
 		$criteria->compare('t.client_id',$this->client_id,true);
 		$criteria->compare('t.alias',$this->alias);
 
@@ -104,7 +103,9 @@ class AssemblyToClient extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = $this->linkThisColumn('searchAssembly');
+ 		$columns[] = 'searchAssemblyDescription';
+ 		$columns[] = 'searchAssemblyUnit';
+ 		$columns[] = 'searchAssemblyAlias';
  		$columns[] = 'alias';
 
 		return $columns;
@@ -116,7 +117,12 @@ class AssemblyToClient extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchAssembly');
+		return array(
+			'assembly->description',
+			'assembly->unit',
+			'assembly->alias',
+			'alias',
+		);
 	}
 
 	/**
@@ -126,7 +132,9 @@ class AssemblyToClient extends ActiveRecord
 	{
 		return array(
 			'assembly->description',
+			'assembly->unit',
 			'assembly->alias',
+			'alias',
 		);
 	}
 

@@ -89,9 +89,9 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		return parent::attributeLabels(array(
 			'task_id' => 'Task',
 			'assembly_id' => 'Assembly',
-			'searchAssembly' => 'Assembly',	
-			'searchMaterialAlias' => 'Client alias/Assembly alias',
-			'searchQuantity' => 'quantity',
+			'searchTask' => 'Task',
+			'searchAssemblyDescription' => 'Material',
+			'searchAssemblyAlias' => 'Client alias/Material alias',
 			'searchTaskQuantity' => 'Task quantity',
 			'searchTotalQuantity' => 'Total',
 			'searchAssemblyGroup' => 'Group/Comment',
@@ -100,7 +100,11 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 
 	static function getDisplayAttr()
 	{
-		return array('assembly->description');
+		return array(
+			'assembly->description',
+			'assembly->unit',
+			'assembly->alias',
+		);
 	}
 
 	public function afterFind() {

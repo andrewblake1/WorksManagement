@@ -6,8 +6,8 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
+	public $searchAssemblyDescription;
 	public $searchAssemblyGroup;
-	public $searchAssembly;
 	public $searchAssemblyAlias;
 	public $searchTaskQuantity;
 	public $searchTotalQuantity;
@@ -29,7 +29,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, parent_id, quantity, searchTotalQuantity, searchTaskQuantity, searchAssemblyAlias, searchAssemblyGroup, searchAssembly', 'safe', 'on'=>'search'),
+			array('id, task_id, parent_id, quantity, searchTotalQuantity, searchTaskQuantity, searchAssemblyAlias, searchAssemblyGroup, searchMaterialDescription', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -47,7 +47,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 			't.task_id',
 			't.parent_id',
 			't.assembly_id',
-			'assembly.description AS searchAssembly',
+			'assembly.description AS searchAssemblyDescription',
 			"CONCAT_WS('$delimiter',
 				assemblyToClient.alias,
 				assembly.alias
@@ -76,7 +76,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		';
 		
 		// where
-		$criteria->compare('assembly.description',$this->searchAssembly,true);
+		$criteria->compare('assembly.description',$this->searchAssemblyDescription,true);
 		$this->compositeCriteria($criteria,
 			array(
 				'assembly_to_client.alias',
@@ -109,8 +109,8 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		$columns[] = 'quantity';
 		$columns[] = 'searchTaskQuantity';
 		$columns[] = 'searchTotalQuantity';
-		$columns[] = 'searchAssembly';
-		$columns[] = 'searchAssemblyAlias';
+ 		$columns[] = 'searchAssemblyDescription';
+ 		$columns[] = 'searchAssemblyAlias';
 
 		return $columns;
 	}
@@ -122,8 +122,8 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	public function getSearchSort()
 	{
 		return array(
-			'searchAssembly',
-			'searchAssemblyAlias',
+			'searchMaterialDescription',
+			'searchMaterialAlias',
 			'searchAssemblyGroup',
 			'parent_id',
 			'quantity',

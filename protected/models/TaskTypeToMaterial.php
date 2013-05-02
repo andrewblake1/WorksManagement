@@ -97,7 +97,6 @@ class TaskTypeToMaterial extends ActiveRecord
 			't.material_id',
 			'material.description AS searchMaterialDescription',
 			'material.unit AS searchMaterialUnit',
-			'material.alias AS searchMaterialAlias',
 			"CONCAT_WS('$delimiter',
 				material.alias,
 				materialToClient.alias
@@ -177,6 +176,7 @@ class TaskTypeToMaterial extends ActiveRecord
 
 	public function afterFind() {
 		$this->store_id = $this->material->store_id;
+
 		if($materialToClient = MaterialToClient::model()->findByAttributes(array(
 			'material_id'=>$this->material_id,
 			'client_id'=>$this->taskType->client,

@@ -28,7 +28,9 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchAssembly;
+	public $searchAssemblyDescription;
+	public $searchAssemblyUnit;
+	public $searchAssemblyAlias;
 
 	/**
 	 * @var string nice model name for use in output
@@ -47,7 +49,7 @@ class AssemblyGroupToAssembly extends ActiveRecord
 			array('assembly_id, assembly_group_id, store_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchAssembly, assembly_id, assembly_group_id', 'safe', 'on'=>'search'),
+			array('id, searchAssemblyDescription, searchAssemblyUnit, searchAssemblyAlias, assembly_id, assembly_group_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,8 +80,10 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	{
 		return array(
 			'assembly_group_id' => 'Assembly Group',
-			'assembly_id' => 'Assembly',
-			'searchAssembly' => 'Assembly',
+//			'assembly_id' => 'Assembly',
+			'searchAssemblyDescription' => 'Assembly',
+			'searchAssemblyUnit' => 'Unit',
+			'searchAssemblyAlias' => 'Alias',
 		);
 	}
 
@@ -94,12 +98,16 @@ class AssemblyGroupToAssembly extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'assembly.description AS searchAssembly',
+			'assembly.description AS searchAssemblyDescription',
+			'assembly.unit AS searchAssemblyUnit',
+			'assembly.alias AS searchAssemblyAlias',
 		);
 
 		// where
 		$criteria->compare('assembly_group_id',$this->assembly_group_id);
-		$criteria->compare('assembly.description',$this->searchAssembly);
+		$criteria->compare('assembly.description',$this->searchAssemblyDescription,true);
+		$criteria->compare('assembly.unit',$this->searchAssemblyUnit,true);
+		$criteria->compare('assembly.alias',$this->searchAssemblyAlias,true);
 
 		// join
 		$criteria->with = array(
@@ -111,7 +119,9 @@ class AssemblyGroupToAssembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchAssembly', 'Assembly', 'assembly_id');
+		$columns[] = 'searchAssemblyDescription';
+ 		$columns[] = 'searchAssemblyUnit';
+ 		$columns[] = 'searchAssemblyAlias';
 		
 		return $columns;
 	}
@@ -122,7 +132,10 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
+			'assemblyGroup->description',
 			'assembly->description',
+			'assembly->unit',
+			'assembly->alias',
 		);
 	}
 
@@ -132,7 +145,11 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchAssembly');
+		return array(
+			'searchAssemblyDescription',
+			'searchAssemblyUnit',
+			'searchAssemblyAlias',
+		);
 	}
 	
 	public function beforeValidate()

@@ -26,7 +26,8 @@ class TaskTypeToAssembly extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchAssembly;
+	public $searchAssemblyDescription;
+	public $searchAssemblyAlias;
 
 	/**
 	 * @var string nice model name for use in output
@@ -47,7 +48,7 @@ class TaskTypeToAssembly extends ActiveRecord
 			array('store_id, task_type_id, assembly_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_type_id, searchAssembly, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
+			array('id, task_type_id, searchAssemblyDescription, searchAssemblyAlias, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,7 +73,9 @@ class TaskTypeToAssembly extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'task_type_id' => 'Task Type',
-			'assembly_id' => 'Assembly',
+//			'assembly_id' => 'Assembly',
+			'searchAssemblyDescription' => 'Assembly',
+			'searchAssemblyAlias' => 'Alias',
 		));
 	}
 
@@ -88,7 +91,11 @@ class TaskTypeToAssembly extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.assembly_id',
-			'assembly.description AS searchAssembly',
+			'assembly.description AS searchAssemblyDescription',
+			"CONCAT_WS('$delimiter',
+				assembly.alias,
+				assemblyToClient.alias
+			) AS searchAssemblyAlias",
 			't.quantity',
 			't.minimum',
 			't.maximum',
@@ -96,8 +103,16 @@ class TaskTypeToAssembly extends ActiveRecord
 			't.quantity_tooltip',
 		);
 
+		// join
+		$criteria->join = '
+			LEFT JOIN task_type taskType ON t.task_type_id = taskType.id
+			LEFT JOIN assembly_to_client assemblyToClient ON t.assembly_id = assemblyToClient_assembly_id
+				AND taskType.client_id = assemblyToClient.client_id
+		';
+		
 		// where
-		$criteria->compare('assembly.description',$this->searchAssembly);
+		$criteria->compare('assembly.description',$this->searchAssemblyDescription,true);
+		$criteria->compare('assembly.alias',$this->searchAssemblyAlias,true);
 		$criteria->compare('t.task_type_id',$this->task_type_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.minimium',$this->minimum);
@@ -115,7 +130,8 @@ class TaskTypeToAssembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchAssembly', 'Assembly', 'assembly_id');
+		$columns[] = 'searchAssemblyDescription';
+ 		$columns[] = 'searchAssemblyAlias';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
@@ -131,7 +147,10 @@ class TaskTypeToAssembly extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
+			'taskType->description',
 			'assembly->description',
+			'assembly->unit',
+			'assembly->alias',
 		);
 	}
 
@@ -141,11 +160,23 @@ class TaskTypeToAssembly extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchAssembly');
+		return array(
+			'searchAssemblyDescription',
+			'searchAssemblyUnit',
+			'searchAssemblyAlias',
+		);
 	}
 
 	public function afterFind() {
 		$this->store_id = $this->assembly->store_id;
+		
+		if($assemblyToClient = AssemblyToClient::model()->findByAttributes(array(
+			'assembly_id'=>$this->assembly_id,
+			'client_id'=>$this->taskType->client,
+		)))
+		{
+			$this->client_alias = $assemblyToClient->alias;
+		}
 		
 		return parent::afterFind();
 	}
