@@ -11,7 +11,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	public $searchAssemblyAlias;
 	public $searchTaskQuantity;
 	public $searchTotalQuantity;
-	protected $defaultSort = array('searchAssemblyGroup'=>'DESC', 't.parent_id', 'searchAssembly');
+	protected $defaultSort = array('searchAssemblyGroup'=>'DESC', 't.parent_id', 'searchAssemblyGroup');
 
 	/**
 	 * @return string the associated database table name
@@ -122,8 +122,8 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	public function getSearchSort()
 	{
 		return array(
-			'searchMaterialDescription',
-			'searchMaterialAlias',
+			'searchAssemblyDescription',
+			'searchAssemblyAlias',
 			'searchAssemblyGroup',
 			'parent_id',
 			'quantity',

@@ -27,8 +27,6 @@
  */
 class TaskToAssembly extends AdjacencyListActiveRecord
 {
-	public $searchAssembly;
-	public $searchQuantity;
 	public $store_id;
 
 	/**
@@ -90,8 +88,8 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 			'task_id' => 'Task',
 			'assembly_id' => 'Assembly',
 			'searchTask' => 'Task',
-			'searchAssemblyDescription' => 'Material',
-			'searchAssemblyAlias' => 'Client alias/Material alias',
+			'searchAssemblyDescription' => 'Assembly',
+			'searchAssemblyAlias' => 'Aliases',
 			'searchTaskQuantity' => 'Task quantity',
 			'searchTotalQuantity' => 'Total',
 			'searchAssemblyGroup' => 'Group/Comment',
@@ -102,7 +100,6 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	{
 		return array(
 			'assembly->description',
-			'assembly->unit',
 			'assembly->alias',
 		);
 	}

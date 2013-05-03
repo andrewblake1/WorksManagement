@@ -96,6 +96,8 @@ nano /etc/php5/apache2/php.ini
 post_max_size = 40M
 upload_max_filesize = 30M
 max_file_uploads = 20
+session.gc_probability = 1
+session.gc_divisor = 1000
 # high memory limit needed for phpexcel otherwise it crashes leaving a blank screen with no file. So far with materials
 # export of just over 6000 rows, requiring somewhere between 256M and 384M
 memory_limit = 384M

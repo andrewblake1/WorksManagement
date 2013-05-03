@@ -29,7 +29,6 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchAssemblyDescription;
-	public $searchAssemblyUnit;
 	public $searchAssemblyAlias;
 
 	/**
@@ -49,7 +48,7 @@ class AssemblyGroupToAssembly extends ActiveRecord
 			array('assembly_id, assembly_group_id, store_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchAssemblyDescription, searchAssemblyUnit, searchAssemblyAlias, assembly_id, assembly_group_id', 'safe', 'on'=>'search'),
+			array('id, searchAssemblyDescription, searchAssemblyAlias, assembly_id, assembly_group_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -82,7 +81,6 @@ class AssemblyGroupToAssembly extends ActiveRecord
 			'assembly_group_id' => 'Assembly Group',
 //			'assembly_id' => 'Assembly',
 			'searchAssemblyDescription' => 'Assembly',
-			'searchAssemblyUnit' => 'Unit',
 			'searchAssemblyAlias' => 'Alias',
 		);
 	}
@@ -99,14 +97,12 @@ class AssemblyGroupToAssembly extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			'assembly.description AS searchAssemblyDescription',
-			'assembly.unit AS searchAssemblyUnit',
 			'assembly.alias AS searchAssemblyAlias',
 		);
 
 		// where
 		$criteria->compare('assembly_group_id',$this->assembly_group_id);
 		$criteria->compare('assembly.description',$this->searchAssemblyDescription,true);
-		$criteria->compare('assembly.unit',$this->searchAssemblyUnit,true);
 		$criteria->compare('assembly.alias',$this->searchAssemblyAlias,true);
 
 		// join
@@ -120,7 +116,6 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'searchAssemblyDescription';
- 		$columns[] = 'searchAssemblyUnit';
  		$columns[] = 'searchAssemblyAlias';
 		
 		return $columns;
@@ -134,7 +129,6 @@ class AssemblyGroupToAssembly extends ActiveRecord
 		return array(
 			'assemblyGroup->description',
 			'assembly->description',
-			'assembly->unit',
 			'assembly->alias',
 		);
 	}
@@ -147,7 +141,6 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	{
 		return array(
 			'searchAssemblyDescription',
-			'searchAssemblyUnit',
 			'searchAssemblyAlias',
 		);
 	}

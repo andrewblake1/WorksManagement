@@ -18,6 +18,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	// if creating
 	if($model->isNewRecord)
 	{
+//add equiv store_id jscript to this widget
 		ProjectTypeController::listWidgetRow($model, $form, 'project_type_id', array(), array('scopeClient'=>array($model->client_id)));
 	}
 	else

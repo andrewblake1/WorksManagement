@@ -93,6 +93,9 @@ class GenericWidgets extends CWidget
 		$categoryTree = new CategoryTree($this->categoryModelName);
 		
 		// loop thru all the pivot table generic types associated to this model
+//ere is where we need to use different array as no relation in row exists
+		
+//rojectToGenericProjectType::model()->findByAttributes()
 		foreach($this->model->{$this->relation_modelToGenericModelTypes} as $toGenericType)
 		{
 			$genericModelType = $toGenericType->{$this->relation_genericModelType};
@@ -111,10 +114,7 @@ class GenericWidgets extends CWidget
 			
 		}
 
-		// display the tree
-//			echo '<div class="container">';
 		$categoryTree->display();
-//			echo '</div>';
 	}
 	
 }
