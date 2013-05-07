@@ -152,7 +152,7 @@ class ProjectToGenericProjectType extends ActiveRecord
 	 */
 	public function createSave(&$models = array())
 	{
-		$saved = Generic::createGeneric($this->genericProjectType->genericType, $models, $generic);
+		$saved = Generic::createGeneric($this->genericProjectType, $models, $generic);
 		$this->generic_id = $generic->id;
 
 		return $saved & parent::createSave($models);

@@ -154,7 +154,7 @@ class TaskToGenericTaskType extends ActiveRecord
 	 */
 	public function createSave(&$models = array())
 	{
-		$saved = Generic::createGeneric($this->genericTaskType->genericType, $models, $generic);
+		$saved = Generic::createGeneric($this->genericTaskType, $models, $generic);
 		$this->generic_id = $generic->id;
 
 		return $saved & parent::createSave($models);

@@ -67,32 +67,7 @@ abstract class GenericExtensionActiveRecord extends ActiveRecord
 		foreach($this->{$this->relation_modelType}->{$this->relation_genericModelTypes} as $genericModelType)
 		{
 			// create a new generic item to hold value
-//			$saved &= Generic::createGeneric($genericModelType->genericType, $models, $generic, $genericModelType);
-			// validate and save
-			$generic = new Generic();
-			// massive assignement - if created dynamically previously and now wanting to save/create
-			if(isset($_POST['Generic']))
-			{
-				if(isset($_POST['Generic'][$genericModelType->id]))
-				{
-					$generic->attributes=$_POST['Generic'][$genericModelType->id];
-				}
-			}
-			else
-			{
-				// set default value
-				$generic->setDefault($genericModelType->genericType);
-			}
-			
-//			$generic->label = $genericModelType->genericType->description;
-			$generic->setLabelAndId($genericModelType);
-			if($saved &= $generic->createSave($models/*, array(
-				'genericType' => $genericModelType->genericType,
-				'params' => array(
-					'relation_modelToGenericModelType'=>$this->relation_modelToGenericModelType,
-					'relation_genericModelType'=>$this->relation_genericModelType,
-				),
-			)*/))
+			if($saved &= Generic::createGeneric($genericModelType, $models, $generic))
 			{
 				// create new modelToGenericModelType
 				$modelToGenericModelType = new $this->class_ModelToGenericModelType();

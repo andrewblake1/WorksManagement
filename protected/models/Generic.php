@@ -259,31 +259,36 @@ class Generic extends ActiveRecord
 		}
 	}
 
-/*	// create a new generic item
-	static function createGeneric(&$genericType, &$models, &$generic, &$genericModelType = NULL)
+	// create a new generic item
+   // factory method for creating due to can't change method signature of derived class constructor
+	static function createGeneric(&$genericModelType, &$models, &$generic)
 	{
 		// create the object
 		$generic = new self;
 
 		// massive assignement - if created dynamically previously and now wanting to save/create
-		if($genericModelType && isset($_POST['Generic']))
+		if(isset($_POST['Generic'][$genericModelType->id]))
 		{
 			$generic->attributes=$_POST['Generic'][$genericModelType->id];
 		}
 		else
 		{
 			// set default value
-			$generic->setDefault($genericType);
+			$generic->setDefault($genericModelType->genericType);
 		}
+		
+		// set label and id
+		$generic->setLabelAndId($genericModelType);
 		
 		// attempt save
 		$saved = $generic->dbCallback('save');
+
 		// record any errors
 		$models[] = $generic;
 
 		return $saved;
 
-	}*/
+	}
 
 	public function setLabelAndId($genericModelType)
 	{

@@ -345,7 +345,7 @@ class StandardDrawingController extends AdjacencyListController
 			if(isset($_GET['parent_id']))
 			{
 				$this->setChildTabs($this->loadModel($_GET['parent_id']));
-				$this->setActiveTabs(NULL, NULL, StandardDrawing::getNiceNamePlural());
+				$this->setActiveTabs(NULL, StandardDrawing::getNiceNamePlural(), StandardDrawing::getNiceNamePlural());
 			}
 		}
 	}

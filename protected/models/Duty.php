@@ -333,7 +333,7 @@ class Duty extends ActiveRecord
 		if(empty($dutyData->generic) && !empty($this->dutyType->generic_type_id))
 		{
 			// create a new generic item to hold value
-			$saved &= Generic::createGeneric($this->dutyType->genericType, $models, $generic);
+			$saved &= Generic::createGeneric($this->dutyType, $models, $generic);
 			// associate the new generic to this duty
 			$dutyData->generic_id = $generic->id;
 			// attempt save

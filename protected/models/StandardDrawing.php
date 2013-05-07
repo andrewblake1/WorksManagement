@@ -123,6 +123,46 @@ class StandardDrawing extends AdjacencyListActiveRecord
 		);
 	}
  
+// TODO: probably breaking mvc here again calling controller code	
+	public function linkColumnAdjacencyList($name, &$columns, $primaryKeyName = 'id', $parentAttrib = 'parent_id')
+	{
+		$modelName = str_replace('View', '', get_class($this));
+		$controllerName = "{$modelName}Controller";
+
+		// add addtional columns for managment of the adjacency list if user has write access
+		if($controllerName::checkAccess(Controller::accessWrite))
+		{
+			if(!is_array($columns) || !in_array($primaryKeyName, $columns))
+			{
+				$columns[] = $primaryKeyName;
+			}
+			if(!in_array($parentAttrib, $columns))
+			{
+				$columns[] = $parentAttrib;
+			}
+		}
+
+		// if the user has at least read access
+		if($controllerName::checkAccess(Controller::accessRead))
+		{
+			// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
+			// even though this confusing here
+			// create a link
+			$params = var_export(Controller::getAdminParams($modelName), true);
+			$columns[] = array(
+				'name'=>$name,
+				'value'=> 'StandardDrawingAdjacencyList::model()->findByAttributes(array("'.$parentAttrib.'" => $data->'.$primaryKeyName.')) !== null
+					? CHtml::link($data->'.$name.', Yii::app()->createUrl("'."$modelName/admin".'", array("'.$parentAttrib.'"=>$data->'.$primaryKeyName.') + '.$params.'))
+					: $data->'.$name,
+				'type'=>'raw',
+			);
+		}
+		else
+		{
+			// create text
+			$columns[] = $name;
+		}
+	}
 	public function getAdminColumns()
 	{
  		// link to admin displaying children or if no children then just description without link
