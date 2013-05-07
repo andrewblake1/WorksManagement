@@ -111,6 +111,7 @@ class AdjacencyListController extends Controller {
 		$cntr = 0;
 		foreach(array_reverse($models) as $model)
 		{
+$t = $model->attributes;
 			$cntr++;
 			if($tabs = $this->getChildTabs($model, $cntr == $size))
 			{
@@ -123,7 +124,6 @@ class AdjacencyListController extends Controller {
 
 	public function getChildTabs($model, $last = FALSE)
 	{
-
 	}
 	
 	static function getParentIds()

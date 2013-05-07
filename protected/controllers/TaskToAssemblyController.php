@@ -49,43 +49,6 @@ class TaskToAssemblyController extends AdjacencyListController
 		);
 	}
 
-	public function getChildTabs($model, $last = FALSE)
-	{
-		$tabs = array();
-		
-		// add tab to  update TaskToAssembly
-		$this->addTab(TaskToAssembly::getNiceName(NULL, $model),array(
-			'TaskToAssembly/update',
-			'id' => $model->id,
-		), $tabs);
-
-		// add tab to sub assemblies
-		$this->addTab(SubAssembly::getNiceNamePlural(), array(
-			'TaskToAssembly/admin',
-			'parent_id' => $model->id,
-			'task_id' => $model->task_id,
-		), $tabs, !$last);
-
-		// add tab to materials
-		$this->addTab(Material::getNiceNamePlural(), array(
-			'TaskToMaterial/admin',
-			'task_to_assembly_id' => $model->id,
-			'parent_id' => $model->id,	// needed for breadcrumb trail calc for adjacency list
-			'task_id' => $model->task_id,
-		), $tabs);
-
-		// add tab to standard drawings
-		$this->addTab(AssemblyToStandardDrawing::getNiceNamePlural(), array(
-			'AssemblyToStandardDrawing/admin',
-			'assembly_id' => $model->assembly_id,
-			'parent_id' => $model->id,	// needed for breadcrumb trail calc for adjacency list
-			'task_id' => $model->task_id,
-			'task_to_assembly_id' => $model->id,
-		), $tabs);
-
-		return $tabs;
-	}
-	
 	/**
 	 * Recursive function to add assembly with sub assemblies to task. Inserts row into task_to_assembly and also appends materials to task_to_materials
 	 * @param int $task_id the task id to add assembly to
@@ -142,7 +105,35 @@ class TaskToAssemblyController extends AdjacencyListController
 		return $saved;
 	}
 
-	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
+	public function getChildTabs($model, $last = FALSE)
+	{
+		$tabs = array();
+		
+		// add tab to  update TaskToAssembly
+		$this->addTab(TaskToAssembly::getNiceName(NULL, $model), $this->createUrl('TaskToAssembly/update', array('id' => $model->id)), $tabs);
+
+		// add tab to sub assemblies
+		$this->addTab(SubAssembly::getNiceNamePlural(), $this->createUrl('TaskToAssembly/admin',array('parent_id' => $model->id, 'task_id' => $model->task_id)), $tabs, !$last);
+
+		// add tab to materials
+		$this->addTab(Material::getNiceNamePlural(), $this->createUrl('TaskToMaterial/admin', array(
+			'task_to_assembly_id' => $model->id,
+			'parent_id' => $model->id,	// needed for breadcrumb trail calc for adjacency list
+			'task_id' => $model->task_id)
+		), $tabs);
+
+		// add tab to standard drawings
+		$this->addTab(AssemblyToStandardDrawing::getNiceNamePlural(), $this->createUrl('AssemblyToStandardDrawing/admin', array(
+			'assembly_id' => $model->assembly_id,
+			'parent_id' => $model->id,	// needed for breadcrumb trail calc for adjacency list
+			'task_id' => $model->task_id,
+			'task_to_assembly_id' => $model->id)
+		), $tabs);
+
+		return $tabs;
+	}
+	
+	// override the tabs when viewing assemblies for a particular task
 	public function setTabs($model) {
 		if($model)
 		{

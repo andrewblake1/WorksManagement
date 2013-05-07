@@ -23,7 +23,7 @@ class AssemblyToStandardDrawing extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Standard drawing';
+	static $niceName = 'Drawing';
 
 	protected $defaultSort = array('standardDrawing.description');
 	

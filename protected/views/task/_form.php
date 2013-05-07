@@ -12,8 +12,22 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	// only show when creating
 	if($model->isNewRecord)
 	{
-		TaskTypeController::listWidgetRow($model, $form, 'task_type_id', array(), array(
-			'scopeProjectType'=>array($model->crew_id)));
+		TaskTypeController::listWidgetRow($model, $form, 'task_type_id',
+			array(
+				'empty'=>'Please select',
+				'ajax' => array(
+					'type'=>'POST',
+					'url'=>$this->createUrl("dependantList"),
+					'success'=>"function(data) {
+						if(data)
+						{
+							$('#generics').replaceWith(data);
+						}
+					}",
+				)
+			),
+			array('scopeProjectType'=>array($model->crew_id))
+		);
 	}
 	else
 	{

@@ -96,6 +96,8 @@ class GenericWidgets extends CWidget
 //ere is where we need to use different array as no relation in row exists
 		
 //rojectToGenericProjectType::model()->findByAttributes()
+		echo CHtml::openTag('div', array('id'=>'generics'));
+		
 		foreach($this->model->{$this->relation_modelToGenericModelTypes} as $toGenericType)
 		{
 			$genericModelType = $toGenericType->{$this->relation_genericModelType};
@@ -107,6 +109,7 @@ class GenericWidgets extends CWidget
 				'form'=>$this->form,
 				'generic'=>$toGenericType->generic,
 				'genericType'=>$toGenericType->{$this->relation_genericModelType}->genericType,
+				'genericModelType'=>$toGenericType->{$this->relation_genericModelType},
 				'relationToGenericType'=>"{$this->relation_modelToGenericModelType}->{$this->relation_genericModelType}->genericType",
 			));
 			// add the widget html to the tree branch
@@ -115,6 +118,9 @@ class GenericWidgets extends CWidget
 		}
 
 		$categoryTree->display();
+
+		echo CHtml::closeTag('div', array('id'=>'Generics'));
+
 	}
 	
 }

@@ -116,12 +116,12 @@ abstract class ActiveRecord extends CActiveRecord
 		{
 			$attributes = static::evalDisplayAttr($model);
 
-			// if the attribute is longer than 30 characters
+/*			// if the attribute is longer than 30 characters
 			if(mb_strlen($attributes) > 20)
 			{
 				// shorten to 20 characters total
 				$attributes = mb_substr($attributes, 0, 17) . '...';
-			}
+			}*/
 
 			// make this our nice name - if it isn't empty
 			if($attributes)
@@ -555,7 +555,7 @@ $t=$this->attributes;
 			}
 		}
 
-		// if the user has at least read access
+/*		// if the user has at least read access
 		if($controllerName::checkAccess(Controller::accessRead))
 		{
 			// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
@@ -570,7 +570,7 @@ $t=$this->attributes;
 				'type'=>'raw',
 			);
 		}
-		else
+		else*/
 		{
 			// create text
 			$columns[] = $name;

@@ -18,8 +18,22 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	// if creating
 	if($model->isNewRecord)
 	{
-//add equiv store_id jscript to this widget
-		ProjectTypeController::listWidgetRow($model, $form, 'project_type_id', array(), array('scopeClient'=>array($model->client_id)));
+		ProjectTypeController::listWidgetRow($model, $form, 'project_type_id',
+			array(
+				'empty'=>'Please select',
+				'ajax' => array(
+					'type'=>'POST',
+					'url'=>$this->createUrl("dependantList"),
+					'success'=>"function(data) {
+						if(data)
+						{
+							$('#generics').replaceWith(data);
+						}
+					}",
+				)
+			),
+			array('scopeClient'=>array($model->client_id))
+		);
 	}
 	else
 	{

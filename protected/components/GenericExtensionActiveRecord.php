@@ -67,16 +67,47 @@ abstract class GenericExtensionActiveRecord extends ActiveRecord
 		foreach($this->{$this->relation_modelType}->{$this->relation_genericModelTypes} as $genericModelType)
 		{
 			// create a new generic item to hold value
-			$saved &= Generic::createGeneric($genericModelType->genericType, $models, $generic);
-			// create new modelToGenericModelType
-			$modelToGenericModelType = new $this->class_ModelToGenericModelType();
-			$modelToGenericModelType->{$this->attribute_generic_model_type_id} = $genericModelType->id;
-			$modelToGenericModelType->{$this->attribute_model_id} = $this->id;
-			$modelToGenericModelType->generic_id = $generic->id;
-			// attempt save
-			$saved &= $modelToGenericModelType->dbCallback('save');
-			// record any errors
-			$models[] = $modelToGenericModelType;
+//			$saved &= Generic::createGeneric($genericModelType->genericType, $models, $generic, $genericModelType);
+			// validate and save
+			$generic = new Generic();
+			// massive assignement - if created dynamically previously and now wanting to save/create
+			if(isset($_POST['Generic']))
+			{
+				if(isset($_POST['Generic'][$genericModelType->id]))
+				{
+					$generic->attributes=$_POST['Generic'][$genericModelType->id];
+				}
+			}
+			else
+			{
+				// set default value
+				$generic->setDefault($genericModelType->genericType);
+			}
+			
+//			$generic->label = $genericModelType->genericType->description;
+			$generic->setLabelAndId($genericModelType);
+			if($saved &= $generic->createSave($models/*, array(
+				'genericType' => $genericModelType->genericType,
+				'params' => array(
+					'relation_modelToGenericModelType'=>$this->relation_modelToGenericModelType,
+					'relation_genericModelType'=>$this->relation_genericModelType,
+				),
+			)*/))
+			{
+				// create new modelToGenericModelType
+				$modelToGenericModelType = new $this->class_ModelToGenericModelType();
+				$modelToGenericModelType->{$this->attribute_generic_model_type_id} = $genericModelType->id;
+				$modelToGenericModelType->{$this->attribute_model_id} = $this->id;
+				$modelToGenericModelType->generic_id = $generic->id;
+				// attempt save
+				$saved &= $modelToGenericModelType->dbCallback('save');
+				// record any errors
+				$models[] = $modelToGenericModelType;
+			}
+			else
+			{//<input id="Generic_2_type_int" class="span5" type="text" name="Generic[2][type_int]">
+				$t = $generic->getErrors();
+			}
 		}
 		
 		return $saved;
@@ -98,24 +129,29 @@ abstract class GenericExtensionActiveRecord extends ActiveRecord
 		foreach($this->{$this->relation_modelToGenericModelTypes} as $modelToGenericModelType)
 		{
 			$generic = $modelToGenericModelType->generic;
+			$genericModelType = $modelToGenericModelType->{$this->relation_genericModelType};
+			$generic->setLabelAndId($genericModelType);
 			
 			// massive assignement
-			$generic->attributes=$_POST['Generic'][$generic->id];
+			$generic->attributes=$_POST['Generic'][$genericModelType->id];
 
 			// validate and save
-			$saved &= $generic->updateSave($models, array(
+			$saved &= $generic->updateSave($models/*, array(
 				'genericType' => $modelToGenericModelType->{$this->relation_genericModelType}->genericType,
 				'params' => array(
 					'relation_modelToGenericModelType'=>$this->relation_modelToGenericModelType,
 					'relation_genericModelType'=>$this->relation_genericModelType,
 				),
-			));
+			)*/);
+			{//<input id="Generic_2_type_int" class="span5" type="text" name="Generic[2][type_int]">
+				$t = $generic->getErrors();
+			}
 		}
 
 		return $saved;
 	}
 
-	protected function getHtmlId($attribute)
+/*	protected function getHtmlId($attribute)
 	{
 		if(($modelName = get_class($this)) == 'Generic')
 		{
@@ -123,7 +159,7 @@ abstract class GenericExtensionActiveRecord extends ActiveRecord
 		}
 		
 		return parent::getHtmlId($attribute);
-	}
+	}*/
 
 }
 ?>

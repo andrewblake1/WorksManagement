@@ -9,6 +9,7 @@ class GenericWidget extends CWidget
 	public $form;
 	public $generic;
 	public $genericType;
+	public $genericModelType;
 	public $relationToGenericType; // working from a generic model to generic type
 
 	/**
@@ -24,10 +25,11 @@ class GenericWidget extends CWidget
     {
 		$genericType = $this->genericType;
 		$generic = $this->generic;
+		$genericModelType = $this->genericModelType;
 		// get array of column names in generic table
 		$dataTypeColumnNames = GenericType::getDataTypeColumnNames();
 		// get the attribute name to be saving to - post array hence []
-		$attribute = "[{$this->generic->id}]".$dataTypeColumnNames[$genericType->data_type];
+		$attribute = "[$genericModelType->id]".$dataTypeColumnNames[$genericType->data_type];
 		// get the label
 		$htmlOptions = array('labelOptions' => array('label'=>$genericType->description));
 		

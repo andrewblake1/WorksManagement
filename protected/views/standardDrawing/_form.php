@@ -136,7 +136,14 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	// parent_id
 	if($this->checkAccess(Controller::accessWrite))
 	{
-		static::listWidgetRow($model, $form, 'parent_id', array(), array('scopeStore'=>array($model->store_id)), 'Parent');
+		if($model->isNewRecord)
+		{
+			$form->hiddenField('parent_id');
+		}
+		else
+		{
+			static::listWidgetRow($model, $form, 'parent_id', array(), array('scopeStore'=>array($model->store_id)), 'Parent');
+		}
 	}
 	
 	?><script>

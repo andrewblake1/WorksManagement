@@ -281,41 +281,68 @@ class StandardDrawingController extends AdjacencyListController
 		return parent::actionDelete($id);
 	}
 
-	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
+	public function getChildTabs($model, $last = FALSE)
+	{
+		$tabs = array();
+		
+		parent::setTabs($model, $tabs);
+	//	$this->addTab(StandardDrawing::getNiceNamePlural(), Yii::app()->request->requestUri, $tabs[0], TRUE);
+
+		// add tab to  update TaskToAssembly
+		$this->addTab(StandardDrawing::getNiceNamePlural(), $this->createUrl('StandardDrawing/admin', array(
+			'store_id' => $model->store_id,
+			'parent_id' => $model->id)
+		), $tabs[0]);	
+		
+		return $tabs[0];
+	}
+	
+	// override the tabs when viewing assemblies for a particular task
 	public function setTabs($model) {
 
 		// control extra rows of tabs if action is 
-		if($model && isset($_GET['task_to_assembly_id']))
+		if($model)
 		{
-			$taskToAssemblyController= new TaskToAssemblyController(NULL);
-			$taskToAssembly = TaskToAssembly::model()->findByPk($_GET['task_to_assembly_id']);
-			$taskToAssembly->assertFromParent();
-			$taskToAssemblyController->setTabs(NULL);
-			$this->_tabs = $taskToAssemblyController->tabs;
-			$this->_tabs[sizeof($this->_tabs) - 1][3]['active'] = TRUE;
-			
-			$tabs=array();
-			$this->addTab(StandardDrawing::getNiceName($_GET['id']), Yii::app()->request->requestUri, $tabs, TRUE);
-			$this->_tabs = array_merge($this->_tabs, array($tabs));
-			
-			// set breadcrumbs
-			static::setUpdateId(NULL, 'TaskToAssembly');
-			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
-			array_pop($this->breadcrumbs);
-			
-			
-			// the update tab
-			$updateTab = $this->_tabs[sizeof($this->_tabs) - 2][3];
-			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
-			// the standard drawings tab
-			$updateTab = $this->_tabs[sizeof($this->_tabs) - 2][0];
-			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
-			// last tab with no link
-			$this->breadcrumbs[] = StandardDrawing::getNiceName($_GET['id']);
+			if(isset($_GET['task_to_assembly_id']))
+			{
+				$taskToAssemblyController= new TaskToAssemblyController(NULL);
+				$taskToAssembly = TaskToAssembly::model()->findByPk($_GET['task_to_assembly_id']);
+				$taskToAssembly->assertFromParent();
+				$taskToAssemblyController->setTabs(NULL);
+				$this->_tabs = $taskToAssemblyController->tabs;
+				$this->_tabs[sizeof($this->_tabs) - 1][3]['active'] = TRUE;
+
+				$tabs=array();
+				$this->addTab(StandardDrawing::getNiceName($_GET['id']), Yii::app()->request->requestUri, $tabs, TRUE);
+				$this->_tabs = array_merge($this->_tabs, array($tabs));
+
+				// set breadcrumbs
+				static::setUpdateId(NULL, 'TaskToAssembly');
+				$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
+				array_pop($this->breadcrumbs);
+
+
+				// the update tab
+				$updateTab = $this->_tabs[sizeof($this->_tabs) - 2][3];
+				$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
+				// the drawings tab
+				$updateTab = $this->_tabs[sizeof($this->_tabs) - 2][0];
+				$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
+				// last tab with no link
+				$this->breadcrumbs[] = StandardDrawing::getNiceName($_GET['id']);
+			}
+			else
+			{
+				parent::setTabs(NULL);
+				$this->setChildTabs($this->loadModel(static::getUpdateId()));
+				$this->setActiveTabs(NULL, NULL, StandardDrawing::getNiceNamePlural());
+			}
 		}
 		else
 		{
 			parent::setTabs($model);
+			$this->setChildTabs($this->loadModel($_GET['parent_id']));
+			$this->setActiveTabs(NULL, StandardDrawing::getNiceNamePlural(), StandardDrawing::getNiceNamePlural());
 		}
 	}
 

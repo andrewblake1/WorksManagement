@@ -43,6 +43,7 @@ class AdminViewWidget extends CWidget
 						'buttonType' => 'link',
 						'type' => 'primary',
 						'size' => 'small',
+						'icon' => 'trash',
 						'label' => 'Delete Selected',
 						'id' => 'bulk_delete_button_1',
 						'url' => array('batchDelete'),
@@ -58,11 +59,11 @@ class AdminViewWidget extends CWidget
 				'checkBoxColumnConfig' => array(
 					'name' => 'id'
 				))
-			: NULL;
+			: array();
 //Yii::app()->params['showDeleteSelectedButton'] = TRUE;	
 		
 		// display the grid
-		$this->_controller->widget('bootstrap.widgets.TbExtendedGridView',array(
+		$this->_controller->widget('WMTbExtendedGridView',array(
 			'id'=>$this->_controller->modelName.'-grid',
 			'type'=>'striped',
 			'dataProvider'=>$this->model->search(),
@@ -103,7 +104,7 @@ class AdminViewWidget extends CWidget
 						ids.push($(this).val());
 					});
 
-					bootbox.confirm("Delete selected rows?",
+					bootbox.confirm("Delete selected?",
 						function(confirmed){
 							if(confirmed)
 							{

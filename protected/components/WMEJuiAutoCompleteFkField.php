@@ -27,7 +27,7 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 			foreach($model->relations() as $relationName => $relation)
 			{
 				// if we have found the relation that uses this attribute which is a foreign key
-				if($relation[2] == $this->attribute)
+				if($relation[0] == ActiveRecord::BELONGS_TO && $relation[2] == $this->attribute)
 				{
 					// if this takes us to our end model
 					if($relation[1] == $fKModelType)
@@ -58,9 +58,8 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
         $value = CHtml::resolveValue($this->model, $this->attribute);
 
 		$model = $this->getRelation($this->model, $fKModelType, $level = 0);
-	
+
 		// find our way down to the end model
-		
 		foreach($fKModelType::getDisplayAttr() as $key => $field)
 		{
 			if(!empty($model))

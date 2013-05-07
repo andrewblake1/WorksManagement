@@ -20,6 +20,8 @@
  */
 class Generic extends ActiveRecord
 {
+	public $label = '';
+	public $htmlId;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -223,22 +225,26 @@ class Generic extends ActiveRecord
 		return $columns;
 	}
 
+	public function getAttributeLabel($attribute) {
+		return $this->label;
+	}
+	
 	/*
-	 * Set user defined default
+	 * Set u5ser defined default
 	 */
-	public function setDefault(CActiveRecord $genericModelType)
+	public function setDefault(CActiveRecord $genericType)
 	{
 		$dataTypeColumnNames = GenericType::getDataTypeColumnNames();
-		$attributeName = $dataTypeColumnNames[$genericModelType->data_type];
+		$attributeName = $dataTypeColumnNames[$genericType->data_type];
 
 		// if this is likely to be an sql select
-		if(stripos($genericModelType->default_select, 'SELECT') !== false)
+		if(stripos($genericType->default_select, 'SELECT') !== false)
 		{
 			// attempt to execute the sql
 			try
 			{
 // TODO: this should be run of connection with restricted sys admin rights rather than main app user rights
-				$this->$attributeName = Yii::app()->db->createCommand($genericModelType->default_select)->queryScalar();
+				$this->$attributeName = Yii::app()->db->createCommand($genericType->default_select)->queryScalar();
 			}
 			catch (CDbException $e)
 			{
@@ -249,17 +255,27 @@ class Generic extends ActiveRecord
 		else
 		{
 			// set to the value of the select column
-			$this->$attributeName = $genericModelType->default_select;
+			$this->$attributeName = $genericType->default_select;
 		}
 	}
 
-	// create a new generic item
-	static function createGeneric(&$genericType, &$models, &$generic)
+/*	// create a new generic item
+	static function createGeneric(&$genericType, &$models, &$generic, &$genericModelType = NULL)
 	{
 		// create the object
 		$generic = new self;
-		// set default value
-		$generic->setDefault($genericType);
+
+		// massive assignement - if created dynamically previously and now wanting to save/create
+		if($genericModelType && isset($_POST['Generic']))
+		{
+			$generic->attributes=$_POST['Generic'][$genericModelType->id];
+		}
+		else
+		{
+			// set default value
+			$generic->setDefault($genericType);
+		}
+		
 		// attempt save
 		$saved = $generic->dbCallback('save');
 		// record any errors
@@ -267,7 +283,25 @@ class Generic extends ActiveRecord
 
 		return $saved;
 
+	}*/
+
+	public function setLabelAndId($genericModelType)
+	{
+		$genericType = $genericModelType->genericType;
+		// Get GenericType column names
+		$dataTypeColumnNames = GenericType::getDataTypeColumnNames();
+		// label
+		$this->label = $genericType->description;
+		// id
+		$this->htmlId = "Generic_{$genericModelType->id}_{$dataTypeColumnNames[$genericType->data_type]}";
 	}
+
+	
+	public function getHtmlId($attribute)
+	{
+		return $this->htmlId;
+	}
+
 }
 
 ?>

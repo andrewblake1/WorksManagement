@@ -22,6 +22,12 @@
 			'jquery-ui.min.js'=>'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js',
 		);
 
+// TODO: this here because sometimes swapping to an autotext in jquery so not there to begin with
+// tidy up so included only in those views
+		$cs=Yii::app()->getClientScript();
+		$cs->registerCoreScript('jquery');
+		$cs->registerScriptFile('jquery-ui.min.js');
+
 		// Load Yii's generated javascript at bottom of page
 		// instead of the 'head', ensuring it loads after JQuery
 //		Yii::app()->getClientScript()->coreScriptPosition = CClientScript::POS_END;
@@ -29,7 +35,6 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width">
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap-and-responsive.min.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" />
 </head>
 <body>
@@ -42,7 +47,7 @@
 			
 			<!-- breadcrumbs -->
 			<?php if(isset($this->breadcrumbs)):?>
-				<?php $this->widget('bootstrap.widgets.TbBreadcrumbs', array(
+				<?php $this->widget('WMTbBreadcrumbs', array(
 					'links'=>$this->breadcrumbs,
 				)); ?>
 			<?php endif?>
@@ -55,10 +60,10 @@
 				// tabs is multi-dimensional i.e. multiple layers
 				foreach($tabs as $tabMenu)
 				{
-					$this->widget('bootstrap.widgets.TbMenu', array(
+					$this->widget('WMTbTabs', array(
 						'type'=>'tabs', // '', 'tabs', 'pills' (or 'list')
 						'stacked'=>false, // whether this is a stacked menu
-						'items'=>$tabMenu,
+						'tabs'=>$tabMenu,
 					));
 				}
 			}
@@ -67,15 +72,7 @@
 			<?php
 			if(!empty($this->heading))
 			{
-				echo '<h2>'.CHtml::encode($this->heading);
-				// if we should be showing the new button
-				if(Yii::app()->controller->action->id == 'admin')
-				{
-					$this->exportButton();
-					$this->newButton();
-//					$this->deleteSelectedButton();
-				}
-				echo '</h2>';
+				echo '<h2>'.CHtml::encode($this->heading).'</h2>';
 			}
 			?>
 		</header>
@@ -89,10 +86,5 @@
 
 </div>
 	
-<!--<script type="text/javascript">
-// handle jQuery plugin naming conflict between jQuery UI and Bootstrap
-$.widget.bridge('uibutton', $.ui.button);
-$.widget.bridge('uitooltip', $.ui.tooltip);
-</script>-->
 </body>
 </html>

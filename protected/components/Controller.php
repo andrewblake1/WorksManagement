@@ -132,7 +132,7 @@ class Controller extends CController {
 	public function actionAutocomplete() {
 		// if something has been entered
 		if (isset($_GET['term'])) {
-			$modelName = /* $_GET['fk_model'] */ $this->modelName;
+			$modelName = $this->modelName;
 			$model = $modelName::model();
 
 			// protect against possible injection
@@ -231,8 +231,13 @@ class Controller extends CController {
 	 * to extract tab options. Admin and create use models level, update uses next level unless
 	 * the current model is a leaf rather than branch (no further branching) in which case popup form will be used to update
 	 */
-	public function setTabs($model) {
-		$level = sizeof($this->_tabs);
+	public function setTabs($model, &$tabs = NULL) {
+		if($tabs === NULL)
+		{
+			$tabs = &$this->_tabs;
+		}
+		
+		$level = sizeof($tabs);
 		
 		if($model)
 		{
@@ -279,7 +284,9 @@ class Controller extends CController {
 				$items = array($thisModelName);
 			}
 		}
-
+		
+if($model)
+$t = $model->attributes;
 		// if there are items
 		if (is_array($items)) {
 			$index = 0;
@@ -296,7 +303,7 @@ class Controller extends CController {
 				// if this item matches the main model
 				if ($modelName == $thisModelName) {
 					// make this the active tab
-					$this->_tabs[$level][$index]['active'] = true;
+					$tabs[$level][$index]['active'] = true;
 				}
 
 				// if first item in tabs
@@ -307,14 +314,21 @@ class Controller extends CController {
 					// store this (first tabs model name)
 					$firstTabModelName = $modelName;
 					$firstTabPrimaryKeyName = $firstTabModelName::model()->tableSchema->primaryKey;
-					$keyValue = static::getUpdateId($firstTabModelName) !== NULL ? static::getUpdateId($firstTabModelName) : NULL;
+					if($model)
+					{
+						$keyValue = $model->$firstTabPrimaryKeyName;
+					}
+					else
+					{
+						$keyValue = static::getUpdateId($firstTabModelName) !== NULL ? static::getUpdateId($firstTabModelName) : NULL;
+					}
 
 					// if nextlevel is true then action should always be update, but also should be update if current model is this model
 					// and not next level
 					// create controler/action
 					if ($keyValue && (!$model || ($firstTabModelName == $thisModelName))) {
-						$this->_tabs[$level][$index]['label'] = $modelName::getNiceName($keyValue);
-						$this->_tabs[$level][$index]['url'] = array("$modelName/$action", $firstTabPrimaryKeyName => $keyValue);
+						$tabs[$level][$index]['label'] = $modelName::getNiceName($keyValue);
+						$tabs[$level][$index]['url'] = array("$modelName/$action", $firstTabPrimaryKeyName => $keyValue);
 						$index++;
 						continue;
 					}
@@ -323,8 +337,8 @@ class Controller extends CController {
 				// add relevant url parameters i.e. foreign key to first tab model
 				$urlParams = ($keyValue === null) ? array() : array($modelName::getParentForeignKey($firstTabModelName) => $keyValue);
 
-				$this->_tabs[$level][$index]['label'] = $modelName::getNiceNamePlural();
-				$this->_tabs[$level][$index]['url'] = array("$modelName/admin") + $urlParams;
+				$tabs[$level][$index]['label'] = $modelName::getNiceNamePlural();
+				$tabs[$level][$index]['url'] = array("$modelName/admin") + $urlParams;
 				$index++;
 			}
 		}
@@ -677,6 +691,7 @@ $t = $model->attributes;
 			else {
 				// rollback
 				$transaction->rollBack();
+
 				// if coming from ajaxvalidate
 				if ($validating) {
 					$result = array();
@@ -684,8 +699,8 @@ $t = $model->attributes;
 						$models = array($model);
 					}
 					foreach ($models as $m) {
-						foreach ($m->getErrors() as $attribute => $errorS) {
-							$result[CHtml::activeId($m, $attribute)] = $errorS;
+						foreach ($m->getErrors() as $attribute => $errors) {
+							$result[$m->getHtmlId($attribute)] = $errors;
 						}
 					}
 					// return the json encoded data to the client
@@ -1169,18 +1184,6 @@ $t=			$model->attributes = $_POST[$modelName];
 		return $reportType == self::reportTypeHtml ? null : 'null';
 	}
 
-	protected function exportButton() {
-		if (Yii::app()->params['showDownloadButton']) {
-			echo ' ';
-			$this->widget('bootstrap.widgets.TbButton', array(
-				'label' => 'Download Excel',
-				'url' => $this->createUrl("{$this->modelName}/admin", $_GET + array('action' => 'download')),
-				'type' => 'primary',
-				'size' => 'small', // '', 'large', 'small' or 'mini'
-			));
-		}
-	}
-
 /*	protected function deleteSelectedButton() {
 		if (Yii::app()->params['showDeleteSelectedButton']) {
 			echo ' ';
@@ -1197,23 +1200,10 @@ $t=			$model->attributes = $_POST[$modelName];
 		}
 	}*/
 
-	protected function newButton() {
-		echo ' ';
-		$this->widget('bootstrap.widgets.TbButton', array(
-			'label' => 'New',
-			'url' => '#myModal',
-			'type' => 'primary',
-			'size' => 'small', // '', 'large', 'small' or 'mini'
-			'htmlOptions' => array(
-				'data-toggle' => 'modal',
-				'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').first().focus();',
-			),
-		));
-	}
-
 	protected function navbar() {
 		$this->widget('bootstrap.widgets.TbNavbar', array(
 			'fixed' => false,
+			'htmlOptions' => array('class' => 'navbar-inverse'),
 			'brand' => Yii::app()->name,
 			'brandUrl' => '#',
 			'collapse' => true, // requires bootstrap-responsive.css
@@ -1252,26 +1242,27 @@ $t=			$model->attributes = $_POST[$modelName];
 			array(
 				'empty'=>'Please select',
 				'ajax' => array(
-				'type'=>'POST',
-				'url'=>Yii::app()->createUrl("$listModelName/DependantList", array('fkField'=>$fkField, 'dependantOnModelName'=>$dependantOnModelName, 'dependantOnAttribute'=>$dependantOnAttribute)),
-				'success'=>"function(data) {
-					if(data)
-					{
-						$('[for=\"{$htmlOptions['id']}\"]').remove();
-						$('#{$htmlOptions['id']}_save').remove();
-						$('#{$htmlOptions['id']}_em_').remove();
-						$('#{$htmlOptions['id']}_lookup').remove();
-						$('#{$htmlOptions['id']}').replaceWith(data);
-						// if this is autotext
-						lookup = $('#{$htmlOptions['id']}_lookup');
-						if(lookup.length)
+					'type'=>'POST',
+					'url'=>Yii::app()->createUrl("$listModelName/DependantList", array('fkField'=>$fkField, 'dependantOnModelName'=>$dependantOnModelName, 'dependantOnAttribute'=>$dependantOnAttribute)),
+					'success'=>"function(data) {
+						if(data)
 						{
-							$dependantOnAttribute = $('#{$modelName}_$dependantOnAttribute').val();
-							lookup.autocomplete({'minLength':1,'maxHeight':'100','select':function(event, ui){"."$('#{$htmlOptions['id']}').val(ui.item.id);$('#{$htmlOptions['id']}_save').val(ui.item.value);},'source':'$source' + $dependantOnAttribute});
+							$('[for=\"{$htmlOptions['id']}\"]').remove();
+							$('#{$htmlOptions['id']}_save').remove();
+							$('#{$htmlOptions['id']}_em_').remove();
+							$('#{$htmlOptions['id']}_lookup').remove();
+							$('#{$htmlOptions['id']}').replaceWith(data);
+							// if this is autotext
+							lookup = $('#{$htmlOptions['id']}_lookup');
+							if(lookup.length)
+							{
+								$dependantOnAttribute = $('#{$modelName}_$dependantOnAttribute').val();
+								lookup.autocomplete({'minLength':1,'maxHeight':'100','select':function(event, ui){"."$('#{$htmlOptions['id']}').val(ui.item.id);$('#{$htmlOptions['id']}_save').val(ui.item.value);},'source':'$source' + $dependantOnAttribute});
+							}
 						}
-					}
-				}",
-			)),
+					}",
+				)
+			),
 			array(),
 			$label
 		);
@@ -1284,12 +1275,28 @@ $t=			$model->attributes = $_POST[$modelName];
 	{
 		$modelName = $_POST['controller'];
 		ob_start();
-		$form=$this->beginWidget('WMTbActiveForm', array('model'=>Material::model(), 'parent_fk'=>$_GET['fkField']));
+		// get the model name of the lookup table from fk field
+		$lookupModelName = $this->getFKModelType($modelName::model(), $_GET['fkField']);
+		$form=$this->beginWidget('WMTbActiveForm', array('model'=>$modelName::model(), 'parent_fk'=>$_GET['fkField']));
 		ob_end_clean();
 		self::listWidgetRow($modelName::model(), $form, $_GET['fkField'], array(),
 			array('scope'.$_GET['dependantOnModelName']=>array($_POST[$modelName][$_GET['dependantOnAttribute']])));
 	}
 
+	// recursive to find our way thru relations to target fk model
+	private function getFKModelType(&$model, $fkField)
+	{
+		// get the associated relation - assuming only 1
+		foreach($model->relations() as $relationName => $relation)
+		{
+			// if we have found the relation that uses this attribute which is a foreign key
+			if($relation[0] == ActiveRecord::BELONGS_TO && $relation[2] == $fkField)
+			{
+				return $relation[1];
+			}
+		}
+	}
+		
 	static function getAdminParam($paramName, $modelName = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
