@@ -15,6 +15,7 @@ class AssemblyToStandardDrawingController extends Controller
 			$taskToAssembly->assertFromParent();
 			$taskToAssemblyController->setTabs(NULL);
 			$this->_tabs = $taskToAssemblyController->tabs;
+			$this->setActiveTabs(NULL, StandardDrawing::getNiceNamePlural(), SubAssembly::getNiceNamePlural());
 			
 			// set breadcrumbs
 			static::setUpdateId(NULL, 'TaskToAssembly');
