@@ -59,9 +59,11 @@ class ViewTaskToMaterial extends ViewActiveRecord
 				materialToClient.alias,
 				material.alias
 				) AS searchMaterialAlias",
-			"IF(taskToAssembly.quantity IS NOT NULL, CONCAT_WS(' * ', t.quantity, taskToAssembly.quantity), t.quantity) AS quantity",
+	//		"IF(taskToAssembly.quantity IS NOT NULL, CONCAT_WS(' * ', t.quantity, taskToAssembly.quantity), t.quantity) AS quantity",
+			't.quantity',
 			't.material_group_to_material_id',
-			't.searchAssembly',
+			"CONCAT_WS(' of ', taskToAssembly.quantity, t.searchAssembly) AS searchAssembly",
+	//		't.searchAssembly',
 			't.searchAssemblyId',
 			't.searchTaskToMaterialToAssemblyToMaterialGroupId',
 			't.assembly_to_material_group_id',

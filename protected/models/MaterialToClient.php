@@ -123,9 +123,9 @@ class MaterialToClient extends ActiveRecord
 	public function getSearchSort()
 	{
 		return array(
-			'material->description',
-			'material->unit',
-			'material->alias',
+			'searchMaterialDescription',
+			'searchMaterialUnit',
+			'searchMaterialAlias',
 			'alias',
 		);
 	}

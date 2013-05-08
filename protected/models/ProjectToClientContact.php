@@ -182,6 +182,7 @@ class ProjectToClientContact extends ActiveRecord
 	public function getSearchSort()
 	{
 		return array(
+			'searchRole',
 			'searchFirst_name',
 			'searchLast_name',
 			'searchEmail',
