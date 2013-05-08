@@ -155,6 +155,12 @@ class ReportController extends Controller
 			// get any link columns which have :link appended to column name
 			foreach(array_keys($command->queryRow()) as $attribute)
 			{
+				if(!isset($options['keyField']))
+				{
+					// set key field as first field - needs a key field otherwise default to id and if not there errors
+					$options['keyField'] = $attribute;
+				}
+
 				$exploded = explode(':', $attribute);
 				if(sizeof($exploded) >= 2)
 				{
@@ -222,7 +228,7 @@ class ReportController extends Controller
 			{
 				$options['params'] = $params;
 			}
-			
+						
 			// the data provider
 			$dataProvider=new CSqlDataProvider($sql, $options);
 
