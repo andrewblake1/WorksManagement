@@ -299,7 +299,7 @@ class ReportController extends Controller
 	protected function createRender($model, $models, $modalId)
 	{
 		// don't do this in admin view - this is special case where we don't render as modal in admin view
-		if($this->action->Id == 'create')
+		if($this->action->id == 'create')
 		{
 			$modelName = $this->modelName;
 

@@ -15,15 +15,16 @@ $baseUrl = Yii::app()->baseUrl;
 $queryString = Yii::app()->request->queryString
 	? '?'.Yii::app()->request->queryString
 	: '';
+
 $open_nodes = implode(',', $identifiers);
 
-Yii::app()->user->setFlash('info','
+/*Yii::app()->user->setFlash('info','
 	<ul>
 		<li>If tree is empty,start by creating one or more root nodes.</li>
 		<li>Right Click on a node to see available operations.</li>
 		<li>Move nodes with Drag And Drop.You can move a non-root node to root position and vice versa.</li>
 		<li>Root nodes cannot be reordered.Their order is fixed  by id.</li>
-	</ul>');
+	</ul>');*/
 
 ?>
 
@@ -298,6 +299,7 @@ echo '
 </script>
 
 <?php
+$this->newButton();
 
 try
 {

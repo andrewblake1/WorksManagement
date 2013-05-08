@@ -424,3 +424,8 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 	});
 
 </script>
+<?php
+
+$this->newButton();
+
+?>

@@ -164,7 +164,8 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 		// otherwise appending to a node
 		else
 		{
-			$parent=$this->loadModel($_POST['parent_id']);
+			$modelName = get_class($this);
+			$parent=$modelName::model()->findByPk($_POST['parent_id']);
 			$saved = $this->appendTo($parent);
 		}
 		// put the model into the models array used for showing all errors
@@ -172,7 +173,5 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 		
 		return $saved;
 	}
-	
-	
 
 }

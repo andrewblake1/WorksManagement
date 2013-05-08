@@ -15,37 +15,6 @@ class WMTbBulkActions extends TbBulkActions
 		parent::init();
 	}
  
-
-	private function newButton() {
-		if (Yii::app()->user->checkAccess($this->_controller->modelName)) {
-			echo ' ';
-			$this->_controller->widget('bootstrap.widgets.TbButton', array(
-				'label' => 'New',
-				'icon' => 'plus',
-				'url' => '#myModal',
-				'type' => 'primary',
-				'size' => 'small', // '', 'large', 'small' or 'mini'
-				'htmlOptions' => array(
-					'data-toggle' => 'modal',
-					'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').first().focus();',
-				),
-			));
-		}
-	}
-
-	public function exportButton() {
-		if (Yii::app()->params['showDownloadButton']) {
-			echo ' ';
-			$this->_controller->widget('bootstrap.widgets.TbButton', array(
-				'label' => 'Download Excel',
-				'icon' => 'download',
-				'url' => $this->_controller->createUrl("{$this->_controller->modelName}/admin", $_GET + array('action' => 'download')),
-				'type' => 'primary',
-				'size' => 'small', // '', 'large', 'small' or 'mini'
-			));
-		}
-	}
-
 	/**
 	 *### .renderButtons()
 	 *
@@ -69,8 +38,9 @@ class WMTbBulkActions extends TbBulkActions
 	
 		echo '<div style="position:absolute;top:0;left:0;height:100%;width:100%;display:block;" class="bulk-actions-blocker"></div>';
 		echo '</div>';
-		$this->exportButton();
-		$this->newButton();
+
+		// add in custom admin buttons - into the bulk action area so all buttons together
+		$this->_controller->renderAdminButtons();
 
 		$this->registerClientScript();
 	}

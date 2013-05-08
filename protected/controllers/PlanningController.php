@@ -59,7 +59,7 @@ class PlanningController extends CategoryController
 	{
 		if(static::checkAccess(self::accessWrite, 'Day'))
 		{
-			echo ' ';
+			echo '<br>';
 			$this->widget('bootstrap.widgets.TbButton', array(
 				'label'=>'New day',
 				'url'=>$this->createUrl("{$this->modelName}/addDay".'?'.Yii::app()->request->queryString),

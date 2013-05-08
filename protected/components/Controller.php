@@ -1447,6 +1447,42 @@ $t = Controller::$nav;
 		Controller::$nav['admin'][$modelName][$level] = $params;
 	}*/
 
+	protected function newButton() {
+		if (Yii::app()->user->checkAccess($this->modelName)) {
+			echo ' ';
+			$this->widget('bootstrap.widgets.TbButton', array(
+				'label' => 'New',
+				'icon' => 'plus',
+				'url' => '#myModal',
+				'type' => 'primary',
+				'size' => 'small', // '', 'large', 'small' or 'mini'
+				'htmlOptions' => array(
+					'data-toggle' => 'modal',
+					'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').first().focus();',
+				),
+			));
+		}
+	}
+
+	protected function exportButton() {
+		if (Yii::app()->params['showDownloadButton']) {
+			echo ' ';
+			$this->widget('bootstrap.widgets.TbButton', array(
+				'label' => 'Download Excel',
+				'icon' => 'download',
+				'url' => $this->createUrl("{$this->modelName}/admin", $_GET + array('action' => 'download')),
+				'type' => 'primary',
+				'size' => 'small', // '', 'large', 'small' or 'mini'
+			));
+		}
+	}
+	
+	public function renderAdminButtons()
+	{
+		$this->exportButton();
+		$this->newButton();
+	}
+
 }
 
 ?>

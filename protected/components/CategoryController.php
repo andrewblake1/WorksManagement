@@ -10,6 +10,23 @@ class CategoryController extends Controller
 	protected function exportButton()
 	{
 	}
+	
+	protected function newButton()
+	{
+		echo '<br>';
+		// this method is called by CController::beginWidget()
+		$this->widget('bootstrap.widgets.TbButton', array(
+			'label' => 'New',
+			'icon' => 'plus',
+			'url' => '#myModal',
+			'type' => 'primary',
+			'size' => 'small', // '', 'large', 'small' or 'mini'
+			'htmlOptions' => array(
+				'data-toggle' => 'modal',
+				'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').first().focus();',
+			),
+		));
+	}
 
 	//UTILITY FUNCTIONS
 	public static  function registerCssAndJs($folder, $jsfile, $cssfile)

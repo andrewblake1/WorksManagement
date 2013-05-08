@@ -3,7 +3,7 @@
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	// set scope to limit to models
-	AuthItemController::listWidgetRow($model, $form, 'context', array(), array('tasks'));
+	AuthItemController::listWidgetRow($model, $form, 'context', array(), array('tasks'), 'Context');
 
 	$form->textFieldRow('description'); 
 

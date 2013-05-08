@@ -103,7 +103,7 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
 		// show initial display value
  //       $this->options['create']="js:function(event, ui){\$(this).val('".addslashes($this->_display)."');}";
        // after user picks from list, save the ID in model/attr field, and Value in _save field for redisplay
-        $this->options['select']="js:function(event, ui){;\$('#".$this->_fieldID."').val(ui.item.id);\$('#".$this->_saveID."').val(ui.item.value);{$this->afterSelect}}";
+        $this->options['select']="js:function(event, ui){;\$('form #".$this->_fieldID."').val(ui.item.id);\$('form #".$this->_saveID."').val(ui.item.value);{$this->afterSelect}}";
         // if onblur not set
 		if(empty($this->htmlOptions['onblur']))
 		{
@@ -111,12 +111,12 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
 			$this->htmlOptions['onblur']="
 				if($(this).val())
 				{
-					$(this).val($('#".$this->_saveID."').val());
+					$(this).val($('form #".$this->_saveID."').val());
 				}
 				else
 				{
-					$('#".$this->_saveID."').val('');
-					$('#".$this->_fieldID."').val('');
+					$('form #".$this->_saveID."').val('');
+					$('form #".$this->_fieldID."').val('');
 				}
 			";
 		}
