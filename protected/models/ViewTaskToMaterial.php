@@ -11,7 +11,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	public $searchMaterialUnit;
 	public $searchMaterialGroup;
 	public $searchMaterialAlias;
-	public $searchTaskQuantity;
+//	public $searchTaskQuantity;
+	public $searchAssemblyQuantity;
 	public $searchTotalQuantity;
 
 	/**
@@ -30,7 +31,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, task_to_assembly_id, searchMaterialUnit, searchTotalQuantity, searchTaskQuantity, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterialDescription, searchAssembly, quantity', 'safe', 'on'=>'search'),
+			array('id, task_id, task_to_assembly_id, searchMaterialUnit, searchAssemblyQuantity, searchTotalQuantity, searchTaskQuantity, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterialDescription, searchAssembly, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -62,8 +63,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	//		"IF(taskToAssembly.quantity IS NOT NULL, CONCAT_WS(' * ', t.quantity, taskToAssembly.quantity), t.quantity) AS quantity",
 			't.quantity',
 			't.material_group_to_material_id',
-			"CONCAT_WS(' of ', taskToAssembly.quantity, t.searchAssembly) AS searchAssembly",
-	//		't.searchAssembly',
+			"taskToAssembly.quantity AS searchAssemblyQuantity",
+			't.searchAssembly',
 			't.searchAssemblyId',
 			't.searchTaskToMaterialToAssemblyToMaterialGroupId',
 			't.assembly_to_material_group_id',
@@ -106,8 +107,9 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		);
 		$criteria->compare('t.task_to_assembly_id',$this->task_to_assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.searchTaskQuantity',$this->searchTaskQuantity);
-		$criteria->compare('t.searchTotalQuantity',$this->searchTotalQuantity);
+		$criteria->compare('searchTaskQuantity',$this->searchTaskQuantity);
+		$criteria->compare('searchAssemblyQuantity',$this->searchAssemblyQuantity);
+		$criteria->compare('searchTotalQuantity',$this->searchTotalQuantity);
 		$criteria->compare('t.task_id',$this->task_id);
 
 		return $criteria;
@@ -122,6 +124,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$columns[] = 'searchStage';
 		$columns[] = 'quantity';
 		$columns[] = 'searchTaskQuantity';
+		$columns[] = 'searchAssemblyQuantity';
 		$columns[] = 'searchTotalQuantity';
 		$columns[] = static::linkColumn('searchAssembly', 'TaskToAssembly', 'task_to_assembly_id');
 		
@@ -140,6 +143,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			'searchMaterialAlias',
 			'searchMaterialGroup',
 			'searchAssembly',
+			'searchAssemblyQuantity',
 			'searchStage',
 		);
 	}
