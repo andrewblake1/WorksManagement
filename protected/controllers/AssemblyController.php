@@ -2,7 +2,7 @@
 
 class AssemblyController extends AdjacencyListController
 {
-	
+	 
 	public function getChildTabs($model, $last = FALSE)
 	{
 		$tabs = array();
