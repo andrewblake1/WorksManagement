@@ -7,13 +7,13 @@
  * @property integer $id
  * @property integer $task_template_id
  * @property integer $custom_field_id
- * @property integer $custom_field_category_id
+ * @property integer $custom_field_task_category_id
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property CustomField $customField
- * @property CustomFieldTaskCategory $customFieldCategory
+ * @property CustomFieldTaskCategory $customFieldTaskCategory
  * @property User $updatedBy
  * @property TaskTemplate $taskTemplate
  * @property TaskToCustomFieldToTaskTemplate[] $taskToCustomFieldToTaskTemplates
@@ -30,7 +30,7 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchTaskTemplate;
-	public $searchCustomFieldtaskcategory;
+	public $searchCustomFieldTaskCategory;
 	public $searchCustomField;
 	
 	/**
@@ -46,7 +46,7 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 			array('custom_field_task_category_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_template_id, searchTaskTemplate, searchCustomFieldtaskcategory, searchCustomField', 'safe', 'on'=>'search'),
+			array('id, task_template_id, searchTaskTemplate, searchCustomFieldTaskCategory, searchCustomField', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,7 +59,7 @@ class CustomFieldToTaskTemplate extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
-            'customFieldCategory' => array(self::BELONGS_TO, 'CustomFieldTaskCategory', 'custom_field_category_id'),
+            'customFieldTaskCategory' => array(self::BELONGS_TO, 'CustomFieldTaskCategory', 'custom_field_task_category_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
             'taskToCustomFieldToTaskTemplates' => array(self::HAS_MANY, 'TaskToCustomFieldToTaskTemplate', 'custom_field_to_task_template_id'),
@@ -75,7 +75,7 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 			'task_template_id' => 'Client/Project type/Task type',
 			'searchTaskTemplate' => 'Client/Project type/Task type',
 			'custom_field_task_category_id' => 'Task category',
-			'searchCustomFieldtaskcategory' => 'Task category',
+			'searchCustomFieldTaskCategory' => 'Task category',
 			'custom_field_id' => 'Custom type',
 			'searchCustomField' => 'Custom type',
 		));
@@ -93,12 +93,12 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.custom_field_task_category_id',
 			't.custom_field_id',
-			'customFieldTaskCategory.name AS searchCustomFieldtaskcategory',
+			'customFieldTaskCategory.name AS searchCustomFieldTaskCategory',
 			'customField.description AS searchCustomField',
 		);
 
 		// where
-		$criteria->compare('customFieldTaskCategory.name',$this->searchCustomFieldtaskcategory,true);
+		$criteria->compare('customFieldTaskCategory.name',$this->searchCustomFieldTaskCategory,true);
 		$criteria->compare('customField.description',$this->searchCustomField,true);
 		$criteria->compare('t.task_template_id',$this->task_template_id);
 
@@ -113,7 +113,7 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchCustomFieldtaskcategory', 'CustomFieldTaskCategory', 'custom_field_task_category_id');
+        $columns[] = static::linkColumn('searchCustomFieldTaskCategory', 'CustomFieldTaskCategory', 'custom_field_task_category_id');
         $columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
 		
 		return $columns;
@@ -135,7 +135,7 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchCustomFieldtaskcategory', 'searchCustomField');
+		return array('searchCustomFieldTaskCategory', 'searchCustomField');
 	}
 
 }

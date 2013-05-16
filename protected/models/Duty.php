@@ -258,7 +258,8 @@ class Duty extends ActiveRecord
 		
 		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
-		if(($level = $this->dutyType->level) == Planning::planningLevelTaskInt)
+		$dutyType = DutyType::model()->findByPk($this->duty_type_id);
+		if(($level = $dutyType->level) == Planning::planningLevelTaskInt)
 		{
 			$planning_id = $this->task_id;
 		}

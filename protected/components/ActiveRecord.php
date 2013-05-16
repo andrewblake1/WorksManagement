@@ -309,7 +309,7 @@ $t = $model->attributes;
 				if($model->$parentForeignKeyName !== null)
 				{
 					// store the primary key for the model
-					Controller::setUpdate_id($model->$parentForeignKeyName, $crumb);
+					Controller::setUpdateId($model->$parentForeignKeyName, $crumb);
 					// ensure that that at least the parents primary key is set for the admin view
 					Controller::setAdminParam($parentForeignKeyName, $model->$parentForeignKeyName, $modelName);
 				}

@@ -424,7 +424,7 @@ $t = $model->attributes;
 		$model = new $modelName('search');
 		$model->unsetAttributes();  // clear any default values
 		// clear the primary key set by update
-		static::setUpdate_id(NULL, $modelName);
+		static::setUpdateId(NULL, $modelName);
 
 		if(isset($_GET['ajax'])) {
 			$this->storeAdminSettings($adminViewModelName, $modelName);
@@ -765,9 +765,9 @@ $t = $model->attributes;
 			$model = $this->loadModel($id);
 		}
 		$models = array();
-
+$t=			$model->attributes;
 		// add primary key into global so it can be retrieved for future use in breadcrumbs
-		static::setUpdate_id($id, $modelName);
+		static::setUpdateId($id, $modelName);
 
 		// ensure that where possible a pk has been passed from parent and get that fk name if possible
 		$parent_fk = $model->assertFromParent();
@@ -911,7 +911,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		$this->heading = $modelName::getNiceName($id);
 
 		// add primary key into global so it can be retrieved for future use in breadcrumbs
-		static::setUpdate_id($id, $modelName);
+		static::setUpdateId($id, $modelName);
 		$model->assertFromParent();
 //$t = Controller::$nav;		
 		// set breadcrumbs
@@ -1343,7 +1343,7 @@ $t=			$model->attributes = $_POST[$modelName];
 	}
 	
 	// return last or specified level of update id
-	static function setUpdate_id($update_id, $modelName = NULL)
+	static function setUpdateId($update_id, $modelName = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 
@@ -1366,7 +1366,7 @@ $t = Controller::$nav;
 	}
 	
 	// return last or specified level of update id
-	static function setUpdate_id($update_id, $modelName = NULL, $level = NULL)
+	static function setUpdateId($update_id, $modelName = NULL, $level = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 

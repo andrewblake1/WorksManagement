@@ -35,6 +35,7 @@ class TaskTemplateToAssembly extends ActiveRecord
 	static $niceName = 'Assembly';
 
 	public $standard_id;
+	public $clientAlias;
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -172,7 +173,7 @@ class TaskTemplateToAssembly extends ActiveRecord
 		
 		if($assemblyToClient = AssemblyToClient::model()->findByAttributes(array(
 			'assembly_id'=>$this->assembly_id,
-			'client_id'=>$this->taskTemplate->client,
+			'client_id'=>$this->taskTemplate->client_id,
 		)))
 		{
 			$this->clientAlias = $assemblyToClient->alias;

@@ -12,10 +12,10 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property CustomField $customField
  * @property CustomFieldProjectCategory $customFieldProjectCategory
- * @property User $updatedBy
+ * @property CustomField $customField
  * @property ProjectTemplate $projectTemplate
+ * @property User $updatedBy
  * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
  */
 class CustomFieldToProjectTemplate extends ActiveRecord
@@ -30,7 +30,7 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchProjectTemplate;
-	public $searchCustomFieldprojectcategory;
+	public $searchCustomFieldProjectCategory;
 	public $searchCustomField;
 	
 	/**
@@ -46,7 +46,7 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 			array('custom_field_project_category_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, project_template_id, searchProjectTemplate, searchCustomFieldprojectcategory, searchCustomField', 'safe', 'on'=>'search'),
+			array('id, project_template_id, searchProjectTemplate, searchCustomFieldProjectCategory, searchCustomField', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,10 +58,10 @@ class CustomFieldToProjectTemplate extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
             'customFieldProjectCategory' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'custom_field_project_category_id'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
             'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'custom_field_to_project_template_id'),
         );
     }
@@ -76,7 +76,7 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 			'project_template_id' => 'Client/Project type',
 			'searchProjectTemplate' => 'Client/Project type',
 			'custom_field_project_category_id' => 'Project category',
-			'searchCustomFieldprojectcategory' => 'Project category',
+			'searchCustomFieldProjectCategory' => 'Project category',
 			'custom_field_id' => 'Custom type',
 			'searchCustomField' => 'Custom type',
 		));
@@ -96,13 +96,13 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 			't.custom_field_project_category_id',
 			't.custom_field_id',
 			'projectTemplate.description AS searchProjectTemplate',
-			'customFieldProjectCategory.name AS searchCustomFieldprojectcategory',
+			'customFieldProjectCategory.name AS searchCustomFieldProjectCategory',
 			'customField.description AS searchCustomField',
 		);
 
 		// where
 		$criteria->compare('projectTemplate.description',$this->searchProjectTemplate,true);
-		$criteria->compare('customFieldProjectCategory.name',$this->searchCustomFieldprojectcategory,true);
+		$criteria->compare('customFieldProjectCategory.name',$this->searchCustomFieldProjectCategory,true);
 		$criteria->compare('customField.description',$this->searchCustomField,true);
 		$criteria->compare('t.project_template_id',$this->project_template_id);
 		
@@ -118,7 +118,7 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = static::linkColumn('searchCustomFieldprojectcategory', 'CustomFieldProjectCategory', 'custom_field_project_category_id');
+		$columns[] = static::linkColumn('searchCustomFieldProjectCategory', 'CustomFieldProjectCategory', 'custom_field_project_category_id');
 		$columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
 		
 		return $columns;
@@ -140,7 +140,7 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchCustomFieldprojectcategory', 'searchCustomField');
+		return array('searchCustomFieldProjectCategory', 'searchCustomField');
 	}
 
 }

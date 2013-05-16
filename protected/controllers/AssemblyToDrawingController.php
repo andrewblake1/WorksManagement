@@ -18,7 +18,7 @@ class AssemblyToDrawingController extends Controller
 			$this->setActiveTabs(NULL, Drawing::getNiceNamePlural(), SubAssembly::getNiceNamePlural());
 			
 			// set breadcrumbs
-			static::setUpdate_id(NULL, 'TaskToAssembly');
+			static::setUpdateId(NULL, 'TaskToAssembly');
 			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
 			array_pop($this->breadcrumbs);
 			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
@@ -36,7 +36,7 @@ class AssemblyToDrawingController extends Controller
 			$this->_tabs = $assemblyController->tabs;
 			
 			// set breadcrumbs
-//			static::setUpdate_id(NULL, 'Assembly');
+//			static::setUpdateId(NULL, 'Assembly');
 			$this->breadcrumbs = AssemblyController::getBreadCrumbTrail('Update');
 			array_pop($this->breadcrumbs);
 			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];

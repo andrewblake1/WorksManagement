@@ -27,7 +27,7 @@ class TaskToAssemblyController extends AdjacencyListController
 								: "TaskToAssemblyToAssemblyToAssemblyGroup/create"
 							: "TaskToAssembly/update",
 						$data->assembly_group_id
-							? array("id"=>$data->searchTaskToAssemblyToAssemblyToAssemblyGroup_id, "TaskToAssemblyToAssemblyToAssemblyGroup"=>array(
+							? array("id"=>$data->search_task_to_assembly_to_assembly_to_assembly_group_id, "TaskToAssemblyToAssemblyToAssemblyGroup"=>array(
 								"assembly_group_to_assembly_id"=>$data->assembly_group_to_assembly_id,
 								"assembly_group_id"=>$data->assembly_group_id,
 								"task_id"=>$data->task_id,
@@ -148,7 +148,7 @@ class TaskToAssemblyController extends AdjacencyListController
 			{
 				$this->setChildTabs($this->loadModel($parent_id));
 				// set breadcrumbs
-				static::setUpdate_id($parent_id);
+				static::setUpdateId($parent_id);
 				$this->breadcrumbs = self::getBreadCrumbTrail();
 				array_pop($this->breadcrumbs);
 				$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];

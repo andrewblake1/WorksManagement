@@ -10,11 +10,11 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	$taskTemplateToMaterialGroup = TaskTemplateToMaterialGroup::model()->findByPk($model->task_template_to_material_group_id);
 	
-	if($model->isNewRecord)
-	{
-		// get the default quantity
-		$model->quantity = $assemblyToMaterialGroup->quantity;
-	}
+//	if($model->isNewRecord)
+//	{
+//		// get the default quantity
+//		$model->quantity = $assemblyToMaterialGroup->quantity;
+//	}
 
 	MaterialController::listWidgetRow($model, $form, 'material_id', array('data-original-title'=>$taskTemplateToMaterialGroup->selection_tooltip), array('scopeMaterialGroup'=>array($model->material_group_id)));
 

@@ -438,8 +438,7 @@ class Task extends CustomFieldExtensionActiveRecord
 	{
 		// initialise the saved variable to show no errors
 		$saved = true;
-$t=  $this->taskTemplate->attributes;
-$t2 = $this->taskTemplate->taskTemplateToAssemblies;
+
 		// loop thru all all assemblies related to the tasks type
 		foreach($this->taskTemplate->taskTemplateToAssemblies as $taskTemplateToAssembly)
 		{

@@ -68,7 +68,7 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 		$taskToAssemblyController->setActiveTabs(NULL, $modelName::getNiceNamePlural());
 		$this->_tabs = $taskToAssemblyController->tabs;
 
-		static::setUpdate_id(NULL, 'TaskToAssembly');
+		static::setUpdateId(NULL, 'TaskToAssembly');
 		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
 
 		$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);

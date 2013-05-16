@@ -193,7 +193,7 @@ $t = Controller::$nav;
 	}
 	
 	// return last or specified level of update id
-	static function setUpdate_id($update_id, $modelName = NULL, $level = NULL)
+	static function setUpdateId($update_id, $modelName = NULL, $level = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 

@@ -27,7 +27,7 @@ class TaskToMaterialController extends Controller
 										: "TaskToMaterialToAssemblyToMaterialGroup/create"
 									: "TaskToMaterial/update",
 								$data->material_group_id
-									? array("id"=>$data->searchTaskToMaterialToAssemblyToMaterialGroup_id, "TaskToMaterialToAssemblyToMaterialGroup"=>array(
+									? array("id"=>$data->search_task_to_material_to_assembly_to_material_group_id, "TaskToMaterialToAssemblyToMaterialGroup"=>array(
 										"material_group_to_material_id"=>$data->material_group_to_material_id,
 										"material_group_id"=>$data->material_group_id,
 										"material_id"=>$data->material_id,
@@ -73,7 +73,7 @@ class TaskToMaterialController extends Controller
 			$taskToAssemblyController->setActiveTabs(TaskToAssembly::getNiceNamePlural(), $modelName::getNiceNamePlural());
 			$this->_tabs = $taskToAssemblyController->tabs;
 
-			static::setUpdate_id(NULL, 'TaskToAssembly');
+			static::setUpdateId(NULL, 'TaskToAssembly');
 			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
 
 			$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);

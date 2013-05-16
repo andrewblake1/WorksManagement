@@ -264,7 +264,7 @@ class WMTbActiveForm extends TbActiveForm
 		$htmlOptions['data-original-title'] = $quantity_tooltip;
 
 		// if no quantity currently set
-		if($model->$attribute)
+		if($model->$attribute === NULL)
 		{
 			// set local default - if single select then select, or if min === max then to min
 			$model->$attribute = RangeActiveRecord::getDefaultValue($select, $minimum, $maximum);

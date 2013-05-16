@@ -11,7 +11,7 @@ class AssemblyController extends AdjacencyListController
 		
 		return $tabs[0];
 	}
-	
+
 	// override the tabs when viewing assemblies for a particular task
 	public function setTabs($model) {
 		if($model)
@@ -27,7 +27,7 @@ class AssemblyController extends AdjacencyListController
 			{
 				$this->setChildTabs($this->loadModel($parent_id));
 				// set breadcrumbs
-				static::setUpdate_id($parent_id);
+				static::setUpdateId($parent_id);
 				$this->breadcrumbs = self::getBreadCrumbTrail();
 				array_pop($this->breadcrumbs);
 				$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
