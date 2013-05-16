@@ -11,13 +11,13 @@
  * @property integer $level
  * @property string $name
  * @property integer $deleted
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  */
 abstract class CategoryActiveRecord extends ActiveRecord {
 	/**
-	 * Id of the div in which the tree will berendered.
+	 * _id of the div in which the tree will berendered.
 	 */
 
 	const ADMIN_TREE_CONTAINER_ID = 'category_admin_tree';
@@ -31,7 +31,7 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 		// NOTE2: Remove ALL rules associated with the nested Behavior:
 		//rgt,lft,root,level,id.
 		return array(
-			array('staff_id', 'required'),
+			array('updated_by', 'required'),
 			array('name', 'length', 'max' => 64),
 		);
 	}
@@ -48,7 +48,7 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 			'level' => 'Level',
 			'name' => 'Name',
 			'deleted' => 'Deleted',
-			'staff_id' => 'Staff',
+			'updated_by' => 'User',
 		) + $attributeLabels);
 	}
 

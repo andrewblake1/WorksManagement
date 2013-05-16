@@ -27,7 +27,7 @@ class TaskToAssemblyController extends AdjacencyListController
 								: "TaskToAssemblyToAssemblyToAssemblyGroup/create"
 							: "TaskToAssembly/update",
 						$data->assembly_group_id
-							? array("id"=>$data->searchTaskToAssemblyToAssemblyToAssemblyGroupId, "TaskToAssemblyToAssemblyToAssemblyGroup"=>array(
+							? array("id"=>$data->searchTaskToAssemblyToAssemblyToAssemblyGroup_id, "TaskToAssemblyToAssemblyToAssemblyGroup"=>array(
 								"assembly_group_to_assembly_id"=>$data->assembly_group_to_assembly_id,
 								"assembly_group_id"=>$data->assembly_group_id,
 								"task_id"=>$data->task_id,
@@ -50,7 +50,7 @@ class TaskToAssemblyController extends AdjacencyListController
 	}
 
 	/**
-	 * Recursive function to add assembly with sub assemblies to task. Inserts row into task_to_assembly and also appends materials to task_to_materials
+	 * Recursive factory method to add assembly with sub assemblies to task. Inserts row into taskToAssembly and also appends materials to taskToMaterials
 	 * @param int $task_id the task id to add assembly to
 	 * @param int $assembly_id the assembly id to add to task
 	 * @param int $parent_id the id of the parent within this model - adjacency list
@@ -61,7 +61,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		// initialise the saved variable to show no errors
 		$saved = true;
 		
-		// insert assembly into task_to_assembly table
+		// insert assembly into taskToAssembly table
 		if($taskToAssembly === NULL)
 		{
 			$taskToAssembly = new TaskToAssembly();
@@ -75,7 +75,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		$saved = $taskToAssembly->dbCallback('save');
 		$models[] = $taskToAssembly;
 		
-		// insert materials into task_to_material table
+		// insert materials into taskToMaterial table
 		
 		// AssemblyToMaterial
 		foreach(AssemblyToMaterial::model()->findAllByAttributes(array('assembly_id'=>$assembly_id)) as $assemblyToMaterial)
@@ -84,8 +84,8 @@ class TaskToAssemblyController extends AdjacencyListController
 			$taskToMaterial->task_id = $task_id;
 			$taskToMaterial->material_id = $assemblyToMaterial->material_id;
 			$taskToMaterial->task_to_assembly_id = $taskToAssembly->id;
-			$taskToMaterial->store_id = $taskToAssembly->assembly->store_id;
-			$taskToMaterial->quantity = $assemblyToMaterial->quantity;
+			$taskToMaterial->standard_id = $taskToAssembly->assembly->standard_id;
+			$taskToMaterial->quantity = $assemblyToMaterial->default;
 			if($saved &= $taskToMaterial->createSave($models))
 			{
 				// add a row into pivot table so can join to get quantity comment and stage etc
@@ -99,7 +99,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		// recurse thru sub assemblies
 		foreach(SubAssembly::model()->findAllByAttributes(array('parent_assembly_id'=>$assembly_id)) as $subAssembly)
 		{
-			$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, $subAssembly->quantity, $taskToAssembly->id, $subAssembly->id, $models);
+			$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, $subAssembly->default, $taskToAssembly->id, $subAssembly->id, $models);
 		}
 		
 		return $saved;
@@ -123,7 +123,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		), $tabs);
 
 		// add tab to standard drawings
-		$this->addTab(AssemblyToStandardDrawing::getNiceNamePlural(), $this->createUrl('AssemblyToStandardDrawing/admin', array(
+		$this->addTab(AssemblyToDrawing::getNiceNamePlural(), $this->createUrl('AssemblyToDrawing/admin', array(
 			'assembly_id' => $model->assembly_id,
 			'parent_id' => $model->id,	// needed for breadcrumb trail calc for adjacency list
 			'task_id' => $model->task_id,
@@ -138,7 +138,7 @@ class TaskToAssemblyController extends AdjacencyListController
 		if($model)
 		{
 			parent::setTabs(NULL);
-			$this->setChildTabs($this->loadModel(static::getUpdateId()));
+			$this->setChildTabs($this->loadModel(static::getUpdate_id()));
 		}
 		else
 		{
@@ -148,7 +148,7 @@ class TaskToAssemblyController extends AdjacencyListController
 			{
 				$this->setChildTabs($this->loadModel($parent_id));
 				// set breadcrumbs
-				static::setUpdateId($parent_id);
+				static::setUpdate_id($parent_id);
 				$this->breadcrumbs = self::getBreadCrumbTrail();
 				array_pop($this->breadcrumbs);
 				$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
@@ -157,13 +157,6 @@ class TaskToAssemblyController extends AdjacencyListController
 			}
 		}
 	}
-
-/*	public function setUpdateTabs($model) {
-		// set top level tabs as per normal admin view
-		parent::setTabs(false);
-		
-		$this->setChildTabs($this->loadModel(static::getUpdateId()));
-	}*/
 	
 }
 

@@ -1,11 +1,11 @@
 <?php
 
 /**
- * This is the model class for table "sub_assembly".
+ * This is the model class for table "tbl_sub_assembly".
  *
- * The followings are the available columns in table 'sub_assembly':
+ * The followings are the available columns in table 'tbl_sub_assembly':
  * @property integer $id
- * @property integer $store_id
+ * @property integer $standard_id
  * @property integer $parent_assembly_id
  * @property integer $child_assembly_id
  * @property string $comment
@@ -15,13 +15,14 @@
  * @property string $select
  * @property string $quantity_tooltip
  * @property integer $deleted
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property User $updatedBy
  * @property Assembly $parentAssembly
- * @property Assembly $store
+ * @property Assembly $standard
  * @property Assembly $childAssembly
- * @property Staff $staff
+ * @property TaskToAssembly[] $taskToAssemblies
  */
 class SubAssembly extends ActiveRecord
 {
@@ -42,8 +43,8 @@ class SubAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('store_id, parent_assembly_id, child_assembly_id, quantity', 'required'),
-			array('store_id, parent_assembly_id, child_assembly_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
+			array('standard_id, parent_assembly_id, child_assembly_id, quantity', 'required'),
+			array('standard_id, parent_assembly_id, child_assembly_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('quantity_tooltip, comment', 'length', 'max'=>255),
 			array('select', 'safe'),
 			// The following rule is used by search().
@@ -57,15 +58,16 @@ class SubAssembly extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'parentAssembly' => array(self::BELONGS_TO, 'Assembly', 'parent_assembly_id'),
-			'store' => array(self::BELONGS_TO, 'Assembly', 'store_id'),
-			'childAssembly' => array(self::BELONGS_TO, 'Assembly', 'child_assembly_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'parentAssembly' => array(self::BELONGS_TO, 'Assembly', 'parent_assembly_id'),
+            'standard' => array(self::BELONGS_TO, 'Assembly', 'standard_id'),
+            'childAssembly' => array(self::BELONGS_TO, 'Assembly', 'child_assembly_id'),
+            'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'sub_assembly_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -73,7 +75,7 @@ class SubAssembly extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'store_id' => 'Store',
+			'standard_id' => 'Standard',
 			'parent_assembly_id' => 'Parent assembly',
 			'child_assembly_id' => 'Sub assembly',
 			'searchChildAssembly' => 'Child assembly',
@@ -168,10 +170,10 @@ class SubAssembly extends ActiveRecord
 		return parent::getParentForeignKey($referencesModel, array('Assembly'=>'parent_assembly_id'));
 	}
 	
-	public function scopeStore($store_id)
+	public function scopeStandard($standard_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compareNull('store_id', $store_id);
+		$criteria->compareNull('standard_id', $standard_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		
@@ -180,7 +182,7 @@ class SubAssembly extends ActiveRecord
 
 	public function beforeValidate()
 	{
-		$this->store_id = $this->parentAssembly->store_id;
+		$this->standard_id = $this->parentAssembly->standard_id;
 		
 		return parent::beforeValidate();
 	}

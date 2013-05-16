@@ -8,7 +8,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->dropDownListRow('level', Planning::$levels);
 
-	GenericTypeController::listWidgetRow($model, $form, 'generic_type_id', array(), array(), null);
+	CustomFieldController::listWidgetRow($model, $form, 'custom_field_id', array(), array(), null);
 
 $this->endWidget();
 

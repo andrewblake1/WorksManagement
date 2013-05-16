@@ -1,13 +1,13 @@
 <?php
 
 /**
- * This is the model class for table "task".
+ * This is the model class for table "tbl_task".
  *
- * The followings are the available columns in table 'task':
+ * The followings are the available columns in table 'tbl_task':
  * @property string $id
  * @property string $level
  * @property string $project_id
- * @property integer $task_type_id
+ * @property integer $task_template_id
  * @property integer $quantity
  * @property string $planned
  * @property string $location
@@ -19,22 +19,23 @@
  * @property integer $preferred_sat
  * @property integer $preferred_sun
  * @property string $crew_id
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Duty[] $duties
+ * @property Project $project
+ * @property User $updatedBy
+ * @property TaskTemplate $taskTemplate
+ * @property Planning $level0
  * @property Crew $crew
  * @property Planning $id0
- * @property TaskLevel $level0
- * @property Project $project
- * @property Staff $staff
- * @property TaskType $taskType
  * @property TaskToAssembly[] $taskToAssemblies
- * @property TaskToGenericTaskType[] $taskToGenericTaskTypes
+ * @property TaskToCustomFieldToTaskTemplate[] $taskToCustomFieldToTaskTemplates
+ * @property TaskToMaterial[] $taskToMaterials
  * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
- * @property TaskToResourceType[] $taskToResourceTypes
+ * @property TaskToResource[] $taskToResources
  */
-class Task extends GenericExtensionActiveRecord
+class Task extends CustomFieldExtensionActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
@@ -42,7 +43,7 @@ class Task extends GenericExtensionActiveRecord
 	 */
 	public $searchInCharge;
 	public $searchProject;
-	public $searchTaskType;
+	public $searchTaskTemplate;
 	public $searchEarliest;
 	public $name;
 	public $in_charge_id;
@@ -51,14 +52,14 @@ class Task extends GenericExtensionActiveRecord
 	 */
 	public $preferred = array();
 
-	protected $class_ModelToGenericModelType = 'TaskToGenericTaskType';
-	protected $attribute_generic_model_type_id = 'generic_task_type_id';
-	protected $attribute_model_id = 'task_id';
-	protected $relation_genericModelType = 'genericTaskType';
-	protected $relation_genericModelTypes = 'genericTaskTypes';
-	protected $relation_modelType = 'taskType';
-	protected $relation_modelToGenericModelTypes = 'taskToGenericTaskTypes';
-	protected $relation_modelToGenericModelType = 'taskToGenericTaskType';
+	protected $classModelToCustomFieldModelType = 'TaskToCustomFieldToTaskTemplate';
+	protected $attributeCustomFieldModelType_id = 'custom_field_to_task_template_id';
+	protected $attributeModel_id = 'task_id';
+	protected $relationCustomFieldModelType = 'customFieldToTaskTemplate';
+	protected $relationCustomFieldModelTypes = 'customFieldToTaskTemplates';
+	protected $relationModelType = 'taskTemplate';
+	protected $relationModelToCustomFieldModelTypes = 'taskToCustomFieldToTaskTemplates';
+	protected $relationModelToCustomFieldModelType = 'taskToCustomFieldToTaskTemplate';
 
 	
 	/**
@@ -69,13 +70,13 @@ class Task extends GenericExtensionActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_id, task_type_id, crew_id', 'required'),
-			array('task_type_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('project_id, task_template_id, crew_id', 'required'),
+			array('task_template_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
 			array('planned, preferred, name, location', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, quantity, searchInCharge, searchEarliest, searchProject, searchTaskType, name, crew_id, planned, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
+			array('id, level, quantity, searchInCharge, searchEarliest, searchProject, searchTaskTemplate, name, crew_id, planned, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -84,23 +85,23 @@ class Task extends GenericExtensionActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'duties' => array(self::HAS_MANY, 'Duty', 'task_id'),
-			'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_id'),
-			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'taskType' => array(self::BELONGS_TO, 'TaskType', 'task_type_id'),
-			'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
-			'level0' => array(self::BELONGS_TO, 'TaskLevel', 'level'),
-			'crew' => array(self::BELONGS_TO, 'Crew', 'crew_id'),
-			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
-			'taskToGenericTaskTypes' => array(self::HAS_MANY, 'TaskToGenericTaskType', 'task_id'),
-			'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'task_id'),
-			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'task_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'duties' => array(self::HAS_MANY, 'Duty', 'task_id'),
+            'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
+            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+            'crew' => array(self::BELONGS_TO, 'Crew', 'crew_id'),
+            'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
+            'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
+            'taskToCustomFieldToTaskTemplates' => array(self::HAS_MANY, 'TaskToCustomFieldToTaskTemplate', 'task_id'),
+            'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_id'),
+            'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'task_id'),
+            'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'task_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -112,8 +113,8 @@ class Task extends GenericExtensionActiveRecord
 			'searchInCharge' => 'In charge, First/Last/Email',
 			'project_id' => 'Project',
 			'searchProject' => 'Project',
-			'task_type_id' => 'Task type',
-			'searchTaskType' => 'Task type',
+			'task_template_id' => 'Task type',
+			'searchTaskTemplate' => 'Task type',
 			'planned' => 'Planned',
 			'name' => 'Task',
 			'location' => 'Location',
@@ -139,12 +140,11 @@ class Task extends GenericExtensionActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id AS id',
-			't.task_type_id',
+			't.task_template_id',
 			't.quantity',
 			't.location',
 			'COALESCE(t.planned, project.planned) AS planned',
-//			'DATE_ADD( project.planned, INTERVAL MAX( lead_in_days ) DAY ) AS searchEarliest',
-			'(SELECT `date` FROM working_days WHERE id = (SELECT id + MAX( lead_in_days ) FROM working_days WHERE `date` >= t.planned LIMIT 1)) as searchEarliest',
+			'(SELECT `date` FROM tbl_working_days WHERE id = (SELECT id + MAX( lead_in_days ) FROM tbl_working_days WHERE `date` >= t.planned LIMIT 1)) as searchEarliest',
 			't.preferred_mon',
 			't.preferred_tue',
 			't.preferred_wed',
@@ -158,16 +158,17 @@ class Task extends GenericExtensionActiveRecord
 				inCharge.email
 				) AS searchInCharge",
 			"CONCAT_WS('$delimiter',
-				taskType.description
-				) AS searchTaskType",
+				taskTemplate.description
+				) AS searchTaskTemplate",
 		);
 
 		// group
 		$criteria->group = 't.id';
+
 		// join 
 		$criteria->join='
-			LEFT JOIN duty ON t.id = duty.task_id
-			LEFT JOIN duty_type dutyType ON duty.duty_type_id = dutyType.id';
+			LEFT JOIN tbl_duty duty ON t.id = duty.task_id
+			LEFT JOIN tbl_duty_type dutyType ON duty.duty_type_id = dutyType.id';
 
 		// where
 		$criteria->compare('t.id',$this->id);
@@ -193,9 +194,9 @@ class Task extends GenericExtensionActiveRecord
 		);
 		$this->compositeCriteria($criteria,
 			array(
-				'taskType.description',
+				'taskTemplate.description',
 			),
-			$this->searchTaskType
+			$this->searchTaskTemplate
 		);
 //$t = $this->crew_id;
 		$criteria->compare('t.crew_id',$this->crew_id);
@@ -205,7 +206,7 @@ class Task extends GenericExtensionActiveRecord
 			'id0',
 			'id0.inCharge',
 			'project',
-			'taskType',
+			'taskTemplate',
 			);
 
 		return $criteria;
@@ -217,8 +218,8 @@ class Task extends GenericExtensionActiveRecord
 		$columns[] = $this->linkThisColumn('name');
 		$columns[] = 'quantity';
 		$columns[] = 'location';
-        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
-        $columns[] = static::linkColumn('searchTaskType', 'TaskType', 'task_type_id');
+        $columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
+        $columns[] = static::linkColumn('searchTaskTemplate', 'TaskTemplate', 'task_template_id');
 		$columns[] = 'planned';
 		$columns[] = 'searchEarliest:date';
 		$columns[] = 'preferred_mon:boolean';
@@ -249,7 +250,7 @@ class Task extends GenericExtensionActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchInCharge', 'searchProject', 'searchTaskType', 'searchEarliest', 'name');
+		return array('searchInCharge', 'searchProject', 'searchTaskTemplate', 'searchEarliest', 'name');
 	}
 
 	public function beforeSave() {
@@ -375,8 +376,8 @@ class Task extends GenericExtensionActiveRecord
 		if($saved = $planning->appendTo(Planning::model()->findByPk($this->crew_id)))
 		{
 			$this->id = $planning->id;
-			$this->quantity = $this->taskType->quantity;
-			// parent create save will add generics -- all we need to do is take care care of adding the other things if no errors
+			$this->quantity = $this->taskTemplate->quantity;
+			// parent create save will add customValues -- all we need to do is take care care of adding the other things if no errors
 			// NB: by calling the parent this is added into $models
 			if($saved = parent::createSave($models))
 			{
@@ -409,19 +410,19 @@ class Task extends GenericExtensionActiveRecord
 	private function createResources(&$models=array())
 	{
 		// initialise the saved variable to show no errors in case the are no
-		// model generics - otherwise will return null indicating a save error
+		// model customValues - otherwise will return null indicating a save error
 		$saved = true;
 		
-		// loop thru all generic model types associated to this models model type
-		foreach($this->taskType->taskTypeToResourceTypes as $taskTypeToResourceType)
+		// loop thru all customValue model types associated to this models model type
+		foreach($this->taskTemplate->taskTemplateToResources as $taskTemplateToResource)
 		{
 			// create a new resource
-			$taskToResourceType = new TaskToResourceType();
+			$taskToResource = new TaskToResource();
 			// copy any useful attributes from
-			$taskToResourceType->attributes = $taskTypeToResourceType->attributes;
-			$taskToResourceType->staff_id = null;
-			$taskToResourceType->task_id = $this->id;
-			$saved &= $taskToResourceType->createSave($models, $taskTypeToResourceType);
+			$taskToResource->attributes = $taskTemplateToResource->attributes;
+			$taskToResource->updated_by = null;
+			$taskToResource->task_id = $this->id;
+			$saved &= $taskToResource->createSave($models, $taskTemplateToResource);
 		}
 		
 		return $saved;
@@ -437,11 +438,12 @@ class Task extends GenericExtensionActiveRecord
 	{
 		// initialise the saved variable to show no errors
 		$saved = true;
-		
+$t=  $this->taskTemplate->attributes;
+$t2 = $this->taskTemplate->taskTemplateToAssemblies;
 		// loop thru all all assemblies related to the tasks type
-		foreach($this->taskType->taskTypeToAssemblies as $taskTypeToAssembly)
+		foreach($this->taskTemplate->taskTemplateToAssemblies as $taskTemplateToAssembly)
 		{
-			$saved = TaskToAssemblyController::addAssembly($this->id, $taskTypeToAssembly->assembly_id, $taskTypeToAssembly->quantity, null, null, $models);
+			$saved = TaskToAssemblyController::addAssembly($this->id, $taskTemplateToAssembly->assembly_id, $taskTemplateToAssembly->default, null, null, $models);
 		}
 		
 		return $saved;
@@ -456,20 +458,22 @@ class Task extends GenericExtensionActiveRecord
 	private function createMaterials(&$models=array())
 	{
 		// initialise the saved variable to show no errors in case the are no
-		// model generics - otherwise will return null indicating a save error
+		// model customValues - otherwise will return null indicating a save error
 		$saved = true;
 		
-		// loop thru all generic model types associated to this models model type
-		foreach($this->taskType->taskTypeToMaterials as $taskTypeToMaterial)
+		// loop thru all customValue model types associated to this models model type
+		foreach($this->taskTemplate->taskTemplateToMaterials as $taskTemplateToMaterial)
 		{
 			// create a new materials
 			$taskToMaterial = new TaskToMaterial();
 			// copy any useful attributes from
-			$taskToMaterial->attributes = $taskTypeToMaterial->attributes;
-			$taskToMaterial->staff_id = null;
+		//	$taskToMaterial->attributes = $taskTemplateToMaterial->attributes;
+			$taskToMaterial->quantity = $taskTemplateToMaterial->default;
+			$taskToMaterial->material_id = $taskTemplateToMaterial->material_id;
+			$taskToMaterial->updated_by = null;
 			$taskToMaterial->task_id = $this->id;
-			// need dummy store id to get around rules
-			$taskToMaterial->store_id = 0;
+			// need dummy standard id to get around rules
+			$taskToMaterial->standard_id = 0;
 			$saved &= $taskToMaterial->createSave($models);
 		}
 		
@@ -485,17 +489,17 @@ class Task extends GenericExtensionActiveRecord
 	private function createDutys(&$models=array())
 	{
 		// initialise the saved variable to show no errors in case the are no
-		// model generics - otherwise will return null indicating a save error
+		// model customValues - otherwise will return null indicating a save error
 		$saved = true;
 		
-		// loop thru all generic model types associated to this models model type
-		foreach($this->taskType->taskTypeToDutyTypes as $taskTypeToDutyType)
+		// loop thru all customValue model types associated to this models model type
+		foreach($this->taskTemplate->taskTemplateToDutyTypes as $taskTemplateToDutyType)
 		{
 			// create a new duty
 			$duty = new Duty();
 			// copy any useful attributes from
-			$duty->attributes = $taskTypeToDutyType->attributes;
-			$duty->staff_id = null;
+			$duty->attributes = $taskTemplateToDutyType->attributes;
+			$duty->updated_by = null;
 			$duty->task_id = $this->id;
 			$saved &= $duty->createSave($models);
 		}

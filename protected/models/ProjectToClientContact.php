@@ -1,31 +1,32 @@
 <?php
 
 /**
- * This is the model class for table "project_to_client_contact".
+ * This is the model class for table "tbl_project_to_client_contact".
  *
- * The followings are the available columns in table 'project_to_client_contact':
+ * The followings are the available columns in table 'tbl_project_to_client_contact':
  * @property integer $id
  * @property string $project_id
  * @property integer $client_id
  * @property integer $client_contact_id
- * @property integer $staff_id
+ * @property integer $deleted
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property ClientContact $clientContact
  * @property Project $client
- * @property Staff $staff
+ * @property User $updatedBy
  * @property Project $project
  */
 class ProjectToClientContact extends ActiveRecord
 {
 	public $searchRole;
-	public $searchFirst_name;
-	public $searchLast_name;
+	public $searchFirstName;
+	public $searchLastName;
 	public $searchEmail;
-	public $searchPhone_mobile;
-	public $searchPhone_home;
-	public $searchPhone_work;
-	public $searchPhone_fax;
+	public $searchPhoneMobile;
+	public $searchPhoneHome;
+	public $searchPhoneWork;
+	public $searchPhoneFax;
 
 	/**
 	 * @var string nice model name for use in output
@@ -45,7 +46,7 @@ class ProjectToClientContact extends ActiveRecord
 			array('project_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchRole, searchFirst_name, searchLast_name, searchEmail, searchPhone_mobile, searchPhone_home, searchPhone_work, searchPhone_fax, project_id, client_id, client_contact_id', 'safe', 'on'=>'search'),
+			array('id, searchRole, searchFirstName, searchLastName, searchEmail, searchPhoneMobile, searchPhoneHome, searchPhoneWork, searchPhoneFax, project_id, client_id, client_contact_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,15 +55,15 @@ class ProjectToClientContact extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'clientContact' => array(self::BELONGS_TO, 'ClientContact', 'client_contact_id'),
-			'client' => array(self::BELONGS_TO, 'Project', 'client_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'clientContact' => array(self::BELONGS_TO, 'ClientContact', 'client_contact_id'),
+            'client' => array(self::BELONGS_TO, 'Project', 'client_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -74,13 +75,13 @@ class ProjectToClientContact extends ActiveRecord
 			'client_id' => 'Client',
 			'client_contact_id' => 'Contact',
 			'searchRole' => 'Role',
-			'searchFirst_name' => 'First name',
-			'searchLast_name' => 'Last name',
+			'searchFirstName' => 'First name',
+			'searchLastName' => 'Last name',
 			'searchEmail' => 'Email',
-			'searchPhone_mobile' => 'Phone mobile',
-			'searchPhone_home' => 'Phone home',
-			'searchPhone_work' => 'Phone work',
-			'searchPhone_fax' => 'Phone fax',
+			'searchPhoneMobile' => 'Phone mobile',
+			'searchPhoneHome' => 'Phone home',
+			'searchPhoneWork' => 'Phone work',
+			'searchPhoneFax' => 'Phone fax',
 		));
 	}
 
@@ -97,26 +98,26 @@ class ProjectToClientContact extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.client_contact_id',
 			'clientContact.role AS searchRole',
-			'clientContact.first_name AS searchFirst_name',
-			'clientContact.last_name AS searchLast_name',
+			'clientContact.first_name AS searchFirstName',
+			'clientContact.last_name AS searchLastName',
 			'clientContact.email AS searchEmail',
-			'clientContact.phone_mobile AS searchPhone_mobile',
-			'clientContact.phone_home AS searchPhone_home',
-			'clientContact.phone_work AS searchPhone_work',
-			'clientContact.phone_fax AS searchPhone_fax',
+			'clientContact.phone_mobile AS searchPhoneMobile',
+			'clientContact.phone_home AS searchPhoneHome',
+			'clientContact.phone_work AS searchPhoneWork',
+			'clientContact.phone_fax AS searchPhoneFax',
 		);
 
 		$criteria->compare('project_id',$this->project_id);
 		$criteria->compare('clientContact.role',$this->searchRole,true);
-		$criteria->compare('clientContact.first_name',$this->searchFirst_name,true);
-		$criteria->compare('clientContact.last_name',$this->searchLast_name,true);
+		$criteria->compare('clientContact.first_name',$this->searchFirstName,true);
+		$criteria->compare('clientContact.last_name',$this->searchLastName,true);
 		$criteria->compare('clientContact.email',$this->searchEmail,true);
-		$criteria->compare('clientContact.phone_mobile',$this->searchPhone_mobile,true);
-		$criteria->compare('clientContact.phone_home',$this->searchPhone_home,true);
-		$criteria->compare('clientContact.phone_work',$this->searchPhone_work,true);
-		$criteria->compare('clientContact.phone_fax',$this->searchPhone_fax,true);
+		$criteria->compare('clientContact.phone_mobile',$this->searchPhoneMobile,true);
+		$criteria->compare('clientContact.phone_home',$this->searchPhoneHome,true);
+		$criteria->compare('clientContact.phone_work',$this->searchPhoneWork,true);
+		$criteria->compare('clientContact.phone_fax',$this->searchPhoneFax,true);
 
-		// join
+		// with
 		$criteria->with = array(
 			'clientContact',
 		);
@@ -127,24 +128,24 @@ class ProjectToClientContact extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[]='searchRole';
-		$columns[]=$this->linkThisColumn('searchFirst_name');
-		$columns[]=$this->linkThisColumn('searchLast_name');
+		$columns[]=$this->linkThisColumn('searchFirstName');
+		$columns[]=$this->linkThisColumn('searchLastName');
         $columns[] = array(
-			'name'=>'searchPhone_mobile',
-			'value'=>'CHtml::link($data->searchPhone_mobile, "tel:".$data->searchPhone_mobile)',
+			'name'=>'searchPhoneMobile',
+			'value'=>'CHtml::link($data->searchPhoneMobile, "tel:".$data->searchPhoneMobile)',
 			'type'=>'raw',
 		);
         $columns[] = array(
-			'name'=>'searchPhone_home',
-			'value'=>'CHtml::link($data->searchPhone_home, "tel:".$data->searchPhone_home)',
+			'name'=>'searchPhoneHome',
+			'value'=>'CHtml::link($data->searchPhoneHome, "tel:".$data->searchPhoneHome)',
 			'type'=>'raw',
 		);
         $columns[] = array(
-			'name'=>'searchPhone_work',
-			'value'=>'CHtml::link($data->searchPhone_work, "tel:".$data->searchPhone_work)',
+			'name'=>'searchPhoneWork',
+			'value'=>'CHtml::link($data->searchPhoneWork, "tel:".$data->searchPhoneWork)',
 			'type'=>'raw',
 		);
-		$columns[]='searchPhone_fax';
+		$columns[]='searchPhoneFax';
         $columns[] = array(
 			'name'=>'searchEmail',
 			'value'=>'$data->searchEmail',
@@ -183,13 +184,13 @@ class ProjectToClientContact extends ActiveRecord
 	{
 		return array(
 			'searchRole',
-			'searchFirst_name',
-			'searchLast_name',
+			'searchFirstName',
+			'searchLastName',
 			'searchEmail',
-			'searchPhone_mobile',
-			'searchPhone_home',
-			'searchPhone_work',
-			'searchPhone_fax',
+			'searchPhoneMobile',
+			'searchPhoneHome',
+			'searchPhoneWork',
+			'searchPhoneFax',
 		);
 	}
 

@@ -1,19 +1,19 @@
 <?php
 
 /**
- * This is the model class for table "task_to_assembly_to_assembly_to_assembly_group".
+ * This is the model class for table "tbl_task_to_assembly_to_assembly_to_assembly_group".
  *
- * The followings are the available columns in table 'task_to_assembly_to_assembly_to_assembly_group':
+ * The followings are the available columns in table 'tbl_task_to_assembly_to_assembly_to_assembly_group':
  * @property string $id
  * @property string $task_to_assembly_id
  * @property string $assembly_group_to_assembly_id
  * @property integer $assembly_group_id
  * @property integer $assembly_id
  * @property string $assembly_to_assembly_group_id
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property Staff $staff
+ * @property User $updatedBy
  * @property TaskToAssembly $taskToAssembly
  * @property AssemblyGroupToAssembly $assembly
  * @property AssemblyToAssemblyGroup $assemblyToAssemblyGroup
@@ -39,15 +39,15 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return $this->customValidators + array(
-			array('assembly_to_assembly_group_id, task_to_assembly_id, quantity, task_id, assembly_group_id, assembly_id, staff_id', 'required'),
-			array('assembly_to_assembly_group_id, quantity, assembly_group_id, assembly_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_to_assembly_group_id, task_to_assembly_id, quantity, task_id, assembly_group_id, assembly_id, updated_by', 'required'),
+			array('assembly_to_assembly_group_id, quantity, assembly_group_id, assembly_id, updated_by', 'numerical', 'integerOnly'=>true),
 			array('task_to_assembly_id, task_id, task_to_assembly_id, assembly_group_to_assembly_id', 'length', 'max'=>10),
 		);
 	}
 
 	public function setCustomValidators()
 	{
-		$this->setCustomValidatorsRange(AssemblyToAssemblyGroup::model()->findByPk($this->assembly_to_Assembly_group_id));
+		$this->setCustomValidatorsRange(AssemblyToAssemblyGroup::model()->findByPk($this->assembly_to_assembly_group_id));
 	}
 
 	/**
@@ -55,17 +55,17 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
-			'assembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_id'),
-			'assemblyToAssemblyGroup' => array(self::BELONGS_TO, 'AssemblyToAssemblyGroup', 'assembly_to_assembly_group_id'),
-			'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_id'),
-			'assemblyGroupToAssembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_to_assembly_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
+            'assembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_id'),
+            'assemblyToAssemblyGroup' => array(self::BELONGS_TO, 'AssemblyToAssemblyGroup', 'assembly_to_assembly_group_id'),
+            'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_id'),
+            'assemblyGroupToAssembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_to_assembly_id'),
+        );
+    }
 
 
 	/**
@@ -91,7 +91,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	}
 	
 	public function assertFromParent($modelName = null) {
-		Controller::setUpdateId($this->task_to_assembly_id, 'TaskToAssembly');
+		Controller::setUpdate_id($this->task_to_assembly_id, 'TaskToAssembly');
 		
 		// need to trick it here into using task to assembly model instead as this model not in navigation hierachy
 		if(!empty($this->task_to_assembly_id))
@@ -106,8 +106,8 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	public function afterFind() {
 		
 		// otherwise our previous saved quantity
-		$taskToAssemblyId = TaskToAssembly::model()->findByPk($this->task_to_assembly_id);
-		$this->quantity = $taskToAssemblyId->quantity;
+		$task_to_assembly_id = TaskToAssembly::model()->findByPk($this->task_to_assembly_id);
+		$this->quantity = $task_to_assembly_id->quantity;
 
 		parent::afterFind();
 	}
@@ -136,7 +136,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 		$taskToAssembly->attributes = $_POST['TaskToAssemblyToAssemblyToAssemblyGroup'];
 		$taskToAssembly->parent_id = $_POST['TaskToAssemblyToAssemblyToAssemblyGroup']['task_to_assembly_id'];
 		// filler - unused in this context but necassary in Assembly model
-		$taskToAssembly->store_id = 0;
+		$taskToAssembly->standard_id = 0;
 		if($saved = $taskToAssembly->createSave($models))
 		{
 			$this->task_to_assembly_id = $taskToAssembly->id;

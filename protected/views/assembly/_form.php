@@ -9,7 +9,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	// parent_id
 	if($this->checkAccess(Controller::accessWrite))
 	{
-		static::listWidgetRow($model, $form, 'parent_id', array(), array('scopeStore'=>array($model->store_id)), 'Parent');
+		static::listWidgetRow($model, $form, 'parent_id', array(), array('scopeStandard'=>array($model->standard_id)), 'Parent');
 	}
 	
 $this->endWidget();

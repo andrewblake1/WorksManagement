@@ -1,21 +1,21 @@
 <?php
 
 /**
- * This is the model class for table "task_to_material_to_assembly_to_material_group".
+ * This is the model class for table "tbl_task_to_material_to_assembly_to_material_group".
  *
- * The followings are the available columns in table 'task_to_material_to_assembly_to_material_group':
+ * The followings are the available columns in table 'tbl_task_to_material_to_assembly_to_material_group':
  * @property string $id
  * @property string $task_to_material_id
  * @property integer $material_group_to_material_id
  * @property integer $material_group_id
  * @property integer $material_id
  * @property integer $assembly_to_material_group_id
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property TaskToMaterial $taskToMaterial
  * @property MaterialGroupToMaterial $material
- * @property Staff $staff
+ * @property User $updatedBy
  * @property AssemblyToMaterialGroup $assemblyToMaterialGroup
  * @property MaterialGroupToMaterial $materialGroup
  * @property MaterialGroupToMaterial $materialGroupToMaterial
@@ -39,8 +39,8 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return $this->customValidators + array(
-			array('assembly_to_material_group_id, task_to_assembly_id, quantity, task_id, material_group_id, material_id, staff_id', 'required'),
-			array('assembly_to_material_group_id, quantity, material_group_id, material_id, material_group_to_material_id, staff_id', 'numerical', 'integerOnly'=>true),
+			array('assembly_to_material_group_id, task_to_assembly_id, quantity, task_id, material_group_id, material_id, updated_by', 'required'),
+			array('assembly_to_material_group_id, quantity, material_group_id, material_id, material_group_to_material_id, updated_by', 'numerical', 'integerOnly'=>true),
 			array('task_to_assembly_id, task_id, task_to_material_id', 'length', 'max'=>10),
 		);
 	}
@@ -55,17 +55,17 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
-			'material' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'assemblyToMaterialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'assembly_to_material_group_id'),
-			'materialGroup' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_id'),
-			'materialGroupToMaterial' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_to_material_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
+            'material' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'assemblyToMaterialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'assembly_to_material_group_id'),
+            'materialGroup' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_id'),
+            'materialGroupToMaterial' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_to_material_id'),
+        );
+    }
 
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
@@ -91,7 +91,7 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	}
 	
 	public function assertFromParent($modelName = null) {
-		Controller::setUpdateId($this->task_to_material_id, 'TaskToMaterial');
+		Controller::setUpdate_id($this->task_to_material_id, 'TaskToMaterial');
 		
 		// need to trick it here into using task to material model instead as this model not in navigation hierachy
 		if(!empty($this->task_to_material_id))
@@ -105,8 +105,8 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	
 	public function afterFind() {
 		
-		$taskToMaterialId = TaskToMaterial::model()->findByPk($this->task_to_material_id);
-		$this->quantity = $taskToMaterialId->quantity;
+		$task_to_material_id = TaskToMaterial::model()->findByPk($this->task_to_material_id);
+		$this->quantity = $task_to_material_id->quantity;
 
 		parent::afterFind();
 	}
@@ -129,7 +129,7 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 		$taskToMaterial = new TaskToMaterial;
 		$taskToMaterial->attributes = $_POST['TaskToMaterialToAssemblyToMaterialGroup'];
 		// filler - unused in this context but necassary in Material model
-		$taskToMaterial->store_id = 0;
+		$taskToMaterial->standard_id = 0;
 
 		if($saved = $taskToMaterial->createSave($models))
 		{

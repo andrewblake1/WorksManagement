@@ -1,6 +1,6 @@
 <?php
 
-class DutycategoryController extends CategoryController
+class DutyCategoryController extends CategoryController
 {
 	
 }

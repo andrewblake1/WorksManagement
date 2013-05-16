@@ -27,7 +27,7 @@ class TaskToMaterialController extends Controller
 										: "TaskToMaterialToAssemblyToMaterialGroup/create"
 									: "TaskToMaterial/update",
 								$data->material_group_id
-									? array("id"=>$data->searchTaskToMaterialToAssemblyToMaterialGroupId, "TaskToMaterialToAssemblyToMaterialGroup"=>array(
+									? array("id"=>$data->searchTaskToMaterialToAssemblyToMaterialGroup_id, "TaskToMaterialToAssemblyToMaterialGroup"=>array(
 										"material_group_to_material_id"=>$data->material_group_to_material_id,
 										"material_group_id"=>$data->material_group_id,
 										"material_id"=>$data->material_id,
@@ -48,7 +48,7 @@ class TaskToMaterialController extends Controller
 		);
 	}
 	
-	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
+	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
 	public function setTabs($model) {
 		$modelName = $this->modelName;
 		$update = FALSE;
@@ -73,7 +73,7 @@ class TaskToMaterialController extends Controller
 			$taskToAssemblyController->setActiveTabs(TaskToAssembly::getNiceNamePlural(), $modelName::getNiceNamePlural());
 			$this->_tabs = $taskToAssemblyController->tabs;
 
-			static::setUpdateId(NULL, 'TaskToAssembly');
+			static::setUpdate_id(NULL, 'TaskToAssembly');
 			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
 
 			$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);

@@ -21,18 +21,18 @@ class UserIdentity extends CUserIdentity
 		$criteria=new CDbCriteria;
 		$criteria->compare('email', $this->username);
 
-		if(!$staff = Staff::model()->find($criteria))
+		if(!$user = User::model()->find($criteria))
 		{
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
 		}
-		elseif($staff->password != md5($this->password))
+		elseif($user->password != md5($this->password))
 		{
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
 		}
 		else
 		{
 			$this->errorCode=self::ERROR_NONE;
-			$this->_id = $staff->id;
+			$this->_id = $user->id;
 		}
 		
 		return !$this->errorCode;

@@ -164,28 +164,28 @@ return array(
 // TODO: naming orientation is inconsistent here
 									'TaskToMaterial',
 									'TaskToAssembly',
-									'TaskToGenericTaskType',
+									'TaskToCustomFieldToTaskTemplate',
 									'TaskToPurchaseOrder',
-									'TaskToResourceType',
+									'TaskToResource',
 								),
 							),
 						),
 						'ProjectToClientContact',
-						'ProjectToProjectTypeToAuthItem',
-						'ProjectToGenericProjectType',
+						'ProjectToProjectTemplateToAuthItem',
+						'ProjectToCustomFieldToProjectTemplate',
 						'Planning',
 					),
-					'ProjectType'=>array(
-						'ProjectTypeToAuthItem',
-						'GenericProjectType',
-						'TaskType'=>array(
-							'GenericTaskType',
-							'TaskTypeToAssembly',
-							'TaskTypeToAssemblyGroup',
-							'TaskTypeToDutyType',
-							'TaskTypeToMaterial',
-							'TaskTypeToMaterialGroup',
-							'TaskTypeToResourceType',
+					'ProjectTemplate'=>array(
+						'ProjectTemplateToAuthItem',
+						'CustomFieldToProjectTemplate',
+						'TaskTemplate'=>array(
+							'CustomFieldToTaskTemplate',
+							'TaskTemplateToAssembly',
+							'TaskTemplateToAssemblyGroup',
+							'TaskTemplateToDutyType',
+							'TaskTemplateToMaterial',
+							'TaskTemplateToMaterialGroup',
+							'TaskTemplateToResource',
 						),
 					),
 				),
@@ -193,32 +193,32 @@ return array(
 					'AuthItemChild',
 				),
 				'DefaultValue',
-				'Dutycategory'=>array(
+				'DutyCategory'=>array(
 					'DutyType',
 				),
-				'GenericType',
-				'Genericprojectcategory',
-				'Generictaskcategory',
+				'CustomField',
+				'CustomFieldProjectCategory',
+				'CustomFieldTaskCategory',
 				'Report'=>array(
 					'ReportToAuthItem',
 					'SubReport',
 				),
-				'Resourcecategory'=>array(
-					'ResourceType'=>array(
-						'ResourceTypeToSupplier',
+				'ResourceCategory'=>array(
+					'Resource'=>array(
+						'ResourceToSupplier',
 					),
 				),
-				'Staff'=>array(
+				'User'=>array(
 					'AuthAssignment',
 				),
 				'Stage',
-				'Store'=>array(
+				'Standard'=>array(
 					'Assembly'=>array(
 						'SubAssembly',
 						'AssemblyToAssemblyGroup',
 						'AssemblyToMaterial',
 						'AssemblyToMaterialGroup',
-						'AssemblyToStandardDrawing',
+						'AssemblyToDrawing',
 					),
 					'AssemblyGroup'=>array(
 						'AssemblyGroupToAssembly',
@@ -227,7 +227,7 @@ return array(
 					'MaterialGroup'=>array(
 						'MaterialGroupToMaterial',
 					),
-					'StandardDrawing',
+					'Drawing',
 				),
 				'Supplier'=>array(
 					'PurchaseOrder',

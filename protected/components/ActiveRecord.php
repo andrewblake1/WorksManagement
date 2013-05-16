@@ -1,11 +1,11 @@
 <?php
-abstract class ActiveRecord extends CActiveRecord
+abstract class ActiveRecord extends RangeActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchStaff;
+	public $searchUser;
 	public $naturalKey;
 	/**
 	 * @var array of labels to override or set at run time
@@ -21,7 +21,7 @@ abstract class ActiveRecord extends CActiveRecord
 	protected $defaultSort = null;
 	/*
 	 * array of validation rules appended to rules at run time as determined
-	 * by the related GenericType
+	 * by the related CustomField
 	 */
 	public $customValidators = array();
 
@@ -39,7 +39,7 @@ abstract class ActiveRecord extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return Yii::app()->functions->uncamelize(get_called_class());
+		return 'tbl_' . Yii::app()->functions->uncamelize(get_class($this));
 	}
 	
 	static public function evalDisplayAttr($model)
@@ -309,7 +309,7 @@ $t = $model->attributes;
 				if($model->$parentForeignKeyName !== null)
 				{
 					// store the primary key for the model
-					Controller::setUpdateId($model->$parentForeignKeyName, $crumb);
+					Controller::setUpdate_id($model->$parentForeignKeyName, $crumb);
 					// ensure that that at least the parents primary key is set for the admin view
 					Controller::setAdminParam($parentForeignKeyName, $model->$parentForeignKeyName, $modelName);
 				}
@@ -383,10 +383,10 @@ $t = $model->attributes;
 					);
 		}
 		
-		// add searchStaff
-		$sort['searchStaff'] = array(
-					'asc'=>" searchStaff ",
-					'desc'=>" searchStaff DESC",
+		// add searchUser
+		$sort['searchUser'] = array(
+					'asc'=>" searchUser ",
+					'desc'=>" searchUser DESC",
 				);
 $t=self::getSearchCriteria($this);
 $t=$this->attributes;
@@ -448,7 +448,7 @@ $t=$this->attributes;
 	 */
 	public function getSearchSort()
 	{
-		return array('searchStaff');
+		return array('searchUser');
 	}
 
 	/**
@@ -460,8 +460,8 @@ $t=$this->attributes;
 		return ActiveRecord::$labelOverrides + $attributeLabels + array(
 			'id' => static::getNiceName(),
 			'naturalKey' => static::getNiceName(),
-			'searchStaff' => 'Staff, First/Last/Email',
-			'staff_id' => 'Staff, First/Last/Email',
+			'searchUser' => 'User, First/Last/Email',
+			'updated_by' => 'User, First/Last/Email',
 			'description' => 'Description',
 			'deleted' => 'Deleted',
 			'parent_id' => 'Parent',
@@ -475,8 +475,8 @@ $t=$this->attributes;
 			'last_name' => 'Last name',
 			'role' => 'Role',
 			'email' => 'Email',
-			'address_line1' => 'Address line 1',
-			'address_line2' => 'Address line 2',
+			'address_line_1' => 'Address line 1',
+			'address_line_2' => 'Address line 2',
 			'post_code' => 'Post code',
 			'town_city' => 'Town/city',
 			'state_province' => 'State/province',
@@ -594,13 +594,13 @@ $t=$this->attributes;
 	{
 		$searchCriteria = $model->searchCriteria;
 		
-		// if this model has a staff_id property
-		if(in_array('staff_id', $model->tableSchema->getColumnNames()))
+		// if this model has a updated_by property
+		if(in_array('updated_by', $model->tableSchema->getColumnNames()))
 		{
-			$this->compositeCriteria($searchCriteria, array('staff.first_name','staff.last_name','staff.email'), $model->searchStaff);
-			$searchCriteria->with[] = 'staff';
+			$this->compositeCriteria($searchCriteria, array('updatedBy.first_name','updatedBy.last_name','updatedBy.email'), $model->searchUser);
+			$searchCriteria->with[] = 'updatedBy';
 			$delimiter = Yii::app()->params['delimiter']['display'];
-			$searchCriteria->select[] = "CONCAT_WS('$delimiter',staff.first_name,staff.last_name,staff.email) AS searchStaff";
+			$searchCriteria->select[] = "CONCAT_WS('$delimiter', updatedBy.first_name, updatedBy.last_name, updatedBy.email) AS searchUser";
 		}
 
 		$modelName = get_class($model);
@@ -683,10 +683,10 @@ $t=$this->attributes;
 	
 	public function beforeValidate()
 	{
-		// If there is a staff id column
-		if(isset($this->metadata->columns['staff_id']))
+		// If there is a user id column
+		if(isset($this->metadata->columns['updated_by']))
 		{
-			$this->staff_id = Yii::app()->user->id;
+			$this->updated_by = Yii::app()->user->id;
 		}
 
 		return parent::beforeValidate();
@@ -929,8 +929,8 @@ if(count($m = $this->getErrors()))
 		return $columns;
 	}
 	
-	protected function getHtmlId($attribute) {
-		return CHtml::activeId($this, $attribute);
+	protected function getHtml_id($attribute) {
+		return CHtml::active_id($this, $attribute);
 	}
 
 	/*

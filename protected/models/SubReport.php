@@ -1,24 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "sub_report".
+ * This is the model class for table "tbl_sub_report".
  *
- * The followings are the available columns in table 'sub_report':
+ * The followings are the available columns in table 'tbl_sub_report':
  * @property string $id
  * @property string $description
  * @property string $select
  * @property string $report_id
  * @property string $format
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Report $report
- * @property Staff $staff
+ * @property User $updatedBy
  */
 class SubReport extends ActiveRecord
 {
 	/**
-	 * Data types. These are the emum values set by the DataType custom type within 
+	 * Data types. These are the emum values set by the format custom type within 
 	 * the database
 	 */
 	const subReportFormatPaged = 'Paged';
@@ -37,7 +37,7 @@ class SubReport extends ActiveRecord
 		);
 	}
 
-	public function scopeSubReportReportId($report_id)
+	public function scopeSubReportReport_id($report_id)
 	{
 		$criteria=new DbCriteria;
 		$criteria->compare('report_id',$report_id);
@@ -71,13 +71,13 @@ class SubReport extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'report' => array(self::BELONGS_TO, 'Report', 'report_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'report' => array(self::BELONGS_TO, 'Report', 'report_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)

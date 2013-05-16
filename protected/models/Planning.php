@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the Nested Set  model class for table "planning".
+ * This is the model class for table "tbl_planning".
  *
- * The followings are the available columns in table 'planning':
+ * The followings are the available columns in table 'tbl_planning':
  * @property string $id
  * @property string $root
  * @property string $lft
@@ -11,17 +11,20 @@
  * @property string $level
  * @property string $name
  * @property integer $in_charge_id
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Crew $crew
+ * @property Day[] $days
  * @property Day $day
  * @property DutyData[] $dutyDatas
+ * @property User $updatedBy
+ * @property User $inCharge
+ * @property Project[] $projects
  * @property Project $project
  * @property ResourceData[] $resourceDatas
  * @property ResourceData[] $resourceDatas1
- * @property Staff $inCharge
- * @property Staff $staff
+ * @property Task[] $tasks
  * @property Task $task
  */
 class Planning extends CategoryActiveRecord {
@@ -29,10 +32,6 @@ class Planning extends CategoryActiveRecord {
 
 	static $niceNamePlural = 'Planning';
 	
-	/**
-	 * Data types. These are the emum values set by the DataType custom type within 
-	 * the database
-	 */
 	const planningLevelProject = 'Project';
 	const planningLevelTask = 'Task';
 	const planningLevelDay = 'Day';
@@ -75,21 +74,26 @@ class Planning extends CategoryActiveRecord {
 	/**
 	 * @return array relational rules.
 	 */
-	public function relations()	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'crew' => array(self::HAS_ONE, 'Crew', 'id'),
-			'day' => array(self::HAS_ONE, 'Day', 'id'),
-			'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'planning_id'),
-			'project' => array(self::HAS_ONE, 'Project', 'id'),
-			'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'planning_id'),
-			'resourceDatas1' => array(self::HAS_MANY, 'ResourceData', 'level'),
-			'inCharge' => array(self::BELONGS_TO, 'Staff', 'in_charge_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'task' => array(self::HAS_ONE, 'Task', 'id'),
-		);
-	}
+	public function relations()
+	{
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'crew' => array(self::HAS_ONE, 'Crew', 'id'),
+            'days' => array(self::HAS_MANY, 'Day', 'level'),
+            'day' => array(self::HAS_ONE, 'Day', 'id'),
+            'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'planning_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'inCharge' => array(self::BELONGS_TO, 'User', 'in_charge_id'),
+            'projects' => array(self::HAS_MANY, 'Project', 'level'),
+            'project' => array(self::HAS_ONE, 'Project', 'id'),
+            'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'planning_id'),
+            'resourceDatas1' => array(self::HAS_MANY, 'ResourceData', 'level'),
+            'tasks' => array(self::HAS_MANY, 'Task', 'level'),
+            'task' => array(self::HAS_ONE, 'Task', 'id'),
+        );
+    }
+
 
 // TODO: either strip this to database trigger or ideally remove the need for day->task_id and crew->day_id completely i.e. run off
 // ajaxtree completely. It is possible for ajax tree not to match these parents hence needs fixing.
@@ -234,7 +238,7 @@ class Planning extends CategoryActiveRecord {
 	public function assertFromParent() {
 		
 		$project = Project::model()->findByPk($this->project_id);
-		Controller::setUpdateId($this->project_id, 'Project');
+		Controller::setUpdate_id($this->project_id, 'Project');
 		return $project->assertFromParent();
 	}
 }

@@ -5,7 +5,7 @@
 			// get the id of the clicked node
 			id = $(this).parent().attr("id").split("_")[1];
 			// go to the admin screen - filtering by this parent id
-			window.location = encodeURI("<?php echo "$baseUrl/Resourcecategory/update/"; ?>" + id);
+			window.location = encodeURI("<?php echo "$baseUrl/ResourceCategory/update/"; ?>" + id);
 		});
 
 	});

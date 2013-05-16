@@ -1,31 +1,34 @@
 <?php
 
 /**
- * This is the model class for table "assembly".
+ * This is the model class for table "tbl_assembly".
  *
- * The followings are the available columns in table 'assembly':
+ * The followings are the available columns in table 'tbl_assembly':
  * @property integer $id
- * @property integer $store_id
+ * @property integer $standard_id
  * @property string $description
  * @property string $alias
  * @property integer $parent_id
  * @property integer $deleted
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property Staff $staff
- * @property Store $store
+ * @property User $updatedBy
+ * @property Standard $standard
  * @property Assembly $parent
  * @property Assembly[] $assemblies
- * @property SubAssembly[] $assemblyToAssemblies
- * @property SubAssembly[] $assemblyToAssemblies1
- * @property SubAssembly[] $assemblyToAssemblies2
+ * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblies
+ * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblies1
+ * @property AssemblyToAssemblyGroup[] $assemblyToAssemblyGroups
  * @property AssemblyToClient[] $assemblyToClients
+ * @property AssemblyToDrawing[] $assemblyToDrawings
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
- * @property AssemblyToStandardDrawing[] $assemblyToStandardDrawings
+ * @property SubAssembly[] $subAssemblies
+ * @property SubAssembly[] $subAssemblies1
+ * @property SubAssembly[] $subAssemblies2
+ * @property TaskTemplateToAssembly[] $taskTemplateToAssemblies
  * @property TaskToAssembly[] $taskToAssemblies
- * @property TaskTypeToAssembly[] $taskTypeToAssemblies
  */
 class Assembly extends AdjacencyListActiveRecord
 {
@@ -39,10 +42,10 @@ class Assembly extends AdjacencyListActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, store_id', 'required'),
-			array('parent_id, store_id', 'numerical', 'integerOnly'=>true),
+			array('description, standard_id', 'required'),
+			array('parent_id, standard_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
-			array('id, description, store_id, alias, parent_id', 'safe', 'on'=>'search'),
+			array('id, description, standard_id, alias, parent_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -50,25 +53,28 @@ class Assembly extends AdjacencyListActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'store' => array(self::BELONGS_TO, 'Store', 'store_id'),
-			'parent' => array(self::BELONGS_TO, 'Assembly', 'parent_id'),
-			'assemblies' => array(self::HAS_MANY, 'Assembly', 'parent_id'),
-			'assemblyToAssemblies' => array(self::HAS_MANY, 'SubAssembly', 'parent_assembly_id'),
-			'assemblyToAssemblies1' => array(self::HAS_MANY, 'SubAssembly', 'store_id'),
-			'assemblyToAssemblies2' => array(self::HAS_MANY, 'SubAssembly', 'child_assembly_id'),
-			'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
-			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
-			'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'assembly_id'),
-			'assemblyToStandardDrawings' => array(self::HAS_MANY, 'AssemblyToStandardDrawing', 'assembly_id'),
-			'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'assembly_id'),
-			'taskTypeToAssemblies' => array(self::HAS_MANY, 'TaskTypeToAssembly', 'assembly_id'),
-		);
-	}
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'standard' => array(self::BELONGS_TO, 'Standard', 'standard_id'),
+            'parent' => array(self::BELONGS_TO, 'Assembly', 'parent_id'),
+            'assemblies' => array(self::HAS_MANY, 'Assembly', 'parent_id'),
+            'assemblyGroupToAssemblies' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'store_id'),
+            'assemblyGroupToAssemblies1' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'assembly_id'),
+            'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'assembly_id'),
+            'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
+            'assemblyToDrawings' => array(self::HAS_MANY, 'AssemblyToDrawing', 'assembly_id'),
+            'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
+            'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'assembly_id'),
+            'subAssemblies' => array(self::HAS_MANY, 'SubAssembly', 'parent_assembly_id'),
+            'subAssemblies1' => array(self::HAS_MANY, 'SubAssembly', 'standard_id'),
+            'subAssemblies2' => array(self::HAS_MANY, 'SubAssembly', 'child_assembly_id'),
+            'taskTemplateToAssemblies' => array(self::HAS_MANY, 'TaskTemplateToAssembly', 'assembly_id'),
+            'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'assembly_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -76,7 +82,7 @@ class Assembly extends AdjacencyListActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'store_id' => 'Store',
+			'standard_id' => 'Standard',
 		));
 	}
 
@@ -90,7 +96,7 @@ class Assembly extends AdjacencyListActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.alias',$this->alias,true);
-		$criteria->compare('t.store_id',$this->store_id);
+		$criteria->compare('t.standard_id',$this->standard_id);
 		if(!empty($this->parent_id))
 		{
 			$criteria->compare('t.parent_id',$this->parent_id);
@@ -127,11 +133,11 @@ class Assembly extends AdjacencyListActiveRecord
 	public function scopeAssemblyGroup($assembly_group_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compare('assemblyGroupToAssembly.assembly_group_id', $assembly_group_id);
+		$criteria->compare('AssemblyGroupToAssembly.assembly_group_id', $assembly_group_id);
 
 		// join
 		$criteria->join = '
-			JOIN assembly_group_to_assembly assemblyGroupToAssembly ON assemblyGroupToAssembly.assembly_id = t.id
+			JOIN tbl_assembly_group_to_assembly assemblyGroupToAssembly ON assemblyGroupToAssembly.assembly_id = t.id
 		';
 
 		$this->getDbCriteria()->mergeWith($criteria);
@@ -139,10 +145,10 @@ class Assembly extends AdjacencyListActiveRecord
 		return $this;
 	}
 
-	public function scopeStore($store_id)
+	public function scopeStandard($standard_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compareNull('store_id', $store_id);
+		$criteria->compareNull('standard_id', $standard_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		

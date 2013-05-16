@@ -8,8 +8,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	$form->textFieldRow('first_name', array(), $SupplierContact);
 	$form->textFieldRow('last_name', array(), $SupplierContact);
 	$form->textFieldRow('email', array(), $SupplierContact);
-	$form->textFieldRow('address_line1', array(), $SupplierContact);
-	$form->textFieldRow('address_line2', array(), $SupplierContact);
+	$form->textFieldRow('address_line_1', array(), $SupplierContact);
+	$form->textFieldRow('address_line_2', array(), $SupplierContact);
 	$form->textFieldRow('post_code', array(), $SupplierContact);
 	$form->textFieldRow('town_city', array(), $SupplierContact);
 	$form->textFieldRow('state_province', array(), $SupplierContact);

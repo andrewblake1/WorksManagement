@@ -135,47 +135,47 @@ sed 's/^"\([0-9]*\) ";" \([0-9]*\)";" \(.*\) \(JAR\|BAL\|CM\|PAA\|LTH\|cl\|SHT\|
 DATABASE IMPORT
 ===============
 Zinfra
-INSERT INTO `material_to_client` (`material_id`, `client_id`, `alias`, `deleted`, `staff_id`)
+INSERT INTO `materialToClient` (`material_id`, `client_id`, `alias`, `deleted`, `updated_by`)
 SELECT `material`.id, 8, CONCAT_WS(' ', `JEN/ZNX Item No`), 0, 1
 FROM `JEN_ZNX Free Issue`
 JOIN `material` ON `material`.`alias` = `JEN_ZNX Free Issue`.`WCE Product No`;
 
 
 Tenix
-INSERT INTO `material_to_client` (`material_id`, `client_id`, `alias`, `deleted`, `staff_id`)
+INSERT INTO `materialToClient` (`material_id`, `client_id`, `alias`, `deleted`, `updated_by`)
 SELECT `material`.id, 12, CONCAT_WS(' ',  `UED Item No`), 0, 1
 FROM `JEN_ZNX Free Issue`
 JOIN `material` ON `material`.`alias` = `JEN_ZNX Free Issue`.`WCE Product No`;
 
 
 ZNX
-INSERT INTO `material_to_client` (`material_id`, `client_id`, `alias`, `deleted`, `staff_id`)
+INSERT INTO `materialToClient` (`material_id`, `client_id`, `alias`, `deleted`, `updated_by`)
 SELECT `material`.id, 4, CONCAT_WS(' ', `JEN/ZNX Item No`, `UED Item No`), 0, 1
 FROM `JEN_ZNX Free Issue`
 JOIN `material` ON `material`.`alias` = `JEN_ZNX Free Issue`.`WCE Product No`;
 
 JEN
-INSERT INTO `material_to_client` (`material_id`, `client_id`, `alias`, `deleted`, `staff_id`)
+INSERT INTO `materialToClient` (`material_id`, `client_id`, `alias`, `deleted`, `updated_by`)
 SELECT `material`.id, 6, CONCAT_WS(' ', `JEN/ZNX Item No`), 0, 1
 FROM `JEN_ZNX Free Issue`
 JOIN `material` ON `material`.`alias` = `JEN_ZNX Free Issue`.`WCE Product No`;
 
 SPA 2
-INSERT INTO `material_to_client` (`material_id`, `client_id`, `alias`, `deleted`, `staff_id`)
+INSERT INTO `materialToClient` (`material_id`, `client_id`, `alias`, `deleted`, `updated_by`)
 SELECT `material`.id, 2, CONCAT_WS(' ', `SPA Free issue`.`SPA Item No`, `SPA Free issue`.`SPA Old No`), 0, 1
 FROM `SPA Free issue`
 JOIN `material` ON `material`.`alias` = `SPA Free issue`.`WCE Product No`
 group by `SPA Free issue`.`WCE Product No`;
 
 Tenix
-INSERT INTO `material_to_client` (`material_id`, `client_id`, `alias`, `deleted`, `staff_id`)
+INSERT INTO `materialToClient` (`material_id`, `client_id`, `alias`, `deleted`, `updated_by`)
 SELECT `material`.id, 12, CONCAT_WS(' ', `SPA Free issue`.`SPA Item No`, `SPA Free issue`.`SPA Old No`), 0, 1
 FROM `SPA Free issue`
 JOIN `material` ON `material`.`alias` = `SPA Free issue`.`WCE Product No`
 group by `SPA Free issue`.`WCE Product No`;
 
 Zinfra
-INSERT INTO `material_to_client` (`material_id`, `client_id`, `alias`, `deleted`, `staff_id`)
+INSERT INTO `materialToClient` (`material_id`, `client_id`, `alias`, `deleted`, `updated_by`)
 SELECT `material`.id, 8, CONCAT_WS(' ', `SPA Free issue`.`SPA Item No`, `SPA Free issue`.`SPA Old No`), 0, 1
 FROM `SPA Free issue`
 JOIN `material` ON `material`.`alias` = `SPA Free issue`.`WCE Product No`

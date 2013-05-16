@@ -1,21 +1,21 @@
 <?php
 
 /**
- * This is the model class for table "day".
+ * This is the model class for table "tbl_day".
  *
- * The followings are the available columns in table 'day':
+ * The followings are the available columns in table 'tbl_day':
  * @property string $id
  * @property string $level
  * @property string $project_id
  * @property string $scheduled
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Crew[] $crews
- * @property Planning $id0
- * @property DayLevel $level0
- * @property Staff $staff
+ * @property User $updatedBy
+ * @property Planning $level0
  * @property Project $project
+ * @property Planning $id0
  */
 class Day extends ActiveRecord
 {
@@ -43,15 +43,16 @@ class Day extends ActiveRecord
 
 	public function relations()
 	{
-		// class name for the relations automatically generated below.
-		return array(
-			'crews' => array(self::HAS_MANY, 'Crew', 'day_id'),
-			'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
-			'level0' => array(self::BELONGS_TO, 'DayLevel', 'level'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'crews' => array(self::HAS_MANY, 'Crew', 'day_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+            'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
+            'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
+        );
+    }
 
 	public function attributeLabels()
 	{
@@ -97,7 +98,7 @@ class Day extends ActiveRecord
 			$this->searchInCharge
 		);
 
-		// join
+		// with
 		$criteria->with = array(
 			'id0',
 			'id0.inCharge',
@@ -111,7 +112,7 @@ class Day extends ActiveRecord
 		$columns[] = $this->linkThisColumn('id');
 		$columns[] = $this->linkThisColumn('name');
  		$columns[] = 'scheduled:date';
-		$columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
+		$columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
 		
 		return $columns;
 	}

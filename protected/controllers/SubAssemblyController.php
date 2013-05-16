@@ -3,7 +3,7 @@
 class SubAssemblyController extends Controller
 {
 	
-	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
+	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
 	public function setTabs($model) {
 
 		// control extra rows of tabs if action is 
@@ -17,7 +17,7 @@ class SubAssemblyController extends Controller
 			$this->_tabs = $assemblyController->tabs;
 			
 			// set breadcrumbs
-	//		static::setUpdateId(NULL, 'Assembly');
+	//		static::setUpdate_id(NULL, 'Assembly');
 			$this->breadcrumbs = AssemblyController::getBreadCrumbTrail('Update');
 			array_pop($this->breadcrumbs);
 			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];

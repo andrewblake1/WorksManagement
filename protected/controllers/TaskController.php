@@ -4,22 +4,22 @@ class TaskController extends Controller
 
 	public function actionDependantList()
 	{
-		// a simple cheat to create generics is to create within cancellable transaction
+		// a simple cheat to create customValues is to create within cancellable transaction
 		$model = new Task();
 		$model->attributes = $_POST[$this->modelName];
 		// ensure unique task de
 		$transaction = Yii::app()->db->beginTransaction();
 		if($model->createSave($models))
 		{
-			// generics
-			$this->widget('GenericWidgets',array(
+			// customValues
+			$this->widget('CustomFieldWidgets',array(
 				'model'=>$model,
 				'form'=>new WMTbActiveForm(),
-				'relation_modelToGenericModelType'=>'taskToGenericTaskType',
-				'relation_modelToGenericModelTypes'=>'taskToGenericTaskTypes',
-				'relation_genericModelType'=>'genericTaskType',
-				'relation_category'=>'generictaskcategory',
-				'categoryModelName'=>'Generictaskcategory',
+				'relationModelToCustomFieldModelType'=>'taskToCustomFieldToTaskTemplate',
+				'relationModelToCustomFieldModelTypes'=>'taskToCustomFieldToTaskTemplates',
+				'relationCustomFieldModelType'=>'customFieldToTaskTemplate',
+				'relation_category'=>'customFieldTaskCategory',
+				'categoryModelName'=>'CustomFieldTaskCategory',
 			));
 		}
 

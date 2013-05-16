@@ -1,18 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "report_to_AuthItem".
+ * This is the model class for table "tbl_report_to_auth_item".
  *
- * The followings are the available columns in table 'report_to_AuthItem':
+ * The followings are the available columns in table 'tbl_report_to_auth_item':
  * @property string $id
  * @property string $report_id
- * @property string $AuthItem_name
- * @property integer $staff_id
+ * @property string $auth_item_name
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Report $report
  * @property AuthItem $authItemName
- * @property Staff $staff
+ * @property User $updatedBy
  */
 class ReportToAuthItem extends ActiveRecord
 {
@@ -22,14 +22,6 @@ class ReportToAuthItem extends ActiveRecord
 	static $niceName = 'Role';
 	
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'report_to_AuthItem';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -37,12 +29,12 @@ class ReportToAuthItem extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('report_id, AuthItem_name', 'required'),
+			array('report_id, auth_item_name', 'required'),
 			array('report_id', 'length', 'max'=>10),
-			array('AuthItem_name', 'length', 'max'=>64),
+			array('auth_item_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, report_id, AuthItem_name', 'safe', 'on'=>'search'),
+			array('id, report_id, auth_item_name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,14 +43,14 @@ class ReportToAuthItem extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'report' => array(self::BELONGS_TO, 'Report', 'report_id'),
-			'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'AuthItem_name'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'report' => array(self::BELONGS_TO, 'Report', 'report_id'),
+            'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -68,7 +60,7 @@ class ReportToAuthItem extends ActiveRecord
 		return parent::attributeLabels(array(
 			'id' => 'Report to role',
 			'report_id' => 'Report',
-			'AuthItem_name' => 'Role',
+			'auth_item_name' => 'Role',
 		));
 	}
 
@@ -82,11 +74,11 @@ class ReportToAuthItem extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'AuthItem_name',
+			'auth_item_name',
 		);
 
 		// where
-		$criteria->compare('t.AuthItem_name',$this->AuthItem_name,true);
+		$criteria->compare('t.auth_item_name',$this->auth_item_name,true);
 		$criteria->compare('t.report_id',$this->report_id);
 		
 		return $criteria;
@@ -94,7 +86,7 @@ class ReportToAuthItem extends ActiveRecord
 	
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('AuthItem_name');
+		$columns[] = $this->linkThisColumn('auth_item_name');
 		
 		return $columns;
 	}
@@ -104,7 +96,7 @@ class ReportToAuthItem extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		$displaAttr[]='AuthItem_name';
+		$displaAttr[]='auth_item_name';
 
 		return $displaAttr;
 	}

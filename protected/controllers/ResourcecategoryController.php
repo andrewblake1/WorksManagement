@@ -1,6 +1,6 @@
 <?php
 
-class ResourcecategoryController extends CategoryController
+class ResourceCategoryController extends CategoryController
 {
 	
 }

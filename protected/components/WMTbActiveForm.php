@@ -125,7 +125,7 @@ class WMTbActiveForm extends TbActiveForm
  
     public function run()
     {
-		$this->hiddenField('staff_id');
+		$this->hiddenField('updated_by');
 		
 		// pass thru the original controller so we know can potentially return here
 		echo CHtml::hiddenField('controller', Yii::app()->controller->modelName);
@@ -263,6 +263,13 @@ class WMTbActiveForm extends TbActiveForm
 		
 		$htmlOptions['data-original-title'] = $quantity_tooltip;
 
+		// if no quantity currently set
+		if($model->$attribute)
+		{
+			// set local default - if single select then select, or if min === max then to min
+			$model->$attribute = RangeActiveRecord::getDefaultValue($select, $minimum, $maximum);
+		}
+		
 		if(empty($select))
 		{
 			// if nothing given

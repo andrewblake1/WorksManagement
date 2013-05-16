@@ -16,5 +16,30 @@ abstract class RangeActiveRecord extends CActiveRecord
 		// force a re-read of validators
 		$this->getValidators(NULL, TRUE);
 	}
+	
+	static function getDefaultValue($select, $minimum, $maximum)
+	{
+		// if single select value
+		if(is_numeric($select))
+		{
+			$default = $select;
+		}
+		// otherwise if min and max are identical
+		elseif($minimum === $maximum)
+		{
+			$default = $minimum;
+		}
+		else
+		{
+			$default = NULL;
+		}
+		
+		return $default;
+	}
+	
+	public function getDefault()
+	{
+		return static::getDefaultValue($this->select, $this->minimum, $this->maximum);
+	}
 }
 ?>

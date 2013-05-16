@@ -12,7 +12,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	// only show when creating
 	if($model->isNewRecord)
 	{
-		TaskTypeController::listWidgetRow($model, $form, 'task_type_id',
+		TaskTemplateController::listWidgetRow($model, $form, 'task_template_id',
 			array(
 				'empty'=>'Please select',
 				'ajax' => array(
@@ -21,25 +21,25 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 					'success'=>"function(data) {
 						if(data)
 						{
-							$('#generics').replaceWith(data);
+							$('#customValues').replaceWith(data);
 						}
 					}",
 				)
 			),
-			array('scopeProjectType'=>array($model->crew_id))
+			array('scopeProjectTemplate'=>array($model->crew_id))
 		);
 	}
 	else
 	{
-		$form->hiddenField('task_type_id');
-		$taskType = $model->taskType;
-		$form->rangeFieldRow('quantity', $taskType->minimum, $taskType->maximum, $taskType->select, $taskType->quantity_tooltip);
+		$form->hiddenField('task_template_id');
+		$taskTemplate = $model->taskTemplate;
+		$form->rangeFieldRow('quantity', $taskTemplate->minimum, $taskTemplate->maximum, $taskTemplate->select, $taskTemplate->quantity_tooltip);
 	}
 
 	// only allow setting or update of in_charge_id if user has correct priveledge
 	if(Yii::app()->user->checkAccess('scheduler'))
 	{
-		StaffController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
+		UserController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
 	}
 
 
@@ -49,15 +49,15 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->checkBoxListInlineRow('preferred', array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'));
 
-	 // generics
-	$this->widget('GenericWidgets',array(
+	 // customValues
+	$this->widget('CustomFieldWidgets',array(
 		'model'=>$model,
 		'form'=>$form,
-		'relation_modelToGenericModelType'=>'taskToGenericTaskType',
-		'relation_modelToGenericModelTypes'=>'taskToGenericTaskTypes',
-		'relation_genericModelType'=>'genericTaskType',
-		'relation_category'=>'generictaskcategory',
-		'categoryModelName'=>'Generictaskcategory',
+		'relationModelToCustomFieldModelType'=>'taskToCustomFieldToTaskTemplate',
+		'relationModelToCustomFieldModelTypes'=>'taskToCustomFieldToTaskTemplates',
+		'relationCustomFieldModelType'=>'customFieldToTaskTemplate',
+		'relation_category'=>'customFieldTaskCategory',
+		'categoryModelName'=>'CustomFieldTaskCategory',
 	));
 
 $this->endWidget();

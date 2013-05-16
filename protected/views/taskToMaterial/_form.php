@@ -13,7 +13,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	}
 	else
 	{
-		MaterialController::dependantListWidgetRow($model, $form, 'material_id', 'Store', 'store_id', array(), array('scopeStore'=>array($model->store_id === null ? 0 : $model->store_id)));
+		MaterialController::dependantListWidgetRow($model, $form, 'material_id', 'Standard', 'standard_id', array(), array('scopeStandard'=>array($model->standard_id === null ? 0 : $model->standard_id)));
 		$form->textFieldRow('quantity');
 	}
 

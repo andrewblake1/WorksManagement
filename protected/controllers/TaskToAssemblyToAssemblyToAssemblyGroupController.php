@@ -2,7 +2,7 @@
 
 class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 {
-	protected function createRender($model, $models, $modalId)
+	protected function createRender($model, $models, $modal_id)
 	{
 // TODO: repeated
 		$taskToAssembly = new TaskToAssembly;
@@ -67,7 +67,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 		$this->setUpdateTabs($model);
 	}*/
 
-	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
+	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
 	public function setTabs($model) {
 		$modelName = $this->modelName;
 	

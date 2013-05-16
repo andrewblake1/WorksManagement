@@ -1,25 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "duty_type".
+ * This is the model class for table "tbl_duty_type".
  *
- * The followings are the available columns in table 'duty_type':
+ * The followings are the available columns in table 'tbl_duty_type':
  * @property integer $id
  * @property string $description
  * @property integer $lead_in_days
  * @property string $level
- * @property integer $dutycategory_id
- * @property integer $generic_type_id
+ * @property integer $duty_category_id
+ * @property integer $custom_field_id
  * @property integer $deleted
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property DutyData[] $dutyDatas
  * @property DutyData[] $dutyDatas1
- * @property Dutycategory $dutycategory
- * @property GenericType $genericType
- * @property Staff $staff
- * @property TaskTypeToDutyType[] $taskTypeToDutyTypes
+ * @property DutyCategory $dutyCategory
+ * @property CustomField $customField
+ * @property User $updatedBy
+ * @property TaskTemplateToDutyType[] $taskTemplateToDutyTypes
  */
 class DutyType extends ActiveRecord
 {
@@ -32,8 +32,8 @@ class DutyType extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchDutycategory;
-	public $searchGenericType;
+	public $searchDutyCategory;
+	public $searchCustomField;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -44,13 +44,13 @@ class DutyType extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('description', 'required'),
-			array('lead_in_days, dutycategory_id', 'numerical', 'integerOnly'=>true),
+			array('lead_in_days, duty_category_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			array('level', 'length', 'max'=>10),
-			array('generic_type_id', 'safe'),
+			array('custom_field_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, lead_in_days, level, dutycategory_id, searchDutycategory, searchGenericType', 'safe', 'on'=>'search'),
+			array('id, description, lead_in_days, level, duty_category_id, searchDutyCategory, searchCustomField', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,17 +59,17 @@ class DutyType extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'level'),
-			'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'duty_type_id'),
-			'dutycategory' => array(self::BELONGS_TO, 'Dutycategory', 'dutycategory_id'),
-			'genericType' => array(self::BELONGS_TO, 'GenericType', 'generic_type_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'taskTypeToDutyTypes' => array(self::HAS_MANY, 'TaskTypeToDutyType', 'duty_type_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'level'),
+            'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'duty_type_id'),
+            'dutyCategory' => array(self::BELONGS_TO, 'DutyCategory', 'duty_category_id'),
+            'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'taskTemplateToDutyTypes' => array(self::HAS_MANY, 'TaskTemplateToDutyType', 'duty_type_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -79,10 +79,10 @@ class DutyType extends ActiveRecord
 		return parent::attributeLabels(array(
 			'lead_in_days' => 'Lead in days',
 			'level' => 'Level',
-			'dutycategory_id' => 'Duty category',
-			'searchDutycategory' => 'Duty category',
-			'generic_type_id' => 'Custom type',
-			'searchGenericType' => 'Custom type',
+			'duty_category_id' => 'Duty category',
+			'searchDutyCategory' => 'Duty category',
+			'custom_field_id' => 'Custom type',
+			'searchCustomField' => 'Custom type',
 		));
 	}
 
@@ -96,22 +96,22 @@ class DutyType extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.generic_type_id',
+			't.custom_field_id',
 			't.description',
 			't.lead_in_days',
 			't.level',
-			'genericType.description AS searchGenericType',
+			'customField.description AS searchCustomField',
 		);
 
 		// where
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
-		$criteria->compare('genericType.description',$this->searchGenericType,true);
-		$criteria->compare('t.dutycategory_id', $this->dutycategory_id);
+		$criteria->compare('customField.description',$this->searchCustomField,true);
+		$criteria->compare('t.duty_category_id', $this->duty_category_id);
 		$criteria->compare('t.level',$this->level,true);
 		
-		// join
-		$criteria->with = array('genericType');
+		// with
+		$criteria->with = array('customField');
 
 		return $criteria;
 	}
@@ -121,7 +121,7 @@ class DutyType extends ActiveRecord
 		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'lead_in_days';
 		$columns[] = 'level';
-        $columns[] = static::linkColumn('searchGenericType', 'GenericType', 'generic_type_id');
+        $columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
 		
 		return $columns;
 	}
@@ -132,7 +132,7 @@ class DutyType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchGenericType');
+		return array('searchCustomField');
 	}
 }
 

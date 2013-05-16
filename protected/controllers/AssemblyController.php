@@ -17,7 +17,7 @@ class AssemblyController extends AdjacencyListController
 		if($model)
 		{
 			parent::setTabs(NULL);
-			$this->setChildTabs($this->loadModel(static::getUpdateId()));
+			$this->setChildTabs($this->loadModel(static::getUpdate_id()));
 		}
 		else
 		{
@@ -27,7 +27,7 @@ class AssemblyController extends AdjacencyListController
 			{
 				$this->setChildTabs($this->loadModel($parent_id));
 				// set breadcrumbs
-				static::setUpdateId($parent_id);
+				static::setUpdate_id($parent_id);
 				$this->breadcrumbs = self::getBreadCrumbTrail();
 				array_pop($this->breadcrumbs);
 				$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];

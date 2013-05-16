@@ -1,51 +1,50 @@
 <?php
 
 /**
- * This is the model class for table "project".
+ * This is the model class for table "tbl_project".
  *
- * The followings are the available columns in table 'project':
+ * The followings are the available columns in table 'tbl_project':
  * @property string $id
  * @property string $level
- * @property integer $project_type_id
+ * @property integer $project_template_id
  * @property integer $client_id
  * @property string $travel_time_1_way
  * @property string $critical_completion
  * @property string $planned
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Day[] $days
- * @property Staff $staff
- * @property ProjectType $projectType
- * @property ProjectType $client
+ * @property User $updatedBy
+ * @property ProjectTemplate $projectTemplate
+ * @property ProjectTemplate $client
+ * @property Planning $level0
  * @property Planning $id0
- * @property ProjectLevel $level0
  * @property ProjectToClientContact[] $projectToClientContacts
  * @property ProjectToClientContact[] $projectToClientContacts1
- * @property ProjectToGenericProjectType[] $projectToGenericProjectTypes
- * @property ProjectToProjectTypeToAuthItem[] $projectToProjectTypeToAuthItems
+ * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
+ * @property ProjectToProjectTemplateToAuthItem[] $projectToProjectTemplateToAuthItems
  * @property Task[] $tasks
- * @property Task[] $tasks1
  */
-class Project extends GenericExtensionActiveRecord
+class Project extends CustomFieldExtensionActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchProjectType;
+	public $searchProjectTemplate;
 	public $searchInCharge;
 	public $name;
 	public $in_charge_id;
 
-	protected $class_ModelToGenericModelType = 'ProjectToGenericProjectType';
-	protected $attribute_generic_model_type_id = 'generic_project_type_id';
-	protected $attribute_model_id = 'project_id';
-	protected $relation_genericModelType = 'genericProjectType';
-	protected $relation_genericModelTypes = 'genericProjectTypes';
-	protected $relation_modelType = 'projectType';
-	protected $relation_modelToGenericModelTypes = 'projectToGenericProjectTypes';
-	protected $relation_modelToGenericModelType = 'projectToGenericProjectType';
+	protected $classModelToCustomFieldModelType = 'ProjectToCustomFieldToProjectTemplate';
+	protected $attributeCustomFieldModelType_id = 'custom_field_to_project_template_id';
+	protected $attributeModel_id = 'project_id';
+	protected $relationCustomFieldModelType = 'customFieldToProjectTemplate';
+	protected $relationCustomFieldModelTypes = 'customFieldToProjectTemplates';
+	protected $relationModelType = 'projectTemplate';
+	protected $relationModelToCustomFieldModelTypes = 'projectToCustomFieldToProjectTemplates';
+	protected $relationModelToCustomFieldModelType = 'projectToCustomFieldToProjectTemplate';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -55,14 +54,14 @@ class Project extends GenericExtensionActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_type_id, client_id', 'required'),
-			array('project_type_id, client_id', 'numerical', 'integerOnly'=>true),
+			array('project_template_id, client_id', 'required'),
+			array('project_template_id, client_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id', 'length', 'max'=>10),
 			array('critical_completion, planned, client_id, name', 'safe'),
 			array('travel_time_1_way', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, searchInCharge, travel_time_1_way, critical_completion, planned, name, searchProjectType', 'safe', 'on'=>'search'),
+			array('id, level, searchInCharge, travel_time_1_way, critical_completion, planned, name, searchProjectTemplate', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -71,23 +70,23 @@ class Project extends GenericExtensionActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'days' => array(self::HAS_MANY, 'Day', 'project_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
-			'client' => array(self::BELONGS_TO, 'ProjectType', 'client_id'),
-			'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
-			'level0' => array(self::BELONGS_TO, 'ProjectLevel', 'level'),
-			'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'client_id'),
-			'projectToClientContacts1' => array(self::HAS_MANY, 'ProjectToClientContact', 'project_id'),
-			'projectToGenericProjectTypes' => array(self::HAS_MANY, 'ProjectToGenericProjectType', 'project_id'),
-			'projectToProjectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTypeToAuthItem', 'project_id'),
-			'tasks' => array(self::HAS_MANY, 'Task', 'project_id'),
-			'tasks1' => array(self::HAS_MANY, 'Task', 'client_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'days' => array(self::HAS_MANY, 'Day', 'project_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
+            'client' => array(self::BELONGS_TO, 'ProjectTemplate', 'client_id'),
+            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+            'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
+            'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'client_id'),
+            'projectToClientContacts1' => array(self::HAS_MANY, 'ProjectToClientContact', 'project_id'),
+            'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'project_id'),
+            'projectToProjectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTemplateToAuthItem', 'project_id'),
+            'tasks' => array(self::HAS_MANY, 'Task', 'project_id'),
+        );
+    }
+
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -100,9 +99,9 @@ class Project extends GenericExtensionActiveRecord
 			'travel_time_1_way' => 'Travel time 1 way (HH:mm)',
 			'critical_completion' => 'Critical completion',
 			'planned' => 'Planned',
-			'project_type_id' => 'Project type',
+			'project_template_id' => 'Project type',
 			'name' => 'Project name',
-			'searchProjectType' => 'Project type',
+			'searchProjectTemplate' => 'Project type',
 		));
 	}
 
@@ -127,8 +126,8 @@ class Project extends GenericExtensionActiveRecord
 			'id0.in_charge_id AS in_charge_id',
 			't.critical_completion',
 			't.planned',
-			't.project_type_id',	// though not displayed, needed to get id for link field
-			'projectType.description AS searchProjectType',
+			't.project_template_id',	// though not displayed, needed to get id for link field
+			'projectTemplate.description AS searchProjectTemplate',
 		);
 
 		// where
@@ -137,7 +136,7 @@ class Project extends GenericExtensionActiveRecord
 		$criteria->compare('t.travel_time_1_way',Yii::app()->format->toMysqlTime($this->travel_time_1_way));
 		$criteria->compare('t.critical_completion',Yii::app()->format->toMysqlDate($this->critical_completion));
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
-		$criteria->compare('projectType.description', $this->searchProjectType, true);
+		$criteria->compare('projectTemplate.description', $this->searchProjectTemplate, true);
 		$criteria->compare('t.client_id', $this->client_id);
 		$this->compositeCriteria($criteria,
 			array(
@@ -148,10 +147,10 @@ class Project extends GenericExtensionActiveRecord
 			$this->searchInCharge
 		);
 
-		// join
+		// with
 		$criteria->with = array(
-			'projectType',
-			'projectType.client',
+			'projectTemplate',
+			'projectTemplate.client',
 			'id0',
 			'id0.inCharge',
 		);
@@ -163,8 +162,8 @@ class Project extends GenericExtensionActiveRecord
 	{
 		$columns[] = $this->linkThisColumn('id');
 		$columns[] = $this->linkThisColumn('name');
-        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
-		$columns[] = static::linkColumn('searchProjectType', 'ProjectType', 'project_type_id');
+        $columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
+		$columns[] = static::linkColumn('searchProjectTemplate', 'ProjectTemplate', 'project_template_id');
 		$columns[] = 'travel_time_1_way';
 		$columns[] = 'critical_completion';
 		$columns[] = 'planned';
@@ -178,7 +177,7 @@ class Project extends GenericExtensionActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchInCharge', 'searchProjectType', 'name');
+		return array('searchInCharge', 'searchProjectTemplate', 'name');
 	}
 
 /*	// ensure that where possible a pk has been passed from parent
@@ -191,7 +190,7 @@ class Project extends GenericExtensionActiveRecord
 			return;
 		}
 		// if we don't have this fk attribute set
-		elseif(empty($this->project_type_id) && empty($this->client_id))
+		elseif(empty($this->project_template_id) && empty($this->client_id))
 		{
 			$niceNameLower =  strtolower(static::getNiceName());
 			throw new CHttpException(400, "No $niceNameLower identified, you must get here from the {$niceNameLower}s page");
@@ -210,7 +209,7 @@ class Project extends GenericExtensionActiveRecord
 
 	public function afterFind() {
 		$this->name = $this->id0->name;
-//		$this->client_id = $this->projectType->client_id;
+//		$this->client_id = $this->projectTemplate->client_id;
 		parent::afterFind();
 	}
 
@@ -221,11 +220,11 @@ class Project extends GenericExtensionActiveRecord
 	static function checkContext($primaryKey, $role)
 	{
 		// if this role exists for this project
-		$ProjectToProjectTypeToAuthItem = ProjectToProjectTypeToAuthItem::model()->findAllByAttributes(array('project_id'=>$primaryKey, 'itemname'=>$role));
-		if(!empty($ProjectToProjectTypeToAuthItem))
+		$ProjectToProjectTemplateToAuthItem = ProjectToProjectTemplateToAuthItem::model()->findAllByAttributes(array('project_id'=>$primaryKey, 'itemname'=>$role));
+		if(!empty($ProjectToProjectTemplateToAuthItem))
 		{
 			// if this user assigned this role within this project
-			if($ProjectToProjectTypeToAuthItem->authAssignment->userid == Yii::app()->user->id)
+			if($ProjectToProjectTemplateToAuthItem->authAssignment->userid == Yii::app()->user->id)
 			{
 				 return true;
 			}
@@ -235,11 +234,11 @@ class Project extends GenericExtensionActiveRecord
 	}
 	
 	public function beforeSave() {
-		if(!empty($this->project_type_id))
+		if(!empty($this->project_template_id))
 		{
-			$projectType = ProjectType::model()->findByPk($this->project_type_id);
+			$projectTemplate = ProjectTemplate::model()->findByPk($this->project_template_id);
 		}
-		$this->client_id = $projectType->client_id;
+		$this->client_id = $projectTemplate->client_id;
 		
 		return parent::beforeSave();
 	}

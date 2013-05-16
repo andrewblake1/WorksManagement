@@ -5,7 +5,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	if($model->isNewRecord)
 	{
 		DutyTypeController::listWidgetRow($model, $form, 'duty_type_id');
-		StaffController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Responsible');
+		UserController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Responsible');
 	}
 	else
 	{
@@ -19,19 +19,19 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 			$form->checkBoxRow('updated');
 			
 			// allow system admin and original creator of duty to be able to alter who it is assigned to
-			if($model->staff_id == Yii::app()->user->id || Yii::app()->user->checkAccess('system admin'))
+			if($model->updated_by == Yii::app()->user->id || Yii::app()->user->checkAccess('system admin'))
 			{
-				StaffController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Assigned to');
+				UserController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Assigned to');
 			}
 		}
 
-		if(!empty($model->dutyData->generic_id))
+		if(!empty($model->dutyData->custom_value_id))
 		{
-			$this->widget('GenericWidget', array(
+			$this->widget('CustomFieldWidget', array(
 				'form'=>$form,
-				'generic'=>$model->dutyData->generic,
-				'genericType'=>$model->dutyType->genericType,
-				'relationToGenericType'=>'duty->dutyType->genericType',
+				'customValue'=>$model->dutyData->customValue,
+				'customField'=>$model->dutyType->customField,
+				'relationToCustomField'=>'duty->dutyType->customField',
 			));
 		}
 	}

@@ -2,7 +2,7 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
-	AssemblyGroupController::listWidgetRow($model, $form, 'assembly_group_id', array(), array('scopeStore'=>array($model->assembly->store_id)));
+	AssemblyGroupController::listWidgetRow($model, $form, 'assembly_group_id', array(), array('scopeStandard'=>array($model->assembly->standard_id)));
 
 	$form->textFieldRow('comment');
 

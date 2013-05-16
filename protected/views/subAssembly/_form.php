@@ -3,9 +3,9 @@
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
 	// get the parent model
-	$assembly = Assembly::model()->findByPk(static::getUpdateId('Assembly'));
+	$assembly = Assembly::model()->findByPk(static::getUpdate_id('Assembly'));
 	AssemblyController::listWidgetRow($model, $form, 'child_assembly_id', array(),
-		array('scopeStore'=>array($assembly->store_id)));
+		array('scopeStandard'=>array($assembly->standard_id)));
 
 	$form->textFieldRow('comment');
 

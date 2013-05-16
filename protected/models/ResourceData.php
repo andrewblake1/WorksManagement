@@ -1,28 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "resource_data".
+ * This is the model class for table "tbl_resource_data".
  *
- * The followings are the available columns in table 'resource_data':
+ * The followings are the available columns in table 'tbl_resource_data':
  * @property string $id
  * @property string $planning_id
  * @property string $level
- * @property integer $resource_type_id
- * @property integer $resource_type_to_supplier_id
+ * @property integer $resource_id
+ * @property integer $resource_to_supplier_id
  * @property integer $quantity
  * @property string $hours
  * @property string $start
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Planning $planning
  * @property Planning $level0
- * @property Staff $staff
- * @property ResourceTypeToSupplier $resourceType
- * @property ResourceTypeToSupplier $resourceTypeToSupplier
- * @property TaskToResourceType[] $taskToResourceTypes
- * @property TaskToResourceType[] $taskToResourceTypes1
- * @property TaskToResourceType[] $taskToResourceTypes2
+ * @property User $updatedBy
+ * @property ResourceToSupplier $resource
+ * @property ResourceToSupplier $resourceToSupplier
+ * @property TaskToResource[] $taskToResources
+ * @property TaskToResource[] $taskToResources1
+ * @property TaskToResource[] $taskToResources2
  */
 class ResourceData extends ActiveRecord
 {
@@ -44,13 +44,13 @@ class ResourceData extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('planning_id, level, resource_type_id, quantity, hours', 'required'),
-			array('resource_type_id, resource_type_to_supplier_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('planning_id, level, resource_id, quantity, hours', 'required'),
+			array('resource_id, resource_to_supplier_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level', 'length', 'max'=>10),
 			array('start, hours', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, planning_id, level, resource_type_id, resource_type_to_supplier_id, quantity, hours, start', 'safe', 'on'=>'search'),
+			array('id, planning_id, level, resource_id, resource_to_supplier_id, quantity, hours, start', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,19 +59,19 @@ class ResourceData extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-			'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'resourceType' => array(self::BELONGS_TO, 'ResourceTypeToSupplier', 'resource_type_id'),
-			'resourceTypeToSupplier' => array(self::BELONGS_TO, 'ResourceTypeToSupplier', 'resource_type_to_supplier_id'),
-			'taskToResourceTypes' => array(self::HAS_MANY, 'TaskToResourceType', 'resource_data_id'),
-			'taskToResourceTypes1' => array(self::HAS_MANY, 'TaskToResourceType', 'resource_type_id'),
-			'taskToResourceTypes2' => array(self::HAS_MANY, 'TaskToResourceType', 'level'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
+            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'resource' => array(self::BELONGS_TO, 'ResourceToSupplier', 'resource_id'),
+            'resourceToSupplier' => array(self::BELONGS_TO, 'ResourceToSupplier', 'resource_to_supplier_id'),
+            'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'resource_data_id'),
+            'taskToResources1' => array(self::HAS_MANY, 'TaskToResource', 'resource_id'),
+            'taskToResources2' => array(self::HAS_MANY, 'TaskToResource', 'level'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -81,8 +81,8 @@ class ResourceData extends ActiveRecord
 		return parent::attributeLabels(array(
 			'planning_id' => 'Planning',
 			'level' => 'Level',
-			'resource_type_id' => 'Resource Type',
-			'resource_type_to_supplier_id' => 'Resource Type To Supplier',
+			'resource_id' => 'Resource Type',
+			'resource_to_supplier_id' => 'Resource Type To Supplier',
 			'hours' => 'Hours',
 			'start' => 'Start',
 		));
@@ -102,12 +102,12 @@ class ResourceData extends ActiveRecord
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('planning_id',$this->planning_id,true);
 		$criteria->compare('level',$this->level,true);
-		$criteria->compare('resource_type_id',$this->resource_type_id);
-		$criteria->compare('resource_type_to_supplier_id',$this->resource_type_to_supplier_id);
+		$criteria->compare('resource_id',$this->resource_id);
+		$criteria->compare('resource_to_supplier_id',$this->resource_to_supplier_id);
 		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('hours',Yii::app()->format->toMysqlTime($this->hours));
 		$criteria->compare('start',Yii::app()->format->toMysqlTime($this->start));
-		$criteria->compare('staff_id',$this->staff_id);
+		$criteria->compare('updated_by',$this->updated_by);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

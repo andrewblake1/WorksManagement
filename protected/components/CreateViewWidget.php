@@ -10,7 +10,7 @@ class CreateViewWidget extends CWidget
 	private $_controller;
 	public $model;
 	public $models;
-	public $modalId;
+	public $modal_id;
 	public $parent_fk;
 
 	/**
@@ -24,7 +24,7 @@ class CreateViewWidget extends CWidget
 
     public function run()
     {
-		$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>$this->modalId));
+		$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>$this->modal_id));
 
 		$modelName = get_class($this->model);
 		echo "<div id=\"form-create$modelName\" class=\"modal-body\">";

@@ -2,8 +2,8 @@
 
 class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 {
-// TODO: Repeated in TaskToMaterialToTaskTypeToMaterialGroupController	
-	protected function createRender($model, $models, $modalId)
+// TODO: Repeated in TaskToMaterialToTaskTemplateToMaterialGroupController	
+	protected function createRender($model, $models, $modal_id)
 	{
 		$taskToMaterial = new TaskToMaterial;
 		$taskToMaterial->attributes = $_GET[$this->modelName];
@@ -52,7 +52,7 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 	}
 	
 	
-	// override the tabs when viewing materials for a particular task - make match task_to_assembly view
+	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
 	public function setTabs($model) {
 		$modelName = $this->modelName;
 		$update = FALSE;
@@ -68,7 +68,7 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 		$taskToAssemblyController->setActiveTabs(NULL, $modelName::getNiceNamePlural());
 		$this->_tabs = $taskToAssemblyController->tabs;
 
-		static::setUpdateId(NULL, 'TaskToAssembly');
+		static::setUpdate_id(NULL, 'TaskToAssembly');
 		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
 
 		$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);

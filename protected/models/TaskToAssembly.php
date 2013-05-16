@@ -1,33 +1,31 @@
 <?php
 
 /**
- * This is the model class for table "task_to_assembly".
+ * This is the model class for table "tbl_task_to_assembly".
  *
- * The followings are the available columns in table 'task_to_assembly':
+ * The followings are the available columns in table 'tbl_task_to_assembly':
  * @property string $id
  * @property string $task_id
  * @property integer $assembly_id
  * @property integer $sub_assembly_id
  * @property string $parent_id
  * @property integer $quantity
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Task $task
- * @property Staff $staff
- * @property SubAssembly $subAssembly
+ * @property User $updatedBy
  * @property Assembly $assembly
  * @property TaskToAssembly $parent
  * @property TaskToAssembly[] $taskToAssemblies
+ * @property SubAssembly $subAssembly
  * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups
- * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups1
- * @property TaskToAssemblyToTaskTypeToAssemblyGroup[] $taskToAssemblyToTaskTypeToAssemblyGroups
- * @property TaskToAssemblyToTaskTypeToAssemblyGroup[] $taskToAssemblyToTaskTypeToAssemblyGroups1
+ * @property TaskToAssemblyToTaskTemplateToAssemblyGroup[] $taskToAssemblyToTaskTemplateToAssemblyGroups
  * @property TaskToMaterial[] $taskToMaterials
  */
 class TaskToAssembly extends AdjacencyListActiveRecord
 {
-	public $store_id;
+	public $standard_id;
 
 	/**
 	 * @var string nice model name for use in output
@@ -42,7 +40,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return $this->customValidators + array(
-			array('task_id, quantity, assembly_id', 'required'),
+			array('task_id, assembly_id', 'required'),
 			array('assembly_id, sub_assembly_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('parent_id, task_id', 'length', 'max'=>10),
 		);
@@ -66,15 +64,13 @@ class TaskToAssembly extends AdjacencyListActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-            'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-            'subAssembly' => array(self::BELONGS_TO, 'SubAssembly', 'sub_assembly_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
             'parent' => array(self::BELONGS_TO, 'TaskToAssembly', 'parent_id'),
             'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'parent_id'),
-            'taskToAssemblyToAssemblyToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'assembly_id'),
-            'taskToAssemblyToAssemblyToAssemblyGroups1' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'task_to_assembly_id'),
-            'taskToAssemblyToTaskTypeToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToTaskTypeToAssemblyGroup', 'assembly_id'),
-            'taskToAssemblyToTaskTypeToAssemblyGroups1' => array(self::HAS_MANY, 'TaskToAssemblyToTaskTypeToAssemblyGroup', 'task_to_assembly_id'),
+            'subAssembly' => array(self::BELONGS_TO, 'SubAssembly', 'sub_assembly_id'),
+            'taskToAssemblyToAssemblyToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'task_to_assembly_id'),
+            'taskToAssemblyToTaskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToTaskTemplateToAssemblyGroup', 'task_to_assembly_id'),
             'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_to_assembly_id'),
         );
     }
@@ -105,7 +101,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	}
 
 	public function afterFind() {
-		$this->store_id = $this->assembly->store_id;
+		$this->standard_id = $this->assembly->standard_id;
 		
 		return parent::afterFind();
 	}
@@ -115,7 +111,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	 */
 	public function createSave(&$models=array())
 	{
-		return TaskToAssemblyController::addAssembly($this->task_id, $this->assembly_id, $this->quantity, $this->parent_id, $this->sub_assembly_id, $models, $this);
+		return TaskToAssemblyController::addAssembly($this->task_id, $this->assembly_id, $this->default, $this->parent_id, $this->sub_assembly_id, $models, $this);
 	}
 	
 }

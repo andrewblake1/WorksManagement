@@ -1,17 +1,17 @@
 <?php
 
 /**
- * This is the model class for table "purchase_order".
+ * This is the model class for table "tbl_purchase_order".
  *
- * The followings are the available columns in table 'purchase_order':
+ * The followings are the available columns in table 'tbl_purchase_order':
  * @property string $id
  * @property integer $supplier_id
  * @property string $number
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Supplier $supplier
- * @property Staff $staff
+ * @property User $updatedBy
  * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
  */
 class PurchaseOrder extends ActiveRecord
@@ -44,14 +44,14 @@ class PurchaseOrder extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'purchase_order_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'purchase_order_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)

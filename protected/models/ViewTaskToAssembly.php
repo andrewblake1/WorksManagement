@@ -14,14 +14,6 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	protected $defaultSort = array('searchAssemblyGroup'=>'DESC', 't.parent_id', 'searchAssemblyGroup');
 
 	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'v_task_to_assembly';
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -57,7 +49,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 			't.quantity * task.quantity AS searchTotalQuantity',
 			't.assembly_group_to_assembly_id',
 			't.assembly_group_id',
-			't.searchTaskToAssemblyToAssemblyToAssemblyGroupId',
+			't.searchTaskToAssemblyToAssemblyToAssemblyGroup_id',
 			't.assembly_to_assembly_group_id',
 			"CONCAT_WS('$delimiter',
 				assemblyGroup.description,
@@ -67,11 +59,11 @@ class ViewTaskToAssembly extends ViewActiveRecord
 				
 		// join
 		$criteria->join = '
-			LEFT JOIN assembly_group assemblyGroup ON t.assembly_group_id = assemblyGroup.id
-			LEFT JOIN assembly ON t.assembly_id = assembly.id
-			LEFT JOIN task ON t.task_id = task.id
-			LEFT JOIN project on task.project_id = project.id
-			LEFT JOIN assembly_to_client assemblyToClient ON project.client_id = assemblyToClient.client_id
+			LEFT JOIN tbl_assembly_group assemblyGroup ON t.assembly_group_id = assemblyGroup.id
+			LEFT JOIN tbl_assembly assembly ON t.assembly_id = assembly.id
+			LEFT JOIN tbl_task task ON t.task_id = task.id
+			LEFT JOIN tbl_project project ON task.project_id = project.id
+			LEFT JOIN tbl_assembly_to_client assemblyToClient ON project.client_id = assemblyToClient.client_id
 				AND t.assembly_id = assemblyToClient.assembly_id
 		';
 		
@@ -79,7 +71,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		$criteria->compare('assembly.description',$this->searchAssemblyDescription,true);
 		$this->compositeCriteria($criteria,
 			array(
-				'assembly_to_client.alias',
+				'assemblyToClient.alias',
 				'assembly.alias'
 			),
 			$this->searchAssemblyAlias

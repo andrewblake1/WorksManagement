@@ -35,7 +35,7 @@ class ReportController extends Controller
 		// determine if this user has access to this report
 		foreach(self::$_model->reportToAuthItems as $reportToAuthItem)
 		{
-			if(Yii::app()->user->checkAccess($reportToAuthItem->AuthItem_name))
+			if(Yii::app()->user->checkAccess($reportToAuthItem->auth_item_name))
 			{
 				$hasAccess = true;
 			}
@@ -302,7 +302,7 @@ class ReportController extends Controller
 		));
 	}
 
-	protected function createRender($model, $models, $modalId)
+	protected function createRender($model, $models, $modal_id)
 	{
 		// don't do this in admin view - this is special case where we don't render as modal in admin view
 		if($this->action->id == 'create')

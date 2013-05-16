@@ -8,7 +8,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->textFieldRow('name');
 
-	DutycategoryController::listWidgetRow($model, $form, 'dutycategory_id');
+	DutyCategoryController::listWidgetRow($model, $form, 'duty_category_id');
 	
 	// if adding to another node - as opposed to creating a new root
 	echo '<input type="hidden" name= "parent_id" value="'.(empty($_POST['parent_id']) ? '' : $_POST['parent_id']).'" />';

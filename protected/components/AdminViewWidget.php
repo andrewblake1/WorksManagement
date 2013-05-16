@@ -87,7 +87,7 @@ class AdminViewWidget extends CWidget
 		?>
 		<script type="text/javascript">
 			// as a global variable
-			var gridId = "yiisession-grid";
+			var grid_id = "yiisession-grid";
 
 			$(function(){
 				// prevent the click event
@@ -112,7 +112,7 @@ class AdminViewWidget extends CWidget
 									type: "POST",
 									url: url,
 									data: {"ids":ids},
-									dataType:'json',
+									data_type:'json',
 									success: function(resp){
 										if(resp.status == "success"){
 											if(resp.msg) {

@@ -22,24 +22,29 @@ class ProjectController extends Controller
 		parent::actionDelete($id);
 	}
 
+	// pretend to create the project in order to take a shortcut of creating the related items
+	// in order to generate the custom fields
 	public function actionDependantList()
 	{
-		// a simple cheat to create generics is to create within cancellable transaction
+		
+		// a simple cheat to create customValues is to create within cancellable transaction
+		// NB: don't set any attributes as might fail validation
 		$model = new Project();
-		$model->attributes = $_POST[$this->modelName];
+		$model->client_id = $_POST['Project']['client_id'];
+		$model->project_template_id = $_POST['Project']['project_template_id'];
 		// ensure unique project de
 		$transaction = Yii::app()->db->beginTransaction();
 		if($model->createSave($models))
 		{
-			// generics
-			$this->widget('GenericWidgets',array(
+			// customValues
+			$this->widget('CustomFieldWidgets',array(
 				'model'=>$model,
 				'form'=>new WMTbActiveForm(),
-				'relation_modelToGenericModelType'=>'projectToGenericProjectType',
-				'relation_modelToGenericModelTypes'=>'projectToGenericProjectTypes',
-				'relation_genericModelType'=>'genericProjectType',
-				'relation_category'=>'genericprojectcategory',
-				'categoryModelName'=>'Genericprojectcategory',
+				'relationModelToCustomFieldModelType'=>'projectToCustomFieldToProjectTemplate',
+				'relationModelToCustomFieldModelTypes'=>'projectToCustomFieldToProjectTemplates',
+				'relationCustomFieldModelType'=>'customFieldToProjectTemplate',
+				'relation_category'=>'customFieldProjectCategory',
+				'categoryModelName'=>'CustomFieldProjectCategory',
 			));
 		}
 

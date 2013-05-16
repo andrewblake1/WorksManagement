@@ -1,26 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "material".
+ * This is the model class for table "tbl_material".
  *
- * The followings are the available columns in table 'material':
+ * The followings are the available columns in table 'tbl_material':
  * @property integer $id
- * @property integer $store_id
+ * @property integer $standard_id
  * @property string $description
  * @property string $unit
  * @property string $alias
  * @property integer $deleted
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToMaterial[] $assemblyToMaterials1
- * @property Staff $staff
- * @property Store $store
- * @property MaterialToClient[] $materialToClients
+ * @property User $updatedBy
+ * @property Standard $standard
  * @property MaterialGroupToMaterial[] $materialGroupToMaterials
+ * @property MaterialToClient[] $materialToClients
+ * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskToMaterial[] $taskToMaterials
- * @property TaskTypeToMaterial[] $taskTypeToMaterials
  */
 class Material extends ActiveRecord
 {
@@ -33,13 +33,13 @@ class Material extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, store_id', 'required'),
-			array('store_id', 'numerical', 'integerOnly'=>true),
+			array('description, standard_id', 'required'),
+			array('standard_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
 			array('unit', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, store_id, description, unit, alias', 'safe', 'on'=>'search'),
+			array('id, standard_id, description, unit, alias', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -48,19 +48,19 @@ class Material extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'store_id'),
-			'assemblyToMaterials1' => array(self::HAS_MANY, 'AssemblyToMaterial', 'material_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'store' => array(self::BELONGS_TO, 'Store', 'store_id'),
-			'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'material_id'),
-			'materialGroupToMaterials' => array(self::HAS_MANY, 'MaterialGroupToMaterial', 'material_id'),
-			'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'material_id'),
-			'taskTypeToMaterials' => array(self::HAS_MANY, 'TaskTypeToMaterial', 'material_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'store_id'),
+            'assemblyToMaterials1' => array(self::HAS_MANY, 'AssemblyToMaterial', 'material_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'standard' => array(self::BELONGS_TO, 'Standard', 'standard_id'),
+            'materialGroupToMaterials' => array(self::HAS_MANY, 'MaterialGroupToMaterial', 'material_id'),
+            'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'material_id'),
+            'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'material_id'),
+            'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'material_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -69,7 +69,7 @@ class Material extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'unit' => 'Unit',
-			'store_id' => 'Store',
+			'standard_id' => 'Standard',
 		));
 	}
 
@@ -84,7 +84,7 @@ class Material extends ActiveRecord
 		$criteria->compare('t.description', $this->description,true);
 		$criteria->compare('t.alias', $this->alias,true);
 		$criteria->compare('t.unit', $this->unit);
-		$criteria->compare('t.store_id', $this->store_id);
+		$criteria->compare('t.standard_id', $this->standard_id);
 
 		$criteria->select=array(
 			't.id',
@@ -123,13 +123,13 @@ class Material extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchStore');
+		return array('searchStandard');
 	}
 
-	public function scopeStore($store_id)
+	public function scopeStandard($standard_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compareNull('store_id', $store_id);
+		$criteria->compareNull('standard_id', $standard_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		
@@ -143,7 +143,7 @@ class Material extends ActiveRecord
 
 		// join
 		$criteria->join = '
-			JOIN material_group_to_material materialGroupToMaterial ON materialGroupToMaterial.material_id = t.id
+			JOIN tbl_material_group_to_material materialGroupToMaterial ON materialGroupToMaterial.material_id = t.id
 		';
 
 		$this->getDbCriteria()->mergeWith($criteria);
@@ -155,14 +155,14 @@ class Material extends ActiveRecord
 	{
 		$assembly = Assembly::model()->findByPk($assembly_id);
 		
-		return $this->scopeStore($assembly->store_id);
+		return $this->scopeStandard($assembly->standard_id);
 	}
 
 	public function scopeMaterialGroup($material_group_id)
 	{
 		$assembly = MaterialGroup::model()->findByPk($assembly_id);
 		
-		return $this->scopeStore($assembly->store_id);
+		return $this->scopeStandard($assembly->standard_id);
 	}
 */
 }

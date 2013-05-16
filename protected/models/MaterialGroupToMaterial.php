@@ -1,26 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "material_group_to_material".
+ * This is the model class for table "tbl_material_group_to_material".
  *
- * The followings are the available columns in table 'material_group_to_material':
+ * The followings are the available columns in table 'tbl_material_group_to_material':
  * @property integer $id
  * @property integer $material_group_id
  * @property integer $material_id
  * @property integer $store_id
  * @property integer $deleted
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Material $material
  * @property MaterialGroup $store
  * @property MaterialGroup $materialGroup
- * @property Staff $staff
+ * @property User $updatedBy
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups1
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups2
- * @property TaskToMaterialToTaskTypeToMaterialGroup[] $taskToMaterialToTaskTypeToMaterialGroups
- * @property TaskToMaterialToTaskTypeToMaterialGroup[] $taskToMaterialToTaskTypeToMaterialGroups1
+ * @property TaskToMaterialToTaskTemplateToMaterialGroup[] $taskToMaterialToTaskTemplateToMaterialGroups
+ * @property TaskToMaterialToTaskTemplateToMaterialGroup[] $taskToMaterialToTaskTemplateToMaterialGroups1
  */
 class MaterialGroupToMaterial extends ActiveRecord
 {
@@ -45,8 +45,8 @@ class MaterialGroupToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('material_id, material_group_id, store_id,', 'required'),
-			array('material_id, material_group_id, store_id', 'numerical', 'integerOnly'=>true),
+			array('material_id, material_group_id, standard_id,', 'required'),
+			array('material_id, material_group_id, standard_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, material_id, material_group_id', 'safe', 'on'=>'search'),
@@ -64,12 +64,12 @@ class MaterialGroupToMaterial extends ActiveRecord
             'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
             'store' => array(self::BELONGS_TO, 'MaterialGroup', 'store_id'),
             'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
-            'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'material_id'),
             'taskToMaterialToAssemblyToMaterialGroups1' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'material_group_id'),
             'taskToMaterialToAssemblyToMaterialGroups2' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'material_group_to_material_id'),
-            'taskToMaterialToTaskTypeToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTypeToMaterialGroup', 'material_id'),
-            'taskToMaterialToTaskTypeToMaterialGroups1' => array(self::HAS_MANY, 'TaskToMaterialToTaskTypeToMaterialGroup', 'material_group_to_material_id'),
+            'taskToMaterialToTaskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTemplateToMaterialGroup', 'material_id'),
+            'taskToMaterialToTaskTemplateToMaterialGroups1' => array(self::HAS_MANY, 'TaskToMaterialToTaskTemplateToMaterialGroup', 'material_group_to_material_id'),
         );
     }
 
@@ -110,7 +110,7 @@ class MaterialGroupToMaterial extends ActiveRecord
 		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
 		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
  
-		// join
+		// with
 		$criteria->with = array(
 			'material',
 		);
@@ -156,7 +156,7 @@ class MaterialGroupToMaterial extends ActiveRecord
 	public function beforeValidate()
 	{
 		$materialGroup = MaterialGroup::model()->findByPk($this->material_group_id);
-		$this->store_id = $materialGroup->store_id;
+		$this->standard_id = $materialGroup->standard_id;
 		
 		return parent::beforeValidate();
 	}

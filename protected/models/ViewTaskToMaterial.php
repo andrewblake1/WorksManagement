@@ -11,17 +11,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	public $searchMaterialUnit;
 	public $searchMaterialGroup;
 	public $searchMaterialAlias;
-//	public $searchTaskQuantity;
 	public $searchAssemblyQuantity;
 	public $searchTotalQuantity;
-
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'v_task_to_material';
-	}
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -65,8 +56,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			't.material_group_to_material_id',
 			"taskToAssembly.quantity AS searchAssemblyQuantity",
 			't.searchAssembly',
-			't.searchAssemblyId',
-			't.searchTaskToMaterialToAssemblyToMaterialGroupId',
+			't.searchAssembly_id',
+			't.searchTaskToMaterialToAssemblyToMaterialGroup_id',
 			't.assembly_to_material_group_id',
 			"CONCAT_WS('$delimiter',
 				materialGroup.description,
@@ -76,13 +67,13 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		
 		// join
 		$criteria->join = '
-			LEFT JOIN stage on t.stage_id = stage.id
-			LEFT JOIN material_group materialGroup ON t.material_group_id = materialGroup.id
-			LEFT JOIN material ON t.material_id = material.id
-			LEFT JOIN task_to_assembly taskToAssembly ON t.task_to_assembly_id = taskToAssembly.id
-			LEFT JOIN task ON t.task_id = task.id
-			LEFT JOIN project on task.project_id = project.id
-			LEFT JOIN material_to_client materialToClient ON project.client_id = materialToClient.client_id
+			LEFT JOIN tbl_stage stage ON t.stage_id = stage.id
+			LEFT JOIN tbl_material_group materialGroup ON t.material_group_id = materialGroup.id
+			LEFT JOIN tbl_material material ON t.material_id = material.id
+			LEFT JOIN tbl_task_to_assembly taskToAssembly ON t.task_to_assembly_id = taskToAssembly.id
+			LEFT JOIN tbl_task task ON t.task_id = task.id
+			LEFT JOIN tbl_project project ON task.project_id = project.id
+			LEFT JOIN tbl_material_to_client materialToClient ON project.client_id = materialToClient.client_id
 				AND t.material_id = materialToClient.material_id
 		';
 		
@@ -91,7 +82,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
 		$this->compositeCriteria($criteria,
 			array(
-				'material_to_client.alias',
+				'materialToClient.alias',
 				'material.alias'
 			),
 			$this->searchMaterialAlias

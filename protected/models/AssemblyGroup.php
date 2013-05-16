@@ -1,22 +1,22 @@
 <?php
 
 /**
- * This is the model class for table "assembly_group".
+ * This is the model class for table "tbl_assembly_group".
  *
- * The followings are the available columns in table 'assembly_group':
+ * The followings are the available columns in table 'tbl_assembly_group':
  * @property integer $id
  * @property string $description
- * @property integer $store_id
+ * @property integer $standard_id
  * @property integer $deleted
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property User $updatedBy
+ * @property Standard $standard
+ * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblies
  * @property AssemblyToAssemblyGroup[] $assemblyToAssemblyGroups
  * @property AssemblyToAssemblyGroup[] $assemblyToAssemblyGroups1
- * @property Staff $staff
- * @property Store $store
- * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblys
- * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblys1
+ * @property TaskTemplateToAssemblyGroup[] $taskTemplateToAssemblyGroups
  */
 class AssemblyGroup extends ActiveRecord
 {
@@ -28,12 +28,12 @@ class AssemblyGroup extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, store_id', 'required'),
-			array('store_id', 'numerical', 'integerOnly'=>true),
+			array('description, standard_id', 'required'),
+			array('standard_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, store_id', 'safe', 'on'=>'search'),
+			array('id, description, standard_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -41,18 +41,18 @@ class AssemblyGroup extends ActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'store_id'),
-			'assemblyToAssemblyGroups1' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'assembly_group_id'),
-			'store' => array(self::BELONGS_TO, 'Store', 'store_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'assemblyGroupToAssemblys' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'store_id'),
-			'assemblyGroupToAssemblys1' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'assembly_group_id'),
-		);
-	}
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'standard' => array(self::BELONGS_TO, 'Standard', 'standard_id'),
+            'assemblyGroupToAssemblies' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'assembly_group_id'),
+            'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'store_id'),
+            'assemblyToAssemblyGroups1' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'assembly_group_id'),
+            'taskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskTemplateToAssemblyGroup', 'assembly_group_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -60,7 +60,7 @@ class AssemblyGroup extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'store_id' => 'Store',
+			'standard_id' => 'Standard',
 		));
 	}
 
@@ -73,7 +73,7 @@ class AssemblyGroup extends ActiveRecord
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.store_id',$this->store_id);
+		$criteria->compare('t.standard_id',$this->standard_id);
 
 		$criteria->select=array(
 			't.id',
@@ -91,10 +91,10 @@ class AssemblyGroup extends ActiveRecord
 		return $columns;
 	}
 
-	public function scopeStore($store_id)
+	public function scopeStandard($standard_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compareNull('store_id', $store_id);
+		$criteria->compareNull('standard_id', $standard_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		

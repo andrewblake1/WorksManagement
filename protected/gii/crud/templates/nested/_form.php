@@ -154,10 +154,10 @@ foreach($this->tableSchema->columns as $column)
 ?>
 
 <input type="hidden" name= "YII_CSRF_TOKEN" value="<?php echo '<?php '; ?>echo Yii::app()->request->csrfToken;<?php echo ' ?>'; ?>"  />
-  <input type="hidden" name= "parent_id" value="<?php echo '<?php '; ?>echo $_POST['parent_id'];<?php echo ' ?>'; ?>"  />
+  <input type="hidden" name= "parentId" value="<?php echo '<?php '; ?>echo $_POST['parentId'];<?php echo ' ?>'; ?>"  />
 
   <?php echo '<?php '; ?> if (!$model->isNewRecord):<?php echo ' ?>'; ?>
-    <input type="hidden" name= "update_id" value=" <?php echo '<?php '; ?>echo $_POST['update_id'];<?php echo ' ?>'; ?>"  />
+    <input type="hidden" name= "updateId" value=" <?php echo '<?php '; ?>echo $_POST['updateId'];<?php echo ' ?>'; ?>"  />
      <?php echo '<?php '; ?>endif;<?php echo ' ?>'; ?>
       
     

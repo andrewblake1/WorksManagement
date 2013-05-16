@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "assembly_to_material_group".
+ * This is the model class for table "tbl_assembly_to_material_group".
  *
- * The followings are the available columns in table 'assembly_to_material_group':
+ * The followings are the available columns in table 'tbl_assembly_to_material_group':
  * @property integer $id
  * @property integer $assembly_id
  * @property integer $stage_id
@@ -17,10 +17,10 @@
  * @property string $selection_tooltip
  * @property string $comment
  * @property integer $deleted
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property Staff $staff
+ * @property User $updatedBy
  * @property Stage $stage
  * @property Assembly $assembly
  * @property MaterialGroup $store
@@ -48,8 +48,8 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('assembly_id, material_group_id, stage_id, store_id, quantity', 'required'),
-			array('assembly_id, material_group_id, stage_id, store_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, material_group_id, stage_id, standard_id, quantity', 'required'),
+			array('assembly_id, material_group_id, stage_id, standard_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('quantity_tooltip, selection_tooltip, comment', 'length', 'max'=>255),
 			array('select', 'safe'),
 			array('id, assembly_id, searchStage, searchMaterialGroupDescription, quantity, minimum, maximum, quantity_tooltip, selection_tooltip, select, comment', 'safe', 'on'=>'search'),
@@ -60,18 +60,18 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'stage' => array(self::BELONGS_TO, 'Stage', 'stage_id'),
-			'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
-			'store' => array(self::BELONGS_TO, 'MaterialGroup', 'store_id'),
-			'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
-			'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'assembly_to_material_group_id'),
-		);
-	}
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'stage' => array(self::BELONGS_TO, 'Stage', 'stage_id'),
+            'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
+            'store' => array(self::BELONGS_TO, 'MaterialGroup', 'store_id'),
+            'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
+            'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'assembly_to_material_group_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -174,7 +174,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	public function beforeValidate()
 	{
 		$assembly = Assembly::model()->findByPk($this->assembly_id);
-		$this->store_id = $assembly->store_id;
+		$this->standard_id = $assembly->standard_id;
 		
 		return parent::beforeValidate();
 	}

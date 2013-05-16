@@ -8,7 +8,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	'htmlOptions'=>Yii::app()->user->checkAccess('scheduler') ? array('readonly'=>'readonly') : array(),
 ));
 
-	StaffController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
+	UserController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
 
 $this->endWidget();
 

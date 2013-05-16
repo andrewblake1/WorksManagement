@@ -6,8 +6,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	$form->textFieldRow('last_name');
 	$form->textFieldRow('role');
 	$form->textFieldRow('email');
-	$form->textFieldRow('address_line1');
-	$form->textFieldRow('address_line2');
+	$form->textFieldRow('address_line_1');
+	$form->textFieldRow('address_line_2');
 	$form->textFieldRow('post_code');
 	$form->textFieldRow('town_city');
 	$form->textFieldRow('state_province');

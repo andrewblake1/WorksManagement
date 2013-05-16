@@ -320,7 +320,7 @@ $t = $model->attributes;
 					}
 					else
 					{
-						$keyValue = static::getUpdateId($firstTabModelName) !== NULL ? static::getUpdateId($firstTabModelName) : NULL;
+						$keyValue = static::getUpdate_id($firstTabModelName) !== NULL ? static::getUpdate_id($firstTabModelName) : NULL;
 					}
 
 					// if nextlevel is true then action should always be update, but also should be update if current model is this model
@@ -424,7 +424,7 @@ $t = $model->attributes;
 		$model = new $modelName('search');
 		$model->unsetAttributes();  // clear any default values
 		// clear the primary key set by update
-		static::setUpdateId(NULL, $modelName);
+		static::setUpdate_id(NULL, $modelName);
 
 		if(isset($_GET['ajax'])) {
 			$this->storeAdminSettings($adminViewModelName, $modelName);
@@ -555,8 +555,8 @@ $t2=$model->attributes;
 			if ($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = static::getParentCrumb($crumb))) {
 				if (static::getAdminParam($parentForeignKey, $modelName) !== NULL) {
 					$queryParamters[$parentForeignKey] = static::getAdminParam($parentForeignKey, $modelName);
-				} elseif (static::getUpdateId($parentCrumb)) {
-					$queryParamters[$parentForeignKey] = static::getUpdateId($parentCrumb);
+				} elseif (static::getUpdate_id($parentCrumb)) {
+					$queryParamters[$parentForeignKey] = static::getUpdate_id($parentCrumb);
 				}
 			}
 
@@ -572,7 +572,7 @@ $t2=$model->attributes;
 					// add crumb to admin view. NB using last query paramters to that admin view
 					$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
 					// add a crumb with just the primary key nice name but no href
-					$primaryKey = static::getUpdateId($crumb);
+					$primaryKey = static::getUpdate_id($crumb);
 					$breadcrumbs[] = $crumb::getNiceName($primaryKey);
 				} else {
 					$breadcrumbs[] = $displays;
@@ -584,9 +584,9 @@ $t2=$model->attributes;
 				$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
 
 				// if there is a primary key for this
-				if (static::getUpdateId($crumb) !== NULL) {
+				if (static::getUpdate_id($crumb) !== NULL) {
 					// add an update crumb to this primary key
-					$primaryKey = static::getUpdateId($crumb);
+					$primaryKey = static::getUpdate_id($crumb);
 					$breadcrumbs[$crumb::getNiceName($primaryKey)] = array("$crumb/"
 						. (static::checkAccess(self::accessWrite, $crumb) ? 'update' : 'view'),
 						$crumb::model()->tableSchema->primaryKey => $primaryKey,
@@ -661,7 +661,7 @@ $t2=$model->attributes;
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreate($modalId = 'myModal', &$model = null) {
+	public function actionCreate($modal_id = 'myModal', &$model = null) {
 		if ($model === null) {
 			$model = new $this->modelName;
 		}
@@ -700,7 +700,7 @@ $t = $model->attributes;
 					}
 					foreach ($models as $m) {
 						foreach ($m->getErrors() as $attribute => $errors) {
-							$result[$m->getHtmlId($attribute)] = $errors;
+							$result[$m->getHtml_id($attribute)] = $errors;
 						}
 					}
 					// return the json encoded data to the client
@@ -739,17 +739,17 @@ $t = $model->attributes;
 			$this->createRedirect($model);
 		}
 
-		$this->createRender($model, $models, $modalId);
+		$this->createRender($model, $models, $modal_id);
 	}
 
-	protected function createRender($model, $models, $modalId) {
+	protected function createRender($model, $models, $modal_id) {
 		// set tabs
 //		$this->tabs = $model;
 
 		$this->widget('CreateViewWidget', array(
 			'model' => $model,
 			'models' => $models,
-			'modalId' => $modalId,
+			'modal_id' => $modal_id,
 		));
 	}
 
@@ -767,7 +767,7 @@ $t = $model->attributes;
 		$models = array();
 
 		// add primary key into global so it can be retrieved for future use in breadcrumbs
-		static::setUpdateId($id, $modelName);
+		static::setUpdate_id($id, $modelName);
 
 		// ensure that where possible a pk has been passed from parent and get that fk name if possible
 		$parent_fk = $model->assertFromParent();
@@ -803,7 +803,7 @@ $t=			$model->attributes = $_POST[$modelName];
 					}
 					foreach ($models as $m) {
 						foreach ($m->getErrors() as $attribute => $errors) {
-							$result[$m->getHtmlId($attribute)] = $errors;
+							$result[$m->getHtml_id($attribute)] = $errors;
 						}
 					}
 					// return the json encoded data to the client
@@ -911,7 +911,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		$this->heading = $modelName::getNiceName($id);
 
 		// add primary key into global so it can be retrieved for future use in breadcrumbs
-		static::setUpdateId($id, $modelName);
+		static::setUpdate_id($id, $modelName);
 		$model->assertFromParent();
 //$t = Controller::$nav;		
 		// set breadcrumbs
@@ -1113,13 +1113,14 @@ $t=			$model->attributes = $_POST[$modelName];
 		}
 
 		// if we arent going to receive the pk as id at run time via Planning ajaxtree
-		if ($reportType == self::reportTypeHtml && (static::getUpdateId($context) !== NULL)) {
+		if ($reportType == self::reportTypeHtml && (static::getUpdate_id($context) !== NULL)) {
 			// set the primary key
-			$pk = static::getUpdateId($context);
+			$pk = static::getUpdate_id($context);
 		}
 
 		$criteria = new CDbCriteria;
-		// join
+
+		// with
 		$criteria->with = array(
 			'reportToAuthItems',
 		);
@@ -1131,7 +1132,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		foreach (Report::model()->findAll($criteria) as $report) {
 			// determine if this user has access
 			foreach ($report->reportToAuthItems as $reportToAuthItem) {
-				if (Yii::app()->user->checkAccess($reportToAuthItem->AuthItem_name)) {
+				if (Yii::app()->user->checkAccess($reportToAuthItem->auth_item_name)) {
 					$params['id'] = $report->id;
 					$params['context'] = $context;
 					if (!empty($pk)) {
@@ -1334,7 +1335,7 @@ $t=			$model->attributes = $_POST[$modelName];
 	}
 
 	// return last or specified level of update id
-	static function getUpdateId($modelName = NULL)
+	static function getUpdate_id($modelName = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 
@@ -1342,15 +1343,15 @@ $t=			$model->attributes = $_POST[$modelName];
 	}
 	
 	// return last or specified level of update id
-	static function setUpdateId($updateId, $modelName = NULL)
+	static function setUpdate_id($update_id, $modelName = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 
-		Controller::$nav['update'][$modelName] = $updateId;
+		Controller::$nav['update'][$modelName] = $update_id;
 	}
 
 /*	// return last or specified level of update id
-	static function getUpdateId($modelName = NULL, $level = NULL)
+	static function getUpdate_id($modelName = NULL, $level = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 
@@ -1365,7 +1366,7 @@ $t = Controller::$nav;
 	}
 	
 	// return last or specified level of update id
-	static function setUpdateId($updateId, $modelName = NULL, $level = NULL)
+	static function setUpdate_id($update_id, $modelName = NULL, $level = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 
@@ -1376,7 +1377,7 @@ $t = Controller::$nav;
 				: 0;
 		}
 
-		Controller::$nav['update'][$modelName][$level] = $updateId;
+		Controller::$nav['update'][$modelName][$level] = $update_id;
 	}
 	
 	// return last or specified level of admin params

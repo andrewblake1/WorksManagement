@@ -1,18 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "crew".
+ * This is the model class for table "tbl_crew".
  *
- * The followings are the available columns in table 'crew':
+ * The followings are the available columns in table 'tbl_crew':
  * @property string $id
  * @property string $level
  * @property string $day_id
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Planning $id0
  * @property CrewLevel $level0
- * @property Staff $staff
+ * @property User $updatedBy
  * @property Day $day
  * @property Task[] $tasks
  */
@@ -42,16 +42,16 @@ class Crew extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
-			'level0' => array(self::BELONGS_TO, 'CrewLevel', 'level'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'day' => array(self::BELONGS_TO, 'Day', 'day_id'),
-			'tasks' => array(self::HAS_MANY, 'Task', 'crew_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
+            'level0' => array(self::BELONGS_TO, 'CrewLevel', 'level'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'day' => array(self::BELONGS_TO, 'Day', 'day_id'),
+            'tasks' => array(self::HAS_MANY, 'Task', 'crew_id'),
+        );
+    }
 
 	public function attributeLabels()
 	{
@@ -91,7 +91,7 @@ class Crew extends ActiveRecord
 			$this->searchInCharge
 		);
 
-		// join
+		// with
 		$criteria->with = array(
 			'id0',
 			'id0.inCharge',
@@ -103,7 +103,7 @@ class Crew extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = $this->linkThisColumn('id');
-        $columns[] = static::linkColumn('searchInCharge', 'Staff', 'in_charge_id');
+        $columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
 		
 		return $columns;
 	}
@@ -140,7 +140,7 @@ class Crew extends ActiveRecord
 	}
 
 	public function beforeSave() {
-		// ensure that only scheduler is able to alter the in_charge
+		// ensure that only scheduler is able to alter the inCharge
 		if(!Yii::app()->user->checkAccess('scheduler'))
 		{
 			$this->in_charge_id = $this->getOldAttributeValue('in_charge_id');

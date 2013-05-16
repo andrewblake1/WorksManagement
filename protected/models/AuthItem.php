@@ -10,15 +10,16 @@
  * @property string $bizrule
  * @property string $data
  * @property integer $deleted
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property AuthAssignment[] $authAssignments
- * @property Staff $staff
- * @property AuthItemChild[] $authItemchildren
- * @property AuthItemChild[] $authItemchildren1
- * @property ProjectTypeToAuthItem[] $projectTypeToAuthItems
- * @property ReportToAuthItem[] $reportToAuthItems
+ * @property TblUser $updatedBy
+ * @property AuthItemChild[] $authItemChildren
+ * @property AuthItemChild[] $authItemChildren1
+ * @property TblProjectTemplateToAuthItem[] $tblProjectTemplateToAuthItems
+ * @property TblReport[] $tblReports
+ * @property TblReportToAuthItem[] $tblReportToAuthItems
  */
 class AuthItem extends ActiveRecord
 {
@@ -33,6 +34,14 @@ class AuthItem extends ActiveRecord
 	 */
 	static $niceName = 'Role';
 	
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return get_class($this);
+	}
+	
 	public function scopes()
     {
 		return array(
@@ -41,14 +50,6 @@ class AuthItem extends ActiveRecord
 			'tasks'=>array('condition'=>'t.type=' . self::typeTask),
 		);
     }
-
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'AuthItem';
-	}
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -71,18 +72,19 @@ class AuthItem extends ActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'authAssignments' => array(self::HAS_MANY, 'AuthAssignment', 'itemname'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'authItemchildren' => array(self::HAS_MANY, 'AuthItemChild', 'child'),
-			'authItemchildren1' => array(self::HAS_MANY, 'AuthItemChild', 'parent'),
-			'projectTypeToAuthItems' => array(self::HAS_MANY, 'ProjectTypeToAuthItem', 'AuthItem_name'),
-			'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'AuthItem_name'),
-		);
-	}
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'authAssignments' => array(self::HAS_MANY, 'AuthAssignment', 'itemname'),
+            'updatedBy' => array(self::BELONGS_TO, 'TblUser', 'updated_by'),
+            'authItemChildren' => array(self::HAS_MANY, 'AuthItemChild', 'parent'),
+            'authItemChildren1' => array(self::HAS_MANY, 'AuthItemChild', 'child'),
+            'tblProjectTemplateToAuthItems' => array(self::HAS_MANY, 'TblProjectTemplateToAuthItem', 'auth_item_name'),
+            'tblReports' => array(self::HAS_MANY, 'TblReport', 'context'),
+            'tblReportToAuthItems' => array(self::HAS_MANY, 'TblReportToAuthItem', 'auth_item_name'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)

@@ -69,7 +69,7 @@ class PlanningController extends CategoryController
 		}
 	}
 	
-	public function actionCreate($modalId = 'myModal')
+	public function actionCreate($modal_id = 'myModal')
 	{
 		// can't create a planning, must create a project, or day or crew or task
 		throw new CHttpException(403,'Invalid request.');

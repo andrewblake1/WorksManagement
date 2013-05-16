@@ -1,18 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "task_to_purchase_order".
+ * This is the model class for table "tbl_task_to_purchase_order".
  *
- * The followings are the available columns in table 'task_to_purchase_order':
+ * The followings are the available columns in table 'tbl_task_to_purchase_order':
  * @property string $id
  * @property string $task_id
  * @property string $purchase_order_id
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Task $task
  * @property PurchaseOrder $purchaseOrder
- * @property Staff $staff
+ * @property User $updatedBy
  */
 class TaskToPurchaseOrder extends ActiveRecord
 {
@@ -48,14 +48,15 @@ class TaskToPurchaseOrder extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-			'purchaseOrder' => array(self::BELONGS_TO, 'PurchaseOrder', 'purchase_order_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
+            'purchaseOrder' => array(self::BELONGS_TO, 'PurchaseOrder', 'purchase_order_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+        );
+    }
+
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -98,7 +99,7 @@ class TaskToPurchaseOrder extends ActiveRecord
 		);
 		$criteria->compare('t.task_id',$this->task_id);
 		
-		// join
+		// with
 		$criteria->with = array(
 			'purchaseOrder',
 			'purchaseOrder.supplier',

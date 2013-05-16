@@ -164,11 +164,11 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 
 
    //Figure out if we are updating a Model or creating a new one.
-  if(isset($_POST['update_id']))$model= $this->loadModel($_POST['update_id']);else $model=new <?php echo $this->modelClass; ?>;
+  if(isset($_POST['updateId']))$model= $this->loadModel($_POST['updateId']);else $model=new <?php echo $this->modelClass; ?>;
 
 
         $this->renderPartial('_form', array('model'=>$model,
-                                                             'parent_id'=>!empty($_POST['parent_id'])?$_POST['parent_id']:''
+                                                             'parentId'=>!empty($_POST['parentId'])?$_POST['parentId']:''
                                                                    ),
                                                                   false, true);
 
@@ -232,7 +232,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
                        $model=new <?php echo $this->modelClass; ?>;
                       //set the submitted values
                         $model->attributes=$_POST['<?php echo $this->modelClass; ?>'];
-                       $parent=$this->loadModel($_POST['parent_id']);
+                       $parent=$this->loadModel($_POST['parentId']);
                        //return the JSON result to provide feedback.
 			if($model->appendTo($parent)){
                                 echo json_encode(array('success'=>true,
@@ -257,7 +257,7 @@ public function actionUpdate(){
 		if(isset($_POST['<?php echo $this->modelClass; ?>']))
 		{
 
-                        $model=$this->loadModel($_POST['update_id']);
+                        $model=$this->loadModel($_POST['updateId']);
 			$model->attributes=$_POST['<?php echo $this->modelClass; ?>'];
 
 			if( $model->saveNode(false)){
@@ -270,31 +270,31 @@ public function actionUpdate(){
 
 public function actionMoveCopy(){
 
-    $moved_node_id=$_POST['moved_node'];
-    $new_parent_id=$_POST['new_parent'];
-    $new_parent_root_id=$_POST['new_parent_root'];
-    $previous_node_id=$_POST['previous_node'];
-    $next_node_id=$_POST['next_node'];
+    $moved_nodeId=$_POST['moved_node'];
+    $new_parentId=$_POST['new_parent'];
+    $new_parent_rootId=$_POST['new_parent_root'];
+    $previous_nodeId=$_POST['previous_node'];
+    $next_nodeId=$_POST['next_node'];
     $copy=$_POST['copy'];
 
     //the following is additional info about the operation provided by
     // the jstree.It's there if you need it.See documentation for jstree.
 
-   //  $old_parent_id=$_POST['old_parent'];
+   //  $old_parentId=$_POST['old_parent'];
    //$pos=$_POST['pos'];
-   //  $copied_node_id=$_POST['copied_node'];
-   //  $replaced_node_id=$_POST['replaced_node'];
+   //  $copied_nodeId=$_POST['copied_node'];
+   //  $replaced_nodeId=$_POST['replaced_node'];
 
    //the  moved,copied  node
-    $moved_node=$this->loadModel($moved_node_id);
+    $moved_node=$this->loadModel($moved_nodeId);
 
   //if we are not moving as a new root...
-  if ($new_parent_root_id!='root') {
+  if ($new_parent_rootId!='root') {
   //the new parent node
-   $new_parent=$this->loadModel($new_parent_id);
+   $new_parent=$this->loadModel($new_parentId);
   //the previous sibling node (after the move).
-     if($previous_node_id!='false')
-       $previous_node=$this->loadModel($previous_node_id);
+     if($previous_nodeId!='false')
+       $previous_node=$this->loadModel($previous_nodeId);
 
 
 //if we move
@@ -302,7 +302,7 @@ if ($copy == 'false'){
 
 
     //if the moved node is only child of new parent node
-    if ($previous_node_id=='false'&&  $next_node_id=='false')
+    if ($previous_nodeId=='false'&&  $next_nodeId=='false')
     {
 
          if ($moved_node->moveAsFirst($new_parent)){
@@ -312,7 +312,7 @@ if ($copy == 'false'){
     }
 
     //if we moved it in the first position
-    else if($previous_node_id=='false' &&  $next_node_id !='false')
+    else if($previous_nodeId=='false' &&  $next_nodeId !='false')
     {
 
              if($moved_node->moveAsFirst($new_parent)){
@@ -321,7 +321,7 @@ if ($copy == 'false'){
              }
     }
  //if we moved it in the last position
-     else if($previous_node_id !='false' &&  $next_node_id == 'false')
+     else if($previous_nodeId !='false' &&  $next_nodeId == 'false')
      {
 
              if($moved_node->moveAsLast($new_parent)){
@@ -330,7 +330,7 @@ if ($copy == 'false'){
              }
      }
       //if the moved node is somewhere in the middle
-     else if($previous_node_id !='false' &&  $next_node_id != 'false')
+     else if($previous_nodeId !='false' &&  $next_nodeId != 'false')
      {
 
              if($moved_node->moveAfter($previous_node)){

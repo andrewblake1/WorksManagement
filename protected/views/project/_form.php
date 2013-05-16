@@ -12,13 +12,13 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	// only allow setting or update of in_charge_id if user has InCharge priveledge
 	if(Yii::app()->user->checkAccess('scheduler'))
 	{
-		StaffController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
+		UserController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
 	}
 
 	// if creating
 	if($model->isNewRecord)
 	{
-		ProjectTypeController::listWidgetRow($model, $form, 'project_type_id',
+		ProjectTemplateController::listWidgetRow($model, $form, 'project_template_id',
 			array(
 				'empty'=>'Please select',
 				'ajax' => array(
@@ -27,7 +27,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 					'success'=>"function(data) {
 						if(data)
 						{
-							$('#generics').replaceWith(data);
+							$('#customValues').replaceWith(data);
 						}
 					}",
 				)
@@ -37,7 +37,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	}
 	else
 	{
-		$form->hiddenField('project_type_id');
+		$form->hiddenField('project_template_id');
 	}
 
 	$form->textFieldRow('travel_time_1_way');
@@ -46,15 +46,15 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->textFieldRow('planned');
 	
-	// generics
-	$this->widget('GenericWidgets',array(
+	// customValues
+	$this->widget('CustomFieldWidgets',array(
 		'model'=>$model,
 		'form'=>$form,
-		'relation_modelToGenericModelType'=>'projectToGenericProjectType',
-		'relation_modelToGenericModelTypes'=>'projectToGenericProjectTypes',
-		'relation_genericModelType'=>'genericProjectType',
-		'relation_category'=>'genericprojectcategory',
-		'categoryModelName'=>'Genericprojectcategory',
+		'relationModelToCustomFieldModelType'=>'projectToCustomFieldToProjectTemplate',
+		'relationModelToCustomFieldModelTypes'=>'projectToCustomFieldToProjectTemplates',
+		'relationCustomFieldModelType'=>'customFieldToProjectTemplate',
+		'relation_category'=>'customFieldProjectCategory',
+		'categoryModelName'=>'CustomFieldProjectCategory',
 	));
 
 $this->endWidget();

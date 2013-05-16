@@ -1,29 +1,29 @@
 <?php
 
 /**
- * This is the model class for table "supplier_to_supplier_contact".
+ * This is the model class for table "tbl_supplier_to_supplier_contact".
  *
- * The followings are the available columns in table 'supplier_to_supplier_contact':
+ * The followings are the available columns in table 'tbl_supplier_to_supplier_contact':
  * @property integer $id
  * @property integer $supplier_id
  * @property integer $supplier_contact_id
- * @property integer $staff_id
+ * @property integer $deleted
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property Supplier $supplier
  * @property SupplierContact $supplierContact
- * @property Supplier $supplier
- * @property Staff $staff
- * @property Supplier $supplier
+ * @property User $updatedBy
  */
 class SupplierToSupplierContact extends ActiveRecord
 {
-	public $searchFirst_name;
-	public $searchLast_name;
+	public $searchFirstName;
+	public $searchLastName;
 	public $searchEmail;
-	public $searchPhone_mobile;
-	public $searchPhone_home;
-	public $searchPhone_work;
-	public $searchPhone_fax;
+	public $searchPhoneMobile;
+	public $searchPhoneHome;
+	public $searchPhoneWork;
+	public $searchPhoneFax;
 
 	/**
 	 * @var string nice model name for use in output
@@ -41,7 +41,7 @@ class SupplierToSupplierContact extends ActiveRecord
 			array('supplier_id, supplier_contact_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchFirst_name, searchLast_name, searchEmail, searchPhone_mobile, searchPhone_home, searchPhone_work, searchPhone_fax, supplier_id, supplier_contact_id', 'safe', 'on'=>'search'),
+			array('id, searchFirstName, searchLastName, searchEmail, searchPhoneMobile, searchPhoneHome, searchPhoneWork, searchPhoneFax, supplier_id, supplier_contact_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -50,14 +50,14 @@ class SupplierToSupplierContact extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'supplierContact' => array(self::BELONGS_TO, 'SupplierContact', 'supplier_contact_id'),
-			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
+            'supplierContact' => array(self::BELONGS_TO, 'SupplierContact', 'supplier_contact_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -67,13 +67,13 @@ class SupplierToSupplierContact extends ActiveRecord
 		return parent::attributeLabels(array(
 			'supplier_id' => 'Supplier',
 			'supplier_contact_id' => 'Contact',
-			'searchFirst_name' => 'First name',
-			'searchLast_name' => 'Last name',
+			'searchFirstName' => 'First name',
+			'searchLastName' => 'Last name',
 			'searchEmail' => 'Email',
-			'searchPhone_mobile' => 'Phone mobile',
-			'searchPhone_home' => 'Phone home',
-			'searchPhone_work' => 'Phone work',
-			'searchPhone_fax' => 'Phone fax',
+			'searchPhoneMobile' => 'Phone mobile',
+			'searchPhoneHome' => 'Phone home',
+			'searchPhoneWork' => 'Phone work',
+			'searchPhoneFax' => 'Phone fax',
 		));
 	}
 
@@ -89,25 +89,25 @@ class SupplierToSupplierContact extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			'supplier_contact_id',
-			'supplierContact.first_name as searchFirst_name',
-			'supplierContact.last_name as searchLast_name',
+			'supplierContact.first_name as searchFirstName',
+			'supplierContact.last_name as searchLastName',
 			'supplierContact.email as searchEmail',
-			'supplierContact.phone_mobile as searchPhone_mobile',
-			'supplierContact.phone_home as searchPhone_home',
-			'supplierContact.phone_work as searchPhone_work',
-			'supplierContact.phone_fax as searchPhone_fax',
+			'supplierContact.phone_mobile as searchPhoneMobile',
+			'supplierContact.phone_home as searchPhoneHome',
+			'supplierContact.phone_work as searchPhoneWork',
+			'supplierContact.phone_fax as searchPhoneFax',
 		);
 
 		$criteria->compare('supplier_id',$this->supplier_id);
-		$criteria->compare('supplierContact.first_name',$this->searchFirst_name,true);
-		$criteria->compare('supplierContact.last_name',$this->searchLast_name,true);
+		$criteria->compare('supplierContact.first_name',$this->searchFirstName,true);
+		$criteria->compare('supplierContact.last_name',$this->searchLastName,true);
 		$criteria->compare('supplierContact.email',$this->searchEmail,true);
-		$criteria->compare('supplierContact.phone_mobile',$this->searchPhone_mobile,true);
-		$criteria->compare('supplierContact.phone_home',$this->searchPhone_home,true);
-		$criteria->compare('supplierContact.phone_work',$this->searchPhone_work,true);
-		$criteria->compare('supplierContact.phone_fax',$this->searchPhone_fax,true);
+		$criteria->compare('supplierContact.phone_mobile',$this->searchPhoneMobile,true);
+		$criteria->compare('supplierContact.phone_home',$this->searchPhoneHome,true);
+		$criteria->compare('supplierContact.phone_work',$this->searchPhoneWork,true);
+		$criteria->compare('supplierContact.phone_fax',$this->searchPhoneFax,true);
 
-		// join
+		// with
 		$criteria->with = array(
 			'supplierContact',
 		);
@@ -117,24 +117,24 @@ class SupplierToSupplierContact extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[]=$this->linkThisColumn('searchFirst_name');
-		$columns[]=$this->linkThisColumn('searchLast_name');
+		$columns[]=$this->linkThisColumn('searchFirstName');
+		$columns[]=$this->linkThisColumn('searchLastName');
         $columns[] = array(
-			'name'=>'searchPhone_mobile',
-			'value'=>'CHtml::link($data->searchPhone_mobile, "tel:".$data->searchPhone_mobile)',
+			'name'=>'searchPhoneMobile',
+			'value'=>'CHtml::link($data->searchPhoneMobile, "tel:".$data->searchPhoneMobile)',
 			'type'=>'raw',
 		);
         $columns[] = array(
-			'name'=>'searchPhone_home',
-			'value'=>'CHtml::link($data->searchPhone_home, "tel:".$data->searchPhone_home)',
+			'name'=>'searchPhoneHome',
+			'value'=>'CHtml::link($data->searchPhoneHome, "tel:".$data->searchPhoneHome)',
 			'type'=>'raw',
 		);
         $columns[] = array(
-			'name'=>'searchPhone_work',
-			'value'=>'CHtml::link($data->searchPhone_work, "tel:".$data->searchPhone_work)',
+			'name'=>'searchPhoneWork',
+			'value'=>'CHtml::link($data->searchPhoneWork, "tel:".$data->searchPhoneWork)',
 			'type'=>'raw',
 		);
-		$columns[]='searchPhone_fax';
+		$columns[]='searchPhoneFax';
         $columns[] = array(
 			'name'=>'searchEmail',
 			'value'=>'$data->searchEmail',
@@ -172,13 +172,13 @@ class SupplierToSupplierContact extends ActiveRecord
 	public function getSearchSort()
 	{
 		return array(
-			'searchFirst_name',
-			'searchLast_name',
+			'searchFirstName',
+			'searchLastName',
 			'searchEmail',
-			'searchPhone_mobile',
-			'searchPhone_home',
-			'searchPhone_work',
-			'searchPhone_fax',
+			'searchPhoneMobile',
+			'searchPhoneHome',
+			'searchPhoneWork',
+			'searchPhoneFax',
 		);
 	}
 

@@ -7,12 +7,12 @@
  * @property integer $id
  * @property string $parent
  * @property string $child
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property Staff $staff
- * @property AuthItem $child0
  * @property AuthItem $parent0
+ * @property AuthItem $child0
+ * @property TblUser $updatedBy
  */
 class AuthItemChild extends ActiveRecord
 {
@@ -26,9 +26,9 @@ class AuthItemChild extends ActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'AuthItemChild';
+		return get_class($this);
 	}
-
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -49,15 +49,15 @@ class AuthItemChild extends ActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'child0' => array(self::BELONGS_TO, 'AuthItem', 'child'),
-			'parent0' => array(self::BELONGS_TO, 'AuthItem', 'parent'),
-		);
-	}
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'parent0' => array(self::BELONGS_TO, 'AuthItem', 'parent'),
+            'child0' => array(self::BELONGS_TO, 'AuthItem', 'child'),
+            'updatedBy' => array(self::BELONGS_TO, 'TblUser', 'updated_by'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)

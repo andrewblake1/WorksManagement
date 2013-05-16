@@ -1,16 +1,16 @@
 <?php
 
 /**
- * This is the model class for table "supplier_contact".
+ * This is the model class for table "tbl_supplier_contact".
  *
- * The followings are the available columns in table 'supplier_contact':
+ * The followings are the available columns in table 'tbl_supplier_contact':
  * @property integer $id
  * @property string $first_name
  * @property string $last_name
  * @property string $role
  * @property string $email
- * @property string $address_line1
- * @property string $address_line2
+ * @property string $address_line_1
+ * @property string $address_line_2
  * @property string $post_code
  * @property string $town_city
  * @property string $state_province
@@ -20,12 +20,11 @@
  * @property string $phone_work
  * @property string $phone_fax
  * @property integer $deleted
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property Staff $staff
- * @property Supplier $supplier
- * @property ProjectToSupplierContact[] $projectToSupplierContacts
+ * @property User $updatedBy
+ * @property SupplierToSupplierContact[] $supplierToSupplierContacts
  */
 class SupplierContact extends ActiveRecord
 {
@@ -45,11 +44,11 @@ class SupplierContact extends ActiveRecord
 		return array(
 			array('first_name, last_name, email', 'required'),
 			array('first_name, last_name, role, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
-			array('email, address_line1, address_line2', 'length', 'max'=>255),
+			array('email, address_line_1, address_line_2', 'length', 'max'=>255),
 			array('post_code', 'length', 'max'=>16),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, first_name, last_name, role, email, address_line1, address_line2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'safe', 'on'=>'search'),
+			array('id, first_name, last_name, role, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,13 +57,13 @@ class SupplierContact extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'projectToSupplierContacts' => array(self::HAS_MANY, 'ProjectToSupplierContact', 'supplier_contact_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'supplierToSupplierContacts' => array(self::HAS_MANY, 'SupplierToSupplierContact', 'supplier_contact_id'),
+        );
+    }
 
 	/**
 	 * @return DbCriteria the search/filter conditions.

@@ -1,28 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "task_to_material".
+ * This is the model class for table "tbl_task_to_material".
  *
- * The followings are the available columns in table 'task_to_material':
+ * The followings are the available columns in table 'tbl_task_to_material':
  * @property string $id
  * @property integer $quantity
  * @property string $task_id
  * @property integer $material_id
  * @property string $task_to_assembly_id
- * @property integer $staff_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Task $task
  * @property TaskToAssembly $taskToAssembly
- * @property Staff $staff
+ * @property User $updatedBy
  * @property Material $material
  * @property TaskToMaterialToAssemblyToMaterial[] $taskToMaterialToAssemblyToMaterials
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
- * @property TaskToMaterialToTaskTypeToMaterialGroup[] $taskToMaterialToTaskTypeToMaterialGroups
+ * @property TaskToMaterialToTaskTemplateToMaterialGroup[] $taskToMaterialToTaskTemplateToMaterialGroups
  */
 class TaskToMaterial extends ActiveRecord
 {
-	public $store_id;
+	public $standard_id;
 
 	/**
 	 * @var string nice model name for use in output
@@ -37,8 +37,8 @@ class TaskToMaterial extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return $this->customValidators + array(
-			array('store_id, material_id, task_id, quantity', 'required'),
-			array('store_id, material_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('standard_id, material_id, task_id', 'required'),
+			array('standard_id, material_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('task_id, task_to_assembly_id', 'length', 'max'=>10),
 		);
 	}
@@ -57,18 +57,18 @@ class TaskToMaterial extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-			'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
-			'staff' => array(self::BELONGS_TO, 'Staff', 'staff_id'),
-			'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
-			'taskToMaterialToAssemblyToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterial', 'task_to_material_id'),
-			'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'task_to_material_id'),
-			'taskToMaterialToTaskTypeToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTypeToMaterialGroup', 'task_to_material_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
+            'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
+            'taskToMaterialToAssemblyToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterial', 'task_to_material_id'),
+            'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'task_to_material_id'),
+            'taskToMaterialToTaskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTemplateToMaterialGroup', 'task_to_material_id'),
+        );
+    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -102,7 +102,7 @@ class TaskToMaterial extends ActiveRecord
 	}
 
 	public function afterFind() {
-		$this->store_id = $this->material->store_id;
+		$this->standard_id = $this->material->standard_id;
 		
 		return parent::afterFind();
 	}
