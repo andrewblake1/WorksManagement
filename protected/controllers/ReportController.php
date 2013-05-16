@@ -94,10 +94,13 @@ class ReportController extends Controller
 		$subReportDescription = $matches[1];
 
 		// get the sub report model
-		$subReportModel = SubReport::model()->findByAttributes(array(
+		if(!$subReportModel = SubReport::model()->findByAttributes(array(
 			'report_id'=>self::$_model->id,
 			'description'=>$subReportDescription,
-			));
+		)))
+		{
+			throw new CHttpException(403, "System admin error. Sub report '$subReportDescription' does not exist.");
+		}
 
 		// the sql
 		$sql = $subReportModel->select;
@@ -127,7 +130,7 @@ class ReportController extends Controller
 			// otherwise error
 			else
 			{
-				throw new CHttpException(403,'System admin error. The report isn\'t valid - primary key (:pk) in report but not in this context. ');
+				throw new CHttpException(403,'System admin error. The report isn\'t valid - primary key (:pk) in report but not in this context.');
 			}
 		}
 
@@ -155,25 +158,11 @@ class ReportController extends Controller
 			// get any link columns which have :link appended to column name
 			foreach(array_keys($command->queryRow()) as $attribute)
 			{
-				if(!isset($options['keyField']))
-				{
-					// set key field as first field - needs a key field otherwise default to id and if not there errors
-					$options['keyField'] = $attribute;
-				}
-
 				$exploded = explode(':', $attribute);
-				if(sizeof($exploded) >= 2)
+				if(sizeof($exploded) > 1)
 				{
 					$name = $exploded[0];
 					$type = $exploded[1];
-/*					if(!empty($exploded[2]))
-					{
-						$label = $exploded[2];
-					}
-					else
-					{
-						$label = $name;
-					}*/
 					// set attribute
 					$attributes[$name] = array(
 						'name'=>$name,
@@ -186,8 +175,14 @@ class ReportController extends Controller
 				}
 				else
 				{
-					$attributes[$attribute] = $attribute;
+					$name = $attributes[$attribute] = $attribute;
 					$options['sort']['attributes'][] = $attribute;
+				}
+				
+				if(!isset($options['keyField']))
+				{
+					// set key field as first field - needs a key field otherwise default to id and if not there errors
+					$options['keyField'] = $name;
 				}
 			}
 
