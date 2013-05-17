@@ -53,7 +53,7 @@ class AuthAssignment extends ActiveRecord
 			JOIN tbl_project project
 			USING ( project_template_id )
 			LEFT JOIN tbl_project_to_project_template_to_auth_item projectToProjectTemplateToAuthItem ON projectToProjectTemplateToAuthItem.project_id = project.id
-			AND projectToProjectTemplateToAuthItem.itemname = projectTemplateToAuthItem.auth_item_name';
+			AND projectToProjectTemplateToAuthItem.item_name = projectTemplateToAuthItem.auth_item_name';
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		
