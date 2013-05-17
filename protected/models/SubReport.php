@@ -59,7 +59,7 @@ class SubReport extends ActiveRecord
 			array('description', 'length', 'max'=>255),
 			array('report_id', 'length', 'max'=>10),
 			array('format', 'length', 'max'=>9),
-			array('select', 'validationReport'),
+			array('select', 'validationSQL'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, description, select, report_id, format', 'safe', 'on'=>'search'),
@@ -122,28 +122,6 @@ class SubReport extends ActiveRecord
 		$columns[] = 'select';
 		
 		return $columns;
-	}
-
-	public function validationReport($attribute, $params)
-	{
-//TODO: open another database connection as this user whenever entering user entered sql.
-//otherwise they can run their sql with full application access rights
-
-		// first fake valid substitutions
-		$sql = str_ireplace(':pk', '1', $this->$attribute);
-		$sql = str_ireplace(':userid', '1', $sql);
-
-		// test if sql is valid
-		try
-		{
-			// test validity of sql
-			Yii::app()->db->createCommand($sql)->queryAll();
-		}
-		catch(Exception $e)
-		{
-			$errorMessage = 'There is an error in the setup - please contact the system administrator, the database says:<br> '.$e->getMessage();
-			$this->addError($attribute, $errorMessage);
-		}
 	}
 
 }

@@ -30,8 +30,7 @@ class DefaultValue extends ActiveRecord
 		return array(
 			array('table, column, select', 'required'),
 			array('table, column', 'length', 'max'=>64),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
+			array('select', 'validationSQL'),
 			array('id, table, column, select', 'safe', 'on'=>'search'),
 		);
 	}
@@ -97,15 +96,5 @@ class DefaultValue extends ActiveRecord
 			'column',
 			);
 	}
-	
-/*	public function scopeTable($table)
-	{
-		$criteria=new DbCriteria;
-		$criteria->compare('table', $table);
-
-		$this->getDbCriteria()->mergeWith($criteria);
-		
-		return $this;
-	}*/
 
 }

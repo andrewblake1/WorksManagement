@@ -958,6 +958,28 @@ if(count($m = $this->getErrors()))
 		return $saved;
 	}
 
+	public function validationSQL($attribute, $params)
+	{
+//TODO: open another database connection as this user whenever entering user entered sql.
+//otherwise they can run their sql with full application access rights
+
+		// first fake valid substitutions
+		$sql = str_ireplace(':pk', '1', $this->$attribute);
+		$sql = str_ireplace(':userid', '1', $sql);
+
+		// test if sql is valid
+		try
+		{
+			// test validity of sql
+			Yii::app()->db->createCommand($sql)->queryAll();
+		}
+		catch(Exception $e)
+		{
+			$errorMessage = 'There is an error in the setup - please contact the system administrator, the database says:<br> '.$e->getMessage();
+			$this->addError($attribute, $errorMessage);
+		}
+	}
+
 }
 
 ?>
