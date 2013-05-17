@@ -207,7 +207,7 @@ class WMTbActiveForm extends TbActiveForm
 	
 	public function dropDownListRow($attribute, $data = array(), $htmlOptions = array(), $model = NULL)
 	{
-		$model ? $model : $this->model;
+		$model = $model ? $model : $this->model;
 
 		// if only 1 item in list
 		if(sizeof($data) == 1)
@@ -219,7 +219,7 @@ class WMTbActiveForm extends TbActiveForm
 				$model->$attribute = key($data);
 				
 				// create list box
-				echo parent::dropDownListRow($model ? $model : $this->model, $attribute,
+				echo parent::dropDownListRow($model, $attribute,
 					$data, array('class'=>'span5') + $htmlOptions);
 				
 				// add a dummy field as the list will be removed on doc load
