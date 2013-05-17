@@ -119,6 +119,14 @@ class WMTbActiveForm extends TbActiveForm
 
 		// display any validation errors
 		echo $this->errorSummary($this->models ? $this->models : $this->model);
+
+		// use event bubbling to remove Please select blank value item after selections made on any select boxes within this form
+		Yii::app()->clientScript->registerScript('dropDownListRow', "
+			$('#{$this->id}').change(function(event){
+				$('[value=\"\"]', event.target).remove();
+			});
+			", CClientScript::POS_READY
+		);
 		
 		parent::init();
 	}
@@ -199,37 +207,47 @@ class WMTbActiveForm extends TbActiveForm
 	
 	public function dropDownListRow($attribute, $data = array(), $htmlOptions = array(), $model = NULL)
 	{
-/*		// if only 1 item in list
+		$model ? $model : $this->model;
+
+		// if only 1 item in list
 		if(sizeof($data) == 1)
 		{
 			// then no selection to be made so make it for the user - provided something has a value to exclude empty valued please selects
 			if(current($data) !== NULL)
 			{
-				$model->$attribute = current($data);
+				// set val
+				$model->$attribute = key($data);
+				
+				// create list box
 				echo parent::dropDownListRow($model ? $model : $this->model, $attribute,
 					$data, array('class'=>'span5') + $htmlOptions);
-				$this->textFieldRow($attribute, $htmlOptions + array('readonly'=>'readonly'), $model);
-				// one potential issue here is that the element may have an ajax event attached
+				
+				// add a dummy field as the list will be removed on doc load
+				echo CHtml::textField(NULL, current($data), array('class'=>'span5') + $htmlOptions + array('disabled'=>'disabled'));
+				
+				// one potential issue here is that the element may have an ajax event attached to change handler
 				if(isset($htmlOptions['ajax']))
 				{
-					$ajaxObject = CJavaScript::encode($htmlOptions['ajax']);
-					// run the ajax request when document ready
+					// trigger the change handler on document load
 					$id = CHtml::activeId($model, $attribute);
 					Yii::app()->clientScript->registerScript('dropDownListRow', "
-						$.fn.ajax($ajaxObject);
+						// trigger the change handler
+						$('#$id').trigger('change');
+						// hide the select
+						$('#$id').hide();
 						", CClientScript::POS_READY
 					);
 				}
 			}
 		}
-		elseif(sizeof($data) > 1)*/
+		// otherwise of multiple options or attribute required (need to show the empty list so admin can see why failing)
+		elseif(sizeof($data) > 1 || $model->isAttributeRequired($attribute))
 		{
-			echo parent::dropDownListRow($model ? $model : $this->model, $attribute,
+			echo parent::dropDownListRow($model, $attribute,
 				$data, array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
 		}
-//		see if optional
 	}
-	
+
 	public function textFieldRow($attribute, $htmlOptions = array(), $model = NULL)
 	{
 		$model = $model ? $model : $this->model;

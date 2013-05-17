@@ -27,12 +27,22 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 					'success'=>"function(data) {
 						if(data)
 						{
-							$('#customValues').replaceWith(data);
+							$('#customValues').hide('slow', function() {
+								$('#customValues').replaceWith(data);
+								$('#customValues').hide('slow', function() {
+									$('#customValues').show('slow');
+								});
+							});
 						}
-						/* clean it out */
+						// clean it out
 						else
 						{
-							$('#customValues').html('');
+							$('#customValues').hide('slow', function() {
+								$('#customValues').html('');
+								$('#customValues').hide('slow', function() {
+									$('#customValues').show('slow');
+								});
+							});
 						}
 					}",
 				)

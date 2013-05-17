@@ -1225,7 +1225,7 @@ $t=			$model->attributes = $_POST[$modelName];
 
 		$dependantOnControllerName::listWidgetRow($model, $form, $dependantOnAttribute,
 			array(
-				'empty'=>'Please select',
+//				'empty'=>'Please select',
 				'ajax' => array(
 					'type'=>'POST',
 					'url'=>Yii::app()->createUrl("$listModelName/DependantList", array('fkField'=>$fkField, 'dependantOnModelName'=>$dependantOnModelName, 'dependantOnAttribute'=>$dependantOnAttribute)),
