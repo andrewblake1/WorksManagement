@@ -32,7 +32,7 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 	 */
 	static $niceName = 'Role';
 
-	protected $defaultSort = array('t.itemname');
+	protected $defaultSort = array('t.item_name');
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -42,13 +42,13 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('project_id, project_template_to_auth_item_id, auth_assignment_id, itemname', 'required'),
+			array('project_id, project_template_to_auth_item_id, auth_assignment_id, item_name', 'required'),
 			array('project_template_to_auth_item_id, auth_assignment_id', 'numerical', 'integerOnly'=>true),
 			array('project_id', 'length', 'max'=>10),
-			array('itemname', 'length', 'max'=>64),
+			array('item_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('searchProject, searchProjectTemplateToAuthItem, searchAuthAssignment, id, project_id, project_template_to_auth_item_id, auth_assignment_id, itemname', 'safe', 'on'=>'search'),
+			array('searchProject, searchProjectTemplateToAuthItem, searchAuthAssignment, id, project_id, project_template_to_auth_item_id, auth_assignment_id, item_name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -80,7 +80,7 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 			'searchProjectTemplateToAuthItem' => 'Project type',
 			'auth_assignment_id' => 'First/Last/Email',
 			'searchAuthAssignment' => 'First/Last/Email',
-			'itemname' => 'Role',
+			'item_name' => 'Role',
 		));
 	}
 
@@ -101,7 +101,7 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 				user.last_name,
 				user.email
 				) AS searchAuthAssignment",
-			't.itemname',
+			't.item_name',
 		);
 		
 		// where
@@ -114,7 +114,7 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 			),
 			$this->searchAuthAssignment
 		);
-		$criteria->compare('itemname',$this->itemname,true);
+		$criteria->compare('item_name',$this->item_name,true);
 		$criteria->compare('t.project_id',$this->project_id);
 		
 		// with
@@ -127,7 +127,7 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('itemname');
+		$columns[] = $this->linkThisColumn('item_name');
         $columns[] = static::linkColumn('searchAuthAssignment', 'AuthAssignment', 'auth_assignment_id');
 		
 		return $columns;
@@ -149,12 +149,12 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 		{
 			// set the remaining required fields
 			$modelAuthAssignment = AuthAssignment::model()->findByPk($this->auth_assignment_id);
-			$this->itemname = $modelAuthAssignment->itemname;
+			$this->item_name = $modelAuthAssignment->item_name;
 			$modelProject = Project::model()->findByPk($this->project_id);
 			$modelProject->attributes;
 			$modelProjectTemplateToAuthItem = ProjectTemplateToAuthItem::model()->findByAttributes(array(
 				'project_template_id'=>$modelProject->project_template_id, 
-				'auth_item_name'=>$this->itemname,
+				'auth_item_name'=>$this->item_name,
 			));
 			$this->project_template_to_auth_item_id = $modelProjectTemplateToAuthItem->id;
 		}

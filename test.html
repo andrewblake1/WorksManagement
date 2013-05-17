@@ -1,12 +1,15 @@
 SELECT
 	standard_id
-FROM tbl_task_to_material
-	JOIN tbl_material ON tbl_task_to_material.material_id = tbl_material.id
-	JOIN tbl_task ON tbl_task_to_material.task_id = tbl_task.id
+FROM tbl_task_to_assembly
+	JOIN tbl_assembly ON tbl_task_to_assembly.assembly_id = tbl_assembly.id
+	JOIN tbl_task ON tbl_task_to_assembly.task_id = tbl_task.id
 WHERE tbl_task.project_id = (
-	SELECT project_id
-	FROM tbl_task_to_material
-		JOIN tbl_task ON tbl_task_to_material.task_id = tbl_task.id
-	WHERE task_id = :pk LIMIT 1
+	SELECT
+		project_id
+	FROM tbl_task_to_assembly
+		JOIN tbl_task ON tbl_task_to_assembly.task_id = tbl_task.id
+	WHERE task_id = :pk
+	LIMIT 1
 )
-ORDER BY tbl_task_to_material.id DESC LIMIT 1
+ORDER BY tbl_task_to_assembly.id DESC
+LIMIT 1

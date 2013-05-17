@@ -220,7 +220,7 @@ class Project extends CustomFieldExtensionActiveRecord
 	static function checkContext($primaryKey, $role)
 	{
 		// if this role exists for this project
-		$ProjectToProjectTemplateToAuthItem = ProjectToProjectTemplateToAuthItem::model()->findAllByAttributes(array('project_id'=>$primaryKey, 'itemname'=>$role));
+		$ProjectToProjectTemplateToAuthItem = ProjectToProjectTemplateToAuthItem::model()->findAllByAttributes(array('project_id'=>$primaryKey, 'item_name'=>$role));
 		if(!empty($ProjectToProjectTemplateToAuthItem))
 		{
 			// if this user assigned this role within this project
