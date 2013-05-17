@@ -17,7 +17,7 @@ class DefaultValueController extends Controller
 
 	public function actionDynamicColumns()
 	{
-		$tableName = Yii::app()->functions->camelize($_POST['DefaultValue']['table'], true);
+//		$tableName = Yii::app()->functions->camelize($_POST['DefaultValue']['table'], true);
 		$attributes = $this->getColumns($_POST['DefaultValue']['table']);
 		ob_start();
 		$model = DefaultValue::model();
@@ -53,7 +53,6 @@ class DefaultValueController extends Controller
 		{
 			$tableModel = Yii::app()->functions->camelize(str_replace(Yii::app()->params->tablePrefix, '', $tableName), TRUE);
 			$attributes = $tableModel::model()->safeAttributeNames;
-			$attributes = array_combine($attributes, $attributes);
 		}
 
 		return $attributes;

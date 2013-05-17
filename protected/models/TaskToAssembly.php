@@ -41,6 +41,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		// will receive user inputs.
 		return $this->customValidators + array(
 			array('task_id, assembly_id', 'required'),
+			array('standard_id', 'safe'),
 			array('assembly_id, sub_assembly_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('parent_id, task_id', 'length', 'max'=>10),
 		);
