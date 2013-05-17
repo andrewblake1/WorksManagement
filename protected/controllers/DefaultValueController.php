@@ -49,7 +49,7 @@ class DefaultValueController extends Controller
 	{
 		if($tableName)
 		{
-			$tableModel = Yii::app()->functions->camelize($tableName);
+			$tableModel = Yii::app()->functions->camelize(str_replace(Yii::app()->params->tablePrefix, '', $tableName), TRUE);
 			$attributes = $tableModel::model()->safeAttributeNames;
 			$attributes = array_combine($attributes, $attributes);
 		}

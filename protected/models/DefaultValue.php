@@ -93,7 +93,8 @@ class DefaultValue extends ActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'select',
+			'table',
+			'column',
 			);
 	}
 	

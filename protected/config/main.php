@@ -148,6 +148,8 @@ return array(
 			'listMax'=>20,
 			// show download button or not
 			'showDownloadButton'=>true,
+			// table prefix
+			'tablePrefix'=>'tbl_',
 			/**
 			* @var array provides the hierachy for a breadcrumb trail
 			*/
