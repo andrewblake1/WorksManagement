@@ -133,7 +133,7 @@ class Assembly extends AdjacencyListActiveRecord
 	public function scopeAssemblyGroup($assembly_group_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compare('AssemblyGroupToAssembly.assembly_group_id', $assembly_group_id);
+		$criteria->compare('assemblyGroupToAssembly.assembly_group_id', $assembly_group_id);
 
 		// join
 		$criteria->join = '
