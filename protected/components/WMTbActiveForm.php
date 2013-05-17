@@ -199,8 +199,35 @@ class WMTbActiveForm extends TbActiveForm
 	
 	public function dropDownListRow($attribute, $data = array(), $htmlOptions = array(), $model = NULL)
 	{
-		echo parent::dropDownListRow($model ? $model : $this->model, $attribute,
-			$data, array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+/*		// if only 1 item in list
+		if(sizeof($data) == 1)
+		{
+			// then no selection to be made so make it for the user - provided something has a value to exclude empty valued please selects
+			if(current($data) !== NULL)
+			{
+				$model->$attribute = current($data);
+				echo parent::dropDownListRow($model ? $model : $this->model, $attribute,
+					$data, array('class'=>'span5') + $htmlOptions);
+				$this->textFieldRow($attribute, $htmlOptions + array('readonly'=>'readonly'), $model);
+				// one potential issue here is that the element may have an ajax event attached
+				if(isset($htmlOptions['ajax']))
+				{
+					$ajaxObject = CJavaScript::encode($htmlOptions['ajax']);
+					// run the ajax request when document ready
+					$id = CHtml::activeId($model, $attribute);
+					Yii::app()->clientScript->registerScript('dropDownListRow', "
+						$.fn.ajax($ajaxObject);
+						", CClientScript::POS_READY
+					);
+				}
+			}
+		}
+		elseif(sizeof($data) > 1)*/
+		{
+			echo parent::dropDownListRow($model ? $model : $this->model, $attribute,
+				$data, array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+		}
+//		see if optional
 	}
 	
 	public function textFieldRow($attribute, $htmlOptions = array(), $model = NULL)

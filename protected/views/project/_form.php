@@ -29,6 +29,11 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 						{
 							$('#customValues').replaceWith(data);
 						}
+						/* clean it out */
+						else
+						{
+							$('#customValues').html('');
+						}
 					}",
 				)
 			),

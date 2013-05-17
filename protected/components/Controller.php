@@ -1064,13 +1064,13 @@ $t=			$model->attributes = $_POST[$modelName];
 		$criteria->scopes = $scopes;
 		// if more than x rows in the lookup table use autotext
 		if ($fKModelType::model()->count($criteria) > Yii::app()->params->listMax) {
-			static::autoCompleteFKFieldRow($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType/* , $relName */);
+			static::autoCompleteFKFieldRow($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType);
 		} else {
 			static::dropDownListFKfieldRow($model, $form, $fkField, $htmlOptions, $scopes);
 		}
 	}
 
-	static function autoCompleteFKFieldRow($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType/* , $relName */) {
+	static function autoCompleteFKFieldRow($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType) {
 		Yii::app()->controller->widget('WMEJuiAutoCompleteFkField', array(
 			'model' => $model,
 			'form' => $form,
@@ -1184,22 +1184,6 @@ $t=			$model->attributes = $_POST[$modelName];
 
 		return $reportType == self::reportTypeHtml ? null : 'null';
 	}
-
-/*	protected function deleteSelectedButton() {
-		if (Yii::app()->params['showDeleteSelectedButton']) {
-			echo ' ';
-			$this->widget('bootstrap.widgets.TbButton', array(
-				'label' => 'Delete Selected',
-				'id' => 'bulk_delete_button_1',
-				'type' => 'primary',
-				'size' => 'small', // '', 'large', 'small' or 'mini'
-				'htmlOptions' => array(
-					'class'=>'bulk-actions-btn',
-					'onClick' => 'js:batchActions',
-				),
-			));
-		}
-	}*/
 
 	protected function navbar() {
 		$this->widget('bootstrap.widgets.TbNavbar', array(

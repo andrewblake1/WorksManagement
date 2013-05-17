@@ -12,11 +12,11 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property TblUser $user
+ * @property User $user
  * @property AuthItem $itemname0
- * @property TblUser $updatedBy
- * @property TblProjectToProjectTemplateToAuthItem[] $tblProjectToProjectTemplateToAuthItems
- * @property TblProjectToProjectTemplateToAuthItem[] $tblProjectToProjectTemplateToAuthItems1
+ * @property User $updatedBy
+ * @property ProjectToProjectTemplateToAuthItem[] $projectToProjectTemplateToAuthItems
+ * @property ProjectToProjectTemplateToAuthItem[] $projectToProjectTemplateToAuthItems1
  */
 class AuthAssignment extends ActiveRecord
 {
@@ -86,11 +86,11 @@ class AuthAssignment extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'user' => array(self::BELONGS_TO, 'TblUser', 'userid'),
+            'user' => array(self::BELONGS_TO, 'User', 'userid'),
             'itemname0' => array(self::BELONGS_TO, 'AuthItem', 'itemname'),
-            'updatedBy' => array(self::BELONGS_TO, 'TblUser', 'updated_by'),
-            'tblProjectToProjectTemplateToAuthItems' => array(self::HAS_MANY, 'TblProjectToProjectTemplateToAuthItem', 'item_name'),
-            'tblProjectToProjectTemplateToAuthItems1' => array(self::HAS_MANY, 'TblProjectToProjectTemplateToAuthItem', 'auth_assignment_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'projectToProjectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTemplateToAuthItem', 'item_name'),
+            'projectToProjectTemplateToAuthItems1' => array(self::HAS_MANY, 'ProjectToProjectTemplateToAuthItem', 'auth_assignment_id'),
         );
     }
 

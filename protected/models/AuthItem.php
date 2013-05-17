@@ -14,12 +14,12 @@
  *
  * The followings are the available model relations:
  * @property AuthAssignment[] $authAssignments
- * @property TblUser $updatedBy
+ * @property User $updatedBy
  * @property AuthItemChild[] $authItemChildren
  * @property AuthItemChild[] $authItemChildren1
- * @property TblProjectTemplateToAuthItem[] $tblProjectTemplateToAuthItems
- * @property TblReport[] $tblReports
- * @property TblReportToAuthItem[] $tblReportToAuthItems
+ * @property ProjectTemplateToAuthItem[] $projectTemplateToAuthItems
+ * @property Report[] $reports
+ * @property ReportToAuthItem[] $reportToAuthItems
  */
 class AuthItem extends ActiveRecord
 {
@@ -77,12 +77,12 @@ class AuthItem extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'authAssignments' => array(self::HAS_MANY, 'AuthAssignment', 'itemname'),
-            'updatedBy' => array(self::BELONGS_TO, 'TblUser', 'updated_by'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'authItemChildren' => array(self::HAS_MANY, 'AuthItemChild', 'parent'),
             'authItemChildren1' => array(self::HAS_MANY, 'AuthItemChild', 'child'),
-            'tblProjectTemplateToAuthItems' => array(self::HAS_MANY, 'TblProjectTemplateToAuthItem', 'auth_item_name'),
-            'tblReports' => array(self::HAS_MANY, 'TblReport', 'context'),
-            'tblReportToAuthItems' => array(self::HAS_MANY, 'TblReportToAuthItem', 'auth_item_name'),
+            'projectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectTemplateToAuthItem', 'auth_item_name'),
+            'Reports' => array(self::HAS_MANY, 'Report', 'context'),
+            'ReportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'auth_item_name'),
         );
     }
 

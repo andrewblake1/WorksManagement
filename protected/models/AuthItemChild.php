@@ -12,7 +12,7 @@
  * The followings are the available model relations:
  * @property AuthItem $parent0
  * @property AuthItem $child0
- * @property TblUser $updatedBy
+ * @property User $updatedBy
  */
 class AuthItemChild extends ActiveRecord
 {
@@ -55,7 +55,7 @@ class AuthItemChild extends ActiveRecord
         return array(
             'parent0' => array(self::BELONGS_TO, 'AuthItem', 'parent'),
             'child0' => array(self::BELONGS_TO, 'AuthItem', 'child'),
-            'updatedBy' => array(self::BELONGS_TO, 'TblUser', 'updated_by'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
         );
     }
 
