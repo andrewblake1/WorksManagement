@@ -3,6 +3,11 @@ Yii::import('bootstrap.widgets.TbTabs');
 
 class WMTbTabs extends TbTabs
 {
+	/**
+	 * @var boolean whether to encode item labels.
+	 */
+	public $encodeLabel = false;
+
 	protected function normalizeTabs($tabs, &$panes, &$i = 0)
 	{
 		$id = $this->getId();

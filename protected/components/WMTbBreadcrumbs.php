@@ -3,6 +3,10 @@ Yii::import('ext.bootstrap.widgets.TbBreadcrumbs');
 
 class WMTbBreadcrumbs extends TbBreadcrumbs
 {
+	/**
+	 * @var boolean whether to encode item labels.
+	 */
+	public $encodeLabel = false;
 
 	/**
 	 *### .run()

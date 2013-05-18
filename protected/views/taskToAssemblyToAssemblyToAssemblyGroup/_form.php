@@ -16,4 +16,4 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 $this->endWidget();
 
-?>x
+?>

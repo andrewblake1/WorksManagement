@@ -7,20 +7,12 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
-	
+
 <?php
 // Suppress Yii's autoload of JQuery
 // We're loading it at bottom of page (best practice)
 // from Google's CDN with fallback to local version 
 
-		Yii::app()->clientScript->scriptMap=array(
-			// TODO: remove this once the bug is fixed in future release of yiibooster
-			/* NB: currently version 1.9 of jqueryUI introduces tootip which conflicts with bootstrap.
-			 * new version of bootstrap or yiibooster will resolve it - several people working on it
-			 * There is a jquery-ui solution evidently using $.widget.bridge from https://github.com/twitter/bootstrap/issues/6303
-			 */
-			'jquery-ui.min.js'=>'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js',
-		);
 
 // TODO: this here because sometimes swapping to an autotext in jquery so not there to begin with
 // tidy up so included only in those views

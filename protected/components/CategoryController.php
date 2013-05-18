@@ -104,13 +104,6 @@ class CategoryController extends Controller
 	{
 		Yii::app()->clientScript->registerCoreScript('jquery');
 		$this->registerJs('webroot.js_plugins.jstree','/jquery.jstree.js');
-//		$this->registerCssAndJs('webroot.js_plugins.fancybox',
-//			'/jquery.fancybox-1.3.4.js',
-//			'/jquery.fancybox-1.3.4.css');
-// NB: this conlficting with JuiAutocomplete
-/*		$this->registerCssAndJs('webroot.js_plugins.jqui1812',
-			'/js/jquery-ui-1.8.12.custom.min.js',
-			'/css/dark-hive/jquery-ui-1.8.12.custom.css');*/
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js_plugins/json2/json2.js');
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/client_val_form.css','screen');
 	}
@@ -179,9 +172,7 @@ class CategoryController extends Controller
 		$cs->scriptMap=array(
 			'jquery.min.js'=>false,
 			'jquery.js'=>false,
-//			'jquery.fancybox-1.3.4.js'=>false,
 			'jquery.jstree.js'=>false,
-			'jquery-ui-1.8.12.custom.min.js'=>false,
 			'json2.js'=>false,
 		);
 
@@ -226,9 +217,7 @@ class CategoryController extends Controller
 		$cs->scriptMap=array(
 			'jquery.min.js'=>false,
 			'jquery.js'=>false,
-//			'jquery.fancybox-1.3.4.js'=>false,
 			'jquery.jstree.js'=>false,
-			'jquery-ui-1.8.12.custom.min.js'=>false,
 			'json2.js'=>false,
 		);
 
