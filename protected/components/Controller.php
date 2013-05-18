@@ -94,7 +94,7 @@ class Controller extends CController {
 				* new version of bootstrap or yiibooster will resolve it - several people working on it
 				* There is a jquery-ui solution evidently using $.widget.bridge from https://github.com/twitter/bootstrap/issues/6303
 				*/
-			'jquery-ui.min.js'=>'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js',
+			'jquery-ui.min.js'=>'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js',
 		);
 		
 		// These eaiest here in order to save binding elements after ajax (not bound in doc ready)

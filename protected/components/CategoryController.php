@@ -102,7 +102,7 @@ class CategoryController extends Controller
 
 	private function registerAssets()
 	{
-		Yii::app()->clientScript->registerCoreScript('jquery');
+//		Yii::app()->clientScript->registerCoreScript('jquery');
 		$this->registerJs('webroot.js_plugins.jstree','/jquery.jstree.js');
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js_plugins/json2/json2.js');
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/client_val_form.css','screen');
@@ -167,14 +167,14 @@ class CategoryController extends Controller
 
 		//don't reload these scripts or they will mess up the page
 		//yiiactiveform.js still needs to be loaded that's why we don't use
-		// Yii::app()->clientScript->scriptMap['*.js'] = false;
+		//Yii::app()->clientScript->scriptMap['*.js'] = false;
 		$cs=Yii::app()->clientScript;
-		$cs->scriptMap=array(
+		$cs->scriptMap = array_merge(array(
 			'jquery.min.js'=>false,
 			'jquery.js'=>false,
 			'jquery.jstree.js'=>false,
 			'json2.js'=>false,
-		);
+		), $cs->scriptMap);
 
 		$modelName = empty($_POST['model_name']) ? $this->modelName : $_POST['model_name'];
 		
@@ -214,12 +214,12 @@ class CategoryController extends Controller
 		//yiiactiveform.js still needs to be loaded that's why we don't use
 		// Yii::app()->clientScript->scriptMap['*.js'] = false;
 		$cs=Yii::app()->clientScript;
-		$cs->scriptMap=array(
+		$cs->scriptMap = array_merge(array(
 			'jquery.min.js'=>false,
 			'jquery.js'=>false,
 			'jquery.jstree.js'=>false,
 			'json2.js'=>false,
-		);
+		), $cs->scriptMap);
 
 		$model=$this->loadModel($_POST['id']);
 
