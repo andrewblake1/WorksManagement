@@ -58,17 +58,6 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $env->yiiTraceLevel);
 require_once($env->yiiPath);
 $env->runYiiStatics(); // like Yii::setPathOfAlias()
 
-// This shifted here from main view file due to ajax requests returning script files to automatically bind new
-// elements - with ajax request may not get to main view include
-Yii::app()->clientScript->scriptMap=array(
-	// TODO: remove this once the bug is fixed in future release of yiibooster
-	/* NB: currently version 1.9 of jqueryUI introduces tootip which conflicts with bootstrap.
-		* new version of bootstrap or yiibooster will resolve it - several people working on it
-		* There is a jquery-ui solution evidently using $.widget.bridge from https://github.com/twitter/bootstrap/issues/6303
-		*/
-	'jquery-ui.min.js'=>'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js',
-);
-
 Yii::createWebApplication($env->configWeb)->run();
 
 ?>

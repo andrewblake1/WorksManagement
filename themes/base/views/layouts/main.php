@@ -16,9 +16,9 @@
 
 // TODO: this here because sometimes swapping to an autotext in jquery so not there to begin with
 // tidy up so included only in those views
-		$cs=Yii::app()->getClientScript();
-		$cs->registerCoreScript('jquery');
-		$cs->registerScriptFile('jquery-ui.min.js');
+// This shifted here from main view file due to ajax requests returning script files to automatically bind new
+// elements - with ajax request may not get to main view include
+
 
 		// Load Yii's generated javascript at bottom of page
 		// instead of the 'head', ensuring it loads after JQuery
