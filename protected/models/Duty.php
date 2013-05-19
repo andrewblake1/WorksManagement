@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'tbl_duty':
  * @property string $id
+ * @property string $parent_id
  * @property string $task_id
  * @property integer $duty_type_id
  * @property string $duty_data_id
@@ -17,8 +18,10 @@
  * @property DutyData $dutyType
  * @property User $responsible0
  * @property DutyData $dutyData
+ * @property Duty $parent
+ * @property Duty[] $duties
  */
-class Duty extends ActiveRecord
+class Duty extends AdjacencyListActiveRecord
 {
 	public $assignedTo;
 	/**
@@ -26,6 +29,7 @@ class Duty extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchTask;
+	public $searchIntegralTo;
 	public $description;
 	public $searchInCharge;
 	public $searchImportance;
@@ -42,12 +46,12 @@ class Duty extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('task_id, duty_type_id', 'required'),
-			array('duty_type_id, responsible', 'numerical', 'integerOnly'=>true),
+			array('parent_id, duty_type_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('updated, custom_value_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_id, due, searchImportance, searchInCharge, searchTask, description, updated', 'safe', 'on'=>'search'),
+			array('id, parent_id, task_id, due, searchIntegralTo, searchImportance, searchInCharge, searchTask, description, updated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,6 +68,8 @@ class Duty extends ActiveRecord
             'dutyType' => array(self::BELONGS_TO, 'DutyData', 'duty_type_id'),
             'responsible0' => array(self::BELONGS_TO, 'User', 'responsible'),
             'dutyData' => array(self::BELONGS_TO, 'DutyData', 'duty_data_id'),
+            'parent' => array(self::BELONGS_TO, 'Duty', 'parent_id'),
+            'duties' => array(self::HAS_MANY, 'Duty', 'parent_id'),
         );
     }
 
@@ -74,6 +80,8 @@ class Duty extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'task_id' => 'Task',
+			'parent_id' => 'Integral to', 
+			'searchIntegralTo' => 'Integral to', 
 			'searchTask' => 'Task',
 			'duty_type_id' => 'Duty/Role/First/Last/Email',
 			'description' => 'Duty',
@@ -126,6 +134,7 @@ class Duty extends ActiveRecord
 				) AS searchInCharge",
 			'dutyData.updated AS updated',
 			'taskTemplateToDutyType.importance AS searchImportance',
+			'dependedOnBy.description AS searchIntegralTo',
 		);
 
 		// where
@@ -148,6 +157,7 @@ class Duty extends ActiveRecord
 		);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
+		$criteria->compare('dependedOnBy.description',$this->searchIntegralTo,true);
 
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
@@ -165,6 +175,8 @@ class Duty extends ActiveRecord
 			LEFT JOIN AuthAssignment ON projectToProjectTemplateToAuthItem.auth_assignment_id = AuthAssignment.id
 			LEFT JOIN tbl_user dutyDefault ON AuthAssignment.userid = dutyDefault.id
 			LEFT JOIN tbl_user responsible ON t.responsible = responsible.id
+			LEFT JOIN tbl_parent parent ON t.parent_id = t.id
+			LEFT JOIN tbl_dutyType dependedOnBy ON parent.duty_type_id = dependedOnBy.id
 		';
 		
 		// with
@@ -180,6 +192,7 @@ class Duty extends ActiveRecord
 	{
         $columns[] = $this->linkThisColumn('description');
         $columns[] = static::linkColumn('searchInCharge', 'User', 'assignedTo');
+        $columns[] = 'searchIntegralTo';
         $columns[] = 'searchImportance';
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
@@ -200,7 +213,15 @@ class Duty extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchTask', 'description', 'updated', 'searchInCharge', 'searchImportance', 'due');
+		return array(
+			'searchTask',
+			'description',
+			'updated',
+			'searchInCharge',
+			'searchImportance',
+			'searchIntegralTo',
+			'due',
+		);
 	}
 
 	public function beforeValidate()
@@ -320,6 +341,11 @@ class Duty extends ActiveRecord
 		return $saved & parent::createSave($models);
 	}
 
+	public function incompleteDependencies()
+	{
+		// get any incomplete children
+		return static::model()->findAllByAttributes(array('parent_id'=>$this->id),'updated IS NULL');
+	}
 }
 
 ?>

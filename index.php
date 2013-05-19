@@ -58,6 +58,8 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $env->yiiTraceLevel);
 require_once($env->yiiPath);
 $env->runYiiStatics(); // like Yii::setPathOfAlias()
 
+// swap these two lines when using the rbac command on command line to regen rbac
 Yii::createWebApplication($env->configWeb)->run();
+//Yii::createWebApplication($env->configConsole)->run();
 
 ?>

@@ -16,7 +16,19 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		}
 		else
 		{
-			$form->checkBoxRow('updated');
+			// only allow to be checked if dependencies have been checked
+			if($dependencyModels = $model->incompleteDependencies)
+			{
+				// make this a widget or part of controller returning grid with links to the duties if allowed
+				foreach($dependencyModels AS $dependencyModel);
+				{
+					
+				}
+			}
+			else
+			{
+				$form->checkBoxRow('updated');
+			}
 			
 			// allow system admin and original creator of duty to be able to alter who it is assigned to
 			if($model->updated_by == Yii::app()->user->id || Yii::app()->user->checkAccess('system admin'))

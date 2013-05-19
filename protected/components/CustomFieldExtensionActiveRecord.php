@@ -126,14 +126,14 @@ abstract class CustomFieldExtensionActiveRecord extends ActiveRecord
 		return $saved;
 	}
 
-/*	protected function getHtml_id($attribute)
+/*	protected function getHtmlId($attribute)
 	{
 		if(($modelName = get_class($this)) == 'customValue')
 		{
 			return "{$modelName_}{$model->primaryKey}_$attribute";
 		}
 		
-		return parent::getHtml_id($attribute);
+		return parent::getHtmlId($attribute);
 	}*/
 
 }

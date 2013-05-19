@@ -21,6 +21,7 @@
 class Drawing extends AdjacencyListActiveRecord
 {
 	public $parent_id;
+	public $parent;		// the missing relation
 	
 	/**
 	 * @var string nice model name for use in output
@@ -190,7 +191,8 @@ class Drawing extends AdjacencyListActiveRecord
 	public function afterFind() {
 		if($this->drawingAdjacencyLists1)
 		{
-			$this->parent_id = $this->drawingAdjacencyLists1[0]->parent_id;
+			$this->parent = $this->drawingAdjacencyLists1[0];
+			$this->parent_id = $this->parent->parent_id;
 		}
 		
 		parent::afterFind();
@@ -243,6 +245,7 @@ class Drawing extends AdjacencyListActiveRecord
 		
 		return parent::update($attributes);
 	}
+
 }
 
 ?>

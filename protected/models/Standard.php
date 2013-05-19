@@ -80,7 +80,7 @@ class Standard extends ActiveRecord
 		
 		return $columns;
 	}
-
+	
 }
 
 ?>

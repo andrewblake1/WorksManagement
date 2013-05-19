@@ -45,7 +45,11 @@ EOD;
 			// NB: these must be run first or there will be an integrity constraing violation against no updated_by
 			// NB: these are just an initial user and should be changed once app is installed
 			Yii::app()->db->createCommand("
-				INSERT INTO `user` (`id`, `first_name`, `last_name`, `phone_mobile`, `email`, `password`, `deleted`, `updated_by`) VALUES (NULL, 'first', 'last', NULL, 'username', MD5('password'), '0', NULL);
+				INSERT INTO `tbl_contact` (id, `first_name`, `last_name`, `phone_mobile`, `email`) VALUES (1, 'first', 'last', NULL, 'username');
+			")->execute();
+
+			Yii::app()->db->createCommand("
+				INSERT INTO `tbl_user` (contact_id, `password`) VALUES (1, MD5('password'));
 			")->execute();
 
 			// system admin
@@ -290,11 +294,6 @@ EOD;
 			$systemAdminRole->addChild('Supplier');
 			$this->_authManager->createOperation('SupplierRead', 'Supplier read');
 			$task->addChild('SupplierRead');
-
-			$task=$this->_authManager->createTask('SupplierToSupplierContact', 'SupplierToSupplierContact task');
-			$systemAdminRole->addChild('SupplierToSupplierContact');
-			$this->_authManager->createOperation('SupplierToSupplierContactRead', 'SupplierToSupplierContact read');
-			$task->addChild('SupplierToSupplierContactRead');
 
 			$task=$this->_authManager->createTask('SupplierContact', 'SupplierContact task');
 			$systemAdminRole->addChild('SupplierContact');

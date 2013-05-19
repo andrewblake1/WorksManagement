@@ -1,6 +1,6 @@
 <?php
 
-class DutyTypeController extends Controller
+class DutyTypeController extends AdjacencyListController
 {
 }
 

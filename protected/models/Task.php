@@ -119,13 +119,13 @@ class Task extends CustomFieldExtensionActiveRecord
 			'name' => 'Task',
 			'location' => 'Location',
 			'searchEarliest' => 'Earliest',
-			'preferred_mon' => 'Mon',
-			'preferred_tue' => 'Tue',
-			'preferred_wed' => 'Wed',
-			'preferred_thu' => 'Thu',
-			'preferred_fri' => 'Fri',
-			'preferred_sat' => 'Sat',
-			'preferred_sun' => 'Sun',
+			'preferred_mon' => 'Mo',
+			'preferred_tue' => 'Tu',
+			'preferred_wed' => 'We',
+			'preferred_thu' => 'Th',
+			'preferred_fri' => 'Fr',
+			'preferred_sat' => 'Sa',
+			'preferred_sun' => 'Su',
 		));
 	}
 

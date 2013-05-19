@@ -302,7 +302,7 @@ class CustomValue extends ActiveRecord
 	}
 
 	
-	public function getHtml_id($attribute)
+	public function getHtmlId($attribute)
 	{
 		return $this->html_id;
 	}

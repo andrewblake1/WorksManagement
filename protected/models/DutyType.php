@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'tbl_duty_type':
  * @property integer $id
+ * @property integer $parent_id
  * @property string $description
  * @property integer $lead_in_days
  * @property string $level
@@ -19,9 +20,11 @@
  * @property DutyCategory $dutyCategory
  * @property CustomField $customField
  * @property User $updatedBy
+ * @property DutyType $parent
+ * @property DutyType[] $dutyTypes
  * @property TaskTemplateToDutyType[] $taskTemplateToDutyTypes
  */
-class DutyType extends ActiveRecord
+class DutyType extends AdjacencyListActiveRecord
 {
 	/**
 	 * @var string nice model name for use in output
@@ -34,6 +37,7 @@ class DutyType extends ActiveRecord
 	 */
 	public $searchDutyCategory;
 	public $searchCustomField;
+	public $searchIntegralTo;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -44,13 +48,13 @@ class DutyType extends ActiveRecord
 		// will receive user inputs.
 		return array(
 			array('description', 'required'),
-			array('lead_in_days, duty_category_id', 'numerical', 'integerOnly'=>true),
+			array('parent_id, lead_in_days, duty_category_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			array('level', 'length', 'max'=>10),
 			array('custom_field_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, lead_in_days, level, duty_category_id, searchDutyCategory, searchCustomField', 'safe', 'on'=>'search'),
+			array('id, parent_id, searchIntegralTo, description, lead_in_days, level, duty_category_id, searchDutyCategory, searchCustomField', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,7 +62,7 @@ class DutyType extends ActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
+    {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
@@ -67,6 +71,8 @@ class DutyType extends ActiveRecord
             'dutyCategory' => array(self::BELONGS_TO, 'DutyCategory', 'duty_category_id'),
             'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'parent' => array(self::BELONGS_TO, 'DutyType', 'parent_id'),
+            'dutyTypes' => array(self::HAS_MANY, 'DutyType', 'parent_id'),
             'taskTemplateToDutyTypes' => array(self::HAS_MANY, 'TaskTemplateToDutyType', 'duty_type_id'),
         );
     }
@@ -78,11 +84,12 @@ class DutyType extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'lead_in_days' => 'Lead in days',
-			'level' => 'Level',
+			'searchIntegralTo' => 'Integral to', 
+			'parent_id' => 'Integral to', 
 			'duty_category_id' => 'Duty category',
 			'searchDutyCategory' => 'Duty category',
-			'custom_field_id' => 'Custom type',
-			'searchCustomField' => 'Custom type',
+			'custom_field_id' => 'Custom field',
+			'searchCustomField' => 'Custom field',
 		));
 	}
 
@@ -101,6 +108,8 @@ class DutyType extends ActiveRecord
 			't.lead_in_days',
 			't.level',
 			'customField.description AS searchCustomField',
+			'parent.description AS searchIntegralTo',
+			't.parent_id',
 		);
 
 		// where
@@ -109,9 +118,13 @@ class DutyType extends ActiveRecord
 		$criteria->compare('customField.description',$this->searchCustomField,true);
 		$criteria->compare('t.duty_category_id', $this->duty_category_id);
 		$criteria->compare('t.level',$this->level,true);
+		$criteria->compare('parent.description',$this->searchIntegralTo,true);
 		
 		// with
-		$criteria->with = array('customField');
+		$criteria->with = array(
+			'customField',
+			'parent',
+		);
 
 		return $criteria;
 	}
@@ -119,6 +132,7 @@ class DutyType extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = $this->linkThisColumn('description');
+		$columns[] = static::linkColumn('searchIntegralTo', 'DutyType', 'parent_id');
 		$columns[] = 'lead_in_days';
 		$columns[] = 'level';
         $columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
@@ -132,7 +146,10 @@ class DutyType extends ActiveRecord
 	 */
 	public function getSearchSort()
 	{
-		return array('searchCustomField');
+		return array(
+			'searchCustomField',
+			'searchIntegralTo',
+		);
 	}
 }
 

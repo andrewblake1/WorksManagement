@@ -5,34 +5,31 @@
  *
  * The followings are the available columns in table 'tbl_supplier_contact':
  * @property integer $id
- * @property string $first_name
- * @property string $last_name
+ * @property integer $supplier_id
+ * @property integer $contact_id
  * @property string $role
- * @property string $email
- * @property string $address_line_1
- * @property string $address_line_2
- * @property string $post_code
- * @property string $town_city
- * @property string $state_province
- * @property string $country
- * @property string $phone_mobile
- * @property string $phone_home
- * @property string $phone_work
- * @property string $phone_fax
- * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property User $updatedBy
- * @property SupplierToSupplierContact[] $supplierToSupplierContacts
+ * @property Contact $contact
+ * @property Supplier $supplier
  */
-class SupplierContact extends ActiveRecord
+class SupplierContact extends ContactActiveRecord
 {
-
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Contact';
+	public $first_name;
+	public $last_name;
+	public $email;
+	public $address_line_1;
+	public $address_line_2;
+	public $post_code;
+	public $town_city;
+	public $state_province;
+	public $country;
+	public $phone_mobile;
+	public $phone_home;
+	public $phone_work;
+	public $phone_fax;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -42,13 +39,14 @@ class SupplierContact extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('first_name, last_name, email', 'required'),
+			array('supplier_id, first_name, last_name, email', 'required'),
+			array('supplier_id', 'numerical', 'integerOnly'=>true),
 			array('first_name, last_name, role, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
 			array('email, address_line_1, address_line_2', 'length', 'max'=>255),
 			array('post_code', 'length', 'max'=>16),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, first_name, last_name, role, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'safe', 'on'=>'search'),
+			array('id, supplier_id, first_name, last_name, role, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -61,7 +59,8 @@ class SupplierContact extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'supplierToSupplierContacts' => array(self::HAS_MANY, 'SupplierToSupplierContact', 'supplier_contact_id'),
+            'contact' => array(self::BELONGS_TO, 'Contact', 'contact_id'),
+            'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
         );
     }
 
@@ -72,26 +71,33 @@ class SupplierContact extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.first_name',$this->first_name,true);
-		$criteria->compare('t.last_name',$this->last_name,true);
-		$criteria->compare('t.role',$this->role,true);
-		$criteria->compare('t.email',$this->email,true);
-		$criteria->compare('t.phone_mobile',$this->phone_mobile,true);
-		$criteria->compare('t.phone_home',$this->phone_home,true);
-		$criteria->compare('t.phone_work',$this->phone_work,true);
-		$criteria->compare('t.phone_fax',$this->phone_fax,true);
-
+		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.first_name',
-			't.last_name',
 			't.role',
-			't.email',
-			't.phone_mobile',
-			't.phone_home',
-			't.phone_work',
-			't.phone_fax',
+			'contact.first_name AS first_name',
+			'contact.last_name AS last_name',
+			'contact.email AS email',
+			'contact.phone_mobile AS phone_mobile',
+			'contact.phone_home AS phone_home',
+			'contact.phone_work AS phone_work',
+			'contact.phone_fax AS phone_fax',
+		);
+
+		// where
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.role',$this->role,true);
+		$criteria->compare('contact.first_name',$this->first_name,true);
+		$criteria->compare('contact.last_name',$this->last_name,true);
+		$criteria->compare('contact.email',$this->email,true);
+		$criteria->compare('contact.phone_mobile',$this->phone_mobile,true);
+		$criteria->compare('contact.phone_home',$this->phone_home,true);
+		$criteria->compare('contact.phone_work',$this->phone_work,true);
+		$criteria->compare('contact.phone_fax',$this->phone_fax,true);
+
+		// with
+		$criteria->with=array(
+			'contact',
 		);
 
 		return $criteria;
@@ -99,8 +105,8 @@ class SupplierContact extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[]=$this->linkThisColumn('first_name');
-		$columns[]=$this->linkThisColumn('last_name');
+		$columns[]='first_name';
+		$columns[]='last_name';
 		$columns[]='role';
         $columns[] = array(
 			'name'=>'phone_mobile',
@@ -127,17 +133,15 @@ class SupplierContact extends ActiveRecord
 		return $columns;
 	}
 
-	/**
-	 * @return array the list of columns to be concatenated for use in drop down lists
-	 */
-	public static function getDisplayAttr()
+/*	public function scopeSupplier($supplier_id)
 	{
-		return array(
-			'first_name',
-			'last_name',
-			'email',
-		);
-	}
+		$criteria=new DbCriteria;
+		$criteria->compare('supplier_id', $supplier_id);
+
+		$this->getDbCriteria()->mergeWith($criteria);
+	
+		return $this;
+	}*/
 	
 }
 

@@ -714,7 +714,7 @@ $t = $model->attributes;
 					}
 					foreach ($models as $m) {
 						foreach ($m->getErrors() as $attribute => $errors) {
-							$result[$m->getHtml_id($attribute)] = $errors;
+							$result[$m->getHtmlId($attribute)] = $errors;
 						}
 					}
 					// return the json encoded data to the client
@@ -817,7 +817,7 @@ $t=			$model->attributes = $_POST[$modelName];
 					}
 					foreach ($models as $m) {
 						foreach ($m->getErrors() as $attribute => $errors) {
-							$result[$m->getHtml_id($attribute)] = $errors;
+							$result[$m->getHtmlId($attribute)] = $errors;
 						}
 					}
 					// return the json encoded data to the client

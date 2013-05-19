@@ -42,7 +42,6 @@ return array(
 		),
 
 		'aliases' => array(
-			//assuming you extracted the files to the extensions folder
 			'xupload' => 'ext.xupload'
 		),
 
@@ -233,9 +232,7 @@ return array(
 				),
 				'Supplier'=>array(
 					'PurchaseOrder',
-					'SupplierToSupplierContact'=>array(
-						'SupplierContact',
-					),
+					'SupplierContact',
 				),
 			),
 		),
@@ -260,8 +257,19 @@ return array(
 		// Application components home
 		'components'=>array(
 
+			// RBAC
+			'authManager'=>'inherit',
+			
+// TODO: would like to use in inherit but for some reason globabl $wceDatabaseName is blank in here
+// in console app ??
 			// Database
-			'db'=>'inherit',
+			'db' => array(
+				'connectionString' => "mysql:host=localhost;dbname=worksmanagement_melbourne_dev",
+				'emulatePrepare' => true,
+				'username' => 'root',
+				'password' => 'root',
+				'charset' => 'utf8',
+			),
 
 			// Application Log
 			'log' => array(

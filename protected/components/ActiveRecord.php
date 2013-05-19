@@ -448,9 +448,26 @@ $t=$this->attributes;
 	 */
 	public function getSearchSort()
 	{
-		return array('searchUser');
-	}
+		$t = $this->rules();
+		foreach ($this->rules() as $rule)
+		{
+			if(isset($rule['on']) && $rule['on'] == 'search' && $rule[1] == 'safe')
+			{
+				$theseColumns = $this->tableSchema->columnNames;
+				$sorts = explode(',', str_replace(' ', '', $rule[0]));
+				foreach($sorts as $key => &$value)
+				{
+					if(in_array($value, $theseColumns))
+					{
+						$value = "t.$value";
+					}
+				}
+				return $sorts;
+			}
+		}
 
+		return array();
+	}
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -595,13 +612,13 @@ $t=$this->attributes;
 		$searchCriteria = $model->searchCriteria;
 		
 		// if this model has a updated_by property
-		if(in_array('updated_by', $model->tableSchema->getColumnNames()))
+/*		if(in_array('updated_by', $model->tableSchema->getColumnNames()))
 		{
 			$this->compositeCriteria($searchCriteria, array('updatedBy.first_name','updatedBy.last_name','updatedBy.email'), $model->searchUser);
 			$searchCriteria->with[] = 'updatedBy';
 			$delimiter = Yii::app()->params['delimiter']['display'];
 			$searchCriteria->select[] = "CONCAT_WS('$delimiter', updatedBy.first_name, updatedBy.last_name, updatedBy.email) AS searchUser";
-		}
+		}*/
 
 		$modelName = get_class($model);
 		if(!isset($_GET["{$modelName}_sort"]))
@@ -929,8 +946,8 @@ if(count($m = $this->getErrors()))
 		return $columns;
 	}
 	
-	protected function getHtml_id($attribute) {
-		return CHtml::active_id($this, $attribute);
+	public function getHtmlId($attribute) {
+		return CHtml::activeId($this, $attribute);
 	}
 
 	/*
@@ -979,7 +996,7 @@ if(count($m = $this->getErrors()))
 			$this->addError($attribute, $errorMessage);
 		}
 	}
-
+	
 }
 
 ?>

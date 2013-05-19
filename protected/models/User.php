@@ -5,10 +5,7 @@
  *
  * The followings are the available columns in table 'tbl_user':
  * @property integer $id
- * @property string $first_name
- * @property string $last_name
- * @property string $phone_mobile
- * @property string $email
+ * @property integer $contact_id
  * @property string $password
  * @property integer $deleted
  * @property integer $updated_by
@@ -24,6 +21,7 @@
  * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
  * @property Client[] $clients
  * @property ClientContact[] $clientContacts
+ * @property Contact[] $contacts
  * @property Crew[] $crews
  * @property CustomField[] $customFields
  * @property CustomFieldProjectCategory[] $customFieldProjectCategories
@@ -65,7 +63,6 @@
  * @property SubReport[] $subReports
  * @property Supplier[] $suppliers
  * @property SupplierContact[] $supplierContacts
- * @property SupplierToSupplierContact[] $supplierToSupplierContacts
  * @property Task[] $tasks
  * @property TaskTemplate[] $taskTemplates
  * @property TaskTemplateToAssembly[] $taskTemplateToAssemblies
@@ -86,11 +83,17 @@
  * @property TaskToResource[] $taskToResources
  * @property User $updatedBy
  * @property User[] $users
+ * @property Contact $contact
  */
-class User extends ActiveRecord
+class User extends ContactActiveRecord
 {
 	static $niceNamePlural = 'User';
 
+	public $first_name;
+	public $last_name;
+	public $phone_mobile;
+	public $email;
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -127,6 +130,7 @@ class User extends ActiveRecord
             'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'updated_by'),
             'clients' => array(self::HAS_MANY, 'Client', 'updated_by'),
             'clientContacts' => array(self::HAS_MANY, 'ClientContact', 'updated_by'),
+            'contacts' => array(self::HAS_MANY, 'Contact', 'tbl_user_id'),
             'crews' => array(self::HAS_MANY, 'Crew', 'updated_by'),
             'customFields' => array(self::HAS_MANY, 'CustomField', 'updated_by'),
             'customFieldProjectCategories' => array(self::HAS_MANY, 'CustomFieldProjectCategory', 'updated_by'),
@@ -168,7 +172,6 @@ class User extends ActiveRecord
             'subReports' => array(self::HAS_MANY, 'SubReport', 'updated_by'),
             'suppliers' => array(self::HAS_MANY, 'Supplier', 'updated_by'),
             'supplierContacts' => array(self::HAS_MANY, 'SupplierContact', 'updated_by'),
-            'supplierToSupplierContacts' => array(self::HAS_MANY, 'SupplierToSupplierContact', 'updated_by'),
             'tasks' => array(self::HAS_MANY, 'Task', 'updated_by'),
             'taskTemplates' => array(self::HAS_MANY, 'TaskTemplate', 'updated_by'),
             'taskTemplateToAssemblies' => array(self::HAS_MANY, 'TaskTemplateToAssembly', 'updated_by'),
@@ -189,6 +192,7 @@ class User extends ActiveRecord
             'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'updated_by'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'users' => array(self::HAS_MANY, 'User', 'updated_by'),
+            'contact' => array(self::BELONGS_TO, 'Contact', 'contact_id'),
         );
     }
 
@@ -209,18 +213,25 @@ class User extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.first_name',$this->first_name,true);
-		$criteria->compare('t.last_name',$this->last_name,true);
-		$criteria->compare('t.phone_mobile',$this->phone_mobile,true);
-		$criteria->compare('t.email',$this->email,true);
-
+		// select
 		$criteria->select=array(
 			't.id',
-			't.first_name',
-			't.last_name',
-			't.phone_mobile',
-			't.email',
+			'contact.first_name AS first_name',
+			'contact.last_name AS last_name',
+			'contact.phone_mobile AS phone_mobile',
+			'contact.email AS email',
+		);
+		
+		// where
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('contact.first_name',$this->first_name,true);
+		$criteria->compare('contact.last_name',$this->last_name,true);
+		$criteria->compare('contact.phone_mobile',$this->phone_mobile,true);
+		$criteria->compare('contact.email',$this->email,true);
+
+		// with
+		$criteria->with=array(
+			'contact',
 		);
 
 		return $criteria;
@@ -246,18 +257,6 @@ class User extends ActiveRecord
 	}
 
 	/**
-	 * @return array the list of columns to be concatenated for use in drop down lists
-	 */
-	public static function getDisplayAttr()
-	{
-		return array(
-			'first_name',
-			'last_name',
-			'email',
-		);
-	}
-
-	/**
 	 * perform one-way encryption on the password before we store it in the database
 	 */
 	protected function afterValidate()
@@ -271,7 +270,8 @@ class User extends ActiveRecord
 		// if the password value has changed
 		return $this->isNewRecord || $this->attributeChanged('password') ? md5($value) : $value;
 	}
-
+	
+	
 }
 
 ?>
