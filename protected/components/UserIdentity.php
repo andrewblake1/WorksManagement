@@ -19,9 +19,9 @@ class UserIdentity extends CUserIdentity
 	public function authenticate()
 	{
 		$criteria=new CDbCriteria;
-		$criteria->compare('email', $this->username);
+		$criteria->compare('contact.email', $this->username);
 
-		if(!$user = User::model()->find($criteria))
+		if(!$user = User::model()->with('contact')->find($criteria))
 		{
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
 		}
