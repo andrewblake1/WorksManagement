@@ -25,7 +25,7 @@ class MaterialToClient extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Material';
+	static $niceName = 'Material alias';
 	
 	/**
 	 * @return array validation rules for model attributes.

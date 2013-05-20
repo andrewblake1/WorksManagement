@@ -23,7 +23,7 @@ class AssemblyToClient extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Assembly';
+	static $niceName = 'Assembly alias';
 
 	/**
 	 * @return array validation rules for model attributes.
