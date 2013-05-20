@@ -140,19 +140,6 @@ class MaterialGroupToMaterial extends ActiveRecord
 		);
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array(
-			'searchMaterialDescription',
-			'searchMaterialUnit',
-			'searchMaterialAlias',
-		);
-	}
-	
 	public function beforeValidate()
 	{
 		$materialGroup = MaterialGroup::model()->findByPk($this->material_group_id);

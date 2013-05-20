@@ -121,15 +121,6 @@ class ProjectToCustomFieldToProjectTemplate extends ActiveRecord
 		return array('customFieldToProjectTemplate->customField->description');
 	}
 	
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchCustomFieldToProjectTemplate', 'searchCustomField');
-	}
-	
 	/*
 	 * overidden as mulitple models i.e. nothing to save in this model as this model can either be deleted or created as the data item resides in customValue
 	 */

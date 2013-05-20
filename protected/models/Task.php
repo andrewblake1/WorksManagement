@@ -153,9 +153,9 @@ class Task extends CustomFieldExtensionActiveRecord
 			't.preferred_sat',
 			't.preferred_sun',
 			"CONCAT_WS('$delimiter',
-				inCharge.first_name,
-				inCharge.last_name,
-				inCharge.email
+				contact.first_name,
+				contact.last_name,
+				contact.email
 				) AS searchInCharge",
 			"CONCAT_WS('$delimiter',
 				taskTemplate.description
@@ -186,9 +186,9 @@ class Task extends CustomFieldExtensionActiveRecord
 		$criteria->compare('t.preferred_sun',Yii::app()->format->toMysqlBool($this->preferred_sun));
 		$this->compositeCriteria($criteria,
 			array(
-				'inCharge.first_name',
-				'inCharge.last_name',
-				'inCharge.email',
+				'contact.first_name',
+				'contact.last_name',
+				'contact.email',
 			),
 			$this->searchInCharge
 		);
@@ -204,7 +204,7 @@ class Task extends CustomFieldExtensionActiveRecord
 		// join
 		$criteria->with = array(
 			'id0',
-			'id0.inCharge',
+			'id0.inCharge.contact',
 			'project',
 			'taskTemplate',
 			);
@@ -242,15 +242,6 @@ class Task extends CustomFieldExtensionActiveRecord
 		$displaAttr[]='id0->name';
 
 		return $displaAttr;
-	}
-
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchInCharge', 'searchProject', 'searchTaskTemplate', 'searchEarliest', 'name');
 	}
 
 	public function beforeSave() {

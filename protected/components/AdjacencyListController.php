@@ -20,9 +20,9 @@ class AdjacencyListController extends Controller {
 			{
 				$queryParameters[$parentForeignKey] = $paramsLevel0[$parentForeignKey];
 			}
-			elseif(static::getUpdate_id($parentCrumb) !== NULL)
+			elseif(static::getUpdateId($parentCrumb) !== NULL)
 			{
-				$queryParameters[$parentForeignKey] = static::getUpdate_id($parentCrumb);
+				$queryParameters[$parentForeignKey] = static::getUpdateId($parentCrumb);
 			}
 		}
 
@@ -32,7 +32,7 @@ class AdjacencyListController extends Controller {
 		if(!$parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
 		{
 			// if there is a primary key for this -- starting from beginning
-			if(($update_id = static::getUpdate_id(NULL, 0)) !== NULL)
+			if(($update_id = static::getUpdateId(NULL, 0)) !== NULL)
 			{
 				// get the update models parent id
 				$parent_id = $modelName::model()->findByPk($update_id)->parent_id;
@@ -64,7 +64,7 @@ class AdjacencyListController extends Controller {
 					// remove last item in existing breadcrumbs
 					array_pop($breadcrumbs);
 					// add a crumb with just the primary key nice name but no href
-					$primaryKey = static::getUpdate_id($modelName);
+					$primaryKey = static::getUpdateId($modelName);
 					$adjacencyListCrumbs[] = $modelName::getNiceName($primaryKey);
 					// add crumb to admin view. NB using last query paramters to that admin view
 					$adjacencyListCrumbs[$text] = array("$modelName/admin") + $queryParameters + array('parent_id'=>$parent_id);
@@ -101,7 +101,7 @@ class AdjacencyListController extends Controller {
 
 		parent::actionUpdate($id, $model);
 	}
-	
+
 	public function setChildTabs($model)
 	{
 		$models = array();
@@ -134,7 +134,7 @@ $t = $model->attributes;
 		if(!$parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
 		{
 			// if there is a primary key for this -- starting from beginning
-			if(($update_id = static::getUpdate_id(NULL, 0)) !== NULL)
+			if(($update_id = static::getUpdateId(NULL, 0)) !== NULL)
 			{
 				// get the update models parent id
 				$parent_id = $modelName::model()->findByPk($update_id)->parent_id;
@@ -178,7 +178,7 @@ $t = $model->attributes;
 	}
 	
 /*	// return last or specified level of update id
-	static function getUpdate_id($modelName = NULL, $level = NULL)
+	static function getUpdateId($modelName = NULL, $level = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 

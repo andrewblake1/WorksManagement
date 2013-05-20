@@ -17,7 +17,7 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 	 */
 	public $fKModelType;
 
-	// recursive to find our way thru relations to target fk model
+	// recursive to find our way thru relations to target fk model for given attribute
 	private function getRelation($model, $fKModelType, &$level)
 	{
 		// ensure recursion ends at 5 levels
@@ -57,12 +57,10 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 
         $value = CHtml::resolveValue($this->model, $this->attribute);
 
-		$model = $this->getRelation($this->model, $fKModelType, $level = 0);
-
-		// find our way down to the end model
-		foreach($fKModelType::getDisplayAttr() as $key => $field)
+		if($model = $this->getRelation($this->model, $fKModelType, $level = 0))
 		{
-			if(!empty($model))
+			// find our way down to the end model
+			foreach($fKModelType::getDisplayAttr() as $key => $field)
 			{
 				if(is_numeric($key))
 				{

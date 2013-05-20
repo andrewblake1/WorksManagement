@@ -133,18 +133,6 @@ class AssemblyGroupToAssembly extends ActiveRecord
 		);
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array(
-			'searchAssemblyDescription',
-			'searchAssemblyAlias',
-		);
-	}
-	
 	public function beforeValidate()
 	{
 		$assemblyGroup = AssemblyGroup::model()->findByPk($this->assembly_group_id);

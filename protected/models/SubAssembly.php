@@ -152,15 +152,6 @@ class SubAssembly extends ActiveRecord
 	}
  
 	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchChildAssembly');
-	}
-
-	/**
 	 * Returns foreign key attribute name within this model that references another model.
 	 * @param string $referencesModel the name name of the model that the foreign key references.
 	 * @return string the foreign key attribute name within this model that references another model

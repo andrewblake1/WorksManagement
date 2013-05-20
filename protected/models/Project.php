@@ -118,9 +118,9 @@ class Project extends CustomFieldExtensionActiveRecord
 			't.id',
 			'id0.name AS name',
 			"CONCAT_WS('$delimiter',
-				inCharge.first_name,
-				inCharge.last_name,
-				inCharge.email
+				contact.first_name,
+				contact.last_name,
+				contact.email
 				) AS searchInCharge",
 			'travel_time_1_way',
 			'id0.in_charge_id AS in_charge_id',
@@ -140,9 +140,9 @@ class Project extends CustomFieldExtensionActiveRecord
 		$criteria->compare('t.client_id', $this->client_id);
 		$this->compositeCriteria($criteria,
 			array(
-				'inCharge.first_name',
-				'inCharge.last_name',
-				'inCharge.email',
+				'contact.first_name',
+				'contact.last_name',
+				'contact.email',
 			),
 			$this->searchInCharge
 		);
@@ -152,7 +152,7 @@ class Project extends CustomFieldExtensionActiveRecord
 			'projectTemplate',
 			'projectTemplate.client',
 			'id0',
-			'id0.inCharge',
+			'id0.inCharge.contact',
 		);
 
 		return $criteria;
@@ -169,15 +169,6 @@ class Project extends CustomFieldExtensionActiveRecord
 		$columns[] = 'planned';
 		
 		return $columns;
-	}
-
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchInCharge', 'searchProjectTemplate', 'name');
 	}
 
 /*	// ensure that where possible a pk has been passed from parent

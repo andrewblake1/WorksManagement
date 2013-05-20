@@ -140,17 +140,6 @@ class DutyType extends AdjacencyListActiveRecord
 		return $columns;
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array(
-			'searchCustomField',
-			'searchIntegralTo',
-		);
-	}
 }
 
 ?>

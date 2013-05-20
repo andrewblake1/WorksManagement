@@ -133,15 +133,6 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 		return $columns;
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchAuthAssignment');
-	}
-
 	public function beforeValidate()
 	{
 		// if user has chosen an auth assigment

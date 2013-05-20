@@ -8,24 +8,6 @@ class ContactActiveRecord extends ActiveRecord
 	static $niceName = 'Contact';
 	
 	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-/*	public function getSearchSort()
-	{
-		$t = $this->rules();
-		foreach ($this->rules() as $rule)
-		{
-			if(isset($rule['on']) && $rule['on'] == 'search' && $rule[1] == 'safe')
-			{
-				return explode(',', str_replace(' ', '', $rule[0]));
-			}
-		}
-
-		return array();
-	}*/
-	
-	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */
 	public static function getDisplayAttr()

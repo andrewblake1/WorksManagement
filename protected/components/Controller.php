@@ -334,7 +334,7 @@ $t = $model->attributes;
 					}
 					else
 					{
-						$keyValue = static::getUpdate_id($firstTabModelName) !== NULL ? static::getUpdate_id($firstTabModelName) : NULL;
+						$keyValue = static::getUpdateId($firstTabModelName) !== NULL ? static::getUpdateId($firstTabModelName) : NULL;
 					}
 
 					// if nextlevel is true then action should always be update, but also should be update if current model is this model
@@ -569,8 +569,8 @@ $t2=$model->attributes;
 			if ($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = static::getParentCrumb($crumb))) {
 				if (static::getAdminParam($parentForeignKey, $modelName) !== NULL) {
 					$queryParamters[$parentForeignKey] = static::getAdminParam($parentForeignKey, $modelName);
-				} elseif (static::getUpdate_id($parentCrumb)) {
-					$queryParamters[$parentForeignKey] = static::getUpdate_id($parentCrumb);
+				} elseif (static::getUpdateId($parentCrumb)) {
+					$queryParamters[$parentForeignKey] = static::getUpdateId($parentCrumb);
 				}
 			}
 
@@ -586,7 +586,7 @@ $t2=$model->attributes;
 					// add crumb to admin view. NB using last query paramters to that admin view
 					$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
 					// add a crumb with just the primary key nice name but no href
-					$primaryKey = static::getUpdate_id($crumb);
+					$primaryKey = static::getUpdateId($crumb);
 					$breadcrumbs[] = $crumb::getNiceName($primaryKey);
 				} else {
 					$breadcrumbs[] = $displays;
@@ -598,9 +598,9 @@ $t2=$model->attributes;
 				$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
 
 				// if there is a primary key for this
-				if (static::getUpdate_id($crumb) !== NULL) {
+				if (static::getUpdateId($crumb) !== NULL) {
 					// add an update crumb to this primary key
-					$primaryKey = static::getUpdate_id($crumb);
+					$primaryKey = static::getUpdateId($crumb);
 					$breadcrumbs[$crumb::getNiceName($primaryKey)] = array("$crumb/"
 						. (static::checkAccess(self::accessWrite, $crumb) ? 'update' : 'view'),
 						$crumb::model()->tableSchema->primaryKey => $primaryKey,
@@ -1127,9 +1127,9 @@ $t=			$model->attributes = $_POST[$modelName];
 		}
 
 		// if we arent going to receive the pk as id at run time via Planning ajaxtree
-		if ($reportType == self::reportTypeHtml && (static::getUpdate_id($context) !== NULL)) {
+		if ($reportType == self::reportTypeHtml && (static::getUpdateId($context) !== NULL)) {
 			// set the primary key
-			$pk = static::getUpdate_id($context);
+			$pk = static::getUpdateId($context);
 		}
 
 		$criteria = new CDbCriteria;
@@ -1333,7 +1333,7 @@ $t=			$model->attributes = $_POST[$modelName];
 	}
 
 	// return last or specified level of update id
-	static function getUpdate_id($modelName = NULL)
+	static function getUpdateId($modelName = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 
@@ -1349,7 +1349,7 @@ $t=			$model->attributes = $_POST[$modelName];
 	}
 
 /*	// return last or specified level of update id
-	static function getUpdate_id($modelName = NULL, $level = NULL)
+	static function getUpdateId($modelName = NULL, $level = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 

@@ -256,6 +256,15 @@ class User extends ContactActiveRecord
 		return $columns;
 	}
 
+/*	public static function getDisplayAttr()
+	{
+		return array(
+			'contact->first_name',
+			'contact->flast_name',
+			'contact->email',
+		);
+	}*/ 
+ 
 	/**
 	 * perform one-way encryption on the password before we store it in the database
 	 */

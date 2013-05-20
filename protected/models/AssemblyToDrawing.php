@@ -120,15 +120,6 @@ class AssemblyToDrawing extends ActiveRecord
 	}
 	
 	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchDrawing');
-	}
-
-	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */
 	public static function getDisplayAttr()

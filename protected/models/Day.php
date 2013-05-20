@@ -78,9 +78,9 @@ class Day extends ActiveRecord
 			'id0.name AS name',
 			't.scheduled',
 			"CONCAT_WS('$delimiter',
-				inCharge.first_name,
-				inCharge.last_name,
-				inCharge.email
+				contact.first_name,
+				contact.last_name,
+				contact.email
 				) AS searchInCharge",
 		);
 
@@ -91,9 +91,9 @@ class Day extends ActiveRecord
 		$criteria->compare('t.project_id',$this->project_id);
 		$this->compositeCriteria($criteria,
 			array(
-				'inCharge.first_name',
-				'inCharge.last_name',
-				'inCharge.email',
+				'contact.first_name',
+				'contact.last_name',
+				'contact.email',
 			),
 			$this->searchInCharge
 		);
@@ -101,7 +101,7 @@ class Day extends ActiveRecord
 		// with
 		$criteria->with = array(
 			'id0',
-			'id0.inCharge',
+			'id0.inCharge.contact',
 		);
 
 		return $criteria;
@@ -115,15 +115,6 @@ class Day extends ActiveRecord
 		$columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
 		
 		return $columns;
-	}
-
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchInCharge', 'name');
 	}
 
 	/**

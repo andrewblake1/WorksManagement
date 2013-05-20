@@ -155,19 +155,6 @@ class TaskTemplateToAssembly extends ActiveRecord
 		);
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array(
-			'searchAssemblyDescription',
-			'searchAssemblyUnit',
-			'searchAssemblyAlias',
-		);
-	}
-
 	public function afterFind() {
 		$this->standard_id = $this->assembly->standard_id;
 		

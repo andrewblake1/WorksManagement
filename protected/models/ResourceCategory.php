@@ -43,7 +43,7 @@ class ResourceCategory extends CategoryActiveRecord {
 	{
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
-		return parent::rules() + array(
+		return array(
             'resources' => array(self::HAS_MANY, 'Resource', 'resource_category_id'),
             'dutyCategory' => array(self::BELONGS_TO, 'DutyCategory', 'duty_category_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),

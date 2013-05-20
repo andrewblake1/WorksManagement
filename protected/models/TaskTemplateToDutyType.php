@@ -179,15 +179,6 @@ class TaskTemplateToDutyType extends ActiveRecord
 		);
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchDutyType', 'searchProjectTemplateToAuthItem');
-	}
-
 	public function beforeValidate()
 	{
 		// need to set project_template_id which is an extra foreign key to make circular foreign key constraint

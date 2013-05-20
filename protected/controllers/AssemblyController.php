@@ -17,7 +17,7 @@ class AssemblyController extends AdjacencyListController
 		if($model)
 		{
 			parent::setTabs(NULL);
-			$this->setChildTabs($this->loadModel(static::getUpdate_id()));
+			$this->setChildTabs($this->loadModel(static::getUpdateId()));
 		}
 		else
 		{

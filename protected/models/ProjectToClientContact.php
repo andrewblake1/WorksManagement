@@ -176,24 +176,6 @@ class ProjectToClientContact extends ActiveRecord
 		return parent::beforeSave();
 	}
 	
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array(
-			'searchRole',
-			'searchFirstName',
-			'searchLastName',
-			'searchEmail',
-			'searchPhoneMobile',
-			'searchPhoneHome',
-			'searchPhoneWork',
-			'searchPhoneFax',
-		);
-	}
-
 }
 
 ?>

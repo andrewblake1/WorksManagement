@@ -207,35 +207,6 @@ class Duty extends AdjacencyListActiveRecord
 		);
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array(
-			'searchTask',
-			'description',
-			'updated',
-			'searchInCharge',
-			'searchImportance',
-			'searchIntegralTo',
-			'due',
-		);
-	}
-
-	public function beforeValidate()
-	{
-//		if(isset($this->taskTemplateToDutyType_id))
-//		{
-//			$model = TaskTemplateToDutyType::model()->findByPk($this->taskTemplateToDutyType_id);
-//			$this->task_template_id = $model->task_template_id ;
-//			$this->duty_type_id = $model->duty_type_id ;
-//		}
-		
-		return parent::beforeValidate();
-	}
-
 	public function afterFind() {
 
 		$this->updated = $this->dutyData->updated;

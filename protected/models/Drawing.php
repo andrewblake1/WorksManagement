@@ -167,17 +167,6 @@ class Drawing extends AdjacencyListActiveRecord
 		return $columns;
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{	
-		return array(
-			'parent_id',
-		);
-	}
-	
 	public function scopeStandard($standard_id)
 	{
 		$criteria=new DbCriteria;
@@ -191,7 +180,7 @@ class Drawing extends AdjacencyListActiveRecord
 	public function afterFind() {
 		if($this->drawingAdjacencyLists1)
 		{
-			$this->parent = $this->drawingAdjacencyLists1[0];
+			$this->parent = $this->drawingAdjacencyLists1[0]->parent;
 			$this->parent_id = $this->parent->parent_id;
 		}
 		

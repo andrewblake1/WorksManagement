@@ -73,9 +73,9 @@ class Crew extends ActiveRecord
 		$criteria->select=array(
 			't.id',
 			"CONCAT_WS('$delimiter',
-				inCharge.first_name,
-				inCharge.last_name,
-				inCharge.email
+				contact.first_name,
+				contact.last_name,
+				contact.email
 				) AS searchInCharge",
 		);
 
@@ -84,9 +84,9 @@ class Crew extends ActiveRecord
 		$criteria->compare('t.day_id',$this->day_id);
 		$this->compositeCriteria($criteria,
 			array(
-				'inCharge.first_name',
-				'inCharge.last_name',
-				'inCharge.email',
+				'contact.first_name',
+				'contact.last_name',
+				'contact.email',
 			),
 			$this->searchInCharge
 		);
@@ -94,7 +94,7 @@ class Crew extends ActiveRecord
 		// with
 		$criteria->with = array(
 			'id0',
-			'id0.inCharge',
+			'id0.inCharge.contact',
 		);
 
 		return $criteria;
@@ -109,21 +109,12 @@ class Crew extends ActiveRecord
 	}
 
 	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array('searchInCharge');
-	}
-
-	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */
 	public static function getDisplayAttr()
 	{
-		$displaAttr[]='id0->inCharge->first_name';
-		$displaAttr[]='id0->inCharge->last_name';
+		$displaAttr[]='id0->inCharge->contact->first_name';
+		$displaAttr[]='id0->inCharge->contact->last_name';
 
 		return $displaAttr;
 	}
