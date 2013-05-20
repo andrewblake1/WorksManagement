@@ -98,7 +98,7 @@ class ProjectToClientContact extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.client_contact_id',
 			'clientContact.role AS searchRole',
-			'ccontact.first_name AS searchFirstName',
+			'contact.first_name AS searchFirstName',
 			'contact.last_name AS searchLastName',
 			'contact.email AS searchEmail',
 			'contact.phone_mobile AS searchPhoneMobile',
