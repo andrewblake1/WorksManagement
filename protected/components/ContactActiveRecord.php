@@ -13,9 +13,9 @@ class ContactActiveRecord extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'first_name',
-			'last_name',
-			'email',
+			'contact->first_name',
+			'contact->last_name',
+			'contact->email',
 		);
 	}
 
