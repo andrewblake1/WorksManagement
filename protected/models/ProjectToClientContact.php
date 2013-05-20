@@ -98,28 +98,29 @@ class ProjectToClientContact extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.client_contact_id',
 			'clientContact.role AS searchRole',
-			'clientContact.first_name AS searchFirstName',
-			'clientContact.last_name AS searchLastName',
-			'clientContact.email AS searchEmail',
-			'clientContact.phone_mobile AS searchPhoneMobile',
-			'clientContact.phone_home AS searchPhoneHome',
-			'clientContact.phone_work AS searchPhoneWork',
-			'clientContact.phone_fax AS searchPhoneFax',
+			'ccontact.first_name AS searchFirstName',
+			'contact.last_name AS searchLastName',
+			'contact.email AS searchEmail',
+			'contact.phone_mobile AS searchPhoneMobile',
+			'contact.phone_home AS searchPhoneHome',
+			'contact.phone_work AS searchPhoneWork',
+			'contact.phone_fax AS searchPhoneFax',
 		);
 
 		$criteria->compare('project_id',$this->project_id);
 		$criteria->compare('clientContact.role',$this->searchRole,true);
-		$criteria->compare('clientContact.first_name',$this->searchFirstName,true);
-		$criteria->compare('clientContact.last_name',$this->searchLastName,true);
-		$criteria->compare('clientContact.email',$this->searchEmail,true);
-		$criteria->compare('clientContact.phone_mobile',$this->searchPhoneMobile,true);
-		$criteria->compare('clientContact.phone_home',$this->searchPhoneHome,true);
-		$criteria->compare('clientContact.phone_work',$this->searchPhoneWork,true);
-		$criteria->compare('clientContact.phone_fax',$this->searchPhoneFax,true);
+		$criteria->compare('contact.first_name',$this->searchFirstName,true);
+		$criteria->compare('contact.last_name',$this->searchLastName,true);
+		$criteria->compare('contact.email',$this->searchEmail,true);
+		$criteria->compare('contact.phone_mobile',$this->searchPhoneMobile,true);
+		$criteria->compare('contact.phone_home',$this->searchPhoneHome,true);
+		$criteria->compare('contact.phone_work',$this->searchPhoneWork,true);
+		$criteria->compare('contact.phone_fax',$this->searchPhoneFax,true);
 
 		// with
 		$criteria->with = array(
 			'clientContact',
+			'clientContact.contact',
 		);
 
 		return $criteria;
@@ -161,9 +162,9 @@ class ProjectToClientContact extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'clientContact->first_name',
-			'clientContact->last_name',
-			'clientContact->email',
+			'clientContact->contact->first_name',
+			'clientContact->contact->last_name',
+			'clientContact->contact->email',
 		);
 	}
 

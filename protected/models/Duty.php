@@ -109,27 +109,27 @@ class Duty extends AdjacencyListActiveRecord
 			'(SELECT `date` FROM tbl_working_days WHERE id = (SELECT id - lead_in_days FROM tbl_working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
 			"COALESCE(
 				IF(LENGTH(CONCAT_WS('$delimiter',
-					responsible.first_name,
-					responsible.last_name,
-					responsible.email
+					responsibleContact.first_name,
+					responsibleContact.last_name,
+					responsibleContact.email
 					))=0, NULL, CONCAT_WS('$delimiter',
-					responsible.first_name,
-					responsible.last_name,
-					responsible.email
+					responsibleContact.first_name,
+					responsibleContact.last_name,
+					responsibleContact.email
 					)),
 				IF(LENGTH(CONCAT_WS('$delimiter',
-					dutyDefault.first_name,
-					dutyDefault.last_name,
-					dutyDefault.email
+					dutyDefaultContact.first_name,
+					dutyDefaultContact.last_name,
+					dutyDefaultContact.email
 					))=0, NULL, CONCAT_WS('$delimiter',
-					dutyDefault.first_name,
-					dutyDefault.last_name,
-					dutyDefault.email
+					dutyDefaultContact.first_name,
+					dutyDefaultContact.last_name,
+					dutyDefaultContact.email
 					)),
 				CONCAT_WS('$delimiter',
-					inCharge.first_name,
-					inCharge.last_name,
-					inCharge.email
+					contact.first_name,
+					contact.last_name,
+					contact.email
 					)
 				) AS searchInCharge",
 			'dutyData.updated AS updated',
@@ -140,25 +140,13 @@ class Duty extends AdjacencyListActiveRecord
 		// where
 		$criteria->compare('dutyType.description',$this->description,true);
 		$criteria->compare('taskTemplateToDutyType.importance',$this->searchImportance,true);
-		$this->compositeCriteria(
-			$criteria,
-			array(
-				'dutyDefault.first_name',
-				'dutyDefault.last_name',
-				'dutyDefault.email',
-			), $this->searchInCharge);
-		$this->compositeCriteria($criteria,
-			array(
-				'inCharge.first_name',
-				'inCharge.last_name',
-				'inCharge.email',
-			),
-			$this->searchInCharge
-		);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
 		$criteria->compare('dependedOnBy.description',$this->searchIntegralTo,true);
-
+// TODO will be non standard code to search by searchincharge
+		
+		
+		
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
 
@@ -174,7 +162,11 @@ class Duty extends AdjacencyListActiveRecord
 			LEFT JOIN tbl_project_to_project_template_to_auth_item projectToProjectTemplateToAuthItem ON projectTemplateToAuthItem.id = projectToProjectTemplateToAuthItem.project_template_to_auth_item_id
 			LEFT JOIN AuthAssignment ON projectToProjectTemplateToAuthItem.auth_assignment_id = AuthAssignment.id
 			LEFT JOIN tbl_user dutyDefault ON AuthAssignment.userid = dutyDefault.id
+			LEFT JOIN tbl_contact dutyDefaultContact ON dutyDefault.contact_id = dutyDefaultContact.id
+			
 			LEFT JOIN tbl_user responsible ON t.responsible = responsible.id
+			LEFT JOIN tbl_contact responsibleContact ON responsible.contact_id = responsibleContact.id
+			
 			LEFT JOIN tbl_parent parent ON t.parent_id = t.id
 			LEFT JOIN tbl_dutyType dependedOnBy ON parent.duty_type_id = dependedOnBy.id
 		';
@@ -182,7 +174,7 @@ class Duty extends AdjacencyListActiveRecord
 		// with
 		$criteria->with = array(
 			'dutyData',
-			'dutyData.planning.inCharge',
+			'dutyData.planning.inCharge.contact',
 		);
 
 		return $criteria;

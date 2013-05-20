@@ -97,9 +97,9 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.auth_assignment_id',
 			"CONCAT_WS('$delimiter',
-				user.first_name,
-				user.last_name,
-				user.email
+				contact.first_name,
+				contact.last_name,
+				contact.email
 				) AS searchAuthAssignment",
 			't.item_name',
 		);
@@ -108,9 +108,9 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 		$criteria->compare('auth_assignment_id',$this->auth_assignment_id);
 		$this->compositeCriteria($criteria,
 			array(
-				'user.first_name',
-				'user.last_name',
-				'user.email',
+				'contact.first_name',
+				'contact.last_name',
+				'contact.email',
 			),
 			$this->searchAuthAssignment
 		);
@@ -119,7 +119,7 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 		
 		// with
 		$criteria->with = array(
-			'authAssignment.user',
+			'authAssignment.user.contact',
 		);
 
 		return $criteria;
