@@ -112,7 +112,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	 */
 	public function createSave(&$models=array())
 	{
-		return TaskToAssemblyController::addAssembly($this->task_id, $this->assembly_id, $this->default, $this->parent_id, $this->sub_assembly_id, $models, $this);
+		return TaskToAssemblyController::addAssembly($this->task_id, $this->assembly_id, $this->quantity, $this->parent_id, $this->sub_assembly_id, $models, $this);
 	}
 	
 }

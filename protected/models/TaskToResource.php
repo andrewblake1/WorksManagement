@@ -128,7 +128,7 @@ class TaskToResource extends ActiveRecord
 		$criteria->with = array(
 			'task',
 			'resourceData',
-			'resource',
+			'resourceData.resourceToSupplier.resource',
 			'resourceData.resourceToSupplier.supplier',
 			);
 

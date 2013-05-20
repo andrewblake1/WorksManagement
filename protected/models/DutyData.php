@@ -92,4 +92,11 @@ class DutyData extends ActiveRecord
 		return parent::beforeSave();
 	}
 
+	static function getDisplayAttr()
+	{
+		return array(
+			'dutyType->description',
+		);
+	}
+
 }

@@ -773,7 +773,7 @@ $t = $model->attributes;
 	 * @param integer $id the ID of the model to be updated
 	 */
 	public function actionUpdate($id, $model = null) {
-		$modelName = $this->modelName;
+ 		$modelName = $this->modelName;
 
 		if ($model === null) {
 			$model = $this->loadModel($id);

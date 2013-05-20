@@ -37,7 +37,7 @@ class TaskToMaterialToAssemblyToMaterial extends ActiveRecord
 	{
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
-		return parent::rules() + array(
+		return array(
             'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
             'assemblyToMaterial' => array(self::BELONGS_TO, 'AssemblyToMaterial', 'assembly_to_material_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),

@@ -123,7 +123,15 @@ class Crew extends ActiveRecord
 	// needed to overwrite this here because project has to look thru project type to get to client when doing update but gets client for admin
 	public function assertFromParent()
 	{
-		// if we are in the planning screen then they may not be a parent foreign key as will be derived when user identifies a node
+// TODO: repeated in task, an day
+		// if update in planning view
+		if(isset($_POST['controller']['Planning']) && isset($_GET['project_id']))
+		{
+			// ensure that that at least the parents primary key is set for the admin view of planning
+			Controller::setAdminParam('project_id', $_GET['project_id'], 'Planning');
+		}
+		
+		// if we are in the schdule screen then they may not be a parent foreign key as will be derived when user identifies a node
 		if(!(Yii::app()->controller->id == 'planning'))
 		{
 			return parent::assertFromParent();

@@ -106,7 +106,7 @@ class Duty extends AdjacencyListActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			'dutyType.description AS description',
-			'(SELECT `date` FROM tbl_working_days WHERE id = (SELECT id - lead_in_days FROM tbl_working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
+			'(SELECT `date` FROM tbl_working_days WHERE id = (SELECT id - dutyType.lead_in_days FROM tbl_working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
 			"COALESCE(
 				IF(LENGTH(CONCAT_WS('$delimiter',
 					responsibleContact.first_name,
@@ -167,8 +167,8 @@ class Duty extends AdjacencyListActiveRecord
 			LEFT JOIN tbl_user responsible ON t.responsible = responsible.id
 			LEFT JOIN tbl_contact responsibleContact ON responsible.contact_id = responsibleContact.id
 			
-			LEFT JOIN tbl_parent parent ON t.parent_id = t.id
-			LEFT JOIN tbl_dutyType dependedOnBy ON parent.duty_type_id = dependedOnBy.id
+			LEFT JOIN tbl_duty parent ON t.parent_id = t.id
+			LEFT JOIN tbl_duty_type dependedOnBy ON parent.duty_type_id = dependedOnBy.id
 		';
 		
 		// with
@@ -195,7 +195,7 @@ class Duty extends AdjacencyListActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'dutyType->description',
+			'dutyType->dutyType->description',
 		);
 	}
 
@@ -304,10 +304,10 @@ class Duty extends AdjacencyListActiveRecord
 		return $saved & parent::createSave($models);
 	}
 
-	public function incompleteDependencies()
+	public function getIncompleteDependencies()
 	{
 		// get any incomplete children
-		return static::model()->findAllByAttributes(array('parent_id'=>$this->id),'updated IS NULL');
+		return static::model()->with('dutyData')->findAllByAttributes(array('parent_id'=>$this->id),'dutyData.updated IS NULL');
 	}
 }
 

@@ -135,6 +135,8 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 											$("#form-modal").html(data);
 //											$("#myModal" + modelName + " form").replaceWith(data);
 											//$("#form-create" + targetName).replaceWith(data);
+											action = $("#form-modal form[action]").attr('action');
+											$("#form-modal form[action]").attr('action', action + '<?php echo $queryString; ?>');
 											// display the modal
 											$("#myModal").modal('show');
 
