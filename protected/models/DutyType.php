@@ -46,7 +46,7 @@ class DutyType extends AdjacencyListActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('description', 'required'),
 			array('parent_id, lead_in_days, duty_category_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
@@ -54,8 +54,8 @@ class DutyType extends AdjacencyListActiveRecord
 			array('custom_field_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, parent_id, searchIntegralTo, description, lead_in_days, level, duty_category_id, searchDutyCategory, searchCustomField', 'safe', 'on'=>'search'),
-		);
+//			array('id, parent_id, searchIntegralTo, description, lead_in_days, level, duty_category_id, searchDutyCategory, searchCustomField', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

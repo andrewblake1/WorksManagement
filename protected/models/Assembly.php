@@ -41,12 +41,12 @@ class Assembly extends AdjacencyListActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('description, standard_id', 'required'),
 			array('parent_id, standard_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
-			array('id, description, standard_id, alias, parent_id', 'safe', 'on'=>'search'),
-		);
+//			array('id, description, standard_id, alias, parent_id', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

@@ -30,14 +30,14 @@ class ProjectTemplate extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('description, client_id', 'required'),
 			array('client_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, client_id, searchClient', 'safe', 'on'=>'search'),
-		);
+//			array('id, description, client_id, searchClient', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

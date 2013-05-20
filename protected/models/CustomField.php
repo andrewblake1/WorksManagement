@@ -96,7 +96,7 @@ class CustomField extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('description, validation_type, data_type', 'required'),
 			array('mandatory, allow_new', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
@@ -105,9 +105,9 @@ class CustomField extends ActiveRecord
 			array('validation_text, validation_error', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, mandatory, allow_new, validation_type, data_type, validation_text, validation_error', 'safe', 'on'=>'search'),
+//			array('id, description, mandatory, allow_new, validation_type, data_type, validation_text, validation_error', 'safe', 'on'=>'search'),
 			array('validation_text', 'validation_text'),
-		);
+		));
 	}
 
 	/**

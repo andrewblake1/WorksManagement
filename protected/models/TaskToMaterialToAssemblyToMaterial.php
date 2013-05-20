@@ -23,11 +23,11 @@ class TaskToMaterialToAssemblyToMaterial extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('task_to_material_id, assembly_to_material_id, updated_by', 'required'),
 			array('assembly_to_material_id, updated_by', 'numerical', 'integerOnly'=>true),
 			array('task_to_material_id', 'length', 'max'=>10),
-		);
+		));
 	}
 
 	/**
@@ -37,7 +37,7 @@ class TaskToMaterialToAssemblyToMaterial extends ActiveRecord
 	{
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
-        return array(
+		return parent::rules() + array(
             'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
             'assemblyToMaterial' => array(self::BELONGS_TO, 'AssemblyToMaterial', 'assembly_to_material_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),

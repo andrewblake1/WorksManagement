@@ -29,14 +29,14 @@ class PurchaseOrder extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('supplier_id, number', 'required'),
 			array('supplier_id', 'numerical', 'integerOnly'=>true),
 			array('number', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchSupplier, number', 'safe', 'on'=>'search'),
-		);
+//			array('id, searchSupplier, number', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

@@ -39,12 +39,12 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return $this->customValidators + array(
+		return array_merge(parent::rules(), array(
 			array('task_id, assembly_id', 'required'),
 			array('standard_id', 'safe'),
 			array('assembly_id, sub_assembly_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('parent_id, task_id', 'length', 'max'=>10),
-		);
+		));
 	}
 
 	public function setCustomValidators()

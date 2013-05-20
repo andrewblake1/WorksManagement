@@ -40,14 +40,14 @@ class ProjectToClientContact extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('project_id, client_contact_id', 'required'),
 			array('client_id, client_contact_id', 'numerical', 'integerOnly'=>true),
 			array('project_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchRole, searchFirstName, searchLastName, searchEmail, searchPhoneMobile, searchPhoneHome, searchPhoneWork, searchPhoneFax, project_id, client_id, client_contact_id', 'safe', 'on'=>'search'),
-		);
+//			array('id, searchRole, searchFirstName, searchLastName, searchEmail, searchPhoneMobile, searchPhoneHome, searchPhoneWork, searchPhoneFax, project_id, client_id, client_contact_id', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

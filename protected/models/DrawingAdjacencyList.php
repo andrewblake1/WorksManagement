@@ -33,13 +33,13 @@ class DrawingAdjacencyList extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('parent_id, child_id, updated_by', 'required'),
 			array('parent_id, child_id, updated_by', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, parent_id, child_id, updated_by', 'safe', 'on'=>'search'),
-		);
+//			array('id, parent_id, child_id, updated_by', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

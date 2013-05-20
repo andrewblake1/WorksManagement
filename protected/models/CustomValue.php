@@ -30,15 +30,15 @@ class CustomValue extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return $this->customValidators + array(
+		return array_merge(parent::rules(), array(
 			array('type_int', 'numerical', 'integerOnly'=>true),
 			array('type_float', 'numerical'),
 			array('type_text', 'length', 'max'=>255),
 			array('type_time, type_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, type_int, type_float, type_time, type_date, type_text', 'safe', 'on'=>'search'),
-		);
+//			array('id, type_int, type_float, type_time, type_date, type_text', 'safe', 'on'=>'search'),
+		));
 	}
 
 	public function setCustomValidators($customValidatorParams = array())

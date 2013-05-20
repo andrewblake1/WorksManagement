@@ -30,7 +30,7 @@ class CustomFieldTaskCategory extends CategoryActiveRecord {
 	{
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
-        return array(
+		return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'customFieldToTaskTemplates' => array(self::HAS_MANY, 'CustomFieldToTaskTemplate', 'custom_field_category_id'),
         );

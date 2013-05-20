@@ -27,12 +27,12 @@ class DefaultValue extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('table, column, select', 'required'),
 			array('table, column', 'length', 'max'=>64),
 			array('select', 'validationSQL'),
-			array('id, table, column, select', 'safe', 'on'=>'search'),
-		);
+//			array('id, table, column, select', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

@@ -40,14 +40,14 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('project_template_id, custom_field_id', 'required'),
 			array('project_template_id, custom_field_id,', 'numerical', 'integerOnly'=>true),
 			array('custom_field_project_category_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, project_template_id, searchProjectTemplate, searchCustomFieldProjectCategory, searchCustomField', 'safe', 'on'=>'search'),
-		);
+//			array('id, project_template_id, searchProjectTemplate, searchCustomFieldProjectCategory, searchCustomField', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

@@ -69,15 +69,15 @@ class Task extends CustomFieldExtensionActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('project_id, task_template_id, crew_id', 'required'),
 			array('task_template_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
 			array('planned, preferred, name, location', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, quantity, searchInCharge, searchEarliest, searchProject, searchTaskTemplate, name, crew_id, planned, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
-		);
+//			array('id, level, quantity, searchInCharge, searchEarliest, searchProject, searchTaskTemplate, name, crew_id, planned, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

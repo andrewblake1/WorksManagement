@@ -31,14 +31,14 @@ class Day extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('project_id', 'required'),
 			array('id, level, project_id, in_charge_id', 'length', 'max'=>10),
 			array('name, scheduled', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, level, searchInCharge, project_id, scheduled', 'safe', 'on'=>'search'),
-		);
+//			array('id, name, level, searchInCharge, project_id, scheduled', 'safe', 'on'=>'search'),
+		));
 	}
 
 	public function relations()

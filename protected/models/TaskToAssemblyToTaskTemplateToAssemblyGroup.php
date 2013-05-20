@@ -38,11 +38,11 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return $this->customValidators + array(
+		return array_merge(parent::rules(), array(
 			array('task_template_to_assembly_group_id, task_to_assembly_id, assembly_group_to_assembly_id, quantity, task_id, assembly_group_id, assembly_id, updated_by', 'required'),
 			array('task_template_to_assembly_group_id, quantity, assembly_group_id, assembly_id, updated_by', 'numerical', 'integerOnly'=>true),
 			array('task_to_assembly_id, task_id, task_to_assembly_id, assembly_group_to_assembly_id', 'length', 'max'=>10),
-		);
+		));
 	}
 
 	public function setCustomValidators()

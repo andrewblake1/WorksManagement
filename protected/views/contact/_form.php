@@ -100,9 +100,9 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'tbl_user_id'); ?>
-		<?php echo $form->textField($model,'tbl_user_id'); ?>
-		<?php echo $form->error($model,'tbl_user_id'); ?>
+		<?php echo $form->labelEx($model,'updated_by'); ?>
+		<?php echo $form->textField($model,'updated_by'); ?>
+		<?php echo $form->error($model,'updated_by'); ?>
 	</div>
 
 	<div class="row buttons">

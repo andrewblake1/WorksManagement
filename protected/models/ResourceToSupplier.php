@@ -37,13 +37,13 @@ class ResourceToSupplier extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('resource_id, supplier_id', 'required'),
 			array('resource_id, supplier_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchSupplier, resource_id, supplier_id,', 'safe', 'on'=>'search'),
-		);
+//			array('id, searchSupplier, resource_id, supplier_id,', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

@@ -29,11 +29,11 @@ class ResourceCategory extends CategoryActiveRecord {
 		// will receive user inputs.
 		// NOTE2: Remove ALL rules associated with the nested Behavior:
 		//rgt,lft,root,level,id.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('name', 'required'),
 			array('duty_category_id', 'safe'),
 			array('name', 'length', 'max' => 64),
-		);
+		));
 	}
 
 	/**
@@ -43,7 +43,7 @@ class ResourceCategory extends CategoryActiveRecord {
 	{
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
-        return array(
+		return parent::rules() + array(
             'resources' => array(self::HAS_MANY, 'Resource', 'resource_category_id'),
             'dutyCategory' => array(self::BELONGS_TO, 'DutyCategory', 'duty_category_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),

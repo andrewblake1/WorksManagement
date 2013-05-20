@@ -25,13 +25,13 @@ class Supplier extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('name', 'required'),
 			array('name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name', 'safe', 'on'=>'search'),
-		);
+//			array('id, name', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Supplier extends ActiveRecord
 	{
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
-        return array(
+ 		return parent::rules() + array(
             'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrder', 'supplier_id'),
             'resourceToSuppliers' => array(self::HAS_MANY, 'ResourceToSupplier', 'supplier_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),

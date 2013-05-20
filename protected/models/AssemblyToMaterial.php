@@ -47,13 +47,13 @@ class AssemblyToMaterial extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('assembly_id, material_id, stage_id, standard_id, quantity', 'required'),
 			array('assembly_id, material_id, stage_id, standard_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('quantity_tooltip', 'length', 'max'=>255),
 			array('select', 'safe'),
-			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
-		);
+//			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

@@ -28,13 +28,13 @@ class Standard extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('name', 'required'),
 			array('name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name', 'safe', 'on'=>'search'),
-		);
+//			array('id, name', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

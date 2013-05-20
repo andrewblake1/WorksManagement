@@ -31,15 +31,15 @@ class DutyData extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('planning_id, duty_type_id, level', 'required'),
 			array('duty_type_id', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level, custom_value_id', 'length', 'max'=>10),
 			array('updated', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, planning_id, duty_type_id, level, updated, custom_value_id', 'safe', 'on'=>'search'),
-		);
+//			array('id, planning_id, duty_type_id, level, updated, custom_value_id', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

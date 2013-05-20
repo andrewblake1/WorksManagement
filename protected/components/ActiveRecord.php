@@ -42,6 +42,51 @@ abstract class ActiveRecord extends RangeActiveRecord
 		return 'tbl_' . Yii::app()->functions->uncamelize(get_class($this));
 	}
 	
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// because only setting search attribues names herer and not actually assigning variables
+		// it should be fine to use all object varialbles. This technically means that things like defaultSort could
+		// be injected so we need to be aware and remove these here or not use this if there is potential issue
+		$attributes = $this->attributeNames();
+		$attributes = array_combine($attributes, $attributes);
+		
+		foreach(get_object_vars($this) as $key => $value)
+		{
+			if($value === NULL || is_scalar($value))
+			{
+				$attributes[$key] = $key;
+			}
+		}
+		
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array_merge($this->customValidators, array(array(implode(',', $attributes), 'safe', 'on'=>'search')));
+	}
+/*	{
+		$t = $this->rules();
+		foreach ($this->rules() as $rule)
+		{
+			if(isset($rule['on']) && $rule['on'] == 'search' && $rule[1] == 'safe')
+			{
+				$theseColumns = $this->tableSchema->columnNames;
+				$sorts = explode(',', str_replace(' ', '', $rule[0]));
+				foreach($sorts as $key => &$value)
+				{
+					if(in_array($value, $theseColumns))
+					{
+						$value = "t.$value";
+					}
+				}
+				return $sorts;
+			}
+		}
+
+		return array();
+	}*/
+ 
 	static public function evalDisplayAttr($model)
 	{
 		$attributes = array();
@@ -468,6 +513,7 @@ $t=$this->attributes;
 
 		return array();
 	}
+	
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */

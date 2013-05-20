@@ -28,13 +28,13 @@ class Crew extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('day_id', 'required'),
 			array('id, level, day_id, in_charge_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, searchInCharge, day_id', 'safe', 'on'=>'search'),
-		);
+//			array('id, level, searchInCharge, day_id', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

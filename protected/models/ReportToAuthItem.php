@@ -28,17 +28,17 @@ class ReportToAuthItem extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('report_id, auth_item_name', 'required'),
 			array('report_id', 'length', 'max'=>10),
 			array('auth_item_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, report_id, auth_item_name', 'safe', 'on'=>'search'),
-		);
+//			array('id, report_id, auth_item_name', 'safe', 'on'=>'search'),
+		));
 	}
 
-	/**
+	/** 
 	 * @return array relational rules.
 	 */
 	public function relations()

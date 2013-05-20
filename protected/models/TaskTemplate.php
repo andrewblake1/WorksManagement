@@ -56,7 +56,7 @@ class TaskTemplate extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('description, project_template_id, client_id', 'required'),
 			array('project_template_id, client_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
@@ -65,8 +65,8 @@ class TaskTemplate extends ActiveRecord
 			array('select', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, project_template_id, unit_price, quantity, minimum, maximum, select, quantity_tooltip, deleted, updated_by', 'safe', 'on'=>'search'),
-		);
+//			array('id, description, project_template_id, unit_price, quantity, minimum, maximum, select, quantity_tooltip, deleted, updated_by', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

@@ -32,15 +32,15 @@ class Resource extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('description', 'required'),
 			array('resource_category_id, maximum', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			array('unit_price', 'length', 'max'=>7),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, unit_price, resource_category_id, maximum', 'safe', 'on'=>'search'),
-		);
+//			array('id, description, unit_price, resource_category_id, maximum', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

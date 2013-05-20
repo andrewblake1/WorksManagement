@@ -53,7 +53,7 @@ class Project extends CustomFieldExtensionActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('project_template_id, client_id', 'required'),
 			array('project_template_id, client_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id', 'length', 'max'=>10),
@@ -61,8 +61,8 @@ class Project extends CustomFieldExtensionActiveRecord
 			array('travel_time_1_way', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, level, searchInCharge, travel_time_1_way, critical_completion, planned, name, searchProjectTemplate', 'safe', 'on'=>'search'),
-		);
+//			array('id, level, searchInCharge, travel_time_1_way, critical_completion, planned, name, searchProjectTemplate', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

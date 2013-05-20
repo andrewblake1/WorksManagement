@@ -40,14 +40,14 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('task_template_id, custom_field_id', 'required'),
 			array('task_template_id, custom_field_id', 'numerical', 'integerOnly'=>true),
 			array('custom_field_task_category_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_template_id, searchTaskTemplate, searchCustomFieldTaskCategory, searchCustomField', 'safe', 'on'=>'search'),
-		);
+//			array('id, task_template_id, searchTaskTemplate, searchCustomFieldTaskCategory, searchCustomField', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

@@ -34,13 +34,13 @@ class AssemblyToDrawing extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('assembly_id, drawing_id, standard_id', 'required'),
 			array('assembly_id, drawing_id, standard_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, assembly_id, searchDrawing, standard_id', 'safe', 'on'=>'search'),
-		);
+//			array('id, assembly_id, searchDrawing, standard_id', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

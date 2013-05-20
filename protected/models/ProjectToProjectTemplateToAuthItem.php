@@ -41,15 +41,15 @@ class ProjectToProjectTemplateToAuthItem extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('project_id, project_template_to_auth_item_id, auth_assignment_id, item_name', 'required'),
 			array('project_template_to_auth_item_id, auth_assignment_id', 'numerical', 'integerOnly'=>true),
 			array('project_id', 'length', 'max'=>10),
 			array('item_name', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('searchProject, searchProjectTemplateToAuthItem, searchAuthAssignment, id, project_id, project_template_to_auth_item_id, auth_assignment_id, item_name', 'safe', 'on'=>'search'),
-		);
+//			array('searchProject, searchProjectTemplateToAuthItem, searchAuthAssignment, id, project_id, project_template_to_auth_item_id, auth_assignment_id, item_name', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

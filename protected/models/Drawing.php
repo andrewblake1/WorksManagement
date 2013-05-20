@@ -37,13 +37,13 @@ class Drawing extends AdjacencyListActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('standard_id, description', 'required'),
 			array('parent_id, standard_id', 'numerical', 'integerOnly'=>true),
 			array('description alias', 'length', 'max'=>255),
 //			array('file', 'file', 'types'=>'jpg, gif, png, pdf', 'allowEmpty' => true),
-			array('id, standard_id, parent_id, description, alias', 'safe', 'on'=>'search'),
-		);
+//			array('id, standard_id, parent_id, description, alias', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

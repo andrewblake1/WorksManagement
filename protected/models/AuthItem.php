@@ -58,14 +58,14 @@ class AuthItem extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('name', 'required'),
 			array('name', 'length', 'max'=>64),
 			array('description, bizrule, data', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('name, type, description, bizrule, data', 'safe', 'on'=>'search'),
-		);
+//			array('name, type, description, bizrule, data', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

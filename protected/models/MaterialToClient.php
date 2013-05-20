@@ -34,13 +34,13 @@ class MaterialToClient extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('material_id, client_id', 'required'),
 			array('material_id, client_id', 'numerical', 'integerOnly'=>true),
 			array('unit_price', 'length', 'max'=>7),
 			array('alias', 'length', 'max'=>255),
-			array('id, client_id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, alias, unit_price', 'safe', 'on'=>'search'),
-		);
+//			array('id, client_id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, alias, unit_price', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

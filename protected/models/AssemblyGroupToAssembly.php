@@ -43,13 +43,13 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('assembly_id, assembly_group_id, standard_id,', 'required'),
 			array('assembly_id, assembly_group_id, standard_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, searchAssemblyDescription, searchAssemblyAlias, assembly_id, assembly_group_id', 'safe', 'on'=>'search'),
-		);
+//			array('id, searchAssemblyDescription, searchAssemblyAlias, assembly_id, assembly_group_id', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

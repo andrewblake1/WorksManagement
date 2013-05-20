@@ -44,13 +44,13 @@ class TaskTemplateToAssembly extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('standard_id, task_template_id, assembly_id, quantity', 'required'),
 			array('standard_id, task_template_id, assembly_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_template_id, searchAssemblyDescription, searchAssemblyAlias, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
-		);
+//			array('id, task_template_id, searchAssemblyDescription, searchAssemblyAlias, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

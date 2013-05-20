@@ -19,11 +19,11 @@
  * @property string $phone_work
  * @property string $phone_fax
  * @property integer $deleted
- * @property integer $tbl_user_id
+ * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property ClientContact[] $clientContacts
- * @property User $tblUser
+ * @property User $updatedBy
  * @property SupplierContact[] $supplierContacts
  * @property User[] $users
  */
@@ -37,17 +37,17 @@ class Contact extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('first_name, last_name, email', 'required'),
-			array('deleted, tbl_user_id', 'numerical', 'integerOnly'=>true),
+			array('deleted, updated_by', 'numerical', 'integerOnly'=>true),
 			array('first_name, last_name, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
 //			array('first_name, last_name, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'safe'),
 			array('first_name, last_name, email', 'required'),
 			array('post_code', 'length', 'max'=>16),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, first_name, last_name, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax, deleted, tbl_user_id', 'safe', 'on'=>'search'),
-		);
+//			array('id, first_name, last_name, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax, deleted, updated_by', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**
@@ -55,15 +55,15 @@ class Contact extends ActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'clientContacts' => array(self::HAS_MANY, 'ClientContact', 'contact_id'),
-			'tblUser' => array(self::BELONGS_TO, 'User', 'tbl_user_id'),
-			'supplierContacts' => array(self::HAS_MANY, 'SupplierContact', 'contact_id'),
-			'users' => array(self::HAS_MANY, 'User', 'contact_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'clientContacts' => array(self::HAS_MANY, 'ClientContact', 'contact_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'supplierContacts' => array(self::HAS_MANY, 'SupplierContact', 'contact_id'),
+            'users' => array(self::HAS_MANY, 'User', 'contact_id'),
+        );
+    }
 	
 	/**
 	 * @return array customized attribute labels (name=>label)

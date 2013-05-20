@@ -101,15 +101,15 @@ class User extends ContactActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('first_name, last_name, email', 'required'),
 			array('first_name, last_name, phone_mobile', 'length', 'max'=>64),
 			array('email', 'length', 'max'=>255),
 			array('password', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, first_name, last_name, phone_mobile, email', 'safe', 'on'=>'search'),
-		);
+//			array('id, first_name, last_name, phone_mobile, email', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**
@@ -130,7 +130,7 @@ class User extends ContactActiveRecord
             'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'updated_by'),
             'clients' => array(self::HAS_MANY, 'Client', 'updated_by'),
             'clientContacts' => array(self::HAS_MANY, 'ClientContact', 'updated_by'),
-            'contacts' => array(self::HAS_MANY, 'Contact', 'tbl_user_id'),
+            'contacts' => array(self::HAS_MANY, 'Contact', 'updated_by'),
             'crews' => array(self::HAS_MANY, 'Crew', 'updated_by'),
             'customFields' => array(self::HAS_MANY, 'CustomField', 'updated_by'),
             'customFieldProjectCategories' => array(self::HAS_MANY, 'CustomFieldProjectCategory', 'updated_by'),

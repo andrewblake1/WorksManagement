@@ -27,15 +27,15 @@ class Report extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('description', 'required'),
 			array('description', 'length', 'max'=>255),
 			array('context', 'length', 'max'=>64),
 			array('template_html, subReport_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, template_html, context', 'safe', 'on'=>'search'),
-		);
+//			array('id, description, template_html, context', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

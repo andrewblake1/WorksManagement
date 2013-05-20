@@ -54,7 +54,7 @@ class SubReport extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('description, select, report_id, format', 'required'),
 			array('description', 'length', 'max'=>255),
 			array('report_id', 'length', 'max'=>10),
@@ -62,8 +62,8 @@ class SubReport extends ActiveRecord
 			array('select', 'validationSQL'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, description, select, report_id, format', 'safe', 'on'=>'search'),
-		);
+//			array('id, description, select, report_id, format', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

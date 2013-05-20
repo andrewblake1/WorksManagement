@@ -36,14 +36,14 @@ class TaskTemplateToResource extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('task_template_id, resource_id, quantity', 'required'),
 			array('task_template_id, resource_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('hours', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_template_id, searchTaskTemplate, searchResource, quantity, hours', 'safe', 'on'=>'search'),
-		);
+//			array('id, task_template_id, searchTaskTemplate, searchResource, quantity, hours', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

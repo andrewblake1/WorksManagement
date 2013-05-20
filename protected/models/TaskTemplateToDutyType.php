@@ -83,14 +83,14 @@ class TaskTemplateToDutyType extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('task_template_id, project_template_id, duty_type_id, project_template_to_auth_item_id, importance', 'required'),
 			array('task_template_id, project_template_id, duty_type_id, project_template_to_auth_item_id', 'numerical', 'integerOnly'=>true),
 			array('importance', 'length', 'max'=>8),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, task_template_id, importance, searchDutyType, searchTaskTemplate, searchProjectTemplateToAuthItem', 'safe', 'on'=>'search'),
-		);
+//			array('id, task_template_id, importance, searchDutyType, searchTaskTemplate, searchProjectTemplateToAuthItem', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**

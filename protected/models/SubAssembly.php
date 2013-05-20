@@ -42,15 +42,15 @@ class SubAssembly extends ActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		return array_merge(parent::rules(), array(
 			array('standard_id, parent_assembly_id, child_assembly_id, quantity', 'required'),
 			array('standard_id, parent_assembly_id, child_assembly_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('quantity_tooltip, comment', 'length', 'max'=>255),
 			array('select', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
-		);
+//			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
+		));
 	}
 
 	/**
