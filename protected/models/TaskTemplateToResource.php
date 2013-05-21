@@ -68,6 +68,7 @@ class TaskTemplateToResource extends ActiveRecord
 		return parent::attributeLabels(array(
 			'task_template_id' => 'Task Type',
 			'resource_id' => 'Resource Type',
+			'hours' => 'Time on-site (HH:mm)',
 		));
 	}
 
@@ -86,7 +87,6 @@ class TaskTemplateToResource extends ActiveRecord
 			'resource.description AS searchResource',
 			't.quantity',
 			't.hours',
-			'hours' => 'Time on-site (HH:mm)',
 		);
 
 		// where

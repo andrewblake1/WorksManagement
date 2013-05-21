@@ -96,6 +96,7 @@ class TaskTemplateToMaterial extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.material_id',
+			't.task_template_id',
 			'material.description AS searchMaterialDescription',
 			'material.unit AS searchMaterialUnit',
 			"CONCAT_WS('$delimiter',
@@ -112,7 +113,7 @@ class TaskTemplateToMaterial extends ActiveRecord
 		// join
 		$criteria->join = '
 			LEFT JOIN tbl_task_template taskTemplate ON t.task_template_id = taskTemplate.id
-			LEFT JOIN tbl_material_to_client materialToClient ON t.material_id = materialToClient_material_id
+			LEFT JOIN tbl_material_to_client materialToClient ON t.material_id = materialToClient.material_id
 				AND taskTemplate.client_id = materialToClient.client_id
 		';
 		

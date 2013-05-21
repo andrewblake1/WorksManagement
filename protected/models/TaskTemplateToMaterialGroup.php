@@ -33,6 +33,8 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchMaterialGroupDescription;
+	
+	public $standard_id;
 	/**
 	 * @var string nice model name for use in output
 	 */

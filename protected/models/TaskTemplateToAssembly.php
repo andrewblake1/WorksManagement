@@ -92,6 +92,7 @@ class TaskTemplateToAssembly extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.assembly_id',
+			't.task_template_id',
 			'assembly.description AS searchAssemblyDescription',
 			"CONCAT_WS('$delimiter',
 				assembly.alias,
@@ -107,7 +108,7 @@ class TaskTemplateToAssembly extends ActiveRecord
 		// join
 		$criteria->join = '
 			LEFT JOIN tbl_task_template taskTemplate ON t.task_template_id = taskTemplate.id
-			LEFT JOIN tbl_assembly_to_client assemblyToClient ON t.assembly_id = assemblyToClientAssembly_id
+			LEFT JOIN tbl_assembly_to_client assemblyToClient ON t.assembly_id = assemblyToClient.assembly_id
 				AND taskTemplate.client_id = assemblyToClient.client_id
 		';
 		
