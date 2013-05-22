@@ -14,6 +14,7 @@ class SubAssemblyController extends Controller
 			$assembly = Assembly::model()->findByPk($_GET['parent_assembly_id']);
 			$assembly->assertFromParent();
 			$assemblyController->setTabs($assembly);
+			$assemblyController->setActiveTabs(NULL, SubAssembly::getNiceNamePlural(), SubAssembly::getNiceNamePlural());
 			$this->_tabs = $assemblyController->tabs;
 			
 			// set breadcrumbs

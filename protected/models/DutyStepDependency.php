@@ -1,4 +1,4 @@
- <?php
+<?php
 
 /**
  * This is the model class for table "tbl_duty_step_dependency".
@@ -16,10 +16,10 @@
  * @property DutyData[] $dutyDatas1
  * @property DutyStep $parentDutyStep
  * @property DutyStep $childDutyStep
- * @property User $updatedBy
  * @property DutyType $dutyType
+ * @property User $updatedBy
  */
-class DutyStepDependency extends AdjacencyListActiveRecord
+class DutyStepDependency extends ActiveRecord
 {
 
 	/**
@@ -38,7 +38,7 @@ class DutyStepDependency extends AdjacencyListActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
 		return array_merge(parent::rules(), array(
-            array('id, parent_duty_step_id, child_duty_step_id, duty_type_id, updated_by', 'required'),
+            array('child_duty_step_id, duty_type_id, updated_by', 'required'),
             array('parent_duty_step_id, child_duty_step_id, deleted, updated_by', 'numerical', 'integerOnly'=>true),
             array('id, duty_type_id', 'length', 'max'=>10),
         ));
@@ -56,8 +56,8 @@ class DutyStepDependency extends AdjacencyListActiveRecord
             'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'duty_step_dependency_id'),
             'parentDutyStep' => array(self::BELONGS_TO, 'DutyStep', 'parent_duty_step_id'),
             'childDutyStep' => array(self::BELONGS_TO, 'DutyStep', 'child_duty_step_id'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
         );
     }
 

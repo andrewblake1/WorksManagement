@@ -1,6 +1,6 @@
 <?php
 
-class DutyStepDependencyController extends AdjacencyListController
+class DutyStepDependencyController extends Controller
 {
 	
 	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
