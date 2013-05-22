@@ -190,6 +190,16 @@ EOD;
 			$this->_authManager->createOperation('DefaultValueRead', 'DefaultValue read');
 			$task->addChild('DefaultValueRead');
 
+			$task=$this->_authManager->createTask('DutyStep', 'DutyStep task');
+			$systemAdminRole->addChild('DutyStep');
+			$this->_authManager->createOperation('DutyStepRead', 'DutyStep read');
+			$task->addChild('DutyStepRead');
+
+			$task=$this->_authManager->createTask('DutyStepDependency', 'DutyStepDependency task');
+			$systemAdminRole->addChild('DutyStepDependency');
+			$this->_authManager->createOperation('DutyStepDependencyRead', 'DutyStepDependency read');
+			$task->addChild('DutyStepDependencyRead');
+
 			$task=$this->_authManager->createTask('DutyType', 'DutyType task');
 			$systemAdminRole->addChild('DutyType');
 			$this->_authManager->createOperation('DutyTypeRead', 'DutyType read');

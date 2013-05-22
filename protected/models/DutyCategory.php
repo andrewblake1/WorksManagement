@@ -15,7 +15,7 @@
  *
  * The followings are the available model relations:
  * @property User $updatedBy
- * @property DutyType[] $dutyTypes
+ * @property DutyStep[] $dutySteps
  * @property ResourceCategory[] $resourceCategories
  */
 class DutyCategory extends CategoryActiveRecord {
@@ -38,7 +38,7 @@ class DutyCategory extends CategoryActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'dutyTypes' => array(self::HAS_MANY, 'DutyType', 'duty_category_id'),
+            'dutySteps' => array(self::HAS_MANY, 'DutyStep', 'duty_category_id'),
             'resourceCategories' => array(self::HAS_MANY, 'ResourceCategory', 'duty_category_id'),
         );
     }

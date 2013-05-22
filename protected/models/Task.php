@@ -168,7 +168,7 @@ class Task extends CustomFieldExtensionActiveRecord
 		// join 
 		$criteria->join='
 			LEFT JOIN tbl_duty duty ON t.id = duty.task_id
-			LEFT JOIN tbl_duty_type dutyType ON duty.duty_type_id = dutyType.id';
+			LEFT JOIN tbl_duty_step dutyStep ON duty.duty_step_id = dutyStep.id';
 
 		// where
 		$criteria->compare('t.id',$this->id);

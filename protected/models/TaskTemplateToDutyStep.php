@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 /**
  * This is the model class for table "tbl_task_template_to_duty_type".
@@ -7,8 +7,8 @@
  * @property integer $id
  * @property integer $task_template_id
  * @property integer $project_template_id
- * @property integer $duty_type_id
  * @property integer $project_template_to_auth_item_id
+ * @property string $duty_type_id
  * @property string $importance
  * @property integer $deleted
  * @property integer $updated_by
@@ -16,9 +16,9 @@
  * The followings are the available model relations:
  * @property TaskTemplate $taskTemplate
  * @property ProjectTemplateToAuthItem $projectTemplate
- * @property DutyType $dutyType
  * @property User $updatedBy
  * @property ProjectTemplateToAuthItem $projectTemplateToAuthItem
+ * @property DutyType $dutyType
  */
 class TaskTemplateToDutyType extends ActiveRecord
 {
@@ -26,7 +26,7 @@ class TaskTemplateToDutyType extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchDutyType;
+	public $searchDutyStep;
 	public $searchTaskTemplate;
 	public $searchProjectTemplateToAuthItem;
 	/**
@@ -84,12 +84,12 @@ class TaskTemplateToDutyType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_template_id, project_template_id, duty_type_id, project_template_to_auth_item_id, importance', 'required'),
-			array('task_template_id, project_template_id, duty_type_id, project_template_to_auth_item_id', 'numerical', 'integerOnly'=>true),
+			array('task_template_id, project_template_id, duty_step_id, project_template_to_auth_item_id, importance', 'required'),
+			array('task_template_id, project_template_id, duty_step_id, project_template_to_auth_item_id', 'numerical', 'integerOnly'=>true),
 			array('importance', 'length', 'max'=>8),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-//			array('id, task_template_id, importance, searchDutyType, searchTaskTemplate, searchProjectTemplateToAuthItem', 'safe', 'on'=>'search'),
+//			array('id, task_template_id, importance, searchDutyStep, searchTaskTemplate, searchProjectTemplateToAuthItem', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -103,9 +103,9 @@ class TaskTemplateToDutyType extends ActiveRecord
         return array(
             'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
             'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplateToAuthItem', 'project_template_id'),
-            'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'projectTemplateToAuthItem' => array(self::BELONGS_TO, 'ProjectTemplateToAuthItem', 'project_template_to_auth_item_id'),
+            'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
         );
     }
 
@@ -115,8 +115,8 @@ class TaskTemplateToDutyType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'duty_type_id' => 'Duty type',
-			'searchDutyType' => 'Duty type',
+			'duty_step_id' => 'Duty type',
+			'searchDutyStep' => 'Duty type',
 			'task_template_id' => 'Client/Project type/Task type',
 			'searchTaskTemplate' => 'Client/Project type/Task type',
 			'searchProjectTemplateToAuthItem' => 'Role',
@@ -135,22 +135,22 @@ class TaskTemplateToDutyType extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.duty_type_id',
+			't.duty_step_id',
 			't.project_template_to_auth_item_id',
-			'dutyType.description AS searchDutyType',
+			'dutyStep.description AS searchDutyStep',
 			'projectTemplateToAuthItem.auth_item_name AS searchProjectTemplateToAuthItem',
 			't.importance',
 		);
 
 		// where
-		$criteria->compare('dutyType.description',$this->searchDutyType);
+		$criteria->compare('dutyStep.description',$this->searchDutyStep);
 		$criteria->compare('projectTemplateToAuthItem.auth_item_name',$this->searchProjectTemplateToAuthItem);
 		$criteria->compare('t.task_template_id',$this->task_template_id);
 		$criteria->compare('t.importance',$this->importance,true);
 
 		// with
 		$criteria->with = array(
-			'dutyType',
+			'dutyStep',
 			'taskTemplate',
 			'taskTemplate.projectTemplate',
 			'projectTemplateToAuthItem'
@@ -161,7 +161,7 @@ class TaskTemplateToDutyType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchDutyType', 'DutyType', 'duty_type_id');
+        $columns[] = static::linkColumn('searchDutyStep', 'DutyStep', 'duty_step_id');
 //        $columns[] = static::linkColumn('searchProjectTemplateToAuthItem', 'ProjectTemplateToAuthItem', 'project_template_to_auth_item_id');
         $columns[] = 'searchProjectTemplateToAuthItem';
 		$columns[] = 'importance';
@@ -175,7 +175,7 @@ class TaskTemplateToDutyType extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'dutyType->description',
+			'dutyStep->description',
 		);
 	}
 

@@ -195,7 +195,10 @@ return array(
 				),
 				'DefaultValue',
 				'DutyCategory'=>array(
-					'DutyType',
+					'DutyStep',
+				),
+				'DutyType'=>array(
+					'DutyStepDependency',
 				),
 				'CustomField',
 				'CustomFieldProjectCategory',

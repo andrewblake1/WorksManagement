@@ -20,6 +20,12 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 	// recursive to find our way thru relations to target fk model for given attribute
 	private function getRelation($model, $fKModelType, &$level)
 	{
+		// first try specific controller function to get relation
+		if($relation = $this->controller->getRelation($this->model, $this->attribute))
+		{
+			return $relation;
+		}
+		
 		// ensure recursion ends at 5 levels
 		if($level < 5)
 		{

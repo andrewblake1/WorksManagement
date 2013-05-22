@@ -367,7 +367,7 @@ $t = $model->attributes;
 				
 				// capture the first parent only for returning later
 				if(empty($firstParentForeignKeyName))
-					{
+				{
 					$firstParentForeignKeyName = $parentForeignKeyName;
 				}
 			}

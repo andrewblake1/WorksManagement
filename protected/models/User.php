@@ -37,7 +37,7 @@
  * @property Duty[] $duties1
  * @property DutyCategory[] $dutyCategories
  * @property DutyData[] $dutyDatas
- * @property DutyType[] $dutyTypes
+ * @property DutyStep[] $dutySteps
  * @property Material[] $materials
  * @property MaterialGroup[] $materialGroups
  * @property MaterialGroupToMaterial[] $materialGroupToMaterials
@@ -146,7 +146,7 @@ class User extends ContactActiveRecord
             'duties1' => array(self::HAS_MANY, 'Duty', 'responsible'),
             'dutyCategories' => array(self::HAS_MANY, 'DutyCategory', 'updated_by'),
             'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'updated_by'),
-            'dutyTypes' => array(self::HAS_MANY, 'DutyType', 'updated_by'),
+            'dutySteps' => array(self::HAS_MANY, 'DutyStep', 'updated_by'),
             'materials' => array(self::HAS_MANY, 'Material', 'updated_by'),
             'materialGroups' => array(self::HAS_MANY, 'MaterialGroup', 'updated_by'),
             'materialGroupToMaterials' => array(self::HAS_MANY, 'MaterialGroupToMaterial', 'updated_by'),

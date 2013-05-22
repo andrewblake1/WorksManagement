@@ -1,27 +1,22 @@
-<?php
+ <?php
 
 /**
  * This is the model class for table "tbl_duty".
  *
  * The followings are the available columns in table 'tbl_duty':
  * @property string $id
- * @property string $parent_id
  * @property string $task_id
- * @property integer $duty_type_id
  * @property string $duty_data_id
- * @property integer $responsible
+ * @property string $duty_step_dependency_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Task $task
  * @property User $updatedBy
- * @property DutyData $dutyType
- * @property User $responsible0
  * @property DutyData $dutyData
- * @property Duty $parent
- * @property Duty[] $duties
+ * @property DutyData $dutyStepDependency
  */
-class Duty extends AdjacencyListActiveRecord
+class Duty extends ActiveRecord
 {
 	public $assignedTo;
 	/**
@@ -45,8 +40,8 @@ class Duty extends AdjacencyListActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_id, duty_type_id', 'required'),
-			array('parent_id, duty_type_id, responsible', 'numerical', 'integerOnly'=>true),
+			array('task_id, duty_step_id', 'required'),
+			array('parent_id, duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('updated, custom_value_id', 'safe'),
 			// The following rule is used by search().
@@ -65,11 +60,8 @@ class Duty extends AdjacencyListActiveRecord
         return array(
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'dutyType' => array(self::BELONGS_TO, 'DutyData', 'duty_type_id'),
-            'responsible0' => array(self::BELONGS_TO, 'User', 'responsible'),
             'dutyData' => array(self::BELONGS_TO, 'DutyData', 'duty_data_id'),
-            'parent' => array(self::BELONGS_TO, 'Duty', 'parent_id'),
-            'duties' => array(self::HAS_MANY, 'Duty', 'parent_id'),
+            'dutyStepDependency' => array(self::BELONGS_TO, 'DutyData', 'duty_step_dependency_id'),
         );
     }
 
@@ -83,7 +75,7 @@ class Duty extends AdjacencyListActiveRecord
 			'parent_id' => 'Integral to', 
 			'searchIntegralTo' => 'Integral to', 
 			'searchTask' => 'Task',
-			'duty_type_id' => 'Duty/Role/First/Last/Email',
+			'duty_step_id' => 'Duty/Role/First/Last/Email',
 			'description' => 'Duty',
 			'responsible' => 'Assigned to',
 			'updated' => 'Completed',
@@ -105,8 +97,8 @@ class Duty extends AdjacencyListActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'dutyType.description AS description',
-			'(SELECT `date` FROM tbl_working_days WHERE id = (SELECT id - dutyType.lead_in_days FROM tbl_working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
+			'dutyStep.description AS description',
+			'(SELECT `date` FROM tbl_working_days WHERE id = (SELECT id - dutyStep.lead_in_days FROM tbl_working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
 			"COALESCE(
 				IF(LENGTH(CONCAT_WS('$delimiter',
 					responsibleContact.first_name,
@@ -138,7 +130,7 @@ class Duty extends AdjacencyListActiveRecord
 		);
 
 		// where
-		$criteria->compare('dutyType.description',$this->description,true);
+		$criteria->compare('dutyStep.description',$this->description,true);
 		$criteria->compare('taskTemplateToDutyType.importance',$this->searchImportance,true);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
@@ -156,8 +148,8 @@ class Duty extends AdjacencyListActiveRecord
 			JOIN tbl_project project ON task.project_id = project.id
 			JOIN tbl_crew crew ON task.crew_id = crew.id
 			JOIN tbl_day day ON crew.day_id = day.id
-			JOIN tbl_duty_type dutyType ON t.duty_type_id = dutyType.id
-			LEFT JOIN tbl_task_template_to_duty_type taskTemplateToDutyType USING ( task_template_id, duty_type_id )
+			JOIN tbl_duty_step dutyStep ON t.duty_step_id = dutyStep.id
+			LEFT JOIN tbl_task_template_to_duty_type taskTemplateToDutyType USING ( task_template_id, duty_step_id )
 			LEFT JOIN tbl_project_template_to_auth_item projectTemplateToAuthItem ON taskTemplateToDutyType.project_template_to_auth_item_id = projectTemplateToAuthItem.id
 			LEFT JOIN tbl_project_to_project_template_to_auth_item projectToProjectTemplateToAuthItem ON projectTemplateToAuthItem.id = projectToProjectTemplateToAuthItem.project_template_to_auth_item_id
 			LEFT JOIN AuthAssignment ON projectToProjectTemplateToAuthItem.auth_assignment_id = AuthAssignment.id
@@ -168,7 +160,7 @@ class Duty extends AdjacencyListActiveRecord
 			LEFT JOIN tbl_contact responsibleContact ON responsible.contact_id = responsibleContact.id
 			
 			LEFT JOIN tbl_duty parent ON t.parent_id = t.id
-			LEFT JOIN tbl_duty_type dependedOnBy ON parent.duty_type_id = dependedOnBy.id
+			LEFT JOIN tbl_duty_step dependedOnBy ON parent.duty_step_id = dependedOnBy.id
 		';
 		
 		// with
@@ -195,7 +187,7 @@ class Duty extends AdjacencyListActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'dutyType->dutyType->description',
+			'dutyStep->dutyStep->description',
 		);
 	}
 
@@ -222,8 +214,8 @@ class Duty extends AdjacencyListActiveRecord
 
 			// validate and save
 			$saved &= $customValue->updateSave($models, array(
-				'customField' => $this->taskTemplateToDutyType->dutyType->customField,
-				'params' => array('relationToCustomField'=>'duty->taskTemplateToDutyType->dutyType->customField'),
+				'customField' => $this->taskTemplateToDutyType->dutyStep->customField,
+				'params' => array('relationToCustomField'=>'duty->taskTemplateToDutyType->dutyStep->customField'),
 			));
 		}
 
@@ -242,8 +234,8 @@ class Duty extends AdjacencyListActiveRecord
 		
 		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
-		$dutyType = DutyType::model()->findByPk($this->duty_type_id);
-		if(($level = $dutyType->level) == Planning::planningLevelTaskInt)
+		$dutyStep = DutyStep::model()->findByPk($this->duty_step_id);
+		if(($level = $dutyStep->level) == Planning::planningLevelTaskInt)
 		{
 			$planning_id = $this->task_id;
 		}
@@ -271,7 +263,7 @@ class Duty extends AdjacencyListActiveRecord
 		{
 			$dutyData = new DutyData;
 			$dutyData->planning_id = $planning_id;
-			$dutyData->duty_type_id = $this->duty_type_id;
+			$dutyData->duty_step_id = $this->duty_step_id;
 			$dutyData->level = $level;
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
 			$dutyData->dbCallback('save');
@@ -284,14 +276,14 @@ class Duty extends AdjacencyListActiveRecord
 		// retrieve the DutyData
 		$dutyData = DutyData::model()->findByAttributes(array(
 			'planning_id'=>$planning_id,
-			'duty_type_id'=>$this->duty_type_id,
+			'duty_step_id'=>$this->duty_step_id,
 		));
 
 		// if there isn't already a customValue item to hold value and there should be
-		if(empty($dutyData->customValue) && !empty($this->dutyType->custom_field_id))
+		if(empty($dutyData->customValue) && !empty($this->dutyStep->custom_field_id))
 		{
 			// create a new customValue item to hold value
-			$saved &= CustomValue::createCustomField($this->dutyType, $models, $customValue);
+			$saved &= CustomValue::createCustomField($this->dutyStep, $models, $customValue);
 			// associate the new customValue to this duty
 			$dutyData->custom_value_id = $customValue->id;
 			// attempt save

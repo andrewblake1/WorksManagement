@@ -6,8 +6,10 @@
  * The followings are the available columns in table 'tbl_duty_data':
  * @property string $id
  * @property string $planning_id
- * @property integer $duty_type_id
+ * @property string $duty_step_dependency_id
+ * @property integer $duty_step_id
  * @property string $level
+ * @property integer $responsible
  * @property string $updated
  * @property string $custom_value_id
  * @property integer $updated_by
@@ -18,8 +20,10 @@
  * @property CustomValue $customValue
  * @property User $updatedBy
  * @property Planning $planning
- * @property DutyType $level0
- * @property DutyType $dutyType
+ * @property DutyStep $level0
+ * @property User $responsible0
+ * @property DutyStepDependency $dutyStep
+ * @property DutyStepDependency $dutyStepDependency
  */
 class DutyData extends ActiveRecord
 {
@@ -32,13 +36,13 @@ class DutyData extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('planning_id, duty_type_id, level', 'required'),
-			array('duty_type_id', 'numerical', 'integerOnly'=>true),
+			array('planning_id, duty_step_id, level', 'required'),
+			array('duty_step_id', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level, custom_value_id', 'length', 'max'=>10),
 			array('updated', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-//			array('id, planning_id, duty_type_id, level, updated, custom_value_id', 'safe', 'on'=>'search'),
+//			array('id, planning_id, duty_step_id, level, updated, custom_value_id', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -50,13 +54,15 @@ class DutyData extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'duties' => array(self::HAS_MANY, 'Duty', 'duty_type_id'),
-            'duties1' => array(self::HAS_MANY, 'Duty', 'duty_data_id'),
+            'duties' => array(self::HAS_MANY, 'Duty', 'duty_data_id'),
+            'duties1' => array(self::HAS_MANY, 'Duty', 'duty_step_dependency_id'),
             'customValue' => array(self::BELONGS_TO, 'CustomValue', 'custom_value_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-            'level0' => array(self::BELONGS_TO, 'DutyType', 'level'),
-            'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
+            'level0' => array(self::BELONGS_TO, 'DutyStep', 'level'),
+            'responsible0' => array(self::BELONGS_TO, 'User', 'responsible'),
+            'dutyStep' => array(self::BELONGS_TO, 'DutyStepDependency', 'duty_step_id'),
+            'dutyStepDependency' => array(self::BELONGS_TO, 'DutyStepDependency', 'duty_step_dependency_id'),
         );
     }
 
@@ -67,7 +73,7 @@ class DutyData extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'planning_id' => 'Planning',
-			'duty_type_id' => 'Duty type',
+			'duty_step_id' => 'Duty type',
 			'level' => 'Level',
 			'updated' => 'Updated',
 			'custom_value_id' => 'Custom value',
@@ -95,7 +101,7 @@ class DutyData extends ActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'dutyType->description',
+			'dutyStep->description',
 		);
 	}
 

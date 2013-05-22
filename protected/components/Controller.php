@@ -1482,6 +1482,14 @@ $t = Controller::$nav;
 		$this->newButton();
 	}
 
+	/*
+	 * If can't determine relation automaticatlly (as in has many through) getRelation in getRelation WMEJuiAutoCompleteFkField
+	 * then this allows hard coding of return result by controller
+	 */
+	public function getRelation($model, $attribute)
+	{
+	}
+	
 }
 
 ?>

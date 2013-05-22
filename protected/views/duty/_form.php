@@ -4,7 +4,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	if($model->isNewRecord)
 	{
-		DutyTypeController::listWidgetRow($model, $form, 'duty_type_id');
+		DutyStepController::listWidgetRow($model, $form, 'duty_step_id');
 		UserController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Responsible');
 	}
 	else
@@ -42,8 +42,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 			$this->widget('CustomFieldWidget', array(
 				'form'=>$form,
 				'customValue'=>$model->dutyData->customValue,
-				'customField'=>$model->dutyType->customField,
-				'relationToCustomField'=>'duty->dutyType->customField',
+				'customField'=>$model->dutyStep->customField,
+				'relationToCustomField'=>'duty->dutyStep->customField',
 			));
 		}
 	}

@@ -181,7 +181,7 @@ class Drawing extends AdjacencyListActiveRecord
 		if($this->drawingAdjacencyLists1)
 		{
 			$this->parent = $this->drawingAdjacencyLists1[0]->parent;
-			$this->parent_id = $this->parent->parent_id;
+			$this->parent_id = $this->parent->id;
 		}
 		
 		parent::afterFind();

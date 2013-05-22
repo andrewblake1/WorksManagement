@@ -20,7 +20,7 @@
  * @property User $updatedBy
  * @property CustomFieldToProjectTemplate[] $customFieldToProjectTemplates
  * @property CustomFieldToTaskTemplate[] $customFieldToTaskTemplates
- * @property DutyType[] $dutyTypes
+ * @property DutyStep[] $dutySteps
  */
 class CustomField extends ActiveRecord
 {
@@ -181,7 +181,7 @@ class CustomField extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'customFieldToProjectTemplates' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'custom_field_id'),
             'customFieldToTaskTemplates' => array(self::HAS_MANY, 'CustomFieldToTaskTemplate', 'custom_field_id'),
-            'dutyTypes' => array(self::HAS_MANY, 'DutyType', 'custom_field_id'),
+            'dutySteps' => array(self::HAS_MANY, 'DutyStep', 'custom_field_id'),
         );
     }
 

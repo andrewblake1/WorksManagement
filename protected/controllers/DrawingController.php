@@ -342,13 +342,24 @@ class DrawingController extends AdjacencyListController
 		else
 		{
 			parent::setTabs($model);
-			if(isset($_GET['parent_id']))
+			if(!empty($_GET['parent_id']))
 			{
 				$this->setChildTabs($this->loadModel($_GET['parent_id']));
 				$this->setActiveTabs(NULL, Drawing::getNiceNamePlural(), Drawing::getNiceNamePlural());
 			}
 		}
 	}
+	
+	public function getRelation($model, $attribute)
+	{
+		if($attribute == 'parent_id')
+		{
+			return $model->parent;
+		}
+		
+		return NULL;
+	}
+
 
 }
 
