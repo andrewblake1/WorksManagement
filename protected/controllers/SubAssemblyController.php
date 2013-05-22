@@ -17,7 +17,6 @@ class SubAssemblyController extends Controller
 			$this->_tabs = $assemblyController->tabs;
 			
 			// set breadcrumbs
-	//		static::setUpdateId(NULL, 'Assembly');
 			$this->breadcrumbs = AssemblyController::getBreadCrumbTrail('Update');
 			array_pop($this->breadcrumbs);
 			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];

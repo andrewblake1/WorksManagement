@@ -44,4 +44,35 @@ class DutyType extends ActiveRecord
 		);
 	}
 
+	/**
+	 * @return DbCriteria the search/filter conditions.
+	 */
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
+
+		// select
+		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
+			't.description',
+		);
+
+		// where
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.description',$this->description,true);
+
+		// with
+		$criteria->with=array(
+		);
+
+		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+		$columns[]='description';
+		
+		return $columns;
+	}
+
 }

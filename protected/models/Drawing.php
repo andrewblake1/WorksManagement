@@ -192,13 +192,13 @@ class Drawing extends AdjacencyListActiveRecord
 		$return = parent::insert($attributes);
 
 		// if parent_id is not null
-		if($this->parent_id !== NULL)
+		if($return && !empty($this->parent_id))
 		{
 			$drawingAdjacencyList = new DrawingAdjacencyList();
 			$drawingAdjacencyList->updated_by = $this->updated_by;
 			$drawingAdjacencyList->child_id = $this->id;
 			$drawingAdjacencyList->parent_id = $this->parent_id;
-			$drawingAdjacencyList->insert();
+			$return = $drawingAdjacencyList->insert();
 		}
 		
 		return $return;

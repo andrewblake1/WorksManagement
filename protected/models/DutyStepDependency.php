@@ -19,8 +19,17 @@
  * @property User $updatedBy
  * @property DutyType $dutyType
  */
-class DutyStepDependency extends ActiveRecord
+class DutyStepDependency extends AdjacencyListActiveRecord
 {
+
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Duty dependency';
+
+	public $searchChildDutyStep;
+	protected $defaultSort = array('childDutyStep.description');
+	
     /**
      * @return array validation rules for model attributes.
      */
@@ -58,35 +67,62 @@ class DutyStepDependency extends ActiveRecord
     public function attributeLabels()
     {
         return array(
-            'id' => 'ID',
-            'parent_duty_step_id' => 'Parent Duty Step',
-            'child_duty_step_id' => 'Child Duty Step',
-            'duty_type_id' => 'Duty Type',
-            'deleted' => 'Deleted',
-            'updated_by' => 'Updated By',
+            'parent_duty_step_id' => 'Integral to',
+            'child_duty_step_id' => 'Depends on',
+            'duty_type_id' => 'Duty type',
+			'searchChildDutyStep' => 'Depends on',
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-     */
-    public function search()
-    {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
+	/**
+	 * @return DbCriteria the search/filter conditions.
+	 */
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
 
-        $criteria=new CDbCriteria;
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria->select=array(
+			't.id',
+			't.parent_duty_step_id',
+			't.child_duty_step_id',
+			'childDutyStep.description AS searchChildDutyStep',
+		);
 
-        $criteria->compare('id',$this->id,true);
-        $criteria->compare('parent_duty_step_id',$this->parent_duty_step_id);
-        $criteria->compare('child_duty_step_id',$this->child_duty_step_id);
-        $criteria->compare('duty_type_id',$this->duty_type_id,true);
-        $criteria->compare('deleted',$this->deleted);
-        $criteria->compare('updated_by',$this->updated_by);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.parent_duty_step_id',$this->parent_duty_step_id);
+		$criteria->compare('childDutyStep.description',$this->searchChildDutyStep,true);
 
-        return new CActiveDataProvider($this, array(
-            'criteria'=>$criteria,
-        ));
-    }
-} 
+		$criteria->with = array(
+			'childDutyStep',
+		);
+
+		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+        $columns[] = static::linkColumn('searchChildDutyStep', 'DutyStep', 'child_duty_step_id');
+		
+		return $columns;
+	}
+
+	public static function getDisplayAttr()
+	{
+		return array(
+			'parentDutyStep->description',
+		);
+	}
+ 
+	/**
+	 * Returns foreign key attribute name within this model that references another model.
+	 * @param string $referencesModel the name name of the model that the foreign key references.
+	 * @return string the foreign key attribute name within this model that references another model
+	 */
+	static function getParentForeignKey($referencesModel)
+	{
+		return parent::getParentForeignKey($referencesModel, array('DutyStep'=>'parent_duty_step_id'));
+	}
+	
+
+}
