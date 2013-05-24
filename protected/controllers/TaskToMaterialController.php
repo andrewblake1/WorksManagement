@@ -71,28 +71,21 @@ class TaskToMaterialController extends Controller
 //			$taskToAssembly->assertFromParent();
 			$taskToAssemblyController->setTabs(NULL);
 			$taskToAssemblyController->setActiveTabs(TaskToAssembly::getNiceNamePlural(), $modelName::getNiceNamePlural());
-			$this->_tabs = $taskToAssemblyController->tabs;
+			static::$tabs = $taskToAssemblyController->tabs;
 
 			static::setUpdateId(NULL, 'TaskToAssembly');
-			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
+//			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
 
-			$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
 
 			if($update)
 			{
+				$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
 				$tabs=array();
 				$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
-				$this->_tabs = array_merge($this->_tabs, array($tabs));
-				array_pop($this->breadcrumbs);
-				$this->breadcrumbs[$modelName::getNiceNamePlural()] = Yii::app()->request->requestUri;
-				$this->breadcrumbs[] = $lastLabel;
-			}
-			else
-			{
-				array_pop($this->breadcrumbs);
-				$this->breadcrumbs[] = $modelName::getNiceNamePlural();
+				static::$tabs = array_merge(static::$tabs, array($tabs));
 			}
 
+			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
 		}
 		
 	}

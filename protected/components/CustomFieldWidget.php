@@ -27,9 +27,9 @@ class CustomFieldWidget extends CWidget
 		$customValue = $this->customValue;
 		$CustomFieldModelType = $this->CustomFieldModelType;
 		// get array of column names in customValue table
-		$data_typeColumnNames = CustomField::getDataTypeColumnNames();
+		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
 		// get the attribute name to be saving to - post array hence []
-		$attribute = "[$CustomFieldModelType->id]".$data_typeColumnNames[$customField->data_type];
+		$attribute = "[$CustomFieldModelType->id]".$dataTypeColumnNames[$customField->data_type];
 		// get the label
 		$htmlOptions = array('labelOptions' => array('label'=>$customField->description));
 		

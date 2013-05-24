@@ -12,7 +12,6 @@
  * The followings are the available model relations:
  * @property Assembly[] $assemblies
  * @property AssemblyGroup[] $assemblyGroups
- * @property AssemblyToDrawing[] $assemblyToDrawings
  * @property Drawing[] $drawings
  * @property Material[] $materials
  * @property MaterialGroup[] $materialGroups
@@ -47,7 +46,6 @@ class Standard extends ActiveRecord
         return array(
             'assemblies' => array(self::HAS_MANY, 'Assembly', 'standard_id'),
             'assemblyGroups' => array(self::HAS_MANY, 'AssemblyGroup', 'standard_id'),
-            'assemblyToDrawings' => array(self::HAS_MANY, 'AssemblyToDrawing', 'standard_id'),
             'drawings' => array(self::HAS_MANY, 'Drawing', 'standard_id'),
             'materials' => array(self::HAS_MANY, 'Material', 'standard_id'),
             'materialGroups' => array(self::HAS_MANY, 'MaterialGroup', 'standard_id'),

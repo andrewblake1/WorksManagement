@@ -4,7 +4,18 @@ class AssemblyToMaterialGroupController extends Controller
 {
 	public function setTabs($model) {
 
-		if(isset($_GET['assembly_id']))
+		if(isset($_GET['sub_assembly_ids']))
+		{
+			// in sub assembly admin view
+			$subAssemblyController= new SubAssemblyController(NULL);
+			$subAssembly = SubAssembly::model()->findByPk($_GET['sub_assembly_ids'][sizeof($_GET['sub_assembly_ids'])]);
+			$subAssembly->assertFromParent();
+			static::setUpdateId($subAssembly->id, 'SubAssembly');
+			$subAssemblyController->setTabs($subAssembly);
+			$subAssemblyController->setActiveTabs(NULL, AssemblyToMaterialGroup::getNiceNamePlural(), SubAssembly::getNiceNamePlural());
+			static::$tabs = $subAssemblyController->tabs;
+		}
+		elseif(isset($_GET['assembly_id']))
 		{
 			// set tabs
 			$assemblyController= new AssemblyController(NULL);
@@ -12,19 +23,13 @@ class AssemblyToMaterialGroupController extends Controller
 			$assembly->assertFromParent();
 			$assemblyController->setTabs($assembly);
 			$assemblyController->setActiveTabs(NULL, AssemblyToMaterialGroup::getNiceNamePlural(), SubAssembly::getNiceNamePlural());
-			$this->_tabs = $assemblyController->tabs;
-			
-			// set breadcrumbs
-//			static::setUpdateId(NULL, 'Assembly');
-			$this->breadcrumbs = AssemblyController::getBreadCrumbTrail('Update');
-			array_pop($this->breadcrumbs);
-			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
-			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
-			$this->breadcrumbs[] = AssemblyToMaterialGroup::getNiceName();
+			static::$tabs = $assemblyController->tabs;
 		}
 		else
 		{
 			parent::setTabs($model);
 		}
+		
+		$this->breadcrumbs = AssemblyController::getBreadCrumbTrail();
 	}
 }

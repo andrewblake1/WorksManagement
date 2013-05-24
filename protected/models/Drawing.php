@@ -12,7 +12,6 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property AssemblyToDrawing[] $assemblyToDrawings
  * @property User $updatedBy
  * @property Standard $standard
  * @property DrawingAdjacencyList[] $drawingAdjacencyLists
@@ -54,7 +53,6 @@ class Drawing extends AdjacencyListActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'assemblyToDrawings' => array(self::HAS_MANY, 'AssemblyToDrawing', 'drawing_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'standard' => array(self::BELONGS_TO, 'Standard', 'standard_id'),
             'drawingAdjacencyLists' => array(self::HAS_MANY, 'DrawingAdjacencyList', 'parent_id'),
@@ -158,6 +156,7 @@ class Drawing extends AdjacencyListActiveRecord
 			$columns[] = $name;
 		}
 	}
+
 	public function getAdminColumns()
 	{
  		// link to admin displaying children or if no children then just description without link
@@ -180,8 +179,10 @@ class Drawing extends AdjacencyListActiveRecord
 	public function afterFind() {
 		if($this->drawingAdjacencyLists1)
 		{
-			$this->parent = $this->drawingAdjacencyLists1[0]->parent;
-			$this->parent_id = $this->parent->id;
+			if($this->parent = $this->drawingAdjacencyLists1[0]->parent)
+			{
+				$this->parent_id = $this->parent->id;
+			}
 		}
 		
 		parent::afterFind();

@@ -100,11 +100,6 @@ EOD;
 			$this->_authManager->createOperation('AssemblyToClientRead', 'AssemblyToClient read');
 			$task->addChild('AssemblyToClientRead');
 
-			$task=$this->_authManager->createTask('AssemblyToDrawing', 'AssemblyToDrawing task');
-			$systemAdminRole->addChild('AssemblyToDrawing');
-			$this->_authManager->createOperation('AssemblyToDrawingRead', 'AssemblyToDrawing read');
-			$task->addChild('AssemblyToDrawingRead');
-
 			$task=$this->_authManager->createTask('AuthAssignment', 'AuthAssignment task');
 			$systemAdminRole->addChild('AuthAssignment');
 			$this->_authManager->createOperation('AuthAssignmentRead', 'AuthAssignment read');
@@ -144,6 +139,11 @@ EOD;
 			$systemAdminRole->addChild('Drawing');
 			$this->_authManager->createOperation('DrawingRead', 'Drawing read');
 			$task->addChild('DrawingRead');
+
+			$task=$this->_authManager->createTask('DrawingToAssembly', 'DrawingToAssembly task');
+			$systemAdminRole->addChild('DrawingToAssembly');
+			$this->_authManager->createOperation('DrawingToAssemblyRead', 'DrawingToAssembly read');
+			$task->addChild('DrawingToAssemblyRead');
 
 			$task=$this->_authManager->createTask('Stage', 'Stage task');
 			$systemAdminRole->addChild('Stage');
@@ -503,7 +503,6 @@ EOD;
 			$dataentryRole->addChild('AssemblyToAssemblyGroup');
 			$dataentryRole->addChild('AssemblyToMaterial');
 			$dataentryRole->addChild('AssemblyToMaterialGroup');
-			$dataentryRole->addChild('AssemblyToDrawing');
 			$dataentryRole->addChild('AssemblyGroup');
 			$dataentryRole->addChild('AssemblyGroupToAssembly');
 			$dataentryRole->addChild('Material');

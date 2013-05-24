@@ -64,7 +64,7 @@ class TaskToMaterialToTaskTemplateToMaterialGroupController extends Controller
 		$taskToAssembly->assertFromParent();
 		$taskToAssemblyController->setTabs(false);
 		$taskToAssemblyController->setActiveTabs(NULL, $modelName::getNiceNamePlural());
-		$this->_tabs = $taskToAssemblyController->tabs;
+		static::$tabs = $taskToAssemblyController->tabs;
 
 		Controller::$nav['update']['TaskToAssembly'] = NULL;
 		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
@@ -73,7 +73,7 @@ class TaskToMaterialToTaskTemplateToMaterialGroupController extends Controller
 
 		$tabs=array();
 		$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
-		$this->_tabs = array_merge($this->_tabs, array($tabs));
+		static::$tabs = array_merge(static::$tabs, array($tabs));
 		array_pop($this->breadcrumbs);
 		$this->breadcrumbs[$modelName::getNiceNamePlural()] = Yii::app()->request->requestUri;
 		$this->breadcrumbs[] = $lastLabel;

@@ -222,7 +222,6 @@ return array(
 						'AssemblyToAssemblyGroup',
 						'AssemblyToMaterial',
 						'AssemblyToMaterialGroup',
-						'AssemblyToDrawing',
 					),
 					'AssemblyGroup'=>array(
 						'AssemblyGroupToAssembly',
@@ -231,7 +230,9 @@ return array(
 					'MaterialGroup'=>array(
 						'MaterialGroupToMaterial',
 					),
-					'Drawing',
+					'Drawing'=>array(
+						'DrawingToAssembly',
+					),
 				),
 				'Supplier'=>array(
 					'PurchaseOrder',

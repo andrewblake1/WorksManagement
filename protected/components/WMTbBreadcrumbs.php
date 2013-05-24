@@ -32,8 +32,19 @@ class WMTbBreadcrumbs extends TbBreadcrumbs
 
 		$count = count($this->links);
 		$counter = 0;
-		foreach ($this->links as $label => $url)
+		foreach($this->links as $index => $link)
 		{
+			if(is_array($link))
+			{
+				$label = key($link);
+				$url = current($link);
+			}
+			else
+			{
+				$label = $index;
+				$url = $link;
+			}
+			
 
 			++$counter; // latest is the active one
 			if (is_string($label) || is_array($url))

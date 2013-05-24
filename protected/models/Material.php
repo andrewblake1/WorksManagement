@@ -9,6 +9,7 @@
  * @property string $description
  * @property string $unit
  * @property string $alias
+ * @property integer $drawing_id
  * @property integer $deleted
  * @property integer $updated_by
  *
@@ -16,7 +17,8 @@
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToMaterial[] $assemblyToMaterials1
  * @property User $updatedBy
- * @property Standard $standard
+ * @property Drawing $standard
+ * @property Drawing $drawing
  * @property MaterialGroupToMaterial[] $materialGroupToMaterials
  * @property MaterialToClient[] $materialToClients
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
@@ -24,6 +26,7 @@
  */
 class Material extends ActiveRecord
 {
+	public $searchDrawingDescription;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -34,7 +37,7 @@ class Material extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('description, standard_id', 'required'),
-			array('standard_id', 'numerical', 'integerOnly'=>true),
+			array('standard_id, drawing_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
 			array('unit', 'length', 'max'=>64),
 			// The following rule is used by search().
@@ -54,7 +57,8 @@ class Material extends ActiveRecord
             'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'store_id'),
             'assemblyToMaterials1' => array(self::HAS_MANY, 'AssemblyToMaterial', 'material_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'standard' => array(self::BELONGS_TO, 'Standard', 'standard_id'),
+            'standard' => array(self::BELONGS_TO, 'Drawing', 'standard_id'),
+            'drawing' => array(self::BELONGS_TO, 'Drawing', 'drawing_id'),
             'materialGroupToMaterials' => array(self::HAS_MANY, 'MaterialGroupToMaterial', 'material_id'),
             'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'material_id'),
             'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'material_id'),
@@ -70,6 +74,8 @@ class Material extends ActiveRecord
 		return parent::attributeLabels(array(
 			'unit' => 'Unit',
 			'standard_id' => 'Standard',
+			'drawing_id' => 'Drawing',
+			'searchDrawingDescription' => 'Drawing',
 		));
 	}
 
@@ -80,18 +86,20 @@ class Material extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
-		$criteria->compare('t.id', $this->id);
-		$criteria->compare('t.description', $this->description,true);
-		$criteria->compare('t.alias', $this->alias,true);
-		$criteria->compare('t.unit', $this->unit);
-		$criteria->compare('t.standard_id', $this->standard_id);
-
 		$criteria->select=array(
 			't.id',
 			't.description',
 			't.alias',
 			't.unit',
+			'drawing.description AS searchDrawingDescription',
 		);
+
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.description', $this->description,true);
+		$criteria->compare('t.alias', $this->alias,true);
+		$criteria->compare('t.unit', $this->unit);
+		$criteria->compare('t.standard_id', $this->standard_id);
+		$criteria->compare('drawing.description',$this->searchDrawingDescription,true);
 
 		return $criteria;
 	}
@@ -101,6 +109,7 @@ class Material extends ActiveRecord
 //		$columns[] = 'id';
 		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'alias';
+		$columns[] = 'searchDrawingDescription';
 		$columns[] = 'unit';
 		
 		return $columns;
@@ -142,20 +151,6 @@ class Material extends ActiveRecord
 		return $this;
 	}
 
-/*	public function scopeAssembly($assembly_id)
-	{
-		$assembly = Assembly::model()->findByPk($assembly_id);
-		
-		return $this->scopeStandard($assembly->standard_id);
-	}
-
-	public function scopeMaterialGroup($material_group_id)
-	{
-		$assembly = MaterialGroup::model()->findByPk($assembly_id);
-		
-		return $this->scopeStandard($assembly->standard_id);
-	}
-*/
 }
 
 ?>

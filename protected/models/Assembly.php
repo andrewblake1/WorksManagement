@@ -8,20 +8,18 @@
  * @property integer $standard_id
  * @property string $description
  * @property string $alias
- * @property integer $parent_id
+ * @property integer $drawing_id
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property User $updatedBy
- * @property Standard $standard
- * @property Assembly $parent
- * @property Assembly[] $assemblies
+ * @property Drawing $standard
+ * @property Drawing $drawing
  * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblies
  * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblies1
  * @property AssemblyToAssemblyGroup[] $assemblyToAssemblyGroups
  * @property AssemblyToClient[] $assemblyToClients
- * @property AssemblyToDrawing[] $assemblyToDrawings
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
  * @property SubAssembly[] $subAssemblies
@@ -30,9 +28,11 @@
  * @property TaskTemplateToAssembly[] $taskTemplateToAssemblies
  * @property TaskToAssembly[] $taskToAssemblies
  */
-class Assembly extends AdjacencyListActiveRecord
+class Assembly extends ActiveRecord
 {
 	protected $defaultSort = array('t.description');
+	
+	public $searchDrawingDescription;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -43,9 +43,8 @@ class Assembly extends AdjacencyListActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('description, standard_id', 'required'),
-			array('parent_id, standard_id', 'numerical', 'integerOnly'=>true),
+			array('drawing_id, standard_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
-//			array('id, description, standard_id, alias, parent_id', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -58,14 +57,12 @@ class Assembly extends AdjacencyListActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'standard' => array(self::BELONGS_TO, 'Standard', 'standard_id'),
-            'parent' => array(self::BELONGS_TO, 'Assembly', 'parent_id'),
-            'assemblies' => array(self::HAS_MANY, 'Assembly', 'parent_id'),
+            'standard' => array(self::BELONGS_TO, 'Drawing', 'standard_id'),
+            'drawing' => array(self::BELONGS_TO, 'Drawing', 'drawing_id'),
             'assemblyGroupToAssemblies' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'store_id'),
             'assemblyGroupToAssemblies1' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'assembly_id'),
             'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'assembly_id'),
             'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
-            'assemblyToDrawings' => array(self::HAS_MANY, 'AssemblyToDrawing', 'assembly_id'),
             'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
             'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'assembly_id'),
             'subAssemblies' => array(self::HAS_MANY, 'SubAssembly', 'parent_assembly_id'),
@@ -76,6 +73,7 @@ class Assembly extends AdjacencyListActiveRecord
         );
     }
 
+
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -83,6 +81,8 @@ class Assembly extends AdjacencyListActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'standard_id' => 'Standard',
+			'drawing_id' => 'Drawing',
+			'searchDrawingDescription' => 'Drawing',
 		));
 	}
 
@@ -93,20 +93,21 @@ class Assembly extends AdjacencyListActiveRecord
 	{
 		$criteria=new DbCriteria;
 
+		$criteria->select=array(
+			't.id',
+			't.description',
+			't.alias',
+			'drawing.description AS searchDrawingDescription',
+		);
+		
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.alias',$this->alias,true);
 		$criteria->compare('t.standard_id',$this->standard_id);
-		if(!empty($this->parent_id))
-		{
-			$criteria->compare('t.parent_id',$this->parent_id);
-		}
+		$criteria->compare('drawing.description',$this->searchDrawingDescription,true);
 
-		$criteria->select=array(
-			't.id',
-			't.parent_id',
-			't.description',
-			't.alias',
+		$criteria->with=array(
+			'drawing',
 		);
 
 		return $criteria;
@@ -114,9 +115,9 @@ class Assembly extends AdjacencyListActiveRecord
 
 	public function getAdminColumns()
 	{
-		// link to admin displaying children or if no children then just description without link
-        $this->linkColumnAdjacencyList('description', $columns);
+        $columns[] = 'description';
 		$columns[] = 'alias';
+		$columns[] = 'searchDrawingDescription';
  		
 		return $columns;
 	}
@@ -154,6 +155,7 @@ class Assembly extends AdjacencyListActiveRecord
 		
 		return $this;
 	}
+	
 
 }
 

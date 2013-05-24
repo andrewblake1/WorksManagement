@@ -14,20 +14,14 @@ class DutyStepDependencyController extends Controller
 			$dutyStep = DutyStep::model()->findByPk($_GET['parent_duty_step_id']);
 			$dutyStep->assertFromParent();
 			$dutyStepController->setTabs($dutyStep);
-			$this->_tabs = $dutyStepController->tabs;
-			
-			// set breadcrumbs
-			$this->breadcrumbs = DutyStepController::getBreadCrumbTrail('Update');
-			array_pop($this->breadcrumbs);
-			$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
-			$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
-			$this->breadcrumbs[] = DutyStepDependency::getNiceName();
+			static::$tabs = $dutyStepController->tabs;
 		}
 		else
 		{
 			parent::setTabs($model);
 		}
+		
+		$this->breadcrumbs = DutyStepController::getBreadCrumbTrail('Update');
 	}
-
 
 }

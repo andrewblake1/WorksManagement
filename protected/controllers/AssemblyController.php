@@ -1,9 +1,9 @@
 <?php
 
-class AssemblyController extends AdjacencyListController
+class AssemblyController extends Controller
 {
 	 
-	public function getChildTabs($model, $last = FALSE)
+/*	public function getChildTabs($model, $last = FALSE)
 	{
 		$tabs = array();
 		
@@ -23,19 +23,19 @@ class AssemblyController extends AdjacencyListController
 		{
 			parent::setTabs($model);
 			// if in a sub assembly
-			if($parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
+//			if($model->subAssemblies)
 			{
-				$this->setChildTabs($this->loadModel($parent_id));
+//				$this->setChildTabs($this);
 				// set breadcrumbs
-				static::setUpdateId($parent_id);
-				$this->breadcrumbs = self::getBreadCrumbTrail();
-				array_pop($this->breadcrumbs);
-				$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
-				$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
-				$this->breadcrumbs[] = SubAssembly::getNiceNamePlural();
+//				static::setUpdateId($parent_id);
+//				$this->breadcrumbs = self::getBreadCrumbTrail();
+//				array_pop($this->breadcrumbs);
+//				$updateTab = static::$tabs[sizeof(static::$tabs) - 1][0];
+//				$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
+//				$this->breadcrumbs[] = SubAssembly::getNiceNamePlural();
 			}
 		}
-	}
+	}*/
 
 }
 

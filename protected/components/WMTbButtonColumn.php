@@ -15,10 +15,11 @@ Yii::import('bootstrap.widgets.TbButtonColumn');
 class WMTbButtonColumn extends TbButtonColumn
 {
 	public $template;
+	protected $controller;
 
     public function __construct($grid)
 	{
-		$controller = Yii::app()->getController();
+		$this->controller = Yii::app()->getController();
 
 		// TODO: this id needs fixing
 		$this->afterDelete='function(link,success,data) {

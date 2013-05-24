@@ -1,4 +1,4 @@
-<?php
+  <?php
 
 class TaskToAssemblyController extends AdjacencyListController
 {
@@ -122,14 +122,6 @@ class TaskToAssemblyController extends AdjacencyListController
 			'task_id' => $model->task_id)
 		), $tabs);
 
-		// add tab to standard drawings
-		$this->addTab(AssemblyToDrawing::getNiceNamePlural(), $this->createUrl('AssemblyToDrawing/admin', array(
-			'assembly_id' => $model->assembly_id,
-			'parent_id' => $model->id,	// needed for breadcrumb trail calc for adjacency list
-			'task_id' => $model->task_id,
-			'task_to_assembly_id' => $model->id)
-		), $tabs);
-
 		return $tabs;
 	}
 	
@@ -147,15 +139,10 @@ class TaskToAssemblyController extends AdjacencyListController
 			if($parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
 			{
 				$this->setChildTabs($this->loadModel($parent_id));
-				// set breadcrumbs
-				static::setUpdateId($parent_id);
-				$this->breadcrumbs = self::getBreadCrumbTrail();
-				array_pop($this->breadcrumbs);
-				$updateTab = $this->_tabs[sizeof($this->_tabs) - 1][0];
-				$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
-				$this->breadcrumbs[] = SubAssembly::getNiceNamePlural();
 			}
 		}
+
+		$this->breadcrumbs = self::getBreadCrumbTrail();
 	}
 	
 }

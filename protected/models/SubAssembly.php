@@ -24,8 +24,10 @@
  * @property Assembly $childAssembly
  * @property TaskToAssembly[] $taskToAssemblies
  */
-class SubAssembly extends ActiveRecord
+class SubAssembly extends AdjacencyListActiveRecord
 {
+	public $parent_id;
+	public $parent;
 
 	/**
 	 * @var string nice model name for use in output
@@ -107,6 +109,9 @@ class SubAssembly extends ActiveRecord
 		);
 
 		$criteria->compare('t.id',$this->id);
+//		$parentAssemblyId = is_string($_GET['parent_assembly_id'])
+//			? $_GET['parent_ids']
+//			: array_pop($_GET['parent_ids']);
 		$criteria->compare('t.parent_assembly_id',$this->parent_assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.minimium',$this->minimum);
@@ -128,10 +133,11 @@ class SubAssembly extends ActiveRecord
 
 		return $criteria;
 	}
-
+	
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchChildAssembly', 'Assembly', 'child_assembly_id');
+   //     $columns[] = static::linkColumn('searchChildAssembly', 'Assembly', 'child_assembly_id', array('parent_assembly_id'=>$_GET['parent_assembly_id']));
+        $columns[] = 'searchChildAssembly';
   		$columns[] = 'comment';
 		$columns[] = 'quantity';
  		$columns[] = 'minimum';
@@ -145,9 +151,9 @@ class SubAssembly extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'parentAssembly->description',
+			'childAssembly->description',
 			'comment',
-			'parentAssembly->alias',
+			'childAssembly->alias',
 		);
 	}
  
@@ -176,6 +182,15 @@ class SubAssembly extends ActiveRecord
 		$this->standard_id = $this->parentAssembly->standard_id;
 		
 		return parent::beforeValidate();
+	}
+	
+	public function afterFind() {
+		parent::afterFind();
+		
+		if($this->parent_id = $this->parent_assembly_id)
+		{
+			$this->parent = $this->parentAssembly;
+		}
 	}
 
 }

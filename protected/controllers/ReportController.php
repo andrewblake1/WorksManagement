@@ -310,12 +310,11 @@ class ReportController extends Controller
 				$this->heading .= $modelName::getNiceName() . 's';
 			}
 
-			// set breadcrumbs
-			$this->breadcrumbs = $this->getBreadCrumbTrail('Create');
-
 			// set up tab menu if required - using setter
-			$this->_tabs[0][0]['label'] = 'Create';
-			$this->_tabs[0][0]['active'] = true;
+			static::$tabs[0][0]['label'] = 'Create';
+			static::$tabs[0][0]['active'] = true;
+			// set breadcrumbs
+			$this->breadcrumbs = $this->getBreadCrumbTrail();
 
 			echo $this->render('_form',array(
 				'model'=>$model,

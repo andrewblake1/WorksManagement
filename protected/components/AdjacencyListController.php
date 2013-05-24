@@ -4,7 +4,7 @@ class AdjacencyListController extends Controller {
 	/**
 	 * Add additional crumbs showing the trail within
 	 */
-	static function getBreadCrumbTrail($lastCrumb = NULL)
+/*	static function getBreadCrumbTrail($lastCrumb = NULL)
 	{
 		$breadcrumbs = parent::getBreadCrumbTrail($lastCrumb);
 		$adjacencyListCrumbs = array();
@@ -91,7 +91,7 @@ class AdjacencyListController extends Controller {
 		}
 
 		return $breadcrumbs;
-	}
+	}*/
 
 	public function actionUpdate($id, $model = null) {
 		$modelName = $this->modelName;
@@ -115,16 +115,13 @@ $t = $model->attributes;
 			$cntr++;
 			if($tabs = $this->getChildTabs($model, $cntr == $size))
 			{
-				$this->_tabs[] = $tabs;
+				static::$tabs[] = $tabs;
 			}
 		}
 
-		return $this->_tabs;
+		return static::$tabs;
 	}
 
-	public function getChildTabs($model, $last = FALSE)
-	{
-	}
 	
 	static function getParentIds()
 	{

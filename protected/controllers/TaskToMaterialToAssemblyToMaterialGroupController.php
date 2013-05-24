@@ -12,12 +12,12 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 
 		// set heading
 		$this->heading = TaskToMaterial::getNiceName();
-
-		// set breadcrumbs
-		$this->breadcrumbs = TaskToMaterialController::getBreadCrumbTrail('Create');
 		
 		// set tabs
 		$this->tabs = $taskToMaterial;
+
+		// set breadcrumbs
+		$this->breadcrumbs = TaskToMaterialController::getBreadCrumbTrail('Create');
 		
 		echo $this->render('_form',array(
 			'model'=>$model,
@@ -66,7 +66,7 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 		$taskToAssembly->assertFromParent('TaskToMaterial');
 		$taskToAssemblyController->setTabs(NULL);
 		$taskToAssemblyController->setActiveTabs(NULL, $modelName::getNiceNamePlural());
-		$this->_tabs = $taskToAssemblyController->tabs;
+		static::$tabs = $taskToAssemblyController->tabs;
 
 		static::setUpdateId(NULL, 'TaskToAssembly');
 		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
@@ -75,7 +75,7 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 
 		$tabs=array();
 		$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
-		$this->_tabs = array_merge($this->_tabs, array($tabs));
+		static::$tabs = array_merge(static::$tabs, array($tabs));
 		array_pop($this->breadcrumbs);
 		$this->breadcrumbs[$modelName::getNiceNamePlural()] = Yii::app()->request->requestUri;
 		$this->breadcrumbs[] = $lastLabel;

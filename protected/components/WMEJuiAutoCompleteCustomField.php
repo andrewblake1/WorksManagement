@@ -11,8 +11,8 @@ class WMEJuiAutoCompleteCustomField extends WMEJuiAutoCompleteField
 
     public function init()
     {
-		$data_typeColumnNames = CustomField::getDataTypeColumnNames();
-		$data_typeColumnName = $data_typeColumnNames[$this->customField->data_type];
+		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
+		$data_typeColumnName = $dataTypeColumnNames[$this->customField->data_type];
 		$this->sourceUrl = Yii::app()->createUrl("customValue/autocomplete", array('custom_field_id' => $this->customField->id));
 
         $tempHtmlOpts = array();

@@ -23,7 +23,6 @@ class Controller extends CController {
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs = array();
-
 	/**
 	 * @var array the buttons to go in Manage cgridview
 	 */
@@ -42,7 +41,7 @@ class Controller extends CController {
 	/**
 	 * @var array the tab menu itemse
 	 */
-	protected $_tabs = array();
+	protected static $tabs = array();
 	/**
 	 * @var bool whether to show the new button in the admin  
 	  protected $_adminShowNew = false;
@@ -236,7 +235,7 @@ class Controller extends CController {
 	}
 
 	public function getTabs() {
-		return $this->_tabs;
+		return static::$tabs;
 	}
 
 	/**
@@ -248,7 +247,7 @@ class Controller extends CController {
 	public function setTabs($model, &$tabs = NULL) {
 		if($tabs === NULL)
 		{
-			$tabs = &$this->_tabs;
+			$tabs = &static::$tabs;
 		}
 		
 		$level = sizeof($tabs);
@@ -507,7 +506,8 @@ $t2=$model->attributes;
 	}
 
 	// called within AdminViewWidget
-	public function getButtons($model) {
+	public function getButtons($model)
+	{
 		return array(
 			'class' => 'WMTbButtonColumn',
 			'buttons' => array(
@@ -552,7 +552,7 @@ $t2=$model->attributes;
 		// if just gone direct to a screen i.e. our memory/history was cleared
 		if (static::getAdminParams() === NULL && !$lastCrumb) {
 			if (static::checkAccess(self::accessRead)) {
-				$breadcrumbs[] = $modelName::getNiceName();
+				$breadcrumbs[] = array($modelName::getNiceName());
 			}
 			return $breadcrumbs;
 		}
@@ -579,36 +579,66 @@ $t2=$model->attributes;
 			if ($modelName == $crumb) {
 				if ($lastCrumb == 'Create') {
 					// add crumb to admin view
-					$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
+					$breadcrumbs[] = array($displays => array("$crumb/admin") + $queryParamters);
 					// add last crumb
-					$breadcrumbs[] = $lastCrumb;
+					$breadcrumbs[] = array($lastCrumb);
 				} elseif ($lastCrumb == 'Update') {
 					// add crumb to admin view. NB using last query paramters to that admin view
-					$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
+					$breadcrumbs[] = array($displays => array("$crumb/admin") + $queryParamters);
 					// add a crumb with just the primary key nice name but no href
 					$primaryKey = static::getUpdateId($crumb);
-					$breadcrumbs[] = $crumb::getNiceName($primaryKey);
+					$breadcrumbs[] = array($crumb::getNiceName($primaryKey));
 				} else {
-					$breadcrumbs[] = $displays;
+					$breadcrumbs[] = array($displays);
 				}
 			}
 			// otherwise not last crumb
 			else {
 				// add crumb to admin view
-				$breadcrumbs[$displays] = array("$crumb/admin") + $queryParamters;
+				$breadcrumbs[] = array($displays => array("$crumb/admin") + $queryParamters);
 
 				// if there is a primary key for this
 				if (static::getUpdateId($crumb) !== NULL) {
 					// add an update crumb to this primary key
 					$primaryKey = static::getUpdateId($crumb);
-					$breadcrumbs[$crumb::getNiceName($primaryKey)] = array("$crumb/"
+					$breadcrumbs[] = array($crumb::getNiceName($primaryKey) => array("$crumb/"
 						. (static::checkAccess(self::accessWrite, $crumb) ? 'update' : 'view'),
 						$crumb::model()->tableSchema->primaryKey => $primaryKey,
-					);
+					));
 				}
 			}
 		}
 
+		/**
+		* Add in from multi-level tabs
+		*/
+		if(sizeof(static::$tabs) > 1)
+		{
+			array_pop($breadcrumbs);
+			array_pop($breadcrumbs);
+
+			// easiest to just get from active tabs
+			foreach(static::$tabs as $index => &$tabsRow)
+			{
+				// loop thru tabs in row
+				foreach($tabsRow as &$tab)
+				{
+					// if active
+					if(!empty($tab['active']) && $tab['active'] == TRUE)
+					{
+						// add link to the first item in the row
+						$breadcrumbs[] = array($tabsRow[0]['label'] => $tabsRow[0]['url']);
+						$breadcrumbs[] = array($tab['label'] => $tab['url']);
+					}
+				}
+			}
+
+			// ensure the last one is just text
+			$count = sizeof($breadcrumbs);
+			$breadcrumbs[$count - 1] = array(key($breadcrumbs[$count - 1]));
+		}
+		
+		
 		return $breadcrumbs;
 	}
 
@@ -862,21 +892,21 @@ $t=			$model->attributes = $_POST[$modelName];
 	{
 		$success = FALSE;
 
-		$sizeofTabs = sizeof($this->_tabs);
+		$sizeofTabs = sizeof(static::$tabs);
 		
 		if($first)
 		{
-			$this->setActiveTab($this->_tabs[0], $first);
+			$this->setActiveTab(static::$tabs[0], $first);
 		}
 		if($last)
 		{
-			$this->setActiveTab($this->_tabs[$sizeofTabs - 1], $last);
+			$this->setActiveTab(static::$tabs[$sizeofTabs - 1], $last);
 		}
 		if($middle)
 		{
 			for($cntr = 1; $cntr < ($sizeofTabs - 1); $cntr++)
 			{
-				$this->setActiveTab($this->_tabs[$cntr], $middle);
+				$this->setActiveTab(static::$tabs[$cntr], $middle);
 			}
 		}
 

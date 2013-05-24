@@ -25,9 +25,6 @@ class AdminViewWidget extends CWidget
  
     public function run()
     {
-		// show buttons on row by row basis i.e. do access check on context
-		array_unshift($this->columns, $this->_controller->getButtons($this->model));
-	
 		// add instructions/ warnings errors via Yii::app()->user->setFlash
 		// NB: thia won't work on ajax update as in delete hence afterDelete javascript added in WMTbButtonColumn
 		$this->_controller->widget('bootstrap.widgets.TbAlert');
@@ -60,18 +57,30 @@ class AdminViewWidget extends CWidget
 					'name' => 'id'
 				))
 			: array();
-//Yii::app()->params['showDeleteSelectedButton'] = TRUE;	
+
+		if($buttons = $this->_controller->getButtons($this->model))
+		{
+			// show buttons on row by row basis i.e. do access check on context
+			array_unshift($this->columns, $buttons);
+		}
 		
-		// display the grid
-		$this->_controller->widget('WMTbExtendedGridView',array(
+		$params = array(
 			'id'=>$this->_controller->modelName.'-grid',
 			'type'=>'striped',
 			'dataProvider'=>$this->model->search(),
 			'filter'=>$this->model,
 			'columns'=>$this->columns,
-			'bulkActions' => $bulkActions,
 			'ajaxUrl' => Yii::app()->request->getUrl(),
-		));
+		);
+		
+		// probably only want bulk actions if if we have buttons
+		if($buttons)
+		{
+			$params['bulkActions'] = $bulkActions;
+		}
+		
+		// display the grid
+		$this->_controller->widget('WMTbExtendedGridView', $params);
 
 		// as using boostrap modal for create the html for the modal needs to be on
 		// the calling page
@@ -84,6 +93,8 @@ class AdminViewWidget extends CWidget
 		
 		parent::run();
 		
+		$modelName = $this->_controller->modelName;
+		$baseUrl = Yii::app()->baseUrl;
 		?>
 		<script type="text/javascript">
 			// as a global variable
@@ -97,7 +108,7 @@ class AdminViewWidget extends CWidget
 			});
 
 			function batchActions(values){
-				var url = "http://localhost/WorksManagement/<?php echo $this->_controller->modelName; ?>/batchDelete";
+				var url = "<?php echo "$baseUrl/$modelName"; ?>/batchDelete";
 				var ids = new Array();
 				if(values.size()>0){
 					values.each(function(idx){
@@ -112,7 +123,7 @@ class AdminViewWidget extends CWidget
 									type: "POST",
 									url: url,
 									data: {"ids":ids},
-									data_type:'json',
+									dataType:'json',
 									success: function(resp){
 										if(resp.status == "success"){
 											if(resp.msg) {
@@ -120,7 +131,7 @@ class AdminViewWidget extends CWidget
 											}
 											$.fn.yiiGridView.update("<?php echo $this->_controller->modelName; ?>-grid");
 										} else {
-											alert(resp.msg);
+											alert(resp.status);
 										}
 									}
 								});

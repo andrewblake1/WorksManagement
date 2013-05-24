@@ -16,7 +16,6 @@
  * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblies
  * @property AssemblyToAssemblyGroup[] $assemblyToAssemblyGroups
  * @property AssemblyToClient[] $assemblyToClients
- * @property AssemblyToDrawing[] $assemblyToDrawings
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
  * @property Client[] $clients
@@ -125,7 +124,6 @@ class User extends ContactActiveRecord
             'assemblyGroupToAssemblies' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'updated_by'),
             'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'updated_by'),
             'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'updated_by'),
-            'assemblyToDrawings' => array(self::HAS_MANY, 'AssemblyToDrawing', 'updated_by'),
             'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'updated_by'),
             'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'updated_by'),
             'clients' => array(self::HAS_MANY, 'Client', 'updated_by'),

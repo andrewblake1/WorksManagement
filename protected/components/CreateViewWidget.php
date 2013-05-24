@@ -26,14 +26,24 @@ class CreateViewWidget extends CWidget
     {
 		$this->beginWidget('bootstrap.widgets.TbModal', array('id'=>$this->modal_id));
 
-		$modelName = get_class($this->model);
-		echo "<div id=\"form-create$modelName\" class=\"modal-body\">";
-		echo $this->_controller->renderPartial('//'.lcfirst($this->_controller->modelName).'/_form',array(
-			'model'=>$this->model,
-			'models'=>$this->models,
-			'parent_fk'=>$this->parent_fk,
-		));
-		echo '</div>';
+		// if there is a view file then show as modal otherwise ignore
+		try
+		{
+			$modelName = get_class($this->model);
+			echo "<div id=\"form-create$modelName\" class=\"modal-body\">";
+			echo $this->_controller->renderPartial('//'.lcfirst($this->_controller->modelName).'/_form',array(
+				'model'=>$this->model,
+				'models'=>$this->models,
+				'parent_fk'=>$this->parent_fk,
+			));
+			echo '</div>';
+		}
+		catch(Exception $e)
+		{
+			// ignore errors rendering 
+// TODO just make this ignore not found errors as in drawing to assembly view			
+
+		}
  
 		$this->endWidget(); 
 	}

@@ -47,10 +47,10 @@ class CustomValue extends ActiveRecord
 		$params = $customValidatorParams['params'];
 		
 		// Get CustomField column names
-		$data_typeColumnNames = CustomField::getDataTypeColumnNames();
+		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
 
 		// get the target attribute
-		$targetAttribute = $data_typeColumnNames[$customField->data_type];
+		$targetAttribute = $dataTypeColumnNames[$customField->data_type];
 
 // TODO: this switch related to CustomFieldWidgets switch - possible call for sub classes - perhaps CustomValue should be abstract?
 
@@ -234,8 +234,8 @@ class CustomValue extends ActiveRecord
 	 */
 	public function setDefault(CActiveRecord $customField)
 	{
-		$data_typeColumnNames = CustomField::getDataTypeColumnNames();
-		$attributeName = $data_typeColumnNames[$customField->data_type];
+		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
+		$attributeName = $dataTypeColumnNames[$customField->data_type];
 
 		// if this is likely to be an sql select
 		if(stripos($customField->default_select, 'SELECT') !== false)
@@ -294,11 +294,11 @@ class CustomValue extends ActiveRecord
 	{
 		$customField = $CustomFieldModelType->customField;
 		// Get CustomField column names
-		$data_typeColumnNames = CustomField::getDataTypeColumnNames();
+		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
 		// label
 		$this->label = $customField->description;
 		// id
-		$this->html_id = "CustomValue_{$CustomFieldModelType->id}_{$data_typeColumnNames[$customField->data_type]}";
+		$this->html_id = "CustomValue_{$CustomFieldModelType->id}_{$dataTypeColumnNames[$customField->data_type]}";
 	}
 
 	

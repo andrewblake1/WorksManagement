@@ -63,18 +63,16 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroupController extends Controller
 			$taskToAssembly->assertFromParent();
 			$taskToAssemblyController->setTabs(NULL);
 			$taskToAssemblyController->setActiveTabs(NULL, SubAssembly::getNiceNamePlural());
-			$this->_tabs = $taskToAssemblyController->tabs;
+			static::$tabs = $taskToAssemblyController->tabs;
 			
 			$tabs=array();
 			$modelName = $this->modelName;
 			$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
 			$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
-			$this->_tabs = array_merge($this->_tabs, array($tabs));
+			static::$tabs = array_merge(static::$tabs, array($tabs));
 			
 			// set breadcrumbs
-			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
-			array_pop($this->breadcrumbs);
-			$this->breadcrumbs[] = $lastLabel;
+			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail();
 		}
 		else
 		{

@@ -309,27 +309,14 @@ class DrawingController extends AdjacencyListController
 				$taskToAssembly = TaskToAssembly::model()->findByPk($_GET['task_to_assembly_id']);
 				$taskToAssembly->assertFromParent();
 				$taskToAssemblyController->setTabs(NULL);
-				$this->_tabs = $taskToAssemblyController->tabs;
-				$this->_tabs[sizeof($this->_tabs) - 1][3]['active'] = TRUE;
+				static::$tabs = $taskToAssemblyController->tabs;
+				static::$tabs[sizeof(static::$tabs) - 1][3]['active'] = TRUE;
 
 				$tabs=array();
 				$this->addTab(Drawing::getNiceName($_GET['id']), Yii::app()->request->requestUri, $tabs, TRUE);
-				$this->_tabs = array_merge($this->_tabs, array($tabs));
+				static::$tabs = array_merge(static::$tabs, array($tabs));
 
-				// set breadcrumbs
-				static::setUpdateId(NULL, 'TaskToAssembly');
-				$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
-				array_pop($this->breadcrumbs);
-
-
-				// the update tab
-				$updateTab = $this->_tabs[sizeof($this->_tabs) - 2][3];
-				$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
-				// the drawings tab
-				$updateTab = $this->_tabs[sizeof($this->_tabs) - 2][0];
-				$this->breadcrumbs[$updateTab['label']] = $updateTab['url'];
-				// last tab with no link
-				$this->breadcrumbs[] = Drawing::getNiceName($_GET['id']);
+				$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail();
 			}
 			else
 			{
@@ -337,6 +324,7 @@ class DrawingController extends AdjacencyListController
 				
 				$this->setChildTabs($this->loadModel(static::getUpdateId()));
 				$this->setActiveTabs(NULL, NULL, Drawing::getNiceNamePlural());
+				$this->breadcrumbs = static::getBreadCrumbTrail();
 			}
 		}
 		else
@@ -347,6 +335,8 @@ class DrawingController extends AdjacencyListController
 				$this->setChildTabs($this->loadModel($_GET['parent_id']));
 				$this->setActiveTabs(NULL, Drawing::getNiceNamePlural(), Drawing::getNiceNamePlural());
 			}
+
+			$this->breadcrumbs = static::getBreadCrumbTrail();
 		}
 	}
 	
