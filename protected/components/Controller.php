@@ -690,7 +690,7 @@ $t2=$model->attributes;
 			$modelName = get_class($model);
 		}
 
-		$params = array("$modelName/admin") + static::getAdminParams($modelName);
+		$params = array_merge(array("$modelName/admin"), /* + static::getAdminParams($modelName)*/$_GET);
 
 		// if we want to sort by the newest record first
 		if ($sortByNewest) {

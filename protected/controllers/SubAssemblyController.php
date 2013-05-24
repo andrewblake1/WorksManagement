@@ -15,7 +15,7 @@ class SubAssemblyController extends AdjacencyListController
 				'update' => array(
 					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
 					'url' => "\$this->controller->createUrl('update', array('id'=>\$data->id) +
-						array('sub_assembly_ids'=>array_merge(array(empty(\$_GET['sub_assembly_ids']) ? array() : \$_GET['sub_assembly_ids']), array(\$data->id))
+						array('sub_assembly_ids'=>array_merge(empty(\$_GET['sub_assembly_ids']) ? array() : \$_GET['sub_assembly_ids'], array(\$data->id))
 					))",
 				),
 				'view' => array(
@@ -23,7 +23,7 @@ class SubAssemblyController extends AdjacencyListController
 						!Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))
 						&& Yii::app()->user->checkAccess(get_class($data)."Read")',
 					'url' => "\$this->controller->createUrl('view', array('id'=>\$data->id) +
-						array('sub_assembly_ids'=>array_merge(array(empty(\$_GET['sub_assembly_ids']) ? array() : \$_GET['sub_assembly_ids']), array(\$data->id))
+						array('sub_assembly_ids'=>array_merge(empty(\$_GET['sub_assembly_ids']) ? array() : \$_GET['sub_assembly_ids'], array(\$data->id))
 					))",
 				),
 			),
@@ -106,6 +106,6 @@ class SubAssemblyController extends AdjacencyListController
 		// set breadcrumbs
 		$this->breadcrumbs = self::getBreadCrumbTrail();
 	}
-
+	
 	
 }

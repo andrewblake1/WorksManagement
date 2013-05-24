@@ -100,7 +100,7 @@ class WMTbActiveForm extends TbActiveForm
 		// Only do modal if in admin view
 		if(/*$this->_action == 'Create' && */Yii::app()->controller->action->id == 'admin' || Yii::app()->controller->action->id == 'returnForm')
 		{
-			if($this->_action != 'Update')
+			if(!$this->action && $this->_action != 'Update')
 			{
 				$this->action = $this->controller->createUrl("$modelName/{$this->_action}");	// NB: this needed here but not for update to set the form action from admin as modal
 			}

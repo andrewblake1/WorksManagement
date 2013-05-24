@@ -110,7 +110,7 @@ class DutyStepDependency extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'parentDutyStep->description',
+			'childDutyStep->description',
 		);
 	}
  
@@ -122,7 +122,6 @@ class DutyStepDependency extends ActiveRecord
 	static function getParentForeignKey($referencesModel)
 	{
 		return parent::getParentForeignKey($referencesModel, array('DutyStep'=>'parent_duty_step_id'));
-	}
-	
+	}	
 
 }

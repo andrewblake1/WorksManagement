@@ -2,6 +2,14 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
+	// hidden field to parent assembly
+	if(!empty($_GET['sub_assembly_ids']))
+	{
+		$subAssembly = SubAssembly::model()->findByPk(array_pop($_GET['sub_assembly_ids']));
+		$model->parent_assembly_id = $subAssembly->child_assembly_id;
+		$form->hiddenField('parent_assembly_id');
+	}
+
 	// get the parent model
 	$assembly = Assembly::model()->findByPk(static::getUpdateId('Assembly'));
 	AssemblyController::listWidgetRow($model, $form, 'child_assembly_id', array(),
