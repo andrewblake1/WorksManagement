@@ -82,7 +82,7 @@ class DutyStepDependencyController extends Controller
 			// if in a sub duty_step
 			if(isset($_GET['duty_step_dependency_ids']))
 			{
-				$dutyStepDependency = DutyStepDependency::model()->findByPk($_GET['duty_step_dependency_ids'][1]);
+				$dutyStepDependency = DutyStepDependency::model()->findByPk(current($_GET['duty_step_dependency_ids']));
 				static::setUpdateId($dutyStepDependency->parent_duty_step_id, 'DutyStep');
 				parent::setTabs($model);
 				$this->setChildTabs(NULL);

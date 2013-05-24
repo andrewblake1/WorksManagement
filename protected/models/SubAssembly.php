@@ -109,10 +109,7 @@ class SubAssembly extends AdjacencyListActiveRecord
 		);
 
 		$criteria->compare('t.id',$this->id);
-//		$parentAssemblyId = is_string($_GET['parent_assembly_id'])
-//			? $_GET['parent_ids']
-//			: array_pop($_GET['parent_ids']);
-		$criteria->compare('t.parent_assembly_id',$this->parent_assembly_id);
+		$criteria->compareNull('t.parent_assembly_id',$this->parent_assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.minimium',$this->minimum);
 		$criteria->compare('t.maximum',$this->maximum);

@@ -25,7 +25,7 @@ class DutyStepDependency extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Duty dependency';
+	static $niceName = 'Dependency';
 
 	public $searchChildDutyStep;
 	protected $defaultSort = array('childDutyStep.description');
@@ -90,7 +90,7 @@ class DutyStepDependency extends ActiveRecord
 		);
 
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.parent_duty_step_id',$this->parent_duty_step_id);
+		$criteria->compareNull('t.parent_duty_step_id',$this->parent_duty_step_id);
 		$criteria->compare('childDutyStep.description',$this->searchChildDutyStep,true);
 
 		$criteria->with = array(

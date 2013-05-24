@@ -91,7 +91,7 @@ class SubAssemblyController extends AdjacencyListController
 			// if in a sub assembly
 			if(isset($_GET['sub_assembly_ids']))
 			{
-				$subAssembly = SubAssembly::model()->findByPk($_GET['sub_assembly_ids'][1]);
+				$subAssembly = SubAssembly::model()->findByPk(current($_GET['sub_assembly_ids']));
 				static::setUpdateId($subAssembly->parent_assembly_id, 'Assembly');
 				parent::setTabs($model);
 				$this->setChildTabs(NULL);

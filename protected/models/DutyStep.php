@@ -10,6 +10,7 @@
  * @property string $level
  * @property integer $duty_category_id
  * @property integer $custom_field_id
+ * @property string $comment
  * @property integer $deleted
  * @property integer $updated_by
  *
@@ -47,6 +48,7 @@ class DutyStep extends AdjacencyListActiveRecord
 			array('description', 'required'),
 			array('lead_in_days, duty_category_id', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
+            array('comment', 'length', 'max'=>255),
 			array('level', 'length', 'max'=>10),
 			array('custom_field_id', 'safe'),
 		));
@@ -96,6 +98,7 @@ class DutyStep extends AdjacencyListActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.custom_field_id',
 			't.description',
+			't.comment',
 			't.lead_in_days',
 			't.level',
 			'customField.description AS searchCustomField',
@@ -103,6 +106,7 @@ class DutyStep extends AdjacencyListActiveRecord
 
 		// where
 		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.comment',$this->comment,true);
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
 		$criteria->compare('customField.description',$this->searchCustomField,true);
 		$criteria->compare('t.duty_category_id', $this->duty_category_id);
@@ -122,6 +126,7 @@ class DutyStep extends AdjacencyListActiveRecord
 		$columns[] = 'lead_in_days';
 		$columns[] = 'level';
         $columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
+		$columns[] = 'comment';
 		
 		return $columns;
 	}
