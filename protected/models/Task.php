@@ -492,13 +492,16 @@ class Task extends CustomFieldExtensionActiveRecord
 		// loop thru all customValue model types associated to this models model type
 		foreach($this->taskTemplate->taskTemplateToDutyTypes as $taskTemplateToDutyType)
 		{
-			// create a new duty
-			$duty = new Duty();
-			// copy any useful attributes from
-			$duty->attributes = $taskTemplateToDutyType->attributes;
-			$duty->updated_by = null;
-			$duty->task_id = $this->id;
-			$saved &= $duty->createSave($models);
+			// loop thru steps of the Duty type
+			foreach($taskTemplateToDutyType->dutyStepDependencies as $dutyStepDependency)
+			{
+				// create a new duty
+				$duty = new Duty();
+				// copy any useful attributes from
+				$duty->task_id = $this->id;
+				$duty->duty_step_dependency_id = $dutyStepDependency->id;
+				$saved &= $duty->createSave($models);
+			}
 		}
 		
 		return $saved;

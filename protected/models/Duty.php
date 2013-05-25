@@ -214,8 +214,8 @@ class Duty extends ActiveRecord
 
 			// validate and save
 			$saved &= $customValue->updateSave($models, array(
-				'customField' => $this->taskTemplateToDutyType->dutyStep->customField,
-				'params' => array('relationToCustomField'=>'duty->taskTemplateToDutyType->dutyStep->customField'),
+				'customField' => $this->dutyStepDependency->childDutyStep->customField,
+				'params' => array('relationToCustomField'=>'dutyStepDependency->childDutyStep->customField'),
 			));
 		}
 
@@ -234,7 +234,8 @@ class Duty extends ActiveRecord
 		
 		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
-		$dutyStep = DutyStep::model()->findByPk($this->duty_step_id);
+		$dutyStepDependency = DutyStepDependency::model()->findByPk($this->duty_step_dependency_id);
+		$dutyStep = $dutyStepDependency->child_duty_step_id;
 		if(($level = $dutyStep->level) == Planning::planningLevelTaskInt)
 		{
 			$planning_id = $this->task_id;
@@ -263,7 +264,8 @@ class Duty extends ActiveRecord
 		{
 			$dutyData = new DutyData;
 			$dutyData->planning_id = $planning_id;
-			$dutyData->duty_step_id = $this->duty_step_id;
+			$dutyData->duty_step_dependency_id = $dutyStepDependency->id;
+			$dutyData->duty_step_id = $dutyStep->id;
 			$dutyData->level = $level;
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
 			$dutyData->dbCallback('save');
@@ -276,14 +278,14 @@ class Duty extends ActiveRecord
 		// retrieve the DutyData
 		$dutyData = DutyData::model()->findByAttributes(array(
 			'planning_id'=>$planning_id,
-			'duty_step_id'=>$this->duty_step_id,
+			'duty_step_dependency_id'=>$dutyStepDependency->id,
 		));
 
 		// if there isn't already a customValue item to hold value and there should be
-		if(empty($dutyData->customValue) && !empty($this->dutyStep->custom_field_id))
+		if(empty($dutyData->customValue) && !empty($dutyStep->custom_field_id))
 		{
 			// create a new customValue item to hold value
-			$saved &= CustomValue::createCustomField($this->dutyStep, $models, $customValue);
+			$saved &= CustomValue::createCustomField($dutyStep, $models, $customValue);
 			// associate the new customValue to this duty
 			$dutyData->custom_value_id = $customValue->id;
 			// attempt save
