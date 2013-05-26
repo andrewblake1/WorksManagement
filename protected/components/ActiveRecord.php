@@ -807,7 +807,7 @@ if(count($m = $this->getErrors()))
 				{
 					// soft delete
 					// mark the row as deleted - increment to allow re-create and re delete later without violating unique constraints combined with deleted
-					$this->deleted = Yii::app()->db->createCommand('SELECT MAX(deleted) + 1 FROM '.$this->tableName())->queryScalar();
+					$this->deleted = 1;
 					$result=$this->save();
 				}
 				// otherwise delete the row
@@ -827,6 +827,54 @@ if(count($m = $this->getErrors()))
 			throw new CDbException(Yii::t('yii','The active record cannot be deleted because it is new.'));
 	}
 
+	/*
+	 *	When a record fails to insert, it must be due to a constraint violation. Try to update with deleted attribute
+	 *  Set to 0 - hence undeleting an existing record. 
+	 */
+	public function insert($attributes = null) {
+		
+		try
+		{
+			$result = parent::insert($attributes);
+		}
+		catch (CDbException $e)
+		{
+			if(isset($this->deleted))
+			{
+				// get the matching row
+				$model = self::model()->findByAttributes($this->attributes);
+				
+				// if deleted
+				if($model->deleted)
+				{
+					// attempt undelete
+					$model->deleted = 0;
+					if($result=$model->update())
+					{
+						// set the id to the existing id
+						$primaryKeyName = $modelName::model()->tableSchema->primaryKey;
+						$this->$primaryKeyName = $model->$primaryKeyName;
+						// similalate setting of other properties that insert sets
+						$this->isNewRecord = TRUE;
+						$this->scenario = 'update';
+					}
+					else
+					{
+						// not handled so re-throw
+						throw($e);
+					}
+				}
+			}
+			else
+			{
+				// not handled so re-throw
+				throw($e);
+			}
+		}
+		
+		return $result;
+	}
+	
 	/**
 	 * Override of this necassary because _validators is private var of CModel and populated
 	 * on construct or sometime before our call to dynamically add validators - where needed.
