@@ -795,6 +795,9 @@ if(count($m = $this->getErrors()))
 		return $return;
 	}
 
+	/*
+	 *  Soft delete
+	 */
 	public function delete()
 	{
 		if(!$this->getIsNewRecord())
@@ -828,7 +831,7 @@ if(count($m = $this->getErrors()))
 	}
 
 	/*
-	 *	When a record fails to insert, it must be due to a constraint violation. Try to update with deleted attribute
+	 *	Soft delete re-insert. When a record fails to insert, it must be due to a constraint violation. Try to update with deleted attribute
 	 *  Set to 0 - hence undeleting an existing record. 
 	 */
 	public function insert($attributes = null) {
@@ -841,19 +844,30 @@ if(count($m = $this->getErrors()))
 		{
 			if(isset($this->deleted))
 			{
+				$primaryKeyName = self::model()->tableSchema->primaryKey;
+				$attributes = $this->attributes;
+				unset($attributes['deleted']);
+				if(array_key_exists($primaryKeyName, $attributes))
+				{
+					unset($attributes[$primaryKeyName]);
+				}
+				unset($attributes[$primaryKeyName]);
+				if(array_key_exists('updated_by', $attributes))
+				{
+					unset($attributes['updated_by']);
+				}
 				// get the matching row
-				$model = self::model()->findByAttributes($this->attributes);
+				$model = self::model()->resetScope()->findByAttributes($attributes);
 				
 				// if deleted
 				if($model->deleted)
 				{
+					$this->$primaryKeyName = $model->$primaryKeyName;
 					// attempt undelete
-					$model->deleted = 0;
-					if($result=$model->update())
+					$this->deleted = 0;
+					$this->isNewRecord = FALSE;
+					if($result=$this->update())
 					{
-						// set the id to the existing id
-						$primaryKeyName = $modelName::model()->tableSchema->primaryKey;
-						$this->$primaryKeyName = $model->$primaryKeyName;
 						// similalate setting of other properties that insert sets
 						$this->isNewRecord = TRUE;
 						$this->scenario = 'update';
