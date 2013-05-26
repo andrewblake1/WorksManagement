@@ -6,6 +6,8 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	'parent_fk'=>$parent_fk,
 ));
 
+	$form->hiddenField('project_template_id');
+	
 	$form->textFieldRow('name');
 	
 	// if adding to another node - as opposed to creating a new root

@@ -13,9 +13,9 @@
  *
  * The followings are the available model relations:
  * @property CustomField $customField
- * @property CustomFieldTaskCategory $customFieldTaskCategory
  * @property User $updatedBy
- * @property TaskTemplate $taskTemplate
+ * @property CustomFieldTaskCategory $taskTemplate
+ * @property CustomFieldTaskCategory $customFieldTaskCategory
  * @property TaskToCustomFieldToTaskTemplate[] $taskToCustomFieldToTaskTemplates
  */
 class CustomFieldToTaskTemplate extends ActiveRecord
@@ -41,12 +41,8 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_template_id, custom_field_id', 'required'),
-			array('task_template_id, custom_field_id', 'numerical', 'integerOnly'=>true),
-			array('custom_field_task_category_id', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, task_template_id, searchTaskTemplate, searchCustomFieldTaskCategory, searchCustomField', 'safe', 'on'=>'search'),
+			array('task_template_id, custom_field_id, custom_field_task_category_id', 'required'),
+			array('task_template_id, custom_field_id, custom_field_task_category_id', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -59,9 +55,9 @@ class CustomFieldToTaskTemplate extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
-            'customFieldTaskCategory' => array(self::BELONGS_TO, 'CustomFieldTaskCategory', 'custom_field_task_category_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
+            'taskTemplate' => array(self::BELONGS_TO, 'CustomFieldTaskCategory', 'task_template_id'),
+            'customFieldTaskCategory' => array(self::BELONGS_TO, 'CustomFieldTaskCategory', 'custom_field_task_category_id'),
             'taskToCustomFieldToTaskTemplates' => array(self::HAS_MANY, 'TaskToCustomFieldToTaskTemplate', 'custom_field_to_task_template_id'),
         );
     }
@@ -76,8 +72,8 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 			'searchTaskTemplate' => 'Client/Project type/Task type',
 			'custom_field_task_category_id' => 'Task category',
 			'searchCustomFieldTaskCategory' => 'Task category',
-			'custom_field_id' => 'Custom type',
-			'searchCustomField' => 'Custom type',
+			'custom_field_id' => 'Custom field',
+			'searchCustomField' => 'Custom field',
 		));
 	}
 
@@ -89,31 +85,28 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 		$criteria=new DbCriteria;
 
 		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.custom_field_task_category_id',
 			't.custom_field_id',
-			'customFieldTaskCategory.name AS searchCustomFieldTaskCategory',
 			'customField.description AS searchCustomField',
 		);
 
 		// where
-		$criteria->compare('customFieldTaskCategory.name',$this->searchCustomFieldTaskCategory,true);
 		$criteria->compare('customField.description',$this->searchCustomField,true);
-		$criteria->compare('t.task_template_id',$this->task_template_id);
-
-		// with
+		$criteria->compare('t.custom_field_task_category_id',$this->custom_field_task_category_id);
+		
+		// with 
 		$criteria->with = array(
-			'customFieldTaskCategory',
 			'customField',
-			);
+		);
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchCustomFieldTaskCategory', 'CustomFieldTaskCategory', 'custom_field_task_category_id');
         $columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
 		
 		return $columns;

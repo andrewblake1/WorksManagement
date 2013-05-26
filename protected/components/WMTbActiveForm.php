@@ -226,7 +226,7 @@ class WMTbActiveForm extends TbActiveForm
 				echo CHtml::textField(NULL, current($data), array('class'=>'span5') + $htmlOptions + array('disabled'=>'disabled'));
 				
 				// one potential issue here is that the element may have an ajax event attached to change handler
-				if(isset($htmlOptions['ajax']))
+//				if(isset($htmlOptions['ajax']))
 				{
 					// trigger the change handler on document load
 					$id = CHtml::activeId($model, $attribute);

@@ -25,7 +25,7 @@
 class CustomField extends ActiveRecord
 {
 	/**
-	 * Data types. These are the emum values set by the data_type custom type within 
+	 * Data types. These are the emum values set by the data_type Custom field within 
 	 * the database
 	 */
 	const data_typeDate = 'Date';
@@ -35,7 +35,7 @@ class CustomField extends ActiveRecord
 	const data_typeTime  = 'Time';
 
 	/**
-	 * Validation types. These are the emum values set by the ValidationType custom type within
+	 * Validation types. These are the emum values set by the ValidationType Custom field within
 	 * the database
 	 */
 	const validation_typeNone = 'None';
@@ -103,9 +103,6 @@ class CustomField extends ActiveRecord
 			array('validation_type', 'length', 'max'=>10),
 			array('data_type', 'length', 'max'=>5),
 			array('validation_text, validation_error', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, description, mandatory, allow_new, validation_type, data_type, validation_text, validation_error', 'safe', 'on'=>'search'),
 			array('validation_text', 'validation_text'),
 		));
 	}

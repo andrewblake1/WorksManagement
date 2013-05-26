@@ -28,7 +28,7 @@ class TaskToCustomFieldToTaskTemplate extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Custom type';
+	static $niceName = 'Custom field';
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -68,8 +68,8 @@ class TaskToCustomFieldToTaskTemplate extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'custom_field_to_task_template_id' => 'Task type/Custom type)',
-			'searchCustomFieldToTaskTemplate' => 'Task type/Custom type)',
+			'custom_field_to_task_template_id' => 'Task type/Custom field)',
+			'searchCustomFieldToTaskTemplate' => 'Task type/Custom field)',
 			'task_id' => 'Client/Task',
 			'searchTask' => 'Client/Task',
 			'custom_value_id' => 'Custom value',

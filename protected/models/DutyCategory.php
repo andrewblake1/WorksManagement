@@ -21,6 +21,11 @@
 class DutyCategory extends CategoryActiveRecord {
 
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Duty group';
+
+	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
 	public function attributeLabels() {

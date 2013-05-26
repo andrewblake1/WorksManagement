@@ -153,9 +153,6 @@ return array(
 			* @var array provides the hierachy for a breadcrumb trail
 			*/
 			'trail' => array(
-				'AuthItem'=>array(
-					'AuthItemChild',
-				),
 				'Client'=>array(
 					'AssemblyToClient',
 					'MaterialToClient',
@@ -165,7 +162,6 @@ return array(
 							'Crew'=>array(
 								'Task'=>array(
 									'Duty',
-// TODO: naming orientation is inconsistent here
 									'TaskToMaterial',
 									'TaskToAssembly',
 									'TaskToCustomFieldToTaskTemplate',
@@ -180,10 +176,14 @@ return array(
 						'Planning',
 					),
 					'ProjectTemplate'=>array(
+						'CustomFieldProjectCategory'=>array(
+							'CustomFieldToProjectTemplate',
+						),
 						'ProjectTemplateToAuthItem',
-						'CustomFieldToProjectTemplate',
 						'TaskTemplate'=>array(
-							'CustomFieldToTaskTemplate',
+							'CustomFieldTaskCategory'=>array(
+								'CustomFieldToTaskTemplate',
+							),
 							'TaskTemplateToAssembly',
 							'TaskTemplateToAssemblyGroup',
 							'TaskTemplateToDutyType',
@@ -192,7 +192,9 @@ return array(
 							'TaskTemplateToResource',
 						),
 					),
+					'ProjectType',
 				),
+				'CustomField',
 				'DefaultValue',
 				'DutyCategory'=>array(
 					'DutyStep',
@@ -200,10 +202,6 @@ return array(
 				'DutyType'=>array(
 					'DutyStepDependency',
 				),
-				'CustomField',
-				'CustomFieldProjectCategory',
-				'CustomFieldTaskCategory',
-				'ProjectType',
 				'Report'=>array(
 					'ReportToAuthItem',
 					'SubReport',
@@ -213,8 +211,8 @@ return array(
 						'ResourceToSupplier',
 					),
 				),
-				'User'=>array(
-					'AuthAssignment',
+				'AuthItem'=>array(
+					'AuthItemChild',
 				),
 				'Stage',
 				'Standard'=>array(
@@ -238,6 +236,9 @@ return array(
 				'Supplier'=>array(
 					'PurchaseOrder',
 					'SupplierContact',
+				),
+				'User'=>array(
+					'AuthAssignment',
 				),
 			),
 		),

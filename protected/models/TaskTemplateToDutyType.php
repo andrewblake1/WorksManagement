@@ -35,7 +35,7 @@ class TaskTemplateToDutyType extends ActiveRecord
 	static $niceName = 'Duty type';
 
 	/**
-	 * Importance. These are the emum values set by the importance custom type within 
+	 * Importance. These are the emum values set by the importance Custom field within 
 	 * the database
 	 */
 	const importanceStandard = 'Standard';

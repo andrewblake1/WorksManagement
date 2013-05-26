@@ -12,10 +12,10 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property CustomFieldProjectCategory $customFieldProjectCategory
  * @property CustomField $customField
- * @property ProjectTemplate $projectTemplate
  * @property User $updatedBy
+ * @property CustomFieldProjectCategory $projectTemplate
+ * @property CustomFieldProjectCategory $customFieldProjectCategory
  * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
  */
 class CustomFieldToProjectTemplate extends ActiveRecord
@@ -41,12 +41,8 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('project_template_id, custom_field_id', 'required'),
-			array('project_template_id, custom_field_id,', 'numerical', 'integerOnly'=>true),
-			array('custom_field_project_category_id', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, project_template_id, searchProjectTemplate, searchCustomFieldProjectCategory, searchCustomField', 'safe', 'on'=>'search'),
+			array('project_template_id, custom_field_id, custom_field_project_category_id', 'required'),
+			array('project_template_id, custom_field_id, custom_field_project_category_id,', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -58,13 +54,14 @@ class CustomFieldToProjectTemplate extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'customFieldProjectCategory' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'custom_field_project_category_id'),
             'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
-            'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'projectTemplate' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'project_template_id'),
+            'customFieldProjectCategory' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'custom_field_project_category_id'),
             'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'custom_field_to_project_template_id'),
         );
     }
+
 
 
 	/**
@@ -77,8 +74,8 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 			'searchProjectTemplate' => 'Client/Project type',
 			'custom_field_project_category_id' => 'Project category',
 			'searchCustomFieldProjectCategory' => 'Project category',
-			'custom_field_id' => 'Custom type',
-			'searchCustomField' => 'Custom type',
+			'custom_field_id' => 'Custom field',
+			'searchCustomField' => 'Custom field',
 		));
 	}
 
@@ -95,30 +92,23 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.custom_field_project_category_id',
 			't.custom_field_id',
-			'projectTemplate.description AS searchProjectTemplate',
-			'customFieldProjectCategory.name AS searchCustomFieldProjectCategory',
 			'customField.description AS searchCustomField',
 		);
 
 		// where
-		$criteria->compare('projectTemplate.description',$this->searchProjectTemplate,true);
-		$criteria->compare('customFieldProjectCategory.name',$this->searchCustomFieldProjectCategory,true);
 		$criteria->compare('customField.description',$this->searchCustomField,true);
-		$criteria->compare('t.project_template_id',$this->project_template_id);
+		$criteria->compare('t.custom_field_project_category_id',$this->custom_field_project_category_id);
 		
 		// with 
 		$criteria->with = array(
-			'projectTemplate',
-			'customFieldProjectCategory',
 			'customField',
-			);
+		);
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-		$columns[] = static::linkColumn('searchCustomFieldProjectCategory', 'CustomFieldProjectCategory', 'custom_field_project_category_id');
 		$columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
 		
 		return $columns;

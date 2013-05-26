@@ -711,11 +711,14 @@ $t2=$model->attributes;
 		}
 		$models = array();
 
+		$model->attributes = $_GET;
+
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating = $this->performAjaxValidation($model);
 // TODO: this is untested without javascript
 $t = $model->attributes;
-		if (isset($_POST[$this->modelName])) {
+		if (isset($_POST[$this->modelName]))
+		{
 			$model->attributes = $_POST[$this->modelName];
 			// ensure Controller::$nav is set
 			$model->assertFromParent();

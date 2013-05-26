@@ -35,8 +35,8 @@ abstract class ViewCustomFieldActiveRecord extends ViewActiveRecord
 	 */
 	public function attributeLabels($attributeLabels = array()) {
 		return parent::attributeLabels(array(
-			'id' => 'Custom type',
-			'description' => 'Custom type',
+			'id' => 'Custom field',
+			'description' => 'Custom field',
 			'value' => 'Value',
 		) + $attributeLabels);
 	}

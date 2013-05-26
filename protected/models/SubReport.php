@@ -18,7 +18,7 @@
 class SubReport extends ActiveRecord
 {
 	/**
-	 * Data types. These are the emum values set by the format custom type within 
+	 * Data types. These are the emum values set by the format Custom field within 
 	 * the database
 	 */
 	const subReportFormatPaged = 'Paged';

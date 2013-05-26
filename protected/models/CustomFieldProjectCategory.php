@@ -10,19 +10,35 @@
  * @property integer $rgt
  * @property integer $level
  * @property string $name
+ * @property integer $project_template_id
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property User $updatedBy
+ * @property ProjectTemplate $projectTemplate
  * @property CustomFieldToProjectTemplate[] $customFieldToProjectTemplates
+ * @property CustomFieldToProjectTemplate[] $customFieldToProjectTemplates1
  */
 class CustomFieldProjectCategory extends CategoryActiveRecord {
 
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Project category';
+	static $niceName = 'Custom field group';
+				
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array_merge(parent::rules(), array(
+            array('project_template_id', 'required'),
+            array('project_template_id', 'numerical', 'integerOnly'=>true),
+		));
+	}
 
 	/**
 	 * @return array relational rules.
@@ -33,7 +49,9 @@ class CustomFieldProjectCategory extends CategoryActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'customFieldToProjectTemplates' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'custom_field_project_category_id'),
+            'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
+            'customFieldToProjectTemplates' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'project_template_id'),
+            'customFieldToProjectTemplates1' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'custom_field_project_category_id'),
         );
     }
 

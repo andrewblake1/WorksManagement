@@ -28,7 +28,7 @@ class ProjectToCustomFieldToProjectTemplate extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Custom type';
+	static $niceName = 'Custom field';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -68,8 +68,8 @@ class ProjectToCustomFieldToProjectTemplate extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'custom_field_to_project_template_id' => 'Custom type',
-			'searchCustomFieldToProjectTemplate' => 'Custom type',
+			'custom_field_to_project_template_id' => 'Custom field',
+			'searchCustomFieldToProjectTemplate' => 'Custom field',
 			'project_id' => 'Client/Project',
 			'searchProject' => 'Client/Project',
 			'custom_value_id' => 'Custom Value',

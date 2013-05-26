@@ -22,6 +22,11 @@
 class ResourceCategory extends CategoryActiveRecord {
 
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Resource group';
+
+	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules() {
