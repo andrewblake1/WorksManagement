@@ -2,14 +2,14 @@
 
 abstract class CustomFieldExtensionActiveRecord extends ActiveRecord
 {
-	protected $classModelToCustomFieldModelType;
-	protected $attributeCustomFieldModelType_id;
-	protected $attributeModel_id;
-	protected $relationCustomFieldModelTypes;
-	protected $relationCustomFieldModelType;
-	protected $relationModelType;
-	protected $relationModelToCustomFieldModelTypes;
-	protected $relationModelToCustomFieldModelType;
+	protected $classModelToCustomFieldModelTemplate;
+	protected $attributeCustomFieldModelTemplate_id;
+	protected $attributeModelId;
+	protected $relationCustomFieldModelTemplates;
+	protected $relationCustomFieldModelTemplate;
+	protected $relationModelTemplate;
+	protected $relationModelToCustomFieldModelTemplates;
+	protected $relationModelToCustomFieldModelTemplate;
 	
 	/*
 	 * overidden as mulitple models
@@ -64,20 +64,20 @@ abstract class CustomFieldExtensionActiveRecord extends ActiveRecord
 		$saved = true;
 		
 		// loop thru all customValue model types associated to this models model type
-		foreach($this->{$this->relationModelType}->{$this->relationCustomFieldModelTypes} as $CustomFieldModelType)
+		foreach($this->{$this->relationModelTemplate}->{$this->relationCustomFieldModelTemplates} as $CustomFieldModelTemplate)
 		{
 			// create a new customValue item to hold value
-			if($saved &= CustomValue::createCustomField($CustomFieldModelType, $models, $customValue))
+			if($saved &= CustomValue::createCustomField($CustomFieldModelTemplate, $models, $customValue))
 			{
-				// create new modelToCustomFieldModelType
-				$modelToCustomFieldModelType = new $this->classModelToCustomFieldModelType();
-				$modelToCustomFieldModelType->{$this->attributeCustomFieldModelType_id} = $CustomFieldModelType->id;
-				$modelToCustomFieldModelType->{$this->attributeModel_id} = $this->id;
-				$modelToCustomFieldModelType->custom_value_id = $customValue->id;
+				// create new modelToCustomFieldModelTemplate
+				$modelToCustomFieldModelTemplate = new $this->classModelToCustomFieldModelTemplate();
+				$modelToCustomFieldModelTemplate->{$this->attributeCustomFieldModelTemplate_id} = $CustomFieldModelTemplate->id;
+				$modelToCustomFieldModelTemplate->{$this->attributeModelId} = $this->id;
+				$modelToCustomFieldModelTemplate->custom_value_id = $customValue->id;
 				// attempt save
-				$saved &= $modelToCustomFieldModelType->dbCallback('save');
+				$saved &= $modelToCustomFieldModelTemplate->dbCallback('save');
 				// record any errors
-				$models[] = $modelToCustomFieldModelType;
+				$models[] = $modelToCustomFieldModelTemplate;
 			}
 			else
 			{//<input id="CustomField_2_type_int" class="span5" type="text" name="CustomValue[2][type_int]">
@@ -101,21 +101,21 @@ abstract class CustomFieldExtensionActiveRecord extends ActiveRecord
 		$saved = true;
 		
 		// loop thru all customValue model types associated to this models model type
-		foreach($this->{$this->relationModelToCustomFieldModelTypes} as $modelToCustomFieldModelType)
+		foreach($this->{$this->relationModelToCustomFieldModelTemplates} as $modelToCustomFieldModelTemplate)
 		{
-			$customValue = $modelToCustomFieldModelType->customValue;
-			$CustomFieldModelType = $modelToCustomFieldModelType->{$this->relationCustomFieldModelType};
-			$customValue->setLabelAndId($CustomFieldModelType);
+			$customValue = $modelToCustomFieldModelTemplate->customValue;
+			$CustomFieldModelTemplate = $modelToCustomFieldModelTemplate->{$this->relationCustomFieldModelTemplate};
+			$customValue->setLabelAndId($CustomFieldModelTemplate);
 			
 			// massive assignement
-			$customValue->attributes=$_POST['CustomValue'][$CustomFieldModelType->id];
+			$customValue->attributes=$_POST['CustomValue'][$CustomFieldModelTemplate->id];
 
 			// validate and save
 			$saved &= $customValue->updateSave($models/*, array(
-				'customField' => $modelToCustomFieldModelType->{$this->relationCustomFieldModelType}->customField,
+				'customField' => $modelToCustomFieldModelTemplate->{$this->relationCustomFieldModelTemplate}->customField,
 				'params' => array(
-					'relationModelToCustomFieldModelType'=>$this->relationModelToCustomFieldModelType,
-					'relationCustomFieldModelType'=>$this->relationCustomFieldModelType,
+					'relationModelToCustomFieldModelTemplate'=>$this->relationModelToCustomFieldModelTemplate,
+					'relationCustomFieldModelTemplate'=>$this->relationCustomFieldModelTemplate,
 				),
 			)*/);
 			{//<input id="CustomField_2_type_int" class="span5" type="text" name="CustomValue[2][type_int]">

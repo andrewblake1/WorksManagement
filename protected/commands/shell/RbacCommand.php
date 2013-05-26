@@ -260,6 +260,11 @@ EOD;
 			$this->_authManager->createOperation('ProjectToCustomFieldToProjectTemplateRead', 'ProjectToCustomFieldToProjectTemplate read');
 			$task->addChild('ProjectToCustomFieldToProjectTemplateRead');
 
+			$task=$this->_authManager->createTask('ProjectType', 'ProjectType task');
+			$systemAdminRole->addChild('ProjectType');
+			$this->_authManager->createOperation('ProjectTypeRead', 'ProjectType read');
+			$task->addChild('ProjectTypeRead');
+
 			$task=$this->_authManager->createTask('Report', 'Report task');
 			$systemAdminRole->addChild('Report');
 			$this->_authManager->createOperation('ReportRead', 'Report read');

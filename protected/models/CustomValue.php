@@ -261,24 +261,24 @@ class CustomValue extends ActiveRecord
 
 	// create a new customValue item
    // factory method for creating due to can't change method signature of derived class constructor
-	static function createCustomField(&$CustomFieldModelType, &$models, &$customValue)
+	static function createCustomField(&$CustomFieldModelTemplate, &$models, &$customValue)
 	{
 		// create the object
 		$customValue = new self;
 
 		// massive assignement - if created dynamically previously and now wanting to save/create
-		if(isset($_POST['CustomValue'][$CustomFieldModelType->id]))
+		if(isset($_POST['CustomValue'][$CustomFieldModelTemplate->id]))
 		{
-			$customValue->attributes=$_POST['CustomValue'][$CustomFieldModelType->id];
+			$customValue->attributes=$_POST['CustomValue'][$CustomFieldModelTemplate->id];
 		}
 		else
 		{
 			// set default value
-			$customValue->setDefault($CustomFieldModelType->customField);
+			$customValue->setDefault($CustomFieldModelTemplate->customField);
 		}
 		
 		// set label and id
-		$customValue->setLabelAndId($CustomFieldModelType);
+		$customValue->setLabelAndId($CustomFieldModelTemplate);
 		
 		// attempt save
 		$saved = $customValue->dbCallback('save');
@@ -290,15 +290,15 @@ class CustomValue extends ActiveRecord
 
 	}
 
-	public function setLabelAndId($CustomFieldModelType)
+	public function setLabelAndId($CustomFieldModelTemplate)
 	{
-		$customField = $CustomFieldModelType->customField;
+		$customField = $CustomFieldModelTemplate->customField;
 		// Get CustomField column names
 		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
 		// label
 		$this->label = $customField->description;
 		// id
-		$this->html_id = "CustomValue_{$CustomFieldModelType->id}_{$dataTypeColumnNames[$customField->data_type]}";
+		$this->html_id = "CustomValue_{$CustomFieldModelTemplate->id}_{$dataTypeColumnNames[$customField->data_type]}";
 	}
 
 	

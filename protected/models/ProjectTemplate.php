@@ -12,11 +12,11 @@
  *
  * The followings are the available model relations:
  * @property CustomFieldToProjectTemplate[] $customFieldToProjectTemplates
- * @property Project[] $projects
- * @property Project[] $projects1
  * @property User $updatedBy
  * @property Client $client
  * @property ProjectTemplateToAuthItem[] $projectTemplateToAuthItems
+ * @property ProjectType[] $projectTypes
+ * @property ProjectType[] $projectTypes1
  * @property TaskTemplate[] $taskTemplates
  * @property TaskTemplate[] $taskTemplates1
  */
@@ -49,11 +49,11 @@ class ProjectTemplate extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'customFieldToProjectTemplates' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'project_template_id'),
-            'projects' => array(self::HAS_MANY, 'Project', 'project_template_id'),
-            'projects1' => array(self::HAS_MANY, 'Project', 'client_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
             'projectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectTemplateToAuthItem', 'project_template_id'),
+            'projectTypes' => array(self::HAS_MANY, 'ProjectType', 'project_template_id'),
+            'projectTypes1' => array(self::HAS_MANY, 'ProjectType', 'client_id'),
             'taskTemplates' => array(self::HAS_MANY, 'TaskTemplate', 'project_template_id'),
             'taskTemplates1' => array(self::HAS_MANY, 'TaskTemplate', 'client_id'),
         );

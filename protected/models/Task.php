@@ -52,14 +52,14 @@ class Task extends CustomFieldExtensionActiveRecord
 	 */
 	public $preferred = array();
 
-	protected $classModelToCustomFieldModelType = 'TaskToCustomFieldToTaskTemplate';
-	protected $attributeCustomFieldModelType_id = 'custom_field_to_task_template_id';
-	protected $attributeModel_id = 'task_id';
-	protected $relationCustomFieldModelType = 'customFieldToTaskTemplate';
-	protected $relationCustomFieldModelTypes = 'customFieldToTaskTemplates';
-	protected $relationModelType = 'taskTemplate';
-	protected $relationModelToCustomFieldModelTypes = 'taskToCustomFieldToTaskTemplates';
-	protected $relationModelToCustomFieldModelType = 'taskToCustomFieldToTaskTemplate';
+	protected $classModelToCustomFieldModelTemplate = 'TaskToCustomFieldToTaskTemplate';
+	protected $attributeCustomFieldModelTemplate_id = 'custom_field_to_task_template_id';
+	protected $attributeModelId = 'task_id';
+	protected $relationCustomFieldModelTemplate = 'customFieldToTaskTemplate';
+	protected $relationCustomFieldModelTemplates = 'customFieldToTaskTemplates';
+	protected $relationModelTemplate = 'taskTemplate';
+	protected $relationModelToCustomFieldModelTemplates = 'taskToCustomFieldToTaskTemplates';
+	protected $relationModelToCustomFieldModelTemplate = 'taskToCustomFieldToTaskTemplate';
 
 	
 	/**

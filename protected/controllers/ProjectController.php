@@ -24,14 +24,19 @@ class ProjectController extends Controller
 
 	// pretend to create the project in order to take a shortcut of creating the related items
 	// in order to generate the custom fields
-	public function actionDependantList()
+	public function actionDependantList($model = NULL)
 	{
 		
 		// a simple cheat to create customValues is to create within cancellable transaction
 		// NB: don't set any attributes as might fail validation
-		$model = new Project();
-		$model->client_id = $_POST['Project']['client_id'];
-		$model->project_template_id = $_POST['Project']['project_template_id'];
+		if(!$model)
+		{
+			$model = new Project();
+			$model->client_id = $_POST['Project']['client_id'];
+			$model->project_type_id = $_POST['Project']['project_type_id'];
+			$fromAjax = TRUE;
+		}
+
 		// ensure unique project de
 		$transaction = Yii::app()->db->beginTransaction();
 		if($model->createSave($models))
@@ -40,16 +45,19 @@ class ProjectController extends Controller
 			$this->widget('CustomFieldWidgets',array(
 				'model'=>$model,
 				'form'=>new WMTbActiveForm(),
-				'relationModelToCustomFieldModelType'=>'projectToCustomFieldToProjectTemplate',
-				'relationModelToCustomFieldModelTypes'=>'projectToCustomFieldToProjectTemplates',
-				'relationCustomFieldModelType'=>'customFieldToProjectTemplate',
+				'relationModelToCustomFieldModelTemplate'=>'projectToCustomFieldToProjectTemplate',
+				'relationModelToCustomFieldModelTemplates'=>'projectToCustomFieldToProjectTemplates',
+				'relationCustomFieldModelTemplate'=>'customFieldToProjectTemplate',
 				'relation_category'=>'customFieldProjectCategory',
 				'categoryModelName'=>'CustomFieldProjectCategory',
 			));
 		}
 
 		$transaction->rollBack();
-		Yii::app()->end();
+		if(isset($fromAjax))
+		{
+			Yii::app()->end();
+		}
 	}
 
 }

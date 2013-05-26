@@ -18,7 +18,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	// if creating
 	if($model->isNewRecord)
 	{
-		ProjectTemplateController::listWidgetRow($model, $form, 'project_template_id',
+		ProjectTypeController::listWidgetRow($model, $form, 'project_type_id',
 			array(
 				'empty'=>'Please select',
 				'ajax' => array(
@@ -49,10 +49,11 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 			),
 			array('scopeClient'=>array($model->client_id))
 		);
+		
 	}
 	else
 	{
-		$form->hiddenField('project_template_id');
+		$form->hiddenField('project_type_id');
 	}
 
 	$form->textFieldRow('travel_time_1_way');
@@ -62,15 +63,29 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	$form->textFieldRow('planned');
 	
 	// customValues
-	$this->widget('CustomFieldWidgets',array(
-		'model'=>$model,
-		'form'=>$form,
-		'relationModelToCustomFieldModelType'=>'projectToCustomFieldToProjectTemplate',
-		'relationModelToCustomFieldModelTypes'=>'projectToCustomFieldToProjectTemplates',
-		'relationCustomFieldModelType'=>'customFieldToProjectTemplate',
-		'relation_category'=>'customFieldProjectCategory',
-		'categoryModelName'=>'CustomFieldProjectCategory',
-	));
+	if($model->isNewRecord)
+	{
+		// if a single option
+		if(!empty($model->project_type_id))
+		{
+			// set some necassary variables
+			$this->actionDependantList($model);
+			$customFieldsAdded = TRUE;
+		}
+	}
+
+	if(!isset($customFieldsAdded))
+	{
+		$this->widget('CustomFieldWidgets',array(
+			'model'=>$model,
+			'form'=>$form,
+			'relationModelToCustomFieldModelTemplate'=>'projectToCustomFieldToProjectTemplate',
+			'relationModelToCustomFieldModelTemplates'=>'projectToCustomFieldToProjectTemplates',
+			'relationCustomFieldModelTemplate'=>'customFieldToProjectTemplate',
+			'relation_category'=>'customFieldProjectCategory',
+			'categoryModelName'=>'CustomFieldProjectCategory',
+		));
+	}
 
 $this->endWidget();
 

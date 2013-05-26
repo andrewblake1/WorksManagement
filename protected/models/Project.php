@@ -6,7 +6,7 @@
  * The followings are the available columns in table 'tbl_project':
  * @property string $id
  * @property string $level
- * @property integer $project_template_id
+ * @property integer $project_type_id
  * @property integer $client_id
  * @property string $travel_time_1_way
  * @property string $critical_completion
@@ -16,12 +16,11 @@
  * The followings are the available model relations:
  * @property Day[] $days
  * @property User $updatedBy
- * @property ProjectTemplate $projectTemplate
- * @property ProjectTemplate $client
  * @property Planning $level0
  * @property Planning $id0
+ * @property ProjectType $projectType
+ * @property ProjectType $client
  * @property ProjectToClientContact[] $projectToClientContacts
- * @property ProjectToClientContact[] $projectToClientContacts1
  * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
  * @property ProjectToProjectTemplateToAuthItem[] $projectToProjectTemplateToAuthItems
  * @property Task[] $tasks
@@ -32,19 +31,21 @@ class Project extends CustomFieldExtensionActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchProjectTemplate;
+	public $searchProjectType;
 	public $searchInCharge;
 	public $name;
 	public $in_charge_id;
+	public $project_template_id;
+	public $projectTemplate;
 
-	protected $classModelToCustomFieldModelType = 'ProjectToCustomFieldToProjectTemplate';
-	protected $attributeCustomFieldModelType_id = 'custom_field_to_project_template_id';
-	protected $attributeModel_id = 'project_id';
-	protected $relationCustomFieldModelType = 'customFieldToProjectTemplate';
-	protected $relationCustomFieldModelTypes = 'customFieldToProjectTemplates';
-	protected $relationModelType = 'projectTemplate';
-	protected $relationModelToCustomFieldModelTypes = 'projectToCustomFieldToProjectTemplates';
-	protected $relationModelToCustomFieldModelType = 'projectToCustomFieldToProjectTemplate';
+	protected $classModelToCustomFieldModelTemplate = 'ProjectToCustomFieldToProjectTemplate';
+	protected $attributeCustomFieldModelTemplate_id = 'custom_field_to_project_template_id';
+	protected $attributeModelId = 'project_id';
+	protected $relationCustomFieldModelTemplate = 'customFieldToProjectTemplate';
+	protected $relationCustomFieldModelTemplates = 'customFieldToProjectTemplates';
+	protected $relationModelTemplate = 'projectTemplate';
+	protected $relationModelToCustomFieldModelTemplates = 'projectToCustomFieldToProjectTemplates';
+	protected $relationModelToCustomFieldModelTemplate = 'projectToCustomFieldToProjectTemplate';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -54,14 +55,14 @@ class Project extends CustomFieldExtensionActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('project_template_id, client_id', 'required'),
-			array('project_template_id, client_id', 'numerical', 'integerOnly'=>true),
+			array('project_type_id, client_id', 'required'),
+			array('project_type_id, client_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id', 'length', 'max'=>10),
 			array('critical_completion, planned, client_id, name', 'safe'),
 			array('travel_time_1_way', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-//			array('id, level, searchInCharge, travel_time_1_way, critical_completion, planned, name, searchProjectTemplate', 'safe', 'on'=>'search'),
+//			array('id, level, searchInCharge, travel_time_1_way, critical_completion, planned, name, searchProjectType', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -75,12 +76,11 @@ class Project extends CustomFieldExtensionActiveRecord
         return array(
             'days' => array(self::HAS_MANY, 'Day', 'project_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
-            'client' => array(self::BELONGS_TO, 'ProjectTemplate', 'client_id'),
             'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
             'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
-            'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'client_id'),
-            'projectToClientContacts1' => array(self::HAS_MANY, 'ProjectToClientContact', 'project_id'),
+            'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
+            'client' => array(self::BELONGS_TO, 'ProjectType', 'client_id'),
+            'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'project_id'),
             'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'project_id'),
             'projectToProjectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTemplateToAuthItem', 'project_id'),
             'tasks' => array(self::HAS_MANY, 'Task', 'project_id'),
@@ -99,9 +99,9 @@ class Project extends CustomFieldExtensionActiveRecord
 			'travel_time_1_way' => 'Travel time 1 way (HH:mm)',
 			'critical_completion' => 'Critical completion',
 			'planned' => 'Planned',
-			'project_template_id' => 'Project type',
+			'project_type_id' => 'Project type',
 			'name' => 'Project name',
-			'searchProjectTemplate' => 'Project type',
+			'searchProjectType' => 'Project type',
 		));
 	}
 
@@ -126,8 +126,8 @@ class Project extends CustomFieldExtensionActiveRecord
 			'id0.in_charge_id AS in_charge_id',
 			't.critical_completion',
 			't.planned',
-			't.project_template_id',	// though not displayed, needed to get id for link field
-			'projectTemplate.description AS searchProjectTemplate',
+			't.project_type_id',	// though not displayed, needed to get id for link field
+			'projectType.name AS searchProjectType',
 		);
 
 		// where
@@ -136,7 +136,7 @@ class Project extends CustomFieldExtensionActiveRecord
 		$criteria->compare('t.travel_time_1_way',Yii::app()->format->toMysqlTime($this->travel_time_1_way));
 		$criteria->compare('t.critical_completion',Yii::app()->format->toMysqlDate($this->critical_completion));
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
-		$criteria->compare('projectTemplate.description', $this->searchProjectTemplate, true);
+		$criteria->compare('projectType.name', $this->searchProjectType, true);
 		$criteria->compare('t.client_id', $this->client_id);
 		$this->compositeCriteria($criteria,
 			array(
@@ -149,8 +149,8 @@ class Project extends CustomFieldExtensionActiveRecord
 
 		// with
 		$criteria->with = array(
-			'projectTemplate',
-			'projectTemplate.client',
+			'projectType',
+			'projectType.client',
 			'id0',
 			'id0.inCharge.contact',
 		);
@@ -163,30 +163,13 @@ class Project extends CustomFieldExtensionActiveRecord
 		$columns[] = $this->linkThisColumn('id');
 		$columns[] = $this->linkThisColumn('name');
         $columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
-		$columns[] = static::linkColumn('searchProjectTemplate', 'ProjectTemplate', 'project_template_id');
+		$columns[] = static::linkColumn('searchProjectType', 'ProjectType', 'project_type_id');
 		$columns[] = 'travel_time_1_way';
 		$columns[] = 'critical_completion';
 		$columns[] = 'planned';
 		
 		return $columns;
 	}
-
-/*	// ensure that where possible a pk has been passed from parent
-	// needed to overwrite this here because project has to look thru project type to get to client when doing update but gets client for admin
-	public function assertFromParent()
-	{
-		// if we are in the schdule screen then they may not be a parent foreign key as will be derived when user identifies a node
-		if(Yii::app()->controller->id == 'PlanningController')
-		{
-			return;
-		}
-		// if we don't have this fk attribute set
-		elseif(empty($this->project_template_id) && empty($this->client_id))
-		{
-			$niceNameLower =  strtolower(static::getNiceName());
-			throw new CHttpException(400, "No $niceNameLower identified, you must get here from the {$niceNameLower}s page");
-		}
-	}*/
 
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
@@ -200,7 +183,9 @@ class Project extends CustomFieldExtensionActiveRecord
 
 	public function afterFind() {
 		$this->name = $this->id0->name;
-//		$this->client_id = $this->projectTemplate->client_id;
+		$this->project_template_id = $this->projectType->project_template_id;
+		$this->projectTemplate = $this->projectType->projectTemplate;
+		
 		parent::afterFind();
 	}
 
@@ -225,11 +210,11 @@ class Project extends CustomFieldExtensionActiveRecord
 	}
 	
 	public function beforeSave() {
-		if(!empty($this->project_template_id))
+		if(!empty($this->project_type_id))
 		{
-			$projectTemplate = ProjectTemplate::model()->findByPk($this->project_template_id);
+			$this->project_template_id = $this->projectType->project_template_id;
+			$this->projectTemplate = $this->projectType->projectTemplate;
 		}
-		$this->client_id = $projectTemplate->client_id;
 		
 		return parent::beforeSave();
 	}

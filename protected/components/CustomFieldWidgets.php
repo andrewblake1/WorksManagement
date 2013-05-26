@@ -72,9 +72,9 @@ class CustomFieldWidgets extends CWidget
 	private $controller;
 	public $model;
 	public $form;
-	public $relationModelToCustomFieldModelType;
-	public $relationModelToCustomFieldModelTypes;
-	public $relationCustomFieldModelType;
+	public $relationModelToCustomFieldModelTemplate;
+	public $relationModelToCustomFieldModelTemplates;
+	public $relationCustomFieldModelTemplate;
 	public $relation_category;
 	public $categoryModelName;
 
@@ -98,19 +98,19 @@ class CustomFieldWidgets extends CWidget
 //rojectToCustomFieldToProjectTemplate::model()->findByAttributes()
 		echo CHtml::openTag('div', array('id'=>'customValues'));
 		
-		foreach($this->model->{$this->relationModelToCustomFieldModelTypes} as $toCustomField)
+		foreach($this->model->{$this->relationModelToCustomFieldModelTemplates} as $toCustomField)
 		{
-			$CustomFieldModelType = $toCustomField->{$this->relationCustomFieldModelType};
-			$category = $CustomFieldModelType->{$this->relation_category};
+			$CustomFieldModelTemplate = $toCustomField->{$this->relationCustomFieldModelTemplate};
+			$category = $CustomFieldModelTemplate->{$this->relation_category};
 
 			// get the widget html
 			ob_start();
 			$this->controller->widget('CustomFieldWidget', array(
 				'form'=>$this->form,
 				'customValue'=>$toCustomField->customValue,
-				'customField'=>$toCustomField->{$this->relationCustomFieldModelType}->customField,
-				'CustomFieldModelType'=>$toCustomField->{$this->relationCustomFieldModelType},
-				'relationToCustomField'=>"{$this->relationModelToCustomFieldModelType}->{$this->relationCustomFieldModelType}->customField",
+				'customField'=>$toCustomField->{$this->relationCustomFieldModelTemplate}->customField,
+				'CustomFieldModelTemplate'=>$toCustomField->{$this->relationCustomFieldModelTemplate},
+				'relationToCustomField'=>"{$this->relationModelToCustomFieldModelTemplate}->{$this->relationCustomFieldModelTemplate}->customField",
 			));
 			// add the widget html to the tree branch
 			$categoryTree->add(isset($category->id) ? $category->id : null, ob_get_clean());

@@ -8,7 +8,7 @@ class AssemblyToAssemblyGroupController extends Controller
 		{
 			// in sub assembly admin view
 			$subAssemblyController= new SubAssemblyController(NULL);
-			$subAssembly = SubAssembly::model()->findByPk($_GET['sub_assembly_ids'][sizeof($_GET['sub_assembly_ids'])]);
+			$subAssembly = SubAssembly::model()->findByPk(array_pop($subAssemblyIds = $_GET['sub_assembly_ids']));
 			$subAssembly->assertFromParent();
 			static::setUpdateId($subAssembly->id, 'SubAssembly');
 			$subAssemblyController->setTabs($subAssembly);

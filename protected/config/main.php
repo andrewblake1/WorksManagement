@@ -153,6 +153,9 @@ return array(
 			* @var array provides the hierachy for a breadcrumb trail
 			*/
 			'trail' => array(
+				'AuthItem'=>array(
+					'AuthItemChild',
+				),
 				'Client'=>array(
 					'AssemblyToClient',
 					'MaterialToClient',
@@ -190,9 +193,6 @@ return array(
 						),
 					),
 				),
-				'AuthItem'=>array(
-					'AuthItemChild',
-				),
 				'DefaultValue',
 				'DutyCategory'=>array(
 					'DutyStep',
@@ -203,6 +203,7 @@ return array(
 				'CustomField',
 				'CustomFieldProjectCategory',
 				'CustomFieldTaskCategory',
+				'ProjectType',
 				'Report'=>array(
 					'ReportToAuthItem',
 					'SubReport',

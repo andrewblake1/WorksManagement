@@ -65,13 +65,24 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->checkBoxListInlineRow('preferred', array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'));
 
-	 // customValues
+	// customValues
+	if($model->isNewRecord)
+	{
+		// if a single option
+		if(!empty($model->task_template_id))
+		{
+			// set some necassary variables
+			$this->actionDependantList($model);
+			$customFieldsAdded = TRUE;
+		}
+	}
+
 	$this->widget('CustomFieldWidgets',array(
 		'model'=>$model,
 		'form'=>$form,
-		'relationModelToCustomFieldModelType'=>'taskToCustomFieldToTaskTemplate',
-		'relationModelToCustomFieldModelTypes'=>'taskToCustomFieldToTaskTemplates',
-		'relationCustomFieldModelType'=>'customFieldToTaskTemplate',
+		'relationModelToCustomFieldModelTemplate'=>'taskToCustomFieldToTaskTemplate',
+		'relationModelToCustomFieldModelTemplates'=>'taskToCustomFieldToTaskTemplates',
+		'relationCustomFieldModelTemplate'=>'customFieldToTaskTemplate',
 		'relation_category'=>'customFieldTaskCategory',
 		'categoryModelName'=>'CustomFieldTaskCategory',
 	));
