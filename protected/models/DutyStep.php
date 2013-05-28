@@ -25,7 +25,7 @@
  * @property DutyStepDependency[] $dutyStepDependencies1
  * @property DutyStepDependency[] $dutyStepDependencies2
  */
-class DutyStep extends AdjacencyListActiveRecord
+class DutyStep extends ActiveRecord
 {
 	/**
 	 * @var string nice model name for use in output
@@ -136,7 +136,7 @@ class DutyStep extends AdjacencyListActiveRecord
 		
 		return $columns;
 	}
-
+	
 /*
 	public function beforeValidate()
 	{
