@@ -57,7 +57,7 @@ class SubAssemblyController extends AdjacencyListController
 		$tabs = array();
 		
 		// need to truncate the array of dependency on per tab level basis
-		$subAssemblyIds = array_slice($_GET['sub_assembly_ids'], 0, 1 + array_search($model->child_assembly_id, $_GET['sub_assembly_ids']));
+		$subAssemblyIds = array_slice($_GET['sub_assembly_ids'], 0, 1 + array_search($model->id, $_GET['sub_assembly_ids']));
 		
 		// add tab to  update SubAssembly
 		$this->addTab(SubAssembly::getNiceName(NULL, $model), $this->createUrl('SubAssembly/update', array('id' => $model->id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs, TRUE);

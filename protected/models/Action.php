@@ -45,21 +45,25 @@ class Action extends ActiveRecord
 		return $this;
 	}
 
-	public function scopes()
-    {
-		return array(
-			'client'=>array('condition'=>'t.project_template_id IS NULL AND t.client_id IS NULL'),
-			'projectTemplate'=>array('condition'=>'t.project_template_id IS NULL'),
-		);
-    }
-
-	public function scopeClient($clientId)
+	public function scopeClient()
 	{
-		$client = Client::model()->findByPk($clientId);
+		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
+		$criteria=new DbCriteria;
+		$criteria->addCondition('t.project_template_id IS NULL AND t.client_id IS NULL');
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+
+	public function scopeProjectTemplate($projectTemplateId)
+	{
+		$projectTemplate = ProjectTemplate::model()->findByPk($projectTemplateId);
 		
 		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
 		$criteria=new DbCriteria;
-		$criteria->compare('t.project_template_id', $taskTemplate->project_template_id);
+		$criteria->addCondition("
+			t.project_template IS NULL OR t.project_template <> $projectTemplateId");
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		

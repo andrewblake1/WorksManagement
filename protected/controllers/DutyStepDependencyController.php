@@ -60,7 +60,7 @@ class DutyStepDependencyController extends Controller
 		$tabs = array();
 		
 		// need to truncate the array of dependency on per tab level basis
-		$dutyStepDependencyIds = array_slice($_GET['duty_step_dependency_ids'], 0, 1 + array_search($model->child_duty_step_id, $_GET['duty_step_dependency_ids']));
+		$dutyStepDependencyIds = array_slice($_GET['duty_step_dependency_ids'], 0, 1 + array_search($model->id, $_GET['duty_step_dependency_ids']));
 		
 		// add tab to  update DutyStepDependency
 		$this->addTab(DutyStepDependency::getNiceName(NULL, $model), $this->createUrl('DutyStepDependency/update', array('id' => $model->id, 'action_id' => $_GET['action_id'], 'duty_step_dependency_ids'=>$dutyStepDependencyIds)), $tabs, TRUE);
