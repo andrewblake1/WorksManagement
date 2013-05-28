@@ -17,7 +17,7 @@ class DutyStepDependencyController extends Controller
 				),
 				'update' => array(
 					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
-					'url' => "\$this->controller->createUrl('update', array('id'=>\$data->id, 'duty_type_id' => \$_GET['duty_type_id']) +
+					'url' => "\$this->controller->createUrl('update', array('id'=>\$data->id, 'action_id' => \$_GET['action_id']) +
 						array('duty_step_dependency_ids'=>array_merge(empty(\$_GET['duty_step_dependency_ids']) ? array() : \$_GET['duty_step_dependency_ids'], array(\$data->id))
 					))",
 				),
@@ -25,7 +25,7 @@ class DutyStepDependencyController extends Controller
 					'visible' => '
 						!Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))
 						&& Yii::app()->user->checkAccess(get_class($data)."Read")',
-					'url' => "\$this->controller->createUrl('view', array('id'=>\$data->id, 'duty_type_id' => \$_GET['duty_type_id']) +
+					'url' => "\$this->controller->createUrl('view', array('id'=>\$data->id, 'action_id' => \$_GET['action_id']) +
 						array('duty_step_dependency_ids'=>array_merge(empty(\$_GET['duty_step_dependency_ids']) ? array() : \$_GET['duty_step_dependency_ids'], array(\$data->id))
 					))",
 				),
@@ -59,12 +59,15 @@ class DutyStepDependencyController extends Controller
 	{
 		$tabs = array();
 		
+		// need to truncate the array of dependency on per tab level basis
+		$dutyStepDependencyIds = array_slice($_GET['duty_step_dependency_ids'], 0, 1 + array_search($model->child_duty_step_id, $_GET['duty_step_dependency_ids']));
+		
 		// add tab to  update DutyStepDependency
-		$this->addTab(DutyStepDependency::getNiceName(NULL, $model), $this->createUrl('DutyStepDependency/update', array('id' => $model->id, 'duty_type_id' => $_GET['duty_type_id'], 'duty_step_dependency_ids'=>$_GET['duty_step_dependency_ids'])), $tabs, TRUE);
+		$this->addTab(DutyStepDependency::getNiceName(NULL, $model), $this->createUrl('DutyStepDependency/update', array('id' => $model->id, 'action_id' => $_GET['action_id'], 'duty_step_dependency_ids'=>$dutyStepDependencyIds)), $tabs, TRUE);
 		
 		// add tab to sub assemblies
 		$this->addTab(DutyStepDependency::getNiceNamePlural(), $this->createUrl('DutyStepDependency/admin',
-			array('duty_type_id' => $_GET['duty_type_id'], 'parent_duty_step_id'=>$model->child_duty_step_id, 'duty_step_dependency_ids'=>$_GET['duty_step_dependency_ids'])), $tabs);
+			array('action_id' => $_GET['action_id'], 'parent_duty_step_id'=>$model->child_duty_step_id, 'duty_step_dependency_ids'=>$dutyStepDependencyIds)), $tabs);
 
 		return $tabs;
 	}
@@ -96,12 +99,6 @@ class DutyStepDependencyController extends Controller
 
 		// set breadcrumbs
 		$this->breadcrumbs = self::getBreadCrumbTrail();
-	}	
-
-/*	protected function createRedirect($model)
-	{
-		$params = array_merge(array('admin'), $_GET);
-		$this->redirect(array_merge(array('admin'), $_GET));
-	}*/
+	}
 	
 }

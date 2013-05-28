@@ -73,7 +73,7 @@ class DutyData extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'planning_id' => 'Planning',
-			'duty_step_id' => 'Duty type',
+			'duty_step_id' => 'Duty',
 			'level' => 'Level',
 			'updated' => 'Updated',
 			'custom_value_id' => 'Custom value',

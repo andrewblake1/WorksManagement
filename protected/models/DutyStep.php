@@ -5,10 +5,11 @@
  *
  * The followings are the available columns in table 'tbl_duty_step':
  * @property integer $id
+ * @property string $action_id
+ * @property string $auth_item_name
  * @property string $description
  * @property integer $lead_in_days
  * @property string $level
- * @property integer $duty_category_id
  * @property integer $custom_field_id
  * @property string $comment
  * @property integer $deleted
@@ -16,11 +17,13 @@
  *
  * The followings are the available model relations:
  * @property DutyData[] $dutyDatas
- * @property DutyCategory $dutyCategory
  * @property CustomField $customField
  * @property User $updatedBy
+ * @property Action $action
+ * @property AuthItem $authItemName
  * @property DutyStepDependency[] $dutyStepDependencies
  * @property DutyStepDependency[] $dutyStepDependencies1
+ * @property DutyStepDependency[] $dutyStepDependencies2
  */
 class DutyStep extends AdjacencyListActiveRecord
 {
@@ -33,9 +36,8 @@ class DutyStep extends AdjacencyListActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchDutyCategory;
 	public $searchCustomField;
-	public $searchIntegralTo;
+	public $searchAuthItem;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -45,12 +47,12 @@ class DutyStep extends AdjacencyListActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('description', 'required'),
-			array('lead_in_days, duty_category_id', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>64),
+            array('action_id, description', 'required'),
+            array('lead_in_days', 'numerical', 'integerOnly'=>true),
+            array('action_id, level', 'length', 'max'=>10),
+            array('description', 'length', 'max'=>64),
             array('comment', 'length', 'max'=>255),
-			array('level', 'length', 'max'=>10),
-			array('custom_field_id', 'safe'),
+            array('custom_field_id, project_template_id, client_id, auth_item_name', 'safe'),
 		));
 	}
 
@@ -63,11 +65,13 @@ class DutyStep extends AdjacencyListActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'level'),
-            'dutyCategory' => array(self::BELONGS_TO, 'DutyCategory', 'duty_category_id'),
             'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'dutyStepDependencies' => array(self::HAS_MANY, 'DutyStepDependency', 'parent_duty_step_id'),
-            'dutyStepDependencies1' => array(self::HAS_MANY, 'DutyStepDependency', 'child_duty_step_id'),
+            'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
+            'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
+            'dutyStepDependencies' => array(self::HAS_MANY, 'DutyStepDependency', 'action_id'),
+            'dutyStepDependencies1' => array(self::HAS_MANY, 'DutyStepDependency', 'parent_duty_step_id'),
+            'dutyStepDependencies2' => array(self::HAS_MANY, 'DutyStepDependency', 'child_duty_step_id'),
         );
     }
 
@@ -79,10 +83,9 @@ class DutyStep extends AdjacencyListActiveRecord
 		return parent::attributeLabels(array(
 			'lead_in_days' => 'Lead in days',
 			'searchIntegralTo' => 'Integral to', 
-			'duty_category_id' => 'Duty category',
-			'searchDutyCategory' => 'Duty category',
 			'custom_field_id' => 'Custom field',
 			'searchCustomField' => 'Custom field',
+			'searchAuthItem' => 'Role',
 		));
 	}
 
@@ -102,6 +105,7 @@ class DutyStep extends AdjacencyListActiveRecord
 			't.lead_in_days',
 			't.level',
 			'customField.description AS searchCustomField',
+			'AuthItem.auth_item_name AS searchAuthItem',
 		);
 
 		// where
@@ -109,12 +113,13 @@ class DutyStep extends AdjacencyListActiveRecord
 		$criteria->compare('t.comment',$this->comment,true);
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
 		$criteria->compare('customField.description',$this->searchCustomField,true);
-		$criteria->compare('t.duty_category_id', $this->duty_category_id);
 		$criteria->compare('t.level',$this->level,true);
+		$criteria->compare('authItemName.auth_item_name',$this->searchAuthItem);
 		
 		// with
 		$criteria->with = array(
 			'customField',
+			'authItemName',
 		);
 
 		return $criteria;
@@ -125,11 +130,25 @@ class DutyStep extends AdjacencyListActiveRecord
 		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'lead_in_days';
 		$columns[] = 'level';
+        $columns[] = 'searchProjectTemplateToAuthItem';
         $columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
 		$columns[] = 'comment';
 		
 		return $columns;
 	}
+
+/*
+	public function beforeValidate()
+	{
+		// need to set project_template_id which is an extra foreign key to make circular foreign key constraint
+		if(isset($this->project_template_to_auth_item_id))
+		{
+			$projectTemplateToAuthItem = ProjectTemplateToAuthItem::model()->findByPk($this->project_template_to_auth_item_id);
+			$this->project_template_id = $projectTemplateToAuthItem->project_template_id;
+		}
+
+		return parent::beforeValidate();
+	}*/
 
 }
 

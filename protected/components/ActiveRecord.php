@@ -135,6 +135,10 @@ abstract class ActiveRecord extends RangeActiveRecord
 		{
 			$niceName = substr($niceName,0,-1) .'ie';
 		}
+		elseif(substr($niceName, -1) == 's')
+		{
+			$niceName = substr($niceName,0,-1) .'se';
+		}
 		
 		return $niceName . 's';
 	}
@@ -330,7 +334,8 @@ abstract class ActiveRecord extends RangeActiveRecord
 		}
 		
 		// get trail
-		$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName);
+		$CurrentControllerName = Yii::app()->controller->id . 'Controller';
+		$trail = Yii::app()->functions->multidimensional_arraySearch($CurrentControllerName::getTrail(), $modelName);
 		$this->clearForwardMemory($trail);
 		
 		// if not at top level
@@ -857,7 +862,11 @@ if(count($m = $this->getErrors()))
 					unset($attributes['updated_by']);
 				}
 				// get the matching row
-				$model = self::model()->resetScope()->findByAttributes($attributes);
+				if(!$model = self::model()->resetScope()->findByAttributes($attributes))
+				{
+					// unknown error i.e. not todo with already being deleted
+					throw($e);
+				}
 				
 				// if deleted
 				if($model->deleted)

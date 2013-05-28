@@ -25,7 +25,7 @@
  * @property ProjectTemplate $client
  * @property TaskTemplateToAssembly[] $taskTemplateToAssemblies
  * @property TaskTemplateToAssemblyGroup[] $taskTemplateToAssemblyGroups
- * @property TaskTemplateToDutyType[] $taskTemplateToDutyTypes
+ * @property TaskTemplateToAction[] $taskTemplateToActions
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskTemplateToMaterialGroup[] $taskTemplateToMaterialGroups
  * @property TaskTemplateToResource[] $taskTemplateToResources
@@ -84,7 +84,7 @@ class TaskTemplate extends ActiveRecord
             'client' => array(self::BELONGS_TO, 'ProjectTemplate', 'client_id'),
             'taskTemplateToAssemblies' => array(self::HAS_MANY, 'TaskTemplateToAssembly', 'task_template_id'),
             'taskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskTemplateToAssemblyGroup', 'task_template_id'),
-            'taskTemplateToDutyTypes' => array(self::HAS_MANY, 'TaskTemplateToDutyType', 'task_template_id'),
+            'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'task_template_id'),
             'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'task_template_id'),
             'taskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskTemplateToMaterialGroup', 'task_template_id'),
             'taskTemplateToResources' => array(self::HAS_MANY, 'TaskTemplateToResource', 'task_template_id'),

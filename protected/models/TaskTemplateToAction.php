@@ -1,38 +1,37 @@
- <?php
+<?php
 
 /**
- * This is the model class for table "tbl_task_template_to_duty_type".
+ * This is the model class for table "tbl_task_template_to_action".
  *
- * The followings are the available columns in table 'tbl_task_template_to_duty_type':
+ * The followings are the available columns in table 'tbl_task_template_to_action':
  * @property integer $id
  * @property integer $task_template_id
  * @property integer $project_template_id
- * @property integer $project_template_to_auth_item_id
- * @property string $duty_type_id
+ * @property integer $client_id
+ * @property string $action_id
  * @property string $importance
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property TaskTemplate $taskTemplate
- * @property ProjectTemplateToAuthItem $projectTemplate
+ * @property TaskTemplate $projectTemplate
  * @property User $updatedBy
- * @property ProjectTemplateToAuthItem $projectTemplateToAuthItem
- * @property DutyType $dutyType
+ * @property Action $action
+ * @property TaskTemplate $client
  */
-class TaskTemplateToDutyType extends ActiveRecord
+class TaskTemplateToAction extends ActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchDutyType;
+	public $searchAction;
 	public $searchTaskTemplate;
-	public $searchProjectTemplateToAuthItem;
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Duty type';
+	static $niceName = 'Action';
 
 	/**
 	 * Importance. These are the emum values set by the importance Custom field within 
@@ -84,12 +83,9 @@ class TaskTemplateToDutyType extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_template_id, project_template_id, duty_type_id, project_template_to_auth_item_id, importance', 'required'),
-			array('task_template_id, project_template_id, duty_type_id, project_template_to_auth_item_id', 'numerical', 'integerOnly'=>true),
+			array('task_template_id, project_template_id, client_id, action_id, importance', 'required'),
+			array('task_template_id, project_template_id, client_id, action_id', 'numerical', 'integerOnly'=>true),
 			array('importance', 'length', 'max'=>8),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, task_template_id, importance, searchDutyType, searchTaskTemplate, searchProjectTemplateToAuthItem', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -102,10 +98,10 @@ class TaskTemplateToDutyType extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
-            'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplateToAuthItem', 'project_template_id'),
+            'projectTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'project_template_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'projectTemplateToAuthItem' => array(self::BELONGS_TO, 'ProjectTemplateToAuthItem', 'project_template_to_auth_item_id'),
-            'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
+            'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
+            'client' => array(self::BELONGS_TO, 'TaskTemplate', 'client_id'),
         );
     }
 
@@ -115,11 +111,10 @@ class TaskTemplateToDutyType extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'duty_type_id' => 'Duty type',
-			'searchDutyType' => 'Duty type',
+			'action_id' => 'Action',
+			'searchAction' => 'Action',
 			'task_template_id' => 'Client/Project type/Task type',
 			'searchTaskTemplate' => 'Client/Project type/Task type',
-			'searchProjectTemplateToAuthItem' => 'Role',
 			'importance' => 'Standard Optional',
 		));
 	}
@@ -135,16 +130,13 @@ class TaskTemplateToDutyType extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.duty_type_id',
-			't.project_template_to_auth_item_id',
-			'dutyType.description AS searchDutyType',
-			'projectTemplateToAuthItem.auth_item_name AS searchProjectTemplateToAuthItem',
+			't.action_id',
+			'dutyType.description AS searchAction',
 			't.importance',
 		);
 
 		// where
-		$criteria->compare('dutyType.description',$this->searchDutyType);
-		$criteria->compare('projectTemplateToAuthItem.auth_item_name',$this->searchProjectTemplateToAuthItem);
+		$criteria->compare('dutyType.description',$this->searchAction);
 		$criteria->compare('t.task_template_id',$this->task_template_id);
 		$criteria->compare('t.importance',$this->importance,true);
 
@@ -153,7 +145,6 @@ class TaskTemplateToDutyType extends ActiveRecord
 			'dutyType',
 			'taskTemplate',
 			'taskTemplate.projectTemplate',
-			'projectTemplateToAuthItem'
 		);
 
 		return $criteria;
@@ -161,8 +152,7 @@ class TaskTemplateToDutyType extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchDutyType', 'DutyType', 'duty_type_id');
-        $columns[] = 'searchProjectTemplateToAuthItem';
+        $columns[] = static::linkColumn('searchAction', 'Action', 'action_id');
 		$columns[] = 'importance';
 		
 		return $columns;
@@ -177,18 +167,17 @@ class TaskTemplateToDutyType extends ActiveRecord
 			'dutyType->description',
 		);
 	}
-
-	public function beforeValidate()
-	{
-		// need to set project_template_id which is an extra foreign key to make circular foreign key constraint
-		if(isset($this->project_template_to_auth_item_id))
+	
+	public function beforeValidate() {
+		if($taskTemplate = TaskTemplate::model()->findByPk($this->task_template_id))
 		{
-			$projectTemplateToAuthItem = ProjectTemplateToAuthItem::model()->findByPk($this->project_template_to_auth_item_id);
-			$this->project_template_id = $projectTemplateToAuthItem->project_template_id;
+			$this->client_id = $taskTemplate->client_id;
+			$this->project_template_id = $taskTemplate->project_template_id;
 		}
-
+		
 		return parent::beforeValidate();
 	}
+
 }
 
 ?>

@@ -66,7 +66,7 @@
  * @property TaskTemplate[] $taskTemplates
  * @property TaskTemplateToAssembly[] $taskTemplateToAssemblies
  * @property TaskTemplateToAssemblyGroup[] $taskTemplateToAssemblyGroups
- * @property TaskTemplateToDutyType[] $taskTemplateToDutyTypes
+ * @property TaskTemplateToAction[] $taskTemplateToActions
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskTemplateToMaterialGroup[] $taskTemplateToMaterialGroups
  * @property TaskTemplateToResource[] $taskTemplateToResources
@@ -174,7 +174,7 @@ class User extends ContactActiveRecord
             'taskTemplates' => array(self::HAS_MANY, 'TaskTemplate', 'updated_by'),
             'taskTemplateToAssemblies' => array(self::HAS_MANY, 'TaskTemplateToAssembly', 'updated_by'),
             'taskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskTemplateToAssemblyGroup', 'updated_by'),
-            'taskTemplateToDutyTypes' => array(self::HAS_MANY, 'TaskTemplateToDutyType', 'updated_by'),
+            'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'updated_by'),
             'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'updated_by'),
             'taskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskTemplateToMaterialGroup', 'updated_by'),
             'taskTemplateToResources' => array(self::HAS_MANY, 'TaskTemplateToResource', 'updated_by'),

@@ -9,7 +9,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->textFieldRow('name');
 
-	// only allow setting or update of in_charge_id if user has InCharge priveledge
+	// only allow setting or update of in_charge_id if user has InCharge privilege
 	if(Yii::app()->user->checkAccess('scheduler'))
 	{
 		UserController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');

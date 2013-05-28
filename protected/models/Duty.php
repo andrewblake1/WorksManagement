@@ -125,13 +125,13 @@ class Duty extends ActiveRecord
 					)
 				) AS searchInCharge",
 			'dutyData.updated AS updated',
-			'taskTemplateToDutyType.importance AS searchImportance',
+			'taskTemplateToAction.importance AS searchImportance',
 			'dependedOnBy.description AS searchIntegralTo',
 		);
 
 		// where
 		$criteria->compare('dutyStep.description',$this->description,true);
-		$criteria->compare('taskTemplateToDutyType.importance',$this->searchImportance,true);
+		$criteria->compare('taskTemplateToAction.importance',$this->searchImportance,true);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
 		$criteria->compare('dependedOnBy.description',$this->searchIntegralTo,true);
@@ -149,8 +149,8 @@ class Duty extends ActiveRecord
 			JOIN tbl_crew crew ON task.crew_id = crew.id
 			JOIN tbl_day day ON crew.day_id = day.id
 			JOIN tbl_duty_step dutyStep ON t.duty_step_id = dutyStep.id
-			LEFT JOIN tbl_task_template_to_duty_type taskTemplateToDutyType USING ( task_template_id, duty_step_id )
-			LEFT JOIN tbl_project_template_to_auth_item projectTemplateToAuthItem ON taskTemplateToDutyType.project_template_to_auth_item_id = projectTemplateToAuthItem.id
+			LEFT JOIN tbl_task_template_to_action taskTemplateToAction USING ( task_template_id, duty_step_id )
+			LEFT JOIN tbl_project_template_to_auth_item projectTemplateToAuthItem ON taskTemplateToAction.project_template_to_auth_item_id = projectTemplateToAuthItem.id
 			LEFT JOIN tbl_project_to_project_template_to_auth_item projectToProjectTemplateToAuthItem ON projectTemplateToAuthItem.id = projectToProjectTemplateToAuthItem.project_template_to_auth_item_id
 			LEFT JOIN AuthAssignment ON projectToProjectTemplateToAuthItem.auth_assignment_id = AuthAssignment.id
 			LEFT JOIN tbl_user dutyDefault ON AuthAssignment.userid = dutyDefault.id

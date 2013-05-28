@@ -56,24 +56,26 @@ class SubAssemblyController extends AdjacencyListController
 	{
 		$tabs = array();
 		
+		// need to truncate the array of dependency on per tab level basis
+		$subAssemblyIds = array_slice($_GET['sub_assembly_ids'], 0, 1 + array_search($model->child_assembly_id, $_GET['sub_assembly_ids']));
+		
 		// add tab to  update SubAssembly
-		$this->addTab(SubAssembly::getNiceName(NULL, $model), $this->createUrl('SubAssembly/update', array('id' => $model->id, 'sub_assembly_ids'=>$_GET['sub_assembly_ids'])), $tabs, TRUE);
+		$this->addTab(SubAssembly::getNiceName(NULL, $model), $this->createUrl('SubAssembly/update', array('id' => $model->id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs, TRUE);
 		
 		// add tab to sub assemblies
 		$this->addTab(SubAssembly::getNiceNamePlural(), $this->createUrl('SubAssembly/admin',
-			array('parent_assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$_GET['sub_assembly_ids'])), $tabs);
+			array('parent_assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs);
 
-		// add tab to assembly groups
 		$this->addTab(AssemblyToAssemblyGroup::getNiceNamePlural(), $this->createUrl('AssemblyToAssemblyGroup/admin',
-			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$_GET['sub_assembly_ids'])), $tabs);
+			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs);
 
 		// add tab to assembly groups
 		$this->addTab(AssemblyToMaterial::getNiceNamePlural(), $this->createUrl('AssemblyToMaterial/admin',
-			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$_GET['sub_assembly_ids'])), $tabs);
+			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs);
 
 		// add tab to assembly groups
 		$this->addTab(AssemblyToMaterialGroup::getNiceNamePlural(), $this->createUrl('AssemblyToMaterialGroup/admin',
-			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$_GET['sub_assembly_ids'])), $tabs);
+			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs);
 
 		return $tabs;
 	}

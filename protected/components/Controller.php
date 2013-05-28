@@ -38,6 +38,11 @@ class Controller extends CController {
 	 */
 	public $heading;
 
+	/*
+	 * @var array the trail
+	 */
+	static $trail = NULL;
+	
 	/**
 	 * @var array the tab menu itemse
 	 */
@@ -141,6 +146,11 @@ class Controller extends CController {
 		);
 	}
 
+	static function getTrail()
+	{
+		return self::$trail ? self::$trail : Yii::app()->params['trail'];
+	}
+	 
 	// data provider for EJuiAutoCompleteFkField
 	public function actionAutocomplete() {
 		// if something has been entered
@@ -264,12 +274,12 @@ class Controller extends CController {
 		// multidimensional array search returns from start of search array to target
 		// need to get the next level items from that point only
 		// step thru the trail to our target
-		$items = Yii::app()->params['trail'];
+		$items = self::getTrail();
 		// if we should return this level NB: this is empty deliberately to keep condition the same as below
 		if (!$model && (isset($items[$thisModelName]))) {
 			
 		} else {
-			$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $thisModelName);
+			$trail = Yii::app()->functions->multidimensional_arraySearch(self::getTrail(), $thisModelName);
 			// get tree of items at or below the desired level
 			foreach ($trail as $key => &$value) {
 				// if we should return this level
@@ -534,7 +544,7 @@ $t2=$model->attributes;
 			$modelName = static::modelName();
 		}
 
-		$trail = array_reverse(Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName));
+		$trail = array_reverse(Yii::app()->functions->multidimensional_arraySearch(self::getTrail(), $modelName));
 
 		if (!empty($trail[1])) {
 			return $trail[1];
@@ -558,7 +568,7 @@ $t2=$model->attributes;
 		}
 
 		// loop thru the trail for this model
-		foreach (Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $modelName) as $crumb) {
+		foreach (Yii::app()->functions->multidimensional_arraySearch(self::getTrail(), $modelName) as $crumb) {
 			// check access
 			if (!static::checkAccess(self::accessRead, $crumb)) {
 				continue;
@@ -647,7 +657,7 @@ $t2=$model->attributes;
 	 * will want to edit some of the branches or leaves below hence redirect to update
 	 */
 
-	protected function createRedirect($model) {
+	protected function createRedirect($model, $params = array()) {
 		$items = Yii::app()->params['trail'];
 		$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $this->modelName);
 		// get tree of items at or below the desired level
@@ -659,7 +669,7 @@ $t2=$model->attributes;
 		// if there are some child items
 		if (sizeof($items)) {
 			// go to update view
-			$this->redirect(array('update', $model->tableSchema->primaryKey => $model->getPrimaryKey()));
+			$this->redirect(array_merge(array('update', $model->tableSchema->primaryKey => $model->getPrimaryKey()), $params));
 		} else {
 			// go to admin view
 			$model->assertFromParent();

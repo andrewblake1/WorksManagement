@@ -17,8 +17,8 @@ return array(
 		//'local' => 'path/to/local-folder'
 	),
 
-	'homeUrl'=>array('client/admin'),
-	'defaultController'=>array('client/admin'),
+//	'homeUrl'=>array('dashboard/index'),
+	'defaultController'=>array('dashboard/index'),
 
 	// This is the main Web application configuration. Any writable
 	// CWebApplication properties can be configured here.
@@ -153,7 +153,16 @@ return array(
 			* @var array provides the hierachy for a breadcrumb trail
 			*/
 			'trail' => array(
+				'Dashboard',
+				'Action'=>array(
+					'DutyStepDependency',
+					'DutyStep',
+				),
 				'Client'=>array(
+					'Action'=>array(
+						'DutyStepDependency',
+						'DutyStep',
+					),
 					'AssemblyToClient',
 					'MaterialToClient',
 					'ClientContact',
@@ -176,6 +185,10 @@ return array(
 						'Planning',
 					),
 					'ProjectTemplate'=>array(
+						'Action'=>array(
+							'DutyStepDependency',
+							'DutyStep',
+						),
 						'CustomFieldProjectCategory'=>array(
 							'CustomFieldToProjectTemplate',
 						),
@@ -186,7 +199,7 @@ return array(
 							),
 							'TaskTemplateToAssembly',
 							'TaskTemplateToAssemblyGroup',
-							'TaskTemplateToDutyType',
+							'TaskTemplateToAction',
 							'TaskTemplateToMaterial',
 							'TaskTemplateToMaterialGroup',
 							'TaskTemplateToResource',
@@ -196,12 +209,6 @@ return array(
 				),
 				'CustomField',
 				'DefaultValue',
-				'DutyCategory'=>array(
-					'DutyStep',
-				),
-				'DutyType'=>array(
-					'DutyStepDependency',
-				),
 				'Report'=>array(
 					'ReportToAuthItem',
 					'SubReport',

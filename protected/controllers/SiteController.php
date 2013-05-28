@@ -41,16 +41,7 @@ class SiteController extends Controller
 	 */
 	public function actionIndex()
 	{
-// TODO: figure out how to get the console app to use its own urlmanager as it seems to want to go to index here or
-// it f...s up!
-		if(isset($_SERVER['argv'][1]) && $_SERVER['argv'][1] == 'shell')
-		{
-			$this->render('index');
-		}
-		else
-		{
-			$this->redirect('client/admin');
-		}
+		$this->render('index');
 	}
 
 	/**

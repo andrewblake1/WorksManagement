@@ -10,13 +10,11 @@
  * @property integer $rgt
  * @property integer $level
  * @property string $name
- * @property integer $duty_category_id
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Resource[] $resources
- * @property DutyCategory $dutyCategory
  * @property User $updatedBy
  */
 class ResourceCategory extends CategoryActiveRecord {
@@ -36,7 +34,6 @@ class ResourceCategory extends CategoryActiveRecord {
 		//rgt,lft,root,level,id.
 		return array_merge(parent::rules(), array(
 			array('name', 'required'),
-			array('duty_category_id', 'safe'),
 			array('name', 'length', 'max' => 64),
 		));
 	}
@@ -50,7 +47,6 @@ class ResourceCategory extends CategoryActiveRecord {
         // class name for the relations automatically generated below.
 		return array(
             'resources' => array(self::HAS_MANY, 'Resource', 'resource_category_id'),
-            'dutyCategory' => array(self::BELONGS_TO, 'DutyCategory', 'duty_category_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
         );
     }
@@ -61,7 +57,6 @@ class ResourceCategory extends CategoryActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'id' => 'Resource category',
-//			'duty_category_id' => 'DutyCategory',
 		) + parent::attributeLabels();
 	}
 

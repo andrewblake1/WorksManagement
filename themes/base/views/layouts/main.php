@@ -42,9 +42,7 @@
 			
 			<!-- breadcrumbs -->
 			<?php if(isset($this->breadcrumbs)):?>
-				<?php $this->widget('WMTbBreadcrumbs', array(
-					'links'=>$this->breadcrumbs,
-				)); ?>
+				<?php $this->widget('WMTbBreadcrumbs', array('links'=>$this->breadcrumbs)); ?>
 			<?php endif?>
 
 			<!-- tabs -->

@@ -7,17 +7,17 @@
  * @property string $id
  * @property integer $parent_duty_step_id
  * @property integer $child_duty_step_id
- * @property string $duty_type_id
+ * @property string $action_id
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property DutyData[] $dutyDatas
  * @property DutyData[] $dutyDatas1
+ * @property User $updatedBy
+ * @property DutyStep $dutyType
  * @property DutyStep $parentDutyStep
  * @property DutyStep $childDutyStep
- * @property DutyType $dutyType
- * @property User $updatedBy
  */
 class DutyStepDependency extends ActiveRecord
 {
@@ -38,9 +38,9 @@ class DutyStepDependency extends ActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
 		return array_merge(parent::rules(), array(
-            array('child_duty_step_id, duty_type_id, updated_by', 'required'),
+            array('child_duty_step_id, action_id, updated_by', 'required'),
             array('parent_duty_step_id, child_duty_step_id, deleted, updated_by', 'numerical', 'integerOnly'=>true),
-            array('id, duty_type_id', 'length', 'max'=>10),
+            array('id, action_id', 'length', 'max'=>10),
         ));
     }
 
@@ -54,10 +54,10 @@ class DutyStepDependency extends ActiveRecord
         return array(
             'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'duty_step_id'),
             'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'duty_step_dependency_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'dutyType' => array(self::BELONGS_TO, 'DutyStep', 'action_id'),
             'parentDutyStep' => array(self::BELONGS_TO, 'DutyStep', 'parent_duty_step_id'),
             'childDutyStep' => array(self::BELONGS_TO, 'DutyStep', 'child_duty_step_id'),
-            'dutyType' => array(self::BELONGS_TO, 'DutyType', 'duty_type_id'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
         );
     }
 
@@ -69,7 +69,7 @@ class DutyStepDependency extends ActiveRecord
         return array(
             'parent_duty_step_id' => 'Integral to',
             'child_duty_step_id' => 'Depends on',
-            'duty_type_id' => 'Duty type',
+            'action_id' => 'Action',
 			'searchChildDutyStep' => 'Depends on',
         );
     }

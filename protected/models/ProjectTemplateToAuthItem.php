@@ -15,8 +15,8 @@
  * @property AuthItem $authItemName
  * @property User $updatedBy
  * @property ProjectToProjectTemplateToAuthItem[] $projectToProjectTemplateToAuthItems
- * @property TaskTemplateToDutyType[] $taskTemplateToDutyTypes
- * @property TaskTemplateToDutyType[] $taskTemplateToDutyTypes1
+ * @property TaskTemplateToAction[] $taskTemplateToActions
+ * @property TaskTemplateToAction[] $taskTemplateToActions1
  */
 class ProjectTemplateToAuthItem extends ActiveRecord
 {
@@ -27,7 +27,7 @@ class ProjectTemplateToAuthItem extends ActiveRecord
 	 */
 	static $niceName = 'Role';
 	
-	public function scopeTaskTemplateToDutyType($task_template_id)
+	public function scopeTaskTemplateToAction($task_template_id)
 	{
 //TODO this and another location that restrict lists need to include the current record if updating rather than excluding it
 // also add deleted to unique indexes and make deleted += 1 so not violating constraints when adding new and removing old multiple times
@@ -73,8 +73,8 @@ class ProjectTemplateToAuthItem extends ActiveRecord
             'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'projectToProjectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTemplateToAuthItem', 'project_template_to_auth_item_id'),
-            'taskTemplateToDutyTypes' => array(self::HAS_MANY, 'TaskTemplateToDutyType', 'project_template_id'),
-            'taskTemplateToDutyTypes1' => array(self::HAS_MANY, 'TaskTemplateToDutyType', 'project_template_to_auth_item_id'),
+            'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'project_template_id'),
+            'taskTemplateToActions1' => array(self::HAS_MANY, 'TaskTemplateToAction', 'project_template_to_auth_item_id'),
         );
     }
 
