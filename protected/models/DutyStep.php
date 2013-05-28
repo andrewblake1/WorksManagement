@@ -105,7 +105,7 @@ class DutyStep extends AdjacencyListActiveRecord
 			't.lead_in_days',
 			't.level',
 			'customField.description AS searchCustomField',
-			'AuthItem.auth_item_name AS searchAuthItem',
+			'authItemName.name AS searchAuthItem',
 		);
 
 		// where
@@ -114,12 +114,12 @@ class DutyStep extends AdjacencyListActiveRecord
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
 		$criteria->compare('customField.description',$this->searchCustomField,true);
 		$criteria->compare('t.level',$this->level,true);
-		$criteria->compare('authItemName.auth_item_name',$this->searchAuthItem);
+		$criteria->compare('authItemName.name',$this->searchAuthItem, true);
 		
 		// with
 		$criteria->with = array(
 			'customField',
-			'authItemName',
+			'authItemName',	
 		);
 
 		return $criteria;
@@ -130,7 +130,7 @@ class DutyStep extends AdjacencyListActiveRecord
 		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'lead_in_days';
 		$columns[] = 'level';
-        $columns[] = 'searchProjectTemplateToAuthItem';
+        $columns[] = 'searchAuthItem';
         $columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
 		$columns[] = 'comment';
 		
