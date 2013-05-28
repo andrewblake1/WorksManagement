@@ -83,8 +83,8 @@ class TaskTemplateToAction extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_template_id, project_template_id, client_id, action_id, importance', 'required'),
-			array('task_template_id, project_template_id, client_id, action_id', 'numerical', 'integerOnly'=>true),
+			array('task_template_id, action_id, importance', 'required'),
+			array('task_template_id, action_id', 'numerical', 'integerOnly'=>true),
 			array('importance', 'length', 'max'=>8),
 		));
 	}
@@ -131,18 +131,18 @@ class TaskTemplateToAction extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.action_id',
-			'dutyType.description AS searchAction',
+			'action.description AS searchAction',
 			't.importance',
 		);
 
 		// where
-		$criteria->compare('dutyType.description',$this->searchAction);
+		$criteria->compare('action.description',$this->searchAction);
 		$criteria->compare('t.task_template_id',$this->task_template_id);
 		$criteria->compare('t.importance',$this->importance,true);
 
 		// with
 		$criteria->with = array(
-			'dutyType',
+			'action',
 			'taskTemplate',
 			'taskTemplate.projectTemplate',
 		);
@@ -164,18 +164,18 @@ class TaskTemplateToAction extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'dutyType->description',
+			'action->description',
 		);
 	}
 	
-	public function beforeValidate() {
+	public function save() {
 		if($taskTemplate = TaskTemplate::model()->findByPk($this->task_template_id))
 		{
 			$this->client_id = $taskTemplate->client_id;
 			$this->project_template_id = $taskTemplate->project_template_id;
 		}
-		
-		return parent::beforeValidate();
+$t = $this->attributes;		
+		return parent::save();
 	}
 
 }

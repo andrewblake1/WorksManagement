@@ -15,7 +15,7 @@
  * @property DutyData[] $dutyDatas
  * @property DutyData[] $dutyDatas1
  * @property User $updatedBy
- * @property DutyStep $dutyType
+ * @property DutyStep $action
  * @property DutyStep $parentDutyStep
  * @property DutyStep $childDutyStep
  */
@@ -55,11 +55,12 @@ class DutyStepDependency extends ActiveRecord
             'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'duty_step_id'),
             'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'duty_step_dependency_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'dutyType' => array(self::BELONGS_TO, 'DutyStep', 'action_id'),
+            'action' => array(self::BELONGS_TO, 'DutyStep', 'action_id'),
             'parentDutyStep' => array(self::BELONGS_TO, 'DutyStep', 'parent_duty_step_id'),
             'childDutyStep' => array(self::BELONGS_TO, 'DutyStep', 'child_duty_step_id'),
         );
     }
+
 
     /**
      * @return array customized attribute labels (name=>label)
