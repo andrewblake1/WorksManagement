@@ -123,7 +123,7 @@ class Action extends ActiveRecord
 		return parent::attributeLabels(array(
 			'standard_id' => 'Standard',
 			'drawing_id' => 'Drawing',
-			'searchOverride' => 'Override',
+			'searchOverride' => 'Replace',
 		));
 	}
 
@@ -144,9 +144,11 @@ class Action extends ActiveRecord
 		);
 
 		// where
+		
+		// need to only show at top level
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.client_id',$this->client_id);
-		$criteria->compare('t.project_template_id',$this->project_template_id);
+		$criteria->compareNull('t.client_id',$this->client_id);
+		$criteria->compareNull('t.project_template_id',$this->project_template_id);
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('override.description',$this->searchOverride,true);
 
@@ -161,7 +163,10 @@ class Action extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[]='description';
-		$columns[]='searchOverride';
+		if($this->client_id || $this->project_template_id)
+		{
+			$columns[]='searchOverride';
+		}
 		
 		return $columns;
 	}

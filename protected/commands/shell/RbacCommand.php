@@ -418,6 +418,23 @@ EOD;
 			$schedulerRole->addChild('ProjectRead');
 			$schedulerRole->addChild('ClientRead');
 
+			// SWITCHING OPERATOR
+			$schedulerRole=$this->_authManager->createRole('switching operator', 'Switching Operator');
+			// create tasks
+			$schedulerRole->addChild('AssemblyToMaterialRead');
+			$schedulerRole->addChild('AssemblyRead');
+			$schedulerRole->addChild('AssemblyGroupRead');
+			$schedulerRole->addChild('AssemblyToAssemblyGroupRead');
+			$schedulerRole->addChild('AssemblyGroupToAssemblyRead');
+			$schedulerRole->addChild('AssemblyToMaterialGroupRead');
+			$schedulerRole->addChild('DrawingRead');
+			$schedulerRole->addChild('DrawingToAssemblyRead');
+			$schedulerRole->addChild('MaterialGroupRead');
+			$schedulerRole->addChild('MaterialRead');
+			$schedulerRole->addChild('MaterialGroupToMaterialRead');
+			$schedulerRole->addChild('StandardReadRead');
+			$schedulerRole->addChild('SubAssemblyRead');
+
 			// DEFAULT
 			$defaultRole=$this->_authManager->createRole('default', 'Default', 'return !Yii::app()->user->isGuest;');
 			// create task to allow update access if user is related to this task - this will use checkAccess in update action
@@ -446,13 +463,15 @@ EOD;
 
 			// FIELD MANAGER
 			$fieldManagerRole=$this->_authManager->createRole('field manager', 'Field manager');
+			$fieldManagerRole->addChild('switching operator');
+
+			// PROJECT FIELD MANAGER
 			// Creating a task which is parent of Project role that has the business rule we
 			// want to check - params passed by project update, create, delete. This task is then to become child of this role hence
 			// not interferring with existing project manager role but providing another path of acceptance or denial for field manager
-			$task=$this->_authManager->createTask(
-			'ProjectFieldManger',
-			'Project update and delete if is field manager assigned to project)',
-			'return Project::checkContext($params["primaryKey"], "field manager");');
+			$task=$this->_authManager->createTask('ProjectFieldManger',
+				'Project update and delete if is field manager assigned to project)',
+				'return Project::checkContext($params["primaryKey"], "field manager");');
 			$task->addChild('Project');
 			$fieldManagerRole->addChild('ProjectFieldManger');
 

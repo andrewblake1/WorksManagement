@@ -350,8 +350,11 @@ $t = $model->attributes;
 					// and not next level
 					// create controler/action
 					if ($keyValue && (!$model || ($firstTabModelName == $thisModelName))) {
+						$urlParams =  array("$modelName/$action", $firstTabPrimaryKeyName => $keyValue);
+						// add any existing get parameters - but only valid ones
+						$urlParams = array_merge($urlParams, static::getValidGetParams($modelName));
 						$tabs[$level][$index]['label'] = $modelName::getNiceName($keyValue);
-						$tabs[$level][$index]['url'] = array("$modelName/$action", $firstTabPrimaryKeyName => $keyValue);
+						$tabs[$level][$index]['url'] = $urlParams;
 						$index++;
 						continue;
 					}
@@ -359,12 +362,28 @@ $t = $model->attributes;
 
 				// add relevant url parameters i.e. foreign key to first tab model
 				$urlParams = ($keyValue === null) ? array() : array($modelName::getParentForeignKey($firstTabModelName) => $keyValue);
+				// add any existing get parameters
+				$urlParams = array_merge($urlParams, static::getValidGetParams($modelName));
 
 				$tabs[$level][$index]['label'] = $modelName::getNiceNamePlural();
 				$tabs[$level][$index]['url'] = array("$modelName/admin") + $urlParams;
 				$index++;
 			}
 		}
+	}
+
+	static function getValidGetParams($modelName)
+	{
+		$get = array();
+		foreach($_GET as $key => $value)
+		{
+			if($modelName::model()->hasAttribute($key))
+			{
+				$get[$key] = $value;
+			}
+		}
+
+		return $get;
 	}
 
 	public function addTab($label, $url, &$tabs, $active = FALSE) {
