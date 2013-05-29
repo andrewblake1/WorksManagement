@@ -781,17 +781,31 @@ $t=$this->attributes;
 		{
 			$errorMessage = $e->getMessage();
 fb($errorMessage);
-			foreach ($messages as $needle => &$message)
+
+			// special handling if forcing trigger failures to block an operation
+			if(strpos($errorMessage, 'forced_trigger_error'))
 			{
-				// NB: do not remove the speech marks around needle - converting to string
-				if(strpos($errorMessage, "$needle") !== FALSE)
-				{
-					$errorMessage = $message;
-					break;
-				}
+				// extact the message which is the incorrect column name - the bad table name is forced_trigger_error
+				preg_match("/#1054 - Unknown column '(.*)' in 'where clause'/", $errorMessage, $matches);
+				$errorMessage = $matches[1];
 			}
-			$this->addError(null, $errorMessage);
-			return;
+			else
+			{
+				// special handling to block parents being set to children - forcing a trigger fail on bad column name
+				foreach ($messages as $needle => &$message)
+				{
+					// NB: do not remove the speech marks around needle - converting to string
+					if(strpos($errorMessage, "$needle") !== FALSE)
+					{
+						$errorMessage = $message;
+						break;
+					}
+				}
+				
+				$this->addError(null, $errorMessage);
+				
+				return;
+			}
 		}
 if(count($m = $this->getErrors()))
 {

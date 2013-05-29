@@ -184,7 +184,7 @@ class Drawing extends AdjacencyListActiveRecord
 				$this->parent_id = $this->parent->id;
 			}
 		}
-		
+
 		parent::afterFind();
 	}
 	

@@ -101,6 +101,10 @@ class Material extends ActiveRecord
 		$criteria->compare('t.standard_id', $this->standard_id);
 		$criteria->compare('drawing.description',$this->searchDrawingDescription,true);
 
+		$criteria->with = array(
+			'drawing',
+		);
+		
 		return $criteria;
 	}
 
