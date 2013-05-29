@@ -856,12 +856,31 @@ if(count($m = $this->getErrors()))
 				{
 					unset($attributes[$primaryKeyName]);
 				}
-				unset($attributes[$primaryKeyName]);
+//				unset($attributes[$primaryKeyName]);
 				if(array_key_exists('updated_by', $attributes))
 				{
 					unset($attributes['updated_by']);
 				}
-				// get the matching row
+				// get the matching row. Need to get list of attributes for search as the constraint violation columns
+				// only - otherwise the other attributes will make us not find a match
+				preg_match("/for key '(.*)'. The /", $e->getMessage(), $matches);
+				if(isset($matches[1]))
+				{
+					$databaseName = Yii::app()->params['databaseName'];
+					$results = Yii::app()->db->createCommand("
+						SELECT COLUMN_NAME
+						FROM information_schema.KEY_COLUMN_USAGE
+						WHERE TABLE_SCHEMA = '$databaseName'
+							AND CONSTRAINT_NAME = '{$matches[1]}'")->queryAll();
+					// convert to array so we can use the keys to intersect with attributes
+					$keyColumns = array();
+					foreach($results as $keyColumn)
+					{
+						$keyColumns[$keyColumn['COLUMN_NAME']] = $keyColumn['COLUMN_NAME'];
+					}
+				
+					$attributes = array_intersect_key($attributes, $keyColumns);
+				}
 				if(!$model = self::model()->resetScope()->findByAttributes($attributes))
 				{
 					// unknown error i.e. not todo with already being deleted

@@ -682,6 +682,23 @@ $t2=$model->attributes;
 	 */
 
 	protected function updateRedirect($model) {
+		
+		if (!empty($_POST['controller']))
+		{
+			$modelName = $_POST['controller'];
+		}
+		else
+		{
+			$modelName = get_class($model);
+		}
+		
+		// need to be careful not to filter by the update id
+		$primaryKeyName = $modelName::model()->tableSchema->primaryKey;
+		if(isset($_GET[$primaryKeyName]))
+		{
+			unset($_GET[$primaryKeyName]);
+		}
+		
 		$this->adminRedirect($model);
 	}
 

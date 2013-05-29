@@ -117,12 +117,14 @@ class AuthAssignment extends ActiveRecord
 
 		// select
 		$criteria->select=array(
+			't.id',
 			't.itemname',
+			't.userid',
 		);
 
 		// where
 		$criteria->compare('t.itemname',$this->itemname,true);
-		$criteria->compare('t.userid', $this->userid);
+		$criteria->compare('t.userid', $this->userid,true);
 
 		return $criteria;
 	}
