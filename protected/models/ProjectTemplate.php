@@ -11,6 +11,8 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property Action[] $actions
+ * @property CustomFieldProjectCategory[] $customFieldProjectCategories
  * @property CustomFieldToProjectTemplate[] $customFieldToProjectTemplates
  * @property User $updatedBy
  * @property Client $client
@@ -48,6 +50,8 @@ class ProjectTemplate extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'actions' => array(self::HAS_MANY, 'Action', 'project_template_id'),
+            'customFieldProjectCategories' => array(self::HAS_MANY, 'CustomFieldProjectCategory', 'project_template_id'),
             'customFieldToProjectTemplates' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'project_template_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'client' => array(self::BELONGS_TO, 'Client', 'client_id'),

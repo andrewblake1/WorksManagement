@@ -46,6 +46,18 @@ class DutyStep extends ActiveRecord
 	public $client_id;
 	public $project_template_id;
 	
+	public function scopeAction($actionId)
+	{
+		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
+		$criteria=new DbCriteria;
+		
+		$criteria->compare('t.action_id', $actionId);
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -108,11 +120,12 @@ class DutyStep extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
+			't.action_id',
 			't.custom_field_id',
 			't.description',
 			't.comment',
 			't.lead_in_days',
-			'level0.description AS searchLevel',
+			'level0.name AS searchLevel',
 			'customField.description AS searchCustomField',
 			'authItemName.name AS searchAuthItem',
 		);
@@ -120,9 +133,10 @@ class DutyStep extends ActiveRecord
 		// where
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.comment',$this->comment,true);
+		$criteria->compare('t.action_id',$this->action_id);
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
 		$criteria->compare('customField.description',$this->searchCustomField,true);
-		$criteria->compare('level0.description',$this->searchLevel,true);
+		$criteria->compare('level0.name',$this->searchLevel,true);
 		$criteria->compare('authItemName.name',$this->searchAuthItem, true);
 		
 		// with

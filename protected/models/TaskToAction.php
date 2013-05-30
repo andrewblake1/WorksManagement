@@ -102,8 +102,8 @@ class TaskToAction extends ViewActiveRecord
 		));
 	}
 
-	public function insert($attributes = null) {
-//TODO: loosing any errors here attached in models
+	public function createSave(&$models=array())
+	{
 		// only need to call factory method to add duties as no actual TaskToAction table
 		// factory method to create duties
 		return Duty::addDuties($this->action_id, $this->task_id, $models);
@@ -111,7 +111,7 @@ class TaskToAction extends ViewActiveRecord
 	
 	// again - no actual table, however need to remove duties
 	public function delete() {
-		Duty::deleteAllByAttributes(array(
+		return Duty::deleteAllByAttributes(array(
 			'action_id' => $this->action_id,
 			'task_id' => $this->task_id,
 		));

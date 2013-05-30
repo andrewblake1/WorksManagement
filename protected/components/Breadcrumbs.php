@@ -10,9 +10,6 @@ class Breadcrumbs extends WMTbBreadcrumbs
 	 */
 	public function run()
 	{
-//		if(empty($this->links))
-//			return;
-
 		echo CHtml::openTag($this->tagName,$this->htmlOptions)."\n";
 		$links=array();
 		if($this->homeLink===null)

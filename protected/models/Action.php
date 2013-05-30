@@ -30,29 +30,7 @@ class Action extends ActiveRecord
 	{
 		$taskTemplate = TaskTemplate::model()->findByPk($taskTemplateId);
 		
-		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
-		$criteria=new DbCriteria;
-		$criteria->compare('t.project_template_id', $taskTemplate->project_template_id);
-		$criteria->addCondition('project_template_id IS NULL', 'OR');
-
-		$criteria2=new DbCriteria;
-		$criteria2->compare('t.client_id', $taskTemplate->client_id);
-		$criteria2->addCondition('client_id IS NULL', 'OR');
-
-		// this gives us a list which is basically correct but doesn't take into account the overrides
-		$criteria->mergeWith($criteria2, 'AND');
-
-		// take into account the overrides. Can be max 2 overrides - 1 at template level and the next at client level
-		// start by joining result on override to id to obtain
-		$criteria->join = '
-			LEFT JOIN tbl_action override ON t.override_id = override.id
-		';
-		// and finally - exclude any records that have a child
-		$criteria2->addCondition('override.id IS NULL');
-		
-		$this->getDbCriteria()->mergeWith($criteria);
-		
-		return $this;
+		return $this->scopeProjectTemplate($taskTemplate->project_template_id);
 	}
 
 	// used by override to limit to releveant higher level
@@ -74,9 +52,25 @@ class Action extends ActiveRecord
 		
 		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
 		$criteria=new DbCriteria;
-		$criteria->addCondition("
-			t.project_template IS NULL AND (t.client_id IS NULL OR t.client_id = '{$projectTemplateId->client_id}')");
+		$criteria->compare('t.project_template_id', $projectTemplateId);
+		$criteria->addCondition('t.project_template_id IS NULL', 'OR');
 
+		$criteria2=new DbCriteria;
+		$criteria2->compare('t.client_id', $projectTemplate->client_id);
+		$criteria2->addCondition('t.client_id IS NULL', 'OR');
+
+		// this gives us a list which is basically correct but doesn't take into account the overrides
+		$criteria->mergeWith($criteria2, 'AND');
+
+		// take into account the overrides. Can be max 2 overrides - 1 at template level and the next at client level
+		// start by joining result on override to id to obtain
+		$criteria->join = '
+			LEFT JOIN tbl_action override ON t.override_id = override.id
+		';
+
+		// and finally - exclude any records that have a child
+		$criteria->addCondition('override.id IS NULL');
+		
 		$this->getDbCriteria()->mergeWith($criteria);
 
 		return $this;

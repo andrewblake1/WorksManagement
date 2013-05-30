@@ -2,7 +2,7 @@
 return array (
   'template' => 'default',
   'connectionId' => 'db',
-  'tablePrefix' => 'v',
+  'tablePrefix' => 'tbl',
   'modelPath' => 'application.models',
   'baseClass' => 'ActiveRecord',
   'buildRelations' => '1',

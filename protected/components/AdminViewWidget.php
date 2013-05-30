@@ -70,7 +70,7 @@ class AdminViewWidget extends CWidget
 			'dataProvider'=>$this->model->search(),
 			'filter'=>$this->model,
 			'columns'=>$this->columns,
-			'ajaxUrl' => Yii::app()->request->getUrl(),
+//			'ajaxUrl' => Yii::app()->request->getUrl(), // beware this screws up filter, paging params being sent on afterDelete etc
 		);
 		
 		// probably only want bulk actions if if we have buttons

@@ -16,6 +16,19 @@ class ActionController extends Controller
 		{
 			unset(self::$trail['Action']);
 		}
+		elseif(isset($_GET['action_id']))
+		{
+			$action = Action::model()->findByPk($_GET['action_id']);
+			if($action->project_template_id)
+			{
+				unset(self::$trail['Action']);
+				unset(self::$trail['Client']['Action']);
+			}
+			elseif($action->client_id)
+			{
+				unset(self::$trail['Action']);
+			}
+		}
 		
 		parent::__construct($id, $module);
 	}

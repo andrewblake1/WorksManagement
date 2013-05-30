@@ -13,7 +13,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	// get the parent model
 	$dutyStep = DutyStep::model()->findByPk(static::getUpdateId('DutyStep'));
 	DutyStepController::listWidgetRow($model, $form, 'child_duty_step_id', array(),
-		array(/*'scopeStandard'=>array($dutyStep->standard_id)*/));
+		array('scopeAction'=>array($model->action_id)));
 
 $this->endWidget();
 

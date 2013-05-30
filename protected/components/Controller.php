@@ -652,21 +652,27 @@ $t2=$model->attributes;
 		if(sizeof(static::$tabs) > 1)
 		{
 			array_pop($breadcrumbs);
-			array_pop($breadcrumbs);
 
+			$numTabRows = sizeof(static::$tabs);
+			$rowCount = 0;
 			// easiest to just get from active tabs
 			foreach(static::$tabs as $index => &$tabsRow)
 			{
+				$rowCount++;
 				// loop thru tabs in row
+				$tabCount = 0;
 				foreach($tabsRow as &$tab)
 				{
-					// if active
 					if(!empty($tab['active']) && $tab['active'] == TRUE)
 					{
 						// add link to the first item in the row
 						$breadcrumbs[] = array($tabsRow[0]['label'] => $tabsRow[0]['url']);
-						$breadcrumbs[] = array($tab['label'] => $tab['url']);
+						if(($rowCount != $numTabRows) || $tabCount)
+						{
+							$breadcrumbs[] = array($tab['label'] => $tab['url']);
+						}
 					}
+					$tabCount++;
 				}
 			}
 
@@ -700,7 +706,7 @@ $t2=$model->attributes;
 		} else {
 			// go to admin view
 			$model->assertFromParent();
-			$this->adminRedirect($model, true);
+			$this->adminRedirect($model);
 		}
 	}
 
