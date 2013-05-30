@@ -65,11 +65,11 @@ class Action extends ActiveRecord
 		// take into account the overrides. Can be max 2 overrides - 1 at template level and the next at client level
 		// start by joining result on override to id to obtain
 		$criteria->join = '
-			LEFT JOIN tbl_action override ON t.override_id = override.id
+			LEFT JOIN tbl_action override ON t.id = override.override_id
 		';
 
 		// and finally - exclude any records that have a child
-		$criteria->addCondition('override.id IS NULL');
+		$criteria->addCondition('override.override_id IS NULL');
 		
 		$this->getDbCriteria()->mergeWith($criteria);
 

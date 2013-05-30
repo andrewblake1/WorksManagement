@@ -652,6 +652,7 @@ $t2=$model->attributes;
 		if(sizeof(static::$tabs) > 1)
 		{
 			array_pop($breadcrumbs);
+			array_pop($breadcrumbs);
 
 			$numTabRows = sizeof(static::$tabs);
 			$rowCount = 0;
