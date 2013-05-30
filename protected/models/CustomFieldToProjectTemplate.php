@@ -8,6 +8,8 @@
  * @property integer $project_template_id
  * @property integer $custom_field_id
  * @property integer $custom_field_project_category_id
+ * @property integer $show_in_admin
+ * @property integer $show_in_planning
  * @property integer $deleted
  * @property integer $updated_by
  *
@@ -42,7 +44,7 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('project_template_id, custom_field_id, custom_field_project_category_id', 'required'),
-			array('project_template_id, custom_field_id, custom_field_project_category_id,', 'numerical', 'integerOnly'=>true),
+			array('project_template_id, custom_field_id, custom_field_project_category_id, show_in_admin, show_in_planning', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -75,6 +77,8 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 			'custom_field_project_category_id' => 'Project category',
 			'searchCustomFieldProjectCategory' => 'Project category',
 			'custom_field_id' => 'Custom field',
+			'show_in_admin' => 'Show in admin page',
+			'show_in_planning' => 'Show in planning page',
 			'searchCustomField' => 'Custom field',
 		));
 	}
@@ -93,11 +97,15 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 			't.custom_field_project_category_id',
 			't.custom_field_id',
 			'customField.description AS searchCustomField',
+			't.show_in_admin',
+			't.show_in_planning',
 		);
 
 		// where
 		$criteria->compare('customField.description',$this->searchCustomField,true);
 		$criteria->compare('t.custom_field_project_category_id',$this->custom_field_project_category_id);
+		$criteria->compare('t.show_in_admin',Yii::app()->format->toMysqlBool($this->show_in_admin));
+		$criteria->compare('t.show_in_planning',Yii::app()->format->toMysqlBool($this->show_in_planning));
 		
 		// with 
 		$criteria->with = array(
@@ -110,6 +118,8 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
+		$columns[] = 'show_in_admin:boolean';
+		$columns[] = 'show_in_planning:boolean';
 		
 		return $columns;
 	}

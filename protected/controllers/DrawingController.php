@@ -57,7 +57,6 @@ class DrawingController extends AdjacencyListController
 		header('Access-Control-Allow-Methods: OPTIONS, HEAD, GET, POST, PUT, DELETE');
 		header('Access-Control-Allow-Headers: X-File-Name, X-File-Type, X-File-Size');
 		$this->initUploadHandler($id);
-//		$this->uploadHandler->get();
 	}
 	
 	public function actionUpload()
@@ -65,7 +64,6 @@ class DrawingController extends AdjacencyListController
 		if(isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE')
 		{
 			$this->initUploadHandler($_GET['id']);
-//            $this->uploadHandler->delete();
         }
 		else
 		{
@@ -286,7 +284,6 @@ class DrawingController extends AdjacencyListController
 		$tabs = array();
 		
 		parent::setTabs($model, $tabs);
-	//	$this->addTab(Drawing::getNiceNamePlural(), Yii::app()->request->requestUri, $tabs[0], TRUE);
 
 		// add tab to  update TaskToAssembly
 		$this->addTab(Drawing::getNiceNamePlural(), $this->createUrl('Drawing/admin', array(
@@ -295,6 +292,41 @@ class DrawingController extends AdjacencyListController
 		), $tabs[0]);	
 		
 		return $tabs[0];
+	}
+	
+	/*
+	 * Adjust the tabs array by only allowing the specified tabs at the specified levels - skips the first tab which is update - only admin views
+	 * parameters are exclusions
+	 */
+	public function trimTabs($topRow, $bottomRow = array(), $middleRows = array())
+	{
+		// loop thru tabs layers
+		for($numLayers = sizeof($this->tabs), $cntr = 1; $cntr <= $numLayers; $cntr++)
+		{
+			if($cntr == 1)
+			{
+				$row = $topRow;
+			}
+			elseif($cntr == $numLayers)
+			{
+				$row = $bottomRow;
+			}
+			else
+			{
+				$row = $middleRows;
+			}
+
+			// loop thru the individual tabs
+			foreach(self::$tabs[$cntr - 1] as $key => $value)
+			{
+				// if the label is in the exclusion array
+				if(in_array($value['label'], $row))
+				{
+					// remove it from the tabs
+					unset(self::$tabs[$cntr - 1][$key]);
+				}
+			}
+		}
 	}
 	
 	// override the tabs when viewing assemblies for a particular task
@@ -316,6 +348,7 @@ class DrawingController extends AdjacencyListController
 				$this->addTab(Drawing::getNiceName($_GET['id']), Yii::app()->request->requestUri, $tabs, TRUE);
 				static::$tabs = array_merge(static::$tabs, array($tabs));
 
+				// elimate irrelevant tabs
 				$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail();
 			}
 			else
@@ -338,6 +371,8 @@ class DrawingController extends AdjacencyListController
 
 			$this->breadcrumbs = static::getBreadCrumbTrail();
 		}
+		
+		$this->trimTabs(array(), array(Assembly::getNiceNamePlural()), array(Drawing::getNiceNamePlural()));
 	}
 	
 	public function getRelation($model, $attribute)

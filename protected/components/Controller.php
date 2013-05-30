@@ -375,11 +375,19 @@ $t = $model->attributes;
 	static function getValidGetParams($modelName)
 	{
 		$get = array();
+		
+		$primaryKeyName = $modelName::model()->tableSchema->primaryKey;
+
 		foreach($_GET as $key => $value)
 		{
 			if($modelName::model()->hasAttribute($key))
 			{
-				$get[$key] = $value;
+				// ignore primary key field
+				if($key != $primaryKeyName)
+				{
+					$get[$key] = $value;
+				}
+					
 			}
 		}
 
@@ -1536,7 +1544,8 @@ $t = Controller::$nav;
 				'size' => 'small', // '', 'large', 'small' or 'mini'
 				'htmlOptions' => array(
 					'data-toggle' => 'modal',
-					'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').first().focus();',
+//					'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').first().hide();',
+					'onclick' => '$(\'#myModal input\').first().focus();',
 				),
 			));
 		}

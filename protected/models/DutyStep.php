@@ -21,6 +21,7 @@
  * @property User $updatedBy
  * @property Action $action
  * @property AuthItem $authItemName
+ * @property Level $level0
  * @property DutyStepDependency[] $dutyStepDependencies
  * @property DutyStepDependency[] $dutyStepDependencies1
  * @property DutyStepDependency[] $dutyStepDependencies2
@@ -38,6 +39,7 @@ class DutyStep extends ActiveRecord
 	 */
 	public $searchCustomField;
 	public $searchAuthItem;
+	public $searchLevel;
 	/*
 	 * these just here for purpose of tabs - ensuring these variables exist ensures than can be added to the url from currrent $_GET
 	 */
@@ -74,6 +76,7 @@ class DutyStep extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
             'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
+            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'dutyStepDependencies' => array(self::HAS_MANY, 'DutyStepDependency', 'action_id'),
             'dutyStepDependencies1' => array(self::HAS_MANY, 'DutyStepDependency', 'parent_duty_step_id'),
             'dutyStepDependencies2' => array(self::HAS_MANY, 'DutyStepDependency', 'child_duty_step_id'),
@@ -91,6 +94,7 @@ class DutyStep extends ActiveRecord
 			'custom_field_id' => 'Custom field',
 			'searchCustomField' => 'Custom field',
 			'searchAuthItem' => 'Role',
+			'searchLevel' => 'Level',
 		));
 	}
 
@@ -108,7 +112,7 @@ class DutyStep extends ActiveRecord
 			't.description',
 			't.comment',
 			't.lead_in_days',
-			't.level',
+			'level0.description AS searchLevel',
 			'customField.description AS searchCustomField',
 			'authItemName.name AS searchAuthItem',
 		);
@@ -118,13 +122,14 @@ class DutyStep extends ActiveRecord
 		$criteria->compare('t.comment',$this->comment,true);
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
 		$criteria->compare('customField.description',$this->searchCustomField,true);
-		$criteria->compare('t.level',$this->level,true);
+		$criteria->compare('level0.description',$this->searchLevel,true);
 		$criteria->compare('authItemName.name',$this->searchAuthItem, true);
 		
 		// with
 		$criteria->with = array(
 			'customField',
-			'authItemName',	
+			'authItemName',
+			'level0',
 		);
 
 		return $criteria;
@@ -134,7 +139,7 @@ class DutyStep extends ActiveRecord
 	{
 		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'lead_in_days';
-		$columns[] = 'level';
+		$columns[] = 'searchLevel';
         $columns[] = 'searchAuthItem';
         $columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
 		$columns[] = 'comment';

@@ -385,6 +385,11 @@ EOD;
 			$this->_authManager->createOperation('TaskRead', 'Task read');
 			$task->addChild('TaskRead');
 
+			$task=$this->_authManager->createTask('TaskToAction', 'TaskToAction task');
+			$projectManagerRole->addChild('TaskToAction');
+			$this->_authManager->createOperation('TaskToActionRead', 'TaskToAction read');
+			$task->addChild('TaskToActionRead');
+
 			$task=$this->_authManager->createTask('TaskToAssembly', 'TaskToAssembly task');
 			$task2=$this->_authManager->createTask('TaskToAssemblyToAssemblyToAssemblyGroup', 'TaskToAssemblyToAssemblyToAssemblyGroup task');
 			$projectManagerRole->addChild('TaskToAssembly');
@@ -432,7 +437,7 @@ EOD;
 			$schedulerRole->addChild('MaterialGroupRead');
 			$schedulerRole->addChild('MaterialRead');
 			$schedulerRole->addChild('MaterialGroupToMaterialRead');
-			$schedulerRole->addChild('StandardReadRead');
+			$schedulerRole->addChild('StandardRead');
 			$schedulerRole->addChild('SubAssemblyRead');
 
 			// DEFAULT

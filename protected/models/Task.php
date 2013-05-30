@@ -61,6 +61,10 @@ class Task extends CustomFieldExtensionActiveRecord
 	protected $relationModelToCustomFieldModelTemplates = 'taskToCustomFieldToTaskTemplates';
 	protected $relationModelToCustomFieldModelTemplate = 'taskToCustomFieldToTaskTemplate';
 
+	/*
+	 * override table name
+	 */
+	private $_tableName;
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -74,12 +78,13 @@ class Task extends CustomFieldExtensionActiveRecord
 			array('task_template_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
 			array('planned, preferred, name, location', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, level, quantity, searchInCharge, searchEarliest, searchProject, searchTaskTemplate, name, crew_id, planned, location, preferred_mon, preferred_tue, preferred_wed, preferred_thu, preferred_fri, preferred_sat, preferred_sun', 'safe', 'on'=>'search'),
 		));
 	}
 
+	public function tableName() {
+		return $this->_tableName ? $this->_tableName : parent::tableName();
+	}
+	
 	/**
 	 * @return array relational rules.
 	 */
@@ -127,6 +132,58 @@ class Task extends CustomFieldExtensionActiveRecord
 			'preferred_sat' => 'Sa',
 			'preferred_sun' => 'Su',
 		));
+	}
+
+	/**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 */
+	public function search($pagination = array())
+	{
+		/* create a temporary table name  -- TaskActiveDataProvider will need to take care of removing temp table after stored procedure has created it and
+		 * data has been retrieved
+		 */
+		$this->_tableName = Yii::app()->params['tempTablePrefix'] . Yii::app()->user->id;
+		
+// todo: switch to prepared statment
+		// create the temporary table
+		Yii::app()->db->createCommand("CALL pro_get_tasks_from_crew_admin_view({$this->crew_id}, '{$this->_tableName}')")->execute();
+		
+/*		// need to get the additional column names
+		$customColumns = array();
+		foreach(Yii::app()->db->createCommand("SHOW COLUMNS FROM `{$this->_tableName}`)")->queryAll() as $tempColumn)
+		{
+			// if the column doesn't exist already in the task table
+			if(!Task::model()->hasAttribute($tempColumn['Field']))
+			{
+				$customColumns[$tempColumn['Field']] = $tempColumn['Field'];
+			}
+		}*/
+		
+		// get the sort order
+		foreach($this->searchSort as $attribute)
+		{
+			$sort[$attribute] = array(
+						'asc'=>" $attribute ",
+						'desc'=>" $attribute DESC",
+					);
+		}
+		
+		// add searchUser
+		$sort['searchUser'] = array(
+					'asc'=>" searchUser ",
+					'desc'=>" searchUser DESC",
+				);
+
+		// add all other attributes
+		$sort[] = '*';
+		$dataProvider = new TaskActiveDataProvider($this, array(
+			'criteria'=>self::getSearchCriteria($this),
+			'sort'=>array('attributes'=>$sort),
+			'pagination' => $pagination,
+		));
+	
+		return $dataProvider;
 	}
 
 	/**
@@ -207,7 +264,7 @@ class Task extends CustomFieldExtensionActiveRecord
 			'id0.inCharge.contact',
 			'project',
 			'taskTemplate',
-			);
+		);
 
 		return $criteria;
 	}
@@ -492,23 +549,13 @@ class Task extends CustomFieldExtensionActiveRecord
 		// loop thru all customValue model types associated to this models model type
 		foreach($this->taskTemplate->taskTemplateToActions as $taskTemplateToAction)
 		{
-			// loop thru steps of the Action
-			foreach($taskTemplateToAction->dutyStepDependencies as $dutyStepDependency)
-			{
-				// create a new duty
-				$duty = new Duty();
-				// copy any useful attributes from
-				$duty->task_id = $this->id;
-				$duty->duty_step_dependency_id = $dutyStepDependency->id;
-				$saved &= $duty->createSave($models);
-			}
+			// factory method to create duties
+			$saved &= Duty::addDuties($taskTemplateToAction->action_id, $this->id, $models);
 		}
 		
 		return $saved;
 	}
 	
-
-
 }
 
 ?>

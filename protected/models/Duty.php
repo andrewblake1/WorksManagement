@@ -303,6 +303,33 @@ class Duty extends ActiveRecord
 		// get any incomplete children
 		return static::model()->with('dutyData')->findAllByAttributes(array('parent_id'=>$this->id),'dutyData.updated IS NULL');
 	}
+	
+	/* 
+	 * factory method for creating Duties based on actionid and task id
+	 */
+	public static function addDuties($actionId, $taskId, &$models=array())
+	{
+		// initialise the saved variable to show no errors in case the are no
+		// model customValues - otherwise will return null indicating a save error
+		$saved = true;
+		
+		// get the action
+		$action = static::model()->findByPk($actionId);
+	
+		// loop thru steps of the Action
+		foreach($action->dutyStepDependencies as $dutyStepDependency)
+		{
+			// create a new duty
+			$duty = new Duty();
+			// copy any useful attributes from
+			$duty->task_id = $taskId;
+			$duty->duty_step_dependency_id = $dutyStepDependency->id;
+			$saved &= $duty->createSave($models);
+		}
+		
+		return $saved;
+	}
+
 }
 
 ?>

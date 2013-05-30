@@ -4,7 +4,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	if($model->isNewRecord)
 	{
-		DutyStepController::listWidgetRow($model, $form, 'duty_step_id');
+//		DutyStepController::listWidgetRow($model, $form, 'duty_step_id');
 		UserController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Responsible');
 	}
 	else

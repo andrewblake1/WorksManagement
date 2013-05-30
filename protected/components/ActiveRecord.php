@@ -433,8 +433,7 @@ $t = $model->attributes;
 					'asc'=>" searchUser ",
 					'desc'=>" searchUser DESC",
 				);
-$t=self::getSearchCriteria($this);
-$t=$this->attributes;
+
 		// add all other attributes
 		$sort[] = '*';
 		$dataProvider = new ActiveDataProvider($this, array(
@@ -442,6 +441,7 @@ $t=$this->attributes;
 			'sort'=>array('attributes'=>$sort),
 			'pagination' => $pagination,
 		));
+
 		return $dataProvider;
 	}
 

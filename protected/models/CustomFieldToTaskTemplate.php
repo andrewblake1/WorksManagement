@@ -8,6 +8,8 @@
  * @property integer $task_template_id
  * @property integer $custom_field_id
  * @property integer $custom_field_task_category_id
+ * @property integer $show_in_admin
+ * @property integer $show_in_planning
  * @property integer $deleted
  * @property integer $updated_by
  *
@@ -42,7 +44,7 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('task_template_id, custom_field_id, custom_field_task_category_id', 'required'),
-			array('task_template_id, custom_field_id, custom_field_task_category_id', 'numerical', 'integerOnly'=>true),
+			array('task_template_id, custom_field_id, custom_field_task_category_id, show_in_admin, show_in_planning', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -73,6 +75,8 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 			'custom_field_task_category_id' => 'Task category',
 			'searchCustomFieldTaskCategory' => 'Task category',
 			'custom_field_id' => 'Custom field',
+			'show_in_admin' => 'Show in admin page',
+			'show_in_planning' => 'Show in planning page',
 			'searchCustomField' => 'Custom field',
 		));
 	}
@@ -91,10 +95,13 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 			't.custom_field_task_category_id',
 			't.custom_field_id',
 			'customField.description AS searchCustomField',
+			't.show_in_admin',
+			't.show_in_planning',
 		);
 
 		// where
 		$criteria->compare('customField.description',$this->searchCustomField,true);
+		$criteria->compare('t.custom_field_task_category_id',$this->custom_field_task_category_id);
 		$criteria->compare('t.custom_field_task_category_id',$this->custom_field_task_category_id);
 		
 		// with 
@@ -108,6 +115,8 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
+		$columns[] = 'show_in_admin:boolean';
+		$columns[] = 'show_in_planning:boolean';
 		
 		return $columns;
 	}

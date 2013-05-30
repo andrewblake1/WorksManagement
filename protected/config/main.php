@@ -85,7 +85,7 @@ return array(
 				'connectionID'=>'db',
 				'defaultRoles'=>array('default'),
 			),
-			
+
 			// Database
 			'db' => array(
 				'connectionString' => "mysql:host=localhost;dbname=$wceDatabaseName",
@@ -116,12 +116,12 @@ return array(
 				'responsiveCss' => true,
 				'fontAwesomeCss' => true,
 			),
-			
+
 			// site wide functions
 			'functions'=>array(
 				'class'=>'application.components.Functions',
 			),
-			
+
 /*			// widget factory
 			'widgetFactory'=>array(
 				'class'=>CWidgetFactory,
@@ -149,6 +149,8 @@ return array(
 			'showDownloadButton'=>true,
 			// table prefix
 			'tablePrefix'=>'tbl_',
+			// temporary table prefix
+			'tempTablePrefix'=>'tmp_',
 			/**
 			* @var array provides the hierachy for a breadcrumb trail
 			*/
@@ -170,7 +172,9 @@ return array(
 						'Day'=>array(
 							'Crew'=>array(
 								'Task'=>array(
-									'Duty',
+									'TaskToAction'=>array(
+										'Duty',
+									),
 									'TaskToMaterial',
 									'TaskToAssembly',
 									'TaskToCustomFieldToTaskTemplate',
