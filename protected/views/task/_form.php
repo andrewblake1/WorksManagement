@@ -42,7 +42,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 					}",
 				)
 			),
-			array('scopeProjectTemplate'=>array($model->crew_id))
+			array('scopeCrew'=>array($model->crew_id))
 		);
 	}
 	else

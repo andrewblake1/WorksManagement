@@ -33,15 +33,16 @@
 class TaskTemplate extends ActiveRecord
 {
 
-	public function scopeProjectTemplate($crew_id)
+	public function scopeCrew($crew_id)
 	{
 		$criteria=new DbCriteria;
 		$criteria->compare('crew.id',$crew_id);
 		$criteria->join='
-			 JOIN tbl_project_template projectTemplate ON t.project_template_id = projectTemplate.id
-			 JOIN tbl_project project ON projectTemplate.id = project.project_template_id
-			 JOIN tbl_day day ON project.id = day.project_id
-			 JOIN tbl_crew crew ON day.id = crew.day_id
+			JOIN tbl_project_template projectTemplate ON t.project_template_id = projectTemplate.id
+			JOIN tbl_project_type projectType ON projectTemplate.id = projectType.project_template_id
+			JOIN tbl_project project ON projectType.id = project.project_type_id
+			JOIN tbl_day `day` ON project.id = `day`.project_id
+			JOIN tbl_crew `crew` ON day.id = crew.day_id
 		';
 
 		$this->getDbCriteria()->mergeWith($criteria);
