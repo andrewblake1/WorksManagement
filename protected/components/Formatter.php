@@ -10,13 +10,13 @@ class Formatter extends CFormatter
 	}
 
 	public function formatDatetime($value) {
-		return $value === null
+		return empty($value)
 			? ''
 			: date('d M Y, H:i:s', strtotime($value));
 	}
 
 	public function formatTime($value) {
-		return $value === null
+		return empty($value)
 			? ''
 			: date('H:i', strtotime($value));
 	}

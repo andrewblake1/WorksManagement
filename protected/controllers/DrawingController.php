@@ -284,49 +284,26 @@ class DrawingController extends AdjacencyListController
 		$tabs = array();
 		
 		parent::setTabs($model, $tabs);
-
-		// add tab to  update TaskToAssembly
+		
+		// add tab to drawings
 		$this->addTab(Drawing::getNiceNamePlural(), $this->createUrl('Drawing/admin', array(
 			'standard_id' => $model->standard_id,
 			'parent_id' => $model->id)
 		), $tabs[0]);	
 		
-		return $tabs[0];
-	}
-	
-	/*
-	 * Adjust the tabs array by only allowing the specified tabs at the specified levels - skips the first tab which is update - only admin views
-	 * parameters are exclusions
-	 */
-	public function trimTabs($topRow, $bottomRow = array(), $middleRows = array())
-	{
-		// loop thru tabs layers
-		for($numLayers = sizeof($this->tabs), $cntr = 1; $cntr <= $numLayers; $cntr++)
+		// clear tabs with no children, 0 is update, 1 is assemblies and 2 is drawing
+		if(!DrawingToAssembly::model()->countByAttributes(array('drawing_id' => $model->id)))
 		{
-			if($cntr == 1)
-			{
-				$row = $topRow;
-			}
-			elseif($cntr == $numLayers)
-			{
-				$row = $bottomRow;
-			}
-			else
-			{
-				$row = $middleRows;
-			}
-
-			// loop thru the individual tabs
-			foreach(self::$tabs[$cntr - 1] as $key => $value)
-			{
-				// if the label is in the exclusion array
-				if(in_array($value['label'], $row))
-				{
-					// remove it from the tabs
-					unset(self::$tabs[$cntr - 1][$key]);
-				}
-			}
+			unset($tabs[0][1]);
 		}
+		// otherwise their are assemblies so this must be and leaf node so hide the drawings tab instead
+		else
+		{
+			unset($tabs[0][2]);
+		}
+		
+
+		return $tabs[0];
 	}
 	
 	// override the tabs when viewing assemblies for a particular task
@@ -372,7 +349,7 @@ class DrawingController extends AdjacencyListController
 			$this->breadcrumbs = static::getBreadCrumbTrail();
 		}
 		
-		$this->trimTabs(array(), array(Assembly::getNiceNamePlural()), array(Drawing::getNiceNamePlural()));
+//		$this->trimTabs(array(), array(Assembly::getNiceNamePlural()), array(Drawing::getNiceNamePlural()));
 	}
 	
 	public function getRelation($model, $attribute)

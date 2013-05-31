@@ -6,7 +6,6 @@
  * The followings are the available columns in table 'tbl_duty_data':
  * @property string $id
  * @property string $planning_id
- * @property string $duty_step_dependency_id
  * @property integer $duty_step_id
  * @property string $level
  * @property integer $responsible
@@ -16,14 +15,12 @@
  *
  * The followings are the available model relations:
  * @property Duty[] $duties
- * @property Duty[] $duties1
  * @property CustomValue $customValue
  * @property User $updatedBy
  * @property Planning $planning
  * @property DutyStep $level0
  * @property User $responsible0
- * @property DutyStepDependency $dutyStep
- * @property DutyStepDependency $dutyStepDependency
+ * @property DutyStep $dutyStep
  */
 class DutyData extends ActiveRecord
 {
@@ -55,14 +52,12 @@ class DutyData extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'duties' => array(self::HAS_MANY, 'Duty', 'duty_data_id'),
-            'duties1' => array(self::HAS_MANY, 'Duty', 'duty_step_dependency_id'),
             'customValue' => array(self::BELONGS_TO, 'CustomValue', 'custom_value_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
             'level0' => array(self::BELONGS_TO, 'DutyStep', 'level'),
             'responsible0' => array(self::BELONGS_TO, 'User', 'responsible'),
-            'dutyStep' => array(self::BELONGS_TO, 'DutyStepDependency', 'duty_step_id'),
-            'dutyStepDependency' => array(self::BELONGS_TO, 'DutyStepDependency', 'duty_step_dependency_id'),
+            'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
         );
     }
 

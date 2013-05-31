@@ -12,11 +12,9 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property DutyData[] $dutyDatas
- * @property DutyData[] $dutyDatas1
  * @property User $updatedBy
- * @property DutyStep $action
  * @property DutyStep $parentDutyStep
+ * @property DutyStep $action
  * @property DutyStep $childDutyStep
  */
 class DutyStepDependency extends ActiveRecord
@@ -57,11 +55,9 @@ class DutyStepDependency extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'duty_step_id'),
-            'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'duty_step_dependency_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'action' => array(self::BELONGS_TO, 'DutyStep', 'action_id'),
             'parentDutyStep' => array(self::BELONGS_TO, 'DutyStep', 'parent_duty_step_id'),
+            'action' => array(self::BELONGS_TO, 'DutyStep', 'action_id'),
             'childDutyStep' => array(self::BELONGS_TO, 'DutyStep', 'child_duty_step_id'),
         );
     }
@@ -73,7 +69,6 @@ class DutyStepDependency extends ActiveRecord
     public function attributeLabels()
     {
         return array(
-            'parent_duty_step_id' => 'Integral to',
             'child_duty_step_id' => 'Depends on',
             'action_id' => 'Action',
 			'searchChildDutyStep' => 'Depends on',

@@ -107,7 +107,8 @@ class TaskToAction extends ViewActiveRecord
 	{
 		// only need to call factory method to add duties as no actual TaskToAction table
 		// factory method to create duties
-		return Duty::addDuties($this->action_id, $this->task_id, $models);
+		 
+		return Duty::addDuties($this->id = $this->action_id, $this->task_id, $models);
 	}
 	
 	// again - no actual table, however need to remove duties

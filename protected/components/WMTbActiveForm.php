@@ -106,7 +106,7 @@ class WMTbActiveForm extends TbActiveForm
 			}
 			echo '<div class="modal-header">';
 			echo '<a class="close" data-dismiss="modal">&times;</a>';
-			echo "<h3>{$modelName::getNiceName()}</h3>";
+			echo "<h3>{$this->controller->heading}</h3>";
 			echo '</div>';
 		}
 

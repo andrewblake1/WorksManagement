@@ -7,14 +7,12 @@
  * @property string $id
  * @property string $task_id
  * @property string $duty_data_id
- * @property string $duty_step_dependency_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Task $task
  * @property User $updatedBy
  * @property DutyData $dutyData
- * @property DutyData $dutyStepDependency
  */
 class Duty extends ActiveRecord
 {
@@ -24,7 +22,6 @@ class Duty extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchTask;
-	public $searchIntegralTo;
 	public $description;
 	public $searchInCharge;
 	public $searchImportance;
@@ -32,6 +29,10 @@ class Duty extends ActiveRecord
 	public $updated;
 	public $due;
 	
+	public $duty_step_id;
+	public $responsible;
+	public $task_to_action_id;
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -41,12 +42,9 @@ class Duty extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('task_id, duty_step_id', 'required'),
-			array('parent_id, duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
+			array('duty_step_id', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('updated, custom_value_id', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, parent_id, task_id, due, searchIntegralTo, searchImportance, searchInCharge, searchTask, description, updated', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -61,7 +59,6 @@ class Duty extends ActiveRecord
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'dutyData' => array(self::BELONGS_TO, 'DutyData', 'duty_data_id'),
-            'dutyStepDependency' => array(self::BELONGS_TO, 'DutyData', 'duty_step_dependency_id'),
         );
     }
 
@@ -72,8 +69,6 @@ class Duty extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'task_id' => 'Task',
-			'parent_id' => 'Integral to', 
-			'searchIntegralTo' => 'Integral to', 
 			'searchTask' => 'Task',
 			'duty_step_id' => 'Duty/Role/First/Last/Email',
 			'description' => 'Duty',
@@ -97,6 +92,7 @@ class Duty extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
+			't.duty_data_id',
 			'dutyStep.description AS description',
 			'(SELECT `date` FROM tbl_working_days WHERE id = (SELECT id - dutyStep.lead_in_days FROM tbl_working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
 			"COALESCE(
@@ -126,7 +122,6 @@ class Duty extends ActiveRecord
 				) AS searchInCharge",
 			'dutyData.updated AS updated',
 			'taskTemplateToAction.importance AS searchImportance',
-			'dependedOnBy.description AS searchIntegralTo',
 		);
 
 		// where
@@ -134,8 +129,7 @@ class Duty extends ActiveRecord
 		$criteria->compare('taskTemplateToAction.importance',$this->searchImportance,true);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
-		$criteria->compare('dependedOnBy.description',$this->searchIntegralTo,true);
-// TODO will be non standard code to search by searchincharge
+// TODO will be non standard code to search by searchincharge - probably have to use temp table similar to task view adding of custom fields
 		
 		
 		
@@ -148,27 +142,25 @@ class Duty extends ActiveRecord
 			JOIN tbl_project project ON task.project_id = project.id
 			JOIN tbl_crew crew ON task.crew_id = crew.id
 			JOIN tbl_day day ON crew.day_id = day.id
-			JOIN tbl_duty_step dutyStep ON t.duty_step_id = dutyStep.id
-			LEFT JOIN tbl_task_template_to_action taskTemplateToAction USING ( task_template_id, duty_step_id )
-			LEFT JOIN tbl_project_template_to_auth_item projectTemplateToAuthItem ON taskTemplateToAction.project_template_to_auth_item_id = projectTemplateToAuthItem.id
-			LEFT JOIN tbl_project_to_project_template_to_auth_item projectToProjectTemplateToAuthItem ON projectTemplateToAuthItem.id = projectToProjectTemplateToAuthItem.project_template_to_auth_item_id
+			JOIN tbl_duty_data dutyData ON t.duty_data_id = dutyData.id
+			JOIN tbl_duty_step dutyStep ON dutyData.duty_step_id = dutyStep.id
+			JOIN tbl_planning planning ON dutyData.planning_id = planning.id
+			LEFT JOIN tbl_task_template_to_action taskTemplateToAction USING ( task_template_id, action_id )
+			
+			LEFT JOIN tbl_project_to_project_template_to_auth_item projectToProjectTemplateToAuthItem
+				ON project.id = projectToProjectTemplateToAuthItem.project_id
+				AND dutyStep.auth_item_name = projectToProjectTemplateToAuthItem.item_name
+			
 			LEFT JOIN AuthAssignment ON projectToProjectTemplateToAuthItem.auth_assignment_id = AuthAssignment.id
+			
 			LEFT JOIN tbl_user dutyDefault ON AuthAssignment.userid = dutyDefault.id
 			LEFT JOIN tbl_contact dutyDefaultContact ON dutyDefault.contact_id = dutyDefaultContact.id
-			
-			LEFT JOIN tbl_user responsible ON t.responsible = responsible.id
+			LEFT JOIN tbl_user responsible ON dutyData.responsible = responsible.id
 			LEFT JOIN tbl_contact responsibleContact ON responsible.contact_id = responsibleContact.id
-			
-			LEFT JOIN tbl_duty parent ON t.parent_id = t.id
-			LEFT JOIN tbl_duty_step dependedOnBy ON parent.duty_step_id = dependedOnBy.id
+			LEFT JOIN tbl_user inCharge ON planning.in_charge_id = inCharge.id
+			LEFT JOIN tbl_contact contact ON inCharge.contact_id = contact.id
 		';
 		
-		// with
-		$criteria->with = array(
-			'dutyData',
-			'dutyData.planning.inCharge.contact',
-		);
-
 		return $criteria;
 	}
 
@@ -176,7 +168,6 @@ class Duty extends ActiveRecord
 	{
         $columns[] = $this->linkThisColumn('description');
         $columns[] = static::linkColumn('searchInCharge', 'User', 'assignedTo');
-        $columns[] = 'searchIntegralTo';
         $columns[] = 'searchImportance';
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
@@ -231,11 +222,11 @@ class Duty extends ActiveRecord
 	public function createSave(&$models=array())
 	{
 		$saved = true;
-		
+
 		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
-		$dutyStepDependency = DutyStepDependency::model()->findByPk($this->duty_step_dependency_id);
-		$dutyStep = $dutyStepDependency->child_duty_step_id;
+		$dutyStep = DutyStep::model()->findByPk($this->duty_step_id);
+
 		if(($level = $dutyStep->level) == Planning::planningLevelTaskInt)
 		{
 			$planning_id = $this->task_id;
@@ -264,7 +255,6 @@ class Duty extends ActiveRecord
 		{
 			$dutyData = new DutyData;
 			$dutyData->planning_id = $planning_id;
-			$dutyData->duty_step_dependency_id = $dutyStepDependency->id;
 			$dutyData->duty_step_id = $dutyStep->id;
 			$dutyData->level = $level;
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
@@ -278,7 +268,7 @@ class Duty extends ActiveRecord
 		// retrieve the DutyData
 		$dutyData = DutyData::model()->findByAttributes(array(
 			'planning_id'=>$planning_id,
-			'duty_step_dependency_id'=>$dutyStepDependency->id,
+			'duty_step_id'=>$dutyStep->id,
 		));
 
 		// if there isn't already a customValue item to hold value and there should be
@@ -317,13 +307,13 @@ class Duty extends ActiveRecord
 		$action = Action::model()->findByPk($actionId);
 	
 		// loop thru steps of the Action
-		foreach($action->dutyStepDependencies as $dutyStepDependency)
+		foreach($action->dutySteps as $dutyStep)
 		{
 			// create a new duty
 			$duty = new Duty();
 			// copy any useful attributes from
 			$duty->task_id = $taskId;
-			$duty->duty_step_dependency_id = $dutyStepDependency->id;
+			$duty->duty_step_id = $dutyStep->id;
 			$saved &= $duty->createSave($models);
 		}
 		

@@ -17,6 +17,7 @@
  *
  * The followings are the available model relations:
  * @property DutyData[] $dutyDatas
+ * @property DutyData[] $dutyDatas1
  * @property CustomField $customField
  * @property User $updatedBy
  * @property Action $action
@@ -84,13 +85,14 @@ class DutyStep extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'level'),
+            'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'duty_step_id'),
             'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
             'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
             'level0' => array(self::BELONGS_TO, 'Level', 'level'),
-            'dutyStepDependencies' => array(self::HAS_MANY, 'DutyStepDependency', 'action_id'),
-            'dutyStepDependencies1' => array(self::HAS_MANY, 'DutyStepDependency', 'parent_duty_step_id'),
+            'dutyStepDependencies' => array(self::HAS_MANY, 'DutyStepDependency', 'parent_duty_step_id'),
+            'dutyStepDependencies1' => array(self::HAS_MANY, 'DutyStepDependency', 'action_id'),
             'dutyStepDependencies2' => array(self::HAS_MANY, 'DutyStepDependency', 'child_duty_step_id'),
         );
     }

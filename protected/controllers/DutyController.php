@@ -2,6 +2,14 @@
 
 class DutyController extends AdjacencyListController
 {
+	
+	public function setTabs($model, &$tabs = NULL) {
+		// create tabs
+		parent::setTabs($model, $tabs);
+		// remobe the first one
+		unset(self::$tabs[0][0]);
+	}
+
 	/**
 	 * Specifies the access control rules.
 	 * NB: need to override this to open up so can shift access control into actionUpdate method to pass params for bizrule

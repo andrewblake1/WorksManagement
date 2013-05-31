@@ -244,6 +244,41 @@ class Controller extends CController {
 		);
 	}
 
+	/*
+	 * Adjust the tabs array by only allowing the specified tabs at the specified levels - skips the first tab which is update - only admin views
+	 * parameters are exclusions
+	 */
+	public function trimTabs($topRow, $bottomRow = array(), $middleRows = array())
+	{
+		// loop thru tabs layers
+		for($numLayers = sizeof($this->tabs), $cntr = 1; $cntr <= $numLayers; $cntr++)
+		{
+			if($cntr == 1)
+			{
+				$row = $topRow;
+			}
+			elseif($cntr == $numLayers)
+			{
+				$row = $bottomRow;
+			}
+			else
+			{
+				$row = $middleRows;
+			}
+
+			// loop thru the individual tabs
+			foreach(self::$tabs[$cntr - 1] as $key => $value)
+			{
+				// if the label is in the exclusion array
+				if(in_array($value['label'], $row))
+				{
+					// remove it from the tabs
+					unset(self::$tabs[$cntr - 1][$key]);
+				}
+			}
+		}
+	}
+	
 	public function getTabs() {
 		return static::$tabs;
 	}
@@ -514,7 +549,7 @@ $t = $model->attributes;
 // it works on windows machine however not mac nor linux for me so far.
 		// set heading
 		if (!$this->heading) {
-			$this->heading .= $modelName::getNiceNamePlural();
+			$this->heading .= mb_substr($modelName::getNiceName(), 0, 17) . '...';
 		}
 
 		// set breadcrumbs
@@ -927,7 +962,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		}
 
 		// set heading
-		$this->heading = $modelName::getNiceName($id);
+		$this->heading = mb_substr($modelName::getNiceName($id), 0, 17) . '...';
 
 		// set breadcrumbs
 		$this->breadcrumbs = static::getBreadCrumbTrail('Update');
