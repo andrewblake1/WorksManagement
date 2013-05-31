@@ -12,11 +12,6 @@ class TaskActiveDataProvider extends ActiveDataProvider
 		// get data
 		$data = parent::getData($refresh);
 		
-		// remove the temporary table - safer to recalc the name -- prevent accidentally dropping table in future possible use of ative data provider where _tablename not set
-// todo: switch to prepared statment
-		$tableName = Yii::app()->params['tempTablePrefix'] . Yii::app()->user->id;
-		Yii::app()->db->createCommand("DROP TABLE IF EXITS `$tableName`")->execute();
-
 		// if there is any data
 		if(empty($data))
 		{

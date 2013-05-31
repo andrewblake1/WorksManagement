@@ -65,7 +65,8 @@ class Task extends CustomFieldExtensionActiveRecord
 		// initialise the saved variable to show no errors in case the are no
 		// model customValues - otherwise will return null indicating a save error
 		$saved = true;
-//projectType->projectTemplate->customFieldProjectCategories->customFieldToProjectTemplates		
+
+// NB:: An error can occurr after updateing relations from gii as seems to drop this relation unless fk is duplicated in custom field model type
 		// loop thru all customValue model types associated to this models model type
 		foreach($this->taskTemplate->customFieldToTaskTemplates as $CustomFieldModelTemplate)
 		{
@@ -123,11 +124,6 @@ class Task extends CustomFieldExtensionActiveRecord
 		return $saved;
 	}
 
-	/*
-	 * override table name
-	 */
-	private $_tableName;
-	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -143,8 +139,25 @@ class Task extends CustomFieldExtensionActiveRecord
 		));
 	}
 
+	// needed as using a view to concat custom columns in admin view
+	public function primaryKey()
+	{
+		return 'id';
+	}
+
 	public function tableName() {
-		return $this->_tableName ? $this->_tableName : parent::tableName();
+$t = Yii::app()->controller->id;
+		// need to create a single shot instance of creating the temp table that appends required custom columns - only if in search scenario will actually
+		// do the search later when attribute assignments have been made which will repeat this - however some methods need the table architecture earlier
+		static $tableName = NULL;
+		if(!$tableName && strcasecmp(Yii::app()->controller->id, __CLASS__)  == 0 && Yii::app()->controller->action->id == 'admin')
+		{
+			Yii::app()->db->createCommand("CALL pro_get_tasks_from_crew_admin_view(0)")->execute();
+			$tableName = 'tmp_table';
+			return $tableName;
+		}
+
+		return parent::tableName();
 	}
 	
 	/**
@@ -202,26 +215,6 @@ class Task extends CustomFieldExtensionActiveRecord
 	 */
 	public function search($pagination = array())
 	{
-		/* create a temporary table name  -- TaskActiveDataProvider will need to take care of removing temp table after stored procedure has created it and
-		 * data has been retrieved
-		 */
-		$this->_tableName = Yii::app()->params['tempTablePrefix'] . Yii::app()->user->id;
-		
-// todo: switch to prepared statment
-		// create the temporary table
-		Yii::app()->db->createCommand("CALL pro_get_tasks_from_crew_admin_view({$this->crew_id}, '{$this->_tableName}')")->execute();
-		
-/*		// need to get the additional column names
-		$customColumns = array();
-		foreach(Yii::app()->db->createCommand("SHOW COLUMNS FROM `{$this->_tableName}`)")->queryAll() as $tempColumn)
-		{
-			// if the column doesn't exist already in the task table
-			if(!Task::model()->hasAttribute($tempColumn['Field']))
-			{
-				$customColumns[$tempColumn['Field']] = $tempColumn['Field'];
-			}
-		}*/
-		
 		// get the sort order
 		foreach($this->searchSort as $attribute)
 		{
@@ -237,8 +230,15 @@ class Task extends CustomFieldExtensionActiveRecord
 					'desc'=>" searchUser DESC",
 				);
 
+		/* create a temporary table name  -- TaskActiveDataProvider will need to take care of removing temp table after stored procedure has created it and
+		 * data has been retrieved
+		 */
+	
+		Yii::app()->db->createCommand("CALL pro_get_tasks_from_crew_admin_view({$this->crew_id})")->execute();
 		// add all other attributes
 		$sort[] = '*';
+		
+		// use custom made ActiveDataProvider just for this purpose
 		$dataProvider = new TaskActiveDataProvider($this, array(
 			'criteria'=>self::getSearchCriteria($this),
 			'sort'=>array('attributes'=>$sort),
@@ -287,7 +287,8 @@ class Task extends CustomFieldExtensionActiveRecord
 		// join 
 		$criteria->join='
 			LEFT JOIN tbl_duty duty ON t.id = duty.task_id
-			LEFT JOIN tbl_duty_step dutyStep ON duty.duty_step_id = dutyStep.id';
+			LEFT JOIN tbl_duty_data dutyData ON duty.duty_data_id = dutyData.id
+			LEFT JOIN tbl_duty_step dutyStep ON dutyData.duty_step_id = dutyStep.id';
 
 		// where
 		$criteria->compare('t.id',$this->id);

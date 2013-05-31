@@ -503,8 +503,6 @@ $t = $model->attributes;
 		$model->assertFromParent();
 		$adminViewModel->attributes = $model->attributes;
 
-$t=$adminViewModel->attributes;
-$t2=$model->attributes;
 		// if exporting to xl
 		if (isset($_GET['action']) && $_GET['action'] == 'download') {
 			// Export it

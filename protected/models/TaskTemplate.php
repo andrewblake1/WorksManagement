@@ -18,14 +18,17 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property CustomFieldTaskCategory[] $customFieldTaskCategories
  * @property CustomFieldToTaskTemplate[] $customFieldToTaskTemplates
  * @property Task[] $tasks
  * @property User $updatedBy
  * @property ProjectTemplate $projectTemplate
  * @property ProjectTemplate $client
+ * @property TaskTemplateToAction[] $taskTemplateToActions
+ * @property TaskTemplateToAction[] $taskTemplateToActions1
+ * @property TaskTemplateToAction[] $taskTemplateToActions2
  * @property TaskTemplateToAssembly[] $taskTemplateToAssemblies
  * @property TaskTemplateToAssemblyGroup[] $taskTemplateToAssemblyGroups
- * @property TaskTemplateToAction[] $taskTemplateToActions
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskTemplateToMaterialGroup[] $taskTemplateToMaterialGroups
  * @property TaskTemplateToResource[] $taskTemplateToResources
@@ -78,14 +81,19 @@ class TaskTemplate extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'customFieldTaskCategories' => array(self::HAS_MANY, 'CustomFieldTaskCategory', 'task_template_id'),
+// NB: be very careful when updating as gii or mysql workbench only giving the next relation if double up on the index custom field to task template!!!!!
+// and we need it!
             'customFieldToTaskTemplates' => array(self::HAS_MANY, 'CustomFieldToTaskTemplate', 'task_template_id'),
             'tasks' => array(self::HAS_MANY, 'Task', 'task_template_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
             'client' => array(self::BELONGS_TO, 'ProjectTemplate', 'client_id'),
+            'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'client_id'),
+            'taskTemplateToActions1' => array(self::HAS_MANY, 'TaskTemplateToAction', 'task_template_id'),
+            'taskTemplateToActions2' => array(self::HAS_MANY, 'TaskTemplateToAction', 'project_template_id'),
             'taskTemplateToAssemblies' => array(self::HAS_MANY, 'TaskTemplateToAssembly', 'task_template_id'),
             'taskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskTemplateToAssemblyGroup', 'task_template_id'),
-            'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'task_template_id'),
             'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'task_template_id'),
             'taskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskTemplateToMaterialGroup', 'task_template_id'),
             'taskTemplateToResources' => array(self::HAS_MANY, 'TaskTemplateToResource', 'task_template_id'),

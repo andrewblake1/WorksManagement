@@ -36,7 +36,7 @@ class TaskToAction extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('description, task_id', 'required'),
+			array('action_id, task_id', 'required'),
             array('client_id, project_template_id', 'numerical', 'integerOnly'=>true),
             array('action_id, override_id, task_id', 'length', 'max'=>10),
             array('description', 'length', 'max'=>255),
@@ -99,6 +99,7 @@ class TaskToAction extends ViewActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'task_id' => 'Task',
+			'description' => 'Action',
 		));
 	}
 

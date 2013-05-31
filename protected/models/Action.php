@@ -13,12 +13,13 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property User $updatedBy
- * @property Client $client
- * @property ProjectTemplate $projectTemplate
  * @property Action $override
  * @property Action[] $actions
+ * @property Client $client
+ * @property ProjectTemplate $projectTemplate
+ * @property User $updatedBy
  * @property DutyStep[] $dutySteps
+ * @property DutyStepDependency[] $dutyStepDependencies
  * @property TaskTemplateToAction[] $taskTemplateToActions
  */
 class Action extends ActiveRecord
@@ -99,12 +100,13 @@ class Action extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
-            'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
             'override' => array(self::BELONGS_TO, 'Action', 'override_id'),
             'actions' => array(self::HAS_MANY, 'Action', 'override_id'),
+            'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
+            'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'dutySteps' => array(self::HAS_MANY, 'DutyStep', 'action_id'),
+            'dutyStepDependencies' => array(self::HAS_MANY, 'DutyStepDependency', 'action_id'),
             'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'action_id'),
         );
     }

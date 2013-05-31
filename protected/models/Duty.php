@@ -1,4 +1,4 @@
- <?php
+<?php
 
 /**
  * This is the model class for table "tbl_duty".
@@ -314,7 +314,7 @@ class Duty extends ActiveRecord
 		$saved = true;
 		
 		// get the action
-		$action = static::model()->findByPk($actionId);
+		$action = Action::model()->findByPk($actionId);
 	
 		// loop thru steps of the Action
 		foreach($action->dutyStepDependencies as $dutyStepDependency)
