@@ -17,8 +17,8 @@ return array(
 		//'local' => 'path/to/local-folder'
 	),
 
-//	'homeUrl'=>array('dashboard/index'),
-	'defaultController'=>array('dashboard/index'),
+	'homeUrl'=>array('dashboard/admin'),
+	'defaultController'=>array('dashboard/admin'),
 
 	// This is the main Web application configuration. Any writable
 	// CWebApplication properties can be configured here.
@@ -155,7 +155,9 @@ return array(
 			* @var array provides the hierachy for a breadcrumb trail
 			*/
 			'trail' => array(
-				'Dashboard',
+				'Dashboard'=>array(
+					'DashboardDuty',
+				),
 				'Action'=>array(
 					'DutyStepDependency',
 					'DutyStep',

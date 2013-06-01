@@ -123,6 +123,7 @@ class PlanningController extends CategoryController
 		}
 		return parent::actionMoveCopy();
 	}
+	
 
 }
 

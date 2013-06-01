@@ -290,18 +290,6 @@ class DrawingController extends AdjacencyListController
 			'standard_id' => $model->standard_id,
 			'parent_id' => $model->id)
 		), $tabs[0]);	
-		
-		// clear tabs with no children, 0 is update, 1 is assemblies and 2 is drawing
-		if(!DrawingToAssembly::model()->countByAttributes(array('drawing_id' => $model->id)))
-		{
-			unset($tabs[0][1]);
-		}
-		// otherwise their are assemblies so this must be and leaf node so hide the drawings tab instead
-		else
-		{
-			unset($tabs[0][2]);
-		}
-		
 
 		return $tabs[0];
 	}

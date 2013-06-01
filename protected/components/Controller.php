@@ -358,12 +358,6 @@ $t = $model->attributes;
 					continue;
 				}
 
-				// if this item matches the main model
-				if ($modelName == $thisModelName) {
-					// make this the active tab
-					$tabs[$level][$index]['active'] = true;
-				}
-
 				// if first item in tabs
 				if (!$index) {
 					// set whether action is update or view
@@ -371,7 +365,7 @@ $t = $model->attributes;
 
 					// store this (first tabs model name)
 					$firstTabModelName = $modelName;
-					$firstTabPrimaryKeyName = $firstTabModelName::model()->tableSchema->primaryKey;
+					$firstTabPrimaryKeyName = $firstTabModelName::primaryKeyName();
 					if($model)
 					{
 						$keyValue = $model->$firstTabPrimaryKeyName;
@@ -395,8 +389,23 @@ $t = $model->attributes;
 					}
 				}
 
+				// get name of foreign key to parent
+				$parentForeignKeyName = $modelName::getParentForeignKey($firstTabModelName);
+				
+				// dont add empty tabs if no write access
+				if(!static::checkAccess(self::accessWrite, $modelName) && !$modelName::model()->countByAttributes(array($parentForeignKeyName => $keyValue)))
+				{
+					continue;
+				}
+				
+				// if this item matches the main model
+				if ($modelName == $thisModelName) {
+					// make this the active tab
+					$tabs[$level][$index]['active'] = true;
+				}
+				
 				// add relevant url parameters i.e. foreign key to first tab model
-				$urlParams = ($keyValue === null) ? array() : array($modelName::getParentForeignKey($firstTabModelName) => $keyValue);
+				$urlParams = ($keyValue === null) ? array() : array($parentForeignKeyName => $keyValue);
 				// add any existing get parameters
 				$urlParams = array_merge($urlParams, static::getValidGetParams($modelName));
 
@@ -411,7 +420,7 @@ $t = $model->attributes;
 	{
 		$get = array();
 		
-		$primaryKeyName = $modelName::model()->tableSchema->primaryKey;
+		$primaryKeyName = $modelName::primaryKeyName();
 
 		foreach($_GET as $key => $value)
 		{
@@ -1238,6 +1247,14 @@ $t=			$model->attributes = $_POST[$modelName];
 	const accessWrite = '';
 
 	static function checkAccess($mode, $modelName = null) {
+		// always allow dashboard
+		if($modelName == 'Dashboard')
+		{
+			return TRUE;
+		}
+		// otherwise if child dashboard then replace the Dashboard portion out to check the suffix part of the name
+		$modelName = str_replace('Dashboard', '', $modelName, $count);
+		
 		if ($mode == self::accessRead || $mode === self::accessWrite) {
 			return Yii::app()->user->checkAccess(($modelName ? $modelName : static::modelName()) . $mode);
 		}

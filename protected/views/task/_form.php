@@ -17,7 +17,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 				'empty'=>'Please select',
 				'ajax' => array(
 					'type'=>'POST',
-					'url'=>$this->createUrl("dependantList"),
+					'url'=>$this->createUrl("Task/dependantList"),
 					// animate the replacement
 					'success'=>"function(data) {
 						if(data)

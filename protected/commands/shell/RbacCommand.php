@@ -458,6 +458,12 @@ EOD;
 			$defaultRole->addChild('ProjectRead');
 			$defaultRole->addChild('ClientRead');
 			$defaultRole->addChild('Planning');
+			// Grant default user access to dashboard
+/*			$task=$this->_authManager->createTask('Dashboard', 'Dashboard task');
+			$this->_authManager->createTask('DashboardDuty', 'DashboardDuty task');
+			$task->addChild('DashboardDuty');
+			$defaultRole->addChild('Dashboard');*/
+
 
 			// Grant project manager project read
 			$projectManagerRole->addChild('ClientRead');

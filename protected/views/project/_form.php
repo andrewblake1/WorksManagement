@@ -23,7 +23,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 				'empty'=>'Please select',
 				'ajax' => array(
 					'type'=>'POST',
-					'url'=>$this->createUrl("dependantList"),
+					'url'=>$this->createUrl("Project/dependantList"),
 					'success'=>"function(data) {
 						if(data)
 						{

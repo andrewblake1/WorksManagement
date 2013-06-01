@@ -25,6 +25,12 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 */
 	public $customValidators = array();
 
+	public static function primaryKeyName()
+	{
+		return self::model()->tableSchema->primaryKey;
+	}
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Client the static model class

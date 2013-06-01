@@ -23,7 +23,7 @@ class Duty extends ActiveRecord
 	 */
 	public $searchTask;
 	public $description;
-	public $searchInCharge;
+	public $searchAssignedTo;
 	public $searchImportance;
 	public $custom_value_id;
 	public $updated;
@@ -75,7 +75,7 @@ class Duty extends ActiveRecord
 			'responsible' => 'Assigned to',
 			'updated' => 'Completed',
 			'custom_value_id' => 'Custom value',
-			'searchInCharge' => 'Assigned to',
+			'searchAssignedTo' => 'Assigned to',
 			'searchImportance' => 'Importance',
 		));
 	}
@@ -95,9 +95,10 @@ class Duty extends ActiveRecord
 			't.duty_data_id',
 			'dutyStep.description AS description',
 			'(SELECT `date` FROM tbl_working_days WHERE id = (SELECT id - dutyStep.lead_in_days FROM tbl_working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
+			"COALESCE(responsibleContact.id, dutyDefaultContact.id, contact.id) AS assignedTo",
 			"COALESCE(
 				IF(LENGTH(CONCAT_WS('$delimiter',
-					responsibleContact.first_name,
+					responsibleContact.id,
 					responsibleContact.last_name,
 					responsibleContact.email
 					))=0, NULL, CONCAT_WS('$delimiter',
@@ -119,7 +120,7 @@ class Duty extends ActiveRecord
 					contact.last_name,
 					contact.email
 					)
-				) AS searchInCharge",
+				) AS searchAssignedTo",
 			'dutyData.updated AS updated',
 			'taskTemplateToAction.importance AS searchImportance',
 		);
@@ -129,7 +130,7 @@ class Duty extends ActiveRecord
 		$criteria->compare('taskTemplateToAction.importance',$this->searchImportance,true);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
-// TODO will be non standard code to search by searchincharge - probably have to use temp table similar to task view adding of custom fields
+// TODO will be non standard code to search by searchAssignedTo - probably have to use temp table similar to task view adding of custom fields
 		
 		
 		
@@ -167,7 +168,7 @@ class Duty extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = $this->linkThisColumn('description');
-        $columns[] = static::linkColumn('searchInCharge', 'User', 'assignedTo');
+        $columns[] = static::linkColumn('searchAssignedTo', 'User', 'assignedTo');
         $columns[] = 'searchImportance';
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
@@ -185,6 +186,10 @@ class Duty extends ActiveRecord
 	public function afterFind() {
 
 		$this->updated = $this->dutyData->updated;
+		if(!$this->assignedTo)
+		{
+			$this->assignedTo = 1;
+		}
 		
 		parent::afterFind();
 	}
