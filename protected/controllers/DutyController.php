@@ -3,6 +3,11 @@
 class DutyController extends AdjacencyListController
 {
 	
+	/**
+	 * @var string the name of the model to use in the admin view - the model may serve a database view as opposed to a table  
+	 */
+	protected $_adminViewModel = 'ViewDuty';
+
 	public function setTabs($model, &$tabs = NULL) {
 		// create tabs
 		parent::setTabs($model, $tabs);

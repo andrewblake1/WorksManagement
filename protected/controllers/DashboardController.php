@@ -30,20 +30,6 @@ class DashboardController extends Controller
 	
 	public function actionAdmin($exportColumns = array()) {
 		$this->redirect($this->createUrl('DashboardDuty/admin'));
-	/*	$modelName = $this->modelName;
-		// may be using a database view instead of main table model
-		$adminViewModelName = $this->_adminViewModel;
-
-		if (!$this->heading) {
-			$this->heading .= mb_substr($modelName::getNiceName(), 0, 17) . '...';
-		}
-
-		// set top level
-		$this->setTabs(NULL);
-		
-
-		// render the view
-		$this->render('index');*/
 	}
 	
 	public function setTabs($model, &$tabs = NULL) {

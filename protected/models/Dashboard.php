@@ -5,10 +5,7 @@
  */
 class Dashboard extends ActiveRecord
 {
-
-	public static function primaryKeyName()
-	{
-		return 'user_id';
+	static function primaryKeyName() {
+		return 'dummy';
 	}
-
 }

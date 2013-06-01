@@ -16,15 +16,14 @@
  */
 class Duty extends ActiveRecord
 {
-	public $assignedTo;
+	public $derived_assigned_to_id;
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchTask;
 	public $description;
-	public $searchAssignedTo;
-	public $searchImportance;
+	public $derived_assigned_to_name;
+	public $derived_importance;
 	public $custom_value_id;
 	public $updated;
 	public $due;
@@ -69,14 +68,13 @@ class Duty extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'task_id' => 'Task',
-			'searchTask' => 'Task',
 			'duty_step_id' => 'Duty/Role/First/Last/Email',
 			'description' => 'Duty',
 			'responsible' => 'Assigned to',
 			'updated' => 'Completed',
 			'custom_value_id' => 'Custom value',
-			'searchAssignedTo' => 'Assigned to',
-			'searchImportance' => 'Importance',
+			'derived_assigned_to_name' => 'Assigned to',
+			'derived_importance' => 'Importance',
 		));
 	}
 
@@ -91,76 +89,20 @@ class Duty extends ActiveRecord
 		// NB: taking first non null of either the user assigned to duty at project or user in charge at target duty level
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.duty_data_id',
-			'dutyStep.description AS description',
-			'(SELECT `date` FROM tbl_working_days WHERE id = (SELECT id - dutyStep.lead_in_days FROM tbl_working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
-			"COALESCE(responsibleContact.id, dutyDefaultContact.id, contact.id) AS assignedTo",
-			"COALESCE(
-				IF(LENGTH(CONCAT_WS('$delimiter',
-					responsibleContact.id,
-					responsibleContact.last_name,
-					responsibleContact.email
-					))=0, NULL, CONCAT_WS('$delimiter',
-					responsibleContact.first_name,
-					responsibleContact.last_name,
-					responsibleContact.email
-					)),
-				IF(LENGTH(CONCAT_WS('$delimiter',
-					dutyDefaultContact.first_name,
-					dutyDefaultContact.last_name,
-					dutyDefaultContact.email
-					))=0, NULL, CONCAT_WS('$delimiter',
-					dutyDefaultContact.first_name,
-					dutyDefaultContact.last_name,
-					dutyDefaultContact.email
-					)),
-				CONCAT_WS('$delimiter',
-					contact.first_name,
-					contact.last_name,
-					contact.email
-					)
-				) AS searchAssignedTo",
-			'dutyData.updated AS updated',
-			'taskTemplateToAction.importance AS searchImportance',
+			'*',
 		);
 
 		// where
-		$criteria->compare('dutyStep.description',$this->description,true);
-		$criteria->compare('taskTemplateToAction.importance',$this->searchImportance,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('derived_importance',$this->derived_importance,true);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
-// TODO will be non standard code to search by searchAssignedTo - probably have to use temp table similar to task view adding of custom fields
+// TODO will be non standard code to search by derived_assigned_to_name - probably have to use temp table similar to task view adding of custom fields
 		
 		
 		
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
-
-		// join
-		$criteria->join = '
-			JOIN tbl_task task ON t.task_id = task.id
-			JOIN tbl_project project ON task.project_id = project.id
-			JOIN tbl_crew crew ON task.crew_id = crew.id
-			JOIN tbl_day day ON crew.day_id = day.id
-			JOIN tbl_duty_data dutyData ON t.duty_data_id = dutyData.id
-			JOIN tbl_duty_step dutyStep ON dutyData.duty_step_id = dutyStep.id
-			JOIN tbl_planning planning ON dutyData.planning_id = planning.id
-			LEFT JOIN tbl_task_template_to_action taskTemplateToAction USING ( task_template_id, action_id )
-			
-			LEFT JOIN tbl_project_to_project_template_to_auth_item projectToProjectTemplateToAuthItem
-				ON project.id = projectToProjectTemplateToAuthItem.project_id
-				AND dutyStep.auth_item_name = projectToProjectTemplateToAuthItem.item_name
-			
-			LEFT JOIN AuthAssignment ON projectToProjectTemplateToAuthItem.auth_assignment_id = AuthAssignment.id
-			
-			LEFT JOIN tbl_user dutyDefault ON AuthAssignment.userid = dutyDefault.id
-			LEFT JOIN tbl_contact dutyDefaultContact ON dutyDefault.contact_id = dutyDefaultContact.id
-			LEFT JOIN tbl_user responsible ON dutyData.responsible = responsible.id
-			LEFT JOIN tbl_contact responsibleContact ON responsible.contact_id = responsibleContact.id
-			LEFT JOIN tbl_user inCharge ON planning.in_charge_id = inCharge.id
-			LEFT JOIN tbl_contact contact ON inCharge.contact_id = contact.id
-		';
 		
 		return $criteria;
 	}
@@ -168,8 +110,8 @@ class Duty extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = $this->linkThisColumn('description');
-        $columns[] = static::linkColumn('searchAssignedTo', 'User', 'assignedTo');
-        $columns[] = 'searchImportance';
+        $columns[] = static::linkColumn('derived_assigned_to_name', 'User', 'derived_assigned_to_id');
+        $columns[] = 'derived_importance';
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
 
@@ -186,9 +128,9 @@ class Duty extends ActiveRecord
 	public function afterFind() {
 
 		$this->updated = $this->dutyData->updated;
-		if(!$this->assignedTo)
+		if(!$this->derived_assigned_to_id)
 		{
-			$this->assignedTo = 1;
+			$this->derived_assigned_to_id = 1;
 		}
 		
 		parent::afterFind();

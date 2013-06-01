@@ -16,8 +16,10 @@
  */
 class DashboardDuty extends Duty
 {
+	protected $defaultSort = array('t.due' => 'DESC', 'description');
+
 	public function tableName() {
-		return Duty::model()->tableName();
+		return 'v_duty';
 	}
 	
 	/**
@@ -25,10 +27,18 @@ class DashboardDuty extends Duty
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria= Duty::model()->searchCriteria;
+		// simulate coming into Duty instead of Dashboard duty
+		$duty = new Duty('search');
+		if(isset($_GET['DashboardDuty']))
+		{
+			$duty->attributes = $_GET['DashboardDuty'];
+		}
+
+		$criteria = $duty->searchCriteria;
 
 		// filter to current active duties for this user
-//		$criteria->compare('assignedTo', 1);
+//		$criteria->compare('derived_assigned_to_id', Yii::app()->user->id);
+		$criteria->compareNull('updated');
 		
 		return $criteria;
 	}
@@ -37,9 +47,9 @@ class DashboardDuty extends Duty
 	{
         $columns[] = $this->linkThisColumn('description');
  //       $columns[] = static::linkColumn('searchInCharge', 'User', 'assignedTo');
-        $columns[] = 'searchImportance';
+        $columns[] = 'derived_importance';
 		$columns[] = 'due:date';
-		$columns[] = 'updated:datetime';
+//		$columns[] = 'updated:datetime';
 
 		return $columns;
 	}
@@ -47,6 +57,9 @@ class DashboardDuty extends Duty
 	public function assertFromParent($modelName = null)
 	{
 
+	}
+	
+	public function afterFind() {
 	}
 
 }

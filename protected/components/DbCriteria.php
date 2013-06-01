@@ -18,7 +18,7 @@ class DbCriteria extends CDbCriteria
 			return parent::compare($column, $value, $partialMatch, $operator, $escape);
 	}
 	
-	public function compareNull($column, $value)
+	public function compareNull($column, $value = NULL)
 	{
 		if(empty($value))
 		{

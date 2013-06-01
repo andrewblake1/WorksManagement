@@ -64,12 +64,18 @@ class AdminViewWidget extends CWidget
 			array_unshift($this->columns, $buttons);
 		}
 		
+		if(isset($_GET['ajax']))
+		{
+			$ajaxUrl = NULL;
+		}
+		
 		$params = array(
 			'id'=>$this->_controller->modelName.'-grid',
 			'type'=>'striped',
 			'dataProvider'=>$this->model->search(),
 			'filter'=>$this->model,
 			'columns'=>$this->columns,
+			'ajaxUrl' => $ajaxUrl, // beware this screws up filter, paging params being sent on afterDelete etc
 //			'ajaxUrl' => Yii::app()->request->getUrl(), // beware this screws up filter, paging params being sent on afterDelete etc
 		);
 		
