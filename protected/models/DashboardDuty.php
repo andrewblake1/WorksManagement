@@ -37,7 +37,7 @@ class DashboardDuty extends Duty
 		$criteria = $duty->searchCriteria;
 
 		// filter to current active duties for this user
-//		$criteria->compare('derived_assigned_to_id', Yii::app()->user->id);
+		$criteria->compare('derived_assigned_to_id', Yii::app()->user->id);
 		$criteria->compareNull('updated');
 		
 		return $criteria;
