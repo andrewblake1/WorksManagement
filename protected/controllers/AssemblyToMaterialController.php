@@ -30,7 +30,7 @@ class AssemblyToMaterialController extends Controller
 			parent::setTabs($model);
 		}
 
-		$this->breadcrumbs = AssemblyController::getBreadCrumbTrail();
+//		$this->breadcrumbs = AssemblyController::getBreadCrumbTrail();
 	}
 }
 
