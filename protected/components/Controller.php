@@ -521,7 +521,15 @@ $t = $model->attributes;
 		static::setUpdateId(NULL, $modelName);
 
 		if(isset($_GET['ajax'])) {
-			$this->storeAdminSettings($adminViewModelName, $modelName);
+			// get around bug where ajaxurl needs to be set to current url in gridview because of params but this prevents
+			// gridview update maintaining paging etc after as the params are no longer appended to the update because of a javascript bug
+			// in parsing the url with params. Was recording somewhere in the yii forum by someone else
+			// This means we have to extend the pager in order to add a paging link for page 1 or that won't work
+			// if paging or filtering or sorting
+			if(isset($_GET["{$adminViewModelName}_sort"]) || isset($_GET["{$adminViewModelName}_page"]) || isset($_GET[$adminViewModelName]))
+			{
+						$this->storeAdminSettings($adminViewModelName, $modelName);
+			}
 		}
 		// otherwise non ajax call
 		elseif(isset($_GET)) {

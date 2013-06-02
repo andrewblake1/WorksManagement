@@ -64,19 +64,37 @@ class AdminViewWidget extends CWidget
 			array_unshift($this->columns, $buttons);
 		}
 		
-		if(isset($_GET['ajax']))
+		/*
+		 * Something we are doing mucks up some of the grid view ajax stuff due to the ajaxUrl
+		 * deleting needs the url not to specified, whereas filtering needs it specified. Not sure why, but if
+		 * deleting then the clean url if inserted here means paging and filtering is lost hence leave blank.
+		 * On the other side, filtering mucks up second time thru if ajaxUrl not specified as it keeps concatenating each
+		 * filtering url together - creating a bad url which locks errors the javascript trying to pattern match the Url
+		 */
+/*$t = 		$this->controller->action->id;
+		if($this->controller->action->id == 'delete')
 		{
 			$ajaxUrl = NULL;
 		}
-		
+		else
+		{
+			$ajaxUrl = Yii::app()->request->getUrl();
+		}*/
+
 		$params = array(
 			'id'=>$this->_controller->modelName.'-grid',
 			'type'=>'striped',
 			'dataProvider'=>$this->model->search(),
 			'filter'=>$this->model,
 			'columns'=>$this->columns,
-			'ajaxUrl' => $ajaxUrl, // beware this screws up filter, paging params being sent on afterDelete etc
-//			'ajaxUrl' => Yii::app()->request->getUrl(), // beware this screws up filter, paging params being sent on afterDelete etc
+			'ajaxUrl' => Yii::app()->request->getUrl(), // required because of javascript bug when using parameters in url
+			'pager' => 'LinkPager',						// needed override in order to get around delete issue caused by adding ajaxUrl
+			/* basically need ajaxUrl or because of query params jscript will fail on url parsing in jscript. This however causes
+			 * delete not to have paging filtering and sorting info attached  - this is ok as we have stored
+			 * these in admin variable but due to page 1 in standard linkpager being blank then all these vaiables become unset
+			 * at the top of actionadmin and get lost hence clearing these when deleting. Answer was to
+			 * check at top of action admin when get ajax defined for and empty state but had to ensure page 1 actually had a page number param
+			 */
 		);
 		
 		// probably only want bulk actions if if we have buttons
