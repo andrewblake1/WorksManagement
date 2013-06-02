@@ -393,7 +393,7 @@ $t = $model->attributes;
 				$parentForeignKeyName = $modelName::getParentForeignKey($firstTabModelName);
 				
 				// dont add empty tabs if no write access
-				if(!static::checkAccess(self::accessWrite, $modelName) && !$modelName::model()->countByAttributes(array($parentForeignKeyName => $keyValue)))
+				if(!static::checkAccess(self::accessWrite, $modelName) && $parentForeignKeyName && !$modelName::model()->countByAttributes(array($parentForeignKeyName => $keyValue)))
 				{
 					continue;
 				}

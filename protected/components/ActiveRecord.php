@@ -202,7 +202,14 @@ abstract class ActiveRecord extends RangeActiveRecord
 		}
 		else
 		{
-			if($parentForeignKey = Yii::app()->functions->uncamelize($referencesModel))
+			
+			// make sure there is a parent first - no parent in top level
+			$trail = Yii::app()->params['trail'];
+			if(isset($trail[$referencesModel]) || in_array($referencesModel, $trail))
+			{
+				return;
+			}
+			elseif($parentForeignKey = Yii::app()->functions->uncamelize($referencesModel))
 			{
 				$parentForeignKey .= '_id';
 			}
