@@ -224,7 +224,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 	public static function getListData($scopes = array())
 	{
 		// format models as $key=>$value with listData
-		$crigetParentForeignKeyteria=new CDbCriteria;
+		$criteria=new CDbCriteria;
 		
 		// key will contain either a number or a foreign key field in which case field will be the lookup value
 		foreach(static::getDisplayAttr() as $field)

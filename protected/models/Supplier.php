@@ -10,6 +10,7 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property MaterialToClient[] $materialToClients
  * @property PurchaseOrder[] $purchaseOrders
  * @property ResourceToSupplier[] $resourceToSuppliers
  * @property User $updatedBy
@@ -41,11 +42,12 @@ class Supplier extends ActiveRecord
 	{
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
- 		return array(
+        return array(
+            'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'supplier_id'),
             'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrder', 'supplier_id'),
             'resourceToSuppliers' => array(self::HAS_MANY, 'ResourceToSupplier', 'supplier_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'supplierToSupplierContacts' => array(self::HAS_MANY, 'SupplierToSupplierContact', 'supplier_id'),
+            'supplierContacts' => array(self::HAS_MANY, 'SupplierContact', 'supplier_id'),
         );
     }
 

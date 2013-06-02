@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $material_id
  * @property integer $client_id
+ * @property integer $supplier_id
  * @property string $unit_price
  * @property string $alias
  * @property integer $updated_by
@@ -15,17 +16,19 @@
  * @property Material $material
  * @property Client $client
  * @property User $updatedBy
+ * @property Supplier $supplier
  */
 class MaterialToClient extends ActiveRecord
 {
 	public $searchMaterialDescription;
 	public $searchMaterialUnit;
 	public $searchMaterialAlias;
+	public $searchSupplierName;
 
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Material alias';
+	static $niceName = 'Material';
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -35,11 +38,10 @@ class MaterialToClient extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('material_id, client_id', 'required'),
-			array('material_id, client_id', 'numerical', 'integerOnly'=>true),
+			array('material_id, client_id, supplier_id', 'required'),
+			array('material_id, client_id, supplier_id', 'numerical', 'integerOnly'=>true),
 			array('unit_price', 'length', 'max'=>7),
 			array('alias', 'length', 'max'=>255),
-//			array('id, client_id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, alias, unit_price', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -54,6 +56,7 @@ class MaterialToClient extends ActiveRecord
             'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
             'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
         );
     }
 
@@ -70,6 +73,7 @@ class MaterialToClient extends ActiveRecord
 			'searchMaterialDescription' => 'Material',
 			'searchMaterialUnit' => 'Unit',
 			'searchMaterialAlias' => 'Alias',
+			'searchSupplierName' => 'Supplier',
 		));
 	}
 
@@ -87,6 +91,7 @@ class MaterialToClient extends ActiveRecord
 			'material.description AS searchMaterialDescription',
 			'material.unit AS searchMaterialUnit',
 			'material.alias AS searchMaterialAlias',
+			'supplier.name AS searchSupplierName',
 			't.unit_price',
 			"t.alias",
 			't.client_id',
@@ -95,6 +100,7 @@ class MaterialToClient extends ActiveRecord
 		$criteria->compare('material.description',$this->searchMaterialDescription,true);
 		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
 		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
+		$criteria->compare('supplier.name',$this->searchSupplierName,true);
 		$criteria->compare('t.alias',$this->alias,true);
  		$criteria->compare('t.client_id',$this->client_id);
 		$criteria->compare('t.unit_price', $this->unit_price);
@@ -109,6 +115,7 @@ class MaterialToClient extends ActiveRecord
  		$columns[] = 'searchMaterialDescription';
  		$columns[] = 'searchMaterialUnit';
  		$columns[] = 'searchMaterialAlias';
+ 		$columns[] = 'searchSupplierName';
  		$columns[] = 'alias';
 		$columns[] = 'unit_price';
 

@@ -676,7 +676,7 @@ $t = $model->attributes;
 					$primaryKey = static::getUpdateId($crumb);
 					$breadcrumbs[] = array($crumb::getNiceName($primaryKey));
 				} else {
-					$breadcrumbs[] = array($displays);
+					$breadcrumbs[] = array($displays => array("$crumb/admin") + $queryParamters);
 				}
 			}
 			// otherwise not last crumb
@@ -701,8 +701,8 @@ $t = $model->attributes;
 		*/
 		if(sizeof(static::$tabs) > 1)
 		{
-			array_pop($breadcrumbs);
-			array_pop($breadcrumbs);
+//			array_pop($breadcrumbs);
+//			array_pop($breadcrumbs);
 
 			$numTabRows = sizeof(static::$tabs);
 			$rowCount = 0;
@@ -716,8 +716,12 @@ $t = $model->attributes;
 				{
 					if(!empty($tab['active']) && $tab['active'] == TRUE)
 					{
-						// add link to the first item in the row
-						$breadcrumbs[] = array($tabsRow[0]['label'] => $tabsRow[0]['url']);
+						// add link to the first item in the row -- if not first row
+						if($rowCount > 1)
+						{
+							$breadcrumbs[] = array($tabsRow[0]['label'] => $tabsRow[0]['url']);
+						}
+
 						if(($rowCount != $numTabRows) || $tabCount)
 						{
 							$breadcrumbs[] = array($tab['label'] => $tab['url']);
