@@ -60,12 +60,18 @@ EOD;
 					UPDATE `tbl_drawing` SET id_old = id;
 					UPDATE `tbl_drawing` SET id = id_new + $max;
 				")->execute();
+				
+				echo '\nupdated ids in database - 1st pass';
 
 				// rename the directories - 1st phase + max
+				$cntr = 1;
 				foreach(Drawing::model()->findAll() as $drawing)
 				{
 					$new = $drawing->id_new + $max;
 					exec("mv {$path}drawing/{$drawing->id} {$path}drawing/$new");
+					
+					echo "\nRenumberd $cntr = 1st pass";
+					$cntr++;
 				}
 
 				// second phase - to our target values
@@ -74,10 +80,14 @@ EOD;
 				")->execute();
 
 				// rename the directories - 1st phase + max
+				$cntr = 1;
 				foreach(Drawing::model()->findAll() as $drawing)
 				{
 					$new = $drawing->id - $max;
 					exec("mv {$path}drawing/{$drawing->id} {$path}drawing/{$new}");
+					
+					echo "\nRenumberd $cntr = 2nd pass";
+					$cntr++;
 				}
 
 				$transaction->commit();
@@ -88,7 +98,7 @@ EOD;
 
 				$transaction->rollBack();
 
-				return;
+				exit;
 			}
 
 			//provide a message indicating success
