@@ -43,11 +43,6 @@ EOD;
 	    //check the input from the user and continue if they indicated yes to the above question
 	    if(!strncasecmp(trim(fgets(STDIN)),'y',1)) 
 		{
-		    //first we need to remove all operations, roles, child relationship and as-signments
-			$this->_authManager->clearAll();
-
-			// NB: these must be run first or there will be an integrity constraing violation against no updated_by
-			// NB: these are just an initial user and should be changed once app is installed
 			try
 			{
 				Yii::app()->db->createCommand("

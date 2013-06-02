@@ -281,14 +281,6 @@ return array(
 			
 // TODO: would like to use in inherit but for some reason globabl $wceDatabaseName is blank in here
 // in console app ??
-			// Database
-			'db' => array(
-				'connectionString' => "mysql:host=localhost;dbname=worksmanagement_melbourne_dev",
-				'emulatePrepare' => true,
-				'username' => 'root',
-				'password' => 'root',
-				'charset' => 'utf8',
-			),
 
 			// Application Log
 			'log' => array(

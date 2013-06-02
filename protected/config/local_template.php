@@ -21,7 +21,7 @@ return array(
 			// Database
 			'db'=>array(
 				'username' => 'root',
-				'password' => '2w0c1e2_',
+				'password' => '',
 			),
 
 		),
@@ -36,5 +36,26 @@ return array(
 		),
 
 	),
+	
+	// This is the Console application configuration. Any writable
+	// CConsoleApplication properties can be configured here.
+	// Use 'inherit' to copy from generated configWeb
+	'configConsole' => array(
+
+		// Application components
+		'components' => array(
+
+			// Database
+			'db' => array(
+				'connectionString' => "mysql:host=localhost;dbname=worksmanagement_melbourne_dev",
+				'emulatePrepare' => true,
+				'username' => 'root',
+				'password' => '',
+				'charset' => 'utf8',
+			),
+		),
+		
+	),
+
 
 );
