@@ -43,53 +43,52 @@ EOD;
 	    //check the input from the user and continue if they indicated yes to the above question
 	    if(!strncasecmp(trim(fgets(STDIN)),'y',1)) 
 		{
+			// file path
+			$path = Yii::app()->params['privateUploadPath'];
+			
 			// 1st phase ensuring unique by adding max(id)
 			try
 			{
+				// start a transaction
+				$transaction = Yii::app()->db->beginTransaction();
+
 				$max = Yii::app()->db
 					->createCommand("SELECT MAX(id) + MAX(id_new) AS max FROM tbl_drawing")
 					->queryScalar();
 				
 				Yii::app()->db->createCommand("
-					START TRANSACTION;
 					UPDATE `tbl_drawing` SET id_old = id;
 					UPDATE `tbl_drawing` SET id = id_new + $max;
-					COMMIT;
 				")->execute();
-			}
-			catch (CDbException $e)
-			{
-				echo $e->getMessage();
-				return;
-			}
 
-			// rename the directories
-			$path = Yii::app()->params['privateUploadPath'];
-			foreach(Drawing::model()->findAll() as $drawing)
-			{
-				exec("mv {$path}drawing/{$drawing->id_old} {$path}drawing/{$drawing->id_new}");
-			}
-			
-			// send phase - to what we want remove max(id)
-			try
-			{
+				// rename the directories - 1st phase + max
+				foreach(Drawing::model()->findAll() as $drawing)
+				{
+					$new = $drawing->id_new + $max;
+					exec("mv {$path}drawing/{$drawing->id} {$path}drawing/$new");
+				}
+
+				// second phase - to our target values
 				Yii::app()->db->createCommand("
-					START TRANSACTION;
 					UPDATE `tbl_drawing` SET id = id - $max;
-					COMMIT;
 				")->execute();
+
+				// rename the directories - 1st phase + max
+				foreach(Drawing::model()->findAll() as $drawing)
+				{
+					$new = $drawing->id - $max;
+					exec("mv {$path}drawing/{$drawing->id} {$path}drawing/{$new}");
+				}
+
+				$transaction->commit();
 			}
 			catch (CDbException $e)
 			{
 				echo $e->getMessage();
-				return;
-			}
 
-			// rename the directories
-			$path = Yii::app()->params['privateUploadPath'];
-			foreach(Drawing::model()->findAll() as $drawing)
-			{
-				exec("mv {$path}drawing/{$drawing->id_old} {$path}drawing/{$drawing->id_new}");
+				$transaction->rollBack();
+
+				return;
 			}
 
 			//provide a message indicating success

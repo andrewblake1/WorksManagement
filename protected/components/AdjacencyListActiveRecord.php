@@ -9,7 +9,7 @@ class AdjacencyListActiveRecord extends ActiveRecord {
 	// clear any levels below current tab level
 	protected function clearForwardMemory(&$trail)
 	{
-		parent::clearForwardMemory(&$trail);
+		parent::clearForwardMemory($trail);
 		
 		$modelName = get_class($this);
 		$controllerName = $modelName.'Controller';
