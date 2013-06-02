@@ -61,7 +61,7 @@ EOD;
 					UPDATE `tbl_drawing` SET id = id_new + $max;
 				")->execute();
 				
-				echo '\nupdated ids in database - 1st pass';
+				echo '\nupdated ids in database - 1st pass\n';
 
 				// rename the directories - 1st phase + max
 				$cntr = 1;

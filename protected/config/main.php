@@ -272,6 +272,8 @@ return array(
 
 		// Autoloading model and component classes
 		'import'=>'inherit',
+		
+		'params'=>'inherit',
 
 		// Application components home
 		'components'=>array(

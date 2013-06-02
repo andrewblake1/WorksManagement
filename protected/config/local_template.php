@@ -20,12 +20,12 @@ return array(
 		'components' => array(
 			// Database
 			'db'=>array(
-				'username' => 'root',
+				'username' => '',
 				'password' => '',
 			),
 
 		),
-		
+
 		'params'=>array(
 			// directory to store uploaded files in that are above document root
 			'publicUploadPath' => dirname(__FILE__) . '/../../assets/',
@@ -36,7 +36,7 @@ return array(
 		),
 
 	),
-	
+
 	// This is the Console application configuration. Any writable
 	// CConsoleApplication properties can be configured here.
 	// Use 'inherit' to copy from generated configWeb
@@ -49,13 +49,20 @@ return array(
 			'db' => array(
 				'connectionString' => "mysql:host=localhost;dbname=worksmanagement_melbourne_dev",
 				'emulatePrepare' => true,
-				'username' => 'root',
+				'username' => '',
 				'password' => '',
 				'charset' => 'utf8',
 			),
 		),
-		
-	),
 
+		'params'=>array(
+			// directory to store uploaded files in that are below document root
+			'privateUploadPath' => "/home/www-data/uploads/dev/melbourne/",
+			// directory to store uploaded files in that are above document root
+			'publicUploadPath' => dirname(__FILE__) . '/../../assets/',
+			// web directory to store uploaded files in that are above document root
+			'webUploadPath' => '/assets/',
+		),
+	),
 
 );
