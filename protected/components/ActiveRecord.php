@@ -204,8 +204,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 		{
 			
 			// make sure there is a parent first - no parent in top level
-			$trail = Yii::app()->params['trail'];
-			if(isset($trail[$referencesModel]) || in_array($referencesModel, $trail))
+			if($referencesModel == 'Dashboard')
 			{
 				return;
 			}
@@ -225,7 +224,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 	public static function getListData($scopes = array())
 	{
 		// format models as $key=>$value with listData
-		$criteria=new CDbCriteria;
+		$crigetParentForeignKeyteria=new CDbCriteria;
 		
 		// key will contain either a number or a foreign key field in which case field will be the lookup value
 		foreach(static::getDisplayAttr() as $field)
