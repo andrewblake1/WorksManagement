@@ -279,6 +279,11 @@ return array(
 			// RBAC
 			'authManager'=>'inherit',
 			
+			// site wide functions
+			'functions'=>array(
+				'class'=>'application.components.Functions',
+			),
+
 // TODO: would like to use in inherit but for some reason globabl $wceDatabaseName is blank in here
 // in console app ??
 
