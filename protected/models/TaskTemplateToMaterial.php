@@ -181,7 +181,7 @@ class TaskTemplateToMaterial extends ActiveRecord
 
 		if($materialToClient = MaterialToClient::model()->findByAttributes(array(
 			'material_id'=>$this->material_id,
-			'client_id'=>$this->taskTemplate->client,
+			'client_id'=>$this->taskTemplate->client_id,
 		)))
 		{
 			$this->clientAlias = $materialToClient->alias;
