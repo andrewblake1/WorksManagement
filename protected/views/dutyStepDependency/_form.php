@@ -1,5 +1,5 @@
 <?php
-if($this->action->id == 'create')
+if($this->action->id != 'update')
 {
 	$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk, 'action'=>$this->createUrl('create', $_GET)));
 
