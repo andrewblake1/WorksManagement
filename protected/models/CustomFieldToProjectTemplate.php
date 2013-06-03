@@ -134,6 +134,24 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 		);
 	}
 
+/*	// needed because the only id passed from the custom field project category scren is the category id - nence need to get this models parent
+	public function assertFromParent()
+	{
+// TODO: repeated in task, an day
+		// if update in planning view
+		if(isset($_GET['controller']['Planning']) && isset($_GET['project_id']))
+		{
+			// ensure that that at least the parents primary key is set for the admin view of planning
+			Controller::setAdminParam('project_id', $_GET['project_id'], 'Planning');
+		}
+		
+		// if we are in the schdule screen then they may not be a parent foreign key as will be derived when user identifies a node
+		if(!(Yii::app()->controller->id == 'planning'))
+		{
+			return parent::assertFromParent();
+		}
+	}*/
+
 }
 
 ?>
