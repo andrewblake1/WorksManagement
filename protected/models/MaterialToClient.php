@@ -105,7 +105,10 @@ class MaterialToClient extends ActiveRecord
  		$criteria->compare('t.client_id',$this->client_id);
 		$criteria->compare('t.unit_price', $this->unit_price);
 
-		$criteria->with = array('material');
+		$criteria->with = array(
+			'material',
+			'supplier',
+		);
 
 		return $criteria;
 	}
