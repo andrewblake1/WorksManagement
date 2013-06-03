@@ -98,7 +98,7 @@ class Task extends CustomFieldExtensionActiveRecord
 	 * @param array of CActiveRecord models to extract errors from if necassary
 	 * @return returns 0, or null on error of any inserts
 	 */
-	private function updateCustomFields(&$models=array())
+	public function updateCustomFields(&$models=array())
 	{
 		// initialise the saved variable to show no errors in case the are no
 		// model customValues - otherwise will return null indicating a save error

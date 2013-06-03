@@ -35,9 +35,15 @@ class WMTbBreadcrumbs extends TbBreadcrumbs
 		foreach($this->links as $index => $link)
 		{
 			// make the last crumb linkless
-			if(is_array($link) && $counter + 1 == $count)
+			if(($counter + 1) == $count)
 			{
-				$link = key($link);
+				if(is_array($link))
+				{
+					if(is_array(current($link)))
+					{
+						$link = key($link);
+					}
+				}
 			}
 			
 			if(is_array($link))
