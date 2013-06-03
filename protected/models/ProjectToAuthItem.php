@@ -1,20 +1,21 @@
 <?php
 
 /**
- * This is the model class for table "tbl_report_to_auth_item".
+ * This is the model class for table "tbl_project_to_auth_item".
  *
- * The followings are the available columns in table 'tbl_report_to_auth_item':
+ * The followings are the available columns in table 'tbl_project_to_auth_item':
  * @property string $id
- * @property string $report_id
+ * @property string $project_id
  * @property string $auth_item_name
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property Report $report
+ * @property Project $project
  * @property AuthItem $authItemName
  * @property User $updatedBy
+ * @property ProjectToAuthItemToAuthAssignment[] $projectToAuthItemToAuthAssignments
  */
-class ReportToAuthItem extends ActiveRecord
+class ProjectToAuthItem extends ActiveRecord
 {
 	/**
 	 * @var string nice model name for use in output
@@ -29,38 +30,36 @@ class ReportToAuthItem extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('report_id, auth_item_name', 'required'),
-			array('report_id', 'length', 'max'=>10),
+			array('project_id, auth_item_name', 'required'),
+			array('project_id', 'length', 'max'=>10),
 			array('auth_item_name', 'length', 'max'=>64),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, report_id, auth_item_name', 'safe', 'on'=>'search'),
 		));
 	}
 
-	/** 
+	/**
 	 * @return array relational rules.
 	 */
 	public function relations()
 	{
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
-        return array(
-            'report' => array(self::BELONGS_TO, 'Report', 'report_id'),
-            'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-        );
-    }
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+			'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
+			'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
+			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+			'projectToAuthItemToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthItemToAuthAssignment', 'project_to_auth_item_id'),
+		);
+	}
 
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
 	public function attributeLabels()
 	{
-		return parent::attributeLabels(array(
-			'report_id' => 'Report',
+		return array(
+			'project_id' => 'Project',
 			'auth_item_name' => 'Role',
-		));
+		);
 	}
 
 	/**
@@ -78,7 +77,7 @@ class ReportToAuthItem extends ActiveRecord
 
 		// where
 		$criteria->compare('t.auth_item_name',$this->auth_item_name,true);
-		$criteria->compare('t.report_id',$this->report_id);
+		$criteria->compare('t.project_id',$this->project_id);
 		
 		return $criteria;
 	}

@@ -1,36 +1,34 @@
 <?php
 
 /**
- * This is the model class for table "tbl_supplier_contact".
+ * This is the model class for table "tbl_project_to_auth_item_to_auth_assignment".
  *
- * The followings are the available columns in table 'tbl_supplier_contact':
+ * The followings are the available columns in table 'tbl_project_to_auth_item_to_auth_assignment':
  * @property integer $id
- * @property integer $supplier_id
- * @property integer $contact_id
- * @property string $role
+ * @property string $project_to_auth_item_id
+ * @property integer $auth_assignment_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property ProjectToAuthItem $projectToAuthItem
+ * @property AuthAssignment $authAssignment
  * @property User $updatedBy
- * @property Contact $contact
- * @property Supplier $supplier
  */
-class SupplierContact extends ContactActiveRecord
+class ProjectToAuthItemToAuthAssignment extends ActiveRecord
 {
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'User';
+	
 	public $first_name;
 	public $last_name;
 	public $email;
-	public $address_line_1;
-	public $address_line_2;
-	public $post_code;
-	public $town_city;
-	public $state_province;
-	public $country;
 	public $phone_mobile;
 	public $phone_home;
 	public $phone_work;
 	public $phone_fax;
-
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -39,14 +37,9 @@ class SupplierContact extends ContactActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('supplier_id, first_name, last_name, email', 'required'),
-			array('supplier_id', 'numerical', 'integerOnly'=>true),
-			array('first_name, last_name, role, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
-			array('email, address_line_1, address_line_2', 'length', 'max'=>255),
-			array('post_code', 'length', 'max'=>16),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, supplier_id, first_name, last_name, role, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'safe', 'on'=>'search'),
+			array('project_to_auth_item_id, auth_assignment_id', 'required'),
+			array('auth_assignment_id', 'numerical', 'integerOnly'=>true),
+			array('project_to_auth_item_id', 'length', 'max'=>10),
 		));
 	}
 
@@ -55,14 +48,26 @@ class SupplierContact extends ContactActiveRecord
 	 */
 	public function relations()
 	{
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
-        return array(
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'contact' => array(self::BELONGS_TO, 'Contact', 'contact_id'),
-            'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
-        );
-    }
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+			'projectToAuthItem' => array(self::BELONGS_TO, 'ProjectToAuthItem', 'project_to_auth_item_id'),
+			'authAssignment' => array(self::BELONGS_TO, 'AuthAssignment', 'auth_assignment_id'),
+			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+		);
+	}
+
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels()
+	{
+		return array(
+			'project_to_auth_item_id' => 'Role',
+			'auth_assignment_id' => 'User',
+			'searchUser' => 'User',
+		);
+	}
 
 	/**
 	 * @return DbCriteria the search/filter conditions.
@@ -74,7 +79,6 @@ class SupplierContact extends ContactActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.role',
 			'contact.first_name AS first_name',
 			'contact.last_name AS last_name',
 			'contact.email AS email',
@@ -85,8 +89,7 @@ class SupplierContact extends ContactActiveRecord
 		);
 
 		// where
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.role',$this->role,true);
+		$criteria->compare('t.project_to_auth_item_id',$this->project_to_auth_item_id);
 		$criteria->compare('contact.first_name',$this->first_name,true);
 		$criteria->compare('contact.last_name',$this->last_name,true);
 		$criteria->compare('contact.email',$this->email,true);
@@ -94,20 +97,18 @@ class SupplierContact extends ContactActiveRecord
 		$criteria->compare('contact.phone_home',$this->phone_home,true);
 		$criteria->compare('contact.phone_work',$this->phone_work,true);
 		$criteria->compare('contact.phone_fax',$this->phone_fax,true);
-
-		// with
+		
 		$criteria->with=array(
-			'contact',
+			'authAssignment.user.contact',
 		);
-
+		
 		return $criteria;
 	}
-
+	
 	public function getAdminColumns()
 	{
 		$columns[]='first_name';
 		$columns[]='last_name';
-		$columns[]='role';
         $columns[] = array(
 			'name'=>'phone_mobile',
 			'value'=>'CHtml::link($data->phone_mobile, "tel:".$data->phone_mobile)',
@@ -133,6 +134,16 @@ class SupplierContact extends ContactActiveRecord
 		return $columns;
 	}
 
-}
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		$displaAttr[]='authAssignment->user->contact->first_name';
+		$displaAttr[]='authAssignment->user->contact->last_name';
+		$displaAttr[]='authAssignment->user->contact->email_name';
 
-?>
+		return $displaAttr;
+	}
+
+}

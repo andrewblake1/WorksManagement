@@ -12,11 +12,7 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property User $user
- * @property AuthItem $itemname0
- * @property User $updatedBy
- * @property ProjectToProjectTemplateToAuthItem[] $projectToProjectTemplateToAuthItems
- * @property ProjectToProjectTemplateToAuthItem[] $projectToProjectTemplateToAuthItems1
+ * @property ProjectToAuthItemToAuthAssignment[] $projectToAuthItemToAuthAssignments
  */
 class AuthAssignment extends ActiveRecord
 {
@@ -43,17 +39,13 @@ class AuthAssignment extends ActiveRecord
 		parent::scopes();
 	}
 	
-	public function scopeProjectToProjectTemplateToAuthItem($project_id)
+	public function scopeProjectToAuthItemId($projectToAuthItemId)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compare('project.id',$project_id);
-		$criteria->addCondition('projectToProjectTemplateToAuthItem.id IS NULL');
+		$criteria->compare('projectToAuthItemToAuthAssignment.project_to_auth_item_id', $projectToAuthItemId);
 		$criteria->join='
-			JOIN tbl_project_template_to_auth_item projectTemplateToAuthItem ON t.itemname = projectTemplateToAuthItem.auth_item_name
-			JOIN tbl_project project
-			USING ( project_template_id )
-			LEFT JOIN tbl_project_to_project_template_to_auth_item projectToProjectTemplateToAuthItem ON projectToProjectTemplateToAuthItem.project_id = project.id
-			AND projectToProjectTemplateToAuthItem.item_name = projectTemplateToAuthItem.auth_item_name';
+			JOIN tbl_project_to_auth_item_to_auth_assignment projectToAuthItemToAuthAssignment ON t.id = projectToAuthItemToAuthAssignment.auth_assignment.id
+		';
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		
@@ -86,11 +78,10 @@ class AuthAssignment extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'user' => array(self::BELONGS_TO, 'User', 'userid'),
-            'itemname0' => array(self::BELONGS_TO, 'AuthItem', 'itemname'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'projectToProjectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTemplateToAuthItem', 'item_name'),
-            'projectToProjectTemplateToAuthItems1' => array(self::HAS_MANY, 'ProjectToProjectTemplateToAuthItem', 'auth_assignment_id'),
+			// BEWARE : gii missing a couple here!
+			'user' => array(self::BELONGS_TO, 'User', 'userid'),
+			'itemname0' => array(self::BELONGS_TO, 'AuthItem', 'itemname'),
+           'projectToAuthItemToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthItemToAuthAssignment', 'auth_assignment_id'),
         );
     }
 
@@ -147,9 +138,9 @@ class AuthAssignment extends ActiveRecord
 		if(!isset($_GET['userid']))
 		{
 			static::$labelOverrides['auth_assignment_id'] = 'Role/First/Last/Email';
-			$displaAttr[]='user->contact->first_name';
-			$displaAttr[]='user->contact->last_name';
-			$displaAttr[]='user->contact->email';
+//			$displaAttr[]='user->contact->first_name';
+//			$displaAttr[]='user->contact->last_name';
+//			$displaAttr[]='user->contact->email';
 		}
 
 

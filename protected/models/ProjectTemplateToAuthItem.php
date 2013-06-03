@@ -14,9 +14,6 @@
  * @property ProjectTemplate $projectTemplate
  * @property AuthItem $authItemName
  * @property User $updatedBy
- * @property ProjectToProjectTemplateToAuthItem[] $projectToProjectTemplateToAuthItems
- * @property TaskTemplateToAction[] $taskTemplateToActions
- * @property TaskTemplateToAction[] $taskTemplateToActions1
  */
 class ProjectTemplateToAuthItem extends ActiveRecord
 {
@@ -72,9 +69,6 @@ class ProjectTemplateToAuthItem extends ActiveRecord
             'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
             'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'projectToProjectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTemplateToAuthItem', 'project_template_to_auth_item_id'),
-            'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'project_template_id'),
-            'taskTemplateToActions1' => array(self::HAS_MANY, 'TaskTemplateToAction', 'project_template_to_auth_item_id'),
         );
     }
 
@@ -131,6 +125,17 @@ class ProjectTemplateToAuthItem extends ActiveRecord
 		$displaAttr[]='authItemName->description';
 
 		return $displaAttr;
+	}
+	
+	
+	public static function add($authItemName, $projectId, &$models = array())
+	{
+		$projectToAuthItem = new ProjectToAuthItem;
+		
+		$projectToAuthItem->auth_item_name = $authItemName;
+		$projectToAuthItem->project_id = $projectId;
+
+		return $projectToAuthItem->createSave($models);
 	}
 
 }

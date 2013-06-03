@@ -186,7 +186,9 @@ return array(
 							),
 						),
 						'ProjectToClientContact',
-						'ProjectToProjectTemplateToAuthItem',
+						'ProjectToAuthItem'=>array(
+							'ProjectToAuthItemToAuthAssignment',
+						),
 						'ProjectToCustomFieldToProjectTemplate',
 						'Planning',
 					),

@@ -20,9 +20,9 @@
  * @property Planning $id0
  * @property ProjectType $projectType
  * @property ProjectType $client
+ * @property ProjectToAuthItem[] $projectToAuthItems
  * @property ProjectToClientContact[] $projectToClientContacts
  * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
- * @property ProjectToProjectTemplateToAuthItem[] $projectToProjectTemplateToAuthItems
  * @property Task[] $tasks
  */
 class Project extends CustomFieldExtensionActiveRecord
@@ -141,9 +141,9 @@ class Project extends CustomFieldExtensionActiveRecord
             'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
             'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
             'client' => array(self::BELONGS_TO, 'ProjectType', 'client_id'),
+            'projectToAuthItems' => array(self::HAS_MANY, 'ProjectToAuthItem', 'project_id'),
             'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'project_id'),
             'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'project_id'),
-            'projectToProjectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTemplateToAuthItem', 'project_id'),
             'tasks' => array(self::HAS_MANY, 'Task', 'project_id'),
         );
     }
@@ -313,17 +313,46 @@ class Project extends CustomFieldExtensionActiveRecord
 		{
 			// add the Project
 			$this->id = $planning->id;
-			$saved = parent::createSave($models);
+			$saved &= parent::createSave($models);
 
 			// add a Day
 			$day = new Day;
 			$day->project_id = $this->id;
-			$saved = $day->createSave($models);
+			$saved &= $day->createSave($models);
+
+			// attempt creation of default roles
+			$saved &= $this->createRoles($models);
 		}
 
 		// put the model into the models array used for showing all errors
 		$models[] = $planning;
 
+		return $saved;
+	}
+	
+	/**
+	 * Creates the intial roles rows for a task
+	 * @param CActiveRecord $model the model (task)
+	 * @param array of CActiveRecord models to extract errors from if necassary
+	 * @return returns 0, or null on error of any inserts
+	 */
+	private function createRoles(&$models=array())
+	{
+		// initialise the saved variable to show no errors in case the are no
+		// model customValues - otherwise will return null indicating a save error
+		$saved = true;
+		
+		// loop thru all customValue model types associated to this models model type
+		foreach(ProjectTemplateToAuthItem::model()->findByAttributes(array('project_template_id'=>$this->project_template_id)) as $projectTemplateToAuthItem)
+		{
+			// factory method to create role
+			$saved &= ProjectTemplateToAuthItem::add(
+				$projectTemplateToAuthItem->auth_item_name,
+				$this->id,
+				$models
+			);
+		}
+		
 		return $saved;
 	}
 	

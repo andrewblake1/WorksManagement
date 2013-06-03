@@ -52,7 +52,8 @@ class CreateViewWidget extends CWidget
 		catch(Exception $e)
 		{
 			// ignore errors rendering 
-// TODO just make this ignore not found errors as in drawing to assembly view			
+// TODO just make this ignore not found errors as in drawing to assembly view
+$t = 1;
 
 		}
  

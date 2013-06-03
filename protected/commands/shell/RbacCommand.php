@@ -360,10 +360,15 @@ EOD;
 			$this->_authManager->createOperation('ProjectToClientContactRead', 'ProjectToClientContact read');
 			$task->addChild('ProjectToClientContactRead');
 
-			$task=$this->_authManager->createTask('ProjectToProjectTemplateToAuthItem', 'ProjectToProjectTemplateToAuthItem task');
-			$projectManagerRole->addChild('ProjectToProjectTemplateToAuthItem');
-			$this->_authManager->createOperation('ProjectToProjectTemplateToAuthItemRead', 'ProjectToProjectTemplateToAuthItem read');
-			$task->addChild('ProjectToProjectTemplateToAuthItemRead');
+			$task=$this->_authManager->createTask('ProjectToAuthItem', 'ProjectToAuthItem task');
+			$projectManagerRole->addChild('ProjectToAuthItem');
+			$this->_authManager->createOperation('ProjectToAuthItemRead', 'ProjectToAuthItem read');
+			$task->addChild('ProjectToAuthItemRead');
+
+			$task=$this->_authManager->createTask('ProjectToAuthItemToAuthAssignment', 'ProjectToAuthItemToAuthAssignment task');
+			$projectManagerRole->addChild('ProjectToAuthItemToAuthAssignment');
+			$this->_authManager->createOperation('ProjectToAuthItemToAuthAssignmentRead', 'ProjectToAuthItemToAuthAssignment read');
+			$task->addChild('ProjectToAuthItemToAuthAssignmentRead');
 
 			$task=$this->_authManager->createTask('TaskTemplateToActionToProjectTemplateToAuthItem', 'TaskTemplateToActionToProjectTemplateToAuthItem task');
 			$projectManagerRole->addChild('TaskTemplateToActionToProjectTemplateToAuthItem');

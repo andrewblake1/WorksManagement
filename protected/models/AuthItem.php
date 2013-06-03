@@ -13,11 +13,9 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property AuthAssignment[] $authAssignments
- * @property User $updatedBy
- * @property AuthItemChild[] $authItemChildren
- * @property AuthItemChild[] $authItemChildren1
+ * @property DutyStep[] $dutySteps
  * @property ProjectTemplateToAuthItem[] $projectTemplateToAuthItems
+ * @property ProjectToAuthItem[] $projectToAuthItems
  * @property Report[] $reports
  * @property ReportToAuthItem[] $reportToAuthItems
  */
@@ -76,13 +74,11 @@ class AuthItem extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'authAssignments' => array(self::HAS_MANY, 'AuthAssignment', 'itemname'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'authItemChildren' => array(self::HAS_MANY, 'AuthItemChild', 'parent'),
-            'authItemChildren1' => array(self::HAS_MANY, 'AuthItemChild', 'child'),
+            'dutySteps' => array(self::HAS_MANY, 'DutyStep', 'auth_item_name'),
             'projectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectTemplateToAuthItem', 'auth_item_name'),
-            'Reports' => array(self::HAS_MANY, 'Report', 'context'),
-            'ReportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'auth_item_name'),
+            'projectToAuthItems' => array(self::HAS_MANY, 'ProjectToAuthItem', 'auth_item_name'),
+            'reports' => array(self::HAS_MANY, 'Report', 'context'),
+            'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'auth_item_name'),
         );
     }
 

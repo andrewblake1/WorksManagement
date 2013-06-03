@@ -266,13 +266,13 @@ class Task extends CustomFieldExtensionActiveRecord
         $columns['derived_task_template_description'] = static::linkColumn('derived_task_template_description', 'TaskTemplate', 'task_template_id');
 		$columns['planned'] = 'planned';
 		$columns['derived_earliest'] = 'derived_earliest:date';
-		$columns['preferred_mon'] = 'preferred_mon:boolean';
+/*		$columns['preferred_mon'] = 'preferred_mon:boolean';
 		$columns['preferred_tue'] = 'preferred_tue:boolean';
 		$columns['preferred_wed'] = 'preferred_wed:boolean';
 		$columns['preferred_thu'] = 'preferred_thu:boolean';
 		$columns['preferred_fri'] = 'preferred_fri:boolean';
 		$columns['preferred_sat'] = 'preferred_sat:boolean';
-		$columns['preferred_sun'] = 'preferred_sun:boolean';
+		$columns['preferred_sun'] = 'preferred_sun:boolean';*/
 		
 		// loop thru temporary table columns
 		$isCustom = FALSE;
