@@ -216,6 +216,65 @@ abstract class ActiveRecord extends RangeActiveRecord
 		return $parentForeignKey;
 	}
 	
+	public static function getCriteriaFromDisplayAttr(&$concat = array(), &$display = array())
+	{
+		$criteria = new DbCriteria();
+		$model = self::model();
+
+		foreach (static::getDisplayAttr() as $field) {
+			// building display parameter which gets eval'd later
+			$display[] = '{$p->' . $field . '}';
+
+			// get attribute and array of relations to follow to attribute
+			$fields = explode('->', $field);
+			$attribute = array_pop($fields);
+			// with relation
+			if($with = implode('.', $fields))
+			{
+				// with model
+				$criteria->with[$with] = $with;
+				// pop the last relation again to ge the alias
+				$alias = array_pop(explode('->', $with));
+				// all relations for the model
+				$relations = $model->relations();
+				// loop thru relations
+				foreach($fields as $relationName)
+				{
+					// the class name of the related model
+					$className = $relations[$relationName][1];
+					// A model
+					$relationModel = $className::model();
+					// the relations of this relation
+					$relations = $relationModel->relations();
+				}
+				// an d finally - the columns in the last relation
+				$columns = $relationModel->tableSchema->columns;
+			}
+			else
+			{
+				// no relations so attrib belongs to this model
+				$alias = 't';
+				// columns in the attributes model
+				$columns = $model->tableSchema->columns;
+			}
+
+			$criteria->order[] = "$alias.$attribute ASC";
+
+			$column = "$alias.$attribute";
+
+			// if non character field then need to cast and we only use varchar
+			if (strpos($columns[$attribute]->dbType, 'varchar') === FALSE) {
+				$column = "CONVERT($column USING utf8) COLLATE utf8_unicode_ci";
+			}
+
+			$concat[] = $column;
+		}
+
+		$criteria->order = implode(', ', $criteria->order);
+
+		return $criteria;
+	}
+
 	/**
 	 * Returns the listdata of specified bound column and display column.
 	 * @param string $displayColumn the bound column.
@@ -223,39 +282,14 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 */
 	public static function getListData($scopes = array())
 	{
-		// format models as $key=>$value with listData
-		$criteria=new CDbCriteria;
+		$concat = array();
+		$display = array();
+		$criteria = static::getCriteriaFromDisplayAttr($concat, $display);
 		
-		// key will contain either a number or a foreign key field in which case field will be the lookup value
-		foreach(static::getDisplayAttr() as $field)
-		{
-			/*
-				* $matches[5] attribute
-				* $matches[4] alias
-				* $matches[1] relations
-				*/
-			if(preg_match('/(((.*)->)?(\w*))->(\w*)$/', $field, $matches))
-			{
-				$criteria->with[] = $matches[1];
-				$alias = $matches[4];
-				$attribute = $matches[5];
-			}
-			else
-			{
-				$alias = 't';
-				$attribute = $field;
-			}
-
-			$criteria->order[] = "$alias.$attribute ASC";
-			$concat_ws[] = "$alias.$attribute";
-		}
-
-		$criteria->order = implode(', ', $criteria->order);
-
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 				't.'.static::model()->tableSchema->primaryKey,
-				"CONCAT_WS('$delimiter',".implode(',', $concat_ws).") AS naturalKey",
+				"CONCAT_WS('$delimiter',".implode(',', $concat).") AS naturalKey",
 			);
 		$criteria->scopes = empty($scopes) ? null : $scopes;
 		

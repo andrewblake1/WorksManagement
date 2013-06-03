@@ -139,9 +139,9 @@ class ProjectToAuthItemToAuthAssignment extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		$displaAttr[]='authAssignment->user->contact->first_name';
+		$displaAttr[]='id';
 		$displaAttr[]='authAssignment->user->contact->last_name';
-		$displaAttr[]='authAssignment->user->contact->email_name';
+		$displaAttr[]='authAssignment->user->contact->email';
 
 		return $displaAttr;
 	}

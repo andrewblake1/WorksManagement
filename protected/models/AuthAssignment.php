@@ -42,10 +42,10 @@ class AuthAssignment extends ActiveRecord
 	public function scopeProjectToAuthItemId($projectToAuthItemId)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compare('projectToAuthItemToAuthAssignment.project_to_auth_item_id', $projectToAuthItemId);
-		$criteria->join='
-			JOIN tbl_project_to_auth_item_to_auth_assignment projectToAuthItemToAuthAssignment ON t.id = projectToAuthItemToAuthAssignment.auth_assignment.id
-		';
+		
+		$projectToAuthItem = ProjectToAuthItem::model()->findByPk($projectToAuthItemId);
+		
+		$criteria->compare('itemname', $projectToAuthItem->auth_item_name);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		
@@ -81,7 +81,7 @@ class AuthAssignment extends ActiveRecord
 			// BEWARE : gii missing a couple here!
 			'user' => array(self::BELONGS_TO, 'User', 'userid'),
 			'itemname0' => array(self::BELONGS_TO, 'AuthItem', 'itemname'),
-           'projectToAuthItemToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthItemToAuthAssignment', 'auth_assignment_id'),
+			'projectToAuthItemToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthItemToAuthAssignment', 'auth_assignment_id'),
         );
     }
 
@@ -138,9 +138,9 @@ class AuthAssignment extends ActiveRecord
 		if(!isset($_GET['userid']))
 		{
 			static::$labelOverrides['auth_assignment_id'] = 'Role/First/Last/Email';
-//			$displaAttr[]='user->contact->first_name';
-//			$displaAttr[]='user->contact->last_name';
-//			$displaAttr[]='user->contact->email';
+			$displaAttr[]='user->contact->first_name';
+			$displaAttr[]='user->contact->last_name';
+			$displaAttr[]='user->contact->email';
 		}
 
 

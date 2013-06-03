@@ -158,44 +158,9 @@ class Controller extends CController {
 			$modelName = $this->modelName;
 			$model = $modelName::model();
 
-			// protect against possible injection
-			$criteria = new CDbCriteria;
 			$concat = array();
-
-			foreach ($modelName::getDisplayAttr() as $field) {
-				// building display parameter which gets eval'd later
-				$display[] = '{$p->' . $field . '}';
-
-				/*
-				 * $matches[5] attribute
-				 * $matches[4] alias
-				 * $matches[1] relations
-				 */
-				if (preg_match('/(((.*)->)?(\w*))->(\w*)$/', $field, $matches)) {
-					$criteria->with[] = $matches[1];
-					$alias = $matches[4];
-					$attribute = $matches[5];
-					$relations = $model->relations();
-					$className = $relations[$alias][1];
-					$relation = $className::model();
-					$columns = $relation->tableSchema->columns;
-				} else {
-					$alias = 't';
-					$attribute = $field;
-					$columns = $model->tableSchema->columns;
-				}
-
-				$criteria->order[] = "$alias.$attribute ASC";
-
-				$column = "$alias.$attribute";
-
-				// if non character field then need to cast and we only use varchar
-				if (strpos($columns[$attribute]->dbType, 'varchar') === FALSE) {
-					$column = "CONVERT($column USING utf8) COLLATE utf8_unicode_ci";
-				}
-
-				$concat[] = $column;
-			}
+			$display = array();
+			$criteria = $modelName::getCriteriaFromDisplayAttr($concat, $display);
 
 			// create the search term
 			$concat = "CONCAT_WS(' ', " . implode(', ', $concat) . ")";
@@ -211,9 +176,9 @@ class Controller extends CController {
 
 			// limit the results
 			$criteria->limit = Yii::app()->params->listMax;
-			$criteria->order = implode(', ', $criteria->order);
 			$display = implode(Yii::app()->params['delimiter']['display'], $display);
 			$criteria->scopes = empty($_GET['scopes']) ? null : $_GET['scopes'];
+			
 			$fKModels = $model->findAll($criteria);
 
 			// if some models founds
