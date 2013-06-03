@@ -146,13 +146,13 @@ class Task extends CustomFieldExtensionActiveRecord
 	}
 
 	public function tableName() {
-$t = Yii::app()->controller->id;
+
 		// need to create a single shot instance of creating the temp table that appends required custom columns - only if in search scenario will actually
 		// do the search later when attribute assignments have been made which will repeat this - however some methods need the table architecture earlier
 		static $tableName = NULL;
 		if(!$tableName && strcasecmp(Yii::app()->controller->id, __CLASS__)  == 0 && Yii::app()->controller->action->id == 'admin')
 		{
-			Yii::app()->db->createCommand("CALL pro_get_tasks_from_crew_admin_view(0)")->execute();
+			Yii::app()->db->createCommand("CALL pro_get_tasks_from_crew_admin_view(9)")->execute();
 			$tableName = 'tmp_table';
 			return $tableName;
 		}
@@ -189,16 +189,14 @@ $t = Yii::app()->controller->id;
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'in_charge_id' => 'In charge, First/Last/Email',
-			'searchInCharge' => 'In charge, First/Last/Email',
-			'project_id' => 'Project',
-			'searchProject' => 'Project',
-			'task_template_id' => 'Task type',
-			'searchTaskTemplate' => 'Task type',
+			'in_charge_id' => 'In charge',
+			'derived_in_charge' => 'In charge',
+			'task_template_id' => 'Template',
+			'derived_task_template_description' => 'Template',
 			'planned' => 'Planned',
 			'name' => 'Task',
 			'location' => 'Location',
-			'searchEarliest' => 'Earliest',
+			'derived_earliest' => 'Earliest',
 			'preferred_mon' => 'Mo',
 			'preferred_tue' => 'Tu',
 			'preferred_wed' => 'We',
@@ -255,100 +253,50 @@ $t = Yii::app()->controller->id;
 	{
 		$criteria=new DbCriteria;
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id AS id',
-			't.task_template_id',
-			't.quantity',
-			't.location',
-			'COALESCE(t.planned, project.planned) AS planned',
-			'(SELECT `date` FROM tbl_working_days WHERE id = (SELECT id + MAX( lead_in_days ) FROM tbl_working_days WHERE `date` >= t.planned LIMIT 1)) as searchEarliest',
-			't.preferred_mon',
-			't.preferred_tue',
-			't.preferred_wed',
-			't.preferred_thu',
-			't.preferred_fri',
-			't.preferred_sat',
-			't.preferred_sun',
-			"CONCAT_WS('$delimiter',
-				contact.first_name,
-				contact.last_name,
-				contact.email
-				) AS searchInCharge",
-			"CONCAT_WS('$delimiter',
-				taskTemplate.description
-				) AS searchTaskTemplate",
-		);
-
-		// group
-		$criteria->group = 't.id';
-
-		// join 
-		$criteria->join='
-			LEFT JOIN tbl_duty duty ON t.id = duty.task_id
-			LEFT JOIN tbl_duty_data dutyData ON duty.duty_data_id = dutyData.id
-			LEFT JOIN tbl_duty_step dutyStep ON dutyData.duty_step_id = dutyStep.id';
-
-		// where
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('t.location',$this->location,true);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('planned',Yii::app()->format->toMysqlDate($this->planned));
-		$criteria->compare('searchEarliest',Yii::app()->format->toMysqlDate($this->searchEarliest));
-		$criteria->compare('t.preferred_mon',Yii::app()->format->toMysqlBool($this->preferred_mon));
-		$criteria->compare('t.preferred_tue',Yii::app()->format->toMysqlBool($this->preferred_tue));
-		$criteria->compare('t.preferred_wed',Yii::app()->format->toMysqlBool($this->preferred_wed));
-		$criteria->compare('t.preferred_thu',Yii::app()->format->toMysqlBool($this->preferred_thu));
-		$criteria->compare('t.preferred_fri',Yii::app()->format->toMysqlBool($this->preferred_fri));
-		$criteria->compare('t.preferred_sat',Yii::app()->format->toMysqlBool($this->preferred_sat));
-		$criteria->compare('t.preferred_sun',Yii::app()->format->toMysqlBool($this->preferred_sun));
-		$this->compositeCriteria($criteria,
-			array(
-				'contact.first_name',
-				'contact.last_name',
-				'contact.email',
-			),
-			$this->searchInCharge
-		);
-		$this->compositeCriteria($criteria,
-			array(
-				'taskTemplate.description',
-			),
-			$this->searchTaskTemplate
-		);
-//$t = $this->crew_id;
-		$criteria->compare('t.crew_id',$this->crew_id);
-		
-		// join
-		$criteria->with = array(
-			'id0',
-			'id0.inCharge.contact',
-			'project',
-			'taskTemplate',
-		);
-
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('id');
-		$columns[] = $this->linkThisColumn('name');
-		$columns[] = 'quantity';
-		$columns[] = 'location';
-        $columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
-        $columns[] = static::linkColumn('searchTaskTemplate', 'TaskTemplate', 'task_template_id');
-		$columns[] = 'planned';
-		$columns[] = 'searchEarliest:date';
-		$columns[] = 'preferred_mon:boolean';
-		$columns[] = 'preferred_tue:boolean';
-		$columns[] = 'preferred_wed:boolean';
-		$columns[] = 'preferred_thu:boolean';
-		$columns[] = 'preferred_fri:boolean';
-		$columns[] = 'preferred_sat:boolean';
-		$columns[] = 'preferred_sun:boolean';
+		$columns['id'] = $this->linkThisColumn('id');
+		$columns['name'] = $this->linkThisColumn('name');
+		$columns['quantity'] = 'quantity';
+		$columns['location'] = 'location';
+        $columns['derived_in_charge'] = static::linkColumn('derived_in_charge', 'User', 'in_charge_id');
+        $columns['derived_task_template_description'] = static::linkColumn('derived_task_template_description', 'TaskTemplate', 'task_template_id');
+		$columns['planned'] = 'planned';
+		$columns['derived_earliest'] = 'derived_earliest:date';
+		$columns['preferred_mon'] = 'preferred_mon:boolean';
+		$columns['preferred_tue'] = 'preferred_tue:boolean';
+		$columns['preferred_wed'] = 'preferred_wed:boolean';
+		$columns['preferred_thu'] = 'preferred_thu:boolean';
+		$columns['preferred_fri'] = 'preferred_fri:boolean';
+		$columns['preferred_sat'] = 'preferred_sat:boolean';
+		$columns['preferred_sun'] = 'preferred_sun:boolean';
+		
+		// loop thru temporary table columns
+		$isCustom = FALSE;
+		foreach(static::model()->tableSchema->getColumnNames() AS $key => $tempTableColumnName)
+		{
+			// start from derived_planned - the last fixed column
+			if($tempTableColumnName == 'derived_planned')
+			{
+				$isCustom = TRUE;
+				continue;
+			}
+			elseif($isCustom === FALSE)
+			{
+				continue;
+			}
+			// if not already in our list of columns to show
+			if(!array_key_exists($tempTableColumnName, $columns))
+			{
+				// stored procedure swaps space for underscore due to becoming dynamic attribute with Yii setter so swap back for label here
+				$label = str_replace('_', ' ', $tempTableColumnName);
+				// use setter to dynamically create an attribute
+				$columns[] = "$tempTableColumnName::$label";
+			}
+		}
 		
 		return $columns;
 	}
