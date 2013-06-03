@@ -1,42 +1,18 @@
 <?php
 
-/*class DutyStepDependencyController extends ActionController
+class DutyStepDependencyController extends Controller
 {
 
-	protected function createRedirect($model) {
-		$params = array();
+	public function __construct($id, $module = null) {
 		
-		if(isset($_POST['DutyStepDependency']['client_id']))
-		{
-			$params['client_id'] = $_POST['DutyStepDependency']['client_id'];
-		}
-		
-		if(isset($_POST['DutyStepDependency']['project_template_id']))
-		{
-			$params['project_template_id'] = $_POST['DutyStepDependency']['project_template_id'];
-		}
-		
-		parent::createRedirect($model, $params);
+		ActionController::setTrail();
+	
+		parent::__construct($id, $module);
 	}
 
-}*/
-
-class DutyStepDependencyController extends ActionController
-{
-	protected function createRedirect($model) {
-		$params = array();
-		
-		if(isset($_GET['DutyStepDependency']['client_id']))
-		{
-			$params['client_id'] = $_GET['DutyStepDependency']['client_id'];
-		}
-		
-		if(isset($_GET['DutyStepDependency']['project_template_id']))
-		{
-			$params['project_template_id'] = $_GET['DutyStepDependency']['project_template_id'];
-		}
-		
-		parent::createRedirect($model, $params);
+	protected function createRedirect($model)
+	{
+		parent::createRedirect($model, ActionController::getCreateRedirectParams($this->modelName));
 	}
 
 	// called within AdminViewWidget

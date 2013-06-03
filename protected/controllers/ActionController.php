@@ -2,8 +2,9 @@
 
 class ActionController extends Controller
 {
-
-	public function __construct($id, $module = null) {
+	
+	public static function setTrail ()
+	{
 		// adjust the trail to remove the invalid items so the correct breadcrumbs are generated as action can appear at 3 levels
 		self::$trail = self::getTrail();
 		
@@ -29,7 +30,18 @@ class ActionController extends Controller
 				unset(self::$trail['Action']);
 			}
 		}
+	}
+
+	public function __construct($id, $module = null) {
+		// hack prior to setTrail route is Action/update
+		if(isset($_GET['id']))
+		{
+			// trick to get the below stuff to fire
+			$_GET['action_id'] = $_GET['id'];
+		}
 		
+		self::setTrail();
+	
 		parent::__construct($id, $module);
 	}
 	
@@ -42,36 +54,41 @@ class ActionController extends Controller
 			'buttons' => array(
 				'delete' => array(
 					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
-					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/delete", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
+					'url' => 'Yii::app()->createUrl("' . get_class($model) . '/delete", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
 				),
 				'update' => array(
 					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
-					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/update", array_merge(array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey), $_GET))',
+					'url' => 'Yii::app()->createUrl("' . get_class($model) . '/update", array_merge(array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey), $_GET))',
 				),
 				'view' => array(
 					'visible' => '
 						!Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))
 						&& Yii::app()->user->checkAccess(get_class($data)."Read")',
-					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/view", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
+					'url' => 'Yii::app()->createUrl("' . get_class($model) . '/view", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
 				),
 			),
 		);
 	}
+	
+	protected function createRedirect($model)
+	{
+		parent::createRedirect($model, self::getCreateRedirectParams($this->modelName));
+	}
 
-	protected function createRedirect($model) {
+	static public function getCreateRedirectParams($modelName) {
 		$params = array();
 		
-		if(isset($_POST['Action']['client_id']))
+		if(isset($_POST[$modelName]['client_id']))
 		{
-			$params['client_id'] = $_POST['Action']['client_id'];
+			$params['client_id'] = $_POST[$modelName]['client_id'];
 		}
 		
-		if(isset($_POST['Action']['project_template_id']))
+		if(isset($_POST[$modelName]['project_template_id']))
 		{
-			$params['project_template_id'] = $_POST['Action']['project_template_id'];
+			$params['project_template_id'] = $_POST[$modelName]['project_template_id'];
 		}
 		
-		parent::createRedirect($model, $params);
+		return $params;
 	}
 
 }

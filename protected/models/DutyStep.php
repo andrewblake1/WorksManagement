@@ -162,19 +162,6 @@ class DutyStep extends ActiveRecord
 		
 		return $columns;
 	}
-	
-/*
-	public function beforeValidate()
-	{
-		// need to set project_template_id which is an extra foreign key to make circular foreign key constraint
-		if(isset($this->project_template_to_auth_item_id))
-		{
-			$projectTemplateToAuthItem = ProjectTemplateToAuthItem::model()->findByPk($this->project_template_to_auth_item_id);
-			$this->project_template_id = $projectTemplateToAuthItem->project_template_id;
-		}
-
-		return parent::beforeValidate();
-	}*/
 
 }
 

@@ -39,6 +39,7 @@ class DashboardDuty extends Duty
 		// filter to current active duties for this user
 		$criteria->compare('derived_assigned_to_id', Yii::app()->user->id);
 		$criteria->compareNull('updated');
+		$criteria->addCondition("planned IS NOT NULL");
 		
 		return $criteria;
 	}

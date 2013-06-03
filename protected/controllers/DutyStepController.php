@@ -1,24 +1,45 @@
 <?php
 
-class DutyStepController extends ActionController
+class DutyStepController extends Controller
 {
 
-	protected function createRedirect($model) {
-		$params = array();
+	public function __construct($id, $module = null) {
 		
-		if(isset($_GET['DutyStep']['client_id']))
-		{
-			$params['client_id'] = $_GET['DutyStep']['client_id'];
-		}
-		
-		if(isset($_GET['DutyStep']['project_template_id']))
-		{
-			$params['project_template_id'] = $_GET['DutyStep']['project_template_id'];
-		}
-$t = $model->attributes;		
-//		if(isset())
-		parent::createRedirect($model, $params);
+		ActionController::setTrail();
+	
+		parent::__construct($id, $module);
 	}
+	
+	protected function createRedirect($model)
+	{
+		parent::createRedirect($model, ActionController::getCreateRedirectParams($this->modelName));
+	}
+	
+	// called within AdminViewWidget
+	// alter to maintain correct breadcrumb
+	public function getButtons($model)
+	{
+		return array(
+			'class' => 'WMTbButtonColumn',
+			'buttons' => array(
+				'delete' => array(
+					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
+					'url' => 'Yii::app()->createUrl("' . get_class($model) . '/delete", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
+				),
+				'update' => array(
+					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
+					'url' => 'Yii::app()->createUrl("' . get_class($model) . '/update", array_merge(array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey), $_GET))',
+				),
+				'view' => array(
+					'visible' => '
+						!Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))
+						&& Yii::app()->user->checkAccess(get_class($data)."Read")',
+					'url' => 'Yii::app()->createUrl("' . get_class($model) . '/view", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
+				),
+			),
+		);
+	}
+	
 
 }
 

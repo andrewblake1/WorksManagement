@@ -97,9 +97,6 @@ class Duty extends ActiveRecord
 		$criteria->compare('derived_importance',$this->derived_importance,true);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
-// TODO will be non standard code to search by derived_assigned_to_name - probably have to use temp table similar to task view adding of custom fields
-		
-		
 		
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
