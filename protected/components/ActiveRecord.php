@@ -234,7 +234,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 				// with model
 				$criteria->with[$with] = $with;
 				// pop the last relation again to ge the alias
-				$alias = array_pop(explode('->', $with));
+				$alias = array_pop($copy = $fields);
 				// all relations for the model
 				$relations = $model->relations();
 				// loop thru relations
