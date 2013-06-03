@@ -29,26 +29,7 @@ class Action extends ActiveRecord
 	public function scopeTaskTemplate($taskTemplateId)
 	{
 		$taskTemplate = TaskTemplate::model()->findByPk($taskTemplateId);
-		
-		return $this->scopeProjectTemplate($taskTemplate->project_template_id);
-	}
-
-	// used by override to limit to releveant higher level
-	public function scopeClient()
-	{
-		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
-		$criteria=new DbCriteria;
-		$criteria->addCondition('t.project_template_id IS NULL AND t.client_id IS NULL');
-
-		$this->getDbCriteria()->mergeWith($criteria);
-		
-		return $this;
-	}
-
-	// used by override to limit to higher level
-	public function scopeProjectTemplate($projectTemplateId)
-	{
-		$projectTemplate = ProjectTemplate::model()->findByPk($projectTemplateId);
+		$projectTemplate = ProjectTemplate::model()->findByPk($taskTemplate->project_template_id);
 		
 		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
 		$criteria=new DbCriteria;
@@ -74,6 +55,30 @@ class Action extends ActiveRecord
 		$this->getDbCriteria()->mergeWith($criteria);
 
 		return $this;
+	}
+
+	// used by override to limit to releveant higher level
+	public function scopeClient($clientId)
+	{
+		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
+		$criteria=new DbCriteria;
+		$criteria->addCondition('t.project_template_id IS NULL');
+
+		$criteria2=new DbCriteria;
+		$criteria2->compare('t.client_id', $clientId);
+		$criteria2->addCondition('t.client_id IS NULL', 'OR');
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+
+	// used by override to limit to higher level
+	public function scopeProjectTemplate($projectTemplateId)
+	{
+		$projectTemplate = ProjectTemplate::model()->findByPk($projectTemplateId);
+		
+		return $this->scopeClient($projectTemplate->client_id);
 	}
 
 	/**

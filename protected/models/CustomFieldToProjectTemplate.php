@@ -43,7 +43,7 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('project_template_id, custom_field_id, custom_field_project_category_id', 'required'),
+			array('custom_field_id, custom_field_project_category_id', 'required'),
 			array('project_template_id, custom_field_id, custom_field_project_category_id, show_in_admin, show_in_planning', 'numerical', 'integerOnly'=>true),
 		));
 	}
@@ -72,8 +72,8 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'project_template_id' => 'Client/Project type',
-			'searchProjectTemplate' => 'Client/Project type',
+			'project_template_id' => 'Project template',
+			'searchProjectTemplate' => 'Project template',
 			'custom_field_project_category_id' => 'Project category',
 			'searchCustomFieldProjectCategory' => 'Project category',
 			'custom_field_id' => 'Custom field',
@@ -134,6 +134,11 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 		);
 	}
 
+	public function beforeSave() {
+		$customFieldProjectCategory = CustomFieldProjectCategory::model()->findByPk($this->custom_field_project_category_id); 
+		$this->project_template_id = $customFieldProjectCategory->project_template_id;
+		return parent::beforeSave();
+	}
 /*	// needed because the only id passed from the custom field project category scren is the category id - nence need to get this models parent
 	public function assertFromParent()
 	{
