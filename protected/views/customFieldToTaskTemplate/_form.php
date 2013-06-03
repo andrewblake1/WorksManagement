@@ -6,6 +6,10 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	CustomFieldController::listWidgetRow($model, $form, 'custom_field_id');
 
+	$form->checkBoxRow('show_in_admin');	
+
+	$form->checkBoxRow('show_in_planning');	
+
 $this->endWidget();
 
 ?>
