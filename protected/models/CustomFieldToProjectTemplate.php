@@ -74,8 +74,8 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 		return parent::attributeLabels(array(
 			'project_template_id' => 'Project template',
 			'searchProjectTemplate' => 'Project template',
-			'custom_field_project_category_id' => 'Project category',
-			'searchCustomFieldProjectCategory' => 'Project category',
+			'custom_field_project_category_id' => 'Custom field set',
+			'searchCustomFieldProjectCategory' => 'Custom field set',
 			'custom_field_id' => 'Custom field',
 			'show_in_admin' => 'Show in admin page',
 			'show_in_planning' => 'Show in planning page',

@@ -43,7 +43,7 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_template_id, custom_field_id, custom_field_task_category_id', 'required'),
+			array('custom_field_id, custom_field_task_category_id', 'required'),
 			array('task_template_id, custom_field_id, custom_field_task_category_id, show_in_admin, show_in_planning', 'numerical', 'integerOnly'=>true),
 		));
 	}
@@ -70,10 +70,10 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'task_template_id' => 'Client/Project type/Task type',
-			'searchTaskTemplate' => 'Client/Project type/Task type',
-			'custom_field_task_category_id' => 'Task category',
-			'searchCustomFieldTaskCategory' => 'Task category',
+			'task_template_id' => 'Task template',
+			'searchTaskTemplate' => 'Task templat',
+			'custom_field_task_category_id' => 'Custom field set',
+			'searchCustomFieldTaskCategory' => 'Custom field set',
 			'custom_field_id' => 'Custom field',
 			'show_in_admin' => 'Show in admin page',
 			'show_in_planning' => 'Show in planning page',
@@ -129,6 +129,12 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 		return array(
 			'customField->description',
 		);
+	}
+
+	public function beforeSave() {
+		$customFieldTaskCategory = CustomFieldTaskCategory::model()->findByPk($this->custom_field_task_category_id); 
+		$this->task_template_id = $customFieldTaskCategory->task_template_id;
+		return parent::beforeSave();
 	}
 
 }
