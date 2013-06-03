@@ -54,7 +54,7 @@ class Material extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'store_id'),
+            'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'standard_id'),
             'assemblyToMaterials1' => array(self::HAS_MANY, 'AssemblyToMaterial', 'material_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'standard' => array(self::BELONGS_TO, 'Drawing', 'standard_id'),

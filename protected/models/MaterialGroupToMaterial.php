@@ -7,13 +7,13 @@
  * @property integer $id
  * @property integer $material_group_id
  * @property integer $material_id
- * @property integer $store_id
+ * @property integer $standard_id
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Material $material
- * @property MaterialGroup $store
+ * @property MaterialGroup $standard
  * @property MaterialGroup $materialGroup
  * @property User $updatedBy
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
@@ -62,7 +62,7 @@ class MaterialGroupToMaterial extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
-            'store' => array(self::BELONGS_TO, 'MaterialGroup', 'store_id'),
+            'standard' => array(self::BELONGS_TO, 'MaterialGroup', 'standard_id'),
             'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'material_id'),

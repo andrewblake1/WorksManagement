@@ -6,7 +6,7 @@
  * The followings are the available columns in table 'tbl_assembly_to_assembly_group':
  * @property string $id
  * @property integer $assembly_id
- * @property integer $store_id
+ * @property integer $standard_id
  * @property integer $assembly_group_id
  * @property integer $quantity
  * @property integer $minimum
@@ -21,7 +21,7 @@
  * The followings are the available model relations:
  * @property User $updatedBy
  * @property Assembly $assembly
- * @property AssemblyGroup $store
+ * @property AssemblyGroup $standard
  * @property AssemblyGroup $assemblyGroup
  * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups
  */
@@ -63,7 +63,7 @@ class AssemblyToAssemblyGroup extends ActiveRecord
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
-            'store' => array(self::BELONGS_TO, 'AssemblyGroup', 'store_id'),
+            'standard' => array(self::BELONGS_TO, 'AssemblyGroup', 'standard_id'),
             'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup', 'assembly_group_id'),
             'taskToAssemblyToAssemblyToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'assembly_to_assembly_group_id'),
         );

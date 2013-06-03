@@ -264,7 +264,7 @@ class User extends ContactActiveRecord
 	}*/ 
  
 	/**
-	 * perform one-way encryption on the password before we store it in the database
+	 * perform one-way encryption on the password before we standard it in the database
 	 */
 	protected function afterValidate()
 	{   

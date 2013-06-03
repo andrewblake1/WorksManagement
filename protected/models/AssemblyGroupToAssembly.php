@@ -7,14 +7,14 @@
  * @property string $id
  * @property integer $assembly_group_id
  * @property integer $assembly_id
- * @property integer $store_id
+ * @property integer $standard_id
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property User $updatedBy
  * @property AssemblyGroup $assemblyGroup
- * @property Assembly $store
+ * @property Assembly $standard
  * @property Assembly $assembly
  * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups
  * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups1
@@ -44,11 +44,8 @@ class AssemblyGroupToAssembly extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('assembly_id, assembly_group_id, standard_id,', 'required'),
+			array('assembly_id, assembly_group_id', 'required'),
 			array('assembly_id, assembly_group_id, standard_id', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, searchAssemblyDescription, searchAssemblyAlias, assembly_id, assembly_group_id', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -62,7 +59,7 @@ class AssemblyGroupToAssembly extends ActiveRecord
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup', 'assembly_group_id'),
-            'store' => array(self::BELONGS_TO, 'Assembly', 'store_id'),
+            'standard' => array(self::BELONGS_TO, 'Assembly', 'standard_id'),
             'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
             'taskToAssemblyToAssemblyToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'assembly_id'),
             'taskToAssemblyToAssemblyToAssemblyGroups1' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'assembly_group_id'),

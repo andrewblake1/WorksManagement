@@ -48,7 +48,7 @@ class AssemblyGroup extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'standard' => array(self::BELONGS_TO, 'Standard', 'standard_id'),
             'assemblyGroupToAssemblies' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'assembly_group_id'),
-            'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'store_id'),
+            'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'standard_id'),
             'assemblyToAssemblyGroups1' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'assembly_group_id'),
             'taskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskTemplateToAssemblyGroup', 'assembly_group_id'),
         );

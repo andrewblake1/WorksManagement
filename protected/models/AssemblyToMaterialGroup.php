@@ -7,7 +7,7 @@
  * @property integer $id
  * @property integer $assembly_id
  * @property integer $stage_id
- * @property integer $store_id
+ * @property integer $standard_id
  * @property integer $material_group_id
  * @property integer $quantity
  * @property integer $minimum
@@ -23,7 +23,7 @@
  * @property User $updatedBy
  * @property Stage $stage
  * @property Assembly $assembly
- * @property MaterialGroup $store
+ * @property MaterialGroup $standard
  * @property MaterialGroup $materialGroup
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
  */
@@ -67,7 +67,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'stage' => array(self::BELONGS_TO, 'Stage', 'stage_id'),
             'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
-            'store' => array(self::BELONGS_TO, 'MaterialGroup', 'store_id'),
+            'standard' => array(self::BELONGS_TO, 'MaterialGroup', 'standard_id'),
             'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
             'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'assembly_to_material_group_id'),
         );

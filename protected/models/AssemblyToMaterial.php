@@ -8,7 +8,7 @@
  * @property integer $assembly_id
  * @property integer $material_id
  * @property integer $stage_id
- * @property integer $store_id
+ * @property integer $standard_id
  * @property integer $quantity
  * @property integer $minimum
  * @property integer $maximum
@@ -19,7 +19,7 @@
  *
  * The followings are the available model relations:
  * @property Assembly $assembly
- * @property Material $store
+ * @property Material $standard
  * @property Material $material
  * @property User $updatedBy
  * @property Stage $stage
@@ -65,7 +65,7 @@ class AssemblyToMaterial extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
-            'store' => array(self::BELONGS_TO, 'Material', 'store_id'),
+            'standard' => array(self::BELONGS_TO, 'Material', 'standard_id'),
             'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'stage' => array(self::BELONGS_TO, 'Stage', 'stage_id'),

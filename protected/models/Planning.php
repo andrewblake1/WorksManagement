@@ -97,7 +97,7 @@ class Planning extends CategoryActiveRecord {
 
 // TODO: either strip this to database trigger or ideally remove the need for day->task_id and crew->day_id completely i.e. run off
 // ajaxtree completely. It is possible for ajax tree not to match these parents hence needs fixing.
-// another alternative is to store parent_id in the planning table on afterSave but at time of writing not sure of effect on surroundings
+// another alternative is to standard parent_id in the planning table on afterSave but at time of writing not sure of effect on surroundings
 	public function afterSave() {
 		
 		// need to ensure that the parent id stays up to date the task and crew tables. task->crew_id and crew->day_id

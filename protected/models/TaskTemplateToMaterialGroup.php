@@ -6,7 +6,7 @@
  * The followings are the available columns in table 'tbl_task_template_to_material_group':
  * @property integer $id
  * @property integer $task_template_id
- * @property integer $store_id
+ * @property integer $standard_id
  * @property integer $material_group_id
  * @property integer $quantity
  * @property integer $minimum
@@ -21,7 +21,7 @@
  * The followings are the available model relations:
  * @property User $updatedBy
  * @property MaterialGroup $materialGroup
- * @property MaterialGroup $store
+ * @property MaterialGroup $standard
  * @property TaskTemplate $taskTemplate
  * @property TaskToMaterialToTaskTemplateToMaterialGroup[] $taskToMaterialToTaskTemplateToMaterialGroups
  * @property TaskToMaterialToTaskTemplateToMaterialGroup[] $taskToMaterialToTaskTemplateToMaterialGroups1
@@ -66,7 +66,7 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
-            'store' => array(self::BELONGS_TO, 'MaterialGroup', 'store_id'),
+            'standard' => array(self::BELONGS_TO, 'MaterialGroup', 'standard_id'),
             'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
             'taskToMaterialToTaskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTemplateToMaterialGroup', 'material_group_id'),
             'taskToMaterialToTaskTemplateToMaterialGroups1' => array(self::HAS_MANY, 'TaskToMaterialToTaskTemplateToMaterialGroup', 'task_template_to_material_group_id'),

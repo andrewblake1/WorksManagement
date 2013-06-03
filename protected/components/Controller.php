@@ -1422,7 +1422,7 @@ $t=			$model->attributes = $_POST[$modelName];
 			$label
 		);
 							
-		// NB: need to set this here as otherwise in wmfkautocomplete the soure url has store_id=, in it which gets stripped
+		// NB: need to set this here as otherwise in wmfkautocomplete the soure url has standard_id=, in it which gets stripped
 		static::listWidgetRow($model, $form, $fkField, $htmlOptions, $scopes);
 	}
 

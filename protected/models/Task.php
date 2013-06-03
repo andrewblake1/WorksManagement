@@ -230,7 +230,7 @@ $t = Yii::app()->controller->id;
 					'desc'=>" searchUser DESC",
 				);
 
-		/* create a temporary table name  -- TaskActiveDataProvider will need to take care of removing temp table after stored procedure has created it and
+		/* create a temporary table name  -- TaskActiveDataProvider will need to take care of removing temp table after standardd procedure has created it and
 		 * data has been retrieved
 		 */
 	

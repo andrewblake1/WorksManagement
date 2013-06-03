@@ -59,7 +59,7 @@ class Assembly extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'standard' => array(self::BELONGS_TO, 'Drawing', 'standard_id'),
             'drawing' => array(self::BELONGS_TO, 'Drawing', 'drawing_id'),
-            'assemblyGroupToAssemblies' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'store_id'),
+            'assemblyGroupToAssemblies' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'standard_id'),
             'assemblyGroupToAssemblies1' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'assembly_id'),
             'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'assembly_id'),
             'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
