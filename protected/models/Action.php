@@ -33,7 +33,7 @@ class Action extends ActiveRecord
 		
 		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
 		$criteria=new DbCriteria;
-		$criteria->compare('t.project_template_id', $projectTemplateId);
+		$criteria->compare('t.project_template_id', $projectTemplate->id);
 		$criteria->addCondition('t.project_template_id IS NULL', 'OR');
 
 		$criteria2=new DbCriteria;
