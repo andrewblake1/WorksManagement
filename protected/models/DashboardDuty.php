@@ -48,7 +48,7 @@ class DashboardDuty extends Duty
 	{
         $columns[] = $this->linkThisColumn('description');
  //       $columns[] = static::linkColumn('searchInCharge', 'User', 'assignedTo');
-        $columns[] = 'derived_importance';
+//        $columns[] = 'derived_importance';
 		$columns[] = 'due:date';
 //		$columns[] = 'updated:datetime';
 

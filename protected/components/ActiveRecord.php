@@ -16,6 +16,14 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 */
 	static $niceName;
 	/**
+	 * @var string nice model name for use in output
+	 */
+	static $createLabel;
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $createButtonText;
+	/**
 	 * @var string default attribute to sort by
 	 */
 	protected $defaultSort = null;
@@ -46,6 +54,19 @@ abstract class ActiveRecord extends RangeActiveRecord
 	public function tableName()
 	{
 		return 'tbl_' . Yii::app()->functions->uncamelize(get_class($this));
+	}
+	
+	public static function getCreateButtonText()
+	{
+		
+return 'getCreateButtonText';
+		return static::$createButtonText ? static::$createButtonText : 'Create';
+	}
+	
+	public static function getCreateLabel()
+	{
+return 'getCreateLabel';
+		return static::$createLabel ? static::$createLabel : 'Create';
 	}
 	
 	/*
@@ -143,6 +164,20 @@ abstract class ActiveRecord extends RangeActiveRecord
 		
 		return $niceName . 's';
 	}
+	
+	// get the nice name of the model
+	static public function getNiceNameShort($primaryKey=null, $model=null)
+	{
+		$niceName = static::getNiceName($primaryKey, $model);
+		
+		if(mb_strlen($niceName) > 20)
+		{
+			$niceName = mb_substr(static::getNiceName($primaryKey), 0, 17) . '...';
+		}
+		
+		return $niceName;
+	}
+		
 	// get the nice name of the model
 	static public function getNiceName($primaryKey=null, $model=null)
 	{

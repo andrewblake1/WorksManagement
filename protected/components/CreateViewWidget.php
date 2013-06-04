@@ -34,8 +34,6 @@ class CreateViewWidget extends CWidget
 				$('#myModal input:not([class=\"hasDatepicker\"]):visible:enabled:first, #myModal textarea:first').first().focus();
 			})",
 			CClientScript::POS_READY);
-		
-
 
 		// if there is a view file then show as modal otherwise ignore
 		try

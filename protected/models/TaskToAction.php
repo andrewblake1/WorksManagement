@@ -12,6 +12,7 @@
  * @property string $description
  * @property string $task_id
  * @property integer $updated_by
+ * @property string $derived_importance
  */
 class TaskToAction extends ViewActiveRecord
 {
@@ -40,7 +41,8 @@ class TaskToAction extends ViewActiveRecord
             array('client_id, project_template_id', 'numerical', 'integerOnly'=>true),
             array('action_id, override_id, task_id', 'length', 'max'=>10),
             array('description', 'length', 'max'=>255),
-			array('description, task_id', 'safe', 'on'=>'search'),
+            array('derived_importance', 'length', 'max'=>8),
+			array('derived_importance, description, task_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -75,11 +77,13 @@ class TaskToAction extends ViewActiveRecord
 		$criteria->select=array(
 			't.id',
 			't.description',
+			't.derived_importance',
 			't.task_id',
 		);
 		
 		// where
 		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.derived_importance',$this->derived_importance,true);
 		$criteria->compare('t.task_id',$this->task_id);
 
 		return $criteria;
@@ -88,6 +92,7 @@ class TaskToAction extends ViewActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'description';
+		$columns[] = 'derived_importance';
 		
 		return $columns;
 	}
@@ -100,6 +105,7 @@ class TaskToAction extends ViewActiveRecord
 		return parent::attributeLabels(array(
 			'task_id' => 'Task',
 			'description' => 'Action',
+			'derived_importance' => 'Importance',
 		));
 	}
 

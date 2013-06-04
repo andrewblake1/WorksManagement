@@ -23,7 +23,9 @@ class Duty extends ActiveRecord
 	 */
 	public $description;
 	public $derived_assigned_to_name;
-	public $derived_importance;
+	
+//	public $derived_importance; // for removal
+	
 	public $custom_value_id;
 	public $updated;
 	public $due;
@@ -74,7 +76,7 @@ class Duty extends ActiveRecord
 			'updated' => 'Completed',
 			'custom_value_id' => 'Custom value',
 			'derived_assigned_to_name' => 'Assigned to',
-			'derived_importance' => 'Importance',
+//			'derived_importance' => 'Importance',
 		));
 	}
 
@@ -94,7 +96,7 @@ class Duty extends ActiveRecord
 
 		// where
 		$criteria->compare('description',$this->description,true);
-		$criteria->compare('derived_importance',$this->derived_importance,true);
+//		$criteria->compare('derived_importance',$this->derived_importance,true);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
 		
@@ -108,7 +110,7 @@ class Duty extends ActiveRecord
 	{
         $columns[] = $this->linkThisColumn('description');
         $columns[] = static::linkColumn('derived_assigned_to_name', 'User', 'derived_assigned_to_id');
-        $columns[] = 'derived_importance';
+//        $columns[] = 'derived_importance';
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
 

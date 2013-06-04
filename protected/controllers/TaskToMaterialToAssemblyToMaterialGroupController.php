@@ -11,13 +11,13 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 		$taskToMaterial->assertFromParent();
 
 		// set heading
-		$this->heading = TaskToMaterial::getNiceName();
+//		$this->heading = TaskToMaterial::getCreateLabel();
 		
 		// set tabs
 		$this->tabs = $taskToMaterial;
 
 		// set breadcrumbs
-		$this->breadcrumbs = TaskToMaterialController::getBreadCrumbTrail('Create');
+	//	$this->breadcrumbs = TaskToMaterialController::getBreadCrumbTrail($this->heading);
 		
 		echo $this->render('_form',array(
 			'model'=>$model,
@@ -97,10 +97,12 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 
 			static::setUpdateId(NULL, 'TaskToAssembly');
 
-			// if updating
+			// if creating or updating
 			if($model)
 			{
-				$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
+				$lastLabel = isset($_GET['id'])
+					? $modelName::getNiceName($_GET['id'])
+					: $modelName::getCreateLabel();
 				$tabs=array();
 				$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
 				static::$tabs = array_merge(static::$tabs, array($tabs));

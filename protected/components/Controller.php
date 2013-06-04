@@ -530,9 +530,9 @@ $t = $model->attributes;
 // TODO excel2007 best format however mixed results getting succesfull creations with this = varies across servers likely php_zip issue	thnk
 // it works on windows machine however not mac nor linux for me so far.
 		// set heading
-		if (!$this->heading) {
-			$this->heading .= mb_substr($modelName::getNiceName(), 0, 17) . '...';
-		}
+//		if (!$this->heading) {
+			$this->heading = $modelName::getNiceNamePlural() ;
+//		}
 
 		// set breadcrumbs
 		$this->breadcrumbs = static::getBreadCrumbTrail();
@@ -634,7 +634,7 @@ $t = $model->attributes;
 					// add crumb to admin view
 					$breadcrumbs[] = array($displays => array("$crumb/admin") + $queryParamters);
 					// add last crumb
-					$breadcrumbs[] = array($lastCrumb);
+					$breadcrumbs[] = array($crumb::getCreateLabel());
 				} elseif ($lastCrumb == 'Update') {
 					// add crumb to admin view. NB using last query paramters to that admin view
 					$breadcrumbs[] = array($displays => array("$crumb/admin") + $queryParamters);
@@ -949,7 +949,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		}
 
 		// set heading
-		$this->heading = mb_substr($modelName::getNiceName($id), 0, 17) . '...';
+		$this->heading = $modelName::getNiceNameShort($id);
 
 		// set breadcrumbs
 		$this->breadcrumbs = static::getBreadCrumbTrail('Update');
@@ -1036,7 +1036,7 @@ $t=			$model->attributes = $_POST[$modelName];
 
 		// set heading
 		$modelName = $this->modelName;
-		$this->heading = $modelName::getNiceName($id);
+		$this->heading = $modelName::getNiceNameShort($id);
 
 		// add primary key into global so it can be retrieved for future use in breadcrumbs
 		static::setUpdateId($id, $modelName);

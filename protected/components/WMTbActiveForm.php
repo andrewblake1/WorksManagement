@@ -98,6 +98,7 @@ class WMTbActiveForm extends TbActiveForm
 		}
 
 		// Only do modal if in admin view
+		$heading = $modelName::getCreateLabel();
 		if(/*$this->_action == 'Create' && */Yii::app()->controller->action->id == 'admin' || Yii::app()->controller->action->id == 'returnForm')
 		{
 			if(!$this->action && $this->_action != 'Update')
@@ -106,7 +107,7 @@ class WMTbActiveForm extends TbActiveForm
 			}
 			echo '<div class="modal-header">';
 			echo '<a class="close" data-dismiss="modal">&times;</a>';
-			echo "<h3>{$this->controller->heading}</h3>";
+			echo "<h3>{$heading}</h3>";
 			echo '</div>';
 		}
 

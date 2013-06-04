@@ -112,7 +112,7 @@ class Task extends CustomFieldExtensionActiveRecord
 			$customValue->setLabelAndId($CustomFieldModelTemplate);
 			
 			// massive assignement
-			$customValue->attributes=$_POST['CustomValue'][$CustomFieldModelTemplate->id];
+			$customValue->attributes=$_POST['CustomValue'][$customValue->id];
 
 			// validate and save
 			$saved &= $customValue->updateSave($models);
