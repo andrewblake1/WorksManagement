@@ -56,16 +56,13 @@ abstract class ActiveRecord extends RangeActiveRecord
 		return 'tbl_' . Yii::app()->functions->uncamelize(get_class($this));
 	}
 	
-	public static function getCreateButtonText()
+	public function getCreateButtonText()
 	{
-		
-return 'getCreateButtonText';
 		return static::$createButtonText ? static::$createButtonText : 'Create';
 	}
 	
 	public static function getCreateLabel()
 	{
-return 'getCreateLabel';
 		return static::$createLabel ? static::$createLabel : 'Create';
 	}
 	

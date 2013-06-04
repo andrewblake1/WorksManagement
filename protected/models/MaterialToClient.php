@@ -10,6 +10,7 @@
  * @property integer $supplier_id
  * @property string $unit_price
  * @property string $alias
+ * @property string $category
  * @property integer $updated_by
  *
  * The followings are the available model relations:
@@ -42,6 +43,7 @@ class MaterialToClient extends ActiveRecord
 			array('material_id, client_id, supplier_id', 'numerical', 'integerOnly'=>true),
 			array('unit_price', 'length', 'max'=>7),
 			array('alias', 'length', 'max'=>255),
+            array('category', 'safe'),
 		));
 	}
 
@@ -95,6 +97,7 @@ class MaterialToClient extends ActiveRecord
 			't.unit_price',
 			"t.alias",
 			't.client_id',
+			't.category',
 		);
 
 		$criteria->compare('material.description',$this->searchMaterialDescription,true);
@@ -102,6 +105,7 @@ class MaterialToClient extends ActiveRecord
 		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
 		$criteria->compare('supplier.name',$this->searchSupplierName,true);
 		$criteria->compare('t.alias',$this->alias,true);
+		$criteria->compare('t.category',$this->category,true);
  		$criteria->compare('t.client_id',$this->client_id);
 		$criteria->compare('t.unit_price', $this->unit_price);
 
@@ -116,6 +120,7 @@ class MaterialToClient extends ActiveRecord
 	public function getAdminColumns()
 	{
  		$columns[] = 'searchMaterialDescription';
+ 		$columns[] = 'category';
  		$columns[] = 'searchMaterialUnit';
  		$columns[] = 'searchMaterialAlias';
  		$columns[] = 'searchSupplierName';

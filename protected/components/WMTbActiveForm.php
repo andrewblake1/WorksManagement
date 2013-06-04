@@ -149,6 +149,11 @@ class WMTbActiveForm extends TbActiveForm
 		// this complex because if compare bool/string 
 		$showSubmit = !(is_string($this->showSubmit) && $this->showSubmit == 'hide');
 
+		// get button label
+		$buttonLabel = $this->_action == 'Update'
+			? $this->_action
+			: $this->model->createButtonText;
+		
 		// button attributes
 		if(Yii::app()->controller->action->id == 'admin' && ($this->_action == 'Create' || $this->_action == 'Update'))
 		{
@@ -156,7 +161,7 @@ class WMTbActiveForm extends TbActiveForm
 			{
 				echo '<div class="modal-footer">';
 			}
-			echo CHtml::submitButton($this->_action, $this->submitOptions);
+			echo CHtml::submitButton($buttonLabel, $this->submitOptions);
 			if($showSubmit)
 			{
 				echo '</div>';
@@ -168,7 +173,7 @@ class WMTbActiveForm extends TbActiveForm
 			{
 				echo '<div class="form-actions">';
 			}
-			echo CHtml::submitButton($this->_action, $this->submitOptions);
+			echo CHtml::submitButton($buttonLabel, $this->submitOptions);
 			if($showSubmit)
 			{
 				echo '</div>';
