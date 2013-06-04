@@ -86,7 +86,7 @@ class TaskToMaterialController extends Controller
 				static::$tabs = array_merge(static::$tabs, array($tabs));
 			}
 
-			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
+			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail();
 		}
 		
 	}

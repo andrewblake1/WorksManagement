@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $standard_id
  * @property string $description
+ * @property string $category
  * @property string $unit
  * @property string $alias
  * @property integer $drawing_id
@@ -40,9 +41,7 @@ class Material extends ActiveRecord
 			array('standard_id, drawing_id', 'numerical', 'integerOnly'=>true),
 			array('description, alias', 'length', 'max'=>255),
 			array('unit', 'length', 'max'=>64),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, standard_id, description, unit, alias', 'safe', 'on'=>'search'),
+            array('category', 'safe'),
 		));
 	}
 
@@ -92,6 +91,7 @@ class Material extends ActiveRecord
 			't.alias',
 			't.unit',
 			'drawing.description AS searchDrawingDescription',
+			't.category',
 		);
 
 		$criteria->compare('t.id', $this->id);
@@ -100,6 +100,7 @@ class Material extends ActiveRecord
 		$criteria->compare('t.unit', $this->unit);
 		$criteria->compare('t.standard_id', $this->standard_id);
 		$criteria->compare('drawing.description',$this->searchDrawingDescription,true);
+		$criteria->compare('t.category',$this->category,true);
 
 		$criteria->with = array(
 			'drawing',
@@ -113,6 +114,7 @@ class Material extends ActiveRecord
 //		$columns[] = 'id';
 		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'alias';
+ 		$columns[] = 'category';
 		$columns[] = 'searchDrawingDescription';
 		$columns[] = 'unit';
 		

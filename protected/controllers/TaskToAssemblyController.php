@@ -156,7 +156,6 @@ class TaskToAssemblyController extends AdjacencyListController
 			}
 		}
 
-		;
 		$this->setActiveTabs(NULL,
 			$model
 				? TaskToAssembly::getNiceName(NULL, $model)
