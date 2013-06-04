@@ -24,11 +24,8 @@
  * @property Assembly $childAssembly
  * @property TaskToAssembly[] $taskToAssemblies
  */
-class SubAssembly extends AdjacencyListActiveRecord
+class SubAssembly extends ActiveRecord
 {
-	public $parent_id;
-	public $parent;
-
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -179,15 +176,6 @@ class SubAssembly extends AdjacencyListActiveRecord
 		$this->standard_id = $this->parentAssembly->standard_id;
 		
 		return parent::beforeValidate();
-	}
-	
-	public function afterFind() {
-		parent::afterFind();
-		
-		if($this->parent_id = $this->parent_assembly_id)
-		{
-			$this->parent = $this->parentAssembly;
-		}
 	}
 
 }

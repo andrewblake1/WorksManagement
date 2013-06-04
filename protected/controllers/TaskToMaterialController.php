@@ -52,8 +52,6 @@ class TaskToMaterialController extends Controller
 	public function setTabs($model) {
 		$modelName = $this->modelName;
 		$update = FALSE;
-			
-		parent::setTabs($model);
 
 		if(!empty($model->taskToAssembly->id))
 		{
@@ -63,19 +61,22 @@ class TaskToMaterialController extends Controller
 		{
 			$parent_id = $_GET['task_to_assembly_id'];
 		}
+		else
+		{
+			parent::setTabs($model);
+		}
+		
+		
 		if(!empty($parent_id))
 		{
 			$_GET['parent_id'] = $task_to_assembly_id = $parent_id;
 			$taskToAssemblyController= new TaskToAssemblyController(NULL);
 			$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
-//			$taskToAssembly->assertFromParent();
 			$taskToAssemblyController->setTabs(NULL);
 			$taskToAssemblyController->setActiveTabs(TaskToAssembly::getNiceNamePlural(), $modelName::getNiceNamePlural());
 			static::$tabs = $taskToAssemblyController->tabs;
 
 			static::setUpdateId(NULL, 'TaskToAssembly');
-//			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
-
 
 			if($update)
 			{

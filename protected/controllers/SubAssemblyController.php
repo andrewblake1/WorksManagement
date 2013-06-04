@@ -1,6 +1,6 @@
 <?php
 
-class SubAssemblyController extends AdjacencyListController
+class SubAssemblyController extends Controller
 {
 	// called within AdminViewWidget
 	public function getButtons($model)
@@ -108,6 +108,31 @@ class SubAssemblyController extends AdjacencyListController
 		// set breadcrumbs
 		$this->breadcrumbs = self::getBreadCrumbTrail();
 	}
+	
+	protected function currentTabLevel()
+	{
+		return sizeof(static::$tabs);
+	}
+	
+	protected function restoreAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
+	{
+		parent::restoreAdminSettings($viewModelName, $modelName, $_SESSION['admin'][$modelName][$this->currentTabLevel()]);
+	}	
+	
+	protected function storeAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
+	{
+		$tabLevel = $this->currentTabLevel();
+		
+		if(!isset($_SESSION['admin'][$modelName][$tabLevel]))
+		{
+			$_SESSION['admin'][$modelName][$tabLevel] = array();
+		}
+
+		parent::storeAdminSettings($viewModelName, $modelName, $_SESSION['admin'][$modelName][$tabLevel]);
+	}
+	
+	
+	
 	
 	
 }
