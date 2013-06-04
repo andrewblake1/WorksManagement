@@ -30,6 +30,14 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Material';
+	/**
+	 * @var string label for tab and breadcrumbs when creating
+	 */
+	static $createLabel = 'Select material';
+	/**
+	 * @var string label on button in create view
+	 */
+	static $createButtonText = 'Save';
 
 	/**
 	 * @return array validation rules for model attributes.

@@ -16,11 +16,11 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 */
 	static $niceName;
 	/**
-	 * @var string nice model name for use in output
+	 * @var string label for tab and breadcrumbs when creating
 	 */
 	static $createLabel;
 	/**
-	 * @var string nice model name for use in output
+	 * @var string label on button in create view
 	 */
 	static $createButtonText;
 	/**
@@ -37,7 +37,6 @@ abstract class ActiveRecord extends RangeActiveRecord
 	{
 		return self::model()->tableSchema->primaryKey;
 	}
-	
 	
 	/**
 	 * Returns the static model of the specified AR class.
