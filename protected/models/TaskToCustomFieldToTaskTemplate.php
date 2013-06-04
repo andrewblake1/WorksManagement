@@ -80,14 +80,14 @@ class TaskToCustomFieldToTaskTemplate extends ActiveRecord
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
-	public function getSearchCriteria()
+/*	public function getSearchCriteria()
 	{
 		$criteria=new DbCriteria;
 
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
+			'id',	// needed for delete and update buttons
 			't.custom_field_to_task_template_id',
 			"CONCAT_WS('$delimiter',
 				taskTemplate.description,
@@ -116,7 +116,7 @@ class TaskToCustomFieldToTaskTemplate extends ActiveRecord
         $columns[] = static::linkColumn('searchCustomFieldToTaskTemplate', 'CustomFieldToTaskTemplate', 'custom_field_to_task_template_id');
 		
 		return $columns;
-	}
+	}*/
 
 	static function getDisplayAttr()
 	{

@@ -15,7 +15,6 @@
 abstract class ViewCustomFieldActiveRecord extends ViewActiveRecord
 {
 	
-		
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -55,6 +54,7 @@ abstract class ViewCustomFieldActiveRecord extends ViewActiveRecord
 		$criteria->compare('t.value',$this->value,true);
 
 		$criteria->select=array(
+			't.id',
 			't.description',
 			't.value',
 		);

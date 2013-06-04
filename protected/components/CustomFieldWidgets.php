@@ -109,7 +109,7 @@ class CustomFieldWidgets extends CWidget
 				'form'=>$this->form,
 				'customValue'=>$toCustomField->customValue,
 				'customField'=>$toCustomField->{$this->relationCustomFieldModelTemplate}->customField,
-				'CustomFieldModelTemplate'=>$toCustomField->{$this->relationCustomFieldModelTemplate},
+//				'CustomFieldModelTemplate'=>$toCustomField->{$this->relationCustomFieldModelTemplate},
 				'relationToCustomField'=>"{$this->relationModelToCustomFieldModelTemplate}->{$this->relationCustomFieldModelTemplate}->customField",
 			));
 			// add the widget html to the tree branch

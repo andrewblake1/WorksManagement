@@ -118,7 +118,7 @@ class Duty extends ActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'dutyStep->dutyStep->description',
+			'dutyData->dutyStep->description',
 		);
 	}
 
@@ -235,7 +235,7 @@ class Duty extends ActiveRecord
 	public function getIncompleteDependencies()
 	{
 		// get any incomplete children
-		return static::model()->with('dutyData')->findAllByAttributes(array('parent_id'=>$this->id),'dutyData.updated IS NULL');
+//		return static::model()->with('dutyData')->findAllByAttributes(array('id'=>$this->duty_data_id), 'dutyData.updated IS NULL');
 	}
 	
 	/* 
@@ -262,6 +262,30 @@ class Duty extends ActiveRecord
 		}
 		
 		return $saved;
+	}
+	
+	public static function getParentForeignKey($referencesModel, $foreignKeys = array()) {
+		// No actual TaskToAdmin - actual parent is task
+		if($referencesModel == 'TaskToAction')
+		{
+			return 'task_id';
+		}
+		
+		return parent::getParentForeignKey($referencesModel, $foreignKeys);
+	}
+	
+	/*
+	 * Need to override becuase parent is TaskToAction which doesn't exist
+	 */
+	public function assertFromParent($modelName = null)
+	{
+		// store the primary key for the model
+		Controller::setUpdateId($this->task_id, 'TaskToAction');
+		// ensure that that at least the parents primary key is set for the admin view
+		Controller::setAdminParam('task_id', $this->task_id, 'Duty');
+				
+		// assert the task
+		return $this->task->assertFromParent();
 	}
 
 }

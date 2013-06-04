@@ -9,7 +9,6 @@ class CustomFieldWidget extends CWidget
 	public $form;
 	public $customValue;
 	public $customField;
-	public $CustomFieldModelTemplate;
 	public $relationToCustomField; // working from a customValue model to customValue type
 
 	/**
@@ -25,11 +24,10 @@ class CustomFieldWidget extends CWidget
     {
 		$customField = $this->customField;
 		$customValue = $this->customValue;
-		$CustomFieldModelTemplate = $this->CustomFieldModelTemplate;
 		// get array of column names in customValue table
 		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
 		// get the attribute name to be saving to - post array hence []
-		$attribute = "[$CustomFieldModelTemplate->id]".$dataTypeColumnNames[$customField->data_type];
+		$attribute = "[{$this->customValue->id}]".$dataTypeColumnNames[$customField->data_type];
 		// get the label
 		$htmlOptions = array('labelOptions' => array('label'=>$customField->description));
 		
