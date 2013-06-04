@@ -235,7 +235,19 @@ class Duty extends ActiveRecord
 	public function getIncompleteDependencies()
 	{
 		// get any incomplete children
-//		return static::model()->with('dutyData')->findAllByAttributes(array('id'=>$this->duty_data_id), 'dutyData.updated IS NULL');
+		$criteria = new DbCriteria;
+		
+		// join to get depencies then need to join back to get updated value on the children
+		$criteria->join="
+			JOIN tbl_duty_data dutyData ON t.duty_data_id = dutyData.id
+			JOIN tbl_duty_step_dependency dutyStepDependency ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
+			
+			JOIN tbl_duty_data dutyDataDependency ON dutyStepDependency.child_duty_step_id = dutyDataDependency.duty_step_id
+		";
+		
+		$criteria->compareNull('dutyDataDependency.updated');
+		
+		return static::model()->findAll($criteria);
 	}
 	
 	/* 
@@ -268,7 +280,7 @@ class Duty extends ActiveRecord
 		// No actual TaskToAdmin - actual parent is task
 		if($referencesModel == 'TaskToAction')
 		{
-			return 'task_id';
+			return 'task_to_action_id';
 		}
 		
 		return parent::getParentForeignKey($referencesModel, $foreignKeys);
@@ -279,13 +291,32 @@ class Duty extends ActiveRecord
 	 */
 	public function assertFromParent($modelName = null)
 	{
+		if($this->task_id)
+		{
+			$taskId = $this->task_id;
+			$task = $this->task;
+		}
+		else
+		{
+			$criteria = new DbCriteria;
+			
+			$criteria->compare('dutyStep.action_id', $this->task_to_action_id);
+			
+			$criteria->with=array(
+				'dutyData',
+				'dutyData.dutyStep',
+			);
+			$task = Duty::model()->find($criteria);
+			$taskId = $task->id;
+		}
+
 		// store the primary key for the model
-		Controller::setUpdateId($this->task_id, 'TaskToAction');
+		Controller::setUpdateId($taskId, 'TaskToAction');
 		// ensure that that at least the parents primary key is set for the admin view
-		Controller::setAdminParam('task_id', $this->task_id, 'Duty');
-				
+		Controller::setAdminParam('task_id', $taskId, 'Duty');
+
 		// assert the task
-		return $this->task->assertFromParent();
+		return $task->assertFromParent();
 	}
 
 }
