@@ -36,7 +36,7 @@ class DrawingToMaterial extends ActiveRecord
 			array('description', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, drawing_id, description', 'safe', 'on'=>'search'),
+			array('id, alias, drawing_id, description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,11 +73,13 @@ class DrawingToMaterial extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.drawing_id',
 			't.description',
+			't.alias',
 		);
 
 		// where
 		$criteria->compare('t.drawing_id', $this->drawing_id);
 		$criteria->compare('t.description', $this->description, true);
+		$criteria->compare('t.alias', $this->alias, true);
 		
 		return $criteria;
 	}
@@ -85,6 +87,7 @@ class DrawingToMaterial extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = self::linkColumn('description', 'Material', 'id');
+		$columns[] = 'alias';
 		
 		return $columns;
 	}

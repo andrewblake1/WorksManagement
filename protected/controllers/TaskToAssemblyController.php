@@ -128,32 +128,29 @@ class TaskToAssemblyController extends AdjacencyListController
 	// override the tabs when viewing assemblies for a particular task
 	public function setTabs($model) {
 
+		if(!empty($_GET['parent_id']))
+		{
+			$parent_id = $_GET['parent_id'];
+			unset($_GET['parent_id']);
+		}
+		
+		// top level - becarefule not to carry across parent_id as a get param for this or will effect future search
+		parent::setTabs($model ? NULL : $model);
+		
+		// restore get
+		if(!empty($parent_id))
+		{
+			$_GET['parent_id'] = $parent_id;
+		}
+
 		if($model)
 		{
-			// top level - becarefule not to carry across parent_id as a get param for this or will effect future search
-			if(!empty($_GET['parent_id']))
-			{
-				$parent_id = $_GET['parent_id'];
-				unset($_GET['parent_id']);
-			}
-
-			parent::setTabs(NULL);
-
-			// restore get
-			if(!empty($parent_id))
-			{
-				$_GET['parent_id'] = $parent_id;
-			}
 			$this->setChildTabs($this->loadModel(static::getUpdateId()));
 		}
-		else
+		// if in a sub assembly
+		elseif(isset($parent_id))
 		{
-			parent::setTabs($model);
-			// if in a sub assembly
-			if($parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
-			{
-				$this->setChildTabs($this->loadModel($parent_id));
-			}
+			$this->setChildTabs($this->loadModel($parent_id));
 		}
 
 		$this->setActiveTabs(NULL,

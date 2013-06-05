@@ -4,7 +4,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 
 	if($model->isNewRecord)
 	{
-//		DutyStepController::listWidgetRow($model, $form, 'duty_step_id');
 		UserController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Responsible');
 	}
 	else
@@ -16,32 +15,31 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 		}
 		else
 		{
-			// only allow to be checked if dependencies have been checked
-			if($dependencyModels = $model->incompleteDependencies)
-			{
-				// make this a widget or part of controller returning grid with links to the duties if allowed
-				foreach($dependencyModels AS $dependencyModel);
-				{
-					// display a 3 column grid widget with paging showing dependency step, who is responsible if any, and the due date for it
-					Yii::app()->controller->widget('bootstrap.widgets.TbGridView',array(
-						'id'=>'dependency-grid',
-						'type'=>'striped',
-						'dataProvider'=>$model->incompleteDependencies,
-						'columns'=>array('description'),
-						'template'=>"{items}\n{pager}",
-
-					));
-				}
-			}
-			else
-			{
-				$form->checkBoxRow('updated');
-			}
-			
 			// allow system admin and original creator of duty to be able to alter who it is assigned to
 			if($model->updated_by == Yii::app()->user->id || Yii::app()->user->checkAccess('system admin'))
 			{
 				UserController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Assigned to');
+			}
+
+			// only allow to be checked if dependencies have been checked
+			if(ViewDuty::model()->findAll($incompleteDependencies = $model->incompleteDependencies))
+			{
+				// display a 3 column grid widget with paging showing dependency step, who is responsible if any, and the due date for it
+				Yii::app()->controller->widget('bootstrap.widgets.TbGridView',array(
+					'id'=>'dependency-grid',
+					'type'=>'striped',
+					'dataProvider'=>new CActiveDataProvider('ViewDuty', array('criteria'=>$incompleteDependencies)),
+					'columns'=>array(
+						'description',
+						'derived_assigned_to_name',
+						'due',
+					),
+					'template'=>"{items}\n{pager}",
+				));
+			}
+			else
+			{
+				$form->checkBoxRow('updated');
 			}
 		}
 

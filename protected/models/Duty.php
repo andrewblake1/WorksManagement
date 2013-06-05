@@ -236,8 +236,10 @@ class Duty extends ActiveRecord
 		$criteria = new DbCriteria;
 		
 		$criteria->select = array(
-			't.*',
+			't.id',
 			'dutyChild.description AS description',
+			'dutyChild.derived_assigned_to_name AS derived_assigned_to_name',
+			'dutyChild.due AS due',
 		);
 		
 		/*
@@ -251,14 +253,15 @@ class Duty extends ActiveRecord
 		 */
 		$criteria->join="
 			JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
-			JOIN v_duty dutyChild ON = dutyStepDependency.child_duty_step_id
+			JOIN v_duty dutyChild ON dutyStepDependency.child_duty_step_id = dutyChild.id 
 		";
 		
+		// this duties id
 		$criteria->compare('t.id', $this->id);
-		$criteria->compareNull('dutyDataDependency.updated');
-		
-//		return static::model()->findAll($criteria);
-		return new CActiveDataProvider('ViewDuty', array('criteria'=>$criteria));
+		// child duties update values arn't set
+		$criteria->compareNull('dutyChild.updated');
+
+		return $criteria;
 	}
 	
 	/* 
