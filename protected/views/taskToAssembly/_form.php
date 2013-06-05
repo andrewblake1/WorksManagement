@@ -8,7 +8,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	if(!$model->isNewRecord && $model->parent_id)
 	{
 		$subAssembly = $model->subAssembly;
-		$form->rangeFieldRow('quantity', $subAssembly->minimum, $subAssembly->maximum, $subAssembly->select, $subAssembly->quantity_tooltip);
+		$form->rangeFieldRow('quantity', $subAssembly->quantity, $subAssembly->minimum, $subAssembly->maximum, $subAssembly->select, $subAssembly->quantity_tooltip);
 	}
 	else
 	{

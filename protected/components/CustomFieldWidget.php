@@ -59,7 +59,7 @@ class CustomFieldWidget extends CWidget
 
 			case CustomField::validation_typeRange :
 				$range = explode('-', $customField->validation_text);
-				$this->form->rangeFieldRow($attribute, $range[0], $range[1], NULL, NULL, $htmlOptions, $customValue);
+				$this->form->rangeFieldRow($attribute, NULL, $range[0], $range[1], NULL, NULL, $htmlOptions, $customValue);
 				break;
 
 			case CustomField::validation_typeSQLSelect :

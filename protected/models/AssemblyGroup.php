@@ -85,7 +85,7 @@ class AssemblyGroup extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
+		$columns[] = 'id';
 		$columns[] = $this->linkThisColumn('description');
 		
 		return $columns;

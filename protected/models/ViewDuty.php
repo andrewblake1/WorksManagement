@@ -10,6 +10,7 @@ class ViewDuty extends ViewActiveRecord
 	public $task_id;		// place holder for parent
 	public $id;
 	public $duty_data_id;
+	public $duty_step_id;
 	public $description;
 	public $due;
 	public $derived_assigned_to_id;

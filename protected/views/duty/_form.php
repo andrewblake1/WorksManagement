@@ -22,7 +22,15 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 				// make this a widget or part of controller returning grid with links to the duties if allowed
 				foreach($dependencyModels AS $dependencyModel);
 				{
-					
+					// display a 3 column grid widget with paging showing dependency step, who is responsible if any, and the due date for it
+					Yii::app()->controller->widget('bootstrap.widgets.TbGridView',array(
+						'id'=>'dependency-grid',
+						'type'=>'striped',
+						'dataProvider'=>$model->incompleteDependencies,
+						'columns'=>array('description'),
+						'template'=>"{items}\n{pager}",
+
+					));
 				}
 			}
 			else

@@ -17,7 +17,7 @@ class DrawingToAssemblyController extends Controller
 		$_GET['parent_id'] = $_GET['drawing_id'];
 		$drawingController->setTabs(NULL);
 		static::$tabs = $drawingController->tabs;
-		static::$tabs[sizeof(static::$tabs) - 1][1]['active'] = TRUE;
+		$this->setActiveTabs(NULL, DrawingToAssembly::getNiceNamePlural());
 		$this->breadcrumbs = DrawingController::getBreadCrumbTrail();
 	}
 	

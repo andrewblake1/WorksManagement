@@ -24,8 +24,6 @@ class Duty extends ActiveRecord
 	public $description;
 	public $derived_assigned_to_name;
 	
-//	public $derived_importance; // for removal
-	
 	public $custom_value_id;
 	public $updated;
 	public $due;
@@ -96,7 +94,6 @@ class Duty extends ActiveRecord
 
 		// where
 		$criteria->compare('description',$this->description,true);
-//		$criteria->compare('derived_importance',$this->derived_importance,true);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
 		
@@ -110,7 +107,6 @@ class Duty extends ActiveRecord
 	{
         $columns[] = $this->linkThisColumn('description');
         $columns[] = static::linkColumn('derived_assigned_to_name', 'User', 'derived_assigned_to_id');
-//        $columns[] = 'derived_importance';
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
 
@@ -239,17 +235,30 @@ class Duty extends ActiveRecord
 		// get any incomplete children
 		$criteria = new DbCriteria;
 		
-		// join to get depencies then need to join back to get updated value on the children
+		$criteria->select = array(
+			't.*',
+			'dutyChild.description AS description',
+		);
+		
+		/*
+		 * Working with v_duty as alias t
+		 * -- join to any dependant steps
+		 * JOIN tbl_duty_step_dependency dutyStepDependency ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
+		 * -- join back to v_duty to obain the details of depandant rows
+		 * JOIN tbl_duty_data dutyDataDependency ON dutyStepDependency.child_duty_step_id = dutyDataDependency.duty_step_id
+		 * JOIN v_duty dutyChild ON dutyDataDependency.id = dutyChild.duty_data_id
+
+		 */
 		$criteria->join="
-			JOIN tbl_duty_data dutyData ON t.duty_data_id = dutyData.id
-			JOIN tbl_duty_step_dependency dutyStepDependency ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
-			
-			JOIN tbl_duty_data dutyDataDependency ON dutyStepDependency.child_duty_step_id = dutyDataDependency.duty_step_id
+			JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
+			JOIN v_duty dutyChild ON = dutyStepDependency.child_duty_step_id
 		";
 		
+		$criteria->compare('t.id', $this->id);
 		$criteria->compareNull('dutyDataDependency.updated');
 		
-		return static::model()->findAll($criteria);
+//		return static::model()->findAll($criteria);
+		return new CActiveDataProvider('ViewDuty', array('criteria'=>$criteria));
 	}
 	
 	/* 

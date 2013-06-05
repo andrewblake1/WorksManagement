@@ -308,7 +308,7 @@ class WMTbActiveForm extends TbActiveForm
 			array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
-	public function rangeFieldRow($attribute, $minimum, $maximum, $select = '', $quantity_tooltip = '', $htmlOptions = array(), $model = NULL) {
+	public function rangeFieldRow($attribute, $default, $minimum, $maximum, $select = '', $quantity_tooltip = '', $htmlOptions = array(), $model = NULL) {
 		
 		$model = $model ? $model : $this->model;
 		
@@ -318,7 +318,9 @@ class WMTbActiveForm extends TbActiveForm
 		if($model->$attribute === NULL)
 		{
 			// set local default - if single select then select, or if min === max then to min
-			$model->$attribute = RangeActiveRecord::getDefaultValue($select, $minimum, $maximum);
+			$model->$attribute = $default === NULL
+				? RangeActiveRecord::getDefaultValue($select, $minimum, $maximum)
+				: $default;
 		}
 		
 		if(empty($select))

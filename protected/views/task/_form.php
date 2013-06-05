@@ -5,10 +5,6 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	'action'=>empty($action) ? null : $action, 
 ));
 
-	$form->textFieldRow('name');
-
-	$form->textAreaRow('location');
-
 	// only show when creating
 	if($model->isNewRecord)
 	{
@@ -49,8 +45,12 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	{
 		$form->hiddenField('task_template_id');
 		$taskTemplate = $model->taskTemplate;
-		$form->rangeFieldRow('quantity', $taskTemplate->minimum, $taskTemplate->maximum, $taskTemplate->select, $taskTemplate->quantity_tooltip);
+		$form->rangeFieldRow('quantity', $taskTemplate->quantity, $taskTemplate->minimum, $taskTemplate->maximum, $taskTemplate->select, $taskTemplate->quantity_tooltip);
 	}
+
+	$form->textFieldRow('name');
+
+	$form->textAreaRow('location');
 
 	// only allow setting or update of in_charge_id if user has correct priveledge
 	if(Yii::app()->user->checkAccess('scheduler'))

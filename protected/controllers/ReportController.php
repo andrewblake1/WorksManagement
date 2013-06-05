@@ -152,7 +152,6 @@ class ReportController extends Controller
 		// otherwise displaying in a grid
 		elseif($count)
 		{
-//$t=array_keys($command->queryRow());
 			// need to determine our own sort columns also with CSqlDataProvider
 			$attributes=array();
 			// get any link columns which have :link appended to column name
@@ -255,13 +254,14 @@ class ReportController extends Controller
 			}
 
 			// display the grid
+			static $cntr = 0;
 			Yii::app()->controller->widget('bootstrap.widgets.TbGridView',array(
-				'id'=>'report-grid',
+				'id'=>'report-grid' . $cntr++,
 				'type'=>'striped',
 				'dataProvider'=>$dataProvider,
 //				'filter'=>$filtersForm,
 				'columns'=>$attributes,
-				'template'=>"{items}\n{pager}",
+				'template'=>$template,
 
 			));
 			$html = ob_get_clean();
