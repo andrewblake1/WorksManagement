@@ -93,11 +93,16 @@ class Assembly extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
 			't.description',
 			't.alias',
-			'drawing.description AS searchDrawingDescription',
+			't.drawing_id',
+			"CONCAT_WS('$delimiter',
+				drawing.alias,
+				drawing.description
+				) AS searchDrawingDescription",
 		);
 		
 		$criteria->compare('t.id',$this->id);
@@ -105,6 +110,13 @@ class Assembly extends ActiveRecord
 		$criteria->compare('t.alias',$this->alias,true);
 		$criteria->compare('t.standard_id',$this->standard_id);
 		$criteria->compare('drawing.description',$this->searchDrawingDescription,true);
+		$this->compositeCriteria($criteria,
+			array(
+				'drawing.alias',
+				'drawing.description',
+			),
+			$this->searchDrawingDescription
+		);
 
 		$criteria->with=array(
 			'drawing',
@@ -117,7 +129,7 @@ class Assembly extends ActiveRecord
 	{
         $columns[] = 'description';
 		$columns[] = 'alias';
-		$columns[] = 'searchDrawingDescription';
+		$columns[] = static::linkColumn('searchDrawingDescription', 'Drawing', 'drawing_id');
  		
 		return $columns;
 	}
@@ -126,8 +138,8 @@ class Assembly extends ActiveRecord
 	{
 		return array(
 			'id',
-			'description',
 			'alias',
+			'description',
 		);
 	}
  

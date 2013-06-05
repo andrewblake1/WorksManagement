@@ -246,6 +246,7 @@ return array(
 					),
 					'Drawing'=>array(
 						'DrawingToAssembly',
+						'DrawingToMaterial',
 					),
 				),
 				'Supplier'=>array(

@@ -145,6 +145,11 @@ EOD;
 			$this->_authManager->createOperation('DrawingToAssemblyRead', 'DrawingToAssembly read');
 			$task->addChild('DrawingToAssemblyRead');
 
+			$task=$this->_authManager->createTask('DrawingToMaterial', 'DrawingToMaterial task');
+			$systemAdminRole->addChild('DrawingToMaterial');
+			$this->_authManager->createOperation('DrawingToMaterialRead', 'DrawingToMaterial read');
+			$task->addChild('DrawingToMaterialRead');
+
 			$task=$this->_authManager->createTask('Stage', 'Stage task');
 			$systemAdminRole->addChild('Stage');
 			$this->_authManager->createOperation('StageRead', 'Stage read');

@@ -85,13 +85,18 @@ class Material extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
 			't.description',
 			't.alias',
 			't.unit',
-			'drawing.description AS searchDrawingDescription',
 			't.category',
+			't.drawing_id',
+			"CONCAT_WS('$delimiter',
+				drawing.alias,
+				drawing.description
+				) AS searchDrawingDescription",
 		);
 
 		$criteria->compare('t.id', $this->id);
@@ -99,8 +104,15 @@ class Material extends ActiveRecord
 		$criteria->compare('t.alias', $this->alias,true);
 		$criteria->compare('t.unit', $this->unit);
 		$criteria->compare('t.standard_id', $this->standard_id);
-		$criteria->compare('drawing.description',$this->searchDrawingDescription,true);
 		$criteria->compare('t.category',$this->category,true);
+		$criteria->compare('drawing.description',$this->searchDrawingDescription,true);
+		$this->compositeCriteria($criteria,
+			array(
+				'drawing.alias',
+				'drawing.description',
+			),
+			$this->searchDrawingDescription
+		);
 
 		$criteria->with = array(
 			'drawing',
@@ -111,12 +123,11 @@ class Material extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'alias';
  		$columns[] = 'category';
-		$columns[] = 'searchDrawingDescription';
 		$columns[] = 'unit';
+		$columns[] = static::linkColumn('searchDrawingDescription', 'Drawing', 'drawing_id');
 		
 		return $columns;
 	}
@@ -127,8 +138,8 @@ class Material extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'description',
 			'alias',
+			'description',
 		);
 	}
 
