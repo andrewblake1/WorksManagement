@@ -88,6 +88,37 @@ class ReportController extends Controller
 		));
 	}
 
+	public static function createSubReportCommand($sql, $pk)
+	{
+		// create the command
+		$command = Yii::app()->db->createCommand($sql);
+
+		// if sql contains :userid
+		if(stripos($sql, ':userid') !== false)
+		{
+			$params[':userid'] = Yii::app()->user->id;
+			$command->bindParam(":userid", $params[':userid'], PDO::PARAM_INT);
+		}
+
+		// if sql contains :pk
+		if(stripos($sql, ':pk') !== false)
+		{
+			// get the primary key if any in play in this context
+			if($pk !== null)
+			{
+				$params[':pk'] = $pk;
+				$command->bindParam(":pk", $params[':pk'], PDO::PARAM_STR);
+			}
+			// otherwise error
+			else
+			{
+				throw new CHttpException(403,'System admin error. The report isn\'t valid - primary key (:pk) in report but not in this context.');
+			}
+		}
+		
+		return $command;
+	}
+
 	static function subReportCallback($matches, $pk)
 	{
 		$html = '';
@@ -102,38 +133,22 @@ class ReportController extends Controller
 			throw new CHttpException(403, "System admin error. Sub report '$subReportDescription' does not exist.");
 		}
 
-		// the sql
-		$sql = $subReportModel->select;
+		// this could before a multi-statement that might do something like createing a temporary table so in this case the sql we
+		// want to deal with is the last one, and all previous ones are just to be executed
+		// The last one is our sql
+		// The last one is` our sql - array filter removes blank elements created eg. by ; at end
+		$sqls = array_filter(explode(';', $subReportModel->select));
+		$sql = array_pop($sqls);
+		// execute any others
+		foreach($sqls as $excuteSql)
+		{
+			static::createSubReportCommand($excuteSql, $pk)->execute();
+		}
 
 		// create commands
-		$countCommand=Yii::app()->db->createCommand("SELECT COUNT(*) FROM ($sql) alias1");
-		$command=Yii::app()->db->createCommand($sql);
+		$countCommand=static::createSubReportCommand("SELECT COUNT(*) FROM ($sql) alias1", $pk);
+		$command=static::createSubReportCommand($sql, $pk);
 		
-		// if sql contains :userid
-		if(stripos($sql, ':userid') !== false)
-		{
-			$params[':userid'] = Yii::app()->user->id;
-			$countCommand->bindParam(":userid", $params[':userid'], PDO::PARAM_INT);
-			$command->bindParam(":userid", $params[':userid'], PDO::PARAM_INT);
-		}
-
-		// if sql contains :pk
-		if(stripos($sql, ':pk') !== false)
-		{
-			// get the primary key if any in play in this context
-			if($pk !== null)
-			{
-				$params[':pk'] = $pk;
-				$countCommand->bindParam(":pk", $params[':pk'], PDO::PARAM_STR);
-				$command->bindParam(":pk", $params[':pk'], PDO::PARAM_STR);
-			}
-			// otherwise error
-			else
-			{
-				throw new CHttpException(403,'System admin error. The report isn\'t valid - primary key (:pk) in report but not in this context.');
-			}
-		}
-
 		// need to determine the count ourselves for when using CSqlDataProvider
 		try
 		{

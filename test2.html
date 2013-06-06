@@ -4,54 +4,53 @@
 -- --------------------------------------------------------------------------------
 DELIMITER $$
 
-CREATE PROCEDURE `worksmanagement_melbourne_dev`.`pro_task_to_assembly` (IN iTaskId INT)
+CREATE PROCEDURE `worksmanagement_melbourne_dev`.`pro_planning_to_material` (IN inPlanningId INT)
 BEGIN
 
     /* variable declarations section */
-	DECLARE var_calculated_total INT;
-    DECLARE cur_var_task_to_assembly_id INT;
+	DECLARE var_accumulated_total INT;
+    DECLARE cur_var_task_to_material_id INT;
 
     DECLARE no_more_rows INT;  
 
     /* cursor declaration section */
     /* ids in temp table */
-    DECLARE cursor_task_to_assembly CURSOR FOR
+    DECLARE cursor_task_to_material CURSOR FOR
         SELECT id
-        FROM tmp_table;
+        FROM tmp_planning_to_material;
 
     /* handler declaration section */
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET no_more_rows = TRUE;
 
     /* processing section */
 
-	/* start with v_task_to_assembly view for the given task id - and add a total column */
+	/* start with v_task_to_material view for the given task id - and add a total column */
     /* create a temporary table to hold the result set */
-	DROP TEMPORARY TABLE IF EXISTS tmp_table;
-	CREATE TEMPORARY TABLE tmp_table (calculated_total INT), SELECT * FROM v_task_to_assembly WHERE task_id = iTaskId;
+	DROP TEMPORARY TABLE IF EXISTS tmp_planning_to_material;
+	CREATE TEMPORARY TABLE tmp_planning_to_material (accumulated_total INT)
+		SELECT t.*
+		FROM v_task_to_material t
+			JOIN tbl_planning planning ON t.task_id = planning.id
+		WHERE planning.lft >= (SELECT tbl_planning.lft FROM tbl_planning WHERE tbl_planning.id = inPlanningId)
+			AND planning.rgt <= (SELECT tbl_planning.rgt FROM tbl_planning WHERE tbl_planning.id = inPlanningId);
 
     /* add the custom field columns to the temporary table */
     /* loop thru custom fields */
-    OPEN cursor_task_to_assembly;
-    loop_task_to_assembly: LOOP
-        FETCH cursor_task_to_assembly INTO cur_var_task_to_assembly_id;
+    OPEN cursor_task_to_material;
+    loop_task_to_material: LOOP
+        FETCH cursor_task_to_material INTO cur_var_task_to_material_id;
         IF no_more_rows THEN
             SET no_more_rows = FALSE;
-            CLOSE cursor_task_to_assembly;
-            LEAVE loop_task_to_assembly:;
+            CLOSE cursor_task_to_material;
+            LEAVE loop_task_to_material;
         END IF;
 
 		/* get the total for this id */
-		pro_task_to_assembly_assembly_quantity_total` (IN iNumber INT, OUT oTotal INT);
+		CALL pro_task_to_material_material_quantity_total(cur_var_task_to_material_id, var_accumulated_total);
 
-        /* add the column to the temporary table */
-        UPDATE ;
+        /* update the calculated quantity into the temp table */
+        UPDATE tmp_planning_to_material SET accumulated_total = var_accumulated_total WHERE id = cur_var_task_to_material_id;
 
-        PREPARE STMT FROM @stmt_add_column;
-        EXECUTE STMT;
     END LOOP; /* end loop thru custom fields */
-
-	/* ouput recordset */
-	SELECT * FROM tmp_table;
-
 
 END

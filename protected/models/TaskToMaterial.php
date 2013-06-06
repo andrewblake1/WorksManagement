@@ -83,7 +83,7 @@ class TaskToMaterial extends ActiveRecord
 			'searchMaterialAlias' => 'Alias',
 			'searchAssemblyQuantity' => 'Assembly quantity',
 			'search_task_quantity' => 'Task quantity',
-			'search_total_quantity' => 'Total',
+			'searchTotalQuantity' => 'Accumlated total',
 			'searchMaterialGroup' => 'Group',
 			'search_assembly' => 'Assembly',
 			'searchStage' => 'Stage',

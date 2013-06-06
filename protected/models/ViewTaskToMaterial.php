@@ -12,6 +12,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 	public $searchMaterialGroup;
 	public $searchMaterialAlias;
 	public $searchAssemblyQuantity;
+	public $searchTotalQuantity;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -21,10 +22,22 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, task_to_assembly_id, searchMaterialUnit, searchAssemblyQuantity, search_total_quantity, search_task_quantity, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterialDescription, search_assembly, quantity', 'safe', 'on'=>'search'),
+			array('id, task_id, task_to_assembly_id, searchMaterialUnit, searchAssemblyQuantity, searchTotalQuantity, search_task_quantity, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterialDescription, search_assembly, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 
+	public function tableName() {
+
+		// need to create the temp table that we will use - required to get the accumlated total - only want to do one shot though hence the atatic
+		static $tableName = NULL;
+		if(!$tableName)
+		{
+			Yii::app()->db->createCommand("CALL pro_planning_to_assembly({$_GET['task_id']})")->execute();
+		}
+
+		return parent::tableName();
+	}
+	
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
@@ -45,15 +58,14 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			'material.description AS searchMaterialDescription',
 			'material.unit AS searchMaterialUnit',
 			't.search_task_quantity',
-			't.search_total_quantity',
+			't.quantity * task.quantity * taskToAssembly.accumulated_total AS searchTotalQuantity',
 			"CONCAT_WS('$delimiter',
 				materialToClient.alias,
 				material.alias
 				) AS searchMaterialAlias",
-	//		"IF(taskToAssembly.quantity IS NOT NULL, CONCAT_WS(' * ', t.quantity, taskToAssembly.quantity), t.quantity) AS quantity",
 			't.quantity',
 			't.material_group_to_material_id',
-			"taskToAssembly.quantity AS searchAssemblyQuantity",
+			"taskToAssembly.accumulated_total AS searchAssemblyQuantity",
 			't.search_assembly',
 			't.search_assembly_id',
 			't.search_task_to_material_to_assembly_to_material_group_id',
@@ -69,7 +81,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			LEFT JOIN tbl_stage stage ON t.stage_id = stage.id
 			LEFT JOIN tbl_material_group materialGroup ON t.material_group_id = materialGroup.id
 			LEFT JOIN tbl_material material ON t.material_id = material.id
-			LEFT JOIN tbl_task_to_assembly taskToAssembly ON t.task_to_assembly_id = taskToAssembly.id
+			LEFT JOIN tmp_planning_to_assembly taskToAssembly ON t.task_to_assembly_id = taskToAssembly.id
 			LEFT JOIN tbl_task task ON t.task_id = task.id
 			LEFT JOIN tbl_project project ON task.project_id = project.id
 			LEFT JOIN tbl_material_to_client materialToClient ON project.client_id = materialToClient.client_id
@@ -99,7 +111,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.search_task_quantity',$this->search_task_quantity);
 		$criteria->compare('t.searchAssemblyQuantity',$this->searchAssemblyQuantity);
-		$criteria->compare('t.search_total_quantity',$this->search_total_quantity);
+		$criteria->compare('t.searchTotalQuantity',$this->searchTotalQuantity);
 		$criteria->compare('t.task_id',$this->task_id);
 
 		return $criteria;
@@ -115,7 +127,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		$columns[] = 'quantity';
 		$columns[] = 'search_task_quantity';
 		$columns[] = 'searchAssemblyQuantity';
-		$columns[] = 'search_total_quantity';
+		$columns[] = 'searchTotalQuantity';
 		$columns[] = static::linkColumn('search_assembly', 'TaskToAssembly', 'task_to_assembly_id');
 		
 		return $columns;
@@ -134,6 +146,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			'searchMaterialGroup',
 			'searchAssemblyQuantity',
 			'searchStage',
+			'searchTotalQuantity',
 		);
 	}
 

@@ -381,9 +381,14 @@ $t = $model->attributes;
 		}
 	}
 
-	static function getValidGetParams($modelName)
+	static function getValidGetParams($modelName = NULL)
 	{
 		$get = array();
+		
+		if(!$modelName)
+		{
+			$modelName = static::modelName();
+		}
 		
 		$primaryKeyName = $modelName::primaryKeyName();
 

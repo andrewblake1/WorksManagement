@@ -1210,9 +1210,9 @@ if(count($m = $this->getErrors()))
 		try
 		{
 			// test validity of sql
-			Yii::app()->db->createCommand($sql)->queryAll();
+			Yii::app()->db->createCommand($sql)->execute();
 		}
-		catch(Exception $e)
+		catch(CDbException $e)
 		{
 			$errorMessage = 'There is an error in the setup - please contact the system administrator, the database says:<br> '.$e->getMessage();
 			$this->addError($attribute, $errorMessage);

@@ -33,7 +33,6 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		if(!$tableName)
 		{
 			Yii::app()->db->createCommand("CALL pro_planning_to_assembly({$_GET['task_id']})")->execute();
-			
 		}
 
 		return $tableName = 'tmp_planning_to_assembly';

@@ -35,6 +35,7 @@ class ProjectType extends CategoryActiveRecord {
 			array('name, project_template_id, client_id', 'required'),
             array('project_template_id, client_id', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max' => 64),
+			array('client_id', 'safe'),
 		));
 	}
 

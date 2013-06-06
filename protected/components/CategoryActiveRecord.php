@@ -74,7 +74,8 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 		}
 		else
 		{
-			$categories = static::model()->findAll(array('order' => 'root,lft'));
+			$controllerName = get_called_class() . 'Controller';
+			$categories = static::model()->findAllByAttributes($controllerName::getValidGetParams(), array('order' => 'root,lft'));
 			$level = 0;
 		}
 
