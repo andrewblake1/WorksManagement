@@ -8,26 +8,30 @@
  * @property integer $standard_id
  * @property string $description
  * @property string $alias
+ * @property integer $default_order
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property Assembly[] $assemblies
+ * @property Assembly[] $assemblies1
  * @property User $updatedBy
  * @property Standard $standard
  * @property DrawingAdjacencyList[] $drawingAdjacencyLists
  * @property DrawingAdjacencyList[] $drawingAdjacencyLists1
+ * @property Material[] $materials
+ * @property Material[] $materials1
  */
 class Drawing extends AdjacencyListActiveRecord
 {
 	public $parent_id;
 	public $parent;		// the missing relation
+	protected $defaultSort = array('t.default_order');
 	
 	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Drawing';
-
-	protected $defaultSort = array('t.id');
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -38,10 +42,8 @@ class Drawing extends AdjacencyListActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('standard_id, description', 'required'),
-			array('parent_id, standard_id', 'numerical', 'integerOnly'=>true),
+			array('parent_id, standard_id, default_order', 'numerical', 'integerOnly'=>true),
 			array('description alias', 'length', 'max'=>255),
-//			array('file', 'file', 'types'=>'jpg, gif, png, pdf', 'allowEmpty' => true),
-//			array('id, standard_id, parent_id, description, alias', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -53,10 +55,14 @@ class Drawing extends AdjacencyListActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'assemblies' => array(self::HAS_MANY, 'Assembly', 'standard_id'),
+            'assemblies1' => array(self::HAS_MANY, 'Assembly', 'drawing_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'standard' => array(self::BELONGS_TO, 'Standard', 'standard_id'),
             'drawingAdjacencyLists' => array(self::HAS_MANY, 'DrawingAdjacencyList', 'parent_id'),
             'drawingAdjacencyLists1' => array(self::HAS_MANY, 'DrawingAdjacencyList', 'child_id'),
+            'materials' => array(self::HAS_MANY, 'Material', 'standard_id'),
+            'materials1' => array(self::HAS_MANY, 'Material', 'drawing_id'),
         );
     }
 
@@ -68,6 +74,7 @@ class Drawing extends AdjacencyListActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'standard_id' => 'Standard',
+			'default_order' => 'Default order no.',
 		));
 	}
 

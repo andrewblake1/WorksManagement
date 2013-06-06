@@ -98,6 +98,8 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	
 	$form->textFieldRow('alias');
 	
+	$form->textFieldRow('default_order');
+	
 	// if update
 	if(!$model->isNewRecord)
 	{
