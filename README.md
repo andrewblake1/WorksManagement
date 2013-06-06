@@ -54,12 +54,23 @@ git checkout 1.1.12
 3./ MySQL - to upload databases straight from workbench need to open mysql to other ip's
 find / -name my.cnf. This potential security risk as normally only open to 127.0.0.1 - may require firewall to make safe
 #edit my.cnf to allow access from any ip??
-/etc/init.d/mysql restart
+3.1/ 
+echo "max_sp_recursion_depth = 255">>max_sp_recursion_depth.cnf
+#### tidy up the above - could just be put both in 1 file under conf.d
+
+
+/etc/init.d/mysql restartselessss
 
 #4./ Installing application
 # need to install as user www-data which means www-data needs access to the .ssh folder
 # www-data needs to update into runtime directory and update assets hence doesn't work if installed as root
 # easiest just to chown -R www-data . after pulled down from github as by default www-data has no home directory to store ssh-keys so would need
+
+
+##### alter the above, everything safer owned by root and only give www-data write access to directories that is needed as below
+
+
+
 # to muck around with this whereas already setup for root hence just do as root and chown after
 cd /var/www
 git init test
@@ -69,7 +80,7 @@ mv WorksManagement melbourne
 # if installed in domain/subdomain i.e. no supdirectory then .htaccess is fine, otherwise need to modify first RewriteRule e.g. /melbourne/ instead of /
 cd melbourne
 cp template.htaccess .htaccess
-# need to create private uploads directory/s below document root
+# need to create private uploads directory/s below document root that www-data has write access to
 mkdir /home/www-data
 cd /home/www-data
 mkdir /uploads
@@ -104,6 +115,7 @@ memory_limit = 384M
 
 exit
 
+#security issues here
 chown -R www-data /home/www-data
 chown -R www-data /var/www
 

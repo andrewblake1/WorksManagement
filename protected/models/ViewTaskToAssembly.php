@@ -11,8 +11,9 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	public $searchAssemblyAlias;
 	public $searchTaskQuantity;
 	public $searchTotalQuantity;
-	protected $defaultSort = array('searchAssemblyGroup'=>'DESC', 't.parent_id', 'searchAssemblyGroup');
 
+	protected $defaultSort = array('searchAssemblyGroup'=>'DESC', 't.parent_id', 'searchAssemblyGroup');
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -25,6 +26,19 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		);
 	}
 
+	public function tableName() {
+
+		// need to create the temp table that we will use - required to get the accumlated total - only want to do one shot though hence the atatic
+		static $tableName = NULL;
+		if(!$tableName)
+		{
+			Yii::app()->db->createCommand("CALL pro_planning_to_assembly({$_GET['task_id']})")->execute();
+			
+		}
+
+		return $tableName = 'tmp_planning_to_assembly';
+	}
+	
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
@@ -46,7 +60,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 				) AS searchAssemblyAlias",
 			't.quantity',
 			'task.quantity AS searchTaskQuantity',
-			't.quantity * task.quantity AS searchTotalQuantity',
+			't.accumulated_total * task.quantity AS searchTotalQuantity',
 			't.assembly_group_to_assembly_id',
 			't.assembly_group_id',
 			't.search_task_to_assembly_to_assembly_to_assembly_group_id',
@@ -85,7 +99,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('task.quantity',$this->searchTaskQuantity);
-		$criteria->compare('t.quantity * task.quantity',$this->searchTotalQuantity);
+		$criteria->compare('t.searchTotalQuantity',$this->searchTotalQuantity);
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.task_id',$this->task_id);
 		$criteria->compare('t.parent_id',$this->parent_id);

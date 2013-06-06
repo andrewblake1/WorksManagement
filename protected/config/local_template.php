@@ -20,8 +20,8 @@ return array(
 		'components' => array(
 			// Database
 			'db'=>array(
-				'username' => '',
-				'password' => '',
+				'username' => 'root',
+				'password' => '2w0c1e2_',
 			),
 
 		),
@@ -54,14 +54,9 @@ return array(
 				'charset' => 'utf8',
 			),
 		),
-
 		'params'=>array(
 			// directory to store uploaded files in that are below document root
 			'privateUploadPath' => "/home/www-data/uploads/dev/melbourne/",
-			// directory to store uploaded files in that are above document root
-			'publicUploadPath' => dirname(__FILE__) . '/../../assets/',
-			// web directory to store uploaded files in that are above document root
-			'webUploadPath' => '/assets/',
 		),
 	),
 

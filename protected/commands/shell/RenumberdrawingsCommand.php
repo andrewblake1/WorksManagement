@@ -1,4 +1,7 @@
 <?php
+/*
+ * Deprecated - but kept for basis of similar
+ */
 class RenumberdrawingsCommand extends CConsoleCommand
 {
    
@@ -19,7 +22,6 @@ DESCRIPTION
 
 EOD;
 	}
-
 	
 	/**
 	 * Execute the action.
@@ -58,35 +60,35 @@ EOD;
 				
 				Yii::app()->db->createCommand("
 					UPDATE `tbl_drawing` SET id_old = id;
-					UPDATE `tbl_drawing` SET id = id_new + $max;
+					UPDATE `tbl_drawing` SET id = (id_new + $max);
 				")->execute();
 				
 				echo '\nupdated ids in database - 1st pass\n';
-
+				echo "\ntarget directory is $path\n";
+				
 				// rename the directories - 1st phase + max
 				$cntr = 1;
 				foreach(Drawing::model()->findAll() as $drawing)
 				{
-					$new = $drawing->id_new + $max;
-					exec("mv {$path}drawing/{$drawing->id} {$path}drawing/$new");
+					exec("mv {$path}drawing/{$drawing->id_old} {$path}drawing/{$drawing->id}");
 					
-					echo "\nRenumberd $cntr = 1st pass";
+					echo "\n1st pass {$drawing->id_old} to {$drawing->id}";
 					$cntr++;
 				}
 
 				// second phase - to our target values
 				Yii::app()->db->createCommand("
-					UPDATE `tbl_drawing` SET id = id - $max;
+					UPDATE `tbl_drawing` SET id = (id - $max);
 				")->execute();
 
 				// rename the directories - 1st phase + max
 				$cntr = 1;
 				foreach(Drawing::model()->findAll() as $drawing)
 				{
-					$new = $drawing->id - $max;
-					exec("mv {$path}drawing/{$drawing->id} {$path}drawing/{$new}");
+					$old = $drawing->id_old + $max;
+					exec("mv {$path}drawing/{$old} {$path}drawing/{$drawing->id}");
 					
-					echo "\nRenumberd $cntr = 2nd pass";
+					echo "\n2nd pass {$old} to {$drawing->id}";
 					$cntr++;
 				}
 

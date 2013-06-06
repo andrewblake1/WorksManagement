@@ -152,9 +152,8 @@ class Task extends CustomFieldExtensionActiveRecord
 		static $tableName = NULL;
 		if(!$tableName && strcasecmp(Yii::app()->controller->id, __CLASS__)  == 0 && Yii::app()->controller->action->id == 'admin')
 		{
-			Yii::app()->db->createCommand("CALL pro_get_tasks_from_crew_admin_view(9)")->execute();
-			$tableName = 'tmp_table';
-			return $tableName;
+			Yii::app()->db->createCommand("CALL pro_get_tasks_from_planning_admin_view({$_GET['crew_id']})")->execute();
+			return $tableName = 'tmp_table';
 		}
 
 		return parent::tableName();
@@ -208,8 +207,7 @@ class Task extends CustomFieldExtensionActiveRecord
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * Different becuase fo the temp table and need the extra columns
 	 */
 	public function search($pagination = array())
 	{
@@ -228,11 +226,6 @@ class Task extends CustomFieldExtensionActiveRecord
 					'desc'=>" searchUser DESC",
 				);
 
-		/* create a temporary table name  -- TaskActiveDataProvider will need to take care of removing temp table after standardd procedure has created it and
-		 * data has been retrieved
-		 */
-	
-		Yii::app()->db->createCommand("CALL pro_get_tasks_from_crew_admin_view({$this->crew_id})")->execute();
 		// add all other attributes
 		$sort[] = '*';
 		
@@ -266,13 +259,6 @@ class Task extends CustomFieldExtensionActiveRecord
         $columns['derived_task_template_description'] = static::linkColumn('derived_task_template_description', 'TaskTemplate', 'task_template_id');
 		$columns['planned'] = 'planned';
 		$columns['derived_earliest'] = 'derived_earliest:date';
-/*		$columns['preferred_mon'] = 'preferred_mon:boolean';
-		$columns['preferred_tue'] = 'preferred_tue:boolean';
-		$columns['preferred_wed'] = 'preferred_wed:boolean';
-		$columns['preferred_thu'] = 'preferred_thu:boolean';
-		$columns['preferred_fri'] = 'preferred_fri:boolean';
-		$columns['preferred_sat'] = 'preferred_sat:boolean';
-		$columns['preferred_sun'] = 'preferred_sun:boolean';*/
 		
 		// loop thru temporary table columns
 		$isCustom = FALSE;
