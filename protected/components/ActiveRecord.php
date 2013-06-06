@@ -32,6 +32,11 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 * by the related CustomField
 	 */
 	public $customValidators = array();
+	/**
+	 * @var bool whether or not to show soft deleted records or not. Important that related records can
+	 * but the actual record hidding within its normaly model, lists to block further selection.
+	 */
+	public static $showSoftDeletes = FALSE;
 
 	public static function primaryKeyName()
 	{
@@ -47,6 +52,43 @@ abstract class ActiveRecord extends RangeActiveRecord
 		return parent::model(get_called_class());
 	}
 
+/*	public function findByPk($pk, $condition = '', $params = array()) {
+		// need to set a global within this object to block the deleted default scope from being applied
+		// when looking for a specific record - which will be a related record hence the whole reason
+		// for soft deletes and will cause an expepected null return otherwise
+		
+// TODO: poor design to not rely on global not great design to rely on a global for this purpose - however working
+// within Yii, scopes seemed logical for the soft deletes. Only other way is to deal with soft deletes individually
+// which is currently less desirable than the global object level global.
+		$this->showSoftDeletes = TRUE;
+		
+		$return = parent::findByPk($pk, $condition, $params);
+	
+		$this->showSoftDeletes = FALSE;
+		
+		return $return;
+	}*/
+	
+	public function getRelated($name,$refresh=false,$params=array())
+	{
+		$md=$this->getMetaData();
+		if(isset($md->relations[$name]))
+		{
+			$relation=$md->relations[$name];
+			if(!$this->getIsNewRecord() && $relation instanceof CBelongsToRelation)
+			{
+				static::$showSoftDeletes = TRUE;
+			}
+		}
+
+		$return = parent::getRelated($name,$refresh,$params);
+
+		static::$showSoftDeletes = FALSE;
+		
+		return $return;
+	}
+	
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -542,24 +584,27 @@ $t = $model->attributes;
 //		$defaultScope = static::$defaultScope;
 		$defaultScope = array();
 	
-		// if this model has a deleted property
-		if(in_array('deleted', $this->tableSchema->getColumnNames()))
+		// if we should be blocking soft deleted records from being returned
+		if(!static::$showSoftDeletes)
 		{
-			$conditions = array();
-			
-			// if there is an existing condition
-			if(!empty($defaultScope['condition']))
+			// if this model has a deleted property
+			if(in_array('deleted', $this->tableSchema->getColumnNames()))
 			{
-				$conditions[] = $defaultScope['condition'];
+				$conditions = array();
+
+				// if there is an existing condition
+				if(!empty($defaultScope['condition']))
+				{
+					$conditions[] = $defaultScope['condition'];
+				}
+
+				// append our new condition
+				$conditions[] = $this->getTableAlias(false, false) . '.deleted=0';
+
+				// set condition in the default scope
+				$defaultScope['condition'] = implode(" AND ", $conditions);
 			}
-			
-			// append our new condition
-			$conditions[] = $this->getTableAlias(false, false) . '.deleted=0';
-			
-			// set condition in the default scope
-			$defaultScope['condition'] = implode(" AND ", $conditions);
 		}
-		
 		
         return $defaultScope;
     }
