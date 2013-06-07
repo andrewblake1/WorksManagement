@@ -9,12 +9,12 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
 	$options['pagination'] = array('pageSize'=>10);
 	$options['params'] = array(':report_id'=>$model->id);
-	$dataProvider=new CSqlDataProvider('SELECT id, CONCAT(CONCAT("{", description), "}") AS subReport_id FROM tbl_sub_report WHERE report_id = :report_id', $options);
+	$dataProvider=new CSqlDataProvider('SELECT id, CONCAT(CONCAT("{", description), "}") AS sub_report_template FROM tbl_sub_report WHERE report_id = :report_id', $options);
 	$this->widget('bootstrap.widgets.TbGridView',array(
 		'id'=>'report-grid',
 		'type'=>'striped',
 		'dataProvider'=>$dataProvider,
-		'columns'=>array('subReport_id::Sub report'),
+		'columns'=>array('sub_report_template::Sub report'),
 	));
 
 //	echo '<div class="tinymce">';

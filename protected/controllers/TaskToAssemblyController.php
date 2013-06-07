@@ -14,36 +14,94 @@ class TaskToAssemblyController extends AdjacencyListController
 			'class'=>'WMTbButtonColumn',
 			'buttons'=>array(
 				'delete' => array(
-					'visible'=>'Yii::app()->user->checkAccess($data->id ? "TaskToAssembly" : "TaskToAssemblyToAssemblyToAssemblyGroup", array("primaryKey"=>$data->id ? $data->id : $data->assembly_group_id))',
-					'url'=>'Yii::app()->createUrl(($data->id ? "TaskToAssembly" : "TaskToAssemblylToAssemblyGroupToAssembly" ).
-							"/delete", array("id"=>$data->id ? $data->id : $data->assembly_group_id))',
+					'visible'=>'Yii::app()->user->checkAccess(
+						$data->assembly_group_id
+							? $data->task_to_assembly_to_assembly_to_assembly_group_id
+								? "TaskToAssemblyToAssemblyToAssemblyGroup"
+								: "TaskToAssemblyToTaskTemplateToAssemblyGroup"
+							: "TaskToAssembly"
+					)',
+					'url'=>'Yii::app()->createUrl((
+						$data->assembly_group_id
+							? $data->task_to_assembly_to_assembly_to_assembly_group_id
+								? "TaskToAssemblyToAssemblyToAssemblyGroup"
+								: "TaskToAssemblyToTaskTemplateToAssemblyGroup"
+							: "TaskToAssembly"
+						) . "/delete", array("id"=>
+						$data->id
+							? $data->id
+							: $data->assembly_group_id
+					))',
 				),
 				'update' => array(
-					'visible'=>'Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyToAssemblyGroup" : "TaskToAssembly", array("primaryKey"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))',
+					'visible'=>'Yii::app()->user->checkAccess(
+						$data->assembly_group_id
+							? $data->task_to_assembly_to_assembly_to_assembly_group_id
+								? "TaskToAssemblyToAssemblyToAssemblyGroup"
+								: "TaskToAssemblyToTaskTemplateToAssemblyGroup"
+							: "TaskToAssembly"
+					)',
+
 					'url'=>'Yii::app()->createUrl(
 						$data->assembly_group_id
-							? $data->id
-								? "TaskToAssemblyToAssemblyToAssemblyGroup/update"
-								: "TaskToAssemblyToAssemblyToAssemblyGroup/create"
+							? $data->task_to_assembly_to_assembly_to_assembly_group_id
+								? $data->id
+									? "TaskToAssemblyToAssemblyToAssemblyGroup/update"
+									: "TaskToAssemblyToAssemblyToAssemblyGroup/create"
+								: $data->id
+									? "TaskToAssemblyToTaskTemplateToAssemblyGroup/update"
+									: "TaskToAssemblyToTaskTemplateToAssemblyGroup/create"
 							: "TaskToAssembly/update",
-						$data->assembly_group_id
-							? array("id"=>$data->search_task_to_assembly_to_assembly_to_assembly_group_id, "TaskToAssemblyToAssemblyToAssemblyGroup"=>array(
-								"assembly_group_to_assembly_id"=>$data->assembly_group_to_assembly_id,
-								"assembly_group_id"=>$data->assembly_group_id,
-								"task_id"=>$data->task_id,
-								"task_to_assembly_id"=>($data->id
-									? $data->id
-									: $data->parent_id),
-								"assembly_to_assembly_group_id"=>$data->assembly_to_assembly_group_id,
-								))
+
+						$data->material_group_id
+							? $data->task_to_assembly_to_assembly_to_assembly_group_id
+								? array("id"=>$data->task_to_assembly_to_assembly_to_assembly_group_id, "TaskToAssemblyToAssemblyToAssemblyGroup"=>array(
+									"assembly_group_to_assembly_id"		=>$data->assembly_group_to_assembly_id,
+									"assembly_group_id"					=>$data->assembly_group_id,
+									"task_id"							=>$data->task_id,
+									"task_to_assembly_id"				=>($data->id
+										? $data->id
+										: $data->parent_id),
+									"assembly_to_assembly_group_id"		=>$data->assembly_to_assembly_group_id,
+									))
+								: array("id"=>$data->task_to_assembly_to_task_template_to_assembly_group_id, "TaskToAssemblyToTaskTemplateToAssemblyGroup"=>array(
+									"assembly_group_to_assembly_id"		=>$data->assembly_group_to_assembly_id,
+									"assembly_group_id"					=>$data->assembly_group_id,
+									"task_id"							=>$data->task_id,
+									"task_to_assembly_id"				=>($data->id
+										? $data->id
+										: $data->parent_id),
+									"task_template_to_assembly_group_id"=>$data->task_template_to_assembly_group_id,
+									))
 							: array("id"=>$data->id)
 					)',
 				),
 				'view' => array(
-					'visible'=>'!Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyToAssemblyGroup" : "TaskToAssembly", array("primaryKey"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))
-						&& Yii::app()->user->checkAccess($data->assembly_group_id ? "TaskToAssemblyToAssemblyToAssemblyGroupRead" : "TaskToAssemblyRead")',
-				'url'=>'Yii::app()->createUrl(($data->assembly_group_id ? "TaskToAssemblyToAssemblyToAssemblyGroup" : "TaskToAssembly" ).
-					"/view", array("id"=>$data->assembly_group_id ? $data->assembly_group_id : $data->id))',
+					'visible'=>'
+						!Yii::app()->user->checkAccess(
+							$data->assembly_group_id
+								? $data->task_to_assembly_to_assembly_to_assembly_group_id
+									? "TaskToAssemblyToAssemblyToAssemblyGroup"
+									: "TaskToAssemblyToTaskTemplateToAssemblyGroup"
+								: "TaskToAssembly")
+						&& Yii::app()->user->checkAccess(
+							$data->assembly_group_id
+								? $data->task_to_assembly_to_assembly_to_assembly_group_id
+									? "TaskToAssemblyToAssemblyToAssemblyGroupRead"
+									: "TaskToAssemblyToTaskTemplateToAssemblyGroupRead"
+								: "TaskToAssemblyRead")
+							',
+					'url'=>'Yii::app()->createUrl((
+						$data->assembly_group_id
+							? $data->task_to_assembly_to_assembly_to_assembly_group_id
+								? "TaskToAssemblyToAssemblyToAssemblyGroup"
+								: "TaskToAssemblyToTaskTemplateToAssemblyGroup"
+							: "TaskToAssembly"
+					) . "/view", array("id"=>
+						$data->assembly_group_id
+							? $data->assembly_group_id
+							: $data->id
+					))',
 				),
 			),
 		);

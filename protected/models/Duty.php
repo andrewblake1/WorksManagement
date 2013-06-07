@@ -199,19 +199,21 @@ class Duty extends ActiveRecord
 			$dutyData->planning_id = $planning_id;
 			$dutyData->duty_step_id = $dutyStep->id;
 			$dutyData->level = $level;
+			$dutyData->responsible = NULL;
+			$dutyData->updated = NULL;
+			$dutyData->custom_value_id = NULL;
+			$dutyData->updated_by = Yii::app()->user->id;
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
-			$dutyData->dbCallback('save');
+			$dutyData->insert();
 		}
 		catch (CDbException $e)
 		{
-			// dump
-
+			// retrieve the DutyData
+			$dutyData = DutyData::model()->findByAttributes(array(
+				'planning_id'=>$planning_id,
+				'duty_step_id'=>$dutyStep->id,
+			));
 		}
-		// retrieve the DutyData
-		$dutyData = DutyData::model()->findByAttributes(array(
-			'planning_id'=>$planning_id,
-			'duty_step_id'=>$dutyStep->id,
-		));
 
 		// if there isn't already a customValue item to hold value and there should be
 		if(empty($dutyData->customValue) && !empty($dutyStep->custom_field_id))
@@ -221,7 +223,7 @@ class Duty extends ActiveRecord
 			// associate the new customValue to this duty
 			$dutyData->custom_value_id = $customValue->id;
 			// attempt save
-			$saved &= $dutyData->createSave($models);
+			$saved &= $dutyData->updateSave($models);
 		}
 
 		// link this Duty to the DutyData

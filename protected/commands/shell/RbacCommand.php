@@ -15,7 +15,6 @@ DESCRIPTION
 
 EOD;
 	}
-
 	
 	/**
 	 * Execute the action.
@@ -346,14 +345,20 @@ EOD;
 
 			$task=$this->_authManager->createTask('TaskToMaterial', 'TaskToMaterial task');
 			$task2=$this->_authManager->createTask('TaskToMaterialToAssemblyToMaterialGroup', 'TaskToMaterialToAssemblyToMaterialGroup task');
+			$task3=$this->_authManager->createTask('TaskToMaterialToTaskTemplateToMaterialGroup', 'TaskToMaterialToTaskTemplateToMaterialGroup task');
 			$projectManagerRole->addChild('TaskToMaterial');
 			$projectManagerRole->addChild('TaskToMaterialToAssemblyToMaterialGroup');
+			$projectManagerRole->addChild('TaskToMaterialToTaskTemplateToMaterialGroup');
 			$task->addChild('TaskToMaterialToAssemblyToMaterialGroup');
+			$task->addChild('TaskToMaterialToTaskTemplateToMaterialGroup');
 			$this->_authManager->createOperation('TaskToMaterialRead', 'TaskToMaterial read');
 			$task->addChild('TaskToMaterialRead');
 			$this->_authManager->createOperation('TaskToMaterialToAssemblyToMaterialGroupRead', 'TaskToMaterialToAssemblyToMaterialGroup read');
+			$this->_authManager->createOperation('TaskToMaterialToTaskTemplateToMaterialGroupRead', 'TaskToMaterialToTaskTemplateToMaterialGroup read');
 			$task->addChild('TaskToMaterialToAssemblyToMaterialGroupRead');
+			$task->addChild('TaskToMaterialToTaskTemplateToMaterialGroupRead');
 			$task2->addChild('TaskToMaterialToAssemblyToMaterialGroupRead');
+			$task3->addChild('TaskToMaterialToTaskTemplateToMaterialGroupRead');
 
 			$task=$this->_authManager->createTask('Project', 'Project task');
 			$projectManagerRole->addChild('Project');
@@ -402,14 +407,20 @@ EOD;
 
 			$task=$this->_authManager->createTask('TaskToAssembly', 'TaskToAssembly task');
 			$task2=$this->_authManager->createTask('TaskToAssemblyToAssemblyToAssemblyGroup', 'TaskToAssemblyToAssemblyToAssemblyGroup task');
+			$task2=$this->_authManager->createTask('TaskToAssemblyToTaskTemplateToAssemblyGroup', 'TaskToAssemblyToTaskTemplateToAssemblyGroup task');
 			$projectManagerRole->addChild('TaskToAssembly');
 			$projectManagerRole->addChild('TaskToAssemblyToAssemblyToAssemblyGroup');
+			$projectManagerRole->addChild('TaskToAssemblyToTaskTemplateToAssemblyGroup');
 			$task->addChild('TaskToAssemblyToAssemblyToAssemblyGroup');
+			$task->addChild('TaskToAssemblyToTaskTemplateToAssemblyGroup');
 			$this->_authManager->createOperation('TaskToAssemblyRead', 'TaskToAssembly read');
 			$task->addChild('TaskToAssemblyRead');
 			$this->_authManager->createOperation('TaskToAssemblyToAssemblyToAssemblyGroupRead', 'TaskToAssemblyToAssemblyToAssemblyGroup read');
+			$this->_authManager->createOperation('TaskToAssemblyToTaskTemplateToAssemblyGroupRead', 'TaskToAssemblyToTaskTemplateToAssemblyGroup read');
 			$task->addChild('TaskToAssemblyToAssemblyToAssemblyGroupRead');
+			$task->addChild('TaskToAssemblyToTaskTemplateToAssemblyGroupRead');
 			$task2->addChild('TaskToAssemblyToAssemblyToAssemblyGroupRead');
+			$task2->addChild('TaskToAssemblyToTaskTemplateToAssemblyGroupRead');
 
 			$task=$this->_authManager->createTask('TaskToCustomFieldToTaskTemplate', 'TaskToCustomFieldToTaskTemplate task');
 			$systemAdminRole->addChild('TaskToCustomFieldToTaskTemplate');
@@ -461,19 +472,6 @@ EOD;
 			$defaultRole->addChild('DutyUpdate');
 			// grant default users read operation
 			$defaultRole->addChild('DutyRead');
-			// Grant read access to tasks and projects
-			$defaultRole->addChild('TaskRead');
-			$defaultRole->addChild('CrewRead');
-			$defaultRole->addChild('DayRead');
-			$defaultRole->addChild('ProjectRead');
-			$defaultRole->addChild('ClientRead');
-			$defaultRole->addChild('Planning');
-			// Grant default user access to dashboard
-/*			$task=$this->_authManager->createTask('Dashboard', 'Dashboard task');
-			$this->_authManager->createTask('DashboardDuty', 'DashboardDuty task');
-			$task->addChild('DashboardDuty');
-			$defaultRole->addChild('Dashboard');*/
-
 
 			// Grant project manager project read
 			$projectManagerRole->addChild('ClientRead');

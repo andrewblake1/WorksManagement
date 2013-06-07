@@ -62,7 +62,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 			't.accumulated_total * task.quantity AS searchTotalQuantity',
 			't.assembly_group_to_assembly_id',
 			't.assembly_group_id',
-			't.search_task_to_assembly_to_assembly_to_assembly_group_id',
+			't.task_to_assembly_to_assembly_to_assembly_group_id',
 			't.assembly_to_assembly_group_id',
 			"CONCAT_WS('$delimiter',
 				assemblyGroup.description,

@@ -343,7 +343,7 @@ class Project extends CustomFieldExtensionActiveRecord
 		$saved = true;
 		
 		// loop thru all customValue model types associated to this models model type
-		foreach(ProjectTemplateToAuthItem::model()->findByAttributes(array('project_template_id'=>$this->project_template_id)) as $projectTemplateToAuthItem)
+		foreach(ProjectTemplateToAuthItem::model()->findAllByAttributes(array('project_template_id'=>$this->project_template_id)) as $projectTemplateToAuthItem)
 		{
 			// factory method to create role
 			$saved &= ProjectTemplateToAuthItem::add(

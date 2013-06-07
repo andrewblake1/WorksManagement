@@ -68,7 +68,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			"taskToAssembly.accumulated_total AS searchAssemblyQuantity",
 			't.search_assembly',
 			't.search_assembly_id',
-			't.search_task_to_material_to_assembly_to_material_group_id',
+			't.task_to_material_to_assembly_to_material_group_id',
 			't.assembly_to_material_group_id',
 			"CONCAT_WS('$delimiter',
 				materialGroup.description,

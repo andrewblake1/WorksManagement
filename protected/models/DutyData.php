@@ -77,8 +77,9 @@ class DutyData extends ActiveRecord
 
 	public function beforeSave()
 	{
+$t = $this->attributes;
 		// if the updated attribute was null but is now being set
-		if($this->updated == 1 && $this->getOldAttributeValue('updated') == null)
+		if($this->updated !== NULL && $this->getOldAttributeValue('updated') == null)
 		{
 			// set to current datetime
 			$this->updated = date('Y-m-d H:i:s');

@@ -30,7 +30,7 @@ class DefaultValue extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('table, column, select', 'required'),
 			array('table, column', 'length', 'max'=>64),
-			array('select', 'validationSQL'),
+			array('select', 'validationSQLSelect'),
 //			array('id, table, column, select', 'safe', 'on'=>'search'),
 		));
 	}

@@ -18,7 +18,7 @@
  */
 class Report extends ActiveRecord
 {
-	public $subReport_id;	// dummy place holder for drag and drop list widget in _form
+	public $sub_report_template;	// dummy place holder for drag and drop list widget in _form
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -31,7 +31,7 @@ class Report extends ActiveRecord
 			array('description', 'required'),
 			array('description', 'length', 'max'=>255),
 			array('context', 'length', 'max'=>64),
-			array('template_html, subReport_id', 'safe'),
+			array('template_html, sub_report_template', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 //			array('id, description, template_html, context', 'safe', 'on'=>'search'),
@@ -61,7 +61,7 @@ class Report extends ActiveRecord
 		return parent::attributeLabels(array(
 			'template_html' => 'Template Html',
 			'context' => 'Context',
-			'subReport_id' => 'Sub report',
+			'sub_report_template' => 'Sub report',
 		));
 	}
 

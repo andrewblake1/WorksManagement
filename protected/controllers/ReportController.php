@@ -56,11 +56,15 @@ class ReportController extends Controller
 		$html = self::$_model->template_html;
 		
 		// get the primary key if any in play in this context
-		$pk = null;
+		$pk = empty($_GET['pk'])
+			? empty($_GET['id'])
+				? NULL
+				: $_GET['id']
+			: $_GET['pk'];
+
 		// if pk passed
-		if(!empty($_GET['pk']))
+		if($pk)
 		{
-			$pk = $_GET['pk'];
 			// adding parameter to callback function - to avoid a global
 			$callback = function( $matches ) use ( $pk ) {
 				return ReportController::subReportCallback($matches, $pk);
@@ -68,7 +72,6 @@ class ReportController extends Controller
 
 			$html = preg_replace_callback('`\{(.*?)\}`', $callback, $html);
 		}
-
 		
 		// if errors
 		if(!empty(self::$_errors))
@@ -88,7 +91,7 @@ class ReportController extends Controller
 		));
 	}
 
-	public static function createSubReportCommand($sql, $pk)
+	public static function createSubReportCommand($sql, &$pk, &$userId, &$params)
 	{
 		// create the command
 		$command = Yii::app()->db->createCommand($sql);
@@ -96,7 +99,7 @@ class ReportController extends Controller
 		// if sql contains :userid
 		if(stripos($sql, ':userid') !== false)
 		{
-			$params[':userid'] = Yii::app()->user->id;
+			$params[':userid'] = $userId;
 			$command->bindParam(":userid", $params[':userid'], PDO::PARAM_INT);
 		}
 
@@ -123,6 +126,8 @@ class ReportController extends Controller
 	{
 		$html = '';
 		$subReportDescription = $matches[1];
+		$userId = Yii::app()->user->id;
+		$params = array();
 
 		// get the sub report model
 		if(!$subReportModel = SubReport::model()->findByAttributes(array(
@@ -142,12 +147,12 @@ class ReportController extends Controller
 		// execute any others
 		foreach($sqls as $excuteSql)
 		{
-			static::createSubReportCommand($excuteSql, $pk)->execute();
+			static::createSubReportCommand($excuteSql, $pk, $userId, $params)->execute();
 		}
 
 		// create commands
-		$countCommand=static::createSubReportCommand("SELECT COUNT(*) FROM ($sql) alias1", $pk);
-		$command=static::createSubReportCommand($sql, $pk);
+		$countCommand=static::createSubReportCommand("SELECT COUNT(*) FROM ($sql) alias1", $pk, $userId, $params);
+		$command=static::createSubReportCommand($sql, $pk, $userId, $params);
 		
 		// need to determine the count ourselves for when using CSqlDataProvider
 		try
@@ -157,6 +162,7 @@ class ReportController extends Controller
 		catch (CDbException $e)
 		{
 			static::$_errors[] = $e->getMessage();
+			return;
 		}
 
 		// if not formatting data in grid - assuming scalar

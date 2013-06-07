@@ -37,7 +37,7 @@ class SubReport extends ActiveRecord
 		);
 	}
 
-	public function scopeSubReportReport_id($report_id)
+/*	public function scopeSubReport($report_id)
 	{
 		$criteria=new DbCriteria;
 		$criteria->compare('report_id',$report_id);
@@ -45,7 +45,7 @@ class SubReport extends ActiveRecord
 		$this->getDbCriteria()->mergeWith($criteria);
 
 		return $this;
-	}
+	}*/
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -59,10 +59,7 @@ class SubReport extends ActiveRecord
 			array('description', 'length', 'max'=>255),
 			array('report_id', 'length', 'max'=>10),
 			array('format', 'length', 'max'=>9),
-			array('select', 'validationSQL'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, description, select, report_id, format', 'safe', 'on'=>'search'),
+			array('select', 'validationSQLSelect'),
 		));
 	}
 

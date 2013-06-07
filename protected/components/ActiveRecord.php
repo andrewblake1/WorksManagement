@@ -401,7 +401,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 * @param array $columns the columns.
 	 * @param string $term the term
 	 */
-	public function compositeCriteria($criteria, $columns, $term)
+	public function compositeCriteria(&$criteria, $columns, $term)
 	{
 /*		foreach(explode(Yii::app()->params['delimiter']['search'], $term) as $term)
 		{
@@ -409,19 +409,23 @@ abstract class ActiveRecord extends RangeActiveRecord
 			$criteria->compare($column, $term, true);
 		}*/
 		
+		// placeholder for bound params - must exist after the end of this call to bind
+		static $boundParams = array(); 
+		
 		// if something has been entered
 		if($term)
 		{
 			// protect against possible injection
 			$concat = "CONCAT_WS(' ', ". implode(', ', $columns) . ")";
 			$cntr = 0;
-			$criteria->params = array();
+	//		$criteria->params = array();
 			foreach($terms = explode(' ', $term) as $term)
 			{
 				$term = trim($term);
 				$paramName = ":param$cntr";
+				$boundParams[":param$cntr"] = "%$term%";
 				$criteria->condition .= ($criteria->condition ? " AND " : '')."$concat LIKE $paramName";
-				$criteria->params[$paramName] = "%$term%";
+				$criteria->params[$paramName] = $boundParams[":param$cntr"];
 				$cntr++;
 			}
 		}
@@ -1242,7 +1246,7 @@ if(count($m = $this->getErrors()))
 		return $saved;
 	}
 
-	public function validationSQL($attribute, $params)
+	public function validationSQLSelect($attribute, $params)
 	{
 //TODO: open another database connection as this user whenever entering user entered sql.
 //otherwise they can run their sql with full application access rights
@@ -1251,6 +1255,18 @@ if(count($m = $this->getErrors()))
 		$sql = str_ireplace(':pk', '1', $this->$attribute);
 		$sql = str_ireplace(':userid', '1', $sql);
 
+		// this could before a multi-statement that might do something like createing a temporary table so in this case the sql we
+		// want to deal with is the last one, and all previous ones are just to be executed
+		// The last one is our sql
+		// The last one is` our sql - array filter removes blank elements created eg. by ; at end
+		$sqls = array_filter(explode(';', $sql));
+		$sql = array_pop($sqls);
+		// execute any others
+		foreach($sqls as $excuteSql)
+		{
+			Yii::app()->db->createCommand($excuteSql)->queryAll();
+		}
+		
 		// test if sql is valid
 		try
 		{

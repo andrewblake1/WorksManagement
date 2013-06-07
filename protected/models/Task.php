@@ -544,7 +544,7 @@ class Task extends CustomFieldExtensionActiveRecord
 		$saved = true;
 		
 		// loop thru all customValue model types associated to this models model type
-		foreach($this->taskTemplate->taskTemplateToActions as $taskTemplateToAction)
+		foreach($this->taskTemplate->taskTemplateToActions1 as $taskTemplateToAction)
 		{
 			// factory method to create duties
 			$saved &= Duty::addDuties($taskTemplateToAction->action_id, $this->id, $models);
@@ -554,5 +554,4 @@ class Task extends CustomFieldExtensionActiveRecord
 	}
 	
 }
-
 ?>
