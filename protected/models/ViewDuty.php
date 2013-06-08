@@ -23,11 +23,7 @@ class ViewDuty extends ViewActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('id, duty_data_id, description, due, derived_assigned_to_id, derived_assigned_to_name, derived_updated, derived_importance', 'safe', 'on'=>'search'),
-		);
+		return Duty::rules();
 	}
 
 	/**

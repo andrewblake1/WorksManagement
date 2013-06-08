@@ -4,6 +4,7 @@ abstract class RangeActiveRecord extends CActiveRecord
 {
 	public function setCustomValidatorsRange($rangeModel)
 	{
+$t = $rangeModel->attributes;
 		if(empty($rangeModel->select))
 		{
 			$this->customValidators[] = array('quantity', 'numerical', 'min'=>$rangeModel->minimum, 'max'=>$rangeModel->maximum);

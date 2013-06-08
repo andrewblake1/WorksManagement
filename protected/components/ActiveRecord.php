@@ -877,10 +877,17 @@ $t = $model->attributes;
 		{
 			$this->updated_by = Yii::app()->user->id;
 		}
+	
+		// set any custom validators
+		$this->setCustomValidators();
 
 		return parent::beforeValidate();
 	}
 
+	public function setCustomValidators()
+	{
+	}
+		
 	/**
 	 * Container to deal with error handling for model database calls.
 	 * @param String $callback the name of the method to call.

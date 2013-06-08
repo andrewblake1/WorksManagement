@@ -12,8 +12,8 @@ class AdjacencyListActiveRecord extends ActiveRecord {
 		parent::clearForwardMemory($trail);
 		
 		$modelName = get_class($this);
-		$controllerName = $modelName.'Controller';
-		$level = $controllerName::currentTabLevel();
+		$controllerName = ucfirst(Yii::app()->controller->id) . 'Controller';
+		$level = sizeof($controllerName::$tabs);
 		
 		if(isset($_SESSION['admin'][$modelName]))
 		{

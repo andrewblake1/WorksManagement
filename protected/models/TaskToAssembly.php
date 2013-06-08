@@ -49,10 +49,20 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 
 	public function setCustomValidators()
 	{
-		// if sub assembly
-		if($this->parent_id)
+		if(!empty($this->subAssembly))
 		{
-			$this->setCustomValidatorsRange($model->subAssembly);
+			// validate quantity against related assemblyToAssembly record
+			$this->setCustomValidatorsRange($this->subAssembly);
+		}
+		elseif(!empty($this->taskToAssemblyToAssemblyToAssemblyGroups))
+		{
+			// validate quantity against related assemblyToAssembly record
+			$this->setCustomValidatorsRange($this->taskToAssemblyToAssemblyToAssemblyGroups[0]->assemblyToAssemblyGroup);
+		}
+		elseif(!empty($this->taskToAssemblyToTaskTemplateToAssemblyGroups))
+		{
+			// validate quantity against related assemblyToAssembly record
+			$this->setCustomValidatorsRange($this->taskToAssemblyToTaskTemplateToAssemblyGroups[0]->taskTemplateToAssemblyGroup);
 		}
 	}
 	

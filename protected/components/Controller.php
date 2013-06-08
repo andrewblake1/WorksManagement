@@ -46,7 +46,7 @@ class Controller extends CController {
 	/**
 	 * @var array the tab menu itemse
 	 */
-	protected static $tabs = array();
+	public static $tabs = array();
 	/**
 	 * @var bool whether to show the new button in the admin  
 	  protected $_adminShowNew = false;
@@ -498,7 +498,7 @@ $t = $model->attributes;
 			// if paging or filtering or sorting
 			if(isset($_GET["{$adminViewModelName}_sort"]) || isset($_GET["{$adminViewModelName}_page"]) || isset($_GET[$adminViewModelName]))
 			{
-						$this->storeAdminSettings($adminViewModelName, $modelName);
+				$this->storeAdminSettings($adminViewModelName, $modelName);
 			}
 		}
 		// otherwise non ajax call

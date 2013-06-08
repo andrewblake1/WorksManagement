@@ -31,6 +31,7 @@ class Duty extends ActiveRecord
 	public $duty_step_id;
 	public $responsible;
 	public $task_to_action_id;
+	public $action_id;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -43,7 +44,7 @@ class Duty extends ActiveRecord
 			array('task_id, duty_step_id', 'required'),
 			array('duty_step_id', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
-			array('updated, custom_value_id', 'safe'),
+			array('action_id, updated, custom_value_id', 'safe'),
 		));
 	}
 
@@ -96,6 +97,7 @@ class Duty extends ActiveRecord
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('t.task_id',$this->task_id);
+		$criteria->compare('t.action_id',$this->action_id);
 		
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
@@ -307,7 +309,16 @@ class Duty extends ActiveRecord
 	 */
 	public function assertFromParent($modelName = null)
 	{
-		if($this->task_id)
+		if($this->task_to_action_id)
+		{
+			return parent::assertFromParent($modelName);
+		}
+		elseif($this->action_id)
+		{
+			$this->task_to_action_id = $this->action_id;
+			return parent::assertFromParent($modelName);
+		}
+		elseif($this->task_id)
 		{
 			$taskId = $this->task_id;
 			$task = $this->task;

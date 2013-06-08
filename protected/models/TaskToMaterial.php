@@ -50,9 +50,19 @@ class TaskToMaterial extends ActiveRecord
 			// validate quantity against related assemblyToMaterial record
 			$this->setCustomValidatorsRange($this->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial);
 		}
+		elseif(!empty($this->taskToMaterialToAssemblyToMaterialGroups))
+		{
+			// validate quantity against related assemblyToMaterial record
+			$this->setCustomValidatorsRange($this->taskToMaterialToAssemblyToMaterialGroups[0]->assemblyToMaterialGroup);
+		}
+		elseif(!empty($this->taskToMaterialToTaskTemplateToMaterialGroups))
+		{
+			// validate quantity against related assemblyToMaterial record
+			$this->setCustomValidatorsRange($this->taskToMaterialToTaskTemplateToMaterialGroups[0]->taskTemplateToMaterialGroup);
+		}
 	}
 	
-	/**
+	/**5
 	 * @return array relational rules.
 	 */
 	public function relations()
