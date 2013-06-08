@@ -22,7 +22,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, task_to_assembly_id, searchMaterialUnit, searchAssemblyQuantity, searchTotalQuantity, search_task_quantity, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterialDescription, search_assembly, quantity', 'safe', 'on'=>'search'),
+			array('id, task_template_to_material_group_id, task_id, task_to_assembly_id, searchMaterialUnit, searchAssemblyQuantity, searchTotalQuantity, search_task_quantity, searchMaterialAlias, searchMaterialGroup, searchStage, searchMaterialDescription, search_assembly, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,6 +70,10 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			't.search_assembly_id',
 			't.task_to_material_to_assembly_to_material_group_id',
 			't.assembly_to_material_group_id',
+
+			't.task_to_material_to_task_template_to_material_group_id',
+			't.task_template_to_material_group_id',
+
 			"CONCAT_WS('$delimiter',
 				materialGroup.description,
 				t.comment

@@ -22,7 +22,7 @@ class ViewTaskToAssembly extends ViewActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, task_id, parent_id, quantity, searchTotalQuantity, searchTaskQuantity, searchAssemblyAlias, searchAssemblyGroup, searchMaterialDescription', 'safe', 'on'=>'search'),
+			array('id, task_id, parent_id, quantity, searchTotalQuantity, searchTaskQuantity, searchAssemblyAlias, searchAssemblyGroup, searchAssemblyDescription', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,6 +64,10 @@ class ViewTaskToAssembly extends ViewActiveRecord
 			't.assembly_group_id',
 			't.task_to_assembly_to_assembly_to_assembly_group_id',
 			't.assembly_to_assembly_group_id',
+
+			't.task_to_assembly_to_task_template_to_assembly_group_id',
+			't.task_template_to_assembly_group_id',
+	
 			"CONCAT_WS('$delimiter',
 				assemblyGroup.description,
 				t.comment
