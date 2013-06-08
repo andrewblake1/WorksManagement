@@ -5,8 +5,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	$form->hiddenField('material_group_to_material_id');
 	$form->hiddenField('material_group_id');
 	$form->hiddenField('task_id');
-	$form->hiddenField('task_to_assembly_id');
 	$form->hiddenField('task_template_to_material_group_id');
+$t = $model->attributes;
 
 	$taskTemplateToMaterialGroup = TaskTemplateToMaterialGroup::model()->findByPk($model->task_template_to_material_group_id);
 	

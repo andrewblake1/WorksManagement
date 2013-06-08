@@ -114,7 +114,7 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 	public function updateSave(&$models = array()) {
 		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
 		$taskToAssembly = TaskToAssembly::model()->findByPk($this->task_to_assembly_id);
-		$taskToAssembly->assembly_id = $this->assembly_id;
+		$taskToAssembly->attributes = $_POST[__CLASS__];
 		
 		if($saved = $taskToAssembly->updateSave($models))
 		{
