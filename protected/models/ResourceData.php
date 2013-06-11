@@ -10,7 +10,7 @@
  * @property integer $resource_id
  * @property integer $resource_to_supplier_id
  * @property integer $quantity
- * @property string $hours
+ * @property string $duration
  * @property string $start
  * @property integer $updated_by
  *
@@ -44,13 +44,10 @@ class ResourceData extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('planning_id, level, resource_id, quantity, hours', 'required'),
+			array('planning_id, level, resource_id, quantity, duration', 'required'),
 			array('resource_id, resource_to_supplier_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level', 'length', 'max'=>10),
-			array('start, hours', 'date', 'format'=>'H:m'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, planning_id, level, resource_id, resource_to_supplier_id, quantity, hours, start', 'safe', 'on'=>'search'),
+			array('start, duration', 'date', 'format'=>'H:m'),
 		));
 	}
 
@@ -65,7 +62,8 @@ class ResourceData extends ActiveRecord
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
             'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'resource' => array(self::BELONGS_TO, 'ResourceToSupplier', 'resource_id'),
+			// Beware here when updating via gii
+            'resource' => array(self::BELONGS_TO, 'Resource', 'resource_id'),
             'resourceToSupplier' => array(self::BELONGS_TO, 'ResourceToSupplier', 'resource_to_supplier_id'),
             'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'resource_data_id'),
             'taskToResources1' => array(self::HAS_MANY, 'TaskToResource', 'resource_id'),
@@ -83,7 +81,7 @@ class ResourceData extends ActiveRecord
 			'level' => 'Level',
 			'resource_id' => 'Resource Type',
 			'resource_to_supplier_id' => 'Resource Type To Supplier',
-			'hours' => 'Hours',
+			'duration' => 'Hours',
 			'start' => 'Start',
 		));
 	}
@@ -105,7 +103,7 @@ class ResourceData extends ActiveRecord
 		$criteria->compare('resource_id',$this->resource_id);
 		$criteria->compare('resource_to_supplier_id',$this->resource_to_supplier_id);
 		$criteria->compare('quantity',$this->quantity);
-		$criteria->compare('hours',Yii::app()->format->toMysqlTime($this->hours));
+		$criteria->compare('duration',Yii::app()->format->toMysqlTime($this->duration));
 		$criteria->compare('start',Yii::app()->format->toMysqlTime($this->start));
 		$criteria->compare('updated_by',$this->updated_by);
 

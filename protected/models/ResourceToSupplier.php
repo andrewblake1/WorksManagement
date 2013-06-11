@@ -30,6 +30,17 @@ class ResourceToSupplier extends ActiveRecord
 	 */
 	static $niceName = 'Supplier';
 	
+	public function scopeResource($resourceId)
+	{
+		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
+		$criteria=new DbCriteria;
+		$criteria->compare('t.resource_id', $resourceId);
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */

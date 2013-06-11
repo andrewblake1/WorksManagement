@@ -125,6 +125,7 @@ class Duty extends ActiveRecord
 	public function afterFind() {
 
 		$this->updated = $this->dutyData->updated;
+		$this->action_id = $this->dutyData->dutyStep->action_id;
 		if(!$this->derived_assigned_to_id)
 		{
 			$this->derived_assigned_to_id = 1;

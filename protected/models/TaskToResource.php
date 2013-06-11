@@ -24,19 +24,21 @@ class TaskToResource extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchResourceToSupplier;
+	public $searchSupplier;
+	public $searchResource;
 	public $searchTaskQuantity;
-	public $searchTotalHours;
+	public $searchTotalDuration;
 	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Resource';
 
 	public $quantity;
-	public $hours;
+	public $duration;
 	public $start;
 	public $description;
 	public $resource_to_supplier_id;
+	public $searchLevel;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -46,15 +48,12 @@ class TaskToResource extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_id, resource_id, quantity, hours', 'required'),
-			array('level, resource_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('task_id, resource_id, quantity, duration', 'required'),
+			array('level, resource_id, resource_to_supplier_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			array('task_id', 'length', 'max'=>10),
 			array('resource_to_supplier_id', 'safe'),
-			array('start, hours', 'date', 'format'=>'H:m'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, level, task_id, searchResourceToSupplier, description, quantity, searchTotalHours, searchTaskQuantity, hours, start', 'safe', 'on'=>'search'),
+			array('start, duration', 'date', 'format'=>'H:m'),
 		));
 	}
 
@@ -70,7 +69,8 @@ class TaskToResource extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'resourceData' => array(self::BELONGS_TO, 'ResourceData', 'resource_data_id'),
             'resource' => array(self::BELONGS_TO, 'ResourceData', 'resource_id'),
-            'level0' => array(self::BELONGS_TO, 'ResourceData', 'level'),
+			// Beware of rename here
+            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
         );
     }
 
@@ -81,14 +81,16 @@ class TaskToResource extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'task_id' => 'Task',
-			'searchResourceToSupplier' => 'Supplier',
+			'searchSupplier' => 'Supplier',
+			'searchResource' => 'Resource',
 			'resource_to_supplier_id' => 'Supplier',
 			'resource_id' => 'Resource type',
 			'description' => 'Resource type',
-			'hours' => 'Duration (HH:mm)',
+			'duration' => 'Duration (HH:mm)',
 			'start' => 'Start time (HH:mm)',
 			'searchTaskQuantity' => 'Task quantity',
-			'searchTotalHours' => 'Total time',
+			'searchTotalDuration' => 'Total time',
+			'searchLevel' => 'Level',
 		));
 	}
 
@@ -103,48 +105,49 @@ class TaskToResource extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.resource_id',
-			'resource.description AS description',
-			'supplier.name AS searchResourceToSupplier',
+			'resource.description AS searchResource',
+			'supplier.name AS searchSupplier',
 			'resourceData.quantity AS quantity',
 			'task.quantity AS searchTaskQuantity',
-			'resourceData.quantity * task.quantity AS searchTotalHours',
-			'resourceData.hours AS hours',
+			'SEC_TO_TIME(TIME_TO_SEC(duration) * resourceData.quantity * task.quantity) AS searchTotalDuration',
+			'resourceData.duration AS duration',
 			'resourceData.start AS start',
-			't.level',
+			'level0.name AS searchLevel',
 		);
 
 		// where
-		$criteria->compare('resource.description',$this->description,true);
-		$criteria->compare('supplier.name',$this->searchResourceToSupplier,true);
+		$criteria->compare('resource.description',$this->searchResource,true);
+		$criteria->compare('supplier.name',$this->searchSupplier,true);
 		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('t.searchTaskQuantity',$this->searchTaskQuantity);
-		$criteria->compare('resourceData.quantity * task.quantity',$this->searchTotalHours);
-		$criteria->compare('hours',Yii::app()->format->toMysqlTime($this->hours));
+		$criteria->compare('resourceData.quantity * task.quantity',$this->searchTotalDuration);
+		$criteria->compare('duration',Yii::app()->format->toMysqlTime($this->duration));
 		$criteria->compare('start',Yii::app()->format->toMysqlTime($this->start));
-		$criteria->compare('t.level',$this->level);
+		$criteria->compare('level0.name',$this->searchLevel,true);
 		$criteria->compare('t.task_id',$this->task_id);
 		
 		//  with
 		$criteria->with = array(
 			'task',
-			'resourceData',
-			'resourceData.resourceToSupplier.resource',
+			'resourceData.resource',
+			'resourceData.resourceToSupplier',
 			'resourceData.resourceToSupplier.supplier',
-			);
+			'level0',
+		);
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-        $columns[] = 'description';
-        $columns[] = static::linkColumn('searchResourceToSupplier', 'ResourceToSupplier', 'resource_to_supplier_id');
+        $columns[] = 'searchResource';
+        $columns[] = static::linkColumn('searchSupplier', 'ResourceToSupplier', 'resource_to_supplier_id');
 		$columns[] = 'quantity';
 		$columns[] = 'searchTaskQuantity';
-		$columns[] = 'hours';
-		$columns[] = 'searchTotalHours';
+		$columns[] = 'duration:time';
+		$columns[] = 'searchTotalDuration:time';
 		$columns[] = 'start';
-		$columns[] = 'level';
+		$columns[] = 'searchLevel';
 		
 		return $columns;
 	}
@@ -160,8 +163,8 @@ class TaskToResource extends ActiveRecord
 			'description',
 			'quantity',
 			'searchTaskQuantity',
-			'hours',
-			'searchTotalHours',
+			'duration',
+			'searchTotalDuration',
 			'start',
 		);
 	}
@@ -173,9 +176,8 @@ class TaskToResource extends ActiveRecord
 
 	public function beforeSave()
 	{
-		$this->resourceData->resource_to_supplier_id = $this->resource_to_supplier_id;
 		$this->resourceData->quantity = $this->quantity;
-		$this->resourceData->hours = $this->hours;
+		$this->resourceData->duration = $this->duration;
 		$this->resourceData->start = $this->start;
 
 		return parent::beforeSave();
@@ -184,7 +186,7 @@ class TaskToResource extends ActiveRecord
 	public function afterFind() {
 		$this->resource_to_supplier_id = $this->resourceData->resource_to_supplier_id;
 		$this->quantity = $this->resourceData->quantity;
-		$this->hours = $this->resourceData->hours;
+		$this->duration = $this->resourceData->duration;
 		$this->start = $this->resourceData->start;
 		
 		parent::afterFind();
@@ -228,23 +230,34 @@ class TaskToResource extends ActiveRecord
 			$resourceData = new ResourceData;
 			$resourceData->planning_id = $planning_id;
 			$resourceData->resource_id = $this->resource_id;
+			$resourceData->resource_to_supplier_id = $this->resource_to_supplier_id;
 			$resourceData->level = $level;
 			$resourceData->quantity = $this->quantity;
-			$resourceData->hours = $this->hours;
+			$resourceData->duration = $this->duration;
+			$resourceData->start = $this->start;
+			$resourceData->updated_by = Yii::app()->user->id;
+			// NB not recording return here as might fail deliberately if already exists - though will go to catch
+			$resourceData->insert();
+		}
+		catch (CDbException $e)
+		{
+			// retrieve the ResourceData
+			$resourceData = ResourceData::model()->findByAttributes(array(
+				'planning_id'=>$planning_id,
+				'resource_id'=>$this->resource_id,
+			));
+			// update the resource data
+// TODO: will have issue here if level changes then planning_id will need to change also may need to converge or diverge
+//			$resourceData->planning_id = $planning_id;
+			$resourceData->resource_id = $this->resource_id;
+			$resourceData->resource_to_supplier_id = $this->resource_to_supplier_id;
+//			$resourceData->level = $level;
+			$resourceData->quantity = $this->quantity;
+			$resourceData->duration = $this->duration;
 			$resourceData->start = $this->start;
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
 			$resourceData->dbCallback('save');
 		}
-		catch (CDbException $e)
-		{
-			// dump
-
-		}
-		// retrieve the ResourceData
-		$resourceData = ResourceData::model()->findByAttributes(array(
-			'planning_id'=>$planning_id,
-			'resource_id'=>$this->resource_id,
-		));
 
 		// link this Resource to the ResourceData
 		$this->resource_data_id = $resourceData->id;
@@ -259,7 +272,6 @@ class TaskToResource extends ActiveRecord
 		
 		// ensure the related items are set
 		$this->beforeSave();
-		$oldResourceData_id = $this->resourceData->id;
 
 		// ensure the ResourceData has correct level by inserting a new one if necassary or linking to correct
 		$this->insertResourceData();

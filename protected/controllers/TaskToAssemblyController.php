@@ -16,16 +16,16 @@ class TaskToAssemblyController extends AdjacencyListController
 				'delete' => array(
 					'visible'=>'Yii::app()->user->checkAccess(
 						$data->assembly_group_id
-							? $data->task_to_assembly_to_assembly_to_assembly_group_id
+							? ($data->task_to_assembly_to_assembly_to_assembly_group_id
 								? "TaskToAssemblyToAssemblyToAssemblyGroup"
-								: "TaskToAssemblyToTaskTemplateToAssemblyGroup"
+								: "TaskToAssemblyToTaskTemplateToAssemblyGroup")
 							: "TaskToAssembly"
 					)',
 					'url'=>'Yii::app()->createUrl((
 						$data->assembly_group_id
-							? $data->task_to_assembly_to_assembly_to_assembly_group_id
+							? ($data->task_to_assembly_to_assembly_to_assembly_group_id
 								? "TaskToAssemblyToAssemblyToAssemblyGroup"
-								: "TaskToAssemblyToTaskTemplateToAssemblyGroup"
+								: "TaskToAssemblyToTaskTemplateToAssemblyGroup")
 							: "TaskToAssembly"
 						) . "/delete", array("id"=>
 						$data->id
@@ -36,9 +36,9 @@ class TaskToAssemblyController extends AdjacencyListController
 				'update' => array(
 					'visible'=>'Yii::app()->user->checkAccess(
 						$data->assembly_group_id
-							? $data->task_to_assembly_to_assembly_to_assembly_group_id
+							? ($data->task_to_assembly_to_assembly_to_assembly_group_id
 								? "TaskToAssemblyToAssemblyToAssemblyGroup"
-								: "TaskToAssemblyToTaskTemplateToAssemblyGroup"
+								: "TaskToAssemblyToTaskTemplateToAssemblyGroup")
 							: "TaskToAssembly"
 					)',
 

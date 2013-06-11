@@ -43,6 +43,13 @@ class CustomValue extends ActiveRecord
 
 	public function setCustomValidators($customValidatorParams = array())
 	{
+		// avoid the call to this function from ActiveRecord::beforeValidate
+		// Todo: maybe should override beforevalidate?
+		if(empty($customValidatorParams))
+		{
+			return;
+		}
+
 		$customField = $customValidatorParams['customField'];
 		$params = $customValidatorParams['params'];
 		
@@ -267,9 +274,11 @@ class CustomValue extends ActiveRecord
 		$customValue = new self;
 
 		// massive assignement - if created dynamically previously and now wanting to save/create
-		if(isset($_POST['CustomValue'][$CustomFieldModelTemplate->id]))
+		if(isset($_POST['CustomValue']))
 		{
-			$customValue->attributes=$_POST['CustomValue'][$CustomFieldModelTemplate->id];
+			// this is a little dirty. Dealing with elements in order they were created as the id looses significance
+			// as was dynamically created. An alternative would be for CustomValue id's to actually be the generic type id instead
+			$customValue->attributes=array_shift($_POST['CustomValue']);
 		}
 		else
 		{

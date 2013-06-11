@@ -4,11 +4,12 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	ResourceController::listWidgetRow($model, $form, 'resource_id');
 
-	ResourceToSupplierController::listWidgetRow($model, $form, 'resource_to_supplier_id');
+	ResourceToSupplierController::listWidgetRow($model, $form, 'resource_to_supplier_id', array(), array(
+		'scopeResource'=>array($model->resource_id)));
 
 	$form->textFieldRow('quantity');
 
-	$form->textFieldRow('hours');
+	$form->textFieldRow('duration');
 
 	$form->textFieldRow('start');
 

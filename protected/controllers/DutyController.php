@@ -11,15 +11,18 @@ class DutyController extends Controller
 	public function setTabs($model, &$tabs = NULL) {
 		// create tabs
 		parent::setTabs($model, $tabs);
-		// remobe the first one
+		// remove the first one
 		unset(self::$tabs[0][0]);
 		
-		// alter the breadcrumb trail also to stop and error with the virtual TaskToAdmin parent
+		// alter the breadcrumb trail also to stop an error with the virtual TaskToAdmin parent
 		$breadcrumbs = $this->breadcrumbs;
 		$lastcrumb = array_slice(($breadcrumbs), -1, 1);
 		$secondToLastCrumb = array_slice(($breadcrumbs), -2, 1);
 		// alter url
-		$secondToLastCrumb[0][key(current($secondToLastCrumb))] = array('duty/admin', 'task_id'=>$_GET['task_id'], 'action_id'=>$_GET['action_id']);
+		$secondToLastCrumb[0][key(current($secondToLastCrumb))] = array('duty/admin',
+			'task_id' => empty($model->task_id) ? $_GET['task_id'] : $model->task_id,
+			'action_id' => empty($model->action_id) ? $_GET['action_id'] : $model->action_id,
+		);
 		array_pop($breadcrumbs);
 		array_pop($breadcrumbs);
 		$this->breadcrumbs = array_merge($breadcrumbs, $secondToLastCrumb, $lastcrumb);
