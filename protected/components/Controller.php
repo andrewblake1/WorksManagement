@@ -349,6 +349,12 @@ $t = $model->attributes;
 						$urlParams = array_merge($urlParams, static::getValidGetParams($modelName));
 						$tabs[$level][$index]['label'] = $modelName::getNiceName($keyValue);
 						$tabs[$level][$index]['url'] = $urlParams;
+						// assume active unless otherwise indicated
+				// if this item matches the main model
+				if ($modelName == $thisModelName) {
+					// make this the active tab
+					$tabs[$level][$index]['active'] = true;
+				}
 						$index++;
 						continue;
 					}

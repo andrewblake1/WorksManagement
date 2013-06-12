@@ -455,6 +455,7 @@ EOD;
 			$schedulerRole->addChild('AssemblyToMaterialGroupRead');
 			$schedulerRole->addChild('DrawingRead');
 			$schedulerRole->addChild('DrawingToAssemblyRead');
+			$schedulerRole->addChild('DrawingToMaterialRead');
 			$schedulerRole->addChild('MaterialGroupRead');
 			$schedulerRole->addChild('MaterialRead');
 			$schedulerRole->addChild('MaterialGroupToMaterialRead');

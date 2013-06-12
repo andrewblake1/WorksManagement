@@ -74,7 +74,6 @@ class AssemblyToMaterial extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'stage' => array(self::BELONGS_TO, 'Stage', 'stage_id'),
             'taskToMaterialToAssemblyToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterial', 'assembly_to_material_id'),
-			'searchDetailDrawingDescription' => 'Detail drawing',
         );
     }
 
@@ -91,6 +90,7 @@ class AssemblyToMaterial extends ActiveRecord
 			'searchMaterialAlias' => 'Alias',
 			'stage_id' => 'Stage',
 			'searchStage' => 'Stage',
+			'searchDetailDrawingDescription' => 'Detail drawing',
 		));
 	}
 
