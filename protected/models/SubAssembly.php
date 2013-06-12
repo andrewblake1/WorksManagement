@@ -8,6 +8,7 @@
  * @property integer $standard_id
  * @property integer $parent_assembly_id
  * @property integer $child_assembly_id
+ * @property integer $detail_drawing_id
  * @property string $comment
  * @property integer $quantity
  * @property integer $minimum
@@ -18,10 +19,11 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property User $updatedBy
+ * @property Drawing $drawing
  * @property Assembly $parentAssembly
  * @property Assembly $standard
  * @property Assembly $childAssembly
+ * @property User $updatedBy
  * @property TaskToAssembly[] $taskToAssemblies
  */
 class SubAssembly extends ActiveRecord
@@ -32,6 +34,8 @@ class SubAssembly extends ActiveRecord
 	static $niceName = 'Sub assembly';
 
 	public $searchChildAssembly;
+	public $searchDetailDrawingDescription;
+
 	protected $defaultSort = array('childAssembly.description');
 
 	/**
@@ -43,12 +47,9 @@ class SubAssembly extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('standard_id, parent_assembly_id, child_assembly_id, quantity', 'required'),
-			array('standard_id, parent_assembly_id, child_assembly_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
+			array('standard_id, parent_assembly_id, child_assembly_id, detail_drawing_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('quantity_tooltip, comment', 'length', 'max'=>255),
 			array('select', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('searchChildAssembly, id, parent_assembly_id, child_assembly_id, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -60,10 +61,11 @@ class SubAssembly extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'drawing' => array(self::BELONGS_TO, 'Drawing', 'detaiol_drawing_id'),
             'parentAssembly' => array(self::BELONGS_TO, 'Assembly', 'parent_assembly_id'),
             'standard' => array(self::BELONGS_TO, 'Assembly', 'standard_id'),
             'childAssembly' => array(self::BELONGS_TO, 'Assembly', 'child_assembly_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'sub_assembly_id'),
         );
     }
@@ -78,6 +80,7 @@ class SubAssembly extends ActiveRecord
 			'parent_assembly_id' => 'Parent assembly',
 			'child_assembly_id' => 'Sub assembly',
 			'searchChildAssembly' => 'Child assembly',
+			'searchDetailDrawingDescription' => 'Detail drawing',
 		));
 	}
 
@@ -97,6 +100,10 @@ class SubAssembly extends ActiveRecord
 				childAssembly.description,
 				childAssembly.alias
 				) AS searchChildAssembly",
+			"CONCAT_WS('$delimiter',
+				drawing.alias,
+				drawing.description
+				) AS searchDetailDrawingDescription",
 			't.select',
 			't.quantity_tooltip',
 			't.quantity',
@@ -120,9 +127,17 @@ class SubAssembly extends ActiveRecord
 			),
 			$this->searchChildAssembly
 		);
+		$this->compositeCriteria($criteria,
+			array(
+				'drawing.alias',
+				'drawing.description',
+			),
+			$this->searchDetailDrawingDescription
+		);
 
 		$criteria->with = array(
 			'childAssembly',
+			'drawing',
 		);
 
 		return $criteria;
@@ -130,9 +145,9 @@ class SubAssembly extends ActiveRecord
 	
 	public function getAdminColumns()
 	{
-   //     $columns[] = static::linkColumn('searchChildAssembly', 'Assembly', 'child_assembly_id', array('parent_assembly_id'=>$_GET['parent_assembly_id']));
         $columns[] = 'searchChildAssembly';
   		$columns[] = 'comment';
+		$columns[] = static::linkColumn('searchDetailDrawingDescription', 'Drawing', 'detail_drawing_id');
 		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';

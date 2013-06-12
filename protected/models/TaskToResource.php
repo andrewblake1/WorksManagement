@@ -146,7 +146,7 @@ class TaskToResource extends ActiveRecord
 		$columns[] = 'searchTaskQuantity';
 		$columns[] = 'duration:time';
 		$columns[] = 'searchTotalDuration:time';
-		$columns[] = 'start';
+		$columns[] = 'start:time';
 		$columns[] = 'searchLevel';
 		
 		return $columns;

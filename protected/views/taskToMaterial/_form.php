@@ -8,6 +8,9 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	{
 		$form->hiddenField('material_id');
 		// material is alterable but might control quantity
+		$assemblyToMaterial = TaskToMaterialToAssemblyToMaterial::model()->findByAttributes(array('task_to_material_id' => $model->id));
+$t = $assemblyToMaterial->assembly_to_material_id;
+$t = $t->assemblyToMaterial;
 		$assemblyToMaterial = TaskToMaterialToAssemblyToMaterial::model()->findByAttributes(array('task_to_material_id' => $model->id))->assemblyToMaterial;
 		$form->rangeFieldRow('quantity', $assemblyToMaterial->quantity, $assemblyToMaterial->minimum, $assemblyToMaterial->maximum, $assemblyToMaterial->select, $assemblyToMaterial->quantity_tooltip);
 	}

@@ -18,7 +18,7 @@ class Formatter extends CFormatter
 	public function formatTime($value) {
 		return empty($value)
 			? ''
-			: date('H:i', strtotime($value));
+			: preg_replace('/(..:..):../', '$1', $value);
 	}
 
 	/**

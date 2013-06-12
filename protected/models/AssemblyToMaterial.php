@@ -9,6 +9,7 @@
  * @property integer $material_id
  * @property integer $stage_id
  * @property integer $standard_id
+ * @property integer $detail_drawing_id
  * @property integer $quantity
  * @property integer $minimum
  * @property integer $maximum
@@ -18,6 +19,7 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property Drawing $detailDrawing
  * @property Assembly $assembly
  * @property Material $standard
  * @property Material $material
@@ -35,6 +37,8 @@ class AssemblyToMaterial extends ActiveRecord
 	public $searchMaterialUnit;
 	public $searchMaterialAlias;
 	public $searchStage;
+	public $searchDetailDrawingDescription;
+
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -49,10 +53,9 @@ class AssemblyToMaterial extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('assembly_id, material_id, stage_id, standard_id, quantity', 'required'),
-			array('assembly_id, material_id, stage_id, standard_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, material_id, stage_id, standard_id, detail_drawing_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('quantity_tooltip', 'length', 'max'=>255),
 			array('select', 'safe'),
-//			array('id, assembly_id, searchStage, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, quantity, minimum, maximum, quantity_tooltip, select', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -64,12 +67,14 @@ class AssemblyToMaterial extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'detailDrawing' => array(self::BELONGS_TO, 'Drawing', 'detail_drawing_id'),
             'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
             'standard' => array(self::BELONGS_TO, 'Material', 'standard_id'),
             'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'stage' => array(self::BELONGS_TO, 'Stage', 'stage_id'),
             'taskToMaterialToAssemblyToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterial', 'assembly_to_material_id'),
+			'searchDetailDrawingDescription' => 'Detail drawing',
         );
     }
 
@@ -102,6 +107,10 @@ class AssemblyToMaterial extends ActiveRecord
 			't.assembly_id',
 			'stage.description AS searchStage',
 			'material.description AS searchMaterialDescription',
+			"CONCAT_WS('$delimiter',
+				drawing.alias,
+				drawing.description
+				) AS searchDetailDrawingDescription",
 			'material.unit AS searchMaterialUnit',
 			'material.alias AS searchMaterialAlias',
 			't.material_id',
@@ -110,6 +119,13 @@ class AssemblyToMaterial extends ActiveRecord
 			't.maximum',
 			't.select',
 			't.quantity_tooltip',
+		);
+		$this->compositeCriteria($criteria,
+			array(
+				'drawing.alias',
+				'drawing.description',
+			),
+			$this->searchDetailDrawingDescription
 		);
 
 		$criteria->compare('stage.description',$this->searchStage,true);
@@ -122,11 +138,12 @@ class AssemblyToMaterial extends ActiveRecord
 		$criteria->compare('t.maximum',$this->maximum);
 		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
 		$criteria->compare('t.select',$this->select,true);
-		
+
 		$criteria->with = array(
 			'material',
 			'stage',
-			);
+			'drawing',
+		);
 
 		return $criteria;
 	}
@@ -137,6 +154,7 @@ class AssemblyToMaterial extends ActiveRecord
  		$columns[] = 'searchMaterialUnit';
  		$columns[] = 'searchMaterialAlias';
  		$columns[] = 'searchStage';
+		$columns[] = static::linkColumn('searchDetailDrawingDescription', 'Drawing', 'detail_drawing_id');
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';

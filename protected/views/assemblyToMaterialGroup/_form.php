@@ -11,6 +11,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('comment');
 
+	DrawingController::listWidgetRow($model, $form, 'drawing_id', array(), array('scopeStandard'=>array($model->standard_id)), 'Drawing');
+
 	$form->textFieldRow('quantity');
 
 	$form->textFieldRow('minimum');

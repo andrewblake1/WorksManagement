@@ -8,6 +8,7 @@
  * @property integer $assembly_id
  * @property integer $standard_id
  * @property integer $assembly_group_id
+ * @property integer $detail_drawing_id
  * @property integer $quantity
  * @property integer $minimum
  * @property integer $maximum
@@ -19,10 +20,11 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property User $updatedBy
+ * @property Drawing $detailDrawing
  * @property Assembly $assembly
  * @property AssemblyGroup $standard
  * @property AssemblyGroup $assemblyGroup
+ * @property User $updatedBy
  * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups
  */
 class AssemblyToAssemblyGroup extends ActiveRecord
@@ -32,6 +34,8 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchAssemblyGroupDescription;
+	public $searchDetailDrawingDescription;
+
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -46,10 +50,9 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('assembly_id, assembly_group_id, standard_id, quantity', 'required'),
-			array('assembly_id, assembly_group_id, standard_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, assembly_group_id, standard_id, detail_drawing_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('quantity_tooltip, selection_tooltip, comment', 'length', 'max'=>255),
 			array('select', 'safe'),
-//			array('id, assembly_id, searchAssemblyGroupDescription, quantity, minimum, maximum, quantity_tooltip, selection_tooltip, select', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -61,10 +64,11 @@ class AssemblyToAssemblyGroup extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'detailDrawing' => array(self::BELONGS_TO, 'Drawing', 'detail_drawing_id'),
             'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
             'standard' => array(self::BELONGS_TO, 'AssemblyGroup', 'standard_id'),
             'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup', 'assembly_group_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskToAssemblyToAssemblyToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'assembly_to_assembly_group_id'),
         );
     }
@@ -80,6 +84,7 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 			'searchAssemblyGroupDescription' => 'Assembly group',
 			'quantity_tooltip' => 'Quantity tooltip',
 			'selection_tooltip' => 'Selection tooltip',
+			'searchDetailDrawingDescription' => 'Detail drawing',
 		));
 	}
 
@@ -96,6 +101,10 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 			't.assembly_id',
 			't.assembly_group_id',
 			'assemblyGroup.description AS searchAssemblyGroupDescription',
+			"CONCAT_WS('$delimiter',
+				drawing.alias,
+				drawing.description
+				) AS searchDetailDrawingDescription",
 			't.select',
 			't.quantity_tooltip',
 			't.selection_tooltip',
@@ -115,9 +124,18 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
 		$criteria->compare('t.selection_tooltip',$this->selection_tooltip,true);
 		$criteria->compare('t.comment',$this->comment,true);
+		$this->compositeCriteria($criteria,
+			array(
+				'drawing.alias',
+				'drawing.description',
+			),
+			$this->searchDetailDrawingDescription
+		);
+
 		
 		$criteria->with = array(
 			'assemblyGroup',
+			'drawing',
 		);
 
 		return $criteria;
@@ -127,6 +145,7 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 	{
         $columns[] = $this->linkThisColumn('searchAssemblyGroupDescription');
  		$columns[] = 'comment';
+		$columns[] = static::linkColumn('searchDetailDrawingDescription', 'Drawing', 'detail_drawing_id');
  		$columns[] = 'selection_tooltip';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';

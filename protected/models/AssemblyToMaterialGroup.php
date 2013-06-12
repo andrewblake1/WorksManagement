@@ -9,6 +9,7 @@
  * @property integer $stage_id
  * @property integer $standard_id
  * @property integer $material_group_id
+ * @property integer $detail_drawing_id
  * @property integer $quantity
  * @property integer $minimum
  * @property integer $maximum
@@ -20,11 +21,12 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property User $updatedBy
- * @property Stage $stage
+ * @property Drawing $detailDrawing
  * @property Assembly $assembly
  * @property MaterialGroup $standard
  * @property MaterialGroup $materialGroup
+ * @property User $updatedBy
+ * @property Stage $stage
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
  */
 class AssemblyToMaterialGroup extends ActiveRecord
@@ -35,6 +37,8 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	 */
 	public $searchMaterialGroupDescription;
 	public $searchStage;
+	public $searchDetailDrawingDescription;
+
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -49,10 +53,9 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('assembly_id, material_group_id, stage_id, standard_id, quantity', 'required'),
-			array('assembly_id, material_group_id, stage_id, standard_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
+			array('assembly_id, material_group_id, stage_id, standard_id, detail_drawing_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
 			array('quantity_tooltip, selection_tooltip, comment', 'length', 'max'=>255),
 			array('select', 'safe'),
-//			array('id, assembly_id, searchStage, searchMaterialGroupDescription, quantity, minimum, maximum, quantity_tooltip, selection_tooltip, select, comment', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -64,11 +67,12 @@ class AssemblyToMaterialGroup extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'stage' => array(self::BELONGS_TO, 'Stage', 'stage_id'),
+            'detailDrawing' => array(self::BELONGS_TO, 'Drawing', 'detail_drawing_id'),
             'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
             'standard' => array(self::BELONGS_TO, 'MaterialGroup', 'standard_id'),
             'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'stage' => array(self::BELONGS_TO, 'Stage', 'stage_id'),
             'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'assembly_to_material_group_id'),
         );
     }
@@ -86,6 +90,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			'quantity_tooltip' => 'Quantity tooltip',
 			'selection_tooltip' => 'Selection tooltip',
 			'searchStage' => 'Stage',
+			'searchDetailDrawingDescription' => 'Detail drawing',
 		));
 	}
 
@@ -103,6 +108,10 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			'stage.description AS searchStage',
 			't.material_group_id',
 			'materialGroup.description AS searchMaterialGroupDescription',
+			"CONCAT_WS('$delimiter',
+				drawing.alias,
+				drawing.description
+				) AS searchDetailDrawingDescription",
 			't.select',
 			't.quantity_tooltip',
 			't.selection_tooltip',
@@ -123,10 +132,19 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
 		$criteria->compare('t.selection_tooltip',$this->selection_tooltip,true);
 		$criteria->compare('t.comment',$this->comment,true);
+		$this->compositeCriteria($criteria,
+			array(
+				'drawing.alias',
+				'drawing.description',
+			),
+			$this->searchDetailDrawingDescription
+		);
+
 		
 		$criteria->with = array(
 			'materialGroup',
 			'stage',
+			'drawing',
 			);
 
 		return $criteria;
@@ -136,6 +154,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	{
         $columns[] = $this->linkThisColumn('searchMaterialGroupDescription');
  		$columns[] = 'comment';
+		$columns[] = static::linkColumn('searchDetailDrawingDescription', 'Drawing', 'detail_drawing_id');
  		$columns[] = 'selection_tooltip';
  		$columns[] = 'searchStage';
  		$columns[] = 'quantity';

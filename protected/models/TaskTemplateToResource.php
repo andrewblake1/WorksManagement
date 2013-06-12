@@ -8,7 +8,7 @@
  * @property integer $task_template_id
  * @property integer $resource_id
  * @property integer $quantity
- * @property string $hours
+ * @property string $duration
  * @property integer $updated_by
  *
  * The followings are the available model relations:
@@ -39,10 +39,10 @@ class TaskTemplateToResource extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('task_template_id, resource_id, quantity', 'required'),
 			array('task_template_id, resource_id, quantity', 'numerical', 'integerOnly'=>true),
-			array('hours', 'date', 'format'=>'H:m'),
+			array('duration', 'date', 'format'=>'H:m'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-//			array('id, task_template_id, searchTaskTemplate, searchResource, quantity, hours', 'safe', 'on'=>'search'),
+//			array('id, task_template_id, searchTaskTemplate, searchResource, quantity, duration', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -68,7 +68,7 @@ class TaskTemplateToResource extends ActiveRecord
 		return parent::attributeLabels(array(
 			'task_template_id' => 'Task Type',
 			'resource_id' => 'Resource Type',
-			'hours' => 'Time on-site (HH:mm)',
+			'duration' => 'Time on-site (HH:mm)',
 		));
 	}
 
@@ -86,13 +86,13 @@ class TaskTemplateToResource extends ActiveRecord
 			't.resource_id',
 			'resource.description AS searchResource',
 			't.quantity',
-			't.hours',
+			't.duration',
 		);
 
 		// where
 		$criteria->compare('resource.description',$this->searchResource);
 		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.hours',Yii::app()->format->toMysqlTime($this->hours));
+		$criteria->compare('t.duration',Yii::app()->format->toMysqlTime($this->duration));
 		$criteria->compare('t.task_template_id',$this->task_template_id);
 
 		// with
@@ -107,7 +107,7 @@ class TaskTemplateToResource extends ActiveRecord
 	{
         $columns[] = static::linkColumn('searchResource', 'Resource', 'resource_id');
  		$columns[] = 'quantity';
-		$columns[] = 'hours';
+		$columns[] = 'duration';
 		
 		return $columns;
 	}

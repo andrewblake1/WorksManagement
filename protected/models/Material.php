@@ -105,7 +105,6 @@ class Material extends ActiveRecord
 		$criteria->compare('t.unit', $this->unit);
 		$criteria->compare('t.standard_id', $this->standard_id);
 		$criteria->compare('t.category',$this->category,true);
-		$boundParam = 'aa';
 		$this->compositeCriteria($criteria,
 			array(
 				'drawing.alias',

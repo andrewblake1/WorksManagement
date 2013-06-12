@@ -6,7 +6,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('quantity');
 
-	$form->textFieldRow('hours');
+	$form->textFieldRow('duration');
 
 $this->endWidget();
 
