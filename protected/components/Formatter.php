@@ -18,7 +18,7 @@ class Formatter extends CFormatter
 	public function formatTime($value) {
 		return empty($value)
 			? ''
-			: preg_replace('/(..:..):../', '$1', $value);
+			: preg_replace('/(.*:.*):.*/', '$1', $value);
 	}
 
 	/**
