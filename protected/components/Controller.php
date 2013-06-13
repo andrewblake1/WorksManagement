@@ -1379,13 +1379,26 @@ $t=			$model->attributes = $_POST[$modelName];
 					'success'=>"function(data) {
 						if(data)
 						{
+							data = $(data);
+
+							// if single item list box then need to hide the listbox as a non editable text box will have been sent also
+							if($(data).filter('#{$htmlOptions['id']}_dummy').length != 0)
+							{
+								data = data.filter('select').hide().end();
+							}
+							
+							lookup = $('#{$htmlOptions['id']}_lookup');
 							$('[for=\"{$htmlOptions['id']}\"]').remove();
 							$('#{$htmlOptions['id']}_save').remove();
 							$('#{$htmlOptions['id']}_em_').remove();
 							$('#{$htmlOptions['id']}_lookup').remove();
+							// may also need to remove other related disable text box if last item produced one
+							// as a result of being a single item select - subbed with non-editing text box
+							$('#{$htmlOptions['id']}_dummy').remove();
+								
+							// do the final substitution
 							$('#{$htmlOptions['id']}').replaceWith(data);
 							// if this is autotext
-							lookup = $('#{$htmlOptions['id']}_lookup');
 							if(lookup.length)
 							{
 								$dependantOnAttribute = $('#{$modelName}_$dependantOnAttribute').val();
@@ -1398,7 +1411,18 @@ $t=			$model->attributes = $_POST[$modelName];
 			array(),
 			$label
 		);
-							
+	
+		// get the id used from the triggering item
+		CHtml::resolveNameID($model, $dependantOnAttribute, $dependsOnHtmlOptions);
+
+								
+		// trigger the change handler on document load to ensure that the dependency is set correctly to begin with
+		Yii::app()->clientScript->registerScript('dropDownListRow' . $htmlOptions['id'], "
+			// trigger the change handler
+			$('#{$dependsOnHtmlOptions['id']}').trigger('change');
+			", CClientScript::POS_READY
+		);
+								
 		// NB: need to set this here as otherwise in wmfkautocomplete the soure url has standard_id=, in it which gets stripped
 		static::listWidgetRow($model, $form, $fkField, $htmlOptions, $scopes);
 	}

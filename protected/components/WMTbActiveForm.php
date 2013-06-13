@@ -221,6 +221,8 @@ class WMTbActiveForm extends TbActiveForm
 			// then no selection to be made so make it for the user - provided something has a value to exclude empty valued please selects
 			if(current($data) !== NULL)
 			{
+				$id = CHtml::activeId($model, $attribute);
+	
 				// set val
 				$model->$attribute = key($data);
 				
@@ -229,13 +231,16 @@ class WMTbActiveForm extends TbActiveForm
 					$data, array('class'=>'span5') + $htmlOptions);
 				
 				// add a dummy field as the list will be removed on doc load
-				echo CHtml::textField(NULL, current($data), array('class'=>'span5') + $htmlOptions + array('disabled'=>'disabled'));
+				echo CHtml::textField(NULL, current($data), $htmlOptions + array(
+						'class'=>'span5',
+						'disabled'=>'disabled',
+						'id'=>$id . '_dummy',
+					));
 				
 				// one potential issue here is that the element may have an ajax event attached to change handler
 //				if(isset($htmlOptions['ajax']))
 				{
 					// trigger the change handler on document load
-					$id = CHtml::activeId($model, $attribute);
 					Yii::app()->clientScript->registerScript('dropDownListRow', "
 						// trigger the change handler
 						$('#$id').trigger('change');
@@ -251,6 +256,11 @@ class WMTbActiveForm extends TbActiveForm
 		{
 			echo parent::dropDownListRow($model, $attribute,
 				$data, array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+		}
+		// otherwise create a hidden item that is blank in case needed by javascript
+		else
+		{
+			$this->hiddenField($attribute);
 		}
 	}
 

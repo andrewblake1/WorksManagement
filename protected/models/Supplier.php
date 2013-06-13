@@ -19,6 +19,21 @@
 class Supplier extends ActiveRecord
 {
 
+/*	public function scopeResource($resourceId)
+	{
+		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
+		$criteria=new DbCriteria;
+		$criteria->compare('resourceToSupplier.resource_id', $resourceId);
+		
+		$criteria->join = "
+			JOIN tbl_resource_to_supplier resourceToSupplier ON t.id = resourceToSupplier.supplier_id
+		";
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}*/
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */

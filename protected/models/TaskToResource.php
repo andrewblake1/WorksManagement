@@ -6,8 +6,6 @@
  * The followings are the available columns in table 'tbl_task_to_resource':
  * @property string $id
  * @property string $task_id
- * @property integer $resource_id
- * @property string $level
  * @property string $resource_data_id
  * @property integer $updated_by
  *
@@ -39,6 +37,8 @@ class TaskToResource extends ActiveRecord
 	public $description;
 	public $resource_to_supplier_id;
 	public $searchLevel;
+	public $resource_id;
+	public $level;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -68,9 +68,9 @@ class TaskToResource extends ActiveRecord
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'resourceData' => array(self::BELONGS_TO, 'ResourceData', 'resource_data_id'),
-            'resource' => array(self::BELONGS_TO, 'ResourceData', 'resource_id'),
+//            'resource' => array(self::BELONGS_TO, 'ResourceData', 'resource_id'),
 			// Beware of rename here
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+  //          'level0' => array(self::BELONGS_TO, 'Level', 'level'),
         );
     }
 
@@ -104,7 +104,7 @@ class TaskToResource extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.resource_id',
+			'resourceData.resource_id',
 			'resource.description AS searchResource',
 			'supplier.name AS searchSupplier',
 			'resourceData.quantity AS quantity',
@@ -132,7 +132,7 @@ class TaskToResource extends ActiveRecord
 			'resourceData.resource',
 			'resourceData.resourceToSupplier',
 			'resourceData.resourceToSupplier.supplier',
-			'level0',
+			'resourceData.level0',
 		);
 
 		return $criteria;
@@ -179,6 +179,8 @@ class TaskToResource extends ActiveRecord
 		$this->resourceData->quantity = $this->quantity;
 		$this->resourceData->duration = $this->duration;
 		$this->resourceData->start = $this->start;
+		$this->resourceData->resource_id = $this->resource_id;
+		$this->resourceData->level = $this->level;
 
 		return parent::beforeSave();
 	}
@@ -188,6 +190,8 @@ class TaskToResource extends ActiveRecord
 		$this->quantity = $this->resourceData->quantity;
 		$this->duration = $this->resourceData->duration;
 		$this->start = $this->resourceData->start;
+		$this->resource_id = $this->resourceData->resource_id;
+		$this->level = $this->resourceData->level;
 		
 		parent::afterFind();
 	}
