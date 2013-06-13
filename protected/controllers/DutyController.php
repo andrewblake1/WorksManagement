@@ -30,6 +30,25 @@ class DutyController extends Controller
 		$this->breadcrumbs[$dutyKey - 1] = array(key($this->breadcrumbs[$dutyKey - 1]));
 	}
 
+	protected static function makeCrumbAdmin($displays, $queryParamters)
+	{
+		$modelName = static::modelName();
+		
+		// if a duty given
+		if($dutyId = static::getUpdateId())
+		{
+			$viewDuty = ViewDuty::model()->findByPk($dutyId);
+			return array($displays => array("$modelName/admin") + array(
+				'task_id'=>$viewDuty->task_id,
+				'action_id'=>$viewDuty->action_id,
+			));
+		}
+		else
+		{
+			return parent::makeCrumbAdmin($displays, $queryParamters);
+		}
+	}
+
 	/**
 	 * Specifies the access control rules.
 	 * NB: need to override this to open up so can shift access control into actionUpdate method to pass params for bizrule

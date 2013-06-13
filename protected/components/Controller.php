@@ -605,6 +605,12 @@ $t = $model->attributes;
 		}
 	}
 
+	protected static function makeCrumbAdmin($displays, $queryParamters)
+	{
+		$modelName = static::modelName();
+		return array($displays => array("$modelName/admin") + $queryParamters);
+	}
+
 	/**
 	 * Get the breadcrumb trail for this controller.
 	 * return array bread crumb trail for this controller
@@ -639,28 +645,23 @@ $t = $model->attributes;
 			}
 
 			$displays = $crumb::getNiceNamePlural();
+
+			// add crumb to admin view
+			$breadcrumbs[] = static::makeCrumbAdmin($displays, $queryParamters);
+				
 			// if this is the last crumb
 			if ($modelName == $crumb) {
 				if ($lastCrumb == 'Create') {
-					// add crumb to admin view
-					$breadcrumbs[] = array($displays => array("$crumb/admin") + $queryParamters);
 					// add last crumb
 					$breadcrumbs[] = array($crumb::getCreateLabel());
 				} elseif ($lastCrumb == 'Update') {
-					// add crumb to admin view. NB using last query paramters to that admin view
-					$breadcrumbs[] = array($displays => array("$crumb/admin") + $queryParamters);
 					// add a crumb with just the primary key nice name but no href
 					$primaryKey = static::getUpdateId($crumb);
 					$breadcrumbs[] = array($crumb::getNiceName($primaryKey));
-				} else {
-					$breadcrumbs[] = array($displays => array("$crumb/admin") + $queryParamters);
 				}
 			}
 			// otherwise not last crumb
 			else {
-				// add crumb to admin view
-				$breadcrumbs[] = array($displays => array("$crumb/admin") + $queryParamters);
-
 				// if there is a primary key for this
 				if (static::getUpdateId($crumb) !== NULL) {
 					// add an update crumb to this primary key
@@ -679,7 +680,6 @@ $t = $model->attributes;
 		if(sizeof(static::$tabs) > 1)
 		{
 			array_pop($breadcrumbs);
-//			array_pop($breadcrumbs);
 
 			$numTabRows = sizeof(static::$tabs);
 			$rowCount = 0;
