@@ -15,17 +15,19 @@ class DutyController extends Controller
 		unset(self::$tabs[0][0]);
 		
 		// alter the breadcrumb trail also to stop an error with the virtual TaskToAdmin parent
-		$breadcrumbs = $this->breadcrumbs;
-		$lastcrumb = array_slice(($breadcrumbs), -1, 1);
-		$secondToLastCrumb = array_slice(($breadcrumbs), -2, 1);
-		// alter url
-		$secondToLastCrumb[0][key(current($secondToLastCrumb))] = array('duty/admin',
-			'task_id' => empty($model->task_id) ? $_GET['task_id'] : $model->task_id,
-			'action_id' => empty($model->action_id) ? $_GET['action_id'] : $model->action_id,
-		);
-		array_pop($breadcrumbs);
-		array_pop($breadcrumbs);
-		$this->breadcrumbs = array_merge($breadcrumbs, $secondToLastCrumb, $lastcrumb);
+		// basically alter the url of the virtual TaskToAdmin item to have no url
+		
+		// get the array index to the duties tab
+		$niceNameDuty = Duty::getNiceNamePlural('Duty');
+		foreach($this->breadcrumbs as $key => &$crumb)
+		{
+			if(key($crumb) == $niceNameDuty)
+			{
+				$dutyKey = $key;
+				break;
+			}
+		}
+		$this->breadcrumbs[$dutyKey - 1] = array(key($this->breadcrumbs[$dutyKey - 1]));
 	}
 
 	/**

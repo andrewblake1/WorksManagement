@@ -92,7 +92,7 @@ class WMTbBreadcrumbs extends TbBreadcrumbs
 	protected function renderItem($content, $active = false)
 	{
 		ob_start();
-		echo CHtml::openTag('li', $active ? array('class' => 'active') : array());
+		echo CHtml::openTag('li', array('class' => 'active'));
 		echo $content;
 		if (!$active) echo $this->separator; 
 		echo '</li>';
