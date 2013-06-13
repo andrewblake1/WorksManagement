@@ -290,7 +290,7 @@ class DrawingController extends AdjacencyListController
 		if(static::checkAccess(self::accessWrite, $modelName) || DrawingAdjacencyList::model()->countByAttributes(array('parent_id' => $model->id)))
 		{
 			// add tab to drawings
-			$this->addTab(Drawing::getNiceNamePlural(), $this->createUrl('Drawing/admin', array(
+			$this->addTab(Drawing::getNiceNamePlural(), $this->createUrl('admin', array(
 				'standard_id' => $model->standard_id,
 				'parent_id' => $model->id)
 			), $tabs[0]);	
