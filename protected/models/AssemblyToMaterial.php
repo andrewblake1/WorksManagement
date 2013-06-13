@@ -108,8 +108,8 @@ class AssemblyToMaterial extends ActiveRecord
 			'stage.description AS searchStage',
 			'material.description AS searchMaterialDescription',
 			"CONCAT_WS('$delimiter',
-				drawing.alias,
-				drawing.description
+				detailDrawing.alias,
+				detailDrawing.description
 				) AS searchDetailDrawingDescription",
 			'material.unit AS searchMaterialUnit',
 			'material.alias AS searchMaterialAlias',
@@ -122,8 +122,8 @@ class AssemblyToMaterial extends ActiveRecord
 		);
 		$this->compositeCriteria($criteria,
 			array(
-				'drawing.alias',
-				'drawing.description',
+				'detailDrawing.alias',
+				'detailDrawing.description',
 			),
 			$this->searchDetailDrawingDescription
 		);
@@ -142,7 +142,7 @@ class AssemblyToMaterial extends ActiveRecord
 		$criteria->with = array(
 			'material',
 			'stage',
-			'drawing',
+			'detailDrawing',
 		);
 
 		return $criteria;

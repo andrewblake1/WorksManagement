@@ -102,8 +102,8 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 			't.assembly_group_id',
 			'assemblyGroup.description AS searchAssemblyGroupDescription',
 			"CONCAT_WS('$delimiter',
-				drawing.alias,
-				drawing.description
+				detailDrawing.alias,
+				detailDrawing.description
 				) AS searchDetailDrawingDescription",
 			't.select',
 			't.quantity_tooltip',
@@ -126,8 +126,8 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 		$criteria->compare('t.comment',$this->comment,true);
 		$this->compositeCriteria($criteria,
 			array(
-				'drawing.alias',
-				'drawing.description',
+				'detailDrawing.alias',
+				'detailDrawing.description',
 			),
 			$this->searchDetailDrawingDescription
 		);
@@ -135,7 +135,7 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 		
 		$criteria->with = array(
 			'assemblyGroup',
-			'drawing',
+			'detailDrawing',
 		);
 
 		return $criteria;

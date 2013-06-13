@@ -15,7 +15,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	AssemblyController::listWidgetRow($model, $form, 'child_assembly_id', array(),
 		array('scopeStandard'=>array($assembly->standard_id)));
 
-	DrawingController::listWidgetRow($model, $form, 'drawing_id', array(), array('scopeStandard'=>array($model->standard_id)), 'Drawing');
+	DrawingController::listWidgetRow($model, $form, 'detail_drawing_id', array(), array('scopeStandard'=>array($model->standard_id)), 'Drawing');
 
 	$form->textFieldRow('comment');
 

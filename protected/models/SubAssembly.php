@@ -19,7 +19,7 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property Drawing $drawing
+ * @property Drawing $detailDrawing
  * @property Assembly $parentAssembly
  * @property Assembly $standard
  * @property Assembly $childAssembly
@@ -61,7 +61,7 @@ class SubAssembly extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'drawing' => array(self::BELONGS_TO, 'Drawing', 'detaiol_drawing_id'),
+            'detailDrawing' => array(self::BELONGS_TO, 'Drawing', 'detail_drawing_id'),
             'parentAssembly' => array(self::BELONGS_TO, 'Assembly', 'parent_assembly_id'),
             'standard' => array(self::BELONGS_TO, 'Assembly', 'standard_id'),
             'childAssembly' => array(self::BELONGS_TO, 'Assembly', 'child_assembly_id'),
@@ -101,8 +101,8 @@ class SubAssembly extends ActiveRecord
 				childAssembly.alias
 				) AS searchChildAssembly",
 			"CONCAT_WS('$delimiter',
-				drawing.alias,
-				drawing.description
+				detailDrawing.alias,
+				detailDrawing.description
 				) AS searchDetailDrawingDescription",
 			't.select',
 			't.quantity_tooltip',
@@ -129,15 +129,15 @@ class SubAssembly extends ActiveRecord
 		);
 		$this->compositeCriteria($criteria,
 			array(
-				'drawing.alias',
-				'drawing.description',
+				'detailDrawing.alias',
+				'detailDrawing.description',
 			),
 			$this->searchDetailDrawingDescription
 		);
 
 		$criteria->with = array(
 			'childAssembly',
-			'drawing',
+			'detailDrawing',
 		);
 
 		return $criteria;

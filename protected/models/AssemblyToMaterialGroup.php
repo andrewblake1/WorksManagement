@@ -109,8 +109,8 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			't.material_group_id',
 			'materialGroup.description AS searchMaterialGroupDescription',
 			"CONCAT_WS('$delimiter',
-				drawing.alias,
-				drawing.description
+				detailDrawing.alias,
+				detailDrawing.description
 				) AS searchDetailDrawingDescription",
 			't.select',
 			't.quantity_tooltip',
@@ -134,8 +134,8 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		$criteria->compare('t.comment',$this->comment,true);
 		$this->compositeCriteria($criteria,
 			array(
-				'drawing.alias',
-				'drawing.description',
+				'detailDrawing.alias',
+				'detailDrawing.description',
 			),
 			$this->searchDetailDrawingDescription
 		);
@@ -144,7 +144,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		$criteria->with = array(
 			'materialGroup',
 			'stage',
-			'drawing',
+			'detailDrawing',
 			);
 
 		return $criteria;

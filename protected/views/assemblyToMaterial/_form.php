@@ -9,7 +9,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	StageController::listWidgetRow($model, $form, 'stage_id');
 
-	DrawingController::listWidgetRow($model, $form, 'drawing_id', array(), array('scopeStandard'=>array($model->standard_id)), 'Drawing');
+	DrawingController::listWidgetRow($model, $form, 'detail_drawing_id', array(), array('scopeStandard'=>array($model->standard_id)), 'Drawing');
 
 	$form->textFieldRow('quantity');
 
