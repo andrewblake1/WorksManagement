@@ -28,6 +28,7 @@ class TaskToActionController extends Controller
 		// go to duty admin view
 		$this->redirect(array_merge(array('Duty/admin', 'task_to_action' => $model->getPrimaryKey()), $params));
 	}
+	
 }
 
 ?>

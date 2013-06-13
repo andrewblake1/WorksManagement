@@ -647,7 +647,8 @@ $t = $model->attributes;
 			$displays = $crumb::getNiceNamePlural();
 
 			// add crumb to admin view
-			$breadcrumbs[] = static::makeCrumbAdmin($displays, $queryParamters);
+			$crumbController = ucfirst($crumb) . 'Controller';
+			$breadcrumbs[] = $crumbController::makeCrumbAdmin($displays, $queryParamters);
 				
 			// if this is the last crumb
 			if ($modelName == $crumb) {
