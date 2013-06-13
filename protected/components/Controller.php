@@ -768,7 +768,7 @@ $t = $model->attributes;
 	}
 
 	// redirect to admin
-	private function adminRedirect($model, $sortByNewest = false) {
+	protected function adminRedirect($model, $sortByNewest = false) {
 		// clear filtering and sorting and paging so can see newly inserted row at the top
 //		$modelName = get_class($model);
 

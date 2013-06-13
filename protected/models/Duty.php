@@ -69,7 +69,7 @@ class Duty extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'task_id' => 'Task',
-			'duty_step_id' => 'Duty/Role/First/Last/Email',
+			'duty_step_id' => 'Duty',
 			'description' => 'Duty',
 			'responsible' => 'Assigned to',
 			'updated' => 'Completed',
@@ -125,6 +125,7 @@ class Duty extends ActiveRecord
 
 		$this->updated = $this->dutyData->updated;
 		$this->action_id = $this->dutyData->dutyStep->action_id;
+		$this->duty_step_id = $this->dutyData->dutyStep->id;
 		if(!$this->derived_assigned_to_id)
 		{
 			$this->derived_assigned_to_id = 1;

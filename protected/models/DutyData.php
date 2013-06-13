@@ -34,7 +34,7 @@ class DutyData extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('planning_id, duty_step_id, level', 'required'),
-			array('duty_step_id', 'numerical', 'integerOnly'=>true),
+			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level, custom_value_id', 'length', 'max'=>10),
 			array('updated', 'safe'),
 			// The following rule is used by search().

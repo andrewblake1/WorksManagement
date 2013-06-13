@@ -103,6 +103,28 @@ class DutyController extends Controller
 			throw new CHttpException(403,'You do not have permission to view this duty.');
 		}
 	}
+	
+	// redirect to admin
+	protected function adminRedirect($model, $sortByNewest = false) {
+
+		$modelName = get_class($model);
+
+		// because we are redirecting back to duty whos parent is the virtual model TaskToAction, we actually need
+		// to pass action_id and task_id instead of task_to_action_id
+	
+		$params = array_merge(array("$modelName/admin"),  (static::getAdminParams($modelName) + array(
+			'action_id'=>$model->action_id,
+			'task_id'=>$model->task_id,
+		)));
+
+		// if we want to sort by the newest record first
+		if ($sortByNewest) {
+			$model->adminReset();
+			$params["{$modelName}_sort"] = $modelName::model()->tableSchema->primaryKey . '.desc';
+		}
+
+		$this->redirect($params);
+	}
 
 }
 
