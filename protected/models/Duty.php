@@ -257,7 +257,9 @@ class Duty extends ActiveRecord
 		 */
 		$criteria->join="
 			JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
-			JOIN v_duty dutyChild ON dutyStepDependency.child_duty_step_id = dutyChild.duty_step_id 
+			JOIN v_duty dutyChild
+				ON dutyStepDependency.child_duty_step_id = dutyChild.duty_step_id 
+				AND t.task_id = dutyChild.task_id
 		";
 		
 		// this duties id
