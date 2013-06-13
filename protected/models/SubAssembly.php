@@ -104,6 +104,7 @@ class SubAssembly extends ActiveRecord
 				detailDrawing.alias,
 				detailDrawing.description
 				) AS searchDetailDrawingDescription",
+			't.detail_drawing_id',
 			't.select',
 			't.quantity_tooltip',
 			't.quantity',

@@ -111,6 +111,7 @@ class AssemblyToMaterial extends ActiveRecord
 				detailDrawing.alias,
 				detailDrawing.description
 				) AS searchDetailDrawingDescription",
+			't.detail_drawing_id',
 			'material.unit AS searchMaterialUnit',
 			'material.alias AS searchMaterialAlias',
 			't.material_id',
