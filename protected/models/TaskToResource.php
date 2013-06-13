@@ -13,8 +13,6 @@
  * @property Task $task
  * @property User $updatedBy
  * @property ResourceData $resourceData
- * @property ResourceData $resource
- * @property ResourceData $level0
  */
 class TaskToResource extends ActiveRecord
 {
@@ -68,9 +66,6 @@ class TaskToResource extends ActiveRecord
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'resourceData' => array(self::BELONGS_TO, 'ResourceData', 'resource_data_id'),
-//            'resource' => array(self::BELONGS_TO, 'ResourceData', 'resource_id'),
-			// Beware of rename here
-  //          'level0' => array(self::BELONGS_TO, 'Level', 'level'),
         );
     }
 

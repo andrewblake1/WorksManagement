@@ -60,7 +60,8 @@ class ResourceData extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+			// shortcutting level around planning to level table direct here - beware gii
+            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
 			// Beware here when updating via gii
             'resource' => array(self::BELONGS_TO, 'Resource', 'resource_id'),
