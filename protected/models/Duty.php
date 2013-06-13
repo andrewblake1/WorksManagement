@@ -75,7 +75,6 @@ class Duty extends ActiveRecord
 			'updated' => 'Completed',
 			'custom_value_id' => 'Custom value',
 			'derived_assigned_to_name' => 'Assigned to',
-//			'derived_importance' => 'Importance',
 		));
 	}
 

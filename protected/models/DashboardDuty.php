@@ -37,7 +37,8 @@ class DashboardDuty extends Duty
 		$criteria = $duty->searchCriteria;
 
 		// filter to current active duties for this user
-		$criteria->compare('derived_assigned_to_id', Yii::app()->user->id);
+		$user = User::model()->findByPk(Yii::app()->user->id);
+		$criteria->compare('derived_assigned_to_id', $user->contact_id);
 		$criteria->compareNull('updated');
 		$criteria->addCondition("planned IS NOT NULL");
 		
