@@ -61,10 +61,10 @@ class SubAssemblyController extends Controller
 		
 		// add tab to  update SubAssembly
 		$action = static::checkAccess(self::accessWrite) ? 'update' : 'view';
-		$this->addTab(SubAssembly::getNiceName(NULL, $model), $this->createUrl($action, array('id' => $model->id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs, TRUE);
+		$this->addTab(SubAssembly::getNiceName(NULL, $model), $this->createUrl("SubAssembly/$action", array('id' => $model->id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs, TRUE);
 		
 		// add tab to sub assemblies
-		$this->addTab(SubAssembly::getNiceNamePlural(), $this->createUrl('admin',
+		$this->addTab(SubAssembly::getNiceNamePlural(), $this->createUrl('SubAssembly/admin',
 			array('parent_assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs);
 
 		$this->addTab(AssemblyToAssemblyGroup::getNiceNamePlural(), $this->createUrl('AssemblyToAssemblyGroup/admin',

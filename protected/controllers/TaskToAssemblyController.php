@@ -169,10 +169,10 @@ class TaskToAssemblyController extends AdjacencyListController
 		
 		// add tab to  update TaskToAssembly
 		$action = static::checkAccess(self::accessWrite) ? 'update' : 'view';
-		$this->addTab(TaskToAssembly::getNiceName(NULL, $model), $this->createUrl($action, array('id' => $model->id)), $tabs);
+		$this->addTab(TaskToAssembly::getNiceName(NULL, $model), $this->createUrl("TaskToAssembly/$action", array('id' => $model->id)), $tabs);
 
 		// add tab to sub assemblies
-		$this->addTab(SubAssembly::getNiceNamePlural(), $this->createUrl('admin',array('parent_id' => $model->id, 'task_id' => $model->task_id)), $tabs, !$last);
+		$this->addTab(SubAssembly::getNiceNamePlural(), $this->createUrl('TaskToAssembly/admin',array('parent_id' => $model->id, 'task_id' => $model->task_id)), $tabs, !$last);
 
 		// add tab to materials
 		$this->addTab(Material::getNiceNamePlural(), $this->createUrl('TaskToMaterial/admin', array(

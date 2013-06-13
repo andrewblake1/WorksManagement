@@ -42,7 +42,7 @@ class Duty extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('task_id, duty_step_id', 'required'),
-			array('duty_step_id', 'numerical', 'integerOnly'=>true),
+			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('action_id, updated, custom_value_id', 'safe'),
 		));
@@ -124,6 +124,7 @@ class Duty extends ActiveRecord
 	public function afterFind() {
 
 		$this->updated = $this->dutyData->updated;
+		$this->responsible = $this->dutyData->responsible;
 		$this->action_id = $this->dutyData->dutyStep->action_id;
 		$this->duty_step_id = $this->dutyData->dutyStep->id;
 		if(!$this->derived_assigned_to_id)
@@ -154,6 +155,9 @@ class Duty extends ActiveRecord
 				'params' => array('relationToCustomField'=>'dutyStepDependency->childDutyStep->customField'),
 			));
 		}
+
+		$this->dutyData->responsible = $this->responsible;
+		$this->dutyData->updated = $this->updated;
 
 		// attempt save of related DutyData
 		$saved &= $this->dutyData->updateSave($models);
@@ -200,7 +204,7 @@ class Duty extends ActiveRecord
 		{
 			$dutyData = new DutyData;
 			$dutyData->planning_id = $planning_id;
-			$dutyData->duty_step_id = $dutyStep->id;
+			$dutyData->duty_step_id = $this->duty_step_id;
 			$dutyData->level = $level;
 			$dutyData->responsible = NULL;
 			$dutyData->updated = NULL;

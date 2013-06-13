@@ -37,9 +37,6 @@ class DutyData extends ActiveRecord
 			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level, custom_value_id', 'length', 'max'=>10),
 			array('updated', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, planning_id, duty_step_id, level, updated, custom_value_id', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -77,9 +74,8 @@ class DutyData extends ActiveRecord
 
 	public function beforeSave()
 	{
-$t = $this->attributes;
 		// if the updated attribute was null but is now being set
-		if($this->updated !== NULL && $this->getOldAttributeValue('updated') == null)
+		if(!empty($this->updated) && $this->getOldAttributeValue('updated') == null)
 		{
 			// set to current datetime
 			$this->updated = date('Y-m-d H:i:s');
