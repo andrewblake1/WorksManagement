@@ -22,7 +22,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 			}
 
 			// only allow to be checked if dependencies have been checked
-			if(!ViewDuty::model()->findAll($incompleteDependencies = $model->incompleteDependencies))
+			if(ViewDuty::model()->findAll($incompleteDependencies = $model->incompleteDependencies))
 			{
 				// display a 3 column grid widget with paging showing dependency step, who is responsible if any, and the due date for it
 				Yii::app()->controller->widget('bootstrap.widgets.TbGridView',array(
