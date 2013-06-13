@@ -60,23 +60,49 @@ class SubAssemblyController extends Controller
 		$subAssemblyIds = array_slice($_GET['sub_assembly_ids'], 0, 1 + array_search($model->id, $_GET['sub_assembly_ids']));
 		
 		// add tab to  update SubAssembly
-		$action = static::checkAccess(self::accessWrite) ? 'update' : 'view';
-		$this->addTab(SubAssembly::getNiceName(NULL, $model), $this->createUrl("SubAssembly/$action", array('id' => $model->id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs, TRUE);
+		$this->addTab(
+			SubAssembly::getNiceName(NULL, $model),
+			'SubAssembly',
+			'update',
+			array('id' => $model->id, 'sub_assembly_ids'=>$subAssemblyIds),
+			$tabs,
+			TRUE
+		);
 		
 		// add tab to sub assemblies
-		$this->addTab(SubAssembly::getNiceNamePlural(), $this->createUrl('SubAssembly/admin',
-			array('parent_assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs);
+		$this->addTab(
+			SubAssembly::getNiceNamePlural(),
+			'SubAssembly',
+			'admin',
+			array('parent_assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds),
+			$tabs
+		);
 
-		$this->addTab(AssemblyToAssemblyGroup::getNiceNamePlural(), $this->createUrl('AssemblyToAssemblyGroup/admin',
-			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs);
+		$this->addTab(
+			AssemblyToAssemblyGroup::getNiceNamePlural(),
+			'AssemblyToAssemblyGroup',
+			'admin',
+			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds),
+			$tabs
+		);
 
 		// add tab to assembly groups
-		$this->addTab(AssemblyToMaterial::getNiceNamePlural(), $this->createUrl('AssemblyToMaterial/admin',
-			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs);
+		$this->addTab(
+			AssemblyToMaterial::getNiceNamePlural(),
+			'AssemblyToMaterial',
+			'admin',
+			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds),
+			$tabs
+		);
 
 		// add tab to assembly groups
-		$this->addTab(AssemblyToMaterialGroup::getNiceNamePlural(), $this->createUrl('AssemblyToMaterialGroup/admin',
-			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds)), $tabs);
+		$this->addTab(
+			AssemblyToMaterialGroup::getNiceNamePlural(),
+			'AssemblyToMaterialGroup',
+			'admin',
+			array('assembly_id'=>$model->child_assembly_id, 'sub_assembly_ids'=>$subAssemblyIds),
+			$tabs
+		);
 
 		return $tabs;
 	}

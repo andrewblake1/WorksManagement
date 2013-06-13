@@ -48,35 +48,5 @@ class TaskToMaterialToTaskTemplateToMaterialGroupController extends Controller
 	{
 		return TaskToMaterialController::getBreadCrumbTrail('Update');
 	}
-	
-	
-/*	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
-	public function setTabs($nextLevel = true) {
-		$modelName = $this->modelName;
-		$update = FALSE;
-			
-		parent::setTabs($nextLevel);
 
-		// if create otherwise update
-		$_GET['parent_id'] = $task_to_assembly_id = (isset($nextLevel->taskToAssembly) ? $nextLevel->taskToAssembly->id : $nextLevel->taskToMaterial->taskToAssembly->id);
-		$taskToAssemblyController= new TaskToAssemblyController(NULL);
-		$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
-		$taskToAssembly->assertFromParent();
-		$taskToAssemblyController->setTabs(false);
-		$taskToAssemblyController->setActiveTabs(NULL, $modelName::getNiceNamePlural());
-		static::$tabs = $taskToAssemblyController->tabs;
-
-		Controller::$nav['update']['TaskToAssembly'] = NULL;
-		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
-
-		$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
-
-		$tabs=array();
-		$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
-		static::$tabs = array_merge(static::$tabs, array($tabs));
-		array_pop($this->breadcrumbs);
-		$this->breadcrumbs[$modelName::getNiceNamePlural()] = Yii::app()->request->requestUri;
-		$this->breadcrumbs[] = $lastLabel;
-	}*/
-	
 }

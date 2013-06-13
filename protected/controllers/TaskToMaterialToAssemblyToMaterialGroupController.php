@@ -51,39 +51,7 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 		return TaskToMaterialController::getBreadCrumbTrail('Update');
 	}
 	
-	
 	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
-/*	public function setTabs($model) {
-		$modelName = $this->modelName;
-		$update = FALSE;
-			
-//		parent::setTabs($model);
-
-		// if create otherwise update
-		$_GET['parent_id'] = $task_to_assembly_id = (isset($model->taskToAssembly) ? $model->taskToAssembly->id : $model->taskToMaterial->taskToAssembly->id);
-		$taskToAssemblyController= new TaskToAssemblyController(NULL);
-		$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
-		$taskToAssembly->assertFromParent('TaskToMaterial');
-		$taskToAssemblyController->setTabs(NULL);
-		static::$tabs = $taskToAssemblyController->tabs;
-
-		static::setUpdateId(NULL, 'TaskToAssembly');
-		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Update');
-
-		$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
-
-		$tabs=array();
-		$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
-		static::$tabs = array_merge(static::$tabs, array($tabs));
-		array_pop($this->breadcrumbs);
-		$this->breadcrumbs[$modelName::getNiceNamePlural()] = Yii::app()->request->requestUri;
-		$this->breadcrumbs[] = $lastLabel;
-
-//		$this->setActiveTabs(NULL, $model ? TaskToAssembly::getNiceName(NULL, $model) : $modelName::getNiceNamePlural());
-		
-	}*/
-	
-		// override the tabs when viewing materials for a particular task - make match taskToAssembly view
 	public function setTabs($model) {
 		$modelName = $this->modelName;
 
@@ -104,7 +72,14 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 					? $modelName::getNiceName($_GET['id'])
 					: $modelName::getCreateLabel();
 				$tabs=array();
-				$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
+				$this->addTab(
+					$lastLabel,
+					Yii::app()->controller->modelName,
+					Yii::app()->controller->action->id,
+					$_GET,
+					$tabs,
+					TRUE
+				);
 				static::$tabs = array_merge(static::$tabs, array($tabs));
 			}
 

@@ -84,7 +84,14 @@ class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 			
 			$tabs=array();
 			$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
-			$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
+			$this->addTab(
+				$lastLabel,
+					Yii::app()->controller->modelName,
+					Yii::app()->controller->action->id,
+					$_GET,
+				$tabs,
+				TRUE
+			);
 			static::$tabs = array_merge(static::$tabs, array($tabs));
 			
 			$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail();

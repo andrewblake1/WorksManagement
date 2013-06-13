@@ -350,11 +350,11 @@ $t = $model->attributes;
 						$tabs[$level][$index]['label'] = $modelName::getNiceName($keyValue);
 						$tabs[$level][$index]['url'] = $urlParams;
 						// assume active unless otherwise indicated
-				// if this item matches the main model
-				if ($modelName == $thisModelName) {
-					// make this the active tab
-					$tabs[$level][$index]['active'] = true;
-				}
+						// if this item matches the main model
+						if ($modelName == $thisModelName) {
+							// make this the active tab
+							$tabs[$level][$index]['active'] = true;
+						}
 						$index++;
 						continue;
 					}
@@ -414,10 +414,23 @@ $t = $model->attributes;
 		return $get;
 	}
 
-	public function addTab($label, $url, &$tabs, $active = FALSE) {
+	public function addTab($label, $modelName, $action, $params, &$tabs, $active = FALSE) {
+		$writeAccess = static::checkAccess(self::accessWrite, $modelName);
+		
+		// dont add empty admin tabs if no write access
+		if($action == 'admin' && !$writeAccess && !$modelName::model()->countByAttributes(array_intersect_key($params, array_flip($modelName::model()->attributeNames()))))
+		{
+			return;
+		}
+		
+		if($action == 'update')
+		{
+			$action = $writeAccess ? 'update' : 'view';
+		}
+
 		$index = sizeof($tabs);
 		$tabs[$index]['label'] = $label;
-		$tabs[$index]['url'] = $url;
+		$tabs[$index]['url'] = $this->createUrl("$modelName/$action", $params);
 		// NB: last one active taken care of somewhere by matching url - unless blocked here
 		if($active)
 		{

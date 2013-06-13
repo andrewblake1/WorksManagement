@@ -75,12 +75,29 @@ class DutyStepDependencyController extends Controller
 		$getParams = Controller::getValidGetParams($this->modelName);
 
 		// add tab to  update DutyStepDependency
-		$action = static::checkAccess(self::accessWrite) ? 'update' : 'view';
-		$this->addTab(DutyStepDependency::getNiceName(NULL, $model), $this->createUrl("DutyStepDependency/$action", array_merge(array('id' => $model->id, 'duty_step_dependency_ids'=>$dutyStepDependencyIds), $getParams)), $tabs, TRUE);
+		$this->addTab(
+			DutyStepDependency::getNiceName(NULL, $model),
+			'DutyStepDependency',
+			'update',
+			array_merge(array(
+				'id' => $model->id,
+				'duty_step_dependency_ids'=>$dutyStepDependencyIds
+			), $getParams),
+			$tabs,
+			TRUE
+		);
 		
 		// add tab to sub dependencies
-		$this->addTab(DutyStepDependency::getNiceNamePlural(), $this->createUrl('DutyStepDependency/admin',
-			array_merge($getParams, array('parent_duty_step_id'=>$model->child_duty_step_id, 'duty_step_dependency_ids'=>$dutyStepDependencyIds))), $tabs);
+		$this->addTab(
+			DutyStepDependency::getNiceNamePlural(),
+			'DutyStepDependency',
+			'admin',
+			array_merge($getParams, array(
+				'parent_duty_step_id'=>$model->child_duty_step_id,
+				'duty_step_dependency_ids'=>$dutyStepDependencyIds
+			)),
+			$tabs
+		);
 
 		return $tabs;
 	}

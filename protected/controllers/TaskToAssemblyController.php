@@ -168,18 +168,36 @@ class TaskToAssemblyController extends AdjacencyListController
 		$tabs = array();
 		
 		// add tab to  update TaskToAssembly
-		$action = static::checkAccess(self::accessWrite) ? 'update' : 'view';
-		$this->addTab(TaskToAssembly::getNiceName(NULL, $model), $this->createUrl("TaskToAssembly/$action", array('id' => $model->id)), $tabs);
+		$this->addTab(
+			TaskToAssembly::getNiceName(NULL, $model),
+			'TaskToAssembly',
+			'update',
+			array('id' => $model->id),
+			$tabs
+		);
 
 		// add tab to sub assemblies
-		$this->addTab(SubAssembly::getNiceNamePlural(), $this->createUrl('TaskToAssembly/admin',array('parent_id' => $model->id, 'task_id' => $model->task_id)), $tabs, !$last);
+		$this->addTab(
+			SubAssembly::getNiceNamePlural(),
+			'TaskToAssembly',
+			'admin',
+			array('parent_id' => $model->id, 'task_id' => $model->task_id),
+			$tabs,
+			!$last
+		);
 
 		// add tab to materials
-		$this->addTab(Material::getNiceNamePlural(), $this->createUrl('TaskToMaterial/admin', array(
-			'task_to_assembly_id' => $model->id,
-			'parent_id' => $model->id,	// needed for breadcrumb trail calc for adjacency list
-			'task_id' => $model->task_id)
-		), $tabs);
+		$this->addTab(
+			Material::getNiceNamePlural(),
+			'TaskToMaterial',
+			'admin',
+			array(
+				'task_to_assembly_id' => $model->id,
+				'parent_id' => $model->id,	// needed for breadcrumb trail calc for adjacency list
+				'task_id' => $model->task_id
+			),
+			$tabs
+		);
 
 		return $tabs;
 	}

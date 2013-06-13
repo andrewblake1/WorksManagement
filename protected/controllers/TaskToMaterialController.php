@@ -134,7 +134,14 @@ class TaskToMaterialController extends Controller
 			{
 				$lastLabel = $modelName::getNiceName(isset($_GET['id']) ? $_GET['id'] : NULL);
 				$tabs=array();
-				$this->addTab($lastLabel, Yii::app()->request->requestUri, $tabs, TRUE);
+				$this->addTab(
+					$lastLabel,
+					Yii::app()->controller->modelName,
+					Yii::app()->controller->action->id,
+					$_GET,
+					$tabs,
+					TRUE
+				);
 				static::$tabs = array_merge(static::$tabs, array($tabs));
 			}
 

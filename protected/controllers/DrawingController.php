@@ -290,10 +290,16 @@ class DrawingController extends AdjacencyListController
 		if(static::checkAccess(self::accessWrite, $modelName) || DrawingAdjacencyList::model()->countByAttributes(array('parent_id' => $model->id)))
 		{
 			// add tab to drawings
-			$this->addTab(Drawing::getNiceNamePlural(), $this->createUrl('Drawing/admin', array(
-				'standard_id' => $model->standard_id,
-				'parent_id' => $model->id)
-			), $tabs[0]);	
+			$this->addTab(
+				Drawing::getNiceNamePlural(),
+				'Drawing',
+				'admin',
+				array(
+					'standard_id' => $model->standard_id,
+					'parent_id' => $model->id
+				),
+				$tabs[0]
+			);	
 		}
 	
 		return $tabs[0];
@@ -315,7 +321,14 @@ class DrawingController extends AdjacencyListController
 				static::$tabs[sizeof(static::$tabs) - 1][3]['active'] = TRUE;
 
 				$tabs=array();
-				$this->addTab(Drawing::getNiceName($_GET['id']), Yii::app()->request->requestUri, $tabs, TRUE);
+				$this->addTab(
+					Drawing::getNiceName($_GET['id']),
+					Yii::app()->controller->modelName,
+					Yii::app()->controller->action->id,
+					$_GET,
+					$tabs,
+					TRUE
+				);
 				static::$tabs = array_merge(static::$tabs, array($tabs));
 
 				// elimate irrelevant tabs
