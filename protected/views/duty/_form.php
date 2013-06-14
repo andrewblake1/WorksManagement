@@ -9,16 +9,19 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 	else
 	{
 		// if previously saved
-		if($model->updated)
+		if($model->dutyData->updated)
 		{
-			$form->textFieldRow('updated', Yii::app()->user->checkAccess('system admin') ? array() : array('readonly'=>'readonly'));
+			$form->textFieldRow(
+				'updated',
+				Yii::app()->user->checkAccess('system admin') ? array() : array('readonly'=>'readonly'),
+				$model->dutyData);
 		}
 		else
 		{
 			// allow system admin and original creator of duty to be able to alter who it is assigned to
-			if($model->updated_by == Yii::app()->user->id || Yii::app()->user->checkAccess('system admin'))
+			if($model->dutyData->updated_by == Yii::app()->user->id || Yii::app()->user->checkAccess('system admin'))
 			{
-				UserController::listWidgetRow($model, $form, 'responsible', array(), array(), 'Assigned to');
+				UserController::listWidgetRow($model->dutyData, $form, 'responsible', array(), array(), 'Assigned to');
 			}
 
 			// only allow to be checked if dependencies have been checked

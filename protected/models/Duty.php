@@ -141,7 +141,9 @@ class Duty extends ActiveRecord
 	public function updateSave(&$models=array())
 	{
 		$saved = true;
-		$this->dutyData->updated = $this->updated;
+		$this->dutyData->attributes = $_POST['DutyData'];
+$t = $this->dutyData->attributes;
+
 
 		// if we need to update a customValue
 		if($customValue = $this->dutyData->customValue)
@@ -155,9 +157,6 @@ class Duty extends ActiveRecord
 				'params' => array('relationToCustomField'=>'dutyStepDependency->childDutyStep->customField'),
 			));
 		}
-
-		$this->dutyData->responsible = $this->responsible;
-		$this->dutyData->updated = $this->updated;
 
 		// attempt save of related DutyData
 		$saved &= $this->dutyData->updateSave($models);
