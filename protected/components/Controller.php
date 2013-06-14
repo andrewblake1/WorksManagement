@@ -1635,7 +1635,7 @@ $t = Controller::$nav;
 		}
 	}
 
-	protected function exportButton() {
+	public function exportButton() {
 		if (Yii::app()->params['showDownloadButton']) {
 			echo ' ';
 			$this->widget('bootstrap.widgets.TbButton', array(

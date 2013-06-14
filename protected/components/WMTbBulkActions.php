@@ -22,9 +22,6 @@ class WMTbBulkActions extends TbBulkActions
 	 */
 	public function renderButtons()
 	{
-//		if ($this->buttons === array())
-//			return false;
-
 		echo CHtml::openTag('div', array('id' => $this->getId(), 'style' => 'position:relative', 'class' => $this->align));
 
 		foreach ($this->buttons as $actionButton)
