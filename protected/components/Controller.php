@@ -126,7 +126,7 @@ class Controller extends CController {
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('admin', 'view'),
+				'actions' => array('admin', 'view', 'download'),
 				'roles' => array($this->modelName . 'Read'),
 			),
 			array('allow',
