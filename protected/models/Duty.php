@@ -32,7 +32,7 @@ class Duty extends ActiveRecord
 	public $responsible;
 	public $task_to_action_id;
 	public $action_id;
-
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -94,7 +94,9 @@ class Duty extends ActiveRecord
 
 		// where
 		$criteria->compare('description',$this->description,true);
+		$criteria->compare('derived_assigned_to_name',$this->derived_assigned_to_name,true);
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
+		$criteria->compare('due',Yii::app()->format->toMysqlDateTime($this->due));
 		$criteria->compare('t.task_id',$this->task_id);
 		$criteria->compare('t.action_id',$this->action_id);
 		
@@ -142,8 +144,6 @@ class Duty extends ActiveRecord
 	{
 		$saved = true;
 		$this->dutyData->attributes = $_POST['DutyData'];
-$t = $this->dutyData->attributes;
-
 
 		// if we need to update a customValue
 		if($customValue = $this->dutyData->customValue)
@@ -352,6 +352,30 @@ $t = $this->dutyData->attributes;
 		return $task->assertFromParent();
 	}
 
+	public function checkAccess($mode)
+	{
+		$user = User::model()->findByPk(Yii::app()->user->id);
+		
+		if(Yii::app()->user->checkAccess('system admin'))
+		{
+			return true;
+		}
+		// otherwise if there is something this is relying on that hasn't been completed yet
+		elseif(ViewDuty::model()->findAll($incompleteDependencies = $this->incompleteDependencies))
+		{
+			return $mode == Controller::accessWrite ? false : true;
+		}
+		// there is nothing this is dependant on so technically can be ticked off
+		else
+		{
+			// if write access all duties, or write access on this duty
+			return Yii::app()->user->checkAccess($mode == Controller::accessWrite ? 'Duty' : 'DutyRead') || ViewDuty::model()->findByAttributes(array(
+				"duty_data_id"=>$this->duty_data_id,
+				"derived_assigned_to_id"=>$user->contact_id,
+			));
+		}
+	}
+	
 }
 
 ?>

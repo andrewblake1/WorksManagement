@@ -464,15 +464,16 @@ EOD;
 
 			// DEFAULT
 			$defaultRole=$this->_authManager->createRole('default', 'Default', 'return !Yii::app()->user->isGuest;');
-			// create task to allow update access if user is related to this task - this will use checkAccess in update action
-			$this->_authManager->createOperation('DutyUpdate', 'Duty update', 'return $params["assignedTo"] == Yii::app()->user->id;');
+//			// create task to allow update access if user is related to this task - this will use checkAccess in update action
+//			$this->_authManager->createOperation('DutyUpdate', 'Duty update', 'return Duty::canUpdate($params["duty"]);');
+			
 			// attach this to the Duty task so that higher users don't get denied when checking this in Duty update action
 			$dutyTask=$this->_authManager->getAuthItem('Duty');
-			$dutyTask->addChild('DutyUpdate');
-			// grant default users this operation
-			$defaultRole->addChild('DutyUpdate');
-			// grant default users read operation
-			$defaultRole->addChild('DutyRead');
+//			$dutyTask->addChild('Duty');
+//			// grant default users this operation
+//			$defaultRole->addChild('DutyUpdate');
+//			// grant default users read operation
+			$defaultRole->addChild('Duty');
 
 			// Grant project manager project read
 			$projectManagerRole->addChild('ClientRead');

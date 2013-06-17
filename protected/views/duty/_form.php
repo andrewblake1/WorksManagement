@@ -1,6 +1,6 @@
 <?php
 
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'task_id'));
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'task_id', 'returnController'=>isset($_GET['controller']) ? $_GET['controller'] : NULL));
 
 	if($model->isNewRecord)
 	{
@@ -42,7 +42,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 			}
 			else
 			{
-				$form->checkBoxRow('updated');
+				$form->checkBoxRow('updated', array(), $model->dutyData);
 			}
 		}
 

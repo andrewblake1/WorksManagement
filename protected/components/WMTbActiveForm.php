@@ -10,6 +10,7 @@ Yii::import('bootstrap.widgets.TbActiveForm');
 class WMTbActiveForm extends TbActiveForm
 {
 	private $controller;
+	public $returnController = NULL;
 	public $parent_fk;
 	public $showSubmit = true;	// true, false, hide - hide is there for use when file uploading as a hack as this button needs to be there for the
 	// ajax validation and form submit to occur for some reason. Havn't investigated why yet. There will be a cleaner way to do this!
@@ -60,6 +61,7 @@ class WMTbActiveForm extends TbActiveForm
 			return true;
 		}'
 );
+
 //TODO: high priority - split this form into 4 - update and create modal, and update and create non modal - too many conditions
 // likely this to become abstract with 4 polymorphic children
 	/**
@@ -87,7 +89,7 @@ class WMTbActiveForm extends TbActiveForm
 		
 		// determine whether form elements should be enabled or disabled by on access rights
 		$controllerName = get_class($this->controller);
-		if(!$controllerName::checkAccess(Controller::accessWrite))
+		if(!$this->model->checkAccess(Controller::accessWrite))
 		{
 			$this->_htmlOptionReadonly = array('readonly'=>'readonly');
 			$this->_action = 'View';
@@ -137,7 +139,7 @@ class WMTbActiveForm extends TbActiveForm
 		$this->hiddenField('updated_by');
 		
 		// pass thru the original controller so we know can potentially return here
-		echo CHtml::hiddenField('controller', Yii::app()->controller->modelName);
+		echo CHtml::hiddenField('controller', $this->returnController ? $this->returnController : Yii::app()->controller->modelName);
 
 		// if there is a parent foreing key i.e. if there is a level above this in our navigation structure
 		if(!empty($this->parent_fk))

@@ -16,7 +16,7 @@
  */
 class DashboardDuty extends Duty
 {
-	protected $defaultSort = array('t.due' => 'DESC', 'description');
+	protected $defaultSort = array('t.due' => 'ASC', 'description');
 
 	public function tableName() {
 		return 'v_duty';

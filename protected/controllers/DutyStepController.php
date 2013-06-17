@@ -15,8 +15,6 @@ class DutyStepController extends Controller
 		parent::createRedirect($model, ActionController::getCreateRedirectParams($this->modelName));
 	}
 	
-	// called within AdminViewWidget
-	// alter to maintain correct breadcrumb
 	public function getButtons($model)
 	{
 		return array(
@@ -38,8 +36,7 @@ class DutyStepController extends Controller
 				),
 			),
 		);
-	}
-	
+	}	
 
 }
 

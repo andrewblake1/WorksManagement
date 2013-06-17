@@ -581,7 +581,6 @@ $t = $model->attributes;
 		));
 	}
 
-	// called within AdminViewWidget
 	public function getButtons($model)
 	{
 		return array(
@@ -783,8 +782,6 @@ $t = $model->attributes;
 
 	// redirect to admin
 	protected function adminRedirect($model, $sortByNewest = false) {
-		// clear filtering and sorting and paging so can see newly inserted row at the top
-//		$modelName = get_class($model);
 
 		// if posted a controller then this is where we should return to
 		if (!empty($_POST['controller']))

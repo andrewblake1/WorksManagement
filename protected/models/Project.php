@@ -257,11 +257,11 @@ class Project extends CustomFieldExtensionActiveRecord
 	static function checkContext($primaryKey, $role)
 	{
 		// if this role exists for this project
-		$ProjectToProjectTemplateToAuthItem = ProjectToProjectTemplateToAuthItem::model()->findAllByAttributes(array('project_id'=>$primaryKey, 'item_name'=>$role));
-		if(!empty($ProjectToProjectTemplateToAuthItem))
+		$projectToAuthItem = ProjectToAuthItem::model()->findAllByAttributes(array('project_id'=>$primaryKey, 'auth_item_name'=>$role));
+		if(!empty($projectToAuthItem))
 		{
 			// if this user assigned this role within this project
-			if($ProjectToProjectTemplateToAuthItem->authAssignment->userid == Yii::app()->user->id)
+			if($projectToAuthItem->authAssignment->userid == Yii::app()->user->id)
 			{
 				 return true;
 			}

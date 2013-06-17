@@ -11,6 +11,7 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property Action[] $actions
  * @property Assembly[] $assemblies
  * @property AssemblyGroup[] $assemblyGroups
  * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblies
@@ -33,10 +34,10 @@
  * @property Drawing[] $drawings
  * @property DrawingAdjacencyList[] $drawingAdjacencyLists
  * @property Duty[] $duties
- * @property Duty[] $duties1
- * @property DutyCategory[] $dutyCategories
  * @property DutyData[] $dutyDatas
+ * @property DutyData[] $dutyDatas1
  * @property DutyStep[] $dutySteps
+ * @property DutyStepDependency[] $dutyStepDependencies
  * @property Material[] $materials
  * @property MaterialGroup[] $materialGroups
  * @property MaterialGroupToMaterial[] $materialGroupToMaterials
@@ -46,9 +47,10 @@
  * @property Project[] $projects
  * @property ProjectTemplate[] $projectTemplates
  * @property ProjectTemplateToAuthItem[] $projectTemplateToAuthItems
+ * @property ProjectToAuthItem[] $projectToAuthItems
+ * @property ProjectToAuthItemToAuthAssignment[] $projectToAuthItemToAuthAssignments
  * @property ProjectToClientContact[] $projectToClientContacts
  * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
- * @property ProjectToProjectTemplateToAuthItem[] $projectToProjectTemplateToAuthItems
  * @property PurchaseOrder[] $purchaseOrders
  * @property Report[] $reports
  * @property ReportToAuthItem[] $reportToAuthItems
@@ -64,9 +66,9 @@
  * @property SupplierContact[] $supplierContacts
  * @property Task[] $tasks
  * @property TaskTemplate[] $taskTemplates
+ * @property TaskTemplateToAction[] $taskTemplateToActions
  * @property TaskTemplateToAssembly[] $taskTemplateToAssemblies
  * @property TaskTemplateToAssemblyGroup[] $taskTemplateToAssemblyGroups
- * @property TaskTemplateToAction[] $taskTemplateToActions
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskTemplateToMaterialGroup[] $taskTemplateToMaterialGroups
  * @property TaskTemplateToResource[] $taskTemplateToResources
@@ -119,6 +121,7 @@ class User extends ContactActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'actions' => array(self::HAS_MANY, 'Action', 'updated_by'),
             'assemblies' => array(self::HAS_MANY, 'Assembly', 'updated_by'),
             'assemblyGroups' => array(self::HAS_MANY, 'AssemblyGroup', 'updated_by'),
             'assemblyGroupToAssemblies' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'updated_by'),
@@ -141,10 +144,10 @@ class User extends ContactActiveRecord
             'drawings' => array(self::HAS_MANY, 'Drawing', 'updated_by'),
             'drawingAdjacencyLists' => array(self::HAS_MANY, 'DrawingAdjacencyList', 'updated_by'),
             'duties' => array(self::HAS_MANY, 'Duty', 'updated_by'),
-            'duties1' => array(self::HAS_MANY, 'Duty', 'responsible'),
-            'dutyCategories' => array(self::HAS_MANY, 'DutyCategory', 'updated_by'),
             'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'updated_by'),
+            'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'responsible'),
             'dutySteps' => array(self::HAS_MANY, 'DutyStep', 'updated_by'),
+            'dutyStepDependencies' => array(self::HAS_MANY, 'DutyStepDependency', 'updated_by'),
             'materials' => array(self::HAS_MANY, 'Material', 'updated_by'),
             'materialGroups' => array(self::HAS_MANY, 'MaterialGroup', 'updated_by'),
             'materialGroupToMaterials' => array(self::HAS_MANY, 'MaterialGroupToMaterial', 'updated_by'),
@@ -154,9 +157,10 @@ class User extends ContactActiveRecord
             'projects' => array(self::HAS_MANY, 'Project', 'updated_by'),
             'projectTemplates' => array(self::HAS_MANY, 'ProjectTemplate', 'updated_by'),
             'projectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectTemplateToAuthItem', 'updated_by'),
+            'projectToAuthItems' => array(self::HAS_MANY, 'ProjectToAuthItem', 'updated_by'),
+            'projectToAuthItemToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthItemToAuthAssignment', 'updated_by'),
             'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'updated_by'),
             'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'updated_by'),
-            'projectToProjectTemplateToAuthItems' => array(self::HAS_MANY, 'ProjectToProjectTemplateToAuthItem', 'updated_by'),
             'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrder', 'updated_by'),
             'reports' => array(self::HAS_MANY, 'Report', 'updated_by'),
             'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'updated_by'),
@@ -172,9 +176,9 @@ class User extends ContactActiveRecord
             'supplierContacts' => array(self::HAS_MANY, 'SupplierContact', 'updated_by'),
             'tasks' => array(self::HAS_MANY, 'Task', 'updated_by'),
             'taskTemplates' => array(self::HAS_MANY, 'TaskTemplate', 'updated_by'),
+            'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'updated_by'),
             'taskTemplateToAssemblies' => array(self::HAS_MANY, 'TaskTemplateToAssembly', 'updated_by'),
             'taskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskTemplateToAssemblyGroup', 'updated_by'),
-            'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'updated_by'),
             'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'updated_by'),
             'taskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskTemplateToMaterialGroup', 'updated_by'),
             'taskTemplateToResources' => array(self::HAS_MANY, 'TaskTemplateToResource', 'updated_by'),

@@ -2,7 +2,10 @@
 
 class ViewDuty extends ViewActiveRecord
 {
-	protected $defaultSort = array('t.due' => 'DESC', 'description');
+	protected $defaultSort = array(
+		't.updated',
+		't.due',
+	);
 
 	/**
 	 * @var string search variables

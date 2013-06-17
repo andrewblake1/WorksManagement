@@ -7,7 +7,7 @@ class CategoryController extends Controller
 	 */
 	protected $_adminView = '/categoryAdmin';
 
-	protected function exportButton()
+	public function exportButton()
 	{
 	}
 	

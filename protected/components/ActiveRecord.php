@@ -1287,6 +1287,12 @@ if(count($m = $this->getErrors()))
 		}
 	}
 	
+	public function checkAccess($mode)
+	{
+		$controllerName = str_replace('View', '', get_class($this) . "Controller");
+		return $controllerName::checkAccess($mode);
+	}
+	
 }
 
 ?>

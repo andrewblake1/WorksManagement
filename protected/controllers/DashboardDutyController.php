@@ -1,7 +1,13 @@
 <?php
 
-class DashboardDutyController extends Controller
+class DashboardDutyController extends DutyController
 {
+
+	/**
+	 * @var string the name of the model to use in the admin view - the model may serve a database view as opposed to a table  
+	 */
+	protected $_adminViewModel = NULL;
+
 	protected function newButton()
 	{
 		
@@ -42,8 +48,6 @@ class DashboardDutyController extends Controller
 		$dashboardController = new DashboardController(NULL);
 		$dashboardController->setTabs(NULL);
 		static::$tabs = $dashboardController->tabs;
-//		static::$tabs[sizeof(static::$tabs) - 1][1]['active'] = TRUE;
-	//	$this->breadcrumbs = DashboardController::getBreadCrumbTrail();
 	}
 	
 

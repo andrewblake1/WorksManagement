@@ -134,7 +134,6 @@ class AuthAssignment extends ActiveRecord
 	{
 		$displaAttr[]='itemname';
 
-		// NB: this clause needed to add the extra name stuff as this used in two places and user needed on ProjectToProjectTemplateToAuthItem
 		if(!isset($_GET['userid']))
 		{
 			static::$labelOverrides['auth_assignment_id'] = 'Role/First/Last/Email';

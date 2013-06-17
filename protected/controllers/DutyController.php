@@ -3,6 +3,31 @@
 class DutyController extends Controller
 {
 	
+	public function getButtons($model)
+	{
+		return array(
+			'class' => 'WMTbButtonColumn',
+			'buttons' => array(
+				'delete' => array(
+					'visible' => 'Yii::app()->user->checkAccess("Duty", array("id"=>$data->id))',
+					'url' => 'Yii::app()->createUrl("Duty/delete", array("id"=>$data->primaryKey))',
+					
+				),
+				'update' => array(
+					'visible' => '$data->checkAccess(Controller::accessWrite)',
+					'url' => 'Yii::app()->createUrl("Duty/update", array("id"=>$data->primaryKey, "controller"=>Yii::app()->controller->modelName))',
+				),
+				'view' => array(
+					'visible' => '
+						!$data->checkAccess(Controller::accessWrite)
+						&& $data->checkAccess(Controller::accessRead)',
+					'url' => 'Yii::app()->createUrl("Duty/view", array("id"=>$data->primaryKey))',
+				),
+			),
+		);
+	}
+
+	
 	/**
 	 * @var string the name of the model to use in the admin view - the model may serve a database view as opposed to a table  
 	 */
@@ -27,7 +52,7 @@ class DutyController extends Controller
 				break;
 			}
 		}
-		$this->breadcrumbs[$dutyKey - 1] = array(key($this->breadcrumbs[$dutyKey - 1]));
+//		$this->breadcrumbs[$dutyKey - 1] = array(key($this->breadcrumbs[$dutyKey - 1]));
 	}
 
 	protected static function makeCrumbAdmin($displays, $queryParamters)
@@ -71,7 +96,7 @@ class DutyController extends Controller
 			),
 		);
 	}
-
+	
 	// special handling of update for duties
 	public function actionUpdate($id)
 	{
@@ -85,17 +110,13 @@ class DutyController extends Controller
 			parent::actionUpdate($id);
 		}
 		// other users with full Duty access or has DutyUpdate permission - has to be assigned to this duty
-		elseif(Yii::app()->user->checkAccess('Duty') || Yii::app()->user->checkAccess('DutyUpdate', array('assignedTo'=>$model->assignedTo)))
+		elseif($model->checkAccess(Controller::accessWrite) && empty($model->updated))
 		{
-			// can only update if not completed
-			if(!empty($model->updated))
-			{
-				parent::actionUpdate($id);
-			}
-			// otherwise can view
-			{
-				$this->actionView($id);
-			}
+			parent::actionUpdate($id);
+		}
+		elseif($model->checkAccess(Controller::accessRead))
+		{
+			$this->actionView($id);
 		}
 		// otherwise doesn't have permission to be here
 		else
@@ -107,7 +128,15 @@ class DutyController extends Controller
 	// redirect to admin
 	protected function adminRedirect($model, $sortByNewest = false) {
 
-		$modelName = get_class($model);
+		// if posted a controller then this is where we should return to
+		if (!empty($_POST['controller']))
+		{
+			$modelName = $_POST['controller'];
+		}
+		else
+		{
+			$modelName = get_class($model);
+		}
 
 		// because we are redirecting back to duty whos parent is the virtual model TaskToAction, we actually need
 		// to pass action_id and task_id instead of task_to_action_id
