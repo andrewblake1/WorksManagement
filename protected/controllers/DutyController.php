@@ -38,8 +38,12 @@ class DutyController extends Controller
 	public function setTabs($model, &$tabs = NULL) {
 		// create tabs
 		parent::setTabs($model, $tabs);
-		// remove the first one
-		unset(self::$tabs[0][0]);
+		
+		if(!$model)
+		{
+			// remove the first one
+			unset(self::$tabs[0][0]);
+		}
 		
 		// alter the breadcrumb trail also to stop an error with the virtual TaskToAdmin parent
 		// basically alter the url of the virtual TaskToAdmin item to have no url

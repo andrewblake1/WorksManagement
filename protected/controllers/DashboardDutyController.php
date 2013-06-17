@@ -52,11 +52,18 @@ class DashboardDutyController extends DutyController
 		);
 	}
 	
-	// simulate the tabs in Drawing
 	public function setTabs($model) {
 		$dashboardController = new DashboardController(NULL);
 		$dashboardController->setTabs(NULL);
 		static::$tabs = $dashboardController->tabs;
+		// if update of view
+		if(!empty($model))
+		{
+			$tabs = array();
+			// add tab to  update SubAssembly
+			$this->addTab(DashboardDuty::getNiceName(NULL, $model), 'DashboardDuty', Yii::app()->controller->action->id, array('id' => $model->id), static::$tabs[], TRUE);
+		}
+		
 	}
 	
 
