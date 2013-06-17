@@ -758,7 +758,6 @@ $t = $model->attributes;
 	/*
 	 * to be overidden if not wanting to redirect to admin
 	 */
-
 	protected function updateRedirect($model) {
 		
 		if (!empty($_POST['controller']))
@@ -779,9 +778,9 @@ $t = $model->attributes;
 		
 		$this->adminRedirect($model);
 	}
-
-	// redirect to admin
-	protected function adminRedirect($model, $sortByNewest = false) {
+	
+	public static function staticAdminRedirect($model, $sortByNewest = false)
+	{
 
 		// if posted a controller then this is where we should return to
 		if (!empty($_POST['controller']))
@@ -801,7 +800,12 @@ $t = $model->attributes;
 			$params["{$modelName}_sort"] = $modelName::model()->tableSchema->primaryKey . '.desc';
 		}
 
-		$this->redirect($params);
+		Yii::app()->controller->redirect($params);
+	}
+
+	// redirect to admin
+	protected function adminRedirect($model, $sortByNewest = false) {
+		static::staticAdminRedirect($model, $sortByNewest);
 	}
 
 	/**
@@ -1191,6 +1195,7 @@ $t=			$model->attributes = $_POST[$modelName];
 	 * @param CModel the model to be validated
 	 */
 	protected function performAjaxValidation($model) {
+$t = $model->attributes;
 		$validating = false;
 		if (isset($_POST['ajax']) && $_POST['ajax'] === $this->modelName . '-form') {
 			$jsonErrors = CActiveForm::validate($model);

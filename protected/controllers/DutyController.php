@@ -5,6 +5,8 @@ class DutyController extends Controller
 	
 	public function getButtons($model)
 	{
+		$controllerName = str_replace('Controller', '', get_called_class());
+		
 		return array(
 			'class' => 'WMTbButtonColumn',
 			'buttons' => array(
@@ -14,14 +16,14 @@ class DutyController extends Controller
 					
 				),
 				'update' => array(
-					'visible' => '$data->checkAccess(Controller::accessWrite)',
-					'url' => 'Yii::app()->createUrl("Duty/update", array("id"=>$data->primaryKey, "controller"=>Yii::app()->controller->modelName))',
+					'visible' => 'Duty::model()->checkAccess(Controller::accessWrite, $data)',
+					'url' => 'Yii::app()->createUrl("'. $controllerName. '/update", array("id"=>$data->primaryKey))',
 				),
 				'view' => array(
 					'visible' => '
-						!$data->checkAccess(Controller::accessWrite)
-						&& $data->checkAccess(Controller::accessRead)',
-					'url' => 'Yii::app()->createUrl("Duty/view", array("id"=>$data->primaryKey))',
+						!Duty::model()->checkAccess(Controller::accessWrite, $data)
+						&& Duty::model()->checkAccess(Controller::accessRead, $data)',
+					'url' => 'Yii::app()->createUrl("'. $controllerName. '/view", array("id"=>$data->primaryKey))',
 				),
 			),
 		);
@@ -52,7 +54,6 @@ class DutyController extends Controller
 				break;
 			}
 		}
-//		$this->breadcrumbs[$dutyKey - 1] = array(key($this->breadcrumbs[$dutyKey - 1]));
 	}
 
 	protected static function makeCrumbAdmin($displays, $queryParamters)

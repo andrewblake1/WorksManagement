@@ -10,7 +10,6 @@ Yii::import('bootstrap.widgets.TbActiveForm');
 class WMTbActiveForm extends TbActiveForm
 {
 	private $controller;
-	public $returnController = NULL;
 	public $parent_fk;
 	public $showSubmit = true;	// true, false, hide - hide is there for use when file uploading as a hack as this button needs to be there for the
 	// ajax validation and form submit to occur for some reason. Havn't investigated why yet. There will be a cleaner way to do this!
@@ -139,7 +138,7 @@ class WMTbActiveForm extends TbActiveForm
 		$this->hiddenField('updated_by');
 		
 		// pass thru the original controller so we know can potentially return here
-		echo CHtml::hiddenField('controller', $this->returnController ? $this->returnController : Yii::app()->controller->modelName);
+		echo CHtml::hiddenField('controller', Yii::app()->controller->modelName);
 
 		// if there is a parent foreing key i.e. if there is a level above this in our navigation structure
 		if(!empty($this->parent_fk))
@@ -153,7 +152,7 @@ class WMTbActiveForm extends TbActiveForm
 
 		// get button label
 		$buttonLabel = $this->_action == 'Update'
-			? $this->_action
+			? $this->model->updateButtonText
 			: $this->model->createButtonText;
 		
 		// button attributes

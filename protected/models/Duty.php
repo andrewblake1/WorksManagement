@@ -34,6 +34,11 @@ class Duty extends ActiveRecord
 	public $action_id;
 	
 	/**
+	 * @var string label on button in update view
+	 */
+	static $updateButtonText;
+	
+	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -41,7 +46,7 @@ class Duty extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_id, duty_step_id', 'required'),
+			array('task_id', 'required'),
 			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('action_id, updated, custom_value_id', 'safe'),
@@ -352,10 +357,21 @@ class Duty extends ActiveRecord
 		return $task->assertFromParent();
 	}
 
-	public function checkAccess($mode)
+	public function checkAccess($mode, $model = NULL)
 	{
-		$user = User::model()->findByPk(Yii::app()->user->id);
 		
+		if($model === NULL)
+		{
+			$model = $this;
+		}
+		else
+		{
+			$this->attributes = $model->attributes;
+			$this->id = $model->id;
+		}
+		
+		$user = User::model()->findByPk(Yii::app()->user->id);
+
 		if(Yii::app()->user->checkAccess('system admin'))
 		{
 			return true;
@@ -375,7 +391,7 @@ class Duty extends ActiveRecord
 			));
 		}
 	}
-	
+
 }
 
 ?>

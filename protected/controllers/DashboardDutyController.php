@@ -6,17 +6,26 @@ class DashboardDutyController extends DutyController
 	/**
 	 * @var string the name of the model to use in the admin view - the model may serve a database view as opposed to a table  
 	 */
-	protected $_adminViewModel = NULL;
+	protected $_adminViewModel = 'ViewDashboardDuty';
 
 	protected function newButton()
 	{
 		
 	}
 	
-	public function actionAdmin($exportColumns = array()) {
+	public function actionUpdate($id) {
+		if(isset($_POST['DashboardDuty'])) {
+			$_POST['Duty'] = $_POST['DashboardDuty'];
+		}
 		
-		return parent::actionAdmin($exportColumns);
+		parent::actionUpdate($id);
 	}
+	
+	// redirect to admin - bypass the dutyController version as don't want to limit by task
+	protected function adminRedirect($model, $sortByNewest = false) {
+		static::staticAdminRedirect($model, $sortByNewest);
+	}
+
 	/**
 	 * @return array action filters
 	 */
@@ -34,7 +43,7 @@ class DashboardDutyController extends DutyController
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('admin'),
+				'actions' => array('admin', 'view', 'update'),
 				'users'=>array('@'),
 			),
 			array('deny', // deny all users

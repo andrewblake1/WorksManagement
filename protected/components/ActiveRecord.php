@@ -15,6 +15,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 * @var string nice model name for use in output
 	 */
 	static $niceName;
+// TODO: these should be in controller and not model
 	/**
 	 * @var string label for tab and breadcrumbs when creating
 	 */
@@ -23,6 +24,10 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 * @var string label on button in create view
 	 */
 	static $createButtonText;
+	/**
+	 * @var string label on button in update view
+	 */
+	static $updateButtonText;
 	/**
 	 * @var string default attribute to sort by
 	 */
@@ -100,6 +105,11 @@ abstract class ActiveRecord extends RangeActiveRecord
 	public function getCreateButtonText()
 	{
 		return static::$createButtonText ? static::$createButtonText : 'Create';
+	}
+	
+	public function getUpdateButtonText()
+	{
+		return static::$updateButtonText ? static::$updateButtonText : 'Update';
 	}
 	
 	public static function getCreateLabel()

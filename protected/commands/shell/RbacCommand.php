@@ -468,12 +468,13 @@ EOD;
 //			$this->_authManager->createOperation('DutyUpdate', 'Duty update', 'return Duty::canUpdate($params["duty"]);');
 			
 			// attach this to the Duty task so that higher users don't get denied when checking this in Duty update action
-			$dutyTask=$this->_authManager->getAuthItem('Duty');
+//			$dutyTask=$this->_authManager->getAuthItem('Duty');
 //			$dutyTask->addChild('Duty');
 //			// grant default users this operation
 //			$defaultRole->addChild('DutyUpdate');
 //			// grant default users read operation
-			$defaultRole->addChild('Duty');
+			$task=$this->_authManager->createTask('DashboardDuty', 'DashboardDuty task');
+			$defaultRole->addChild('DashboardDuty');
 
 			// Grant project manager project read
 			$projectManagerRole->addChild('ClientRead');

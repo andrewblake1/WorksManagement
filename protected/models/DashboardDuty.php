@@ -16,12 +16,13 @@
  */
 class DashboardDuty extends Duty
 {
+	public $updated_by;
 	protected $defaultSort = array('t.due' => 'ASC', 'description');
 
 	public function tableName() {
-		return 'v_duty';
+		return 'tbl_duty';
 	}
-	
+
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
@@ -41,17 +42,14 @@ class DashboardDuty extends Duty
 		$criteria->compare('derived_assigned_to_id', $user->contact_id);
 		$criteria->compareNull('updated');
 		$criteria->addCondition("planned IS NOT NULL");
-		
+
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
         $columns[] = $this->linkThisColumn('description');
- //       $columns[] = static::linkColumn('searchInCharge', 'User', 'assignedTo');
-//        $columns[] = 'derived_importance';
 		$columns[] = 'due:date';
-//		$columns[] = 'updated:datetime';
 
 		return $columns;
 	}
