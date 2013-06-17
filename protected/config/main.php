@@ -178,7 +178,10 @@ return array(
 										'Duty',
 									),
 									'TaskToMaterial',
-									'TaskToAssembly',
+									'TaskToAssembly'=>array(
+										'TaskToAssemblyToAssemblyToAssemblyGroup',
+										'TaskToAssemblyToTaskTemplateToAssemblyGroup',
+									),
 									'TaskToCustomFieldToTaskTemplate',
 									'TaskToPurchaseOrder',
 									'TaskToResource',

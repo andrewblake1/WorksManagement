@@ -113,13 +113,13 @@ class ViewTaskToAssembly extends ViewActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'id';
-		$columns[] = 'parent_id';
+ 		$columns[] = 'parent_id';
+		$columns[] = 'searchAssemblyDescription';
+ 		$columns[] = 'searchAssemblyAlias';
 		$columns[] = 'searchAssemblyGroup';
 		$columns[] = 'quantity';
 		$columns[] = 'searchTaskQuantity';
 		$columns[] = 'searchTotalQuantity';
- 		$columns[] = 'searchAssemblyDescription';
- 		$columns[] = 'searchAssemblyAlias';
 
 		return $columns;
 	}

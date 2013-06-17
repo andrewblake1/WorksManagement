@@ -24,7 +24,6 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 {
 	public $task_id;
 	public $quantity;
-//	public $task_to_assembly_id;
 
 	/**
 	 * @var string nice model name for use in output

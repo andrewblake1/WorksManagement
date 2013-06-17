@@ -2,6 +2,14 @@
 
 class TaskToAssemblyToTaskTemplateToAssemblyGroupController extends Controller
 {
+	
+	public static function getBreadCrumbTrail($lastCrumb = NULL) {
+		// alter the breadcrumb trail as necassary for this model - remove the second and third to last items
+		$breadCrumbs = parent::getBreadCrumbTrail($lastCrumb);
+		array_splice($breadCrumbs, -3, 2);
+		return $breadCrumbs;
+	}
+	
 	protected function createRender($model, $models, $modal_id)
 	{
 		// set heading

@@ -2,6 +2,7 @@
 
 class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 {
+
 	protected function createRender($model, $models, $modal_id)
 	{
 // TODO: repeated
@@ -41,32 +42,18 @@ class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 		$this->redirect($params);
 	}
 	
+	public static function getBreadCrumbTrail($lastCrumb = NULL) {
+		// alter the breadcrumb trail as necassary for this model - remove the second and third to last items
+		$breadCrumbs = parent::getBreadCrumbTrail($lastCrumb);
+		array_splice($breadCrumbs, -3, 2);
+		return $breadCrumbs;
+	}
 	
-	/**
-	 * Get the breadcrumb trail for this controller.
-	 * return array bread crumb trail for this controller
-	 */
-	static function getBreadCrumbTrail($lastCrumb = NULL)
+/*	static function getBreadCrumbTrail($lastCrumb = NULL)
 	{
 		return TaskToAssemblyController::getBreadCrumbTrail('Update');
 	}
-	
-	
-/*	function setUpdateTabs($model) {
-		if(!empty($model->task_to_assembly_id))
-		{
-			// need to trick it here into using task to assembly model instead as this model not in navigation hierachy
-			$taskToAssembly = TaskToAssembly::model()->findByPk($model->task_to_assembly_id);
-			return parent::setUpdateTabs($taskToAssembly);
-		}
-		
-		return parent::setUpdateTabs($model);
-	}*/
-
-/*	public function setCreateTabs($model) {
-		$this->setUpdateTabs($model);
-	}*/
-
+*/
 	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
 	public function setTabs($model) {
 		$modelName = $this->modelName;
