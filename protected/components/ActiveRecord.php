@@ -1002,13 +1002,13 @@ if(count($m = $this->getErrors()))
 			if(isset($this->deleted))
 			{
 				$primaryKeyName = self::model()->tableSchema->primaryKey;
+				$tableName = $this->tableName();
 				$attributes = $this->attributes;
 				unset($attributes['deleted']);
 				if(array_key_exists($primaryKeyName, $attributes))
 				{
 					unset($attributes[$primaryKeyName]);
 				}
-//				unset($attributes[$primaryKeyName]);
 				if(array_key_exists('updated_by', $attributes))
 				{
 					unset($attributes['updated_by']);
@@ -1023,6 +1023,8 @@ if(count($m = $this->getErrors()))
 						SELECT COLUMN_NAME
 						FROM information_schema.KEY_COLUMN_USAGE
 						WHERE TABLE_SCHEMA = '$databaseName'
+							AND TABLE_NAME = '$tableName'
+							AND POSITION_IN_UNIQUE_CONSTRAINT IS NOT NULL
 							AND CONSTRAINT_NAME = '{$matches[1]}'")->queryAll();
 					// convert to array so we can use the keys to intersect with attributes
 					$keyColumns = array();
@@ -1033,7 +1035,7 @@ if(count($m = $this->getErrors()))
 				
 					$attributes = array_intersect_key($attributes, $keyColumns);
 				}
-				if(!$model = self::model()->resetScope()->findByAttributes($attributes))
+				if(!$attributes || !$model = self::model()->resetScope()->findByAttributes($attributes))
 				{
 					// unknown error i.e. not todo with already being deleted
 					throw($e);
