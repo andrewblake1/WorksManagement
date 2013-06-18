@@ -1230,7 +1230,7 @@ if(count($m = $this->getErrors()))
 	{
         foreach($this->adminColumns as $column)
 		{
-			$columns[] = is_string($column) ? $column : $column['name'];
+			$columns[] = (is_string($column) ? $column : $column['name']) . ':raw';
 		}
 		
 		return $columns;

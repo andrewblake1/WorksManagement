@@ -547,7 +547,7 @@ $t = $model->attributes;
 		// if exporting to xl
 		if (isset($_GET['action']) && $_GET['action'] == 'download') {
 			// Export it
-			$this->toExcel($adminViewModel->search(false), $adminViewModel->exportColumns, null, array(), 'CSV'/* 'Excel5' */);
+			$this->toExcel($adminViewModel->search(false), $adminViewModel->exportColumns, null, array()/*, 'CSV' 'Excel5' */);
 		}
 
 // TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
