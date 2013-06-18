@@ -54,31 +54,33 @@ class AdminViewWidget extends CWidget
 		// should we allow bulk delete
 		// determine whether form elements should be enabled or disabled by on access rights
 		$controllerName = get_class($this->_controller);
-		$params['bulkActions'] = $controllerName::checkAccess(Controller::accessWrite) && $buttons
-			? array(
-				'align'=>'left',
-				'actionButtons' => array(
-					array(
-						'buttonType' => 'link',
-						'type' => 'primary',
-						'size' => 'small',
-						'icon' => 'trash',
-						'label' => 'Delete Selected',
-						'id' => 'bulk_delete_button_1',
-						'url' => array('batchDelete'),
-							'align'=>'left',
-						'htmlOptions' => array(
-							'class'=>'bulk-action',
+		if($controllerName::checkAccess(Controller::accessWrite) && $buttons && strcasecmp($buttons['buttons']['delete']['visible'], 'FALSE') != 0)
+		{
+			$params['bulkActions'] = 
+				array(
+					'align'=>'left',
+					'actionButtons' => array(
+						array(
+							'buttonType' => 'link',
+							'type' => 'primary',
+							'size' => 'small',
+							'icon' => 'trash',
+							'label' => 'Delete Selected',
+							'id' => 'bulk_delete_button_1',
+							'url' => array('batchDelete'),
+								'align'=>'left',
+							'htmlOptions' => array(
+								'class'=>'bulk-action',
+							),
+							'click' => 'js:batchActions',
 						),
-						'click' => 'js:batchActions',
 					),
-				),
-				// if grid doesn't have a checkbox column type, it will attach
-				// one and this configuration will be part of it
-				'checkBoxColumnConfig' => array(
-					'name' => 'id'
-				))
-			: array();
+					// if grid doesn't have a checkbox column type, it will attach
+					// one and this configuration will be part of it
+					'checkBoxColumnConfig' => array(
+						'name' => 'id'
+			));
+		}
 
 		// display the grid
 		$this->_controller->widget('WMTbExtendedGridView', $params);

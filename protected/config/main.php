@@ -183,7 +183,7 @@ return array(
 										'TaskToAssemblyToTaskTemplateToAssemblyGroup',
 									),
 									'TaskToCustomFieldToTaskTemplate',
-									'TaskToPurchaseOrder',
+//									'TaskToPurchaseOrder',
 									'TaskToResource',
 								),
 							),
@@ -253,7 +253,7 @@ return array(
 					),
 				),
 				'Supplier'=>array(
-					'PurchaseOrder',
+//					'PurchaseOrder',
 					'SupplierContact',
 				),
 				'User'=>array(

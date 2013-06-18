@@ -366,8 +366,6 @@ class DrawingController extends AdjacencyListController
 
 			$this->breadcrumbs = static::getBreadCrumbTrail();
 		}
-		
-//		$this->trimTabs(array(), array(Assembly::getNiceNamePlural()), array(Drawing::getNiceNamePlural()));
 	}
 	
 	public function getRelation($model, $attribute)

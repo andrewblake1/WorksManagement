@@ -49,6 +49,8 @@ class DashboardDuty extends Duty
 	public function getAdminColumns()
 	{
         $columns[] = $this->linkThisColumn('description');
+		$columns[] = 'project_name';
+		$columns[] = 'action_description';
 		$columns[] = 'due:date';
 
 		return $columns;

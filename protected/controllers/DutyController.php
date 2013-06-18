@@ -11,8 +11,7 @@ class DutyController extends Controller
 			'class' => 'WMTbButtonColumn',
 			'buttons' => array(
 				'delete' => array(
-					'visible' => 'Yii::app()->user->checkAccess("Duty", array("id"=>$data->id))',
-					'url' => 'Yii::app()->createUrl("Duty/delete", array("id"=>$data->primaryKey))',
+					'visible' => 'FALSE',
 					
 				),
 				'update' => array(

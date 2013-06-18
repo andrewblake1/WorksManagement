@@ -31,7 +31,10 @@ class DutyStepDependency extends ActiveRecord
 	static $niceName = 'Dependency';
 
 	public $searchChildDutyStep;
-	protected $defaultSort = array('childDutyStep.description');
+	public $searchLeadInDays;
+	protected $defaultSort = array(
+		'childDutyStep.description',
+	);
 	
     /**
      * @return array validation rules for model attributes.
@@ -72,6 +75,7 @@ class DutyStepDependency extends ActiveRecord
             'child_duty_step_id' => 'Depends on',
             'action_id' => 'Action',
 			'searchChildDutyStep' => 'Depends on',
+			'searchLeadInDays' => 'Lead in days',
         );
     }
 
@@ -89,12 +93,14 @@ class DutyStepDependency extends ActiveRecord
 			't.parent_duty_step_id',
 			't.child_duty_step_id',
 			'childDutyStep.description AS searchChildDutyStep',
+			'childDutyStep.lead_in_days AS searchLeadInDays',
 		);
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.action_id',$this->action_id);
 		$criteria->compareNull('t.parent_duty_step_id',$this->parent_duty_step_id);
 		$criteria->compare('childDutyStep.description',$this->searchChildDutyStep,true);
+		$criteria->compare('childDutyStep.lead_in_days',$this->searchLeadInDays);
 
 		$criteria->with = array(
 			'childDutyStep',
@@ -105,8 +111,9 @@ class DutyStepDependency extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchChildDutyStep', 'DutyStep', 'child_duty_step_id');
-		
+        $columns[] = 'searchLeadInDays';
+		$columns[] = static::linkColumn('searchChildDutyStep', 'DutyStep', 'child_duty_step_id');
+ 		
 		return $columns;
 	}
 

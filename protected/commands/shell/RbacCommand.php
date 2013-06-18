@@ -385,10 +385,10 @@ EOD;
 			$this->_authManager->createOperation('TaskTemplateToActionToProjectTemplateToAuthItemRead', 'TaskTemplateToActionToProjectTemplateToAuthItem read');
 			$task->addChild('TaskTemplateToActionToProjectTemplateToAuthItemRead');
 
-			$task=$this->_authManager->createTask('PurchaseOrder', 'PurchaseOrder task');
+/*			$task=$this->_authManager->createTask('PurchaseOrder', 'PurchaseOrder task');
 			$projectManagerRole->addChild('PurchaseOrder');
 			$this->_authManager->createOperation('PurchaseOrderRead', 'PurchaseOrder read');
-			$task->addChild('PurchaseOrderRead');
+			$task->addChild('PurchaseOrderRead');*/
 
 			$task=$this->_authManager->createTask('Planning', 'Planning task');
 			$projectManagerRole->addChild('Planning');

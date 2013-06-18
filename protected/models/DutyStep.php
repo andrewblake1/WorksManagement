@@ -47,6 +47,11 @@ class DutyStep extends ActiveRecord
 	public $client_id;
 	public $project_template_id;
 	
+	protected $defaultSort = array(
+		'lead_in_days',
+		'description',
+	);
+	
 	public function scopeAction($actionId)
 	{
 		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
@@ -163,6 +168,14 @@ class DutyStep extends ActiveRecord
 		return $columns;
 	}
 
+	public static function getDisplayAttr()
+	{
+		return array(
+			'lead_in_days',
+			'description',
+		);
+	}
+ 
 }
 
 ?>

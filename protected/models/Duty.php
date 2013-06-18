@@ -80,6 +80,8 @@ class Duty extends ActiveRecord
 			'updated' => 'Completed',
 			'custom_value_id' => 'Custom value',
 			'derived_assigned_to_name' => 'Assigned to',
+			'project_name' => 'Project',
+			'action_description' => 'Action',
 		));
 	}
 
