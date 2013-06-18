@@ -58,6 +58,7 @@ class DutyController extends Controller
 				break;
 			}
 		}
+		$this->breadcrumbs[$dutyKey - 1] = array(key($this->breadcrumbs[$dutyKey - 1]));
 	}
 
 	protected static function makeCrumbAdmin($displays, $queryParamters)

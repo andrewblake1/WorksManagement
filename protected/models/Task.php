@@ -116,9 +116,9 @@ class Task extends CustomFieldExtensionActiveRecord
 
 			// validate and save
 			$saved &= $customValue->updateSave($models);
-			{//<input id="CustomField_2_type_int" class="span5" type="text" name="CustomValue[2][type_int]">
-				$t = $customValue->getErrors();
-			}
+//			{//<input id="CustomField_2_type_int" class="span5" type="text" name="CustomValue[2][type_int]">
+//				$t = $customValue->getErrors();
+//			}
 		}
 
 		return $saved;

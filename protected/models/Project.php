@@ -98,7 +98,7 @@ class Project extends CustomFieldExtensionActiveRecord
 			$customValue->setLabelAndId($customFieldModelTemplate);
 			
 			// massive assignement
-			$customValue->attributes=$_POST['CustomValue'][$customFieldModelTemplate->id];
+			$customValue->attributes=$_POST['CustomValue'][$modelToCustomFieldModelTemplate->custom_value_id];
 
 			// validate and save
 			$saved &= $customValue->updateSave($models);

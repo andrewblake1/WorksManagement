@@ -16,7 +16,6 @@
  * @property Client $client
  * @property Contact $contact
  * @property ProjectToClientContact[] $projectToClientContacts
- * @property ProjectToClientContact[] $projectToClientContacts1
  */
 class ClientContact extends ContactActiveRecord
 {
@@ -48,9 +47,6 @@ class ClientContact extends ContactActiveRecord
 			array('first_name, last_name, role, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
 			array('email, address_line_1, address_line_2', 'length', 'max'=>255),
 			array('post_code', 'length', 'max'=>16),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, client_id, first_name, last_name, role, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -65,8 +61,7 @@ class ClientContact extends ContactActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'client' => array(self::BELONGS_TO, 'Client', 'client_id'),
             'contact' => array(self::BELONGS_TO, 'Contact', 'contact_id'),
-            'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'client_id'),
-            'projectToClientContacts1' => array(self::HAS_MANY, 'ProjectToClientContact', 'client_contact_id'),
+            'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'client_contact_id'),
         );
     }
 

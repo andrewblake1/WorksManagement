@@ -61,7 +61,7 @@ class Controller extends CController {
 	 * @var string the name of the admin view
 	 */
 	protected $_adminView = '/admin';
-	private static $nav = array();
+	public static $nav = array();
 
 	static function modelName() {
 		return str_replace('Controller', '', get_called_class());

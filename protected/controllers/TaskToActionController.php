@@ -26,7 +26,11 @@ class TaskToActionController extends Controller
 
 	protected function createRedirect($model, $params = array()) {
 		// go to duty admin view
-		$this->redirect(array_merge(array('Duty/admin', 'task_to_action' => $model->getPrimaryKey()), $params));
+//		$this->redirect(array_merge(array('Duty/admin', 'task_to_action' => $model->getPrimaryKey()), $params));
+		$this->redirect(array_merge(array('Duty/admin',
+			'action_id' => $model->action_id,
+			'task_id' => $model->task_id,
+		), $params));
 	}
 	
 }

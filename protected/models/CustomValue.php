@@ -35,9 +35,6 @@ class CustomValue extends ActiveRecord
 			array('type_float', 'numerical'),
 			array('type_text', 'length', 'max'=>255),
 			array('type_time, type_date', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, type_int, type_float, type_time, type_date, type_text', 'safe', 'on'=>'search'),
 		));
 	}
 

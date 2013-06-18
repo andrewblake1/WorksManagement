@@ -6,15 +6,14 @@
  * The followings are the available columns in table 'tbl_project_to_client_contact':
  * @property integer $id
  * @property string $project_id
- * @property integer $client_id
  * @property integer $client_contact_id
- * @property integer $deleted
+ * @property integer $client_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property User $updatedBy
  * @property ClientContact $clientContact
  * @property Project $client
- * @property User $updatedBy
  * @property Project $project
  */
 class ProjectToClientContact extends ActiveRecord
@@ -44,9 +43,6 @@ class ProjectToClientContact extends ActiveRecord
 			array('project_id, client_contact_id', 'required'),
 			array('client_id, client_contact_id', 'numerical', 'integerOnly'=>true),
 			array('project_id', 'length', 'max'=>10),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, searchRole, searchFirstName, searchLastName, searchEmail, searchPhoneMobile, searchPhoneHome, searchPhoneWork, searchPhoneFax, project_id, client_id, client_contact_id', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -58,9 +54,9 @@ class ProjectToClientContact extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'clientContact' => array(self::BELONGS_TO, 'ClientContact', 'client_contact_id'),
             'client' => array(self::BELONGS_TO, 'Project', 'client_id'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
         );
     }

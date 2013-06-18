@@ -157,10 +157,11 @@ class Duty extends ActiveRecord
 			$customValue->attributes=$_POST['CustomValue'][$customValue->id];
 
 			// validate and save
-			$saved &= $customValue->updateSave($models, array(
-				'customField' => $this->dutyStepDependency->childDutyStep->customField,
-				'params' => array('relationToCustomField'=>'dutyStepDependency->childDutyStep->customField'),
+			$customValue->setCustomValidators(array(
+				'customField' => $this->dutyData->dutyStep->customField,
+				'params' => array('relationToCustomField'=>'dutyData->dutyStep->customField'),
 			));
+			$saved &= $customValue->updateSave($models);
 		}
 
 		// attempt save of related DutyData
@@ -320,41 +321,19 @@ class Duty extends ActiveRecord
 	 */
 	public function assertFromParent($modelName = null)
 	{
-		if($this->task_to_action_id)
-		{
-			return parent::assertFromParent($modelName);
-		}
-		elseif($this->action_id)
-		{
-			$this->task_to_action_id = $this->action_id;
-			return parent::assertFromParent($modelName);
-		}
-		elseif($this->task_id)
-		{
-			$taskId = $this->task_id;
-			$task = $this->task;
-		}
-		else
-		{
-			$criteria = new DbCriteria;
-			
-			$criteria->compare('dutyStep.action_id', $this->task_to_action_id);
-			
-			$criteria->with=array(
-				'dutyData',
-				'dutyData.dutyStep',
-			);
-			$task = Duty::model()->find($criteria);
-			$taskId = $task->id;
-		}
+		Controller::setAdminParam('task_id', $this->task_id, 'Duty');
+		Controller::setAdminParam('action_id', $this->action_id, 'Duty');
 
-		// store the primary key for the model
-		Controller::setUpdateId($taskId, 'TaskToAction');
-		// ensure that that at least the parents primary key is set for the admin view
-		Controller::setAdminParam('task_id', $taskId, 'Duty');
+		Controller::setUpdateId($this->task_id, 'Task');
+		Controller::setUpdateId($this->action_id, 'TaskToAction');
 
+		Controller::setAdminParam('task_id', $this->task_id, 'TaskToAction');
+
+		$this->task->assertFromParent();
+		
+$t = Controller::$nav;
 		// assert the task
-		return $task->assertFromParent();
+		return $this->task->assertFromParent();
 	}
 
 	public function checkAccess($mode, $model = NULL)
