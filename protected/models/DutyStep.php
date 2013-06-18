@@ -48,7 +48,7 @@ class DutyStep extends ActiveRecord
 	public $project_template_id;
 	
 	protected $defaultSort = array(
-		'lead_in_days',
+		'lead_in_days'=>'DESC',
 		'description',
 	);
 	

@@ -33,6 +33,7 @@ class DutyStepDependency extends ActiveRecord
 	public $searchChildDutyStep;
 	public $searchLeadInDays;
 	protected $defaultSort = array(
+		'childDutyStep.leas_in_days'=>'DESC',
 		'childDutyStep.description',
 	);
 	
