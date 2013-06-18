@@ -157,6 +157,7 @@ class Duty extends ActiveRecord
 			$customValue->attributes=$_POST['CustomValue'][$customValue->id];
 
 			// validate and save
+			$customValue->setLabelAndId($this->dutyData->dutyStep);
 			$customValue->setCustomValidators(array(
 				'customField' => $this->dutyData->dutyStep->customField,
 				'params' => array('relationToCustomField'=>'dutyData->dutyStep->customField'),

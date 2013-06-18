@@ -303,7 +303,7 @@ class WMTbActiveForm extends TbActiveForm
 			// disable the datepicker so calendar doesn't pop up when user points
 			$htmlOptions['options']['disabled'] = 'true';
 		}
-		$htmlOptions['id'] = $attribute;
+//		$htmlOptions['id'] = $attribute;
 
 		echo parent::datepickerRow($model, $attribute, $htmlOptions + $this->_htmlOptionReadonly);
 	}
