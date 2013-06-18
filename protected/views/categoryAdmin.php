@@ -87,7 +87,8 @@ echo '
 								type: "POST",
 								url: "<?php echo "$baseUrl/$modelName/returnForm$queryString"; ?>",
 								data:{
-									'update_id':  id,
+									'id':  id,
+									"action": "update",
 									"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 								},
 								'beforeSend' : function(){

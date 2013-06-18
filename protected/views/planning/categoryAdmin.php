@@ -17,16 +17,6 @@ $queryString = Yii::app()->request->queryString
 	: '';
 $open_nodes = implode(',', $identifiers);
 
-/*Yii::app()->user->setFlash('info','
-	<ul>
-		<li>If tree is empty,start by creating one or more root nodes.</li>
-		<li>Right Click on a node to see available operations.</li>
-		<li>Move nodes with Drag And Drop.You can move a non-root node to root position and vice versa.</li>
-		<li>Root nodes cannot be reordered.Their order is fixed  by id.</li>
-	</ul>');
-
-$this->widget('bootstrap.widgets.TbAlert');*/
-
 // holder for the modal form
 echo '<div class="modal fade" id="myModal" style="display: block;"><div class="modal-body" id="form-modal"></div></div>';
 // The tree will be rendered in this div-->
@@ -34,23 +24,21 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 
 ?>
 
-
 <script  type="text/javascript">
 	$(function ()
 	{
 		// get the users rights
-		writeAccessProject = <?php echo Controller::checkAccess(Controller::accessWrite, 'Project'); ?>;
-		writeAccessDay = <?php echo Controller::checkAccess(Controller::accessWrite, 'Day'); ?>;
-		writeAccessCrew = <?php echo Controller::checkAccess(Controller::accessWrite, 'Crew'); ?>;
-		writeAccessTask = <?php echo Controller::checkAccess(Controller::accessWrite, 'Task'); ?>;
-		readAccessProject = <?php echo Controller::checkAccess(Controller::accessRead, 'Project'); ?>;
-		readAccessDay = <?php echo Controller::checkAccess(Controller::accessRead, 'Day'); ?>;
-		readAccessCrew = <?php echo Controller::checkAccess(Controller::accessRead, 'Crew'); ?>;
-		readAccessTask = <?php echo Controller::checkAccess(Controller::accessRead, 'Task'); ?>;
-		isScheduler = <?php echo Yii::app()->user->checkAccess('scheduler'); ?>;
+		writeAccessProject = <?php echo Controller::checkAccess(Controller::accessWrite, 'Project') ? 'true' : 'false'; ?>;
+		writeAccessDay = <?php echo Controller::checkAccess(Controller::accessWrite, 'Day') ? 'true' : 'false'; ?>;
+		writeAccessCrew = <?php echo Controller::checkAccess(Controller::accessWrite, 'Crew') ? 'true' : 'false'; ?>;
+		writeAccessTask = <?php echo Controller::checkAccess(Controller::accessWrite, 'Task') ? 'true' : 'false'; ?>;
+		readAccessProject = <?php echo Controller::checkAccess(Controller::accessRead, 'Project') ? 'true' : 'false'; ?>;
+		readAccessDay = <?php echo Controller::checkAccess(Controller::accessRead, 'Day') ? 'true' : 'false'; ?>;
+		readAccessCrew = <?php echo Controller::checkAccess(Controller::accessRead, 'Crew') ? 'true' : 'false'; ?>;
+		readAccessTask = <?php echo Controller::checkAccess(Controller::accessRead, 'Task') ? 'true' : 'true'; ?>;
+		isScheduler = <?php echo Yii::app()->user->checkAccess('scheduler') ? 'true' : 'false'; ?>;
 		
-		$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>")
-		.jstree(
+		$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").jstree(
 		{
 			"html_data" :
 				{
@@ -86,42 +74,60 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 					if(level == 1)
 					{
 						writeAccess = writeAccessProject;
+						readAccess = readAccessProject;
 						modelName = "Project";
 						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Project'); ?>;
 					}
 					else if(level == 2)
 					{
 						writeAccess = writeAccessDay && isScheduler;
+						readAccess = readAccessDay;
 						modelName = "Day";
 						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Day'); ?>;
 					}
 					else if(level == 3)
 					{
 						writeAccess = writeAccessCrew && isScheduler;
+						readAccess = readAccessCrew;
 						modelName = "Crew";
 						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Crew'); ?>;
 					}
 					else if(level == 4)
 					{
 						writeAccess = writeAccessTask;
+						readAccess = readAccessTask;
 						modelName = "Task";
 						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Task'); ?>;
 					}
 
 					if(writeAccess)
 					{
+						action = "Update";
+					}
+					else if(readAccess)
+					{
+						action = "View";
+					}
+					else
+					{
+						action = false;
+					}
+
+					if(action)
+					{
 						update = {
 							"update" : {
-								"label"	: "Update",
-								"action"	: function (obj) {
+								"label"	: action,
+								"action" : function (obj) {
 
 									// need to re-read modal contents first as selecting a different record
 									$.ajax({
 										type: "POST",
 										url: "<?php echo "$baseUrl/$modelName/returnForm$queryString"; ?>",
 										data:{
-											'update_id':  id,
-											'model_name':  modelName,
+											"id":  id,
+											"action": action,
+											"model_name":  modelName,
 											"YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>"
 										},
 										'beforeSend' : function(){
@@ -133,10 +139,8 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 										success: function(data){
 											// change the contents
 											$("#form-modal").html(data);
-//											$("#myModal" + modelName + " form").replaceWith(data);
-											//$("#form-create" + targetName).replaceWith(data);
-											action = $("#form-modal form[action]").attr('action');
-											$("#form-modal form[action]").attr('action', action + '<?php echo $queryString; ?>');
+											formAction = $("#form-modal form[action]").attr('action');
+											$("#form-modal form[action]").attr('action', formAction + '<?php echo $queryString; ?>');
 											// display the modal
 											$("#myModal").modal('show');
 
@@ -149,74 +153,76 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 						};//update
 						$.extend(contextMenu, update);
 
-						remove = {
-							"remove" : {
-								"label"	: "Delete",
-								"action" : function (obj) {
+						if(writeAccess)
+						{
+							remove = {
+								"remove" : {
+									"label"	: "Delete",
+									"action" : function (obj) {
 
-									if(confirm('Are you sure you want to remove ' + (obj).attr('rel') + 'and any sub categories'))
-									{
-										jQuery("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").jstree("remove",obj);
+										if(confirm('Are you sure you want to remove ' + (obj).attr('rel') + 'and any sub categories'))
+										{
+											jQuery("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").jstree("remove",obj);
+										}
 									}
 								}
-							}
-						};//remove
-						$.extend(contextMenu, remove);
+							};//remove
+							$.extend(contextMenu, remove);
 
-						if(level != 4)
-						{
+							if(level != 4)
+							{
+								create = {
+									"create" : {
+										"label"	: "Create",
+										"action" : function (obj) {
+											ajaxdata = { "YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>" };
 
-							create = {
-								"create" : {
-									"label"	: "Create",
-									"action" : function (obj) {
-										ajaxdata = { "YII_CSRF_TOKEN":"<?php echo Yii::app()->request->csrfToken; ?>" };
+											// get the target model name
+											if(level == 1)
+											{
+												targetName = "Day";
+												$.extend(ajaxdata, {project_id : id});
+											}
+											else if(level == 2)
+											{
+												targetName = "Crew";
+												$.extend(ajaxdata, {day_id : id});
+											}
+											else if(level == 3)
+											{
+												targetName = "Task";
+												$.extend(ajaxdata, {crew_id : id});
+											}
 
-										// get the target model name
-										if(level == 1)
-										{
-											targetName = "Day";
-											$.extend(ajaxdata, {project_id : id});
-										}
-										else if(level == 2)
-										{
-											targetName = "Crew";
-											$.extend(ajaxdata, {day_id : id});
-										}
-										else if(level == 3)
-										{
-											targetName = "Task";
-											$.extend(ajaxdata, {crew_id : id});
-										}
+											$.extend(ajaxdata, {model_name : targetName});
 
-										$.extend(ajaxdata, {model_name : targetName});
+											// need to re-read modal contents first as selecting a different record
+											$.ajax({
+												type: "POST",
+												url: "<?php echo "$baseUrl/$modelName/returnForm$queryString"; ?>",
+												data: ajaxdata,
+												'beforeSend' : function(){
+													$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
+												},
+												'complete' : function(){
+													$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
+												},
+												success: function(data){
+													// change the contents
+													$("#form-modal").html(data);
+													// display the modal
+													$("#myModal").modal('show');
 
-										// need to re-read modal contents first as selecting a different record
-										$.ajax({
-											type: "POST",
-											url: "<?php echo "$baseUrl/$modelName/returnForm$queryString"; ?>",
-											data: ajaxdata,
-											'beforeSend' : function(){
-												$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").addClass("ajax-sending");
-											},
-											'complete' : function(){
-												$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").removeClass("ajax-sending");
-											},
-											success: function(data){
-												// change the contents
-												$("#form-modal").html(data);
-												// display the modal
-												$("#myModal").modal('show');
+												} //success
+											});//ajax
 
-											} //success
-										});//ajax
-
-									}//actions
-								}
-							};//create
-						$.extend(contextMenu, create);
-						}
-					}
+										}//actions
+									}
+								};
+								$.extend(contextMenu, create);
+							}//create
+						}//if(writeAccess)
+					}//if(action)
 					
 					// add any reports
 					if(reportItemsProject !== null)

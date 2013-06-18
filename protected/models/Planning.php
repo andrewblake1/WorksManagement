@@ -239,6 +239,22 @@ class Planning extends CategoryActiveRecord {
 		Controller::setUpdateId($this->project_id, 'Project');
 		return $project->assertFromParent();
 	}
+	
+	/**
+	 * This needs overriding in order to cope with code assuming parent is project
+	 * @param type $attributes
+	 * @param type $condition
+	 * @param type $params
+	 */
+	public function countByAttributes($attributes, $condition = '', $params = array()) {
+		if(isset($attributes['project_id']))
+		{
+			$attributes['id'] = $attributes['project_id'];
+			unset($attributes['project_id']);
+		}
+		
+		return parent::countByAttributes($attributes, $condition, $params);
+	}
 }
 
 ?>

@@ -1071,6 +1071,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		// set breadcrumbs
 		$this->breadcrumbs = static::getBreadCrumbTrail('Update');
 
+$t = $model->attributes;
 		// set up tab menu if required - using setter
 		$this->tabs = $model;
 
@@ -1514,110 +1515,12 @@ $t = $model->attributes;
 	}
 	
 	// return last or specified level of update id
-	static function setUpdateId($update_id, $modelName = NULL)
+	static function setUpdateId($updateId, $modelName = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
 
-		Controller::$nav['update'][$modelName] = $update_id;
+		Controller::$nav['update'][$modelName] = $updateId;
 	}
-
-/*	// return last or specified level of update id
-	static function getUpdateId($modelName = NULL, $level = NULL)
-	{
-		$modelName = $modelName ? $modelName : static::modelName();
-
-		if($level === NULL)
-		{
-			$level = isset(Controller::$nav['update'][$modelName])
-				? sizeof(Controller::$nav['update'][$modelName]) - 1
-				: 0;
-		}
-$t = Controller::$nav;
-		return isset(Controller::$nav['update'][$modelName][$level]) ? Controller::$nav['update'][$modelName][$level] : NULL;
-	}
-	
-	// return last or specified level of update id
-	static function setUpdateId($update_id, $modelName = NULL, $level = NULL)
-	{
-		$modelName = $modelName ? $modelName : static::modelName();
-
-		if($level === NULL)
-		{
-			$level = isset(Controller::$nav['update'][$modelName])
-				? sizeof(Controller::$nav['update'][$modelName])
-				: 0;
-		}
-
-		Controller::$nav['update'][$modelName][$level] = $update_id;
-	}
-	
-	// return last or specified level of admin params
-	static function getAdminParam($paramName, $modelName = NULL, int $level = NULL)
-	{
-		$modelName = $modelName ? $modelName : static::modelName();
-
-		if(isset(Controller::$nav['admin'][$modelName]))
-		{
-			$adminParam = &Controller::$nav['admin'][$modelName];
-
-			if($level === NULL)
-			{
-				$level = sizeof($adminParam);
-			}
-
-			return isset($adminParams[$level - 1][$paramName]) ? $adminParams[$level - 1][$paramName] : NULL;
-		}
-	}
-
-	// return last or specified level of admin params
-	static function getAdminParams($modelName = NULL, int $level = NULL)
-	{
-		$modelName = $modelName ? $modelName : static::modelName();
-
-		if(isset(Controller::$nav['admin'][$modelName]))
-		{
-			$adminParams = &Controller::$nav['admin'][$modelName];
-
-			if($level === NULL)
-			{
-				$level = sizeof($adminParams);
-			}
-
-			return isset($adminParams[$level - 1]) ? $adminParams[$level - 1] : array();
-		}
-		
-		return array();
-	}
-
-	// level is array index i.e. starts at 0 and not 1
-	static function setAdminParam($paramName, $value, $modelName = NULL, int $level = NULL)
-	{
-		$modelName = $modelName ? $modelName : static::modelName();
-
-		if($level === NULL)
-		{
-			$level = isset(Controller::$nav['admin'][$modelName])
-				? sizeof(Controller::$nav['admin'][$modelName])
-				: 0;
-		}
-		
-		Controller::$nav['admin'][$modelName][$level][$paramName] = $value;
-	}
-
-	// level is array index i.e. starts at 0 and not 1
-	static function setAdminParams($params, $modelName = NULL, int $level = NULL)
-	{
-		$modelName = $modelName ? $modelName : static::modelName();
-
-		if($level === NULL)
-		{
-			$level = isset(Controller::$nav['admin'][$modelName])
-				? sizeof(Controller::$nav['admin'][$modelName])
-				: 0;
-		}
-		
-		Controller::$nav['admin'][$modelName][$level] = $params;
-	}*/
 
 	protected function newButton() {
 		if (Yii::app()->user->checkAccess($this->modelName)) {

@@ -35,22 +35,22 @@ class AdjacencyListController extends Controller {
 		$controllerName = get_called_class();
 		$modelName = $controllerName::modelName();
 
-		if(!$parent_id = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
+		if(!$parentId = isset($_GET['parent_id']) ? $_GET['parent_id'] : null)
 		{
 			// if there is a primary key for this -- starting from beginning
-			if(($update_id = static::getUpdateId(NULL, 0)) !== NULL)
+			if(($updateId = static::getUpdateId(NULL, 0)) !== NULL)
 			{
 				// get the update models parent id
-				$parent_id = $modelName::model()->findByPk($update_id)->parent_id;
+				$parentId = $modelName::model()->findByPk($updateId)->parent_id;
 			}
 		}
 		
 		$ids = array();
 
 		// if there is a parent
-		for(; $model = $modelName::model()->findByPk($parent_id); $parent_id = $model->parent_id)
+		for(; $model = $modelName::model()->findByPk($parentId); $parentId = $model->parent_id)
 		{
-			$ids[] = $parent_id;
+			$ids[] = $parentId;
 		}
 		
 		return $ids;

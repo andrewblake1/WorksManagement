@@ -87,7 +87,7 @@ class CategoryController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'=>array('admin'),
+				'actions'=>array('admin', 'fetchTree', 'returnForm'),
 				'roles'=>array($this->modelName.'Read'),
 			),
 			array('allow',
@@ -102,7 +102,6 @@ class CategoryController extends Controller
 
 	private function registerAssets()
 	{
-//		Yii::app()->clientScript->registerCoreScript('jquery');
 		$this->registerJs('webroot.js_plugins.jstree','/jquery.jstree.js');
 		Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js_plugins/json2/json2.js');
 		Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/client_val_form.css','screen');
@@ -179,13 +178,10 @@ class CategoryController extends Controller
 		$modelName = empty($_POST['model_name']) ? $this->modelName : $_POST['model_name'];
 		
 		//Figure out if we are updating a Model or creating a new one.
-		if(isset($_POST['update_id']))
+		if(isset($_POST['id']))
 		{
-//TODO: may have validation problem here i.e. not sure if fields will be bound correctly so may have to place two modals in the form, one for create
-// and one for update - not sure due to binding problem previously experienced after ajax
-//			$model = $this->loadModel($_POST['update_id']);
-			$model = $modelName::model()->findByPk($_POST['update_id']);
-			$returnUrl = $this->createUrl("$modelName/update", array('id'=>$_POST['update_id']));
+			$model = $modelName::model()->findByPk($_POST['id']);
+			$returnUrl = $this->createUrl("$modelName/{$_POST['action']}", array('id'=>$_POST['id']));
 		}
 		else
 		{
