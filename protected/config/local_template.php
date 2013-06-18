@@ -21,7 +21,7 @@ return array(
 			// Database
 			'db'=>array(
 				'username' => 'root',
-				'password' => '2w0c1e2_',
+				'password' => '',
 			),
 
 		),

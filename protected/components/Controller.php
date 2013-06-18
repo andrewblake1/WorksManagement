@@ -1081,10 +1081,6 @@ $t = $model->attributes;
 		));
 	}
 
-	protected function actionAfterDelete() {
-		
-	}
-
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -1097,11 +1093,7 @@ $t = $model->attributes;
 			{
 				// we only allow deletion via POST request
 				$model = $this->loadModel($id);
-
 				$model->delete();
-
-				// call up any special handling in child class
-				$this->actionAfterDelete($model);
 			}
 			catch (CDbException $e)
 			{

@@ -94,13 +94,21 @@ mkdir /uploads/perth
 mkdir /uploads/melbourne/assembly
 mkdir /uploads/perth/assembly
 
-# need to create public uploads temporary directories
 mkdir /var/www/melbourne/assets/assembly
 mkdir /var/www/perth/assets/assembly
-mkdir /var/www/test/melbourne/assets/assembly
+mkdir /var/www/test/melbourne/assets/assembly  
 mkdir /var/www/test/perth/assets/assembly
 mkdir /var/www/dev/melbourne/assets/assembly
 mkdir /var/www/dev/perth/assets/assembly
+
+# need to create public uploads temporary directories
+chown -R www-data /var/www/melbourne/assets
+chown -R www-data /var/www/perth/assets
+chown -R www-data /var/www/test/melbourne/assets
+chown -R www-data /var/www/test/perth/assets
+chown -R www-data /var/www/dev/melbourne/assets
+chown -R www-data /var/www/dev/perth/assets
+chown -R www-data /home/www-data/uploads
 
 nano /etc/php5/apache2/php.ini
 #edit php.ini 
@@ -114,10 +122,6 @@ session.gc_divisor = 1000
 memory_limit = 384M
 
 exit
-
-#security issues here
-chown -R www-data /home/www-data
-chown -R www-data /var/www
 
 # need to set local database access
 cd protected/config
