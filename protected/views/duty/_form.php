@@ -8,6 +8,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 	}
 	else
 	{
+		$showCustom = TRUE;
+
 		// if previously saved
 		if($model->dutyData->updated)
 		{
@@ -39,6 +41,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 					),
 					'template'=>"{items}\n{pager}",
 				));
+		
+				$showCustom = FALSE;
 			}
 			else
 			{
@@ -48,7 +52,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 			}
 		}
 
-		if(!empty($model->dutyData->custom_value_id))
+		if($showCustom && !empty($model->dutyData->custom_value_id))
 		{
 			$this->widget('CustomFieldWidget', array(
 				'form'=>$form,

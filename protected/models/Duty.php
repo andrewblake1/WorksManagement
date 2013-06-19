@@ -152,8 +152,8 @@ class Duty extends ActiveRecord
 		$saved = true;
 		$this->dutyData->attributes = $_POST['DutyData'];
 
-		// if we need to update a customValue
-		if($customValue = $this->dutyData->customValue)
+		// if we need to update a customValue and a custom value has been sent (in case was logical to display it)
+		if($customValue = $this->dutyData->customValue && isset($_POST['CustomValue'][$customValue->id]))
 		{
 			// massive assignement
 			$customValue->attributes=$_POST['CustomValue'][$customValue->id];
