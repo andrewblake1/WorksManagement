@@ -38,6 +38,64 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 		readAccessTask = <?php echo Controller::checkAccess(Controller::accessRead, 'Task') ? 'true' : 'true'; ?>;
 		isScheduler = <?php echo Yii::app()->user->checkAccess('scheduler') ? 'true' : 'false'; ?>;
 		
+					
+		function getAction()
+		{
+			// get target mode level
+			id=obj.attr("id").replace("node_","");
+
+			if(obj.is("DIV"))
+			{
+				level = 1;
+			}
+			else
+			{
+				level = obj.find('[class^="level"]').first().attr("class").replace("level","");
+			}
+
+			if(level == 1)
+			{
+				writeAccess = writeAccessProject;
+				readAccess = readAccessProject;
+				modelName = "Project";
+				reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Project'); ?>;
+			}
+			else if(level == 2)
+			{
+				writeAccess = writeAccessDay && isScheduler;
+				readAccess = readAccessDay;
+				modelName = "Day";
+				reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Day'); ?>;
+			}
+			else if(level == 3)
+			{
+				writeAccess = writeAccessCrew && isScheduler;
+				readAccess = readAccessCrew;
+				modelName = "Crew";
+				reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Crew'); ?>;
+			}
+			else if(level == 4)
+			{
+				writeAccess = writeAccessTask;
+				readAccess = readAccessTask;
+				modelName = "Task";
+				reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Task'); ?>;
+			}
+
+			if(writeAccess)
+			{
+				action = "Update";
+			}
+			else if(readAccess)
+			{
+				action = "View";
+			}
+			else
+			{
+				action = false;
+			}
+		}
+
 		$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").jstree(
 		{
 			"html_data" :
@@ -57,62 +115,8 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 			},
 
 			"contextmenu":  { 'items': function(obj){
-					contextMenu = {};
-					
-					// get target mode level
-					id=obj.attr("id").replace("node_","");
-
-					if(obj.is("DIV"))
-					{
-						level = 1;
-					}
-					else
-					{
-						level = obj.find('[class^="level"]').first().attr("class").replace("level","");
-					}
-
-					if(level == 1)
-					{
-						writeAccess = writeAccessProject;
-						readAccess = readAccessProject;
-						modelName = "Project";
-						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Project'); ?>;
-					}
-					else if(level == 2)
-					{
-						writeAccess = writeAccessDay && isScheduler;
-						readAccess = readAccessDay;
-						modelName = "Day";
-						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Day'); ?>;
-					}
-					else if(level == 3)
-					{
-						writeAccess = writeAccessCrew && isScheduler;
-						readAccess = readAccessCrew;
-						modelName = "Crew";
-						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Crew'); ?>;
-					}
-					else if(level == 4)
-					{
-						writeAccess = writeAccessTask;
-						readAccess = readAccessTask;
-						modelName = "Task";
-						reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Task'); ?>;
-					}
-
-					if(writeAccess)
-					{
-						action = "Update";
-					}
-					else if(readAccess)
-					{
-						action = "View";
-					}
-					else
-					{
-						action = false;
-					}
-
+					contextMenu = {};		
+					getAction();
 					if(action)
 					{
 						update = {
@@ -362,9 +366,6 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 									data.inst.refresh(data.inst._get_parent(data.rslt.oc));
 								}
 							}
-							// refresh entire tree to auto update runtime derived lables
-//							jQuery("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").jstree("refresh");
-							//  console.log('OK');
 						}
 
 					}
@@ -381,50 +382,16 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 		});
 
 		$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").delegate("a","click", function(e) {
-			// get the id of the clicked node
-//			id = $(this).parent().attr("id").split("_")[1];
+//TODO: make this a function as exact repeat of above - pass in object and return the other required variables
+			// get target mode level
 			obj = $(this).parent();
-			
-			// get target node level
-			id=obj.attr("id").replace("node_","");
 
-			if(obj.is("DIV"))
-			{
-				level = 1;
-			}
-			else
-			{
-				level = obj.find('[class^="level"]').first().attr("class").replace("level","");
-			}
-			
-			// get the users rights
-			readAccess = null;
+			getAction();
 
-			if(level == 1)
-			{
-				readAccess = readAccessProject;
-				modelName = "Project";
-			}
-			else if(level == 2)
-			{
-				readAccess = readAccessDay;
-				modelName = "Day";
-			}
-			else if(level == 3)
-			{
-				readAccess = readAccessCrew;
-				modelName = "Crew";
-			}
-			else if(level == 4)
-			{
-				readAccess = readAccessTask;
-				modelName = "Task";
-			}
-			
-			if(readAccess !== null)
+			if(action)
 			{
 				// go to the admin screen - filtering by this parent id
-				window.location = encodeURI("<?php echo "$baseUrl/"; ?>" + modelName + "/update/" + id + "<?php echo $queryString; ?>");
+				window.location = encodeURI("<?php echo "$baseUrl/"; ?>" + modelName + "/" + action + "/" + id + "<?php echo $queryString; ?>");
 			}
 			
 		});

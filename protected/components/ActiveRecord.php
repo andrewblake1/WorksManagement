@@ -1150,10 +1150,11 @@ if(count($m = $this->getErrors()))
 			}
 
 			// loop thru attributes
+			$tableName = $this->tableName();
 			foreach($this->safeAttributeNames as $attributeName)
 			{
 				// if system admin has set a default for this attribute
-				if($defaultValue = DefaultValue::model()->findByAttributes(array('table'=>$this->tableName(), 'column'=>$attributeName)))
+				if($defaultValue = DefaultValue::model()->findByAttributes(array('table'=>$tableName, 'column'=>$attributeName)))
 				{
 					// attempt to execute the sql
 					try

@@ -156,7 +156,9 @@ return array(
 			*/
 			'trail' => array(
 				'Dashboard'=>array(
-					'DashboardDuty',
+					'DashboardDuty'=>array(
+						'DashboardTask',
+					),
 				),
 				'Action'=>array(
 					'DutyStepDependency',

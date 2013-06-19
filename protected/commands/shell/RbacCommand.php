@@ -427,10 +427,10 @@ EOD;
 			$this->_authManager->createOperation('TaskToCustomFieldToTaskTemplateRead', 'TaskToCustomFieldToTaskTemplate read');
 			$task->addChild('TaskToCustomFieldToTaskTemplateRead');
 
-			$task=$this->_authManager->createTask('TaskToPurchaseOrder', 'TaskToPurchaseOrder task');
+/*			$task=$this->_authManager->createTask('TaskToPurchaseOrder', 'TaskToPurchaseOrder task');
 			$projectManagerRole->addChild('TaskToPurchaseOrder');
 			$this->_authManager->createOperation('TaskToPurchaseOrderRead', 'TaskToPurchaseOrder read');
-			$task->addChild('TaskToPurchaseOrderRead');
+			$task->addChild('TaskToPurchaseOrderRead');*/
 
 			$task=$this->_authManager->createTask('TaskToResource', 'TaskToResource task');
 			$projectManagerRole->addChild('TaskToResource');
@@ -473,8 +473,10 @@ EOD;
 //			// grant default users this operation
 //			$defaultRole->addChild('DutyUpdate');
 //			// grant default users read operation
-			$task=$this->_authManager->createTask('DashboardDuty', 'DashboardDuty task');
+			$this->_authManager->createTask('DashboardDuty', 'DashboardDuty task');
 			$defaultRole->addChild('DashboardDuty');
+			$this->_authManager->createTask('DashboardTask', 'DashboardTask task');
+			$defaultRole->addChild('DashboardTask');
 
 			// Grant project manager project read
 			$projectManagerRole->addChild('ClientRead');
@@ -523,7 +525,7 @@ EOD;
 			$foremanRole->addChild('ClientRead');
 			$foremanRole->addChild('MaterialRead');
 			$foremanRole->addChild('AssemblyRead');
-			$foremanRole->addChild('PurchaseOrderRead');
+//			$foremanRole->addChild('PurchaseOrderRead');
 
 			// STOREMAN
 			$storemanRole=$this->_authManager->createRole('storeman', 'Standards');
@@ -534,7 +536,7 @@ EOD;
 			$storemanRole->addChild('ClientRead');
 			$storemanRole->addChild('Material');
 			$storemanRole->addChild('Assembly');
-			$storemanRole->addChild('PurchaseOrderRead');
+//			$storemanRole->addChild('PurchaseOrderRead');
 
 			// DATAENTRY
 			$dataentryRole=$this->_authManager->createRole('dataentry', 'Data entry');

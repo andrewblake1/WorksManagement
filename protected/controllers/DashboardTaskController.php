@@ -1,12 +1,12 @@
 <?php
 
-class DashboardDutyController extends DutyController
+class DashboardTaskController extends TaskController
 {
 
 	/**
 	 * @var string the name of the model to use in the admin view - the model may serve a database view as opposed to a table  
 	 */
-	protected $_adminViewModel = 'ViewDashboardDuty';
+//	protected $_adminViewModel = 'ViewDashboardTask';
 
 	protected function newButton()
 	{
@@ -14,14 +14,14 @@ class DashboardDutyController extends DutyController
 	}
 	
 	public function actionUpdate($id) {
-		if(isset($_POST['DashboardDuty'])) {
-			$_POST['Duty'] = $_POST['DashboardDuty'];
+		if(isset($_POST['DashboardTask'])) {
+			$_POST['Task'] = $_POST['DashboardTask'];
 		}
 		
 		parent::actionUpdate($id);
 	}
 	
-	// redirect to admin - bypass the dutyController version as don't want to limit by task
+	// redirect to admin - bypass the taskController version as don't want to limit by task
 	protected function adminRedirect($model, $sortByNewest = false) {
 		static::staticAdminRedirect($model, $sortByNewest);
 	}
@@ -56,20 +56,15 @@ class DashboardDutyController extends DutyController
 		$dashboardController = new DashboardController(NULL);
 		$dashboardController->setTabs(NULL);
 		static::$tabs = $dashboardController->tabs;
-		// if update or view
-		if(!empty($model))
-		{
-			$tabs = array();
-			// add tab to  update duty
-			$this->addTab(DashboardDuty::getNiceName(NULL, $model), 'DashboardDuty', Yii::app()->controller->action->id, array('id' => $model->id), static::$tabs[], TRUE);
-			// add tab to view associated tasks
-			$this->addTab(DashboardTask::getNiceNamePlural(), 'DashboardTask', 'admin', array(
-				'duty_data_id' => $model->duty_data_id,
-				'duty_id' => $model->id,
-				), static::$tabs[sizeof(static::$tabs) - 1]);
-		}
-		
+		$tabs = array();
+		// add tab to  update duty
+		$duty = Duty::model()->findByPk($_GET['duty_id']);
+		$this->addTab(DashboardDuty::getNiceName(NULL, $duty), 'DashboardDuty', 'update', array('id' => $_GET['duty_id']), static::$tabs[], FALSE, $duty);
+		// add tab to view associated tasks
+		$this->addTab(DashboardTask::getNiceNamePlural(), 'DashboardTask', 'admin', array(
+			'duty_data_id' => $_GET['duty_data_id'],
+			'duty_id' => $_GET['duty_id'],
+			), static::$tabs[sizeof(static::$tabs) - 1], TRUE);
 	}
-	
 
 }

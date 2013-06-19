@@ -414,8 +414,10 @@ $t = $model->attributes;
 		return $get;
 	}
 
-	public function addTab($label, $modelName, $action, $params, &$tabs, $active = FALSE) {
-		$writeAccess = static::checkAccess(self::accessWrite, $modelName);
+	public function addTab($label, $modelName, $action, $params, &$tabs, $active = FALSE, $model = NULL) {
+		$writeAccess = $model
+			? $model->checkAccess(self::accessWrite)
+			: static::checkAccess(self::accessWrite, $modelName);
 		
 		// dont add empty admin tabs if no write access
 		if($action == 'admin' && !$writeAccess && !$modelName::model()->countByAttributes(array_intersect_key($params, array_flip($modelName::model()->attributeNames()))))
