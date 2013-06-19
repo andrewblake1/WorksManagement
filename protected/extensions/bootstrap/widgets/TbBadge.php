@@ -12,11 +12,11 @@ class TbBadge extends CWidget
 	/*
 	 * Valid badge types.
 	 */
-	const TYPE_SUCCESS = 'success';
-	const TYPE_WARNING = 'warning';
+	const TYPE_SUCCESS   = 'success';
+	const TYPE_WARNING   = 'warning';
 	const TYPE_IMPORTANT = 'important';
-	const TYPE_INFO = 'info';
-	const TYPE_INVERSE = 'inverse';
+	const TYPE_INFO      = 'info';
+	const TYPE_INVERSE   = 'inverse';
 
 	/**
 	 * @var string the badge type.
@@ -49,30 +49,22 @@ class TbBadge extends CWidget
 	{
 		$classes = array('badge');
 
-		$validTypes = array(
-			self::TYPE_SUCCESS,
-			self::TYPE_WARNING,
-			self::TYPE_IMPORTANT,
-			self::TYPE_INFO,
-			self::TYPE_INVERSE
-		);
+		$validTypes = array(self::TYPE_SUCCESS, self::TYPE_WARNING, self::TYPE_IMPORTANT, self::TYPE_INFO, self::TYPE_INVERSE);
 
-		if (isset($this->type) && in_array($this->type, $validTypes)) {
-			$classes[] = 'badge-' . $this->type;
-		}
+		if (isset($this->type) && in_array($this->type, $validTypes))
+			$classes[] = 'badge-'.$this->type;
 
-		if (!empty($classes)) {
+		if (!empty($classes))
+		{
 			$classes = implode(' ', $classes);
-			if (isset($this->htmlOptions['class'])) {
-				$this->htmlOptions['class'] .= ' ' . $classes;
-			} else {
+			if (isset($this->htmlOptions['class']))
+				$this->htmlOptions['class'] .= ' '.$classes;
+			else
 				$this->htmlOptions['class'] = $classes;
-			}
 		}
 
-		if ($this->encodeLabel === true) {
+		if ($this->encodeLabel === true)
 			$this->label = CHtml::encode($this->label);
-		}
 	}
 
 	/**

@@ -8,8 +8,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 	}
 	else
 	{
-		$showCustom = TRUE;
-
 		// if previously saved
 		if($model->dutyData->updated)
 		{
@@ -20,11 +18,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 		}
 		else
 		{
-			// allow system admin and original creator of duty to be able to alter who it is assigned to
-			if($model->dutyData->updated_by == Yii::app()->user->id || Yii::app()->user->checkAccess('system admin'))
-			{
-				UserController::listWidgetRow($model->dutyData, $form, 'responsible', array(), array(), 'Assigned to');
-			}
+			UserController::listWidgetRow($model->dutyData, $form, 'responsible', array(), array(), 'Assigned to');
 
 			// only allow to be checked if dependencies have been checked
 			if(ViewDuty::model()->findAll($incompleteDependencies = $model->incompleteDependencies))
@@ -41,18 +35,15 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 					),
 					'template'=>"{items}\n{pager}",
 				));
-		
-				$showCustom = FALSE;
 			}
 			else
 			{
 				$model->dutyData->updated = TRUE;
-				$form->hiddenField('updated', array(), $model->dutyData);
-				$model->updateButtonText = 'Complete';
+				$form->checkBoxRow('updated', array(), $model->dutyData);
 			}
 		}
 
-		if($showCustom && !empty($model->dutyData->custom_value_id))
+		if(!empty($model->dutyData->custom_value_id))
 		{
 			$this->widget('CustomFieldWidget', array(
 				'form'=>$form,
