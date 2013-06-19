@@ -153,18 +153,21 @@ class Duty extends ActiveRecord
 		$this->dutyData->attributes = $_POST['DutyData'];
 
 		// if we need to update a customValue and a custom value has been sent (in case was logical to display it)
-		if($customValue = $this->dutyData->customValue && isset($_POST['CustomValue'][$customValue->id]))
+		if($customValue = $this->dutyData->customValue)
 		{
-			// massive assignement
-			$customValue->attributes=$_POST['CustomValue'][$customValue->id];
+			if(isset($_POST['CustomValue'][$customValue->id]))
+			{
+				// massive assignement
+				$customValue->attributes=$_POST['CustomValue'][$customValue->id];
 
-			// validate and save
-			$customValue->setLabelAndId($this->dutyData->dutyStep);
-			$customValue->setCustomValidators(array(
-				'customField' => $this->dutyData->dutyStep->customField,
-				'params' => array('relationToCustomField'=>'dutyData->dutyStep->customField'),
-			));
-			$saved &= $customValue->updateSave($models);
+				// validate and save
+				$customValue->setLabelAndId($this->dutyData->dutyStep);
+				$customValue->setCustomValidators(array(
+					'customField' => $this->dutyData->dutyStep->customField,
+					'params' => array('relationToCustomField'=>'dutyData->dutyStep->customField'),
+				));
+				$saved &= $customValue->updateSave($models);
+			}
 		}
 
 		// attempt save of related DutyData

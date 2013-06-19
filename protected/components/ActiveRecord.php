@@ -1231,7 +1231,13 @@ if(count($m = $this->getErrors()))
 	{
         foreach($this->adminColumns as $column)
 		{
-			$columns[] = (is_string($column) ? $column : $column['name']) . ':raw';
+			// if no format given then use raw to stop html encoding
+			$parts = explode(':', (is_string($column) ? $column : $column['name']));
+			if(!isset($parts[1]))
+			{
+				$parts[1] = 'raw';
+			}
+			$columns[] = implode(':', $parts);
 		}
 		
 		return $columns;
