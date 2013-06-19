@@ -1024,7 +1024,6 @@ if(count($m = $this->getErrors()))
 						FROM information_schema.KEY_COLUMN_USAGE
 						WHERE TABLE_SCHEMA = '$databaseName'
 							AND TABLE_NAME = '$tableName'
-							AND POSITION_IN_UNIQUE_CONSTRAINT IS NOT NULL
 							AND CONSTRAINT_NAME = '{$matches[1]}'")->queryAll();
 					// convert to array so we can use the keys to intersect with attributes
 					$keyColumns = array();
