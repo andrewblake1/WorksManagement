@@ -67,7 +67,7 @@ class DutyData extends ActiveRecord
 			'planning_id' => 'Planning',
 			'duty_step_id' => 'Duty',
 			'level' => 'Level',
-			'updated' => 'Updated',
+			'updated' => 'Completed',
 			'custom_value_id' => 'Custom value',
 		));
 	}

@@ -36,9 +36,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 					'template'=>"{items}\n{pager}",
 				));
 			}
-			else
+			elseif(!$model->dutyData->updated)
 			{
-				$model->dutyData->updated = TRUE;
 				$form->checkBoxRow('updated', array(), $model->dutyData);
 			}
 		}
