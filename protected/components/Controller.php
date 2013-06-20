@@ -795,7 +795,7 @@ $t = $model->attributes;
 		}
 
 		$params = array_merge(array("$modelName/admin"),  (static::getAdminParams($modelName) + $_GET));
-
+		
 		// if we want to sort by the newest record first
 		if ($sortByNewest) {
 			$model->adminReset();
@@ -1237,7 +1237,15 @@ $t = $model->attributes;
 		$target = new $modelName;
 
 		// add a blank value at the top to be converted to null later if allowing nulls
-		$listData = isset($model->metadata->columns[$fkField]) && $model->metadata->columns[$fkField]->allowNull ? array(' ' => '') : array();
+		$allowNull = TRUE;
+		foreach($model->rules() as $rule)
+		{
+			if($rule[1] == 'required' && in_array($fkField, explode(',', preg_replace( '/\s/', '', $rule[0]))))
+			{
+				$allowNull = TRUE;
+			}
+		}
+		$listData = $allowNull ? array('' => '') : array();
 		$listData += $modelName::getListData($scopes);
 		echo $form->dropDownListRow(
 			$fkField, $listData, $htmlOptions + array('name' => get_class($model) . "[$fkField]"), $model);
@@ -1561,6 +1569,9 @@ $t = $model->attributes;
 	{
 	}
 	
+	public function createUrl($route, $params = array(), $ampersand = '&') {
+		return parent::createUrl($route, array_filter($params), $ampersand);
+	}
 }
 
 ?>

@@ -12,21 +12,13 @@ class DrawingController extends AdjacencyListController
 		exec("mkdir " . Yii::app()->params['privateUploadPath'] . "drawing");
 		exec("mkdir " . Yii::app()->params['publicUploadPath'] . "drawing");
 		exec("mkdir $uploadDir");
-		exec("mkdir {$uploadDir}thumbnails/");
-		$this->expose($id);
 
 		Yii::import("xupload.UploadHandler");
 		$this->uploadHandler = new UploadHandler(array(
 			'upload_dir' => $uploadDir,
-			'upload_url' => Yii::app()->params['webUploadPath'] . "drawing/$session_id$id/",
+			'upload_url' => Drawing::model()->findByPk($id)->expose,
 			'script_url' => $this->createUrl('upload', array('id'=>$id)),
 			'delete_type' => 'POST',
-			'image_versions'=>array('thumbnail'=>array(
-				'upload_dir' => "$uploadDir/thumbnails/",
-				'upload_url' => Yii::app()->params['webUploadPath'] . "drawing/$session_id$id/thumbnails/",
-				'max_width' => '80px',
-				'max_height' => '80px'
-			))
  		));
 	}
 
@@ -186,25 +178,9 @@ class DrawingController extends AdjacencyListController
 		}
 	}
 	
-	private function expose($id)
-	{
-		// create a symlink in below doc root to expose to web
-// TODO: currently if user goes back into drawing then could get up by previous at command removing at just the wrong time.		
-		$session_id = session_id();
-		// local source
-		$source = Yii::app()->params['privateUploadPath'] . "drawing/$id/"; 
-		// local target
-		$target = Yii::app()->params['publicUploadPath'] . "drawing/$session_id$id";
-		// create the symlink
-		exec("ln -s -f $source $target");
-		// set symlink expiry
-		$expire = date("H:i" , time() + 120);
-		exec("echo 'rm $target' | at $expire");
-	}
-	
 	public function actionUpdate($id, $model = null) {
 		$model = $this->loadModel($id, $model);
-		$this->expose($id);
+		$model->expose();
 		
 		parent::actionUpdate($id, $model);
 	}

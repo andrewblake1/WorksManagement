@@ -127,12 +127,16 @@ class Material extends ActiveRecord
  		$columns[] = 'category';
 		$columns[] = 'unit';
 		$columns[] = static::linkColumn('searchDrawingDescription', 'Drawing', 'drawing_id');
-		
+		$columns[] = array( 'class'=>'bootstrap.widgets.TbImageColumn',
+			'imagePathExpression'=>'$data->expose()',
+			'usePlaceKitten'=>FALSE
+		);
+
 		return $columns;
 	}
 	
 	/**
-	 * @return array the list of columns to be concatenated for use in drop down lists
+	 * @return	array the list of columns to be concatenated for use in drop down lists
 	 */
 	public static function getDisplayAttr()
 	{

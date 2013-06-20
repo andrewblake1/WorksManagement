@@ -133,7 +133,7 @@ class WMTbActiveForm extends TbActiveForm
 		// use event bubbling to remove Please select blank value item after selections made on any select boxes within this form
 		Yii::app()->clientScript->registerScript('dropDownListRow', "
 			$('#{$this->id}').change(function(event){
-				$('[value=\"\"]', event.target).remove();
+				$('[value=\"\"]:not(:empty)', event.target).remove();
 			});
 			", CClientScript::POS_READY
 		);
