@@ -277,10 +277,11 @@ class Task extends CustomFieldExtensionActiveRecord
 			// if not already in our list of columns to show
 			if(!array_key_exists($tempTableColumnName, $columns))
 			{
-				// stored procedure swaps space for underscore due to becoming dynamic attribute with Yii setter so swap back for label here
-				$label = str_replace('_', ' ', $tempTableColumnName);
+//				// stored procedure swaps space for underscore due to becoming dynamic attribute with Yii setter so swap back for label here
+//				$label = str_replace('_', ' ', $tempTableColumnName);
+				$customField = CustomField::model()->findByPk(str_replace('custom_field_id_', '', $tempTableColumnName));
 				// use setter to dynamically create an attribute
-				$columns[] = "$tempTableColumnName::$label";
+				$columns[] = "$tempTableColumnName::$customField->description";
 			}
 		}
 		

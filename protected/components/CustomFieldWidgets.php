@@ -92,12 +92,9 @@ class CustomFieldWidgets extends CWidget
 		// create a new category tree
 		$categoryTree = new CategoryTree($this->categoryModelName);
 		
-		// loop thru all the pivot table customValue types associated to this model
-//ere is where we need to use different array as no relation in row exists
-		
-//rojectToCustomFieldToProjectTemplate::model()->findByAttributes()
 		echo CHtml::openTag('div', array('id'=>'customValues'));
 		
+		// loop thru all the pivot table customValue types associated to this model
 		foreach($this->model->{$this->relationModelToCustomFieldModelTemplates} as $toCustomField)
 		{
 			$CustomFieldModelTemplate = $toCustomField->{$this->relationCustomFieldModelTemplate};
@@ -109,7 +106,6 @@ class CustomFieldWidgets extends CWidget
 				'form'=>$this->form,
 				'customValue'=>$toCustomField->customValue,
 				'customField'=>$toCustomField->{$this->relationCustomFieldModelTemplate}->customField,
-//				'CustomFieldModelTemplate'=>$toCustomField->{$this->relationCustomFieldModelTemplate},
 				'relationToCustomField'=>"{$this->relationModelToCustomFieldModelTemplate}->{$this->relationCustomFieldModelTemplate}->customField",
 			));
 			// add the widget html to the tree branch
