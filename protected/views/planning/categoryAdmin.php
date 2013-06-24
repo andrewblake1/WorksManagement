@@ -39,7 +39,7 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 		isScheduler = <?php echo Yii::app()->user->checkAccess('scheduler') ? 'true' : 'false'; ?>;
 		
 					
-		function getAction()
+		function getAction(obj)
 		{
 			// get target mode level
 			id=obj.attr("id").replace("node_","");
@@ -116,9 +116,11 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 
 			"contextmenu":  { 'items': function(obj){
 					contextMenu = {};		
-					getAction();
+console.log(1);
+					getAction(obj);
 					if(action)
 					{
+console.log(2);
 						update = {
 							"update" : {
 								"label"	: action,
@@ -384,9 +386,7 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 		$("#<?php echo $modelName::ADMIN_TREE_CONTAINER_ID; ?>").delegate("a","click", function(e) {
 //TODO: make this a function as exact repeat of above - pass in object and return the other required variables
 			// get target mode level
-			obj = $(this).parent();
-
-			getAction();
+			getAction($(this).parent());
 
 			if(action)
 			{
