@@ -57,7 +57,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 		return parent::model(get_called_class());
 	}
 
-/*	public function findByPk($pk, $condition = '', $params = array()) {
+	public function findByPk($pk, $condition = '', $params = array()) {
 		// need to set a global within this object to block the deleted default scope from being applied
 		// when looking for a specific record - which will be a related record hence the whole reason
 		// for soft deletes and will cause an expepected null return otherwise
@@ -65,14 +65,14 @@ abstract class ActiveRecord extends RangeActiveRecord
 // TODO: poor design to not rely on global not great design to rely on a global for this purpose - however working
 // within Yii, scopes seemed logical for the soft deletes. Only other way is to deal with soft deletes individually
 // which is currently less desirable than the global object level global.
-		$this->showSoftDeletes = TRUE;
+		static::$showSoftDeletes = TRUE;
 		
 		$return = parent::findByPk($pk, $condition, $params);
 	
-		$this->showSoftDeletes = FALSE;
+		static::$showSoftDeletes = FALSE;
 		
 		return $return;
-	}*/
+	}
 	
 	public function getRelated($name,$refresh=false,$params=array())
 	{

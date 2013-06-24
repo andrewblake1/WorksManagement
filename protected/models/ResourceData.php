@@ -21,8 +21,6 @@
  * @property ResourceToSupplier $resource
  * @property ResourceToSupplier $resourceToSupplier
  * @property TaskToResource[] $taskToResources
- * @property TaskToResource[] $taskToResources1
- * @property TaskToResource[] $taskToResources2
  */
 class ResourceData extends ActiveRecord
 {
@@ -60,15 +58,12 @@ class ResourceData extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-			// shortcutting level around planning to level table direct here - beware gii
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-			// Beware here when updating via gii
+			// beware of gii problem here
             'resource' => array(self::BELONGS_TO, 'Resource', 'resource_id'),
             'resourceToSupplier' => array(self::BELONGS_TO, 'ResourceToSupplier', 'resource_to_supplier_id'),
             'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'resource_data_id'),
-            'taskToResources1' => array(self::HAS_MANY, 'TaskToResource', 'resource_id'),
-            'taskToResources2' => array(self::HAS_MANY, 'TaskToResource', 'level'),
         );
     }
 

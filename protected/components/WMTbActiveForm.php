@@ -240,11 +240,11 @@ class WMTbActiveForm extends TbActiveForm
 					$data, array('class'=>'span5') + $htmlOptions);
 				
 				// add a dummy field as the list will be removed on doc load
-				echo CHtml::textField(NULL, current($data), $htmlOptions + array(
+				echo CHtml::textField(NULL, current($data), array(
 						'class'=>'span5',
 						'disabled'=>'disabled',
 						'id'=>$id . '_dummy',
-					));
+					) + $htmlOptions);
 				
 				// one potential issue here is that the element may have an ajax event attached to change handler
 //				if(isset($htmlOptions['ajax']))

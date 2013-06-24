@@ -99,7 +99,7 @@ class TaskToResource extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'resourceData.resource_id',
+			'resourceData.resource_id AS resource_id',
 			'resource.description AS searchResource',
 			'supplier.name AS searchSupplier',
 			'resourceData.quantity AS quantity',
@@ -124,6 +124,7 @@ class TaskToResource extends ActiveRecord
 		//  with
 		$criteria->with = array(
 			'task',
+			'resourceData',
 			'resourceData.resource',
 			'resourceData.resourceToSupplier',
 			'resourceData.resourceToSupplier.supplier',

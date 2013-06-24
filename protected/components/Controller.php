@@ -1406,7 +1406,6 @@ $t = $model->attributes;
 								data = data.filter('select').hide().end();
 							}
 							
-							lookup = $('#{$htmlOptions['id']}_lookup');
 							$('[for=\"{$htmlOptions['id']}\"]').remove();
 							$('#{$htmlOptions['id']}_save').remove();
 							$('#{$htmlOptions['id']}_em_').remove();
@@ -1418,6 +1417,7 @@ $t = $model->attributes;
 							// do the final substitution
 							$('#{$htmlOptions['id']}').replaceWith(data);
 							// if this is autotext
+							lookup = $('#{$htmlOptions['id']}_lookup');
 							if(lookup.length)
 							{
 								$dependantOnAttribute = $('#{$modelName}_$dependantOnAttribute').val();
