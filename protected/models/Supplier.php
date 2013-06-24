@@ -16,23 +16,8 @@
  * @property User $updatedBy
  * @property SupplierContact[] $supplierContacts
  */
-class Supplier extends ActiveRecord
+class Supplier extends FileActiveRecord
 {
-
-/*	public function scopeResource($resourceId)
-	{
-		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
-		$criteria=new DbCriteria;
-		$criteria->compare('resourceToSupplier.resource_id', $resourceId);
-		
-		$criteria->join = "
-			JOIN tbl_resource_to_supplier resourceToSupplier ON t.id = resourceToSupplier.supplier_id
-		";
-
-		$this->getDbCriteria()->mergeWith($criteria);
-		
-		return $this;
-	}*/
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -44,9 +29,6 @@ class Supplier extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('name', 'required'),
 			array('name', 'length', 'max'=>64),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, name', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -65,7 +47,6 @@ class Supplier extends ActiveRecord
             'supplierContacts' => array(self::HAS_MANY, 'SupplierContact', 'supplier_id'),
         );
     }
-
 
 	/**
 	 * @return DbCriteria the search/filter conditions.
@@ -87,7 +68,7 @@ class Supplier extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
+		$columns[] = $this->imageColumn();
 		$columns[] = $this->linkThisColumn('name');
 
 		return $columns;

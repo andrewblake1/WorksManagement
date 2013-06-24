@@ -27,7 +27,7 @@
  * @property SupplierContact[] $supplierContacts
  * @property User[] $users
  */
-class Contact extends ActiveRecord
+class Contact extends FileActiveRecord
 {
 
 	/**
@@ -41,12 +41,8 @@ class Contact extends ActiveRecord
 			array('first_name, last_name, email', 'required'),
 			array('deleted, updated_by', 'numerical', 'integerOnly'=>true),
 			array('first_name, last_name, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
-//			array('first_name, last_name, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'safe'),
 			array('first_name, last_name, email', 'required'),
 			array('post_code', 'length', 'max'=>16),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, first_name, last_name, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax, deleted, updated_by', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -101,6 +97,7 @@ class Contact extends ActiveRecord
 
 	public function getAdminColumns()
 	{
+		$columns[] = $this->imageColumn();
 		$columns[] = $this->linkThisColumn('id');
 		$columns[] = $this->linkThisColumn('first_name');
 		$columns[] = $this->linkThisColumn('last_name');

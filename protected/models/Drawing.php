@@ -22,7 +22,7 @@
  * @property Material[] $materials
  * @property Material[] $materials1
  */
-class Drawing extends AdjacencyListActiveRecord
+class Drawing extends TraitAdjacencyListWithFileActiveRecord
 {
 	public $parent_id;
 	public $parent;		// the missing relation

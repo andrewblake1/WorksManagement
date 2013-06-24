@@ -25,7 +25,7 @@
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskToMaterial[] $taskToMaterials
  */
-class Material extends ActiveRecord
+class Material extends FileActiveRecord
 {
 	public $searchDrawingDescription;
 
@@ -122,15 +122,12 @@ class Material extends ActiveRecord
 
 	public function getAdminColumns()
 	{
+		$columns[] = $this->imageColumn();
 		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'alias';
  		$columns[] = 'category';
 		$columns[] = 'unit';
 		$columns[] = static::linkColumn('searchDrawingDescription', 'Drawing', 'drawing_id');
-		$columns[] = array( 'class'=>'bootstrap.widgets.TbImageColumn',
-			'imagePathExpression'=>'$data->expose()',
-			'usePlaceKitten'=>FALSE
-		);
 
 		return $columns;
 	}

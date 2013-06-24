@@ -1,8 +1,8 @@
 <?php
 
-class SupplierController extends Controller
+class SupplierController extends FileController
 {
-
+	public $multiple = false;
 }
 
 ?>

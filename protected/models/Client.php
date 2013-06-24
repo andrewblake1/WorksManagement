@@ -16,7 +16,7 @@
  * @property MaterialToClient[] $materialToClients
  * @property ProjectTemplate[] $projectTemplates
  */
-class Client extends ActiveRecord
+class Client extends FileActiveRecord
 {
 
 	/**
@@ -29,9 +29,6 @@ class Client extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('name', 'required'),
 			array('name', 'length', 'max'=>64),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, name', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -71,7 +68,7 @@ class Client extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
+		$columns[] = $this->imageColumn();
         $columns[] = $this->linkThisColumn('name');
 
 		return $columns;

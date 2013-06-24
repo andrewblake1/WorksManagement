@@ -168,7 +168,7 @@ class WMTbFileUploadActiveForm extends WMTbActiveForm
 			'model' => new XUploadForm,
 			'htmlOptions' => array('id'=>$this->id),
 			'attribute' => '',
-			'multiple' => true,
+			'multiple' => $this->controller->multiple,
 			'formView' => $formView,
 			'uploadView' => $uploadView,
 			'downloadView' => $downloadView,

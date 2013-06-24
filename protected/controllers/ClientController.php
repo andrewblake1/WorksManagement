@@ -1,7 +1,8 @@
 <?php
 
-class ClientController extends Controller
+class ClientController extends FileController
 {
+	public $multiple = false;
 }
 
 ?>
