@@ -7,16 +7,15 @@
  * @property string $id
  * @property integer $custom_field_to_project_template_id
  * @property string $project_id
- * @property string $custom_value_id
+ * @property string $custom_value
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property CustomValue $customValue
  * @property User $updatedBy
  * @property CustomFieldToProjectTemplate $customFieldToProjectTemplate
  * @property Project $project
  */
-class ProjectToCustomFieldToProjectTemplate extends ActiveRecord
+class ProjectToCustomFieldToProjectTemplate extends CustomValueActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
@@ -40,7 +39,8 @@ class ProjectToCustomFieldToProjectTemplate extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('custom_field_to_project_template_id, project_id', 'required'),
 			array('custom_field_to_project_template_id', 'numerical', 'integerOnly'=>true),
-			array('project_id, custom_value_id', 'length', 'max'=>10),
+			array('project_id', 'length', 'max'=>10),
+			array('custom_value', 'length', 'max'=>255),
 		));
 	}
 
@@ -52,7 +52,6 @@ class ProjectToCustomFieldToProjectTemplate extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'customValue' => array(self::BELONGS_TO, 'CustomValue', 'custom_value_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'customFieldToProjectTemplate' => array(self::BELONGS_TO, 'CustomFieldToProjectTemplate', 'custom_field_to_project_template_id'),
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
@@ -69,48 +68,9 @@ class ProjectToCustomFieldToProjectTemplate extends ActiveRecord
 			'searchCustomFieldToProjectTemplate' => 'Custom field',
 			'project_id' => 'Client/Project',
 			'searchProject' => 'Client/Project',
-			'custom_value_id' => 'Custom Value',
+			'custom_value' => 'Custom Value',
 			'searchCustomField' => 'Custom Value',
 		));
-	}
-
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.custom_field_to_project_template_id',
-			't.custom_value_id',
-			'customValue.id AS searchCustomField',
-			'customField.description AS searchCustomFieldToProjectTemplate',
-		);
-
-		// where
-		$criteria->compare('customValue.id',$this->searchCustomField);
-		$criteria->compare('customField.description',$this->searchCustomFieldToProjectTemplate);
-		$criteria->compare('t.project_id',$this->project_id);
-
-		// with
-		$criteria->with = array(
-			'customFieldToProjectTemplate.customField',
-			'project',
-			'customValue',
-		);
-
-		return $criteria;
-	}
-
-	public function getAdminColumns()
-	{
-        $columns[] = static::linkColumn('searchCustomFieldToProjectTemplate', 'CustomFieldToProjectTemplate', 'custom_field_to_project_template_id');
-        $columns[] = static::linkColumn('searchCustomField', 'CustomValue', 'custom_value_id');
-		
-		return $columns;
 	}
 
 	static function getDisplayAttr()
@@ -118,32 +78,22 @@ class ProjectToCustomFieldToProjectTemplate extends ActiveRecord
 		return array('customFieldToProjectTemplate->customField->description');
 	}
 	
-	/*
-	 * overidden as mulitple models i.e. nothing to save in this model as this model can either be deleted or created as the data item resides in customValue
-	 */
-	public function updateSave(&$models = array())
+	public function beforeValidate()
 	{
-		$customValue = $this->customValue;
-
-		// massive assignement
-		$customValue->attributes=$_POST['CustomValue'][$customValue->id];
-
-		// validate and save NB: only saving the customValue here as nothing else should change
-		return $customValue->updateSave($models, array(
+		// set any custom validators
+		$this->customValidatorParams = array(
 			'customField' => $this->customFieldToProjectTemplate->customField,
 			'params' => array('relationToCustomField'=>'projectToCustomFieldToProjectTemplate->customFieldToProjectTemplate->customField'),
-		));
+		);
+
+		return parent::beforeValidate();
 	}
-
-	/*
-	 * overidden as mulitple models i.e. nothing to save in this model as this model can either be deleted or created as the data item resides in customValue
-	 */
-	public function createSave(&$models = array())
-	{
-		$saved = CustomValue::createCustomField($this->customFieldToProjectTemplate, $models, $customValue);
-		$this->custom_value_id = $customValue->id;
-
-		return $saved & parent::createSave($models);
+	
+	public function init() {
+	
+		$this->setDefault($this->customFieldToProjectTemplate->customField);
+	
+		parent::init();
 	}
 
 }

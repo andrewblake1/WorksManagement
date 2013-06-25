@@ -14,7 +14,7 @@
  * @property User $updatedBy
  * @property DutyData $dutyData
  */
-class Duty extends ActiveRecord
+class Duty extends CustomValueActiveRecord
 {
 	public $derived_assigned_to_id;
 	/**
@@ -24,7 +24,7 @@ class Duty extends ActiveRecord
 	public $description;
 	public $derived_assigned_to_name;
 	
-	public $custom_value_id;
+	public $custom_value;
 	public $updated;
 	public $due;
 	
@@ -49,7 +49,7 @@ class Duty extends ActiveRecord
 			array('task_id', 'required'),
 			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
-			array('action_id, updated, custom_value_id', 'safe'),
+			array('action_id, updated, custom_value', 'safe'),
 		));
 	}
 
@@ -78,7 +78,7 @@ class Duty extends ActiveRecord
 			'description' => 'Duty',
 			'responsible' => 'Assigned to',
 			'updated' => 'Completed',
-			'custom_value_id' => 'Custom value',
+			'custom_value' => 'Custom value',
 			'derived_assigned_to_name' => 'Assigned to',
 			'project_name' => 'Project',
 			'action_description' => 'Action',
@@ -153,19 +153,10 @@ class Duty extends ActiveRecord
 		$this->dutyData->attributes = $_POST['DutyData'];
 
 		// if we need to update a customValue and a custom value has been sent (in case was logical to display it)
-		if($customValue = $this->dutyData->customValue)
+		if($this->dutyData->dutyStep->customField)
 		{
-			// massive assignement
-			$customValue->attributes=$_POST['CustomValue'][$customValue->id];
-
 			// validate and save. NB: should only enforce the mandatory custom field option if completing
 			$this->dutyData->dutyStep->customField->mandatory = $this->dutyData->updated;
-			$customValue->setLabelAndId($this->dutyData->dutyStep);
-			$customValue->setCustomValidators(array(
-				'customField' => $this->dutyData->dutyStep->customField,
-				'params' => array('relationToCustomField'=>'dutyData->dutyStep->customField'),
-			));
-			$saved &= $customValue->updateSave($models);
 		}
 
 		// attempt save of related DutyData
@@ -174,6 +165,23 @@ class Duty extends ActiveRecord
 		return $saved & parent::updateSave($models);
 	}
 	
+	public function beforeValidate()
+	{
+		$this->dutyData->customValidatorParams(array(
+			'customField' => $this->dutyData->dutyStep->customField,
+			'params' => array('relationToCustomField'=>'dutyData->dutyStep->customField'),
+		));
+
+		return parent::beforeValidate();
+	}
+
+	public function init() {
+	
+		$this->setDefault($this->dutyData->dutyStep->customField);
+	
+		parent::init();
+	}
+
 	/*
 	 * overidden as mulitple models
 	 */
@@ -217,7 +225,7 @@ class Duty extends ActiveRecord
 			$dutyData->level = $level;
 			$dutyData->responsible = NULL;
 			$dutyData->updated = NULL;
-			$dutyData->custom_value_id = NULL;
+			$dutyData->custom_value = NULL;
 			$dutyData->updated_by = Yii::app()->user->id;
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
 			$dutyData->insert();
@@ -231,20 +239,20 @@ class Duty extends ActiveRecord
 			));
 		}
 
-		// if there isn't already a customValue item to hold value and there should be
+/*		// if there isn't already a customValue item to hold value and there should be
 		if(empty($dutyData->customValue) && !empty($dutyStep->custom_field_id))
 		{
 			// create a new customValue item to hold value
 			$saved &= CustomValue::createCustomField($dutyStep, $models, $customValue);
 			// associate the new customValue to this duty
-			$dutyData->custom_value_id = $customValue->id;
+			$dutyData->custom_value = $customValue->id;
 			// attempt save
 			$saved &= $dutyData->updateSave($models);
-		}
+		}*/
 
 		// link this Duty to the DutyData
 		$this->duty_data_id = $dutyData->id;
-
+		
 		return $saved & parent::createSave($models);
 	}
 

@@ -55,7 +55,9 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 
 	public function setCustomValidators()
 	{
-		$this->setCustomValidatorsRange(AssemblyToAssemblyGroup::model()->findByPk($this->assembly_to_assembly_group_id));
+		$this->rangeModel = AssemblyToAssemblyGroup::model()->findByPk($this->assembly_to_assembly_group_id);
+		
+		parent::setCustomValidators();
 	}
 
 	/**

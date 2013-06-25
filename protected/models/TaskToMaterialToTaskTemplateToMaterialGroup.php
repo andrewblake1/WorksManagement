@@ -46,8 +46,9 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 
 	public function setCustomValidators()
 	{
-$t = $this->attributes;
-		$this->setCustomValidatorsRange(TaskTemplateToMaterialGroup::model()->findByPk($this->task_template_to_material_group_id));
+		$this->rangeModel = TaskTemplateToMaterialGroup::model()->findByPk($this->task_template_to_material_group_id);
+		
+		parent::setCustomValidators();
 	}
 	
 	/**

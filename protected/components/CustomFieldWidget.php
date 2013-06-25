@@ -1,15 +1,12 @@
 <?php
 
-/**
- * CustomValue widgets
- */
 class CustomFieldWidget extends CWidget
 {
 	private $controller;
 	public $form;
 	public $customValue;
 	public $customField;
-	public $relationToCustomField; // working from a customValue model to customValue type
+	public $relationToCustomField;
 
 	/**
 	 * Displays a particular model.
@@ -24,22 +21,17 @@ class CustomFieldWidget extends CWidget
     {
 		$customField = $this->customField;
 		$customValue = $this->customValue;
-		// get array of column names in customValue table
-		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
+
 		// get the attribute name to be saving to - post array hence []
-		$attribute = "[{$this->customValue->id}]".$dataTypeColumnNames[$customField->data_type];
+		$attribute = "[{$this->customValue->id}]custom_value";
 		// get the label
 		$htmlOptions = array('labelOptions' => array('label'=>$customField->description));
-		
-		// set CustomValue custom validators as per the associated customValue type
-		// NB: the array is just the relations names used in validationLookup for sql type to get at the customField model from the customValue model
-		$customValue->setCustomValidators(array(
+		// set up validation
+		$customValue->customValidatorParams = array(
 			'customField' => $customField,
 			'params' => array('relationToCustomField'=>$this->relationToCustomField),
-		));		
+		);		
 		
-//TODO: should probably be sub-classing here and using inheritance instead of switch. Potentially CustomFieldWidgets could be abstract base with a
-// factory method or static factory method to create the sub types.
 		// create the widget based on the customValue validation type
 		switch($customField->validation_type)
 		{

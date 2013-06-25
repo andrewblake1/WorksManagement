@@ -46,7 +46,9 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 
 	public function setCustomValidators()
 	{
-		$this->setCustomValidatorsRange(TaskTemplateToAssemblyGroup::model()->findByPk($this->task_template_to_assembly_group_id));
+		$this->rangeModel = TaskTemplateToAssemblyGroup::model()->findByPk($this->task_template_to_assembly_group_id);
+		
+		parent::setCustomValidators();
 	}
 
 	/**

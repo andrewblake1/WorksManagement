@@ -52,18 +52,20 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		if(!empty($this->subAssembly))
 		{
 			// validate quantity against related assemblyToAssembly record
-			$this->setCustomValidatorsRange($this->subAssembly);
+			$this->rangeModel = $this->subAssembly;
 		}
 		elseif(!empty($this->taskToAssemblyToAssemblyToAssemblyGroups))
 		{
 			// validate quantity against related assemblyToAssembly record
-			$this->setCustomValidatorsRange($this->taskToAssemblyToAssemblyToAssemblyGroups[0]->assemblyToAssemblyGroup);
+			$this->rangeModel = $this->taskToAssemblyToAssemblyToAssemblyGroups[0]->assemblyToAssemblyGroup;
 		}
 		elseif(!empty($this->taskToAssemblyToTaskTemplateToAssemblyGroups))
 		{
 			// validate quantity against related assemblyToAssembly record
-			$this->setCustomValidatorsRange($this->taskToAssemblyToTaskTemplateToAssemblyGroups[0]->taskTemplateToAssemblyGroup);
+			$this->rangeModel = $this->taskToAssemblyToTaskTemplateToAssemblyGroups[0]->taskTemplateToAssemblyGroup;
 		}
+		
+		parent::setCustomValidators();
 	}
 	
 	/**

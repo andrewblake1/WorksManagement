@@ -60,21 +60,6 @@ class CustomField extends ActiveRecord
 	}
 
 	/**
-	 * Returns data type column names.
-	 * @return array data storage types - to match enum type in mysql workbench
-	 */
-	public static function getDataTypeColumnNames()
-	{
-		return array(
-			self::data_typeDate=>'type_date',
-			self::data_typeFloat=>'type_float',
-			self::data_typeInt=>'type_int',
-			self::data_typeText=>'type_text' ,
-			self::data_typeTime=>'type_time',
-		);
-	}
-
-	/**
 	 * Returns validation types.
 	 * @return array validation types - to match enum type in mysql workbench
 	 */

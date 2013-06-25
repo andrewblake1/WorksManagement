@@ -896,6 +896,7 @@ $t = $model->attributes;
 
 	public function setCustomValidators()
 	{
+		parent::setCustomValidators();
 	}
 		
 	/**

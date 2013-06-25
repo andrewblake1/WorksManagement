@@ -2,18 +2,22 @@
 // TODO: replace this with trait use once in php 5.4
 abstract class RangeActiveRecord extends CActiveRecord
 {
-	public function setCustomValidatorsRange($rangeModel)
+	public $rangeModel = NULL;
+	
+	public function setCustomValidators()
 	{
-$t = $rangeModel->attributes;
-		if(empty($rangeModel->select))
+		if($this->rangeModel)
 		{
-			$this->customValidators[] = array('quantity', 'numerical', 'min'=>$rangeModel->minimum, 'max'=>$rangeModel->maximum);
+			if(empty($this->rangeModel->select))
+			{
+				$this->customValidators[] = array('quantity', 'numerical', 'min'=>$this->rangeModel->minimum, 'max'=>$this->rangeModel->maximum);
+			}
+			else
+			{
+				$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $this->rangeModel->select));
+			}
 		}
-		else
-		{
-			$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $rangeModel->select));
-		}
-
+// TODO: this re-engineer into activerecord when traits.
 		// force a re-read of validators
 		$this->getValidators(NULL, TRUE);
 	}

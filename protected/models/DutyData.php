@@ -10,15 +10,14 @@
  * @property string $level
  * @property integer $responsible
  * @property string $updated
- * @property string $custom_value_id
+ * @property string $custom_value
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Duty[] $duties
- * @property CustomValue $customValue
  * @property User $updatedBy
  * @property Planning $planning
- * @property DutyStep $level0
+ * @property Planning $level0
  * @property User $responsible0
  * @property DutyStep $dutyStep
  */
@@ -35,7 +34,8 @@ class DutyData extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('planning_id, duty_step_id, level', 'required'),
 			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
-			array('planning_id, level, custom_value_id', 'length', 'max'=>10),
+			array('planning_id, level', 'length', 'max'=>10),
+            array('custom_value', 'length', 'max'=>255),
 			array('updated', 'safe'),
 		));
 	}
@@ -49,10 +49,9 @@ class DutyData extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'duties' => array(self::HAS_MANY, 'Duty', 'duty_data_id'),
-            'customValue' => array(self::BELONGS_TO, 'CustomValue', 'custom_value_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-            'level0' => array(self::BELONGS_TO, 'DutyStep', 'level'),
+            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
             'responsible0' => array(self::BELONGS_TO, 'User', 'responsible'),
             'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
         );
@@ -68,7 +67,7 @@ class DutyData extends ActiveRecord
 			'duty_step_id' => 'Duty',
 			'level' => 'Level',
 			'updated' => 'Completed',
-			'custom_value_id' => 'Custom value',
+			'custom_value' => 'Custom value',
 		));
 	}
 

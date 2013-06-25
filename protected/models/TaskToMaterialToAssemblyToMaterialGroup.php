@@ -55,7 +55,9 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 
 	public function setCustomValidators()
 	{
-		$this->setCustomValidatorsRange(AssemblyToMaterialGroup::model()->findByPk($this->assembly_to_material_group_id));
+		$this->rangeModel = AssemblyToMaterialGroup::model()->findByPk($this->assembly_to_material_group_id);
+		
+		parent::setCustomValidators();
 	}
 	
 	/**

@@ -48,18 +48,20 @@ class TaskToMaterial extends ActiveRecord
 		if(!empty($this->taskToMaterialToAssemblyToMaterials))
 		{
 			// validate quantity against related assemblyToMaterial record
-			$this->setCustomValidatorsRange($this->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial);
+			$this->rangeModel = $this->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial;
 		}
 		elseif(!empty($this->taskToMaterialToAssemblyToMaterialGroups))
 		{
 			// validate quantity against related assemblyToMaterial record
-			$this->setCustomValidatorsRange($this->taskToMaterialToAssemblyToMaterialGroups[0]->assemblyToMaterialGroup);
+			$this->rangeModel = $this->taskToMaterialToAssemblyToMaterialGroups[0]->assemblyToMaterialGroup;
 		}
 		elseif(!empty($this->taskToMaterialToTaskTemplateToMaterialGroups))
 		{
 			// validate quantity against related assemblyToMaterial record
-			$this->setCustomValidatorsRange($this->taskToMaterialToTaskTemplateToMaterialGroups[0]->taskTemplateToMaterialGroup);
+			$this->rangeModel = $this->taskToMaterialToTaskTemplateToMaterialGroups[0]->taskTemplateToMaterialGroup;
 		}
+		
+		parent::setCustomValidators();
 	}
 	
 	/**5

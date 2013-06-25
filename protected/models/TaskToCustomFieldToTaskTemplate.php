@@ -7,16 +7,15 @@
  * @property string $id
  * @property string $task_id
  * @property integer $custom_field_to_task_template_id
- * @property string $custom_value_id
+ * @property string $custom_value
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Task $task
- * @property CustomValue $customValue
  * @property User $updatedBy
  * @property CustomFieldToTaskTemplate $customFieldToTaskTemplate
  */
-class TaskToCustomFieldToTaskTemplate extends ActiveRecord
+class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
@@ -40,10 +39,8 @@ class TaskToCustomFieldToTaskTemplate extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('custom_field_to_task_template_id, task_id', 'required'),
 			array('custom_field_to_task_template_id', 'numerical', 'integerOnly'=>true),
-			array('task_id, custom_value_id', 'length', 'max'=>10),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, task_id, searchCustomFieldToTaskTemplate, searchTask, searchCustomField', 'safe', 'on'=>'search'),
+			array('task_id', 'length', 'max'=>10),
+            array('custom_value', 'length', 'max'=>255),
 		));
 	}
 
@@ -56,7 +53,6 @@ class TaskToCustomFieldToTaskTemplate extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-            'customValue' => array(self::BELONGS_TO, 'CustomValue', 'custom_value_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'customFieldToTaskTemplate' => array(self::BELONGS_TO, 'CustomFieldToTaskTemplate', 'custom_field_to_task_template_id'),
         );
@@ -72,57 +68,11 @@ class TaskToCustomFieldToTaskTemplate extends ActiveRecord
 			'searchCustomFieldToTaskTemplate' => 'Task type/Custom field)',
 			'task_id' => 'Client/Task',
 			'searchTask' => 'Client/Task',
-			'custom_value_id' => 'Custom value',
+			'custom_value' => 'Custom value',
 			'searchCustomField' => 'Custom value',
 		));
 	}
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-/*	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			'id',	// needed for delete and update buttons
-			't.custom_field_to_task_template_id',
-			"CONCAT_WS('$delimiter',
-				taskTemplate.description,
-				customField.description
-				) AS searchCustomFieldToTaskTemplate",
-		);
-
-		// where
-		$this->compositeCriteria($criteria, array(
-			'taskTemplate.description',
-			'customField.description',
-			), $this->searchCustomFieldToTaskTemplate);
-		$criteria->compare('t.task_id',$this->task_id);
-
-		// with
-		$criteria->with = array(
-			'customFieldToTaskTemplate.taskTemplate',
-			'customFieldToTaskTemplate.customField',
-		);
-
-		return $criteria;
-	}
-
-	public function getAdminColumns()
-	{
-        $columns[] = static::linkColumn('searchCustomFieldToTaskTemplate', 'CustomFieldToTaskTemplate', 'custom_field_to_task_template_id');
-		
-		return $columns;
-	}*/
-
-	static function getDisplayAttr()
-	{
-		return array('customFieldToTaskTemplate->customField->description');
-	}
-	
 	/**
 	 * Retrieves a sort array for use in CActiveDataProvider.
 	 * @return array the for data provider that contains the sort condition.
@@ -132,32 +82,27 @@ class TaskToCustomFieldToTaskTemplate extends ActiveRecord
 		return array('searchCustomFieldToTaskTemplate', 'searchTask', 'searchCustomField');
 	}
 	
-	/*
-	 * overidden as mulitple models i.e. nothing to save in this model as this model can either be deleted or created as the data item resides in customValue
-	 */
-	public function updateSave(&$models = array())
+	static function getDisplayAttr()
 	{
-		$customValue = $this->customValue;
-
-		// massive assignement
-		$customValue->attributes=$_POST['CustomValue'][$customValue->id];
-
-		// validate and save NB: only saving the customValue here as nothing else should change
-		return $customValue->updateSave($models, array(
+		return array('customFieldToProjectTemplate->customField->description');
+	}
+	
+	public function beforeValidate()
+	{
+		// set any custom validators
+		$this->customValidatorParams = array(
 			'customField' => $this->customFieldToTaskTemplate->customField,
 			'params' => array('relationToCustomField'=>'taskToCustomFieldToTaskTemplate->customFieldToTaskTemplate->customField'),
-		));
+		);
+
+		return parent::beforeValidate();
 	}
 
-	/*
-	 * overidden as mulitple models i.e. nothing to save in this model as this model can either be deleted or created as the data item resides in customValue
-	 */
-	public function createSave(&$models = array())
-	{
-		$saved = CustomValue::createCustomField($this->customFieldToTaskTemplate, $models, $customValue);
-		$this->custom_value_id = $customValue->id;
-
-		return $saved & parent::createSave($models);
+	public function init() {
+	
+		$this->setDefault($this->customFieldToTaskTemplate->customField);
+	
+		parent::init();
 	}
 
 }
