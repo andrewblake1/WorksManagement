@@ -42,15 +42,15 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 			}
 		}
 
-		if(!empty($model->dutyData->custom_value_id))
-		{
-			$this->widget('CustomFieldWidget', array(
-				'form'=>$form,
-				'customValue'=>$model->dutyData->customValue,
-				'customField'=>$model->dutyData->dutyStep->customField,
-				'relationToCustomField'=>'duty->dutyStep->customField',
-			));
-		}
+		$this->widget('CustomFieldWidgets',array(
+			'model'=>$model,
+			'form'=>$form,
+			'relationModelToCustomFieldModelTemplate'=>'dutyDataToCustomFieldToDutyStep',
+			'relationModelToCustomFieldModelTemplates'=>'dutyData->dutyDataToCustomFieldToDutySteps',
+			'relationCustomFieldModelTemplate'=>'customFieldToDutyStep',
+			'relation_category'=>'customFieldDutyStepCategory',
+			'categoryModelName'=>'CustomFieldDutyStepCategory',
+		));
 	}
 
 $this->endWidget();

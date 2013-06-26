@@ -15,6 +15,7 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property CustomFieldToDutyStep[] customFieldToDutySteps
  * @property CustomFieldDutyStepCategory[] $customFieldDutyStepCategories
  * @property DutyData[] $dutyDatas
  * @property User $updatedBy
@@ -88,6 +89,8 @@ class DutyStep extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'customFieldDutyStepCategories' => array(self::HAS_MANY, 'CustomFieldDutyStepCategory', 'duty_step_id'),
+			// Beware: this missed by gii
+            'customFieldToDutySteps' => array(self::HAS_MANY, 'CustomFieldToDutyStep', 'duty_step_id'),
             'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'duty_step_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'action' => array(self::BELONGS_TO, 'Action', 'action_id'),

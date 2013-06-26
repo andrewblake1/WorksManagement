@@ -120,9 +120,6 @@ class CustomValueActiveRecord extends ActiveRecord
 	 */
 	public function setDefault(CActiveRecord $customField)
 	{
-		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
-		$attributeName = $dataTypeColumnNames[$customField->data_type];
-
 		// if this is likely to be an sql select
 		if(stripos($customField->default_select, 'SELECT') !== false)
 		{
@@ -130,7 +127,7 @@ class CustomValueActiveRecord extends ActiveRecord
 			try
 			{
 // TODO: this should be run of connection with restricted sys admin rights rather than main app user rights
-				$this->$attributeName = Yii::app()->db->createCommand($customField->default_select)->queryScalar();
+				$this->custom_value = Yii::app()->db->createCommand($customField->default_select)->queryScalar();
 			}
 			catch (CDbException $e)
 			{
@@ -141,7 +138,7 @@ class CustomValueActiveRecord extends ActiveRecord
 		else
 		{
 			// set to the value of the select column
-			$this->$attributeName = $customField->default_select;
+			$this->custom_value = $customField->default_select;
 		}
 	}
 	

@@ -888,8 +888,11 @@ $t = $model->attributes;
 			$this->updated_by = Yii::app()->user->id;
 		}
 	
-		// set any custom validators
-		$this->setCustomValidators();
+		// set any custom validators -- only if not creating
+		if(!$this->isNewRecord)
+		{
+			$this->setCustomValidators();
+		}
 
 		return parent::beforeValidate();
 	}
@@ -1064,6 +1067,7 @@ if(count($m = $this->getErrors()))
 			else
 			{
 				// not handled so re-throw
+$t = $this->attributes;
 				throw($e);
 			}
 		}

@@ -1245,10 +1245,12 @@ $t = $model->attributes;
 				$allowNull = TRUE;
 			}
 		}
-		$listData = $allowNull ? array('' => '') : array();
-		$listData += $modelName::getListData($scopes);
+		
+		// javascript bubbling will remove please select item after selection or allow blank otherwise
+		$htmlOptions['empty'] = $allowNull ? '' : 'Please select';
+		
 		echo $form->dropDownListRow(
-			$fkField, $listData, $htmlOptions + array('name' => get_class($model) . "[$fkField]"), $model);
+			$fkField, $modelName::getListData($scopes), $htmlOptions + array('name' => get_class($model) . "[$fkField]"), $model);
 	}
 
 	const accessRead = 'Read';
@@ -1391,7 +1393,6 @@ $t = $model->attributes;
 
 		$dependantOnControllerName::listWidgetRow($model, $form, $dependantOnAttribute,
 			array(
-//				'empty'=>'Please select',
 				'ajax' => array(
 					'type'=>'POST',
 					'url'=>Yii::app()->createUrl("$listModelName/DependantList", array('fkField'=>$fkField, 'dependantOnModelName'=>$dependantOnModelName, 'dependantOnAttribute'=>$dependantOnAttribute)),

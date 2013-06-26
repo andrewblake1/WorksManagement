@@ -40,7 +40,7 @@ class Project extends CustomFieldActiveRecord
 
 	// CustomFieldActiveRecord
 	protected $evalCustomFieldPivots = '$this->projectTemplate->customFieldToProjectTemplates';
-	protected $evalClassEndToCustomFieldPivot = 'TaskToCustomFieldToProjectTemplate';
+	protected $evalClassEndToCustomFieldPivot = 'ProjectToCustomFieldToProjectTemplate';
 	protected $evalColumnCustomFieldModelTemplateId = 'custom_field_to_project_template_id';
 	protected $evalColumnEndId = 'project_id';
 	protected $evalEndToCustomFieldPivots = '$this->projectToCustomFieldToProjectTemplates';

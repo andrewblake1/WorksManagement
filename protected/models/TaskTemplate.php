@@ -67,9 +67,6 @@ class TaskTemplate extends ActiveRecord
 			array('unit_price', 'length', 'max'=>7),
 			array('quantity_tooltip', 'length', 'max'=>255),
 			array('select', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, description, project_template_id, unit_price, quantity, minimum, maximum, select, quantity_tooltip, deleted, updated_by', 'safe', 'on'=>'search'),
 		));
 	}
 

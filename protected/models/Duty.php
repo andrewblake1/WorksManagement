@@ -42,8 +42,9 @@ class Duty extends CustomFieldActiveRecord
 	protected $evalClassEndToCustomFieldPivot = 'DutyDataToCustomFieldToDutyStep';
 	protected $evalColumnCustomFieldModelTemplateId = 'custom_field_to_duty_step_id';
 	protected $evalColumnEndId = 'duty_data_id';
-	protected $evalEndToCustomFieldPivots = '$this->dutyDataToCustomFieldToDutySteps';
+	protected $evalEndToCustomFieldPivots = '$this->dutyData->dutyDataToCustomFieldToDutySteps';
 	protected $evalCustomFieldPivot = 'customFieldToDutyStep';
+	protected $evalThisColumnEndId = 'duty_data_id';
 
 	/**
 	 * @return array validation rules for model attributes.
