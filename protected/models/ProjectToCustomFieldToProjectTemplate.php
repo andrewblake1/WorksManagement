@@ -73,6 +73,32 @@ class ProjectToCustomFieldToProjectTemplate extends CustomValueActiveRecord
 		));
 	}
 
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
+
+		// select
+		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
+			'customField.description AS searchCustomField',
+			't.custom_value',
+			't.project_id',
+		);
+
+		// where
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.project_id',$this->project_id);
+		$criteria->compare('customField.description',$this->searchCustomField, true);
+		$criteria->compare('t.custom_value',$this->custom_value, true);
+
+		// with
+		$criteria->with=array(
+			'customFieldToProjectTemplate.customField',
+		);
+
+		return $criteria;
+	}
+	
 	static function getDisplayAttr()
 	{
 		return array('customFieldToProjectTemplate->customField->description');
@@ -89,11 +115,10 @@ class ProjectToCustomFieldToProjectTemplate extends CustomValueActiveRecord
 		return parent::beforeValidate();
 	}
 	
-	public function init() {
-	
+	public function createSave(&$models = array()) {
 		$this->setDefault($this->customFieldToProjectTemplate->customField);
-	
-		parent::init();
+		
+		return parent::createSave($models);
 	}
 
 }

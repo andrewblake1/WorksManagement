@@ -10,8 +10,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	AuthItemController::listWidgetRow($model, $form, 'auth_item_name', array(), array('roles'));
 
-	CustomFieldController::listWidgetRow($model, $form, 'custom_field_id', array(), array(), null);
-
 	$form->textAreaRow('comment');
 	
 $this->endWidget();

@@ -14,7 +14,7 @@
  * @property User $updatedBy
  * @property DutyData $dutyData
  */
-class Duty extends CustomValueActiveRecord
+class Duty extends CustomFieldActiveRecord
 {
 	public $derived_assigned_to_id;
 	/**
@@ -24,7 +24,6 @@ class Duty extends CustomValueActiveRecord
 	public $description;
 	public $derived_assigned_to_name;
 	
-	public $custom_value;
 	public $updated;
 	public $due;
 	
@@ -38,6 +37,14 @@ class Duty extends CustomValueActiveRecord
 	 */
 	static $updateButtonText;
 	
+	// CustomFieldActiveRecord
+	protected $evalCustomFieldPivots = '$this->dutyData->dutyStep->customFieldToDutySteps';
+	protected $evalClassEndToCustomFieldPivot = 'DutyDataToCustomFieldToDutyStep';
+	protected $evalColumnCustomFieldModelTemplateId = 'custom_field_to_duty_step_id';
+	protected $evalColumnEndId = 'duty_data_id';
+	protected $evalEndToCustomFieldPivots = '$this->dutyDataToCustomFieldToDutySteps';
+	protected $evalCustomFieldPivot = 'customFieldToDutyStep';
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -49,7 +56,7 @@ class Duty extends CustomValueActiveRecord
 			array('task_id', 'required'),
 			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
-			array('action_id, updated, custom_value', 'safe'),
+			array('action_id, updated', 'safe'),
 		));
 	}
 
@@ -78,7 +85,6 @@ class Duty extends CustomValueActiveRecord
 			'description' => 'Duty',
 			'responsible' => 'Assigned to',
 			'updated' => 'Completed',
-			'custom_value' => 'Custom value',
 			'derived_assigned_to_name' => 'Assigned to',
 			'project_name' => 'Project',
 			'action_description' => 'Action',
@@ -146,7 +152,7 @@ class Duty extends CustomValueActiveRecord
 	
 	/*
 	 * overidden as mulitple models
-	 */
+	 
 	public function updateSave(&$models=array())
 	{
 		$saved = true;
@@ -173,14 +179,7 @@ class Duty extends CustomValueActiveRecord
 		));
 
 		return parent::beforeValidate();
-	}
-
-	public function init() {
-	
-		$this->setDefault($this->dutyData->dutyStep->customField);
-	
-		parent::init();
-	}
+	}*/
 
 	/*
 	 * overidden as mulitple models
@@ -225,7 +224,6 @@ class Duty extends CustomValueActiveRecord
 			$dutyData->level = $level;
 			$dutyData->responsible = NULL;
 			$dutyData->updated = NULL;
-			$dutyData->custom_value = NULL;
 			$dutyData->updated_by = Yii::app()->user->id;
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
 			$dutyData->insert();
@@ -238,17 +236,6 @@ class Duty extends CustomValueActiveRecord
 				'duty_step_id'=>$dutyStep->id,
 			));
 		}
-
-/*		// if there isn't already a customValue item to hold value and there should be
-		if(empty($dutyData->customValue) && !empty($dutyStep->custom_field_id))
-		{
-			// create a new customValue item to hold value
-			$saved &= CustomValue::createCustomField($dutyStep, $models, $customValue);
-			// associate the new customValue to this duty
-			$dutyData->custom_value = $customValue->id;
-			// attempt save
-			$saved &= $dutyData->updateSave($models);
-		}*/
 
 		// link this Duty to the DutyData
 		$this->duty_data_id = $dutyData->id;

@@ -94,7 +94,7 @@ class CustomFieldWidgets extends CWidget
 		
 		echo CHtml::openTag('div', array('id'=>'customValues'));
 		
-		// loop thru all the pivot table customValue types associated to this model
+		// loop thru all the pivot table custom fields
 		foreach($this->model->{$this->relationModelToCustomFieldModelTemplates} as $toCustomField)
 		{
 			$CustomFieldModelTemplate = $toCustomField->{$this->relationCustomFieldModelTemplate};
@@ -104,7 +104,7 @@ class CustomFieldWidgets extends CWidget
 			ob_start();
 			$this->controller->widget('CustomFieldWidget', array(
 				'form'=>$this->form,
-				'customValue'=>$toCustomField->customValue,
+				'customValue'=>$toCustomField,
 				'customField'=>$toCustomField->{$this->relationCustomFieldModelTemplate}->customField,
 				'relationToCustomField'=>"{$this->relationModelToCustomFieldModelTemplate}->{$this->relationCustomFieldModelTemplate}->customField",
 			));

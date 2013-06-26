@@ -10,15 +10,13 @@
  * @property string $description
  * @property integer $lead_in_days
  * @property string $level
- * @property integer $custom_field_id
  * @property string $comment
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property CustomFieldDutyStepCategory[] $customFieldDutyStepCategories
  * @property DutyData[] $dutyDatas
- * @property DutyData[] $dutyDatas1
- * @property CustomField $customField
  * @property User $updatedBy
  * @property Action $action
  * @property AuthItem $authItemName
@@ -77,7 +75,7 @@ class DutyStep extends ActiveRecord
             array('action_id, level', 'length', 'max'=>10),
             array('description', 'length', 'max'=>64),
             array('comment', 'length', 'max'=>255),
-            array('custom_field_id, project_template_id, client_id, auth_item_name', 'safe'),
+            array('project_template_id, client_id, auth_item_name', 'safe'),
 		));
 	}
 
@@ -89,9 +87,8 @@ class DutyStep extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'level'),
-            'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'duty_step_id'),
-            'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
+            'customFieldDutyStepCategories' => array(self::HAS_MANY, 'CustomFieldDutyStepCategory', 'duty_step_id'),
+            'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'duty_step_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
             'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
@@ -110,8 +107,6 @@ class DutyStep extends ActiveRecord
 		return parent::attributeLabels(array(
 			'lead_in_days' => 'Lead in days',
 			'searchIntegralTo' => 'Integral to', 
-			'custom_field_id' => 'Custom field',
-			'searchCustomField' => 'Custom field',
 			'searchAuthItem' => 'Role',
 			'searchLevel' => 'Level',
 		));
@@ -128,12 +123,10 @@ class DutyStep extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.action_id',
-			't.custom_field_id',
 			't.description',
 			't.comment',
 			't.lead_in_days',
 			'level0.name AS searchLevel',
-			'customField.description AS searchCustomField',
 			'authItemName.name AS searchAuthItem',
 		);
 
@@ -142,13 +135,11 @@ class DutyStep extends ActiveRecord
 		$criteria->compare('t.comment',$this->comment,true);
 		$criteria->compare('t.action_id',$this->action_id);
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
-		$criteria->compare('customField.description',$this->searchCustomField,true);
 		$criteria->compare('level0.name',$this->searchLevel,true);
 		$criteria->compare('authItemName.name',$this->searchAuthItem, true);
 		
 		// with
 		$criteria->with = array(
-			'customField',
 			'authItemName',
 			'level0',
 		);
@@ -162,7 +153,6 @@ class DutyStep extends ActiveRecord
 		$columns[] = 'lead_in_days';
 		$columns[] = 'searchLevel';
         $columns[] = 'searchAuthItem';
-        $columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
 		$columns[] = 'comment';
 		
 		return $columns;

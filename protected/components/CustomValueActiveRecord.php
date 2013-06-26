@@ -10,14 +10,6 @@ class CustomValueActiveRecord extends ActiveRecord
 		$customField = $this->customValidatorParams['customField'];
 		$params = $this->customValidatorParams['params'];
 		
-		// Get CustomField column names
-		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
-
-		// get the target attribute
-		$targetAttribute = $dataTypeColumnNames[$customField->data_type];
-
-// TODO: this switch related to CustomFieldWidgets switch - possible call for sub classes - perhaps CustomValue should be abstract?
-
 		// custom validation error message
 		$validation_error = empty($customField->validation_error) ? array() : array('message'=>$customField->validation_error);
 
@@ -26,30 +18,30 @@ class CustomValueActiveRecord extends ActiveRecord
 		{
 			// Value list
 			case CustomField::validation_typeValueList :
-				$this->customValidators[] = array($targetAttribute, 'in', 'range'=>explode(',', $customField->validation_text)) + $validation_error;
+				$this->customValidators[] = array('custom_value', 'in', 'range'=>explode(',', $customField->validation_text)) + $validation_error;
 				break;
 
 			// Perl compatible regular expression
 			case CustomField::validation_typePCRE :
-				$this->customValidators[] = array($targetAttribute, 'match', 'pattern'=>$customField->validation_text) + $validation_error;
+				$this->customValidators[] = array('custom_value', 'match', 'pattern'=>$customField->validation_text) + $validation_error;
 				break;
 
 			// Numeric range
 			case CustomField::validation_typeRange :
 				$range = explode('-', $customField->validation_text);
-				$this->customValidators[] = array($targetAttribute, 'numerical', 'min'=>$range[0], 'max'=>$range[1]) + $validation_error;
+				$this->customValidators[] = array('custom_value', 'numerical', 'min'=>$range[0], 'max'=>$range[1]) + $validation_error;
 				break;
 
 			// SQL select
 			case CustomField::validation_typeSQLSelect:
-				$this->customValidators[] = array($targetAttribute, 'validationLookup') + $validation_error + $params;
+				$this->customValidators[] = array('custom_value', 'validationLookup') + $validation_error + $params;
 				break;
 		}
 
 		// mandatory
 		if($customField->mandatory)
 		{
-			$this->customValidators[] = array($targetAttribute, 'required');
+			$this->customValidators[] = array('custom_value', 'required');
 		}
 
 		parent::setCustomValidators();

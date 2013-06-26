@@ -1,6 +1,6 @@
 <?php
-
-class CustomValueController extends Controller
+// TODO: not sure if this being used or tested yet - comes from custom value controller - now obsolete
+class CustomFieldController extends Controller
 {
 	// ajax dataprovider for autocomplete fields - only project at the moment - will need to pass somthing else to make customValue
 	public function actionAutocomplete()

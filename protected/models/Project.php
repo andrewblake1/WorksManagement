@@ -25,7 +25,7 @@
  * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
  * @property Task[] $tasks
  */
-class Project extends CustomFieldExtensionActiveRecord
+class Project extends CustomFieldActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
@@ -38,75 +38,13 @@ class Project extends CustomFieldExtensionActiveRecord
 	public $project_template_id;
 	public $projectTemplate;
 
-
-// TODO: replace with trigger after insert on model. Also cascade delete on these 3 tables
-// Also update triggers possibly to maintain ref integ. easiest for now in application code but not great for integrity.
-	/**
-	 * Creates the rows needed for generisizm.
-	 * @param CActiveRecord $model the model
-	 * @param array of CActiveRecord models to extract errors from if necassary
-	 * @return returns 0, or null on error of any inserts
-	 */
-	protected function createCustomFields(&$models=array())
-	{
-		// initialise the saved variable to show no errors in case the are no
-		// model customValues - otherwise will return null indicating a save error
-		$saved = true;
-		
-		// loop thru all customValue model types associated to this models model type
-		foreach($this->projectType->projectTemplate->customFieldToProjectTemplates as $customFieldModelTemplate)
-		{
-			// create a new customValue item to hold value
-			if($saved &= CustomValue::createCustomField($customFieldModelTemplate, $models, $customValue))
-			{
-				// create new modelToCustomFieldModelTemplate
-				$modelToCustomFieldModelTemplate = new ProjectToCustomFieldToProjectTemplate();
-				$modelToCustomFieldModelTemplate->custom_field_to_project_template_id = $customFieldModelTemplate->id;
-				$modelToCustomFieldModelTemplate->project_id = $this->id;
-				$modelToCustomFieldModelTemplate->custom_value_id = $customValue->id;
-				// attempt save
-				$saved &= $modelToCustomFieldModelTemplate->dbCallback('save');
-				// record any errors
-				$models[] = $modelToCustomFieldModelTemplate;
-			}
-			else
-			{//<input id="CustomField_2_type_int" class="span5" type="text" name="CustomValue[2][type_int]">
-				$t = $customValue->getErrors();
-			}
-		}
-		
-		return $saved;
-	}
-
-	/**
-	 * Updates the rows needed for generisizm.
-	 * @param CActiveRecord $model the model
-	 * @param array of CActiveRecord models to extract errors from if necassary
-	 * @return returns 0, or null on error of any inserts
-	 */
-	public function updateCustomFields(&$models=array())
-	{
-		// initialise the saved variable to show no errors in case the are no
-		// model customValues - otherwise will return null indicating a save error
-		$saved = true;
-		
-		// loop thru all customValue model types associated to this models model type
-		foreach($this->projectToCustomFieldToProjectTemplates as $modelToCustomFieldModelTemplate)
-		{
-			$customValue = $modelToCustomFieldModelTemplate->customValue;
-			$customFieldModelTemplate = $modelToCustomFieldModelTemplate->customFieldToProjectTemplate;
-			$customValue->setLabelAndId($customFieldModelTemplate);
-			
-			// massive assignement
-			$customValue->attributes=$_POST['CustomValue'][$modelToCustomFieldModelTemplate->custom_value_id];
-
-			// validate and save
-			$saved &= $customValue->updateSave($models);
-			//<input id="CustomField_2_type_int" class="span5" type="text" name="CustomValue[2][type_int]">
-		}
-
-		return $saved;
-	}
+	// CustomFieldActiveRecord
+	protected $evalCustomFieldPivots = '$this->projectTemplate->customFieldToProjectTemplates';
+	protected $evalClassEndToCustomFieldPivot = 'TaskToCustomFieldToProjectTemplate';
+	protected $evalColumnCustomFieldModelTemplateId = 'custom_field_to_project_template_id';
+	protected $evalColumnEndId = 'project_id';
+	protected $evalEndToCustomFieldPivots = '$this->projectToCustomFieldToProjectTemplates';
+	protected $evalCustomFieldPivot = 'customFieldToProjectTemplate';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -121,9 +59,6 @@ class Project extends CustomFieldExtensionActiveRecord
 			array('id, level, in_charge_id', 'length', 'max'=>10),
 			array('critical_completion, planned, client_id, name', 'safe'),
 			array('travel_time_1_way', 'date', 'format'=>'H:m'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, level, searchInCharge, travel_time_1_way, critical_completion, planned, name, searchProjectType', 'safe', 'on'=>'search'),
 		));
 	}
 

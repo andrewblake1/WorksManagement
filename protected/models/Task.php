@@ -35,7 +35,7 @@
  * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
  * @property TaskToResource[] $taskToResources
  */
-class Task extends CustomFieldExtensionActiveRecord
+class Task extends CustomFieldActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
@@ -51,78 +51,14 @@ class Task extends CustomFieldExtensionActiveRecord
 	 * inline checkbox property 
 	 */
 	public $preferred = array();
-
-// TODO: replace with trigger after insert on model. Also cascade delete on these 3 tables
-// Also update triggers possibly to maintain ref integ. easiest for now in application code but not great for integrity.
-	/**
-	 * Creates the rows needed for generisizm.
-	 * @param CActiveRecord $model the model
-	 * @param array of CActiveRecord models to extract errors from if necassary
-	 * @return returns 0, or null on error of any inserts
-	 */
-	protected function createCustomFields(&$models=array())
-	{
-		// initialise the saved variable to show no errors in case the are no
-		// model customValues - otherwise will return null indicating a save error
-		$saved = true;
-
-// NB:: An error can occurr after updateing relations from gii as seems to drop this relation unless fk is duplicated in custom field model type
-		// loop thru all customValue model types associated to this models model type
-		foreach($this->taskTemplate->customFieldToTaskTemplates as $CustomFieldModelTemplate)
-		{
-			// create a new customValue item to hold value
-			if($saved &= CustomValue::createCustomField($CustomFieldModelTemplate, $models, $customValue))
-			{
-				// create new modelToCustomFieldModelTemplate
-				$modelToCustomFieldModelTemplate = new TaskToCustomFieldToTaskTemplate();
-				$modelToCustomFieldModelTemplate->custom_field_to_task_template_id = $CustomFieldModelTemplate->id;
-				$modelToCustomFieldModelTemplate->task_id = $this->id;
-				$modelToCustomFieldModelTemplate->custom_value_id = $customValue->id;
-				// attempt save
-				$saved &= $modelToCustomFieldModelTemplate->dbCallback('save');
-				// record any errors
-				$models[] = $modelToCustomFieldModelTemplate;
-			}
-			else
-			{//<input id="CustomField_2_type_int" class="span5" type="text" name="CustomValue[2][type_int]">
-				$t = $customValue->getErrors();
-			}
-		}
-		
-		return $saved;
-	}
-
-	/**
-	 * Updates the rows needed for generisizm.
-	 * @param CActiveRecord $model the model
-	 * @param array of CActiveRecord models to extract errors from if necassary
-	 * @return returns 0, or null on error of any inserts
-	 */
-	public function updateCustomFields(&$models=array())
-	{
-		// initialise the saved variable to show no errors in case the are no
-		// model customValues - otherwise will return null indicating a save error
-		$saved = true;
-		
-		// loop thru all customValue model types associated to this models model type
-		foreach($this->taskToCustomFieldToTaskTemplates as $modelToCustomFieldModelTemplate)
-		{
-			$customValue = $modelToCustomFieldModelTemplate->customValue;
-			$CustomFieldModelTemplate = $modelToCustomFieldModelTemplate->customFieldToTaskTemplate;
-			$customValue->setLabelAndId($CustomFieldModelTemplate);
-			
-			// massive assignement
-			$customValue->attributes=$_POST['CustomValue'][$customValue->id];
-
-			// validate and save
-			$saved &= $customValue->updateSave($models);
-//			{//<input id="CustomField_2_type_int" class="span5" type="text" name="CustomValue[2][type_int]">
-//				$t = $customValue->getErrors();
-//			}
-		}
-
-		return $saved;
-	}
+	
+	// CustomFieldActiveRecord
+	protected $evalCustomFieldPivots = '$this->taskTemplate->customFieldToTaskTemplates';
+	protected $evalClassEndToCustomFieldPivot = 'TaskToCustomFieldToTaskTemplate';
+	protected $evalColumnCustomFieldModelTemplateId = 'custom_field_to_task_template_id';
+	protected $evalColumnEndId = 'task_id';
+	protected $evalEndToCustomFieldPivots = '$this->taskToCustomFieldToTaskTemplates';
+	protected $evalCustomFieldPivot = 'customFieldToTaskTemplate';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -517,7 +453,6 @@ class Task extends CustomFieldExtensionActiveRecord
 			// create a new materials
 			$taskToMaterial = new TaskToMaterial();
 			// copy any useful attributes from
-		//	$taskToMaterial->attributes = $taskTemplateToMaterial->attributes;
 			$taskToMaterial->quantity = $taskTemplateToMaterial->default;
 			$taskToMaterial->material_id = $taskTemplateToMaterial->material_id;
 			$taskToMaterial->updated_by = null;

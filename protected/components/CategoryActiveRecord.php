@@ -174,5 +174,10 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 		
 		return $saved;
 	}
+	
+	public function getSearchCriteria()
+	{
+		return new DbCriteria;
+	}
 
 }

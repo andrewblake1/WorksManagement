@@ -162,12 +162,20 @@ return array(
 				),
 				'Action'=>array(
 					'DutyStepDependency',
-					'DutyStep',
+					'DutyStep'=>array(
+						'CustomFieldDutyStepCategory'=>array(
+							'CustomFieldToDutyStep',
+						),
+					),
 				),
 				'Client'=>array(
 					'Action'=>array(
 						'DutyStepDependency',
-						'DutyStep',
+						'DutyStep'=>array(
+							'CustomFieldDutyStepCategory'=>array(
+								'CustomFieldToDutyStep',
+							),
+						),
 					),
 					'AssemblyToClient',
 					'MaterialToClient',
@@ -177,7 +185,9 @@ return array(
 							'Crew'=>array(
 								'Task'=>array(
 									'TaskToAction'=>array(
-										'Duty',
+										'Duty'=>array(
+											'DutyDataToCustomFieldToDutyStep',
+										),
 									),
 									'TaskToMaterial',
 									'TaskToAssembly'=>array(
@@ -200,7 +210,11 @@ return array(
 					'ProjectTemplate'=>array(
 						'Action'=>array(
 							'DutyStepDependency',
-							'DutyStep',
+							'DutyStep'=>array(
+								'CustomFieldDutyStepCategory'=>array(
+									'CustomFieldToDutyStep',
+								),
+							),
 						),
 						'CustomFieldProjectCategory'=>array(
 							'CustomFieldToProjectTemplate',

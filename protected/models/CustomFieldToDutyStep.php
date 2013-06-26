@@ -1,26 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "tbl_custom_field_to_project_template".
+ * This is the model class for table "tbl_custom_field_to_duty_step".
  *
- * The followings are the available columns in table 'tbl_custom_field_to_project_template':
+ * The followings are the available columns in table 'tbl_custom_field_to_duty_step':
  * @property integer $id
- * @property integer $project_template_id
+ * @property integer $duty_step_id
  * @property integer $custom_field_id
- * @property integer $custom_field_project_category_id
- * @property integer $show_in_admin
- * @property integer $show_in_planning
+ * @property integer $custom_field_duty_step_category_id
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property CustomField $customField
  * @property User $updatedBy
- * @property CustomFieldProjectCategory $projectTemplate
- * @property CustomFieldProjectCategory $customFieldProjectCategory
- * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
+ * @property CustomFieldDutyStepCategory $dutyStep
+ * @property CustomFieldDutyStepCategory $customFieldDutyStepCategory
+ * @property DutyDataToCustomFieldToDutyStep[] $dutyDataToCustomFieldToDutySteps
  */
-class CustomFieldToProjectTemplate extends ActiveRecord
+class CustomFieldToDutyStep extends ActiveRecord
 {
 	/**
 	 * @var string nice model name for use in output
@@ -31,10 +29,10 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchProjectTemplate;
-	public $searchCustomFieldProjectCategory;
+	public $searchDutyStep;
+	public $searchCustomFieldDutyStep;
 	public $searchCustomField;
-	
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -43,8 +41,8 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('custom_field_id, custom_field_project_category_id', 'required'),
-			array('project_template_id, custom_field_id, custom_field_project_category_id, show_in_admin, show_in_planning', 'numerical', 'integerOnly'=>true),
+			array('custom_field_id, custom_field_duty_step_category_id', 'required'),
+			array('duty_step_id, custom_field_id, custom_field_duty_step_category_id', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -58,13 +56,12 @@ class CustomFieldToProjectTemplate extends ActiveRecord
         return array(
             'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'projectTemplate' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'project_template_id'),
+            'dutyStep' => array(self::BELONGS_TO, 'CustomFieldDutyStepCategory', 'duty_step_id'),
+            'customFieldDutyStepCategory' => array(self::BELONGS_TO, 'CustomFieldDutyStepCategory', 'custom_field_duty_step_category_id'),
             'customFieldProjectCategory' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'custom_field_project_category_id'),
-            'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'custom_field_to_project_template_id'),
+            'dutyDataToCustomFieldToDutySteps' => array(self::HAS_MANY, 'DutyDataToCustomFieldToDutyStep', 'custom_field_to_duty_step_id'),
         );
     }
-
-
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -72,13 +69,11 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'project_template_id' => 'Project template',
-			'searchProjectTemplate' => 'Project template',
-			'custom_field_project_category_id' => 'Custom field set',
-			'searchCustomFieldProjectCategory' => 'Custom field set',
+			'duty_step_id' => 'Duty step',
+			'searchDutyStep' => 'Duty step',
+			'custom_field_duty_step_category_id' => 'Custom field set',
+			'searchCustomFieldDutyStep' => 'Custom field set',
 			'custom_field_id' => 'Custom field',
-			'show_in_admin' => 'Show in admin page',
-			'show_in_planning' => 'Show in planning page',
 			'searchCustomField' => 'Custom field',
 		));
 	}
@@ -94,19 +89,15 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.custom_field_project_category_id',
+			't.custom_field_duty_step_category_id',
 			't.custom_field_id',
 			'customField.description AS searchCustomField',
-			't.show_in_admin',
-			't.show_in_planning',
 		);
 
 		// where
 		$criteria->compare('customField.description',$this->searchCustomField,true);
-		$criteria->compare('t.custom_field_project_category_id',$this->custom_field_project_category_id);
-		$criteria->compare('t.show_in_admin',Yii::app()->format->toMysqlBool($this->show_in_admin));
-		$criteria->compare('t.show_in_planning',Yii::app()->format->toMysqlBool($this->show_in_planning));
-		
+		$criteria->compare('t.custom_field_duty_step_category_id',$this->custom_field_duty_step_category_id);
+
 		// with 
 		$criteria->with = array(
 			'customField',
@@ -118,8 +109,6 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
-		$columns[] = 'show_in_admin:boolean';
-		$columns[] = 'show_in_planning:boolean';
 		
 		return $columns;
 	}
@@ -135,8 +124,8 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 	}
 
 	public function beforeSave() {
-		$customFieldProjectCategory = CustomFieldProjectCategory::model()->findByPk($this->custom_field_project_category_id); 
-		$this->project_template_id = $customFieldProjectCategory->project_template_id;
+		$customFieldDutyStepCategory = CustomFieldDutyStepCategory::model()->findByPk($this->custom_field_duty_step_category_id); 
+		$this->duty_step_id = $customFieldDutyStepCategory->duty_step_id;
 		return parent::beforeSave();
 	}
 

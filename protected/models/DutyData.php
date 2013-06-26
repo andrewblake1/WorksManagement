@@ -10,7 +10,6 @@
  * @property string $level
  * @property integer $responsible
  * @property string $updated
- * @property string $custom_value
  * @property integer $updated_by
  *
  * The followings are the available model relations:
@@ -20,6 +19,7 @@
  * @property Planning $level0
  * @property User $responsible0
  * @property DutyStep $dutyStep
+ * @property DutyDataToCustomFieldToDutyStep[] $dutyDataToCustomFieldToDutySteps
  */
 class DutyData extends ActiveRecord
 {
@@ -35,7 +35,6 @@ class DutyData extends ActiveRecord
 			array('planning_id, duty_step_id, level', 'required'),
 			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level', 'length', 'max'=>10),
-            array('custom_value', 'length', 'max'=>255),
 			array('updated', 'safe'),
 		));
 	}
@@ -54,6 +53,7 @@ class DutyData extends ActiveRecord
             'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
             'responsible0' => array(self::BELONGS_TO, 'User', 'responsible'),
             'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
+            'dutyDataToCustomFieldToDutySteps' => array(self::HAS_MANY, 'DutyDataToCustomFieldToDutyStep', 'duty_data_id'),
         );
     }
 
@@ -67,7 +67,6 @@ class DutyData extends ActiveRecord
 			'duty_step_id' => 'Duty',
 			'level' => 'Level',
 			'updated' => 'Completed',
-			'custom_value' => 'Custom value',
 		));
 	}
 
