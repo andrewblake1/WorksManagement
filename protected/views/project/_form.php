@@ -68,8 +68,8 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 		// if a single option
 		if(!empty($model->project_type_id))
 		{
-			// set some necassary variables
-			$this->actionDependantList($model);
+			// set some necassary variables - making use of a php quirk here to call non static method via scope resolution operator - ok if not accessing non static member variables
+			ProjectController::actionDependantList($model);
 			$customFieldsAdded = TRUE;
 		}
 	}

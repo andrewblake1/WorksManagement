@@ -2,11 +2,16 @@
 class TaskController extends Controller
 {
 
-	public function actionDependantList()
+	public function actionDependantList($model = NULL)
 	{
 		// a simple cheat to create customValues is to create within cancellable transaction
-		$model = new Task();
-		$model->attributes = $_POST[$this->modelName];
+		if(!$model)
+		{
+			$model = new Task();
+			$model->attributes = $_POST[$this->modelName];
+			$fromAjax = TRUE;
+		}
+
 		// ensure unique task de
 		$transaction = Yii::app()->db->beginTransaction();
 		if($model->createSave($models))
@@ -24,7 +29,10 @@ class TaskController extends Controller
 		}
 
 		$transaction->rollBack();
-		Yii::app()->end();
+		if(isset($fromAjax))
+		{
+			Yii::app()->end();
+		}
 	}
 
 }

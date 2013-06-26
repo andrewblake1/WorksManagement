@@ -26,7 +26,6 @@ class ProjectController extends Controller
 	// in order to generate the custom fields
 	public function actionDependantList($model = NULL)
 	{
-		
 		// a simple cheat to create customValues is to create within cancellable transaction
 		// NB: don't set any attributes as might fail validation
 		if(!$model)

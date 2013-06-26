@@ -116,11 +116,9 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 
 			"contextmenu":  { 'items': function(obj){
 					contextMenu = {};		
-console.log(1);
 					getAction(obj);
 					if(action)
 					{
-console.log(2);
 						update = {
 							"update" : {
 								"label"	: action,

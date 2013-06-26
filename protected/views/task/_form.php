@@ -61,8 +61,6 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->textFieldRow('planned');
 
-//	$form->textFieldRow('earliest')				;
-
 	$form->checkBoxListInlineRow('preferred', array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'));
 
 	// customValues
@@ -71,8 +69,8 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 		// if a single option
 		if(!empty($model->task_template_id))
 		{
-			// set some necassary variables
-			$this->actionDependantList($model);
+			// set some necassary variables - making use of a php quirk here to call non static method via scope resolution operator - ok if not accessing non static member variables
+			TaskController::actionDependantList($model);
 			$customFieldsAdded = TRUE;
 		}
 	}
