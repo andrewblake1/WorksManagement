@@ -56,7 +56,7 @@ class CustomFieldToDutyStep extends ActiveRecord
         return array(
             'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-  //          'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
+            'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
             'customFieldDutyStepCategory' => array(self::BELONGS_TO, 'CustomFieldDutyStepCategory', 'custom_field_duty_step_category_id'),
             'customFieldProjectCategory' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'custom_field_project_category_id'),
             'dutyDataToCustomFieldToDutySteps' => array(self::HAS_MANY, 'DutyDataToCustomFieldToDutyStep', 'custom_field_to_duty_step_id'),

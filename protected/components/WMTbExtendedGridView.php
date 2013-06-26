@@ -59,7 +59,7 @@ class WMTbExtendedGridView extends TbExtendedGridView
 			elseif(Yii::app()->params['showDownloadButton'])// if there are records that can be downloaded
 			{
 				echo '<tr><td colspan="' . count($this->columns) . '">';
-				echo CHtml::openTag('div', array('id' => $this->getId(), 'style' => 'position:relative', 'class' => 'left'));
+				echo CHtml::openTag('div', array('id' => 'download_button_id', 'style' => 'position:relative', 'class' => 'left'));
 				// add in custom admin buttons - into the bulk action area so all buttons together
 				$this->_controller->exportButton();
 				echo '</td></tr>';
