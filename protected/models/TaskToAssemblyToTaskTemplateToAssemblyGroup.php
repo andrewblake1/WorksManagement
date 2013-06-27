@@ -29,6 +29,14 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Assembly';
+	/**
+	 * @var string label for tab and breadcrumbs when creating
+	 */
+	static $createLabel = 'Select assembly';
+	/**
+	 * @var string label on button in create view
+	 */
+	static $createButtonText = 'Save';
 
 	/**
 	 * @return array validation rules for model attributes.

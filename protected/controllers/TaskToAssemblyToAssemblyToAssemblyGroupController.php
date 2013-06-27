@@ -3,9 +3,9 @@
 class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 {
 
+// TODO: repeated
 	protected function createRender($model, $models, $modal_id)
 	{
-// TODO: repeated
 		$taskToAssembly = new TaskToAssembly;
 		$taskToAssembly->attributes = $_GET[$this->modelName];
 		$taskToAssembly->id = $model->task_to_assembly_id;
@@ -49,19 +49,14 @@ class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 		return $breadCrumbs;
 	}
 	
-/*	static function getBreadCrumbTrail($lastCrumb = NULL)
-	{
-		return TaskToAssemblyController::getBreadCrumbTrail('Update');
-	}
-*/
 	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
 	public function setTabs($model) {
 		$modelName = $this->modelName;
 	
 		// control extra rows of tabs if action is update or create
-		if($model && isset($_GET['TaskToAssemblyToAssemblyToAssemblyGroup']['task_to_assembly_id']))
+		if($model && isset($_GET[$modelName]['task_to_assembly_id']))
 		{
-			$task_to_assembly_id = $_GET['parent_id'] = $_GET['TaskToAssemblyToAssemblyToAssemblyGroup']['task_to_assembly_id'];
+			$task_to_assembly_id = $_GET['parent_id'] = $_GET[$modelName]['task_to_assembly_id'];
 			$taskToAssemblyController= new TaskToAssemblyController(NULL);
 			$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
 			$taskToAssembly->assertFromParent();

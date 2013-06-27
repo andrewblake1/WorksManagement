@@ -352,7 +352,7 @@ class WMTbActiveForm extends TbActiveForm
 			// if single value
 			elseif($minimum == $maximum)
 			{
-				$htmlOptions['options']['disabled'] = 'true';
+				$htmlOptions['disabled'] = 'disabled';
 				$this->textFieldRow($attribute, $htmlOptions, $model);
 			}
 			else
