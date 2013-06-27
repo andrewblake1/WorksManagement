@@ -250,7 +250,7 @@ class WMTbActiveForm extends TbActiveForm
 //				if(isset($htmlOptions['ajax']))
 				{
 					// trigger the change handler on document load
-					Yii::app()->clientScript->registerScript('dropDownListRow', "
+					Yii::app()->clientScript->registerScript("dropDownListRow_$id", "
 						// trigger the change handler
 						$('#$id').trigger('change');
 						// hide the select

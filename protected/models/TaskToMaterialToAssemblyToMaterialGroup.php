@@ -101,16 +101,22 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	}
 	
 	public function assertFromParent($modelName = null) {
-		Controller::setUpdateId($this->task_to_material_id, 'TaskToMaterial');
 		
 		// need to trick it here into using task to material model instead as this model not in navigation hierachy
 		if(!empty($this->task_to_material_id))
 		{
+			Controller::setUpdateId($this->task_to_material_id, 'TaskToMaterial');
 			$taskToMaterial = TaskToMaterial::model()->findByPk($this->task_to_material_id);
 			return $taskToMaterial->assertFromParent('TaskToMaterial');
 		}
-		
-		return parent::assertFromParent('TaskToMaterial');
+		elseif(!empty($this->task_id))
+		{
+			Controller::setUpdateId($this->task_id, 'Task');
+			$task = Task::model()->findByPk($this->task_id);
+			return $task->assertFromParent('Task');
+		}
+
+		return parent::assertFromParent($modelName);
 	}
 	
 	public function afterFind() {

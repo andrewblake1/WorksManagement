@@ -91,13 +91,19 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 	}
 	
 	public function assertFromParent($modelName = null) {
-		Controller::setUpdateId($this->task_to_assembly_id, 'TaskToAssembly');
 		
 		// need to trick it here into using task to assembly model instead as this model not in navigation hierachy
 		if(!empty($this->task_to_assembly_id))
 		{
+			Controller::setUpdateId($this->task_to_assembly_id, 'TaskToAssembly');
 			$taskToAssembly = TaskToAssembly::model()->findByPk($this->task_to_assembly_id);
 			return $taskToAssembly->assertFromParent('TaskToAssembly');
+		}
+		elseif(!empty($this->task_id))
+		{
+			Controller::setUpdateId($this->task_id, 'Task');
+			$task = Task::model()->findByPk($this->task_id);
+			return $task->assertFromParent('Task');
 		}
 		
 		return parent::assertFromParent($modelName);
