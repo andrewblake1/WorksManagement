@@ -54,7 +54,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 		$modelName = $this->modelName;
 	
 		// control extra rows of tabs if action is update or create
-		if($model && isset($_GET[$modelName]['task_to_assembly_id']))
+		if($model && !empty($_GET[$modelName]['task_to_assembly_id']))
 		{
 			$task_to_assembly_id = $_GET['parent_id'] = $_GET[$modelName]['task_to_assembly_id'];
 			$taskToAssemblyController= new TaskToAssemblyController(NULL);
