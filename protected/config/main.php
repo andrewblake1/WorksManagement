@@ -60,7 +60,7 @@ return array(
 				'compressMergedCss' => false, //def:false
 
 //				'mergeCssExcludePattern' => '/font-awesome|bootstrap/', //won't merge js files with matching names
-//				'mergeJsExcludePattern' => '/edit_area/', //won't merge js files with matching names
+				'mergeJsExcludePattern' => '/bootstrap\.js|jquery\.js/', //won't merge js files with matching names
 
 				'mergeIfXhr' => true, //def:false, if true->attempts to merge the js files even if the request was xhr (if all other merging conditions are satisfied)
 

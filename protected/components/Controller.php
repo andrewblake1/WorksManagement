@@ -153,6 +153,13 @@ class Controller extends CController
 	{
 		$modelName = $this->modelName;
 		
+		//don't reload these scripts or they will mess up the page - these allowed in NLSClientScript for ajaxTree - must have some doc load stuff or something
+		$cs=Yii::app()->clientScript;
+		$cs->scriptMap = array_merge(array(
+			'bootstrap.js'=>false,
+			'jquery.js'=>false,
+		), $cs->scriptMap);
+
 		// update
 		if(isset($_GET['id']))
 		{
