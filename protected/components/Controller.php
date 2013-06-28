@@ -4,7 +4,8 @@
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
  */
-class Controller extends CController {
+class Controller extends CController
+{
 
 	/**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
@@ -23,6 +24,7 @@ class Controller extends CController {
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs = array();
+
 	/**
 	 * @var array the buttons to go in Manage cgridview
 	 */
@@ -42,7 +44,7 @@ class Controller extends CController {
 	 * @var array the trail
 	 */
 	static $trail = NULL;
-	
+
 	/**
 	 * @var array the tab menu itemse
 	 */
@@ -63,17 +65,16 @@ class Controller extends CController {
 	protected $_adminView = '/admin';
 	public static $nav = array();
 
-	static function modelName() {
+	static function modelName()
+	{
 		return str_replace('Controller', '', get_called_class());
 	}
 
-	public function __construct($id, $module = null) {
+	public function __construct($id, $module = null)
+	{
 		$this->modelName = static::modelName();
-		/* try {
-
-		  }
-		  Yii::app()->dbReadOnly->createCommand('select * from AuthItem')->queryAll(); */
-		if (empty($this->_adminViewModel)) {
+		if(empty($this->_adminViewModel))
+		{
 			$this->_adminViewModel = $this->modelName;
 		}
 
@@ -92,17 +93,17 @@ class Controller extends CController {
 			),
 		);
 
-		Yii::app()->clientScript->scriptMap=array(
+		Yii::app()->clientScript->scriptMap = array(
 			// TODO: remove this once the bug is fixed in future release of yiibooster
 			/* NB: currently version 1.9 of jqueryUI introduces tootip which conflicts with bootstrap.
-				* new version of bootstrap or yiibooster will resolve it - several people working on it
-				* There is a jquery-ui solution evidently using $.widget.bridge from https://github.com/twitter/bootstrap/issues/6303
-				*/
-			'jquery-ui.min.js'=>'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js',
+			 * new version of bootstrap or yiibooster will resolve it - several people working on it
+			 * There is a jquery-ui solution evidently using $.widget.bridge from https://github.com/twitter/bootstrap/issues/6303
+			 */
+			'jquery-ui.min.js' => 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js',
 		);
-		
+
 		// These eaiest here in order to save binding elements after ajax (not bound in doc ready)
-		$cs=Yii::app()->getClientScript();
+		$cs = Yii::app()->getClientScript();
 		$cs->registerCoreScript('jquery');
 		$cs->registerScriptFile('jquery-ui.min.js');
 
@@ -112,7 +113,8 @@ class Controller extends CController {
 	/**
 	 * @return array action filters
 	 */
-	public function filters() {
+	public function filters()
+	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
 		);
@@ -123,10 +125,11 @@ class Controller extends CController {
 	 * This method is used by the 'accessControl' filter.
 	 * @return array access control rules
 	 */
-	public function accessRules() {
+	public function accessRules()
+	{
 		return array(
 			array('allow',
-				'actions' => array('admin', 'view', 'download'),
+				'actions' => array('admin', 'view', 'download', 'returnForm'),
 				'roles' => array($this->modelName . 'Read'),
 			),
 			array('allow',
@@ -146,15 +149,39 @@ class Controller extends CController {
 		);
 	}
 
+	public function actionReturnForm()
+	{
+		$modelName = $this->modelName;
+		
+		// update
+		if(isset($_GET['id']))
+		{
+			$model = $this->loadModel($_GET['id']);
+			$action = $this->createUrl('Update', array('id'=>$_GET['id']));
+		}
+		// create
+		else
+		{
+			$model = new $modelName;
+			$action = NULL;
+			$model->attributes = $_GET[$modelName];
+		}
+	
+
+		$this->renderPartial('_form', array('model' => $model, 'action'=>$action), false, true);
+	}
+
 	static function getTrail()
 	{
 		return self::$trail ? self::$trail : Yii::app()->params['trail'];
 	}
-	 
+
 	// data provider for EJuiAutoCompleteFkField
-	public function actionAutocomplete() {
+	public function actionAutocomplete()
+	{
 		// if something has been entered
-		if (isset($_GET['term'])) {
+		if(isset($_GET['term']))
+		{
 			$modelName = $this->modelName;
 			$model = $modelName::model();
 
@@ -166,7 +193,8 @@ class Controller extends CController {
 			$concat = "CONCAT_WS(' ', " . implode(', ', $concat) . ")";
 			$cntr = 0;
 			$criteria->params = array();
-			foreach ($terms = explode(' ', $_GET['term']) as $term) {
+			foreach($terms = explode(' ', $_GET['term']) as $term)
+			{
 				$term = trim($term);
 				$paramName = ":param$cntr";
 				$criteria->condition .= ($criteria->condition ? " AND " : '') . "$concat LIKE $paramName";
@@ -178,14 +206,16 @@ class Controller extends CController {
 			$criteria->limit = Yii::app()->params->listMax;
 			$display = implode(Yii::app()->params['delimiter']['display'], $display);
 			$criteria->scopes = empty($_GET['scopes']) ? null : $_GET['scopes'];
-			
+
 			$fKModels = $model->findAll($criteria);
 
 			// if some models founds
-			if (!empty($fKModels)) {
+			if(!empty($fKModels))
+			{
 				$out = array();
 				$primaryKey = $model->tableSchema->primaryKey;
-				foreach ($fKModels as $p) {
+				foreach($fKModels as $p)
+				{
 					eval("\$value=\"$display\";");
 					$out[] = array(
 						// expression to give the string for the autoComplete drop-down
@@ -201,7 +231,8 @@ class Controller extends CController {
 		}
 	}
 
-	public function behaviors() {
+	public function behaviors()
+	{
 		return array(
 			'eexcelview' => array(
 				'class' => 'ext.eexcelview.EExcelBehavior',
@@ -213,6 +244,7 @@ class Controller extends CController {
 	 * Adjust the tabs array by only allowing the specified tabs at the specified levels - skips the first tab which is update - only admin views
 	 * parameters are exclusions
 	 */
+
 	public function trimTabs($topRow, $bottomRow = array(), $middleRows = array())
 	{
 		// loop thru tabs layers
@@ -221,12 +253,10 @@ class Controller extends CController {
 			if($cntr == 1)
 			{
 				$row = $topRow;
-			}
-			elseif($cntr == $numLayers)
+			} elseif($cntr == $numLayers)
 			{
 				$row = $bottomRow;
-			}
-			else
+			} else
 			{
 				$row = $middleRows;
 			}
@@ -243,8 +273,9 @@ class Controller extends CController {
 			}
 		}
 	}
-	
-	public function getTabs() {
+
+	public function getTabs()
+	{
 		return static::$tabs;
 	}
 
@@ -254,19 +285,19 @@ class Controller extends CController {
 	 * to extract tab options. Admin and create use models level, update uses next level unless
 	 * the current model is a leaf rather than branch (no further branching) in which case popup form will be used to update
 	 */
-	public function setTabs($model, &$tabs = NULL) {
+	public function setTabs($model, &$tabs = NULL)
+	{
 		if($tabs === NULL)
 		{
 			$tabs = &static::$tabs;
 		}
-		
+
 		$level = sizeof($tabs);
-		
+
 		if($model)
 		{
 			$thisModelName = get_class($model);
-		}
-		else
+		} else
 		{
 			$thisModelName = $this->modelName;
 		}
@@ -276,14 +307,18 @@ class Controller extends CController {
 		// step thru the trail to our target
 		$items = self::getTrail();
 		// if we should return this level NB: this is empty deliberately to keep condition the same as below
-		if (!$model && (isset($items[$thisModelName]))) {
+		if(!$model && (isset($items[$thisModelName])))
+		{
 			
-		} else {
+		} else
+		{
 			$trail = Yii::app()->functions->multidimensional_arraySearch(self::getTrail(), $thisModelName);
 			// get tree of items at or below the desired level
-			foreach ($trail as $key => &$value) {
+			foreach($trail as $key => &$value)
+			{
 				// if we should return this level
-				if (!$model && (isset($items[$thisModelName]) || in_array($thisModelName, $items))) {
+				if(!$model && (isset($items[$thisModelName]) || in_array($thisModelName, $items)))
+				{
 					break;
 				}
 				// if there are items below
@@ -291,40 +326,49 @@ class Controller extends CController {
 			}
 			// NB: by now items could be empty if looking for next level and nothing below i.e. next level from leaf
 			// if there are items
-			if ($items) {
-				if ($model) { // true for create and update
+			if($items)
+			{
+				if($model)
+				{ // true for create and update
 					// still want to show this model in tabs
 					array_unshift($items, $thisModelName);
 				}
 				// otherwise
-				else { // admin
-					if (sizeof($trail) > 1) {
+				else
+				{ // admin
+					if(sizeof($trail) > 1)
+					{
 						// want to show the parent model first in tabs so add to top of items
 						array_unshift($items, $trail[sizeof($trail) - 2]);
 					}
 				}
-			} else {
+			} else
+			{
 				$items = array($thisModelName);
 			}
 		}
-		
-if($model)
-$t = $model->attributes;
+
+		if($model)
+			$t = $model->attributes;
 		// if there are items
-		if (is_array($items)) {
+		if(is_array($items))
+		{
 			$index = 0;
 
-			foreach ($items as $key => &$value) {
+			foreach($items as $key => &$value)
+			{
 				// get the model name of this item
 				$modelName = is_array($value) ? $key : $value;
 
 				// check access
-				if (!static::checkAccess(self::accessRead, $modelName)) {
+				if(!static::checkAccess(self::accessRead, $modelName))
+				{
 					continue;
 				}
 
 				// if first item in tabs
-				if (!$index) {
+				if(!$index)
+				{
 					// set whether action is update or view
 					$action = static::checkAccess(self::accessWrite, $modelName) ? 'update' : 'view';
 
@@ -334,8 +378,7 @@ $t = $model->attributes;
 					if($model)
 					{
 						$keyValue = $model->$firstTabPrimaryKeyName;
-					}
-					else
+					} else
 					{
 						$keyValue = static::getUpdateId($firstTabModelName) !== NULL ? static::getUpdateId($firstTabModelName) : NULL;
 					}
@@ -343,15 +386,17 @@ $t = $model->attributes;
 					// if nextlevel is true then action should always be update, but also should be update if current model is this model
 					// and not next level
 					// create controler/action
-					if ($keyValue && (!$model || ($firstTabModelName == $thisModelName))) {
-						$urlParams =  array("$modelName/$action", $firstTabPrimaryKeyName => $keyValue);
+					if($keyValue && (!$model || ($firstTabModelName == $thisModelName)))
+					{
+						$urlParams = array("$modelName/$action", $firstTabPrimaryKeyName => $keyValue);
 						// add any existing get parameters - but only valid ones
 						$urlParams = array_merge($urlParams, static::getValidGetParams($modelName));
 						$tabs[$level][$index]['label'] = $modelName::getNiceName($keyValue);
 						$tabs[$level][$index]['url'] = $urlParams;
 						// assume active unless otherwise indicated
 						// if this item matches the main model
-						if ($modelName == $thisModelName) {
+						if($modelName == $thisModelName)
+						{
 							// make this the active tab
 							$tabs[$level][$index]['active'] = true;
 						}
@@ -362,19 +407,20 @@ $t = $model->attributes;
 
 				// get name of foreign key to parent
 				$parentForeignKeyName = $modelName::getParentForeignKey($firstTabModelName);
-				
+
 				// dont add empty tabs if no write access
 				if(!static::checkAccess(self::accessWrite, $modelName) && $parentForeignKeyName && !$modelName::model()->countByAttributes(array($parentForeignKeyName => $keyValue)))
 				{
 					continue;
 				}
-				
+
 				// if this item matches the main model
-				if ($modelName == $thisModelName) {
+				if($modelName == $thisModelName)
+				{
 					// make this the active tab
 					$tabs[$level][$index]['active'] = true;
 				}
-				
+
 				// add relevant url parameters i.e. foreign key to first tab model
 				$urlParams = ($keyValue === null) ? array() : array($parentForeignKeyName => $keyValue);
 				// add any existing get parameters
@@ -390,12 +436,12 @@ $t = $model->attributes;
 	static function getValidGetParams($modelName = NULL)
 	{
 		$get = array();
-		
+
 		if(!$modelName)
 		{
 			$modelName = static::modelName();
 		}
-		
+
 		$primaryKeyName = $modelName::primaryKeyName();
 
 		foreach($_GET as $key => $value)
@@ -407,24 +453,22 @@ $t = $model->attributes;
 				{
 					$get[$key] = $value;
 				}
-					
 			}
 		}
 
 		return $get;
 	}
 
-	public function addTab($label, $modelName, $action, $params, &$tabs, $active = FALSE, $model = NULL) {
-		$writeAccess = $model
-			? $model->checkAccess(self::accessWrite)
-			: static::checkAccess(self::accessWrite, $modelName);
-		
+	public function addTab($label, $modelName, $action, $params, &$tabs, $active = FALSE, $model = NULL)
+	{
+		$writeAccess = $model ? $model->checkAccess(self::accessWrite) : static::checkAccess(self::accessWrite, $modelName);
+
 		// dont add empty admin tabs if no write access
 		if($action == 'admin' && !$writeAccess && !$modelName::model()->countByAttributes(array_intersect_key($params, array_flip($modelName::model()->attributeNames()))))
 		{
 			return;
 		}
-		
+
 		if($action == 'update')
 		{
 			$action = $writeAccess ? 'update' : 'view';
@@ -446,61 +490,73 @@ $t = $model->attributes;
 		{
 			$container = &$_SESSION['admin'][$modelName];
 		}
-		
+
 		// restore pagination
-		if (isset($container['page'])) {
+		if(isset($container['page']))
+		{
 			$_GET["{$viewModelName}_page"] = $container['page'];
 		}
 		// restore sort
-		if (isset($container['sort'])) {
+		if(isset($container['sort']))
+		{
 			$_GET["{$viewModelName}_sort"] = $container['sort'];
 		}
 		// restore filters
-		if (isset($container['filter'])) {
-			if (isset($_GET["{$viewModelName}"])) {
+		if(isset($container['filter']))
+		{
+			if(isset($_GET["{$viewModelName}"]))
+			{
 				$_GET["{$viewModelName}"] += $container['filter'];
-			} else {
+			} else
+			{
 				$_GET["{$viewModelName}"] = $container['filter'];
 			}
 		}
-	}	
-	
+	}
+
 	protected function storeAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
 	{
 		if($container === NULL)
 		{
 			$container = &$_SESSION['admin'][$modelName];
 		}
-		
+
 		// if some filters
-		if (isset($_GET[$viewModelName])) {
+		if(isset($_GET[$viewModelName]))
+		{
 			// store filters
 			$container['filter'] = $_GET[$viewModelName];
-		} elseif (isset($container['filter'])) {
+		} elseif(isset($container['filter']))
+		{
 			// clear filters
 			unset($container['filter']);
 		}
 
 		// if pagination
-		if (isset($_GET["{$viewModelName}_page"])) {
+		if(isset($_GET["{$viewModelName}_page"]))
+		{
 			// store pagination
 			$container['page'] = $_GET["{$viewModelName}_page"];
-		} elseif (isset($container['page'])) {
+		} elseif(isset($container['page']))
+		{
 			// clear filters
 			unset($container['page']);
 		}
 
 		// if sorting
-		if (isset($_GET["{$viewModelName}_sort"])) {
+		if(isset($_GET["{$viewModelName}_sort"]))
+		{
 			// store sorting
 			$container['sort'] = $_GET["{$viewModelName}_sort"];
-		} elseif (isset($container['sort'])) {
+		} elseif(isset($container['sort']))
+		{
 			// clear sorting
 			unset($container['sort']);
 		}
 	}
 
-	public function actionAdmin($exportColumns = array()) {
+	public function actionAdmin($exportColumns = array())
+	{
 		$modelName = $this->modelName;
 		// may be using a database view instead of main table model
 		$adminViewModelName = $this->_adminViewModel;
@@ -511,7 +567,8 @@ $t = $model->attributes;
 		// clear the primary key set by update
 		static::setUpdateId(NULL, $modelName);
 
-		if(isset($_GET['ajax'])) {
+		if(isset($_GET['ajax']))
+		{
 			// get around bug where ajaxurl needs to be set to current url in gridview because of params but this prevents
 			// gridview update maintaining paging etc after as the params are no longer appended to the update because of a javascript bug
 			// in parsing the url with params. Was recording somewhere in the yii forum by someone else
@@ -523,7 +580,8 @@ $t = $model->attributes;
 			}
 		}
 		// otherwise non ajax call
-		elseif(isset($_GET)) {
+		elseif(isset($_GET))
+		{
 			// store admin url paramters
 			static::setAdminParams($_GET, $adminViewModelName);
 		}
@@ -531,13 +589,16 @@ $t = $model->attributes;
 		$this->restoreAdminSettings($adminViewModelName, $modelName);
 
 		$attributes = array();
-		if (!empty($_GET)) {
+		if(!empty($_GET))
+		{
 			$attributes += $_GET;
 		}
-		if (!empty($_GET[$this->_adminViewModel])) {
+		if(!empty($_GET[$this->_adminViewModel]))
+		{
 			$attributes += $_GET[$this->_adminViewModel];
 		}
-		if (!empty($_POST[$this->_adminViewModel])) {
+		if(!empty($_POST[$this->_adminViewModel]))
+		{
 			$attributes += $_POST[$this->_adminViewModel];
 		}
 
@@ -547,9 +608,10 @@ $t = $model->attributes;
 		$adminViewModel->attributes = $model->attributes;
 
 		// if exporting to xl
-		if (isset($_GET['action']) && $_GET['action'] == 'download') {
+		if(isset($_GET['action']) && $_GET['action'] == 'download')
+		{
 			// Export it
-			$this->toExcel($adminViewModel->search(false), $adminViewModel->exportColumns, null, array()/*, 'CSV' 'Excel5' */);
+			$this->toExcel($adminViewModel->search(false), $adminViewModel->exportColumns, null, array()/* , 'CSV' 'Excel5' */);
 		}
 
 // TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
@@ -557,9 +619,8 @@ $t = $model->attributes;
 // it works on windows machine however not mac nor linux for me so far.
 		// set heading
 //		if (!$this->heading) {
-			$this->heading = $modelName::getNiceNamePlural() ;
+		$this->heading = $modelName::getNiceNamePlural();
 //		}
-
 		// set breadcrumbs
 		$this->breadcrumbs = static::getBreadCrumbTrail();
 
@@ -567,13 +628,16 @@ $t = $model->attributes;
 		$this->adminRender($adminViewModel, $model);
 	}
 
-	protected function adminRender($adminViewModel, $createModel = NULL) {
-		if (!isset($_GET['ajax'])) {
+	protected function adminRender($adminViewModel, $createModel = NULL)
+	{
+		if(!isset($_GET['ajax']))
+		{
 			// set up tab menu if required - using setter
 			$this->tabs = false;
 		}
 
-		if ($createModel === NULL) {
+		if($createModel === NULL)
+		{
 			$createModel = $adminViewModel;
 		}
 
@@ -591,7 +655,6 @@ $t = $model->attributes;
 				'delete' => array(
 					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
 					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/delete", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
-					
 				),
 				'update' => array(
 					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
@@ -607,14 +670,17 @@ $t = $model->attributes;
 		);
 	}
 
-	static function getParentCrumb($modelName = null) {
-		if (empty($modelName)) {
+	static function getParentCrumb($modelName = null)
+	{
+		if(empty($modelName))
+		{
 			$modelName = static::modelName();
 		}
 
 		$trail = array_reverse(Yii::app()->functions->multidimensional_arraySearch(self::getTrail(), $modelName));
 
-		if (!empty($trail[1])) {
+		if(!empty($trail[1]))
+		{
 			return $trail[1];
 		}
 	}
@@ -629,31 +695,39 @@ $t = $model->attributes;
 	 * Get the breadcrumb trail for this controller.
 	 * return array bread crumb trail for this controller
 	 */
-	static function getBreadCrumbTrail($lastCrumb = NULL) {
+	static function getBreadCrumbTrail($lastCrumb = NULL)
+	{
 		$breadcrumbs = array();
 		$modelName = static::modelName();
 
 		// if just gone direct to a screen i.e. our memory/history was cleared
-		if (static::getAdminParams() === NULL && !$lastCrumb) {
-			if (static::checkAccess(self::accessRead)) {
+		if(static::getAdminParams() === NULL && !$lastCrumb)
+		{
+			if(static::checkAccess(self::accessRead))
+			{
 				$breadcrumbs[] = array($modelName::getNiceName());
 			}
 			return $breadcrumbs;
 		}
 
 		// loop thru the trail for this model
-		foreach (Yii::app()->functions->multidimensional_arraySearch(self::getTrail(), $modelName) as $crumb) {
+		foreach(Yii::app()->functions->multidimensional_arraySearch(self::getTrail(), $modelName) as $crumb)
+		{
 			// check access
-			if (!static::checkAccess(self::accessRead, $crumb)) {
+			if(!static::checkAccess(self::accessRead, $crumb))
+			{
 				continue;
 			}
 
 			// the only query parameter we want to allow is the foreign key to the parent
 			$queryParamters = array();
-			if ($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = static::getParentCrumb($crumb))) {
-				if (static::getAdminParam($parentForeignKey, $modelName) !== NULL) {
+			if($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = static::getParentCrumb($crumb)))
+			{
+				if(static::getAdminParam($parentForeignKey, $modelName) !== NULL)
+				{
 					$queryParamters[$parentForeignKey] = static::getAdminParam($parentForeignKey, $modelName);
-				} elseif (static::getUpdateId($parentCrumb)) {
+				} elseif(static::getUpdateId($parentCrumb))
+				{
 					$queryParamters[$parentForeignKey] = static::getUpdateId($parentCrumb);
 				}
 			}
@@ -663,35 +737,40 @@ $t = $model->attributes;
 			// add crumb to admin view
 			$crumbController = ucfirst($crumb) . 'Controller';
 			$breadcrumbs[] = $crumbController::makeCrumbAdmin($displays, $queryParamters);
-				
+
 			// if this is the last crumb
-			if ($modelName == $crumb) {
-				if ($lastCrumb == 'Create') {
+			if($modelName == $crumb)
+			{
+				if($lastCrumb == 'Create')
+				{
 					// add last crumb
 					$breadcrumbs[] = array($crumb::getCreateLabel());
-				} elseif ($lastCrumb == 'Update') {
+				} elseif($lastCrumb == 'Update')
+				{
 					// add a crumb with just the primary key nice name but no href
 					$primaryKey = static::getUpdateId($crumb);
 					$breadcrumbs[] = array($crumb::getNiceName($primaryKey));
 				}
 			}
 			// otherwise not last crumb
-			else {
+			else
+			{
 				// if there is a primary key for this
-				if (static::getUpdateId($crumb) !== NULL) {
+				if(static::getUpdateId($crumb) !== NULL)
+				{
 					// add an update crumb to this primary key
 					$primaryKey = static::getUpdateId($crumb);
 					$breadcrumbs[] = array($crumb::getNiceName($primaryKey) => array("$crumb/"
-						. (static::checkAccess(self::accessWrite, $crumb) ? 'update' : 'view'),
-						$crumb::model()->tableSchema->primaryKey => $primaryKey,
+							. (static::checkAccess(self::accessWrite, $crumb) ? 'update' : 'view'),
+							$crumb::model()->tableSchema->primaryKey => $primaryKey,
 					));
 				}
 			}
 		}
 
 		/**
-		* Add in from multi-level tabs
-		*/
+		 * Add in from multi-level tabs
+		 */
 		if(sizeof(static::$tabs) > 1)
 		{
 			array_pop($breadcrumbs);
@@ -727,8 +806,8 @@ $t = $model->attributes;
 			$count = sizeof($breadcrumbs);
 			$breadcrumbs[$count - 1] = array(key($breadcrumbs[$count - 1]));
 		}
-		
-		
+
+
 		return $breadcrumbs;
 	}
 
@@ -737,20 +816,24 @@ $t = $model->attributes;
 	 * will want to edit some of the branches or leaves below hence redirect to update
 	 */
 
-	protected function createRedirect($model, $params = array()) {
+	protected function createRedirect($model, $params = array())
+	{
 		$items = Yii::app()->params['trail'];
 		$trail = Yii::app()->functions->multidimensional_arraySearch(Yii::app()->params['trail'], $this->modelName);
 		// get tree of items at or below the desired level
-		foreach ($trail as $key => &$value) {
+		foreach($trail as $key => &$value)
+		{
 			// if there are items below
 			$items = isset($items[$value]) ? $items[$value] : array();
 		}
 
 		// if there are some child items
-		if (sizeof($items)) {
+		if(sizeof($items))
+		{
 			// go to update view
 			$this->redirect(array_merge(array('update', $model->tableSchema->primaryKey => $model->getPrimaryKey()), $params));
-		} else {
+		} else
+		{
 			// go to admin view
 			$model->assertFromParent();
 			$this->adminRedirect($model);
@@ -760,44 +843,45 @@ $t = $model->attributes;
 	/*
 	 * to be overidden if not wanting to redirect to admin
 	 */
-	protected function updateRedirect($model) {
-		
-		if (!empty($_POST['controller']))
+
+	protected function updateRedirect($model)
+	{
+
+		if(!empty($_POST['controller']))
 		{
 			$modelName = $_POST['controller'];
-		}
-		else
+		} else
 		{
 			$modelName = get_class($model);
 		}
-		
+
 		// need to be careful not to filter by the update id
 		$primaryKeyName = $modelName::model()->tableSchema->primaryKey;
 		if(isset($_GET[$primaryKeyName]))
 		{
 			unset($_GET[$primaryKeyName]);
 		}
-		
+
 		$this->adminRedirect($model);
 	}
-	
+
 	public static function staticAdminRedirect($model, $sortByNewest = false)
 	{
 
 		// if posted a controller then this is where we should return to
-		if (!empty($_POST['controller']))
+		if(!empty($_POST['controller']))
 		{
 			$modelName = $_POST['controller'];
-		}
-		else
+		} else
 		{
 			$modelName = get_class($model);
 		}
 
-		$params = array_merge(array("$modelName/admin"),  (static::getAdminParams($modelName) + $_GET));
-		
+		$params = array_merge(array("$modelName/admin"), (static::getAdminParams($modelName) + $_GET));
+
 		// if we want to sort by the newest record first
-		if ($sortByNewest) {
+		if($sortByNewest)
+		{
 			$model->adminReset();
 			$params["{$modelName}_sort"] = $modelName::model()->tableSchema->primaryKey . '.desc';
 		}
@@ -806,7 +890,8 @@ $t = $model->attributes;
 	}
 
 	// redirect to admin
-	protected function adminRedirect($model, $sortByNewest = false) {
+	protected function adminRedirect($model, $sortByNewest = false)
+	{
 		static::staticAdminRedirect($model, $sortByNewest);
 	}
 
@@ -814,8 +899,10 @@ $t = $model->attributes;
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreate($modal_id = 'myModal', &$model = null) {
-		if ($model === null) {
+	public function actionCreate($modal_id = 'myModal', &$model = null)
+	{
+		if($model === null)
+		{
 			$model = new $this->modelName;
 		}
 		$models = array();
@@ -825,8 +912,8 @@ $t = $model->attributes;
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating = $this->performAjaxValidation($model);
 // TODO: this is untested without javascript
-$t = $model->attributes;
-		if (isset($_POST[$this->modelName]))
+		$t = $model->attributes;
+		if(isset($_POST[$this->modelName]))
 		{
 			$model->attributes = $_POST[$this->modelName];
 			// ensure Controller::$nav is set
@@ -838,24 +925,30 @@ $t = $model->attributes;
 			$saved = $model->createSave($models);
 
 			// if not validating and successful
-			if (!$validating && $saved) {
+			if(!$validating && $saved)
+			{
 				// commit
 				$transaction->commit();
 				$this->createRedirect($model);
 			}
 			// otherwise there has been an error which should be captured in model
-			else {
+			else
+			{
 				// rollback
 				$transaction->rollBack();
 
 				// if coming from ajaxvalidate
-				if ($validating) {
+				if($validating)
+				{
 					$result = array();
-					if (!is_array($models)) {
+					if(!is_array($models))
+					{
 						$models = array($model);
 					}
-					foreach ($models as $m) {
-						foreach ($m->getErrors() as $attribute => $errors) {
+					foreach($models as $m)
+					{
+						foreach($m->getErrors() as $attribute => $errors)
+						{
 							$result[$m->getHtmlId($attribute)] = $errors;
 						}
 					}
@@ -866,7 +959,8 @@ $t = $model->attributes;
 
 				$model->isNewRecord = TRUE;
 			}
-		} elseif (isset($_GET[$this->modelName])) {
+		} elseif(isset($_GET[$this->modelName]))
+		{
 			// set any url based paramters
 			$model->attributes = $_GET[$this->modelName];
 			// ensure Controller::$nav is set
@@ -875,14 +969,18 @@ $t = $model->attributes;
 
 // TODO: check this code might be obsolete		
 		// if just failed to save after ajax validation ok'd it - maybe an invalid file upload which can't use ajax validation
-		if (isset($saved) && !$saved) {
+		if(isset($saved) && !$saved)
+		{
 			// get errors
 			$message = '
 				<strong>Sorry, could,\'t save because</strong>
 					<ul>';
-			foreach ($models as $m) {
-				foreach ($m->getErrors() as $attribute => $errors) {
-					foreach ($errors as $error) {
+			foreach($models as $m)
+			{
+				foreach($m->getErrors() as $attribute => $errors)
+				{
+					foreach($errors as $error)
+					{
 						$message.="<li>$error</li>";
 					}
 				}
@@ -898,7 +996,8 @@ $t = $model->attributes;
 		$this->createRender($model, $models, $modal_id);
 	}
 
-	protected function createRender($model, $models, $modal_id) {
+	protected function createRender($model, $models, $modal_id)
+	{
 		// set tabs
 //		$this->tabs = $model;
 
@@ -914,14 +1013,16 @@ $t = $model->attributes;
 	 * If update is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate($id, $model = null) {
- 		$modelName = $this->modelName;
+	public function actionUpdate($id, $model = null)
+	{
+		$modelName = $this->modelName;
 
-		if ($model === null) {
+		if($model === null)
+		{
 			$model = $this->loadModel($id);
 		}
 		$models = array();
-$t=			$model->attributes;
+		$t = $model->attributes;
 		// add primary key into global so it can be retrieved for future use in breadcrumbs
 		static::setUpdateId($id, $modelName);
 
@@ -932,8 +1033,9 @@ $t=			$model->attributes;
 		$validating = $this->performAjaxValidation($model);
 // TODO: this is untested without javascript
 
-		if (isset($_POST[$modelName])) {
-$t=			$model->attributes = $_POST[$modelName];
+		if(isset($_POST[$modelName]))
+		{
+			$t = $model->attributes = $_POST[$modelName];
 
 			// start a transaction
 			$transaction = Yii::app()->db->beginTransaction();
@@ -942,23 +1044,29 @@ $t=			$model->attributes = $_POST[$modelName];
 			$saved = $model->updateSave($models);
 
 			// if not validating and successful
-			if (!$validating && $saved) {
+			if(!$validating && $saved)
+			{
 				// commit
 				$transaction->commit();
 				$this->updateRedirect($model);
 			}
 			// otherwise there has been an error which should be captured in model
-			else {
+			else
+			{
 				// rollback
 				$transaction->rollBack();
 				// if coming from ajaxvalidate
-				if ($validating) {
+				if($validating)
+				{
 					$result = array();
-					if (!is_array($models)) {
+					if(!is_array($models))
+					{
 						$models = array($model);
 					}
-					foreach ($models as $m) {
-						foreach ($m->getErrors() as $attribute => $errors) {
+					foreach($models as $m)
+					{
+						foreach($m->getErrors() as $attribute => $errors)
+						{
 							$result[$m->getHtmlId($attribute)] = $errors;
 						}
 					}
@@ -972,7 +1080,8 @@ $t=			$model->attributes = $_POST[$modelName];
 		}
 
 		// otherwise this is just a get and could be passing paramters
-		if (!empty($_GET[$modelName])) {
+		if(!empty($_GET[$modelName]))
+		{
 			$model->attributes = $_GET[$modelName];
 		}
 
@@ -1005,7 +1114,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		$success = FALSE;
 
 		$sizeofTabs = sizeof(static::$tabs);
-		
+
 		if($first)
 		{
 			$this->setActiveTab(static::$tabs[0], $first);
@@ -1021,7 +1130,6 @@ $t=			$model->attributes = $_POST[$modelName];
 				$this->setActiveTab(static::$tabs[$cntr], $middle);
 			}
 		}
-
 	}
 
 	public function setActiveTab(&$tabsRow, $niceName = NULL)
@@ -1047,7 +1155,6 @@ $t=			$model->attributes = $_POST[$modelName];
 				$tab['active'] = FALSE;
 			}
 		}
-
 	}
 
 	/**
@@ -1055,7 +1162,8 @@ $t=			$model->attributes = $_POST[$modelName];
 	 * @param integer $id the ID of the model to be viewed
 	 */
 // TODO: the guts of this is duplicated in actionUpdate
-	public function actionView($id) {
+	public function actionView($id)
+	{
 		$model = $this->loadModel($id);
 		$primaryKeyName = $model->tableSchema->primaryKey;
 
@@ -1073,7 +1181,7 @@ $t=			$model->attributes = $_POST[$modelName];
 		// set breadcrumbs
 		$this->breadcrumbs = static::getBreadCrumbTrail('Update');
 
-$t = $model->attributes;
+		$t = $model->attributes;
 		// set up tab menu if required - using setter
 		$this->tabs = $model;
 
@@ -1088,7 +1196,8 @@ $t = $model->attributes;
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id) {
+	public function actionDelete($id)
+	{
 		if(Yii::app()->request->isPostRequest)
 		{
 			try
@@ -1096,13 +1205,14 @@ $t = $model->attributes;
 				// we only allow deletion via POST request
 				$model = $this->loadModel($id);
 				$model->delete();
-			}
-			catch (CDbException $e)
+			} catch(CDbException $e)
 			{
-				if (!isset($_GET['ajax'])) {
+				if(!isset($_GET['ajax']))
+				{
 					Yii::app()->user->setFlash('error', '<strong>Oops!</strong>
 						Unfortunately you can&#39;t delete this as at least one other record in the database refers to it.');
-				} else {
+				} else
+				{
 					echo "
 						<div class='alert alert-block alert-error fade in'>
 							<a class='close' data-dismiss='alert'>×</a>
@@ -1114,12 +1224,11 @@ $t = $model->attributes;
 			}
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if (!isset($_GET['ajax']))
+			if(!isset($_GET['ajax']))
 			{
 				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin', $this->modelName => static::getAdminParams($this->modelName)));
 			}
-		}
-		else
+		} else
 		{
 			throw new CHttpException(400, 'Invalid request.');
 		}
@@ -1127,56 +1236,54 @@ $t = $model->attributes;
 
 	// from http://www.yiiframework.com/forum/index.php/topic/37941-how-to-use-bulk-action-in-yiibooster/
 	public function actionBatchDelete()
-    {
-        //  print_r($_POST);
-        $request = Yii::app()->getRequest();
-		
-        if($request->getIsPostRequest())
-		{
-            if(isset($_POST['ids']))
-			{
-                $ids = $_POST['ids'];
-            }
-			
-            $successCount = $failureCount = 0;
-            foreach ($ids as $id)
-			{
-                $model = $this->loadModel($id);
-                ($model->delete() == true) ? $successCount++ : $failureCount++;
-            }
+	{
+		//  print_r($_POST);
+		$request = Yii::app()->getRequest();
 
-            echo CJSON::encode(array(
+		if($request->getIsPostRequest())
+		{
+			if(isset($_POST['ids']))
+			{
+				$ids = $_POST['ids'];
+			}
+
+			$successCount = $failureCount = 0;
+			foreach($ids as $id)
+			{
+				$model = $this->loadModel($id);
+				($model->delete() == true) ? $successCount++ : $failureCount++;
+			}
+
+			echo CJSON::encode(array(
 				'status' => 'success',
-				'msg' => $failureCount
-					? "
+				'msg' => $failureCount ? "
 						<div class='alert alert-block alert-error fade in'>
 							<a class='close' data-dismiss='alert'>×</a>
 							<strong>Oops!</strong>
 							Errors occurred. $successCount deleted but
 							$failureCount failed to be deleted - contact system admin, this is a bug.
-						</div>"
-					: '',
-               ));
+						</div>" : '',
+			));
 
-            die();
-        }
-		else
+			die();
+		} else
 		{
-            throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
-        }
-    }
-	
+			throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+		}
+	}
+
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer the ID of the model to be loaded
 	 */
-	public function loadModel($id, $model = null) {
+	public function loadModel($id, $model = null)
+	{
 		$modelName = $this->modelName;
-		if ($model === null)
+		if($model === null)
 		{
 			$model = $modelName::model()->findByPk($id);
-			if ($model === null)
+			if($model === null)
 			{
 				throw new CHttpException(404, 'The requested page does not exist.');
 			}
@@ -1189,12 +1296,15 @@ $t = $model->attributes;
 	 * Performs the AJAX validation.
 	 * @param CModel the model to be validated
 	 */
-	protected function performAjaxValidation($model) {
-$t = $model->attributes;
+	protected function performAjaxValidation($model)
+	{
+		$t = $model->attributes;
 		$validating = false;
-		if (isset($_POST['ajax']) && $_POST['ajax'] === $this->modelName . '-form') {
+		if(isset($_POST['ajax']) && $_POST['ajax'] === $this->modelName . '-form')
+		{
 			$jsonErrors = CActiveForm::validate($model);
-			if ($model->hasErrors()) {
+			if($model->hasErrors())
+			{
 				echo $jsonErrors;
 				Yii::app()->end();
 			}
@@ -1204,7 +1314,8 @@ $t = $model->attributes;
 		return $validating;
 	}
 
-	static function listWidgetRow($model, $form, $fkField, $htmlOptions = array(), $scopes = array(), $label = null) {
+	static function listWidgetRow($model, $form, $fkField, $htmlOptions = array(), $scopes = array(), $label = null)
+	{
 		$fKModelType = static::modelName();
 
 		// set label to passed in label if one passed, otherwise to the tables nice name
@@ -1213,14 +1324,17 @@ $t = $model->attributes;
 		$criteria = new CDbCriteria();
 		$criteria->scopes = $scopes;
 		// if more than x rows in the lookup table use autotext
-		if ($fKModelType::model()->count($criteria) > Yii::app()->params->listMax) {
+		if($fKModelType::model()->count($criteria) > Yii::app()->params->listMax)
+		{
 			static::autoCompleteFKFieldRow($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType);
-		} else {
+		} else
+		{
 			static::dropDownListFKfieldRow($model, $form, $fkField, $htmlOptions, $scopes);
 		}
 	}
 
-	static function autoCompleteFKFieldRow($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType) {
+	static function autoCompleteFKFieldRow($model, $form, $fkField, $htmlOptions, $scopes, $fKModelType)
+	{
 		Yii::app()->controller->widget('WMEJuiAutoCompleteFkField', array(
 			'model' => $model,
 			'form' => $form,
@@ -1232,7 +1346,8 @@ $t = $model->attributes;
 		);
 	}
 
-	static function dropDownListFKfieldRow($model, $form, $fkField, $htmlOptions = array(), $scopes = array()) {
+	static function dropDownListFKfieldRow($model, $form, $fkField, $htmlOptions = array(), $scopes = array())
+	{
 		$modelName = str_replace('Controller', '', get_called_class());
 		$target = new $modelName;
 
@@ -1240,15 +1355,15 @@ $t = $model->attributes;
 		$allowNull = TRUE;
 		foreach($model->rules() as $rule)
 		{
-			if($rule[1] == 'required' && in_array($fkField, explode(',', preg_replace( '/\s/', '', $rule[0]))))
+			if($rule[1] == 'required' && in_array($fkField, explode(',', preg_replace('/\s/', '', $rule[0]))))
 			{
 				$allowNull = TRUE;
 			}
 		}
-		
+
 		// javascript bubbling will remove please select item after selection or allow blank otherwise
 		$htmlOptions['empty'] = $allowNull ? '' : 'Please select';
-		
+
 		echo $form->dropDownListRow(
 			$fkField, $modelName::getListData($scopes), $htmlOptions + array('name' => get_class($model) . "[$fkField]"), $model);
 	}
@@ -1256,7 +1371,8 @@ $t = $model->attributes;
 	const accessRead = 'Read';
 	const accessWrite = '';
 
-	static function checkAccess($mode, $modelName = null) {
+	static function checkAccess($mode, $modelName = null)
+	{
 		// always allow dashboard
 		if($modelName == 'Dashboard')
 		{
@@ -1264,8 +1380,9 @@ $t = $model->attributes;
 		}
 		// otherwise if child dashboard then replace the Dashboard portion out to check the suffix part of the name
 		$modelName = str_replace('Dashboard', '', $modelName, $count);
-		
-		if ($mode == self::accessRead || $mode === self::accessWrite) {
+
+		if($mode == self::accessRead || $mode === self::accessWrite)
+		{
 			return Yii::app()->user->checkAccess(($modelName ? $modelName : static::modelName()) . $mode);
 		}
 	}
@@ -1273,15 +1390,18 @@ $t = $model->attributes;
 	const reportTypeHtml = 0;
 	const reportTypeJavascript = 1;
 
-	public function getReportsMenu($reportType = self::reportTypeHtml, $context = null) {
+	public function getReportsMenu($reportType = self::reportTypeHtml, $context = null)
+	{
 		// if no context model given
-		if (!$context) {
+		if(!$context)
+		{
 			// set as this controller
 			$context = $this->modelName;
 		}
 
 		// if we arent going to receive the pk as id at run time via Planning ajaxtree
-		if ($reportType == self::reportTypeHtml && (static::getUpdateId($context) !== NULL)) {
+		if($reportType == self::reportTypeHtml && (static::getUpdateId($context) !== NULL))
+		{
 			// set the primary key
 			$pk = static::getUpdateId($context);
 		}
@@ -1297,13 +1417,17 @@ $t = $model->attributes;
 		$criteria->condition = 'context = :context OR context IS NULL';
 		$criteria->params = array('context' => $context);
 
-		foreach (Report::model()->findAll($criteria) as $report) {
+		foreach(Report::model()->findAll($criteria) as $report)
+		{
 			// determine if this user has access
-			foreach ($report->reportToAuthItems as $reportToAuthItem) {
-				if (Yii::app()->user->checkAccess($reportToAuthItem->auth_item_name)) {
+			foreach($report->reportToAuthItems as $reportToAuthItem)
+			{
+				if(Yii::app()->user->checkAccess($reportToAuthItem->auth_item_name))
+				{
 					$params['id'] = $report->id;
 					$params['context'] = $context;
-					if (!empty($pk)) {
+					if(!empty($pk))
+					{
 						$params['pk'] = $pk;
 					}
 					// add menu item
@@ -1316,8 +1440,10 @@ $t = $model->attributes;
 			}
 		}
 
-		if (!empty($items)) {
-			switch ($reportType) {
+		if(!empty($items))
+		{
+			switch($reportType)
+			{
 				case self::reportTypeHtml :
 					return array(
 						'class' => 'bootstrap.widgets.TbMenu',
@@ -1327,13 +1453,15 @@ $t = $model->attributes;
 					);
 				case self::reportTypeJavascript :
 					// return report items for context menu in ajax tree
-					if (!$itemCount = count($items)) {
+					if(!$itemCount = count($items))
+					{
 						// if no items then return null
 						return 'null';
 					}
 					$cntr = 0;
 					$reportTypeJavascript = '';
-					foreach ($items as $item) {
+					foreach($items as $item)
+					{
 						// append menu item
 						$reportTypeJavascript .=
 							"item$cntr : {
@@ -1353,7 +1481,8 @@ $t = $model->attributes;
 		return $reportType == self::reportTypeHtml ? null : 'null';
 	}
 
-	protected function navbar() {
+	protected function navbar()
+	{
 		$this->widget('bootstrap.widgets.TbNavbar', array(
 			'fixed' => false,
 			'htmlOptions' => array('class' => 'navbar-inverse'),
@@ -1381,7 +1510,8 @@ $t = $model->attributes;
 		));
 	}
 
-	static function dependantListWidgetRow($model, $form, $fkField, $dependantOnModelName, $dependantOnAttribute, $htmlOptions, $scopes = array(), $label = null) {
+	static function dependantListWidgetRow($model, $form, $fkField, $dependantOnModelName, $dependantOnAttribute, $htmlOptions, $scopes = array(), $label = null)
+	{
 		$modelName = get_class($model);
 		$listModelName = static::modelName();
 
@@ -1389,14 +1519,13 @@ $t = $model->attributes;
 
 		$source = Yii::app()->createUrl("$listModelName/autocomplete") . "?model=$modelName&attribute=$fkField&scopes%5Bscope$dependantOnModelName%5D%5B0%5D=";
 
-		$dependantOnControllerName = $dependantOnModelName.'Controller';
+		$dependantOnControllerName = $dependantOnModelName . 'Controller';
 
-		$dependantOnControllerName::listWidgetRow($model, $form, $dependantOnAttribute,
-			array(
-				'ajax' => array(
-					'type'=>'POST',
-					'url'=>Yii::app()->createUrl("$listModelName/DependantList", array('fkField'=>$fkField, 'dependantOnModelName'=>$dependantOnModelName, 'dependantOnAttribute'=>$dependantOnAttribute)),
-					'success'=>"function(data) {
+		$dependantOnControllerName::listWidgetRow($model, $form, $dependantOnAttribute, array(
+			'ajax' => array(
+				'type' => 'POST',
+				'url' => Yii::app()->createUrl("$listModelName/DependantList", array('fkField' => $fkField, 'dependantOnModelName' => $dependantOnModelName, 'dependantOnAttribute' => $dependantOnAttribute)),
+				'success' => "function(data) {
 						if(data)
 						{
 							data = $(data);
@@ -1422,27 +1551,25 @@ $t = $model->attributes;
 							if(lookup.length)
 							{
 								$dependantOnAttribute = $('#{$modelName}_$dependantOnAttribute').val();
-								lookup.autocomplete({'minLength':1,'maxHeight':'100','select':function(event, ui){"."$('#{$htmlOptions['id']}').val(ui.item.id);$('#{$htmlOptions['id']}_save').val(ui.item.value);},'source':'$source' + $dependantOnAttribute});
+								lookup.autocomplete({'minLength':1,'maxHeight':'100','select':function(event, ui){" . "$('#{$htmlOptions['id']}').val(ui.item.id);$('#{$htmlOptions['id']}_save').val(ui.item.value);},'source':'$source' + $dependantOnAttribute});
 							}
 						}
 					}",
-				)
-			),
-			array(),
-			$label
+			)
+			), array(), $label
 		);
-	
+
 		// get the id used from the triggering item
 		CHtml::resolveNameID($model, $dependantOnAttribute, $dependsOnHtmlOptions);
 
-								
+
 		// trigger the change handler on document load to ensure that the dependency is set correctly to begin with
 		Yii::app()->clientScript->registerScript('dropDownListRow' . $htmlOptions['id'], "
 			// trigger the change handler
 			$('#{$dependsOnHtmlOptions['id']}').trigger('change');
 			", CClientScript::POS_READY
 		);
-								
+
 		// NB: need to set this here as otherwise in wmfkautocomplete the soure url has standard_id=, in it which gets stripped
 		static::listWidgetRow($model, $form, $fkField, $htmlOptions, $scopes);
 	}
@@ -1453,10 +1580,9 @@ $t = $model->attributes;
 		ob_start();
 		// get the model name of the lookup table from fk field
 		$lookupModelName = $this->getFKModelType($modelName::model(), $_GET['fkField']);
-		$form=$this->beginWidget('WMTbActiveForm', array('model'=>$modelName::model(), 'parent_fk'=>$_GET['fkField']));
+		$form = $this->beginWidget('WMTbActiveForm', array('model' => $modelName::model(), 'parent_fk' => $_GET['fkField']));
 		ob_end_clean();
-		self::listWidgetRow($modelName::model(), $form, $_GET['fkField'], array(),
-			array('scope'.$_GET['dependantOnModelName']=>array($_POST[$modelName][$_GET['dependantOnAttribute']])));
+		self::listWidgetRow($modelName::model(), $form, $_GET['fkField'], array(), array('scope' . $_GET['dependantOnModelName'] => array($_POST[$modelName][$_GET['dependantOnAttribute']])));
 	}
 
 	// recursive to find our way thru relations to target fk model
@@ -1472,7 +1598,7 @@ $t = $model->attributes;
 			}
 		}
 	}
-		
+
 	static function getAdminParam($paramName, $modelName = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
@@ -1486,12 +1612,12 @@ $t = $model->attributes;
 	static function getAdminParams($modelName = NULL)
 	{
 		$modelName = $modelName ? $modelName : static::modelName();
-		
+
 		if(isset(Controller::$nav['admin'][$modelName]))
 		{
 			return Controller::$nav['admin'][$modelName];
 		}
-		
+
 		return array();
 	}
 
@@ -1516,7 +1642,7 @@ $t = $model->attributes;
 
 		return isset(Controller::$nav['update'][$modelName]) ? Controller::$nav['update'][$modelName] : NULL;
 	}
-	
+
 	// return last or specified level of update id
 	static function setUpdateId($updateId, $modelName = NULL)
 	{
@@ -1525,8 +1651,10 @@ $t = $model->attributes;
 		Controller::$nav['update'][$modelName] = $updateId;
 	}
 
-	protected function newButton() {
-		if (Yii::app()->user->checkAccess($this->modelName)) {
+	protected function newButton()
+	{
+		if(Yii::app()->user->checkAccess($this->modelName))
+		{
 			echo ' ';
 			$this->widget('bootstrap.widgets.TbButton', array(
 				'label' => 'New',
@@ -1543,8 +1671,10 @@ $t = $model->attributes;
 		}
 	}
 
-	public function exportButton() {
-		if (Yii::app()->params['showDownloadButton']) {
+	public function exportButton()
+	{
+		if(Yii::app()->params['showDownloadButton'])
+		{
 			echo ' ';
 			$this->widget('bootstrap.widgets.TbButton', array(
 				'label' => 'Download Excel',
@@ -1555,7 +1685,7 @@ $t = $model->attributes;
 			));
 		}
 	}
-	
+
 	public function renderAdminButtons()
 	{
 		$this->exportButton();
@@ -1566,13 +1696,17 @@ $t = $model->attributes;
 	 * If can't determine relation automaticatlly (as in has many through) getRelation in getRelation WMEJuiAutoCompleteFkField
 	 * then this allows hard coding of return result by controller
 	 */
+
 	public function getRelation($model, $attribute)
 	{
+		
 	}
-	
-	public function createUrl($route, $params = array(), $ampersand = '&') {
+
+	public function createUrl($route, $params = array(), $ampersand = '&')
+	{
 		return parent::createUrl($route, array_filter($params), $ampersand);
 	}
+
 }
 
 ?>

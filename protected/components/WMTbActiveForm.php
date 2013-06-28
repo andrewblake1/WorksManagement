@@ -239,7 +239,7 @@ class WMTbActiveForm extends TbActiveForm
 				echo parent::dropDownListRow($model, $attribute,
 					$data, array('class'=>'span5') + $htmlOptions);
 				
-				// add a dummy field as the list will be removed on doc load
+				// add a dummy field as the list will be hidden on doc load
 				echo CHtml::textField(NULL, current($data), array(
 						'class'=>'span5',
 						'disabled'=>'disabled',
@@ -352,6 +352,9 @@ class WMTbActiveForm extends TbActiveForm
 			// if single value
 			elseif($minimum == $maximum)
 			{
+				$this->hiddenField($attribute);
+				// add a dummy field to display as the actual one will be hidden - disabled isn't su
+				$htmlOptions['id'] = CHtml::activeId($model, $attribute) . '_dummy';
 				$htmlOptions['disabled'] = 'disabled';
 				$this->textFieldRow($attribute, $htmlOptions, $model);
 			}

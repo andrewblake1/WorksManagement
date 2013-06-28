@@ -1,6 +1,6 @@
 <?php
 
-$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));		
+$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'action'=>$action));		
 
 	$form->hiddenField('assembly_group_to_assembly_id');
 	$form->hiddenField('assembly_group_id');

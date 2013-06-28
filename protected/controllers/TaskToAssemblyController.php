@@ -10,6 +10,40 @@ class TaskToAssemblyController extends AdjacencyListController
 	// called within AdminViewWidget
 	public function getButtons($model)
 	{
+		// add jquery responsible for handling multiple form possiblities here - i.e. this handling multiple models
+		// need to re-read modal contents first as selecting a different record
+
+/*		Yii::app()->clientScript->registerScript('onclickReturnForm', "
+			function onclickReturnForm(e) {
+				alert('e');
+			}
+		", CClientScript::POS_END);*/
+		$modelName = $this->modelName;
+		
+		?><script  type="text/javascript">
+		function onclickReturnForm(obj)
+		{
+			// need to re-read modal contents first as selecting a different record
+			$.ajax({
+				type: "POST",
+				url: $(obj).attr('href'),
+				'beforeSend' : function(){
+					$("#<?php echo "$modelName-grid"; ?>").addClass("ajax-sending");
+				},
+				'complete' : function(){
+					$("#<?php echo "$modelName-grid"; ?>").removeClass("ajax-sending");
+				},
+				success: function(data){
+					// change the contents
+					$("#myModal div").html(data);
+					// display the modal
+					$("#myModal").modal('show');
+
+				} //success
+			});//ajax
+		}
+		</script><?php
+		
 		return array(
 			'class'=>'WMTbButtonColumn',
 			'buttons'=>array(
@@ -46,11 +80,11 @@ class TaskToAssemblyController extends AdjacencyListController
 						$data->assembly_group_id
 							? ($data->assembly_to_assembly_group_id
 								? ($data->id
-									? "TaskToAssemblyToAssemblyToAssemblyGroup/update"
-									: "TaskToAssemblyToAssemblyToAssemblyGroup/create")
+									? "TaskToAssemblyToAssemblyToAssemblyGroup/returnForm"
+									: "TaskToAssemblyToAssemblyToAssemblyGroup/returnForm")
 								: ($data->id
-									? "TaskToAssemblyToTaskTemplateToAssemblyGroup/update"
-									: "TaskToAssemblyToTaskTemplateToAssemblyGroup/create"))
+									? "TaskToAssemblyToTaskTemplateToAssemblyGroup/returnForm"
+									: "TaskToAssemblyToTaskTemplateToAssemblyGroup/returnForm"))
 							: "TaskToAssembly/update",
 
 						$data->assembly_group_id
@@ -65,16 +99,10 @@ class TaskToAssemblyController extends AdjacencyListController
 									"assembly_to_assembly_group_id"		=>$data->assembly_to_assembly_group_id,
 									)))
 								: (array("id"=>$data->task_to_assembly_to_task_template_to_assembly_group_id, "TaskToAssemblyToTaskTemplateToAssemblyGroup"=>array(
-									"assembly_group_to_assembly_id"		=>$data->assembly_group_to_assembly_id,
-									"assembly_group_id"					=>$data->assembly_group_id,
-									"task_id"							=>$data->task_id,
-									"task_to_assembly_id"				=>($data->id
-										? $data->id
-										: $data->parent_id),
-									"task_template_to_assembly_group_id"=>$data->task_template_to_assembly_group_id,
 									))))
 							: array("id"=>$data->id)
 					)',
+					'click'=>'function() {if($(this).attr("href").indexOf("returnForm") >= 0) { onclickReturnForm(this); return false; }}',
 				),
 				'view' => array(
 					'visible'=>'

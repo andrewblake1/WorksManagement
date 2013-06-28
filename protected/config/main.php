@@ -48,6 +48,28 @@ return array(
 		// Application components
 		'components' => array(
 		
+			'clientScript' => array(
+				'class' => 'ext.NLSClientScript',
+				//'excludePattern' => '/\.tpl/i', //js regexp, files with matching paths won't be filtered is set to other than 'null'
+				//'includePattern' => '/\.php/', //js regexp, only files with matching paths will be filtered if set to other than 'null'
+
+				'mergeJs' => true, //def:true
+				'compressMergedJs' => false, //def:false
+
+				'mergeCss' => false, //def:true
+				'compressMergedCss' => false, //def:false
+
+//				'mergeCssExcludePattern' => '/font-awesome|bootstrap/', //won't merge js files with matching names
+//				'mergeJsExcludePattern' => '/edit_area/', //won't merge js files with matching names
+
+				'mergeIfXhr' => true, //def:false, if true->attempts to merge the js files even if the request was xhr (if all other merging conditions are satisfied)
+
+//				'serverBaseUrl' => 'http://localhost', //can be optionally set here
+				'mergeAbove' => 1, //def:1, only "more than this value" files will be merged,
+				'curlTimeOut' => 10, //def:10, see curl_setopt() doc
+				'curlConnectionTimeOut' => 10, //def:10, see curl_setopt() doc
+			),
+			
 			'user' => array(
 				// enable cookie-based authentication
 				'allowAutoLogin' => true,
