@@ -21,6 +21,7 @@ class TaskToResource extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchSupplier;
+	public $searchResourceToSupplierId;
 	public $searchResource;
 	public $searchTaskQuantity;
 	public $searchTotalDuration;
@@ -99,6 +100,7 @@ class TaskToResource extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
+			'resourceData.resource_to_supplier_id AS searchResourceToSupplierId',
 			'resourceData.resource_id AS resource_id',
 			'resource.description AS searchResource',
 			'supplier.name AS searchSupplier',
@@ -137,7 +139,7 @@ class TaskToResource extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchResource';
-        $columns[] = static::linkColumn('searchSupplier', 'ResourceToSupplier', 'resource_to_supplier_id');
+        $columns[] = static::linkColumn('searchSupplier', 'ResourceToSupplier', 'searchResourceToSupplierId');
 		$columns[] = 'quantity';
 		$columns[] = 'searchTaskQuantity';
 		$columns[] = 'duration:time';

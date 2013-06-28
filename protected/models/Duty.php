@@ -16,6 +16,8 @@
  */
 class Duty extends CustomFieldActiveRecord
 {
+	protected $defaultSort = array('t.lead_in_days'=>'DESC');
+	
 	public $derived_assigned_to_id;
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
@@ -31,6 +33,7 @@ class Duty extends CustomFieldActiveRecord
 	public $responsible;
 	public $task_to_action_id;
 	public $action_id;
+	public $lead_in_days;
 	
 	/**
 	 * @var string label on button in update view
@@ -112,6 +115,7 @@ class Duty extends CustomFieldActiveRecord
 		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
 		$criteria->compare('due',Yii::app()->format->toMysqlDateTime($this->due));
 		$criteria->compare('t.task_id',$this->task_id);
+		$criteria->compare('t.lead_in_days',$this->lead_in_days);
 		$criteria->compare('t.action_id',$this->action_id);
 		
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
@@ -126,6 +130,7 @@ class Duty extends CustomFieldActiveRecord
         $columns[] = static::linkColumn('derived_assigned_to_name', 'User', 'derived_assigned_to_id');
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';
+		$columns[] = 'lead_in_days';
 
 		return $columns;
 	}

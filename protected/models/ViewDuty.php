@@ -5,6 +5,7 @@ class ViewDuty extends ViewActiveRecord
 	protected $defaultSort = array(
 		't.updated',
 		't.due',
+		't.lead_in_days'=>'DESC',
 	);
 
 	/**
@@ -20,6 +21,7 @@ class ViewDuty extends ViewActiveRecord
 	public $derived_assigned_to_name;
 	public $derived_updated;
 	public $derived_importance;
+	public $lead_in_days;
 
 	/**
 	 * @return array validation rules for model attributes.
