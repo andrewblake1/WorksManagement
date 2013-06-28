@@ -142,6 +142,14 @@ class CustomValueActiveRecord extends ActiveRecord
 		}
 	}
 	
+	public function getAdminColumns()
+	{
+		$columns[] = 'searchCustomField';
+		$columns[] = 'custom_value';
+		
+		return $columns;
+	}
+
 }
 
 ?>
