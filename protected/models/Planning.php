@@ -18,8 +18,10 @@
  * @property Day[] $days
  * @property Day $day
  * @property DutyData[] $dutyDatas
+ * @property DutyData[] $dutyDatas1
  * @property User $updatedBy
  * @property User $inCharge
+ * @property Level $level0
  * @property Project[] $projects
  * @property Project $project
  * @property ResourceData[] $resourceDatas
@@ -78,16 +80,15 @@ class Planning extends CategoryActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'crew' => array(self::HAS_ONE, 'Crew', 'id'),
-            'days' => array(self::HAS_MANY, 'Day', 'level'),
             'day' => array(self::HAS_ONE, 'Day', 'id'),
             'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'planning_id'),
+            'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'level'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'inCharge' => array(self::BELONGS_TO, 'User', 'in_charge_id'),
-            'projects' => array(self::HAS_MANY, 'Project', 'level'),
+            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'project' => array(self::HAS_ONE, 'Project', 'id'),
             'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'planning_id'),
             'resourceDatas1' => array(self::HAS_MANY, 'ResourceData', 'level'),
-            'tasks' => array(self::HAS_MANY, 'Task', 'level'),
             'task' => array(self::HAS_ONE, 'Task', 'id'),
         );
     }
