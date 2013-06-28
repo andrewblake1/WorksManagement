@@ -10,6 +10,34 @@ class TaskToMaterialController extends Controller
 	// called within AdminViewWidget
 	public function getButtons($model)
 	{
+//TODO: repeated
+		// add jquery responsible for handling multiple form possiblities here - i.e. this handling multiple models
+		// need to re-read modal contents first as selecting a different record
+		$modelName = $this->modelName;
+		Yii::app()->clientScript->registerScript('onclickReturnForm', "
+			function onclickReturnForm(obj)
+			{
+				// need to re-read modal contents first as selecting a different record
+				$.ajax({
+					type: 'POST',
+					url: $(obj).attr('href'),
+					'beforeSend' : function(){
+						$('#$modelName-grid').addClass('ajax-sending');
+					},
+					'complete' : function(){
+						$('#$modelName-grid').removeClass('ajax-sending');
+					},
+					success: function(data){
+						// change the contents
+						$('#myModal div').html(data);
+						// display the modal
+						$('#myModal').modal('show');
+
+					} //success
+				});//ajax
+			}
+		", CClientScript::POS_END);
+		
 		return array(
 			'class'=>'WMTbButtonColumn',
 			'buttons'=>array(
@@ -43,11 +71,11 @@ class TaskToMaterialController extends Controller
 						$data->material_group_id
 							? ($data->task_to_assembly_id
 								? ($data->id
-									? "TaskToMaterialToAssemblyToMaterialGroup/update"
-									: "TaskToMaterialToAssemblyToMaterialGroup/create")
+									? "TaskToMaterialToAssemblyToMaterialGroup/returnForm"
+									: "TaskToMaterialToAssemblyToMaterialGroup/returnForm")
 								: ($data->id
-									? "TaskToMaterialToTaskTemplateToMaterialGroup/update"
-									: "TaskToMaterialToTaskTemplateToMaterialGroup/create"))
+									? "TaskToMaterialToTaskTemplateToMaterialGroup/returnForm"
+									: "TaskToMaterialToTaskTemplateToMaterialGroup/returnForm"))
 							: "TaskToMaterial/update",
 
 						$data->material_group_id
@@ -69,6 +97,7 @@ class TaskToMaterialController extends Controller
 									)))
 							: array("id"=>$data->id)
 					)',
+					'click'=>'function() {if($(this).attr("href").indexOf("returnForm") >= 0) { onclickReturnForm(this); return false; }}',
 				),
 				'view' => array(
 					'visible'=>'!Yii::app()->user->checkAccess(

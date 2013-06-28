@@ -10,39 +10,33 @@ class TaskToAssemblyController extends AdjacencyListController
 	// called within AdminViewWidget
 	public function getButtons($model)
 	{
+//TODO: repeated
 		// add jquery responsible for handling multiple form possiblities here - i.e. this handling multiple models
 		// need to re-read modal contents first as selecting a different record
-
-/*		Yii::app()->clientScript->registerScript('onclickReturnForm', "
-			function onclickReturnForm(e) {
-				alert('e');
-			}
-		", CClientScript::POS_END);*/
 		$modelName = $this->modelName;
-		
-		?><script  type="text/javascript">
-		function onclickReturnForm(obj)
-		{
-			// need to re-read modal contents first as selecting a different record
-			$.ajax({
-				type: "POST",
-				url: $(obj).attr('href'),
-				'beforeSend' : function(){
-					$("#<?php echo "$modelName-grid"; ?>").addClass("ajax-sending");
-				},
-				'complete' : function(){
-					$("#<?php echo "$modelName-grid"; ?>").removeClass("ajax-sending");
-				},
-				success: function(data){
-					// change the contents
-					$("#myModal div").html(data);
-					// display the modal
-					$("#myModal").modal('show');
+		Yii::app()->clientScript->registerScript('onclickReturnForm', "
+			function onclickReturnForm(obj)
+			{
+				// need to re-read modal contents first as selecting a different record
+				$.ajax({
+					type: 'POST',
+					url: $(obj).attr('href'),
+					'beforeSend' : function(){
+						$('#$modelName-grid').addClass('ajax-sending');
+					},
+					'complete' : function(){
+						$('#$modelName-grid').removeClass('ajax-sending');
+					},
+					success: function(data){
+						// change the contents
+						$('#myModal div').html(data);
+						// display the modal
+						$('#myModal').modal('show');
 
-				} //success
-			});//ajax
-		}
-		</script><?php
+					} //success
+				});//ajax
+			}
+		", CClientScript::POS_END);
 		
 		return array(
 			'class'=>'WMTbButtonColumn',
