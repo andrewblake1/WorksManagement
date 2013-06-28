@@ -93,6 +93,13 @@ class TaskToAssemblyController extends AdjacencyListController
 									"assembly_to_assembly_group_id"		=>$data->assembly_to_assembly_group_id,
 									)))
 								: (array("id"=>$data->task_to_assembly_to_task_template_to_assembly_group_id, "TaskToAssemblyToTaskTemplateToAssemblyGroup"=>array(
+									"assembly_group_to_assembly_id"		=>$data->assembly_group_to_assembly_id,
+									"assembly_group_id"					=>$data->assembly_group_id,
+									"task_id"							=>$data->task_id,
+									"task_to_assembly_id"				=>($data->id
+										? $data->id
+										: $data->parent_id),
+									"task_template_to_assembly_group_id"		=>$data->task_template_to_assembly_group_id,
 									))))
 							: array("id"=>$data->id)
 					)',

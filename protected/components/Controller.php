@@ -158,6 +158,10 @@ class Controller extends CController
 		$cs->scriptMap = array_merge(array(
 			'bootstrap.js'=>false,
 			'jquery.js'=>false,
+			'jquery.yiiactiveform.js'=>false,
+			'bootstrap.bootbox.min.js'=>false,
+			'bootstrap.notify.js'=>false,
+			'jquery-ui.min.js'=>false,
 		), $cs->scriptMap);
 
 		// update
