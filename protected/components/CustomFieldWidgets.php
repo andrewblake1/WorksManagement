@@ -97,8 +97,8 @@ class CustomFieldWidgets extends CWidget
 		// loop thru all the pivot table custom fields
 		foreach(eval('return $this->model->' . $this->relationModelToCustomFieldModelTemplates . ';') as $toCustomField)
 		{
-			$CustomFieldModelTemplate = $toCustomField->{$this->relationCustomFieldModelTemplate};
-			$category = $CustomFieldModelTemplate->{$this->relation_category};
+			$customFieldModelTemplate = $toCustomField->{$this->relationCustomFieldModelTemplate};
+			$category = $customFieldModelTemplate->{$this->relation_category};
 
 			// get the widget html
 			ob_start();

@@ -190,6 +190,7 @@ class Duty extends CustomFieldActiveRecord
 
 			$planning_id = $planning->id;
 		}
+
 		// try insert and catch and dump any error - will ensure existence
 		try
 		{
@@ -216,6 +217,51 @@ class Duty extends CustomFieldActiveRecord
 		$this->duty_data_id = $dutyData->id;
 		
 		return $saved & parent::createSave($models);
+	}
+	
+	// this needs overriding here as really should be part of duty data however handling the variables at this level
+	protected function createCustomFields(&$models=array())
+	{
+		// initialise the saved variable to show no errors in case the are no
+		// model customValues - otherwise will return null indicating a save error
+		$saved = true;
+
+		// loop thru all custom fields pivots
+		foreach(eval("return {$this->evalCustomFieldPivots};") as $customFieldPivot)
+		{
+			$endToCustomFieldPivot = new $this->evalClassEndToCustomFieldPivot;
+			$endToCustomFieldPivot->{$this->evalColumnCustomFieldModelTemplateId} = $customFieldPivot->id;
+
+			$endToCustomFieldPivot->{$this->evalColumnEndId} = $this->{$this->evalThisColumnEndId};
+			if(isset($_POST[get_class($endToCustomFieldPivot)][$endToCustomFieldPivot->{$this->evalCustomFieldPivot}->custom_field_id]['custom_value']))
+			{
+				$endToCustomFieldPivot->custom_value=$_POST[get_class($endToCustomFieldPivot)][$endToCustomFieldPivot->{$this->evalCustomFieldPivot}->custom_field_id]['custom_value'];
+			}
+			else
+			{
+				$endToCustomFieldPivot->setDefault($customFieldPivot->customField);
+			}
+
+			// attempt save
+			// try insert and catch and dump any error - will ensure existence
+			try
+			{
+				$saved &= $endToCustomFieldPivot->dbCallback('save');
+				// record any errors
+				$models[] = $endToCustomFieldPivot;
+			}
+			catch (CDbException $e)
+			{
+				// just loose the error - don't really want to update the custom field as exis may already contain good data
+				// already exists so retrieve and update instead
+	/*			$exisEndToCustomFieldPivot = $evalClassEndToCustomFieldPivot::model()->findByAttibutes(array(
+					'custom_field_to_duty_step_id'=>$endToCustomFieldPivot->custom_field_to_duty_step_id,
+					'duty_data_id'=>$endToCustomFieldPivot->duty_data_id,
+				));*/
+			}
+		}
+		
+		return $saved;
 	}
 
 	public function getIncompleteDependencies()
