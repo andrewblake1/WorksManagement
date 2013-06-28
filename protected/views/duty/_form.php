@@ -53,8 +53,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 		));
 		
 		// need to show previous steps custom fields on duty form as disabled
-//		$this->previousStepsCustomFields($model, $form);
-		
+		$this->previousStepsCustomFields($model, $form);
 	}
 
 $this->endWidget();
