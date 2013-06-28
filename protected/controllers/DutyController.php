@@ -159,6 +159,26 @@ class DutyController extends Controller
 
 		$this->redirect($params);
 	}
+	
+	// need to show previous steps custom fields on duty form as disabled
+	private function previousStepsCustomFields($model, $form)
+	{
+		// loop thru previous duty steps
+	/*	foreach(DutyStepDependency::model()->findAllByAttributes(array('parent_duty_step_id'=>$model->dutyData->duty_step_id)) as $dutyStepDependency )
+		{
+			$this->widget('CustomFieldWidgets',array(
+				'model'=>$dutyStepDependency-<,
+				'form'=>$form,
+				'relationModelToCustomFieldModelTemplate'=>'dutyDataToCustomFieldToDutyStep',
+				'relationModelToCustomFieldModelTemplates'=>'dutyData->dutyDataToCustomFieldToDutySteps',
+				'relationCustomFieldModelTemplate'=>'customFieldToDutyStep',
+				'relation_category'=>'customFieldDutyStepCategory',
+				'categoryModelName'=>'CustomFieldDutyStepCategory',
+				'htmlOptions'=>array('disabled'=>'disabled'),
+			));
+		}*/
+
+	}
 
 }
 

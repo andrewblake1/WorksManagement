@@ -153,37 +153,6 @@ class Duty extends CustomFieldActiveRecord
 	
 	/*
 	 * overidden as mulitple models
-	 
-	public function updateSave(&$models=array())
-	{
-		$saved = true;
-		$this->dutyData->attributes = $_POST['DutyData'];
-
-		// if we need to update a customValue and a custom value has been sent (in case was logical to display it)
-		if($this->dutyData->dutyStep->customField)
-		{
-			// validate and save. NB: should only enforce the mandatory custom field option if completing
-			$this->dutyData->dutyStep->customField->mandatory = $this->dutyData->updated;
-		}
-
-		// attempt save of related DutyData
-		$saved &= $this->dutyData->updateSave($models);
-		
-		return $saved & parent::updateSave($models);
-	}
-	
-	public function beforeValidate()
-	{
-		$this->dutyData->customValidatorParams(array(
-			'customField' => $this->dutyData->dutyStep->customField,
-			'params' => array('relationToCustomField'=>'dutyData->dutyStep->customField'),
-		));
-
-		return parent::beforeValidate();
-	}*/
-
-	/*
-	 * overidden as mulitple models
 	 */
 	public function createSave(&$models=array())
 	{
@@ -276,6 +245,37 @@ class Duty extends CustomFieldActiveRecord
 		$criteria->compare('t.id', $this->id);
 		// child duties update values arn't set
 		$criteria->compareNull('dutyChild.updated');
+
+		return $criteria;
+	}
+	
+	public function getImmediateDependencies()
+	{
+		// get any incomplete children
+		$criteria = new DbCriteria;
+		
+		$criteria->select = array(
+			'dutyChild.id',
+		);
+		
+		/*
+		 * Working with v_duty as alias t
+		 * -- join to any dependant steps
+		 * JOIN tbl_duty_step_dependency dutyStepDependency ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
+		 * -- join back to v_duty to obain the details of depandant rows
+		 * JOIN tbl_duty_data dutyDataDependency ON dutyStepDependency.child_duty_step_id = dutyDataDependency.duty_step_id
+		 * JOIN v_duty dutyChild ON dutyDataDependency.id = dutyChild.duty_data_id
+
+		 */
+		$criteria->join="
+			JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
+			JOIN v_duty dutyChild
+				ON dutyStepDependency.child_duty_step_id = dutyChild.duty_step_id 
+				AND t.task_id = dutyChild.task_id
+		";
+		
+		// this duties id
+		$criteria->compare('t.id', $this->id);
 
 		return $criteria;
 	}
