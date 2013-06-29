@@ -94,5 +94,132 @@ class DutyData extends ActiveRecord
 			'dutyStep->description',
 		);
 	}
+	
+	/**
+	 * Need to deal with level modification here as can't do easily within trigger due to trigger
+	 * not allowing modification of same table outside the row being modified. Could use blackhole table
+	 * with trigger on it to do what we need but can't see advantage over doing it in application here - would
+	 * need to alter table name here to black hole table name
+	 * @param type $attributes
+	 */
+	public function update($attributes = null)
+	{
+		// if the level has changed
+		if($this->attributeChanged('level'))
+		{
+			$oldLevel = $this->oldAttributeValue;
+			$newLevel = $this->level;
+			// if the level number is decreasing - heading toward project - converge
+			if($newLevel < $oldLevel)
+			{
+				// ansestor search
+				$targetPlanningId = Yii::app()->db->createCommand('
+					SELECT id FROM tbl_planning
+					WHERE planning.level = :newLevel
+						AND planning.lft <= (SELECT lft FROM tbl_planning WHERE id = :planningId)
+						AND planning.rgt >= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
+				')->queryScalar(array(':newLevel'=>$newLevel, ':planningId'=>$this->planning_id));
+		
+				// if a duty_data already exists for this step at new target level
+				if($exisDutyDataRow=Yii::app()->db->createCommand('
+					SELECT * FROM tbl_duty_data
+					WHERE duty_step_id = :dutyStepId
+						AND planning_id = :targetPlanningId
+					')->queryRow(array(':dutyStepId'=>$this->duty_step_id, ':targetPlanningId'=>$targetPlanningId)))
+				{
+					$exisDutyDataTarget = new self;
+					$exisDutyDataTarget->attributes = $exisDutyDataRow;
+// beware - not sure if id is safe?
+					$exisDutyDataTarget->setIsNewRecord(false);
+					// merge the custom values
+					Yii::app()->db->createCommand('
+						UPDATE (SELECT * FROM tbl_duty_data_to_custom_field_to_duty_step customExis
+							WHERE duty_data_id = :exisDutyDataTargetid) AS exis
+						JOIN (SELECT * FROM tbl_duty_data_to_custom_field_to_duty_step
+							WHERE duty_data_id = :mergeDutyDataTargetid) AS merge
+						USING(custom_field_to_duty_step_id)
+						SET customExis.custom_value = COALESCE(exis.custom_value, merge.custom_value)
+					')->execute(array(':exisDutyDataTargetid'=>$exisDutyDataTarget->id, ':mergeDutyDataTargetid'=>$this->id));
+					// update existing duty records to now point at this target
+					Yii::app()->db->createCommand('
+						UPDATE tbl_duty duty
+						SET duty_data_id = :exisDutyDataTargetid
+						WHERE duty_data_id = :mergeDutyId
+					')->execute(array(':exisDutyDataTargetid'=>$exisDutyDataTarget->id, ':mergeDutyId'=>$this->id));
+					
+					// remove this record as all the related duty items should now point at the correct new target
+					// this will remove the old custom fields as well by cascade delete
+					$this->delete();
+				}
+				// otherwise just shifting this one to the new level
+				else
+				{
+					$this->planning_id = $targetPlanningId;
+					parent::update();
+				}
+			}
+			// otherwise the level number is increasing - heading toward task - diverge
+			else
+			{
+				// insert new suitable duty data records at the desired level of each related item at the desired level
+				// and modify existing duty records to point at the new relevant duty_data
+				$dutyData = new self;
+				$dutyData->duty_step_id = $this->duty_step_id;
+				$dutyData->level = $newLevel;
+				$dutyData->responsible = $this->responsible;
+				$dutyData->updated = $this->updated;
+				// loop thru all relevant new planning id's
+				// child hunt
+				$command=Yii::app()->db->createCommand('
+					SELECT id FROM tbl_planning
+					WHERE planning.level = :newLevel
+						AND planning.lft >= (SELECT lft FROM tbl_planning WHERE id = :planningId)
+						AND planning.rgt <= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
+				');
+				foreach($command->queryColumn(array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planningId)
+				{
+					$dutyData->planning_id = $planningId;
+					$dutyData->insert();
+					
+					// make the relevant duty items relate - related at task level
+					Yii::app()->db->createCommand('
+						UPDATE tbl_duty duty JOIN tbl_planning planning ON duty.task_id = planning.id
+						SET duty.duty_data_id = :newDutyDataId
+						WHERE planning.lft >= (SELECT lft FROM tbl_planning WHERE id = :planningId)
+							AND planning.rgt <= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
+					')->execute(array(':newDutyDataId'=>$dutyData->id, ':planningId'=>$planningId));
+					
+					// create new set of custom fields for each
+					Yii::app()->db->createCommand('
+					INSERT INTO tbl_duty_data_to_custom_field_to_duty_step (
+						custom_value,
+						custom_field_to_duty_step_id,
+						duty_data_id,
+						updated_by
+						)
+						SELECT
+							custom_value,
+							custom_field_to_duty_step_id,
+							:newDutyDataId,
+							:updatedBy
+						FROM tbl_duty_data_to_custom_field_to_duty_step
+						WHERE duty_data_id = :oldDutyDataId
+					')->execute(array(
+						':newDutyDataId'=>$dutyData->id,
+						':updatedBy'=>$this->updated_by,
+						':oldDutyDataID'=>  $this->id,
+					));
+					
+					// reset for next iteration
+					$dutyData->id = NULL;
+					$dutyData->setIsNewRecord(true);
+				}
+
+				// remove this record as all the related duty items should now point at the correct new target
+				// this will remove the old custom fields as well by cascade delete
+				$this->delete();
+			}
+		}
+	}
 
 }

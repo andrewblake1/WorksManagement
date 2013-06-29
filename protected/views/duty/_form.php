@@ -18,7 +18,9 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 		}
 		else
 		{
+// may need access control here
 			UserController::listWidgetRow($model->dutyData, $form, 'responsible', array(), array(), 'Assigned to');
+			$form->dropDownListRow('level', Planning::$levels, array(), $model->dutyData);
 
 			// only allow to be checked if dependencies have been checked
 			if(ViewDuty::model()->findAll($incompleteDependencies = $model->incompleteDependencies))
@@ -38,6 +40,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 			}
 			elseif(!$model->dutyData->updated)
 			{
+// may need access control here
 				$form->checkBoxRow('updated', array(), $model->dutyData);
 			}
 		}

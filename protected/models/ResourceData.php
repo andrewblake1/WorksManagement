@@ -107,4 +107,111 @@ class ResourceData extends ActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	/**
+	 * Need to deal with level modification here as can't do easily within trigger due to trigger
+	 * not allowing modification of same table outside the row being modified. Could use blackhole table
+	 * with trigger on it to do what we need but can't see advantage over doing it in application here - would
+	 * need to alter table name here to black hole table name
+	 * @param type $attributes
+	 */
+	public function update($attributes = null)
+	{
+// TODO largey repeated in dutyData suggest trait or parent class
+		// if the level has changed
+		if($this->attributeChanged('level'))
+		{
+			$oldLevel = $this->oldAttributeValue;
+			$newLevel = $this->level;
+			// if the level number is decreasing - heading toward project - converge
+			if($newLevel < $oldLevel)
+			{
+				// ansestor search
+				$targetPlanningId = Yii::app()->db->createCommand('
+					SELECT id FROM tbl_planning
+					WHERE planning.level = :newLevel
+						AND planning.lft <= (SELECT lft FROM tbl_planning WHERE id = :planningId)
+						AND planning.rgt >= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
+				')->queryScalar(array(':newLevel'=>$newLevel, ':planningId'=>$this->planning_id));
+		
+				// if a resource_data already exists for this step at new target level
+				if($exisResourceDataRow=Yii::app()->db->createCommand('
+					SELECT * FROM tbl_resource_data
+					WHERE resource_id = :resourceId
+						AND planning_id = :targetPlanningId
+					')->queryRow(array(':resourceId'=>$this->resource_id, ':targetPlanningId'=>$targetPlanningId)))
+				{
+					$exisResourceDataTarget = new self;
+					$exisResourceDataTarget->attributes = $exisResourceDataRow;
+// beware - not sure if id is safe?
+					$exisResourceDataTarget->setIsNewRecord(false);
+					// update existing task_to_resource records to now point at this target
+					Yii::app()->db->createCommand('
+						UPDATE tbl_task_to_resource task_to_resource
+						SET resource_data_id = :exisResourceDataTargetid
+						WHERE resource_data_id = :mergeResourceId
+					')->execute(array(':exisResourceDataTargetid'=>$exisResourceDataTarget->id, ':mergeResourceId'=>$this->id));
+
+					// merge supplier id info
+					Yii::app()->db->createCommand('
+						UPDATE tbl_resource_data
+							SET resource_to_supplier_id COALSECE(resource_to_supplier_id, :mergeResourceToSuppllierId)
+						WHERE id = :exisResourceDataTargetid
+					')->execute(array(
+						':mergeResourceToSuppllierId'=>$this->resource_to_supplier_id,
+						':exisResourceDataTargetid'=>$exisResourceDataTarget->id,
+						));
+					
+					// remove this record as all the related task_to_resource items should now point at the correct new target
+					$this->delete();
+				}
+				// otherwise just shifting this one to the new level
+				else
+				{
+					$this->planning_id = $targetPlanningId;
+					parent::update();
+				}
+			}
+			// otherwise the level number is increasing - heading toward task - diverge
+			else
+			{
+				// insert new suitable task_to_resource data records at the desired level of each related item at the desired level
+				// and modify existing task_to_resource records to point at the new relevant resource_data
+				$resourceData = new self;
+				$resourceData->resource_id = $this->resource_id;
+				$resourceData->level = $newLevel;
+				$resourceData->responsible = $this->responsible;
+				$resourceData->resource_to_supplier_id = $this->resource_to_supplier_id;
+				// loop thru all relevant new planning id's
+				// child hunt
+				$command=Yii::app()->db->createCommand('
+					SELECT id FROM tbl_planning
+					WHERE planning.level = :newLevel
+						AND planning.lft >= (SELECT lft FROM tbl_planning WHERE id = :planningId)
+						AND planning.rgt <= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
+				');
+				foreach($command->queryColumn(array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planningId)
+				{
+					$resourceData->planning_id = $planningId;
+					$resourceData->insert();
+					
+					// make the relevant task_to_resource items relate - related at task level
+					Yii::app()->db->createCommand('
+						UPDATE tbl_task_to_resource task_to_resource JOIN tbl_planning planning ON task_to_resource.task_id = planning.id
+						SET task_to_resource.resource_data_id = :newResourceDataId
+						WHERE planning.lft >= (SELECT lft FROM tbl_planning WHERE id = :planningId)
+							AND planning.rgt <= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
+					')->execute(array(':newResourceDataId'=>$resourceData->id, ':planningId'=>$planningId));
+					
+					// reset for next iteration
+					$resourceData->id = NULL;
+					$resourceData->setIsNewRecord(true);
+				}
+
+				// remove this record as all the related task_to_resource items should now point at the correct new target
+				$this->delete();
+			}
+		}
+	}
+	
 }

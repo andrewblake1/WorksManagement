@@ -58,7 +58,7 @@ class Duty extends CustomFieldActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('task_id', 'required'),
-			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
+			array('duty_step_id, responsible, level', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('action_id, updated', 'safe'),
 		));
@@ -148,11 +148,12 @@ class Duty extends CustomFieldActiveRecord
 		$this->responsible = $this->dutyData->responsible;
 		$this->action_id = $this->dutyData->dutyStep->action_id;
 		$this->duty_step_id = $this->dutyData->dutyStep->id;
+		$this->level = $this->dutyData->level;
 		if(!$this->derived_assigned_to_id)
 		{
 			$this->derived_assigned_to_id = 1;
 		}
-		
+
 		parent::afterFind();
 	}
 	
@@ -382,7 +383,6 @@ class Duty extends CustomFieldActiveRecord
 
 		$this->task->assertFromParent();
 		
-$t = Controller::$nav;
 		// assert the task
 		return $this->task->assertFromParent();
 	}
@@ -420,6 +420,34 @@ $t = Controller::$nav;
 				"derived_assigned_to_id"=>$user->contact_id,
 			));
 		}
+	}
+	
+	/*
+	 * overidden as mulitple models
+	 */
+	public function updateSave(&$models=array())
+	{
+		$saved = true;
+		$this->dutyData->attributes = $_POST['DutyData'];
+
+		// if we need to update a customValue and a custom value has been sent (in case was logical to display it)
+		if($this->dutyData->dutyStep->customField)
+		{
+			// validate and save. NB: should only enforce the mandatory custom field option if completing
+			$this->dutyData->dutyStep->customField->mandatory = $this->dutyData->updated;
+		}
+
+		// attempt save of related DutyData
+		if($saved &= $this->dutyData->updateSave($models))
+		{
+			if(!$saved = $this->dbCallback('save'))
+			{
+				// put the model into the models array used for showing all errors
+				$models[] = $this;
+			}
+		}
+		
+		return $saved & parent::updateSave($models);
 	}
 
 }
