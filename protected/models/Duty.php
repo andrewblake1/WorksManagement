@@ -58,7 +58,8 @@ class Duty extends CustomFieldActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('task_id', 'required'),
-			array('duty_step_id, responsible, level', 'numerical', 'integerOnly'=>true),
+//			array('duty_step_id, responsible, level', 'numerical', 'integerOnly'=>true),
+			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('action_id, updated', 'safe'),
 		));
@@ -148,7 +149,7 @@ class Duty extends CustomFieldActiveRecord
 		$this->responsible = $this->dutyData->responsible;
 		$this->action_id = $this->dutyData->dutyStep->action_id;
 		$this->duty_step_id = $this->dutyData->dutyStep->id;
-		$this->level = $this->dutyData->level;
+//		$this->level = $this->dutyData->level;
 		if(!$this->derived_assigned_to_id)
 		{
 			$this->derived_assigned_to_id = 1;
