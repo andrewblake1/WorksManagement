@@ -68,6 +68,9 @@ class Action extends ActiveRecord
 		$criteria2->compare('t.client_id', $clientId);
 		$criteria2->addCondition('t.client_id IS NULL', 'OR');
 
+		// this gives us a list which is basically correct but doesn't take into account the overrides
+		$criteria->mergeWith($criteria2, 'AND');
+
 		$this->getDbCriteria()->mergeWith($criteria);
 		
 		return $this;

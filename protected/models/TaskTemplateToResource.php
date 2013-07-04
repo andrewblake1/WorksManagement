@@ -40,9 +40,6 @@ class TaskTemplateToResource extends ActiveRecord
 			array('task_template_id, resource_id, quantity', 'required'),
 			array('task_template_id, resource_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('duration', 'date', 'format'=>'H:m'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, task_template_id, searchTaskTemplate, searchResource, quantity, duration', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -68,7 +65,7 @@ class TaskTemplateToResource extends ActiveRecord
 		return parent::attributeLabels(array(
 			'task_template_id' => 'Task Type',
 			'resource_id' => 'Resource Type',
-			'duration' => 'Time on-site (HH:mm)',
+			'duration' => 'Duration (HH:mm)',
 		));
 	}
 
