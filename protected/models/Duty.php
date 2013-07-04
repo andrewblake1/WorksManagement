@@ -308,11 +308,11 @@ class Duty extends CustomFieldActiveRecord
 		$criteria = new DbCriteria;
 		
 		$criteria->select = array(
-			'dutyChild.id',
+			'dutyChild.*',
 		);
 		
 		/*
-		 * Working with v_duty as alias t
+		 * Working with tbl_duty as alias t
 		 * -- join to any dependant steps
 		 * JOIN tbl_duty_step_dependency dutyStepDependency ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
 		 * -- join back to v_duty to obain the details of depandant rows
@@ -321,12 +321,15 @@ class Duty extends CustomFieldActiveRecord
 
 		 */
 		$criteria->join="
-			JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
+			JOIN tbl_duty_data dutyData ON t.duty_data_id = dutyData.id
+			JOIN tbl_duty_step_dependency dutyStepDependency ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
 			JOIN v_duty dutyChild
 				ON dutyStepDependency.child_duty_step_id = dutyChild.duty_step_id 
 				AND t.task_id = dutyChild.task_id
 		";
 		
+		$criteria->distinct = true;
+
 		// this duties id
 		$criteria->compare('t.id', $this->id);
 

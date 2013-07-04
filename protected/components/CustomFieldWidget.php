@@ -26,7 +26,7 @@ class CustomFieldWidget extends CWidget
 		// get the attribute name to be saving to - post array hence []
 		$attribute = "[{$this->customField->id}]custom_value";
 		// get the label
-		$htmlOptions = array_merge($htmlOptions, array('labelOptions' => array('label'=>$customField->description)));
+		$this->htmlOptions = array_merge($this->htmlOptions, array('labelOptions' => array('label'=>$customField->description)));
 		// set up validation
 		$customValue->customValidatorParams = array(
 			'customField' => $customField,
@@ -41,18 +41,18 @@ class CustomFieldWidget extends CWidget
 				// if should be datepicker
 				if($customField->data_type == CustomField::data_typeDate)
 				{
-					echo $this->form->datepickerRow($attribute, $htmlOptions, $customValue);
+					echo $this->form->datepickerRow($attribute, $this->htmlOptions, $customValue);
 				}
 				// othewise text box widget
 				else
 				{
-					echo $this->form->textFieldRow($attribute, $htmlOptions, $customValue);
+					echo $this->form->textFieldRow($attribute, $this->htmlOptions, $customValue);
 				}
 				break;
 
 			case CustomField::validation_typeRange :
 				$range = explode('-', $customField->validation_text);
-				$this->form->rangeFieldRow($attribute, NULL, $range[0], $range[1], NULL, NULL, $htmlOptions, $customValue);
+				$this->form->rangeFieldRow($attribute, NULL, $range[0], $range[1], NULL, NULL, $this->htmlOptions, $customValue);
 				break;
 
 			case CustomField::validation_typeSQLSelect :
@@ -60,7 +60,7 @@ class CustomFieldWidget extends CWidget
 				if(Yii::app()->params->listMax >= Yii::app()->db->createCommand("SELECT COUNT(*) FROM ($sql) alias1")->queryScalar())
 				{
 					// Drop down list widget
-					echo $this->form->dropDownListRow($attribute, Yii::app()->db->createCommand($sql)->query(), $htmlOptions, $customValue);
+					echo $this->form->dropDownListRow($attribute, Yii::app()->db->createCommand($sql)->query(), $this->htmlOptions, $customValue);
 				}
 				else
 				{
@@ -70,7 +70,7 @@ class CustomFieldWidget extends CWidget
 						'form'=>$this->form,
 						'customField'=>$customField,
 						'name'=>$attribute,
-						'htmlOptions'=>$htmlOptions['labelOptions'],
+						'htmlOptions'=>$this->htmlOptions,
 					));
 				}
 
@@ -81,7 +81,7 @@ class CustomFieldWidget extends CWidget
 				// first need to get a list where array keys are the same as the display members
 				$list = explode(',', $customField->validation_text);
 				
-				echo $this->form->dropDownListRow($attribute, array_combine($list, $list), $htmlOptions, $customValue);
+				echo $this->form->dropDownListRow($attribute, array_combine($list, $list), $this->htmlOptions, $customValue);
 				break;
 		}
 	}
