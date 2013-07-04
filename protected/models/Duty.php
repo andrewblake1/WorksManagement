@@ -210,7 +210,7 @@ class Duty extends CustomFieldActiveRecord
 		{
 			// retrieve the DutyData
 			$dutyData = DutyData::model()->findByAttributes(array(
-				'planning_id'=>$planning_id,
+				'planning_id'=>$planning_id,	
 				'duty_step_id'=>$dutyStep->id,
 			));
 		}

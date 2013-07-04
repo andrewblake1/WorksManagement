@@ -266,7 +266,7 @@ class TaskToResource extends ActiveRecord
 	 * overidden as mulitple models
 	 */
 	public function updateSave(&$models=array())
-	{
+	{	
 		$saved = true;
 		$this->resourceData->attributes = $_POST['ResourceData'];
 
