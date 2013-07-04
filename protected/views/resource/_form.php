@@ -8,6 +8,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('unit_price');
 
+	$form->dropDownListRow('level', Planning::$levels);
+
 $this->endWidget();
 
 ?>

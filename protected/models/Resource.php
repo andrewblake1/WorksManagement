@@ -10,11 +10,13 @@
  * @property integer $resource_category_id
  * @property integer $maximum
  * @property integer $deleted
+ * @property string $level
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property ResourceCategory $resourceCategory
  * @property User $updatedBy
+ * @property Level $level0
  * @property ResourceToSupplier[] $resourceToSuppliers
  * @property TaskTemplateToResource[] $taskTemplateToResources
  */
@@ -24,6 +26,8 @@ class Resource extends ActiveRecord
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Resource';
+
+	public $searchLevel;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -37,9 +41,7 @@ class Resource extends ActiveRecord
 			array('resource_category_id, maximum', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>64),
 			array('unit_price', 'length', 'max'=>7),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, description, unit_price, resource_category_id, maximum', 'safe', 'on'=>'search'),
+            array('level', 'length', 'max'=>10),
 		));
 	}
 
@@ -53,10 +55,12 @@ class Resource extends ActiveRecord
         return array(
             'resourceCategory' => array(self::BELONGS_TO, 'ResourceCategory', 'resource_category_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'resourceToSuppliers' => array(self::HAS_MANY, 'ResourceToSupplier', 'resource_id'),
             'taskTemplateToResources' => array(self::HAS_MANY, 'TaskTemplateToResource', 'resource_id'),
         );
     }
+
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -67,6 +71,7 @@ class Resource extends ActiveRecord
 			'resource_category_id' => 'Resource category',
 			'unit_price' => 'Unit price',
 			'maximum' => 'Maximum',
+			'searchLevel' => 'Level',
 		));
 	}
 
@@ -83,6 +88,7 @@ class Resource extends ActiveRecord
 			't.description',
 			't.unit_price',
 			't.maximum',
+			'level0.name AS searchLevel',
 		);
 
 		// where
@@ -91,16 +97,22 @@ class Resource extends ActiveRecord
 		$criteria->compare('t.unit_price',$this->unit_price);
 		$criteria->compare('t.maximum',$this->maximum);
 		$criteria->compare('t.resource_category_id', $this->resource_category_id);
+		$criteria->compare('level0.name',$this->searchLevel,true);
+
+		// with
+		$criteria->with = array(
+			'level0',
+		);
 
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
 		$columns[] = $this->linkThisColumn('description');
 		$columns[] = 'unit_price';
 		$columns[] = 'maximum';
+		$columns[] = 'searchLevel';
 		
 		return $columns;
 	}

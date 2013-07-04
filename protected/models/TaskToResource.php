@@ -194,16 +194,19 @@ class TaskToResource extends ActiveRecord
 		parent::afterFind();
 	}
 
-	public function insertResourceData()
+// TODO:repeated in duties
+	/*
+	 * overidden as mulitple models
+	 */
+	public function createSave(&$models=array())
 	{
-		if($this->level === null)
-		{
-			$this->level = Planning::planningLevelTaskInt;
-		}
-// TODO: a lot of this repeated in resource controller - abstract out - perhaps into PlanningController static function
+		$saved = true;
+
 		// ensure existance of a related ResourceData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
-		if(($level = $this->level) == Planning::planningLevelTaskInt)
+		$resource = Resource::model()->findByPk($this->resource_id);
+
+		if(($level = $resource->level) == Planning::planningLevelTaskInt)
 		{
 			$planning_id = $this->task_id;
 		}
@@ -226,17 +229,20 @@ class TaskToResource extends ActiveRecord
 
 			$planning_id = $planning->id;
 		}
+
 		// try insert and catch and dump any error - will ensure existence
 		try
 		{
 			$resourceData = new ResourceData;
 			$resourceData->planning_id = $planning_id;
 			$resourceData->resource_id = $this->resource_id;
-			$resourceData->resource_to_supplier_id = $this->resource_to_supplier_id;
 			$resourceData->level = $level;
+
+			$resourceData->resource_to_supplier_id = $this->resource_to_supplier_id;
 			$resourceData->quantity = $this->quantity;
 			$resourceData->duration = $this->duration;
 			$resourceData->start = $this->start;
+			
 			$resourceData->updated_by = Yii::app()->user->id;
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
 			$resourceData->insert();
@@ -246,28 +252,40 @@ class TaskToResource extends ActiveRecord
 			// retrieve the ResourceData
 			$resourceData = ResourceData::model()->findByAttributes(array(
 				'planning_id'=>$planning_id,
-				'resource_id'=>$this->resource_id,
+				'resource_id'=>$resource->id,
 			));
-			// update the resource data
-// TODO: will have issue here if level changes then planning_id will need to change also may need to converge or diverge
-//			$resourceData->planning_id = $planning_id;
-			$resourceData->resource_id = $this->resource_id;
-			$resourceData->resource_to_supplier_id = $this->resource_to_supplier_id;
-//			$resourceData->level = $level;
-			$resourceData->quantity = $this->quantity;
-			$resourceData->duration = $this->duration;
-			$resourceData->start = $this->start;
-			// NB not recording return here as might fail deliberately if already exists - though will go to catch
-			$resourceData->dbCallback('save');
 		}
 
 		// link this Resource to the ResourceData
 		$this->resource_data_id = $resourceData->id;
+		
+		return $saved & parent::createSave($models);
+	}
+	
+	/*
+	 * overidden as mulitple models
+	 */
+	public function updateSave(&$models=array())
+	{
+		$saved = true;
+		$this->resourceData->attributes = $_POST['ResourceData'];
+
+		// attempt save of related ResourceData
+		if($saved &= $this->resourceData->updateSave($models))
+		{
+			if(!$saved = $this->dbCallback('save'))
+			{
+				// put the model into the models array used for showing all errors
+				$models[] = $this;
+			}
+		}
+		
+		return $saved & parent::updateSave($models);
 	}
 
 	/*
 	 * overidden as mulitple models
-	 */
+	 
 	public function updateSave(&$models=array())
 	{
 		$saved = true;
@@ -279,17 +297,17 @@ class TaskToResource extends ActiveRecord
 		$this->insertResourceData();
 
 		return $saved & parent::updateSave($models);
-	}
+	}*/
 
 	/*
 	 * overidden as mulitple models
-	 */
+	 
 	public function createSave(&$models=array())
 	{
 		$this->insertResourceData();
 	
 		return parent::createSave($models);
-	}
+	}*/
 
 }
 
