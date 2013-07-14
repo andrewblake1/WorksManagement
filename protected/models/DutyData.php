@@ -102,22 +102,25 @@ class DutyData extends ActiveRecord
 	 * need to alter table name here to black hole table name
 	 * @param type $attributes
 	 */
+// TODO: NB: this is effectively changing the _data level for all connected duties and not just a single duty - hence the operation
+// of this may need to be assesed as this may be limiting perhaps?
 	public function update($attributes = null)
 	{
 		// if the level has changed
 		if($this->attributeChanged('level'))
 		{
-			$oldLevel = $this->oldAttributeValue;
+			$oldLevel = $this->getOldAttributeValue('level');
 			$newLevel = $this->level;
 			// if the level number is decreasing - heading toward project - converge
 			if($newLevel < $oldLevel)
 			{
 				// ansestor search
 				$targetPlanningId = Yii::app()->db->createCommand('
-					SELECT id FROM tbl_planning
+					SELECT id FROM tbl_planning planning
 					WHERE planning.level = :newLevel
 						AND planning.lft <= (SELECT lft FROM tbl_planning WHERE id = :planningId)
 						AND planning.rgt >= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
+						AND planning.root = (SELECT root FROM tbl_planning WHERE id = :planningId)
 				')->queryScalar(array(':newLevel'=>$newLevel, ':planningId'=>$this->planning_id));
 		
 				// if a duty_data already exists for this step at new target level
@@ -125,7 +128,7 @@ class DutyData extends ActiveRecord
 					SELECT * FROM tbl_duty_data
 					WHERE duty_step_id = :dutyStepId
 						AND planning_id = :targetPlanningId
-					')->queryRow(array(':dutyStepId'=>$this->duty_step_id, ':targetPlanningId'=>$targetPlanningId)))
+					')->queryRow(true, array(':dutyStepId'=>$this->duty_step_id, ':targetPlanningId'=>$targetPlanningId)))
 				{
 					$exisDutyDataTarget = new self;
 					$exisDutyDataTarget->attributes = $exisDutyDataRow;
@@ -149,13 +152,13 @@ class DutyData extends ActiveRecord
 					
 					// remove this record as all the related duty items should now point at the correct new target
 					// this will remove the old custom fields as well by cascade delete
-					$this->delete();
+					return $this->delete();
 				}
 				// otherwise just shifting this one to the new level
 				else
 				{
 					$this->planning_id = $targetPlanningId;
-					parent::update();
+					return parent::update();
 				}
 			}
 			// otherwise the level number is increasing - heading toward task - diverge
@@ -168,26 +171,27 @@ class DutyData extends ActiveRecord
 				$dutyData->level = $newLevel;
 				$dutyData->responsible = $this->responsible;
 				$dutyData->updated = $this->updated;
+				$dutyData->updated_by = Yii::app()->user->id;
 				// loop thru all relevant new planning id's
 				// child hunt
 				$command=Yii::app()->db->createCommand('
-					SELECT id FROM tbl_planning
+					SELECT id FROM tbl_planning planning
 					WHERE planning.level = :newLevel
 						AND planning.lft >= (SELECT lft FROM tbl_planning WHERE id = :planningId)
 						AND planning.rgt <= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
+						AND planning.root = (SELECT root FROM tbl_planning WHERE id = :planningId)
 				');
 				foreach($command->queryColumn(array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planningId)
 				{
 					$dutyData->planning_id = $planningId;
 					$dutyData->insert();
 					
-					// make the relevant duty items relate - related at task level
+					// make the relevant duty items relate
 					Yii::app()->db->createCommand('
-						UPDATE tbl_duty duty JOIN tbl_planning planning ON duty.task_id = planning.id
-						SET duty.duty_data_id = :newDutyDataId
-						WHERE planning.lft >= (SELECT lft FROM tbl_planning WHERE id = :planningId)
-							AND planning.rgt <= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
-					')->execute(array(':newDutyDataId'=>$dutyData->id, ':planningId'=>$planningId));
+						UPDATE tbl_duty
+						SET duty_data_id = :newDutyDataId
+						WHERE duty_data_id = :oldDutyDataId
+					')->execute(array(':newDutyDataId'=>$dutyData->id, ':oldDutyDataId'=>$this->id));
 					
 					// create new set of custom fields for each
 					Yii::app()->db->createCommand('
@@ -207,7 +211,7 @@ class DutyData extends ActiveRecord
 					')->execute(array(
 						':newDutyDataId'=>$dutyData->id,
 						':updatedBy'=>$this->updated_by,
-						':oldDutyDataID'=>  $this->id,
+						':oldDutyDataId'=>  $this->id,
 					));
 					
 					// reset for next iteration
@@ -217,9 +221,16 @@ class DutyData extends ActiveRecord
 
 				// remove this record as all the related duty items should now point at the correct new target
 				// this will remove the old custom fields as well by cascade delete
+				// NB: don't return the delete as may delete 0 rows due to orphan maintenance in duty update trigger
 				$this->delete();
+				
+				return true;
 			}
 		}
+		else
+		{
+			return parent::update();
+		}
 	}
-
+	
 }

@@ -951,7 +951,11 @@ fb($errorMessage);
 		}
 if(count($m = $this->getErrors()))
 {
-	$s=1;
+	$t=1;
+}
+elseif(!$return)
+{
+	$t=1;
 }
 		return $return;
 	}

@@ -47,6 +47,9 @@ class Action extends ActiveRecord
 		// start by joining result on override to id to obtain
 		$criteria->join = '
 			LEFT JOIN tbl_action override ON t.id = override.override_id
+				AND (
+					t.client_id = override.client_id
+					OR t.project_template_id = override.project_template_id)
 		';
 
 		// and finally - exclude any records that have a child

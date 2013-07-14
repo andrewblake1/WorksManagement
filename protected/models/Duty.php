@@ -158,114 +158,6 @@ class Duty extends CustomFieldActiveRecord
 		parent::afterFind();
 	}
 	
-	/*
-	 * overidden as mulitple models
-	 */
-	public function createSave(&$models=array())
-	{
-		$saved = true;
-
-		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
-		// if this is task level
-		$dutyStep = DutyStep::model()->findByPk($this->duty_step_id);
-
-		if(($level = $dutyStep->level) == Planning::planningLevelTaskInt)
-		{
-			$planning_id = $this->task_id;
-		}
-		else
-		{
-			// get the desired ansestor
-			$planning = Planning::model()->findByPk($this->task_id);
-
-			while($planning = $planning->parent)
-			{
-				if($planning->level == $level)
-				{
-					break;
-				}
-			}
-			if(empty($planning))
-			{
-				throw new Exception();
-			}
-
-			$planning_id = $planning->id;
-		}
-
-		// try insert and catch and dump any error - will ensure existence
-		try
-		{
-			$dutyData = new DutyData;
-			$dutyData->planning_id = $planning_id;
-			$dutyData->duty_step_id = $this->duty_step_id;
-			$dutyData->level = $level;
-			$dutyData->responsible = NULL;
-			$dutyData->updated = NULL;
-			$dutyData->updated_by = Yii::app()->user->id;
-			// NB not recording return here as might fail deliberately if already exists - though will go to catch
-			$dutyData->insert();
-		}
-		catch (CDbException $e)
-		{
-			// retrieve the DutyData
-			$dutyData = DutyData::model()->findByAttributes(array(
-				'planning_id'=>$planning_id,	
-				'duty_step_id'=>$dutyStep->id,
-			));
-		}
-
-		// link this Duty to the DutyData
-		$this->duty_data_id = $dutyData->id;
-		
-		return $saved & parent::createSave($models);
-	}
-	
-	// this needs overriding here as really should be part of duty data however handling the variables at this level
-	protected function createCustomFields(&$models=array())
-	{
-		// initialise the saved variable to show no errors in case the are no
-		// model customValues - otherwise will return null indicating a save error
-		$saved = true;
-
-		// loop thru all custom fields pivots
-		foreach(eval("return {$this->evalCustomFieldPivots};") as $customFieldPivot)
-		{
-			$endToCustomFieldPivot = new $this->evalClassEndToCustomFieldPivot;
-			$endToCustomFieldPivot->{$this->evalColumnCustomFieldModelTemplateId} = $customFieldPivot->id;
-
-			$endToCustomFieldPivot->{$this->evalColumnEndId} = $this->{$this->evalThisColumnEndId};
-			if(isset($_POST[get_class($endToCustomFieldPivot)][$endToCustomFieldPivot->{$this->evalCustomFieldPivot}->custom_field_id]['custom_value']))
-			{
-				$endToCustomFieldPivot->custom_value=$_POST[get_class($endToCustomFieldPivot)][$endToCustomFieldPivot->{$this->evalCustomFieldPivot}->custom_field_id]['custom_value'];
-			}
-			else
-			{
-				$endToCustomFieldPivot->setDefault($customFieldPivot->customField);
-			}
-
-			// attempt save
-			// try insert and catch and dump any error - will ensure existence
-			try
-			{
-				$saved &= $endToCustomFieldPivot->dbCallback('save');
-				// record any errors
-				$models[] = $endToCustomFieldPivot;
-			}
-			catch (CDbException $e)
-			{
-				// just loose the error - don't really want to update the custom field as exis may already contain good data
-				// already exists so retrieve and update instead
-	/*			$exisEndToCustomFieldPivot = $evalClassEndToCustomFieldPivot::model()->findByAttibutes(array(
-					'custom_field_to_duty_step_id'=>$endToCustomFieldPivot->custom_field_to_duty_step_id,
-					'duty_data_id'=>$endToCustomFieldPivot->duty_data_id,
-				));*/
-			}
-		}
-		
-		return $saved;
-	}
-
 	public function getIncompleteDependencies()
 	{
 		// get any incomplete children
@@ -433,17 +325,13 @@ class Duty extends CustomFieldActiveRecord
 	{
 		$saved = true;
 		$this->dutyData->attributes = $_POST['DutyData'];
-
-		// if we need to update a customValue and a custom value has been sent (in case was logical to display it)
-		if($this->dutyData->dutyStep->customField)
-		{
-			// validate and save. NB: should only enforce the mandatory custom field option if completing
-			$this->dutyData->dutyStep->customField->mandatory = $this->dutyData->updated;
-		}
-
+		
 		// attempt save of related DutyData
 		if($saved &= $this->dutyData->updateSave($models))
 		{
+			// duty data_id may well have changed in the database so re-read this for this this model
+			$duty = Duty::model()->findByPk($this->id);
+			$this->duty_data_id = $duty->duty_data_id;
 			if(!$saved = $this->dbCallback('save'))
 			{
 				// put the model into the models array used for showing all errors
@@ -452,6 +340,114 @@ class Duty extends CustomFieldActiveRecord
 		}
 		
 		return $saved & parent::updateSave($models);
+	}
+
+	/*
+	 * overidden as mulitple models
+	 */
+	public function createSave(&$models=array())
+	{
+		$saved = true;
+
+		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
+		// if this is task level
+		$dutyStep = DutyStep::model()->findByPk($this->duty_step_id);
+
+		if(($level = $dutyStep->level) == Planning::planningLevelTaskInt)
+		{
+			$planning_id = $this->task_id;
+		}
+		else
+		{
+			// get the desired ansestor
+			$planning = Planning::model()->findByPk($this->task_id);
+
+			while($planning = $planning->parent)
+			{
+				if($planning->level == $level)
+				{
+					break;
+				}
+			}
+			if(empty($planning))
+			{
+				throw new Exception();
+			}
+
+			$planning_id = $planning->id;
+		}
+
+		// try insert and catch and dump any error - will ensure existence
+		try
+		{
+			$dutyData = new DutyData;
+			$dutyData->planning_id = $planning_id;
+			$dutyData->duty_step_id = $this->duty_step_id;
+			$dutyData->level = $level;
+			$dutyData->responsible = NULL;
+			$dutyData->updated = NULL;
+			$dutyData->updated_by = Yii::app()->user->id;
+			// NB not recording return here as might fail deliberately if already exists - though will go to catch
+			$dutyData->insert();
+		}
+		catch (CDbException $e)
+		{
+			// retrieve the DutyData
+			$dutyData = DutyData::model()->findByAttributes(array(
+				'planning_id'=>$planning_id,	
+				'duty_step_id'=>$dutyStep->id,
+			));
+		}
+
+		// link this Duty to the DutyData
+		$this->duty_data_id = $dutyData->id;
+		
+		return $saved & parent::createSave($models);
+	}
+	
+	// this needs overriding here as really should be part of duty data however handling the variables at this level
+	protected function createCustomFields(&$models=array())
+	{
+		// initialise the saved variable to show no errors in case the are no
+		// model customValues - otherwise will return null indicating a save error
+		$saved = true;
+
+		// loop thru all custom fields pivots
+		foreach(eval("return {$this->evalCustomFieldPivots};") as $customFieldPivot)
+		{
+			$endToCustomFieldPivot = new $this->evalClassEndToCustomFieldPivot;
+			$endToCustomFieldPivot->{$this->evalColumnCustomFieldModelTemplateId} = $customFieldPivot->id;
+
+			$endToCustomFieldPivot->{$this->evalColumnEndId} = $this->{$this->evalThisColumnEndId};
+			if(isset($_POST[get_class($endToCustomFieldPivot)][$endToCustomFieldPivot->{$this->evalCustomFieldPivot}->custom_field_id]['custom_value']))
+			{
+				$endToCustomFieldPivot->custom_value=$_POST[get_class($endToCustomFieldPivot)][$endToCustomFieldPivot->{$this->evalCustomFieldPivot}->custom_field_id]['custom_value'];
+			}
+			else
+			{
+				$endToCustomFieldPivot->setDefault($customFieldPivot->customField);
+			}
+
+			// attempt save
+			// try insert and catch and dump any error - will ensure existence
+			try
+			{
+				$saved &= $endToCustomFieldPivot->dbCallback('save');
+				// record any errors
+				$models[] = $endToCustomFieldPivot;
+			}
+			catch (CDbException $e)
+			{
+				// just loose the error - don't really want to update the custom field as exis may already contain good data
+				// already exists so retrieve and update instead
+	/*			$exisEndToCustomFieldPivot = $evalClassEndToCustomFieldPivot::model()->findByAttibutes(array(
+					'custom_field_to_duty_step_id'=>$endToCustomFieldPivot->custom_field_to_duty_step_id,
+					'duty_data_id'=>$endToCustomFieldPivot->duty_data_id,
+				));*/
+			}
+		}
+		
+		return $saved;
 	}
 
 }
