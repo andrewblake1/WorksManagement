@@ -161,7 +161,9 @@ return array(
 					),
 				),
 				'Action'=>array(
-					'DutyStepDependency',
+					'DutyStepDependency'=>array(
+						'DutyStepBranch'
+						),
 					'DutyStep'=>array(
 						'CustomFieldDutyStepCategory'=>array(
 							'CustomFieldToDutyStep',
@@ -170,7 +172,9 @@ return array(
 				),
 				'Client'=>array(
 					'Action'=>array(
-						'DutyStepDependency',
+						'DutyStepDependency'=>array(
+							'DutyStepBranch'
+							),
 						'DutyStep'=>array(
 							'CustomFieldDutyStepCategory'=>array(
 								'CustomFieldToDutyStep',
@@ -211,7 +215,9 @@ return array(
 					),
 					'ProjectTemplate'=>array(
 						'Action'=>array(
-							'DutyStepDependency',
+							'DutyStepDependency'=>array(
+								'DutyStepBranch'
+								),
 							'DutyStep'=>array(
 								'CustomFieldDutyStepCategory'=>array(
 									'CustomFieldToDutyStep',

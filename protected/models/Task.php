@@ -70,7 +70,7 @@ class Task extends CustomFieldActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('project_id, task_template_id, crew_id', 'required'),
+			array('project_id, task_template_id, crew_id, mode_id', 'required'),
 			array('task_template_id, quantity, mode_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
 			array('planned, preferred, name, location', 'safe'),

@@ -58,7 +58,6 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 		UserController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
 	}
 
-
 	$form->textFieldRow('planned');
 
 	$form->checkBoxListInlineRow('preferred', array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'));
@@ -74,6 +73,8 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 			$customFieldsAdded = TRUE;
 		}
 	}
+
+	ModeController::listWidgetRow($model, $form, 'mode_id');
 
 	$this->widget('CustomFieldWidgets',array(
 		'model'=>$model,
