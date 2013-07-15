@@ -15,6 +15,7 @@
  * @property TaskTemplate $taskTemplate
  * @property Resource $resource
  * @property User $updatedBy
+ * @property TaskTemplateToResourceToMode[] $taskTemplateToResourceToModes
  */
 class TaskTemplateToResource extends ActiveRecord
 {
@@ -54,6 +55,7 @@ class TaskTemplateToResource extends ActiveRecord
             'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
             'resource' => array(self::BELONGS_TO, 'Resource', 'resource_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'taskTemplateToResourceToModes' => array(self::HAS_MANY, 'TaskTemplateToResourceToMode', 'task_template_to_resource_id'),
         );
     }
 

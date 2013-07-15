@@ -19,6 +19,7 @@
  * @property integer $preferred_sat
  * @property integer $preferred_sun
  * @property string $crew_id
+ * @property integer $mode_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
@@ -29,6 +30,7 @@
  * @property Planning $level0
  * @property Crew $crew
  * @property Planning $id0
+ * @property Mode $mode
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToCustomFieldToTaskTemplate[] $taskToCustomFieldToTaskTemplates
  * @property TaskToMaterial[] $taskToMaterials
@@ -69,7 +71,7 @@ class Task extends CustomFieldActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('project_id, task_template_id, crew_id', 'required'),
-			array('task_template_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('task_template_id, quantity, mode_id', 'numerical', 'integerOnly'=>true),
 			array('id, level, in_charge_id, project_id, crew_id', 'length', 'max'=>10),
 			array('planned, preferred, name, location', 'safe'),
 		));
@@ -110,6 +112,7 @@ class Task extends CustomFieldActiveRecord
             'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
             'crew' => array(self::BELONGS_TO, 'Crew', 'crew_id'),
             'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
+            'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
             'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
             'taskToCustomFieldToTaskTemplates' => array(self::HAS_MANY, 'TaskToCustomFieldToTaskTemplate', 'task_id'),
             'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_id'),

@@ -196,7 +196,9 @@ return array(
 									),
 									'TaskToCustomFieldToTaskTemplate',
 //									'TaskToPurchaseOrder',
-									'TaskToResource',
+									'TaskToResource'=>array(
+										'ResourceDataToMode',
+									),
 								),
 							),
 						),
@@ -214,6 +216,7 @@ return array(
 								'CustomFieldDutyStepCategory'=>array(
 									'CustomFieldToDutyStep',
 								),
+								'DutyStepToMode',
 							),
 						),
 						'CustomFieldProjectCategory'=>array(
@@ -229,13 +232,16 @@ return array(
 							'TaskTemplateToAction',
 							'TaskTemplateToMaterial',
 							'TaskTemplateToMaterialGroup',
-							'TaskTemplateToResource',
+							'TaskTemplateToResource'=>array(
+								'TaskTemplateToResourceToMode',
+							),
 						),
 					),
 					'ProjectType',
 				),
 				'CustomField',
 				'DefaultValue',
+				'Mode',
 				'Report'=>array(
 					'ReportToAuthItem',
 					'SubReport',

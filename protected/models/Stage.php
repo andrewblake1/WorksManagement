@@ -26,9 +26,6 @@ class Stage extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('description', 'required'),
 			array('description', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, description', 'safe', 'on'=>'search'),
 		));
 	}
 

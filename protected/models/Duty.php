@@ -347,8 +347,6 @@ class Duty extends CustomFieldActiveRecord
 	 */
 	public function createSave(&$models=array())
 	{
-		$saved = true;
-
 		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
 		$dutyStep = DutyStep::model()->findByPk($this->duty_step_id);
@@ -377,8 +375,11 @@ class Duty extends CustomFieldActiveRecord
 			$planning_id = $planning->id;
 		}
 
-		// try insert and catch and dump any error - will ensure existence
-		try
+		// retrieve or create
+		if(!$dutyData = DutyData::model()->findByAttributes(array(
+				'planning_id'=>$planning_id,	
+				'duty_step_id'=>$dutyStep->id,
+			)))
 		{
 			$dutyData = new DutyData;
 			$dutyData->planning_id = $planning_id;
@@ -390,19 +391,11 @@ class Duty extends CustomFieldActiveRecord
 			// NB not recording return here as might fail deliberately if already exists - though will go to catch
 			$dutyData->insert();
 		}
-		catch (CDbException $e)
-		{
-			// retrieve the DutyData
-			$dutyData = DutyData::model()->findByAttributes(array(
-				'planning_id'=>$planning_id,	
-				'duty_step_id'=>$dutyStep->id,
-			));
-		}
 
 		// link this Duty to the DutyData
 		$this->duty_data_id = $dutyData->id;
 		
-		return $saved & parent::createSave($models);
+		return parent::createSave($models);
 	}
 	
 	// this needs overriding here as really should be part of duty data however handling the variables at this level

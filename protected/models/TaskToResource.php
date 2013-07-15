@@ -198,10 +198,8 @@ class TaskToResource extends ActiveRecord
 	/*
 	 * overidden as mulitple models
 	 */
-	public function createSave(&$models=array())
+	public function createSave(&$models=array(), $taskTemplateToResource=null)
 	{
-		$saved = true;
-
 		// ensure existance of a related ResourceData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
 		$resource = Resource::model()->findByPk($this->resource_id);
@@ -230,36 +228,40 @@ class TaskToResource extends ActiveRecord
 			$planning_id = $planning->id;
 		}
 
-		// try insert and catch and dump any error - will ensure existence
-		try
+		// retrieve ResourceData - or insert if doesn't exist
+		if(!$resourceData = ResourceData::model()->findByAttributes(array(
+			'planning_id'=>$planning_id,
+			'resource_id'=>$resource->id,
+		)))
 		{
 			$resourceData = new ResourceData;
 			$resourceData->planning_id = $planning_id;
 			$resourceData->resource_id = $this->resource_id;
 			$resourceData->level = $level;
-
 			$resourceData->resource_to_supplier_id = $this->resource_to_supplier_id;
 			$resourceData->quantity = $this->quantity;
 			$resourceData->duration = $this->duration;
 			$resourceData->start = $this->start;
-			
 			$resourceData->updated_by = Yii::app()->user->id;
-			// NB not recording return here as might fail deliberately if already exists - though will go to catch
 			$resourceData->insert();
-		}
-		catch (CDbException $e)
-		{
-			// retrieve the ResourceData
-			$resourceData = ResourceData::model()->findByAttributes(array(
-				'planning_id'=>$planning_id,
-				'resource_id'=>$resource->id,
-			));
+			// add modes if this from template
+			if($taskTemplateToResource)
+			{
+				foreach($taskTemplateToResource->taskTemplateToResourceToModes as $taskTemplateToResourceToMode)
+				{
+					$resourceDataToMode = new ResourceDataToMode;
+					$resourceDataToMode->resource_data_id = $taskToResource->resource_data_id;
+					$resourceDataToMode->mode_id = $taskTemplateToResourceToMode->mode_id;
+					$resourceDataToMode->updated_by =$taskToResource>updated_by;
+					$resourceDataToMode->insert();
+				}
+			}
 		}
 
 		// link this Resource to the ResourceData
 		$this->resource_data_id = $resourceData->id;
 		
-		return $saved & parent::createSave($models);
+		return parent::createSave($models);
 	}
 	
 	/*
