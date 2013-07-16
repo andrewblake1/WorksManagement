@@ -99,6 +99,18 @@ class DutyStepDependencyController extends Controller
 			$tabs
 		);
 
+		// add tab to branching
+		$this->addTab(
+			DutyStepBranch::getNiceNamePlural(),
+			'DutyStepBranch',
+			'admin',
+			array_merge($getParams, array(
+				'duty_step_dependency_ids'=>$dutyStepDependencyIds,
+				'duty_step_dependency_id'=>array_pop($dutyStepDependencyIds),
+			)),
+			$tabs
+		);
+ 
 		return $tabs;
 	}
 

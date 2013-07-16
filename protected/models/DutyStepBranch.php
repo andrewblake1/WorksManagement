@@ -19,24 +19,11 @@
  */
 class DutyStepBranch extends ActiveRecord
 {
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return DutyStepBranch the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'tbl_duty_step_branch';
-	}
-
+	public $searchCustomField;
+	
+	static $niceNamePlural = 'Branches';
+	static $niceName = 'Branch';
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -49,9 +36,6 @@ class DutyStepBranch extends ActiveRecord
 			array('id, custom_field_to_duty_step_id, duty_step_id, updated_by', 'numerical', 'integerOnly'=>true),
 			array('duty_step_dependency_id', 'length', 'max'=>10),
 			array('compare', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, duty_step_dependency_id, custom_field_to_duty_step_id, compare, duty_step_id, updated_by', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,35 +60,54 @@ class DutyStepBranch extends ActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'duty_step_dependency_id' => 'Duty Step Dependency',
-			'custom_field_to_duty_step_id' => 'Custom Field To Duty Step',
-			'compare' => 'Compare',
-			'duty_step_id' => 'Duty Step',
-			'updated_by' => 'Updated By',
+			'custom_field_to_duty_step_id' => 'Custom field',
+			'searchCustomField' => 'Custom field',
 		);
 	}
 
 	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 * @return DbCriteria the search/filter conditions.
 	 */
-	public function search()
+	public function getSearchCriteria()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
+		$criteria=new DbCriteria;
 
-		$criteria=new CDbCriteria;
+		// select
+		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
+			'customField.description AS searchCustomField',
+			't.compare',
+		);
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('duty_step_dependency_id',$this->duty_step_dependency_id,true);
-		$criteria->compare('custom_field_to_duty_step_id',$this->custom_field_to_duty_step_id);
-		$criteria->compare('compare',$this->compare,true);
-		$criteria->compare('duty_step_id',$this->duty_step_id);
-		$criteria->compare('updated_by',$this->updated_by);
+		// where
+		$criteria->compare('t.duty_step_dependency_id',$this->duty_step_dependency_id);
+		$criteria->compare('t.compare',$this->compare, true);
+		$criteria->compare('customField.description',$this->searchCustomField, true);
+		
+		// with
+		$criteria->with = array(
+			'customFieldToDutyStep.customField',
+		);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		return $criteria;
 	}
+
+	public function getAdminColumns()
+	{
+		$columns[] = 'searchCustomField';
+		$columns[] = 'compare';
+		
+		return $columns;
+	}
+
+	public static function getDisplayAttr()
+	{
+		return array(
+			'customFieldToDutyStep->customField->description',
+			'compare',
+		);
+	}
+ 
 }
+
+?>

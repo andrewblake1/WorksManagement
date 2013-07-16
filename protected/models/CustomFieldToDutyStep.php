@@ -46,6 +46,16 @@ class CustomFieldToDutyStep extends ActiveRecord
 		));
 	}
 
+	public function scopeDutyStep($duty_step_id)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('duty_step_id', $duty_step_id);
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+	
 	/**
 	 * @return array relational rules.
 	 */

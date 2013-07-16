@@ -167,7 +167,6 @@ class Assembly extends ActiveRecord
 		
 		return $this;
 	}
-	
 
 }
 
