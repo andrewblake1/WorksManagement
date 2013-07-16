@@ -123,10 +123,17 @@ class TaskToResource extends ActiveRecord
 		$criteria->compare('level0.name',$this->searchLevel,true);
 		$criteria->compare('t.task_id',$this->task_id);
 		
+		// limit to matching task mode
+		$criteria->join = "
+			JOIN tbl_task ON t.task_id = task.id
+			JOIN tbl_resource_data resourceData ON t.resource_data_id = resourceData.id
+			JOIN tbl_resource_data_to_mode resourceDataToMode
+				ON resourceData.id = resourceDataToMode.resource_data_id
+				AND task.mode_id = resourceDataToMode.mode_id
+		";
+		
 		//  with
 		$criteria->with = array(
-			'task',
-			'resourceData',
 			'resourceData.resource',
 			'resourceData.resourceToSupplier',
 			'resourceData.resourceToSupplier.supplier',

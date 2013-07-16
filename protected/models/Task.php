@@ -249,10 +249,6 @@ class Task extends CustomFieldActiveRecord
 			$this->preferred_sun = in_array('6', $this->preferred);
 		}
 
-		
-//		$this->id0->name = $this->name;
-//		$this->id0->in_charge_id = $this->in_charge_id;
-			
 		return parent::beforeSave();
 	}
 

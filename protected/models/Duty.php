@@ -175,7 +175,7 @@ class Duty extends CustomFieldActiveRecord
 
 		parent::afterFind();
 	}
-	
+
 	public function getIncompleteDependencies()
 	{
 		// get any incomplete children
@@ -202,7 +202,7 @@ class Duty extends CustomFieldActiveRecord
 
 		return $criteria;
 	}
-	
+
 	public function getImmediateDependencies()
 	{
 		// get any incomplete children
@@ -227,7 +227,7 @@ class Duty extends CustomFieldActiveRecord
 
 		return $criteria;
 	}
-	
+
 	/* 
 	 * factory method for creating Duties based on actionid and task id
 	 */
@@ -253,7 +253,7 @@ class Duty extends CustomFieldActiveRecord
 		
 		return $saved;
 	}
-	
+
 	public static function getParentForeignKey($referencesModel, $foreignKeys = array()) {
 		// No actual TaskToAdmin - actual parent is task
 		if($referencesModel == 'TaskToAction')
@@ -263,7 +263,7 @@ class Duty extends CustomFieldActiveRecord
 		
 		return parent::getParentForeignKey($referencesModel, $foreignKeys);
 	}
-	
+
 	/*
 	 * Need to override becuase parent is TaskToAction which doesn't exist
 	 */
