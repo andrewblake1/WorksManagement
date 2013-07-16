@@ -162,7 +162,6 @@ class DutyController extends Controller
 	// need to show previous steps custom fields on duty form as disabled - recursive
 	public function previousStepsCustomFields($model, $form)
 	{
-$t3 = $model->attributes;
 		// loop thru previous duty steps
 		foreach(Duty::model()->findAll($immediateDependencies = $model->immediateDependencies) as $duty)
 		{
@@ -176,12 +175,10 @@ $t3 = $model->attributes;
 				'categoryModelName'=>'CustomFieldDutyStepCategory',
 				'htmlOptions'=>array('disabled'=>'disabled'),
 			));
-$t2 = $duty->attributes;
 			
 			// recurse thru any children
 			foreach(Duty::model()->findAll($immediateDependencies = $duty->immediateDependencies) as $duty2)
 			{
-$t = $duty2->attributes;
 				$this->previousStepsCustomFields($duty2, $form);
 			}
 		}

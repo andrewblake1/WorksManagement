@@ -58,7 +58,6 @@ class Duty extends CustomFieldActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('task_id', 'required'),
-//			array('duty_step_id, responsible, level', 'numerical', 'integerOnly'=>true),
 			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 			array('task_id, duty_data_id', 'length', 'max'=>10),
 			array('action_id, updated', 'safe'),
@@ -107,21 +106,41 @@ class Duty extends CustomFieldActiveRecord
 		// NB: taking first non null of either the user assigned to duty at project or user in charge at target duty level
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
-			'*',
+			't.*',
 		);
 
+		//join for conditional branching - looking to exclude where condition clause not met
+		// NB: this may create duplicates if more than one condition
+		$criteria->join="
+			LEFT JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
+			LEFT JOIN v_duty dutyChild
+				ON dutyStepDependency.child_duty_step_id = dutyChild.duty_step_id 
+				AND t.task_id = dutyChild.task_id
+			LEFT JOIN tbl_duty_data_to_custom_field_to_duty_step dutyDataToCustomFieldToDutyStep ON dutyChild.duty_data_id = dutyDataToCustomFieldToDutyStep.duty_data_id
+			LEFT JOIN tbl_duty_step_branch dutyStepBranch
+				ON dutyDataToCustomFieldToDutyStep.custom_field_to_duty_step_id = dutyStepBranch.custom_field_to_duty_step_id
+				AND dutyStepDependency.id = dutyStepBranch.duty_step_dependency_id
+		";
+		$criteria->condition = "
+			dutyStepBranch.compare IS NULL OR
+			dutyDataToCustomFieldToDutyStep.custom_value REGEXP dutyStepBranch.compare
+		";
+
+		// this added becuase of possible duplicates caused by branching
+		$criteria->distinct = true;
+
 		// where
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('derived_assigned_to_name',$this->derived_assigned_to_name,true);
-		$criteria->compare('updated',Yii::app()->format->toMysqlDateTime($this->updated));
-		$criteria->compare('due',Yii::app()->format->toMysqlDateTime($this->due));
+		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.derived_assigned_to_name',$this->derived_assigned_to_name,true);
+		$criteria->compare('t.updated',Yii::app()->format->toMysqlDateTime($this->updated));
+		$criteria->compare('t.due',Yii::app()->format->toMysqlDateTime($this->due));
 		$criteria->compare('t.task_id',$this->task_id);
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
 		$criteria->compare('t.action_id',$this->action_id);
-		
+
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
-		
+
 		return $criteria;
 	}
 
@@ -149,7 +168,6 @@ class Duty extends CustomFieldActiveRecord
 		$this->responsible = $this->dutyData->responsible;
 		$this->action_id = $this->dutyData->dutyStep->action_id;
 		$this->duty_step_id = $this->dutyData->dutyStep->id;
-//		$this->level = $this->dutyData->level;
 		if(!$this->derived_assigned_to_id)
 		{
 			$this->derived_assigned_to_id = 1;
@@ -170,15 +188,6 @@ class Duty extends CustomFieldActiveRecord
 			'dutyChild.due AS due',
 		);
 		
-		/*
-		 * Working with v_duty as alias t
-		 * -- join to any dependant steps
-		 * JOIN tbl_duty_step_dependency dutyStepDependency ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
-		 * -- join back to v_duty to obain the details of depandant rows
-		 * JOIN tbl_duty_data dutyDataDependency ON dutyStepDependency.child_duty_step_id = dutyDataDependency.duty_step_id
-		 * JOIN v_duty dutyChild ON dutyDataDependency.id = dutyChild.duty_data_id
-
-		 */
 		$criteria->join="
 			JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
 			JOIN v_duty dutyChild
@@ -203,15 +212,6 @@ class Duty extends CustomFieldActiveRecord
 			'dutyChild.*',
 		);
 		
-		/*
-		 * Working with tbl_duty as alias t
-		 * -- join to any dependant steps
-		 * JOIN tbl_duty_step_dependency dutyStepDependency ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
-		 * -- join back to v_duty to obain the details of depandant rows
-		 * JOIN tbl_duty_data dutyDataDependency ON dutyStepDependency.child_duty_step_id = dutyDataDependency.duty_step_id
-		 * JOIN v_duty dutyChild ON dutyDataDependency.id = dutyChild.duty_data_id
-
-		 */
 		$criteria->join="
 			JOIN tbl_duty_data dutyData ON t.duty_data_id = dutyData.id
 			JOIN tbl_duty_step_dependency dutyStepDependency ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
