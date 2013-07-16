@@ -1,8 +1,11 @@
 <?php
+// only show form for updating - i.e. no new form here
+if(!$model->isNewRecord)
+{
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'task_id'));
 
-	// only allow to be checked if dependencies have been checked
+	// only allow to be checked if dependencies have been completed
 	if(ViewDuty::model()->findAll($incompleteDependencies = $model->incompleteDependencies))
 	{
 		// display a 3 column grid widget with paging showing dependency step, who is responsible if any, and the due date for it
@@ -27,16 +30,19 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 		$model->updateButtonText = 'Complete';
 	}
 
-	if(!empty($model->dutyData->custom_value_id))
-	{
-		$this->widget('CustomFieldWidget', array(
-			'form'=>$form,
-			'customValue'=>$model->dutyData->customValue,
-			'customField'=>$model->dutyData->dutyStep->customField,
-			'relationToCustomField'=>'duty->dutyStep->customField',
-		));
-	}
+	$this->widget('CustomFieldWidgets',array(
+		'model'=>$model,
+		'form'=>$form,
+		'relationModelToCustomFieldModelTemplate'=>'dutyDataToCustomFieldToDutyStep',
+		'relationModelToCustomFieldModelTemplates'=>'dutyData->dutyDataToCustomFieldToDutySteps',
+		'relationCustomFieldModelTemplate'=>'customFieldToDutyStep',
+		'relation_category'=>'customFieldDutyStepCategory',
+		'categoryModelName'=>'CustomFieldDutyStepCategory',
+	));
+
+	// need to show previous steps custom fields on duty form as disabled
+	$this->previousStepsCustomFields($model, $form);
 
 $this->endWidget();
-
+}
 ?>
