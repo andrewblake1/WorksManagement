@@ -74,6 +74,7 @@ class DutyStepDependency extends ActiveRecord
     {
         return array(
             'child_duty_step_id' => 'Depends on',
+            'parent_duty_step_id' => 'Depended on by',
             'action_id' => 'Action',
 			'searchChildDutyStep' => 'Depends on',
 			'searchLeadInDays' => 'Lead in days',

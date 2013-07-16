@@ -12,7 +12,11 @@ class DutyStepDependencyController extends Controller
 
 	protected function createRedirect($model)
 	{
-		parent::createRedirect($model, ActionController::getCreateRedirectParams($this->modelName));
+		$params = 
+			array_merge(array('id'=>$model->id), Controller::getValidGetParams($this->modelName)) +
+				array('duty_step_dependency_ids'=>array_merge(empty($_GET['duty_step_dependency_ids']) ? array() : $_GET['duty_step_dependency_ids'], array($model->id)));
+		// go to update view
+		$this->redirect(array_merge(array('update'), $params));
 	}
 
 	// called within AdminViewWidget
@@ -116,6 +120,9 @@ class DutyStepDependencyController extends Controller
 
 	// override the tabs when viewing assemblies for a particular task
 	public function setTabs($model) {
+		// unset this before calling parent due to multi level issue - top level has no parent
+		unset($_GET['parent_duty_step_id']);
+
 		if($model)
 		{
 			parent::setTabs(NULL);
