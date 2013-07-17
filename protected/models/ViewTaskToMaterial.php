@@ -26,7 +26,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		);
 	}
 
-	public function tableName() {
+/*	public function tableName() {
 
 		// need to create the temp table that we will use - required to get the accumlated total - only want to do one shot though hence the atatic
 		static $tableName = NULL;
@@ -36,7 +36,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		}
 
 		return parent::tableName();
-	}
+	}*/
 	
 	/**
 	 * @return DbCriteria the search/filter conditions.

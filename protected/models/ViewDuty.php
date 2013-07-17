@@ -65,6 +65,19 @@ class ViewDuty extends ViewActiveRecord
 	{
 		return Duty::model()->attributeLabels();
 	}
+	
+	public function tableName() {
+
+		static $tableName = NULL;
+		if(!$tableName)
+		{
+			Yii::app()->db->createCommand("CALL pro_get_duties_from_planning(5)")->execute();
+			return $tableName = 'tmp_duty';
+		}
+
+		return parent::tableName();
+	}
+
 }
 
 ?>
