@@ -55,7 +55,7 @@ class CustomFieldToDutyStep extends ActiveRecord
 		
 		return $this;
 	}
-	
+
 	/**
 	 * @return array relational rules.
 	 */

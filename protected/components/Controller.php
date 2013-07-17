@@ -801,7 +801,8 @@ class Controller extends CController
 						// add link to the first item in the row -- if not first row
 						if($rowCount > 1)
 						{
-							$breadcrumbs[] = array($tabsRow[0]['label'] => array($tabsRow[0]['url']));
+							$url = is_array($tabsRow[0]['url']) ? $tabsRow[0]['url'] : array($tabsRow[0]['url']);
+							$breadcrumbs[] = array($tabsRow[0]['label'] => $url);
 						}
 
 						if(($rowCount != $numTabRows) || $tabCount)

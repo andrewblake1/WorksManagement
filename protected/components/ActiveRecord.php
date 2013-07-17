@@ -1000,7 +1000,7 @@ elseif(!$return)
 	 *  Set to 0 - hence undeleting an existing record. 
 	 */
 	public function insert($attributes = null) {
-		
+
 		try
 		{
 			$result = parent::insert($attributes);
@@ -1067,11 +1067,15 @@ elseif(!$return)
 						throw($e);
 					}
 				}
+				else
+				{
+					// not handled so re-throw
+					throw($e);
+				}
 			}
 			else
 			{
 				// not handled so re-throw
-$t = $this->attributes;
 				throw($e);
 			}
 		}
