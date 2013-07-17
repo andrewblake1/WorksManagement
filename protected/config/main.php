@@ -168,6 +168,7 @@ return array(
 						'CustomFieldDutyStepCategory'=>array(
 							'CustomFieldToDutyStep',
 						),
+						'DutyStepToMode',
 					),
 				),
 				'Client'=>array(
@@ -179,6 +180,7 @@ return array(
 							'CustomFieldDutyStepCategory'=>array(
 								'CustomFieldToDutyStep',
 							),
+							'DutyStepToMode',
 						),
 					),
 					'AssemblyToClient',

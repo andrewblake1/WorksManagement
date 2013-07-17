@@ -16,6 +16,11 @@
  */
 class DutyStepToMode extends ActiveRecord
 {
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Mode';
+
 	public $searchMode;
 
 	/**
@@ -85,6 +90,13 @@ class DutyStepToMode extends ActiveRecord
 		return $columns;
 	}
 
+	public static function getDisplayAttr()
+	{
+		return array(
+			'mode->description',
+		);
+	}
+ 
 }
 
 ?>

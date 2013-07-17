@@ -5,6 +5,7 @@
 	if(!empty($_GET['duty_step_dependency_ids']))
 	{
 		$dutyStepDependency = DutyStepDependency::model()->findByPk(array_pop($_GET['duty_step_dependency_ids']));
+		$model->duty_step_id = $dutyStepDependency->child_duty_step_id;
 		$form->hiddenField('duty_step_id');
 	}
 

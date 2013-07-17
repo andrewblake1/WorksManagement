@@ -39,6 +39,6 @@ class DutyStepBranchController extends Controller
 		$dutyStepDependencyController->setActiveTabs(NULL, DutyStepBranch::getNiceNamePlural(), DutyStepDependency::getNiceNamePlural());
 		static::$tabs = $dutyStepDependencyController->tabs;
 		
-		$this->breadcrumbs = static::getBreadCrumbTrail();
+		$this->breadcrumbs = $dutyStepDependencyController::getBreadCrumbTrail();
 	}
 }
