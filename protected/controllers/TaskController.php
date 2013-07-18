@@ -15,6 +15,8 @@ class TaskController extends Controller
 		// ensure unique task de
 		$transaction = Yii::app()->db->beginTransaction();
 		$model->beforeValidate();
+		// need to turn of foreign key checks otherwise if mode not selected will fail to create
+		Yii::app()->db->createCommand('SET foreign_key_checks = 0')->execute();
 		if($model->createSave($models, false))
 		{
 			// customValues

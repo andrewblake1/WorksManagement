@@ -71,7 +71,7 @@ class ViewDuty extends ViewActiveRecord
 		static $tableName = NULL;
 		if(!$tableName)
 		{
-			Yii::app()->db->createCommand("CALL pro_get_duties_from_planning(5)")->execute();
+			Yii::app()->db->createCommand("CALL pro_get_duties_from_planning({$_GET['task_id']})")->execute();
 			return $tableName = 'tmp_duty';
 		}
 

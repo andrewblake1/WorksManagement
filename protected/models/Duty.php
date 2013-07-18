@@ -109,26 +109,6 @@ class Duty extends CustomFieldActiveRecord
 			't.*',
 		);
 
-		//join for conditional branching - looking to exclude where condition clause not met
-		// NB: this may create duplicates if more than one condition
-		$criteria->join="
-			LEFT JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
-			LEFT JOIN v_duty dutyChild
-				ON dutyStepDependency.child_duty_step_id = dutyChild.duty_step_id 
-				AND t.task_id = dutyChild.task_id
-			LEFT JOIN tbl_duty_data_to_custom_field_to_duty_step dutyDataToCustomFieldToDutyStep ON dutyChild.duty_data_id = dutyDataToCustomFieldToDutyStep.duty_data_id
-			LEFT JOIN tbl_duty_step_branch dutyStepBranch
-				ON dutyDataToCustomFieldToDutyStep.custom_field_to_duty_step_id = dutyStepBranch.custom_field_to_duty_step_id
-				AND dutyStepDependency.id = dutyStepBranch.duty_step_dependency_id
-		";
-		$criteria->condition = "
-			dutyStepBranch.compare IS NULL OR
-			dutyDataToCustomFieldToDutyStep.custom_value REGEXP dutyStepBranch.compare
-		";
-
-		// this added becuase of possible duplicates caused by branching
-		$criteria->distinct = true;
-
 		// where
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.derived_assigned_to_name',$this->derived_assigned_to_name,true);
