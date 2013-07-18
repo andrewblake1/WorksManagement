@@ -1,13 +1,6 @@
 <?php
 $this->pageTitle=Yii::app()->name . ' - Login';
-$this->widget('bootstrap.widgets.TbBreadcrumbs', array(
-    'links'=>array('Login'),
-));
 ?>
-
-<h1>Login</h1>
-
-<p>Please fill out the following form with your login credentials:</p>
 
 <div class="well">
 	<?php $form=$this->beginWidget('CActiveForm', array(
@@ -19,7 +12,9 @@ $this->widget('bootstrap.widgets.TbBreadcrumbs', array(
 		),
 	)); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+<div class="span3">
+  <img src="http://localhost/WorksManagement/images/worksmanagement.png">
+</div>
 	<?php echo $form->errorSummary($model,NULL,NULL,$htmlOptions=array('class'=>'alert alert-error')); ?>
 	<fieldset>
 		<?php echo $form->labelEx($model,'username'); ?>
