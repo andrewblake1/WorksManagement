@@ -26,7 +26,7 @@ class ViewTaskToMaterial extends ViewActiveRecord
 		);
 	}
 
-/*	public function tableName() {
+	public function tableName() {
 
 		// need to create the temp table that we will use - required to get the accumlated total - only want to do one shot though hence the atatic
 		static $tableName = NULL;
@@ -35,8 +35,8 @@ class ViewTaskToMaterial extends ViewActiveRecord
 			Yii::app()->db->createCommand("CALL pro_planning_to_assembly({$_GET['task_id']})")->execute();
 		}
 
-		return parent::tableName();
-	}*/
+		return $tableName = parent::tableName();
+	}
 	
 	/**
 	 * @return DbCriteria the search/filter conditions.

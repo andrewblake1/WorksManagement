@@ -99,7 +99,7 @@ class TaskToResource extends ActiveRecord
 
 		// select
 		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
+			't.*',	// needed for after find
 			'resourceData.resource_to_supplier_id AS searchResourceToSupplierId',
 			'resourceData.resource_id AS resource_id',
 			'resource.description AS searchResource',
@@ -125,21 +125,17 @@ class TaskToResource extends ActiveRecord
 		
 		// limit to matching task mode
 		$criteria->join = "
-			JOIN tbl_task ON t.task_id = task.id
+			JOIN tbl_task task ON t.task_id = task.id
 			JOIN tbl_resource_data resourceData ON t.resource_data_id = resourceData.id
+			JOIN tbl_resource resource ON resourceData.resource_id = resource.id
+			JOIN tbl_level level0 ON resourceData.level = level0.id
 			JOIN tbl_resource_data_to_mode resourceDataToMode
 				ON resourceData.id = resourceDataToMode.resource_data_id
 				AND task.mode_id = resourceDataToMode.mode_id
+			LEFT JOIN tbl_resource_to_supplier resourceToSupplier ON resource.id = resourceToSupplier.resource_id
+			LEFT JOIN tbl_supplier supplier ON resourceToSupplier.supplier_id = supplier.id
 		";
 		
-		//  with
-		$criteria->with = array(
-			'resourceData.resource',
-			'resourceData.resourceToSupplier',
-			'resourceData.resourceToSupplier.supplier',
-			'resourceData.level0',
-		);
-
 		return $criteria;
 	}
 
@@ -191,6 +187,8 @@ class TaskToResource extends ActiveRecord
 	}
 
 	public function afterFind() {
+		parent::afterFind();
+
 		$this->resource_to_supplier_id = $this->resourceData->resource_to_supplier_id;
 		$this->quantity = $this->resourceData->quantity;
 		$this->duration = $this->resourceData->duration;
@@ -198,7 +196,6 @@ class TaskToResource extends ActiveRecord
 		$this->resource_id = $this->resourceData->resource_id;
 		$this->level = $this->resourceData->level;
 		
-		parent::afterFind();
 	}
 
 // TODO:repeated in duties
