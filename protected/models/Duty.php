@@ -425,9 +425,11 @@ class Duty extends CustomFieldActiveRecord
 			// try insert and catch and dump any error - will ensure existence
 			try
 			{
-				$saved &= $endToCustomFieldPivot->dbCallback('save');
+				// calling insert here and dumping any errors as will error because duty_data shared over numerous duties
+				// TODO: duty_data should extend customfieldactiverecord and not duty!!
+				$endToCustomFieldPivot->insert();
 				// record any errors
-				$models[] = $endToCustomFieldPivot;
+//				$models[] = $endToCustomFieldPivot;
 			}
 			catch (CDbException $e)
 			{

@@ -14,7 +14,8 @@ class TaskController extends Controller
 
 		// ensure unique task de
 		$transaction = Yii::app()->db->beginTransaction();
-		if($model->createSave($models))
+		$model->beforeValidate();
+		if($model->createSave($models, false))
 		{
 			// customValues
 			$this->widget('CustomFieldWidgets',array(

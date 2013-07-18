@@ -12,9 +12,9 @@ abstract class CustomFieldActiveRecord extends ActiveRecord
 	/*
 	 * overidden as mulitple models
 	 */
-	public function createSave(&$models=array())
+	public function createSave(&$models=array(), $runValidation=true)
 	{
-		if($saved = $this->dbCallback('save'))
+		if($saved = $this->dbCallback('save', array($runValidation)))
 		{
 			// attempt creation of customValues
 			$saved &= $this->createCustomFields($models);

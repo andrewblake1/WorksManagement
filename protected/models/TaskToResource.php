@@ -257,9 +257,9 @@ class TaskToResource extends ActiveRecord
 				foreach($taskTemplateToResource->taskTemplateToResourceToModes as $taskTemplateToResourceToMode)
 				{
 					$resourceDataToMode = new ResourceDataToMode;
-					$resourceDataToMode->resource_data_id = $taskToResource->resource_data_id;
+					$resourceDataToMode->resource_data_id = $resourceData->id;
 					$resourceDataToMode->mode_id = $taskTemplateToResourceToMode->mode_id;
-					$resourceDataToMode->updated_by =$taskToResource>updated_by;
+					$resourceDataToMode->updated_by = $resourceData->updated_by;
 					$resourceDataToMode->insert();
 				}
 			}

@@ -350,7 +350,7 @@ class Task extends CustomFieldActiveRecord
 	/*
 	 * overidden as mulitple models
 	 */
-	public function createSave(&$models=array())
+	public function createSave(&$models=array(), $runValidation=true)
 	{
 		// need to insert a row into the planning nested set model so that the id can be used here
 		
@@ -366,7 +366,7 @@ class Task extends CustomFieldActiveRecord
 			$this->quantity = $this->taskTemplate->quantity;
 			// parent create save will add customValues -- all we need to do is take care care of adding the other things if no errors
 			// NB: by calling the parent this is added into $models
-			if($saved = parent::createSave($models))
+			if($saved = parent::createSave($models, $runValidation))
 			{
 				// attempt creation of resources
 				$saved &= $this->createResources($models);
