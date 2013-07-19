@@ -6,7 +6,9 @@
         Purpose of the stylesheet follows.
 */
 
-/* override some twitter bootstrap styles to enlarge the clickable area of icons in the admin view without altering the visible view in any way */
+/* override some twitter bootstrap styles */
+
+/* enlarge the clickable area of icons in the admin view without altering the visible view in any way */
 td.button-column {
 vertical-align: middle;
 white-space: nowrap;
@@ -14,4 +16,18 @@ white-space: nowrap;
 
 .button-column a {
 padding: 8px;
+}
+
+/* improve the look of nested field sets */
+legend {
+	border-style: none;
+	padding: 0 10px;
+    width: auto;
+	margin: 0;
+}
+
+fieldset {
+	border: 1px solid #E3E3E3;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
 }

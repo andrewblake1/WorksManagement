@@ -629,7 +629,6 @@ $t = $model->attributes;
 	 */
 	public function getSearchSort()
 	{
-		$t = $this->rules();
 		foreach ($this->rules() as $rule)
 		{
 			if(isset($rule['on']) && $rule['on'] == 'search' && $rule[1] == 'safe')

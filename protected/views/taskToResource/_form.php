@@ -12,6 +12,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->dropDownListRow('level', Planning::$levels);
 
+	ModeController::listWidgetRow($model, $form, 'mode_id');
+
 $this->endWidget();
 
 ?>

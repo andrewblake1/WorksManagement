@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $task_template_id
  * @property integer $resource_id
+ * @property integer $mode_id
  * @property integer $quantity
  * @property string $duration
  * @property integer $updated_by
@@ -15,7 +16,7 @@
  * @property TaskTemplate $taskTemplate
  * @property Resource $resource
  * @property User $updatedBy
- * @property TaskTemplateToResourceToMode[] $taskTemplateToResourceToModes
+ * @property Mode $mode
  */
 class TaskTemplateToResource extends ActiveRecord
 {
@@ -25,6 +26,7 @@ class TaskTemplateToResource extends ActiveRecord
 	 */
 	public $searchResource;
 	public $searchTaskTemplate;
+	public $searchMode;
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -38,8 +40,8 @@ class TaskTemplateToResource extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_template_id, resource_id, quantity', 'required'),
-			array('task_template_id, resource_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('task_template_id, resource_id, mode_id, quantity', 'required'),
+			array('task_template_id, resource_id, mode_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('duration', 'date', 'format'=>'H:m'),
 		));
 	}
@@ -55,7 +57,7 @@ class TaskTemplateToResource extends ActiveRecord
             'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
             'resource' => array(self::BELONGS_TO, 'Resource', 'resource_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'taskTemplateToResourceToModes' => array(self::HAS_MANY, 'TaskTemplateToResourceToMode', 'task_template_to_resource_id'),
+            'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
         );
     }
 
@@ -68,6 +70,7 @@ class TaskTemplateToResource extends ActiveRecord
 			'task_template_id' => 'Task Type',
 			'resource_id' => 'Resource Type',
 			'duration' => 'Duration (HH:mm)',
+			'searchMode' => 'Mode',
 		));
 	}
 
@@ -86,9 +89,11 @@ class TaskTemplateToResource extends ActiveRecord
 			'resource.description AS searchResource',
 			't.quantity',
 			't.duration',
+			'mode.description AS searchMode',
 		);
 
 		// where
+		$criteria->compare('mode.description',$this->searchMode,true);
 		$criteria->compare('resource.description',$this->searchResource);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.duration',Yii::app()->format->toMysqlTime($this->duration));
@@ -97,6 +102,7 @@ class TaskTemplateToResource extends ActiveRecord
 		// with
 		$criteria->with = array(
 			'resource',
+			'mode',
 		);
 
 		return $criteria;
@@ -107,6 +113,7 @@ class TaskTemplateToResource extends ActiveRecord
         $columns[] = static::linkColumn('searchResource', 'Resource', 'resource_id');
  		$columns[] = 'quantity';
 		$columns[] = 'duration';
+ 		$columns[] = 'searchMode';
 		
 		return $columns;
 	}
@@ -118,6 +125,7 @@ class TaskTemplateToResource extends ActiveRecord
 	{
 		return array(
 			'resource->description',
+			'mode->description',
 		);
 	}
 

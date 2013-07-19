@@ -22,7 +22,7 @@ class ViewDashboardDuty extends ViewDuty
 			return $tableName = 'tmp_duty';
 		}
 
-		return parent::tableName();
+		return 'v_duty';
 	}
 
 	public function getAdminColumns()

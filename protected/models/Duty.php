@@ -117,7 +117,7 @@ class Duty extends CustomFieldActiveRecord
 		$criteria->compare('t.task_id',$this->task_id);
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
 		$criteria->compare('t.action_id',$this->action_id);
-
+		
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
 

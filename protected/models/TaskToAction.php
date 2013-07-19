@@ -65,6 +65,13 @@ class TaskToAction extends ViewActiveRecord
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.derived_importance',$this->derived_importance,true);
 		$criteria->compare('t.task_id',$this->task_id);
+		
+		// elimate actions where due to mode or branching there are no duties
+		Yii::app()->db->createCommand("CALL pro_get_duties_from_planning({$_GET['task_id']})")->execute();
+		$criteria->distinct = TRUE;
+		$criteria->join = "
+			JOIN tmp_duty duty ON t.action_id = duty.action_id
+		";
 
 		return $criteria;
 	}

@@ -202,9 +202,7 @@ return array(
 									),
 									'TaskToCustomFieldToTaskTemplate',
 //									'TaskToPurchaseOrder',
-									'TaskToResource'=>array(
-										'ResourceDataToMode',
-									),
+									'TaskToResource',
 								),
 							),
 						),
@@ -240,9 +238,7 @@ return array(
 							'TaskTemplateToAction',
 							'TaskTemplateToMaterial',
 							'TaskTemplateToMaterialGroup',
-							'TaskTemplateToResource'=>array(
-								'TaskTemplateToResourceToMode',
-							),
+							'TaskTemplateToResource',
 						),
 					),
 					'ProjectType',

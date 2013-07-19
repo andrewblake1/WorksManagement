@@ -334,11 +334,6 @@ EOD;
 			$this->_authManager->createOperation('TaskTemplateToResourceRead', 'TaskTemplateToResource read');
 			$task->addChild('TaskTemplateToResourceRead');
 
-			$task=$this->_authManager->createTask('TaskTemplateToResourceToMode', 'TaskTemplateToResourceToMode task');
-			$systemAdminRole->addChild('TaskTemplateToResourceToMode');
-			$this->_authManager->createOperation('TaskTemplateToResourceToModeRead', 'TaskTemplateToResourceToMode read');
-			$task->addChild('TaskTemplateToResourceToModeRead');
-
 			$task=$this->_authManager->createTask('User', 'User task');
 			$systemAdminRole->addChild('User');
 			$this->_authManager->createOperation('UserRead', 'User read');
@@ -424,11 +419,6 @@ EOD;
 			$projectManagerRole->addChild('Planning');
 			$this->_authManager->createOperation('PlanningRead', 'Planning read');
 			$task->addChild('PlanningRead');
-
-			$task=$this->_authManager->createTask('ResourceDataToMode', 'ResourceDataToMode task');
-			$projectManagerRole->addChild('ResourceDataToMode');
-			$this->_authManager->createOperation('ResourceDataToModeRead', 'ResourceDataToMode read');
-			$task->addChild('ResourceDataToModeRead');
 
 			$task=$this->_authManager->createTask('Task', 'Task task');
 			$projectManagerRole->addChild('Task');

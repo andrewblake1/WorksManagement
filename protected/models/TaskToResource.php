@@ -25,6 +25,7 @@ class TaskToResource extends ActiveRecord
 	public $searchResource;
 	public $searchTaskQuantity;
 	public $searchTotalDuration;
+	public $searchMode;
 	/**
 	 * @var string nice model name for use in output
 	 */
@@ -37,6 +38,7 @@ class TaskToResource extends ActiveRecord
 	public $resource_to_supplier_id;
 	public $searchLevel;
 	public $resource_id;
+	public $mode_id;
 	public $level;
 
 	/**
@@ -47,8 +49,8 @@ class TaskToResource extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_id, resource_id, quantity, duration', 'required'),
-			array('level, resource_id, resource_to_supplier_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('task_id, resource_id, mode_id, quantity, duration', 'required'),
+			array('level, resource_id, mode_id, resource_to_supplier_id, quantity', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			array('task_id', 'length', 'max'=>10),
 			array('resource_to_supplier_id', 'safe'),
@@ -87,6 +89,7 @@ class TaskToResource extends ActiveRecord
 			'searchTaskQuantity' => 'Task quantity',
 			'searchTotalDuration' => 'Total time',
 			'searchLevel' => 'Level',
+			'searchMode' => 'Mode',
 		));
 	}
 
@@ -110,9 +113,11 @@ class TaskToResource extends ActiveRecord
 			'resourceData.duration AS duration',
 			'resourceData.start AS start',
 			'level0.name AS searchLevel',
+			'mode.description AS searchMode',
 		);
 
 		// where
+		$criteria->compare('mode.description',$this->searchMode,true);
 		$criteria->compare('resource.description',$this->searchResource,true);
 		$criteria->compare('supplier.name',$this->searchSupplier,true);
 		$criteria->compare('quantity',$this->quantity);
@@ -129,9 +134,9 @@ class TaskToResource extends ActiveRecord
 			JOIN tbl_resource_data resourceData ON t.resource_data_id = resourceData.id
 			JOIN tbl_resource resource ON resourceData.resource_id = resource.id
 			JOIN tbl_level level0 ON resourceData.level = level0.id
-			JOIN tbl_resource_data_to_mode resourceDataToMode
-				ON resourceData.id = resourceDataToMode.resource_data_id
-				AND task.mode_id = resourceDataToMode.mode_id
+			JOIN tbl_mode mode
+				ON resourceData.mode_id = mode.id
+				AND task.mode_id = resourceData.mode_id
 			LEFT JOIN tbl_resource_to_supplier resourceToSupplier ON resource.id = resourceToSupplier.resource_id
 			LEFT JOIN tbl_supplier supplier ON resourceToSupplier.supplier_id = supplier.id
 		";
@@ -149,6 +154,7 @@ class TaskToResource extends ActiveRecord
 		$columns[] = 'searchTotalDuration:time';
 		$columns[] = 'start:time';
 		$columns[] = 'searchLevel';
+		$columns[] = 'searchMode';
 		
 		return $columns;
 	}
@@ -157,7 +163,7 @@ class TaskToResource extends ActiveRecord
 	 * Retrieves a sort array for use in CActiveDataProvider.
 	 * @return array the for data provider that contains the sort condition.
 	 */
-	public function getSearchSort()
+/*	public function getSearchSort()
 	{
 		return array(
 			'searchResourceToSupplier',
@@ -166,13 +172,17 @@ class TaskToResource extends ActiveRecord
 			'searchTaskQuantity',
 			'duration',
 			'searchTotalDuration',
+			'searchMode',
 			'start',
 		);
-	}
+	}*/
 	
 	static function getDisplayAttr()
 	{
-		return array('resourceData->resourceToSupplier->resource->description');
+		return array(
+			'resourceData->resourceToSupplier->resource->description',
+			'resourceData->mode->description',
+		);
 	}
 
 	public function beforeSave()
@@ -182,6 +192,7 @@ class TaskToResource extends ActiveRecord
 		$this->resourceData->start = $this->start;
 		$this->resourceData->resource_id = $this->resource_id;
 		$this->resourceData->level = $this->level;
+		$this->resourceData->mode_id = $this->mode_id;
 
 		return parent::beforeSave();
 	}
@@ -195,6 +206,7 @@ class TaskToResource extends ActiveRecord
 		$this->start = $this->resourceData->start;
 		$this->resource_id = $this->resourceData->resource_id;
 		$this->level = $this->resourceData->level;
+		$this->mode_id = $this->resourceData->mode_id;
 		
 	}
 
@@ -246,6 +258,7 @@ class TaskToResource extends ActiveRecord
 			$resourceData->quantity = $this->quantity;
 			$resourceData->duration = $this->duration;
 			$resourceData->start = $this->start;
+			$resourceData->mode_id = $this->mode_id;
 			$resourceData->updated_by = Yii::app()->user->id;
 			$resourceData->insert();
 			// add modes if this from template
