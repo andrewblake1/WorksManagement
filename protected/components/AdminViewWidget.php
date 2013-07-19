@@ -89,11 +89,6 @@ class AdminViewWidget extends CWidget
 		// the calling page
 		$this->_controller->actionCreate('myModal', $this->createModel);
 		
-		// add css overrides
-		$sourceFolder = YiiBase::getPathOfAlias('webroot.css');
-		$publishedFile = Yii::app()->assetManager->publish($sourceFolder . '/worksmanagement.css');
-		Yii::app()->clientScript->registerCssFile($publishedFile);
-		
 		parent::run();
 		
 		$modelName = $this->_controller->modelName;

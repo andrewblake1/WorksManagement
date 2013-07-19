@@ -1369,7 +1369,7 @@ class Controller extends CController
 		{
 			if($rule[1] == 'required' && in_array($fkField, explode(',', preg_replace('/\s/', '', $rule[0]))))
 			{
-				$allowNull = TRUE;
+				$allowNull = FALSE;
 			}
 		}
 

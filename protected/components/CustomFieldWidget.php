@@ -43,6 +43,11 @@ class CustomFieldWidget extends CWidget
 				{
 					echo $this->form->datepickerRow($attribute, $this->htmlOptions, $customValue);
 				}
+				// otherwise if should be timepicker
+				elseif($customField->data_type == CustomField::data_typeTime)
+				{
+					echo $this->form->timepickerRow($attribute, $this->htmlOptions, $customValue);
+				}
 				// othewise text box widget
 				else
 				{

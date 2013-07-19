@@ -261,7 +261,7 @@ class TaskToResource extends ActiveRecord
 			$resourceData->mode_id = $this->mode_id;
 			$resourceData->updated_by = Yii::app()->user->id;
 			$resourceData->insert();
-			// add modes if this from template
+/*			// add modes if this from template
 			if($taskTemplateToResource)
 			{
 				foreach($taskTemplateToResource->taskTemplateToResourceToModes as $taskTemplateToResourceToMode)
@@ -272,7 +272,7 @@ class TaskToResource extends ActiveRecord
 					$resourceDataToMode->updated_by = $resourceData->updated_by;
 					$resourceDataToMode->insert();
 				}
-			}
+			}*/
 		}
 
 		// link this Resource to the ResourceData

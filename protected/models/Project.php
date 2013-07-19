@@ -159,7 +159,7 @@ class Project extends CustomFieldActiveRecord
 		$columns[] = $this->linkThisColumn('id');
 		$columns[] = $this->linkThisColumn('name');
         $columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
-		$columns[] = static::linkColumn('searchProjectType', 'ProjectType', 'project_type_id');
+		$columns[] = 'searchProjectType';
 		$columns[] = 'travel_time_1_way';
 		$columns[] = 'critical_completion';
 		$columns[] = 'planned';

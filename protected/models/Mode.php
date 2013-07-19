@@ -14,7 +14,6 @@
  * @property User $updatedBy
  * @property ResourceDataToMode[] $resourceDataToModes
  * @property Task[] $tasks
- * @property TaskTemplateToResourceToMode[] $taskTemplateToResourceToModes
  */
 class Mode extends ActiveRecord
 {
@@ -44,7 +43,6 @@ class Mode extends ActiveRecord
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
 			'resourceDataToModes' => array(self::HAS_MANY, 'ResourceDataToMode', 'mode_id'),
 			'tasks' => array(self::HAS_MANY, 'Task', 'mode_id'),
-			'taskTemplateToResourceToModes' => array(self::HAS_MANY, 'TaskTemplateToResourceToMode', 'mode_id'),
 		);
 	}
 

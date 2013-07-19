@@ -283,6 +283,10 @@ class WMTbActiveForm extends TbActiveForm
 		{
 			 $this->datepickerRow($attribute, $htmlOptions ,$model);
 		}
+		elseif(!empty($columns[$attribute]) && $columns[$attribute]->dbType == 'time')
+		{
+			 $this->timepickerRow($attribute, $htmlOptions ,$model);
+		}
 		else
 		{
 			self::maxLength($model, $attribute, $htmlOptions);
@@ -295,17 +299,36 @@ class WMTbActiveForm extends TbActiveForm
 	{
 		$model = $model ? $model : $this->model;
 
+		// if no write access
+		if(!Controller::checkAccess(Controller::accessRead, get_class($model)))
+		{
+			// disable the datepicker so calendar doesn't pop up when user points
+			$htmlOptions['disabled'] = 'true';
+		}
+		$htmlOptions['id'] = $attribute;
 		$htmlOptions['options']['format'] = 'd M, yyyy';
+		$htmlOptions['prepend'] = '<i class="icon-calendar"></i>';
+
+		echo parent::datepickerRow($model, $attribute, $htmlOptions + $this->_htmlOptionReadonly);
+	}
+
+	public function timepickerRow($attribute, $htmlOptions = array(), $model = NULL)
+	{
+		$model = $model ? $model : $this->model;
 
 		// if no write access
 		if(!Controller::checkAccess(Controller::accessRead, get_class($model)))
 		{
 			// disable the datepicker so calendar doesn't pop up when user points
-			$htmlOptions['options']['disabled'] = 'true';
+			$htmlOptions['disabled'] = 'true';
 		}
 		$htmlOptions['id'] = $attribute;
+		$htmlOptions['append'] = '<i class="icon-time"></i>';
+		$htmlOptions['options']['showMeridian'] = false;
+		$htmlOptions['options']['disableFocus'] = true;
+		$htmlOptions['options']['defaultTime'] = false;
 
-		echo parent::datepickerRow($model, $attribute, $htmlOptions + $this->_htmlOptionReadonly);
+		echo parent::timepickerRow($model, $attribute, $htmlOptions + $this->_htmlOptionReadonly);
 	}
 	
 	public function passwordFieldRow($attribute, $htmlOptions = array(), $model = NULL)
