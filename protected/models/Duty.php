@@ -277,7 +277,7 @@ class Duty extends CustomFieldActiveRecord
 		}
 		
 		$user = User::model()->findByPk(Yii::app()->user->id);
-$incompleteDependencies = $this->incompleteDependencies;
+
 		if(Yii::app()->user->checkAccess('system admin'))
 		{
 			return true;
