@@ -68,7 +68,7 @@ class ViewDuty extends ViewActiveRecord
 	
 	public function tableName()
 	{
-		static $tableName = NULL;
+/*		static $tableName = NULL;
 
 		if(!$tableName)
 		{
@@ -77,14 +77,14 @@ class ViewDuty extends ViewActiveRecord
 			{
 				return $tablename = static::createTmpDuty();
 			}
-		}
+		}*/
 
-		return $tableName = parent::tableName();
+		return /*$tableName = */parent::tableName();
 	}
 	
-	protected static function getTmpDutyArgs()
+/*	protected static function getTmpDutyArgs()
 	{
-		// create argument string for procedure call that generates the temporary table used here */
+		// create argument string for procedure call that generates the temporary table used here 
 		// (IN in_planning_id INT, IN in_action_id INT, IN in_derived_assigned_to_id INT)
 		$args = empty($_GET['task_id']) ? 'NULL' : $_GET['task_id'];
 		$args .= ", ";
@@ -109,7 +109,7 @@ class ViewDuty extends ViewActiveRecord
 		{
 			return 'v_duty';
 		}
-	}
+	}*/
 
 }
 
