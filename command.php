@@ -4,6 +4,7 @@
 function fb($what){
   echo Yii::trace(CVarDumper::dumpAsString($what),'vardump');
 }
+date_default_timezone_set("Pacific/Auckland");
 
 require_once(dirname(__FILE__) . '/protected/extensions/yii-environment/Environment.php');
 
