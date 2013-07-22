@@ -156,29 +156,90 @@ class Duty extends CustomFieldActiveRecord
 		parent::afterFind();
 	}
 
-	public function getIncompleteDependencies()
+	/**
+	 * 
+	 * @param type $booeanAnswer	set to to true if just checking existance - quicker query
+	 * @return \DbCriteria
+	 */
+	public function getIncompleteDependencies($booeanAnswer = false)
 	{
 		// get any incomplete children
 		$criteria = new DbCriteria;
 		
 		$criteria->select = array(
-			't.id',
-			'dutyChild.description AS description',
-			'dutyChild.derived_assigned_to_name AS derived_assigned_to_name',
-			'dutyChild.due AS due',
+			'duty.id',
 		);
-		
+	
 		$criteria->join="
 			JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
-			JOIN v_duty dutyChild
-				ON dutyStepDependency.child_duty_step_id = dutyChild.duty_step_id 
-				AND t.task_id = dutyChild.task_id
+			JOIN tbl_duty_data dutyData ON dutyStepDependency.child_duty_step_id = dutyData.duty_step_id
+			JOIN tbl_duty_step dutyStep ON dutyData.duty_step_id = dutyStep.id
+			JOIN tbl_duty duty ON dutyData.id = duty.duty_data_id AND t.task_id = duty.task_id
 		";
 		
 		// this duties id
 		$criteria->compare('t.id', $this->id);
 		// child duties update values arn't set
-		$criteria->compareNull('dutyChild.updated');
+		$criteria->compareNull('dutyData.updated');
+
+			
+		if(!$booeanAnswer)
+		{
+			$criteria->select = array_merge($criteria->select, array(
+				'dutyStep.description AS description',
+				'(SELECT `date` FROM tbl_working_days w WHERE w.id = (SELECT id - dutyStep.lead_in_days FROM tbl_working_days WHERE `date` <= day.scheduled ORDER BY id DESC LIMIT 1)) as due',
+				"COALESCE(
+					IF(LENGTH(CONCAT_WS(' ',
+						responsibleContact.id,
+						responsibleContact.last_name,
+						responsibleContact.email
+						))=0, NULL, CONCAT_WS(' ',
+						responsibleContact.first_name,
+						responsibleContact.last_name,
+						responsibleContact.email
+						)),
+					IF(LENGTH(CONCAT_WS(' ',
+						dutyDefaultContact.first_name,
+						dutyDefaultContact.last_name,
+						dutyDefaultContact.email
+						))=0, NULL, CONCAT_WS(' ',
+						dutyDefaultContact.first_name,
+						dutyDefaultContact.last_name,
+						dutyDefaultContact.email
+						)),
+					CONCAT_WS(' ',
+						contact.first_name,
+						contact.last_name,
+						contact.email
+						)
+					) AS derived_assigned_to_name",
+			));
+
+			$criteria->join .="
+				JOIN tbl_task task ON duty.task_id = task.id
+				JOIN tbl_crew crew ON task.crew_id = crew.id
+				JOIN tbl_day day ON crew.day_id = day.id
+				JOIN tbl_duty_step_to_mode dutyStepToMode ON dutyStep.id = dutyStepToMode.duty_step_id AND task.mode_id = dutyStepToMode.mode_id
+				JOIN tbl_planning planning ON dutyData.planning_id = planning.id
+				LEFT JOIN tbl_task_template_to_action taskTemplateToAction
+					ON task.task_template_id = taskTemplateToAction.task_template_id
+					AND dutyStep.action_id = taskTemplateToAction.action_id
+				LEFT JOIN tbl_project_to_auth_item projectToAuthItem
+					ON day.project_id = projectToAuthItem.project_id
+					AND dutyStep.auth_item_name = projectToAuthItem.auth_item_name
+				LEFT JOIN tbl_project_to_auth_item_to_auth_assignment projectToAuthItemToAuthAssignment
+					ON projectToAuthItem.id = projectToAuthItemToAuthAssignment.project_to_auth_item_id
+				LEFT JOIN AuthAssignment ON projectToAuthItemToAuthAssignment.auth_assignment_id = AuthAssignment.id
+				LEFT JOIN tbl_user dutyDefault ON AuthAssignment.userid = dutyDefault.id
+				LEFT JOIN tbl_contact dutyDefaultContact ON dutyDefault.contact_id = dutyDefaultContact.id
+				LEFT JOIN tbl_user responsible ON dutyData.responsible = responsible.id
+				LEFT JOIN tbl_contact responsibleContact ON responsible.contact_id = responsibleContact.id
+				LEFT JOIN tbl_user inCharge ON planning.in_charge_id = inCharge.id
+				LEFT JOIN tbl_contact contact ON inCharge.contact_id = contact.id
+			";
+
+			$criteria->group = "dutyData.id";
+		}
 
 		return $criteria;
 	}
@@ -283,7 +344,7 @@ class Duty extends CustomFieldActiveRecord
 			return true;
 		}
 		// otherwise if there is something this is relying on that hasn't been completed yet
-		elseif(ViewDuty::model()->findAll($incompleteDependencies = $this->incompleteDependencies))
+		elseif(ViewDashboardDuty::model()->findAll($incompleteDependencies = $this->getIncompleteDependencies(true)))
 		{
 			return $mode == Controller::accessWrite ? false : true;
 		}

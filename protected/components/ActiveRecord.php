@@ -1002,6 +1002,12 @@ elseif(!$return)
 
 		try
 		{
+			// ensure update_by set
+			if(empty($this->updated_by))
+			{
+				$this->updated_by = Yii::app()->user->id;
+			}
+
 			$result = parent::insert($attributes);
 		}
 		catch (CDbException $e)

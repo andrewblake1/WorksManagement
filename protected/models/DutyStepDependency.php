@@ -8,7 +8,6 @@
  * @property integer $parent_duty_step_id
  * @property integer $child_duty_step_id
  * @property string $action_id
- * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
@@ -46,7 +45,7 @@ class DutyStepDependency extends ActiveRecord
         // will receive user inputs.
 		return array_merge(parent::rules(), array(
             array('child_duty_step_id, action_id, updated_by', 'required'),
-            array('parent_duty_step_id, child_duty_step_id, deleted, updated_by', 'numerical', 'integerOnly'=>true),
+            array('parent_duty_step_id, child_duty_step_id', 'numerical', 'integerOnly'=>true),
             array('id, action_id', 'length', 'max'=>10),
         ));
     }

@@ -67,10 +67,12 @@ class TaskToAction extends ViewActiveRecord
 		$criteria->compare('t.task_id',$this->task_id);
 		
 		// elimate actions where due to mode or branching there are no duties
-		ViewDuty::createTmpDuty();
+//		ViewDuty::createTmpDuty();
 		$criteria->distinct = TRUE;
 		$criteria->join = "
-			JOIN tmp_duty duty ON t.action_id = duty.action_id
+			JOIN v_duty duty
+				ON t.action_id = duty.action_id
+				AND t.task_id = duty.task_id
 		";
 
 		return $criteria;
