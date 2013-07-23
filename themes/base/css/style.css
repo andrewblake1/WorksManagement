@@ -62,12 +62,12 @@ footer p {
 
 /* enlarge the clickable area of icons in the admin view without altering the visible view in any way */
 td.button-column {
-vertical-align: middle;
-white-space: nowrap;
+	vertical-align: middle;
+	white-space: nowrap;
 }
 
 .button-column a {
-padding: 8px;
+	padding: 8px;
 }
 
 /* improve the look of nested field sets */
@@ -85,3 +85,12 @@ fieldset {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
 }
 
+.form-actions {
+	padding: 0;
+	margin-bottom: 0;
+	border-top: none;
+}
+
+form {
+	margin: 0;
+}

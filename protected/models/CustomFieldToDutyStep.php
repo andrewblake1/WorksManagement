@@ -5,18 +5,21 @@
  *
  * The followings are the available columns in table 'tbl_custom_field_to_duty_step':
  * @property integer $id
+ * @property integer $custom_field_duty_step_category_id
  * @property integer $duty_step_id
  * @property integer $custom_field_id
- * @property integer $custom_field_duty_step_category_id
+ * @property string $label_override
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property CustomField $customField
  * @property User $updatedBy
  * @property CustomFieldDutyStepCategory $dutyStep
+ * @property CustomField $customField
  * @property CustomFieldDutyStepCategory $customFieldDutyStepCategory
  * @property DutyDataToCustomFieldToDutyStep[] $dutyDataToCustomFieldToDutySteps
+ * @property DutyStepBranch[] $dutyStepBranches
+ * @property DutyStepBranch[] $dutyStepBranches1
  */
 class CustomFieldToDutyStep extends ActiveRecord
 {
@@ -30,8 +33,8 @@ class CustomFieldToDutyStep extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchDutyStep;
-	public $searchCustomFieldDutyStep;
-	public $searchCustomField;
+	public $searchCustomFieldLabel;
+	public $searchCustomFieldComment;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -82,9 +85,10 @@ class CustomFieldToDutyStep extends ActiveRecord
 			'duty_step_id' => 'Duty step',
 			'searchDutyStep' => 'Duty step',
 			'custom_field_duty_step_category_id' => 'Custom field set',
-			'searchCustomFieldDutyStep' => 'Custom field set',
 			'custom_field_id' => 'Custom field',
-			'searchCustomField' => 'Custom field',
+			'searchCustomFieldLabel' => 'Custom field',
+			'searchCustomFieldComment' => 'Custom field comment',
+            'label_override' => 'Label override',
 		));
 	}
 
@@ -101,11 +105,15 @@ class CustomFieldToDutyStep extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.custom_field_duty_step_category_id',
 			't.custom_field_id',
-			'customField.description AS searchCustomField',
+			't.label_override',
+			'customField.label AS searchCustomFieldLabel',
+			'customField.comment AS searchCustomFieldComment',
 		);
 
 		// where
-		$criteria->compare('customField.description',$this->searchCustomField,true);
+		$criteria->compare('customField.label',$this->searchCustomFieldLabel,true);
+		$criteria->compare('customField.comment',$this->searchCustomFieldComment,true);
+		$criteria->compare('t.label_override',$this->label_override,true);
 		$criteria->compare('t.custom_field_duty_step_category_id',$this->custom_field_duty_step_category_id);
 
 		// with 
@@ -118,9 +126,11 @@ class CustomFieldToDutyStep extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
-		
-		return $columns;
+		$return = array(
+			'label_override',
+			'searchCustomFieldLabel',
+			'earchCustomFieldComment',
+		);
 	}
 
 	/**

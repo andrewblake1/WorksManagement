@@ -5,6 +5,8 @@
  */
 class Dashboard extends ActiveRecord
 {
+	static $niceNamePlural = 'Dashboard';
+
 	static function primaryKeyName() {
 		return 'dummy';
 	}

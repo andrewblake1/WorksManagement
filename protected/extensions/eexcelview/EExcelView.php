@@ -10,7 +10,6 @@ Yii::import('zii.widgets.grid.CGridView');
 	{
 		// PHP Excel Path
 		public static $phpExcelPathAlias = 'ext.phpexcel.Classes.PHPExcel';
-	
 		//the PHPExcel object
 		public static $objPHPExcel = null;
 		public static $activeSheet = null;
@@ -200,12 +199,12 @@ Yii::import('zii.widgets.grid.CGridView');
 				}
 				
 				//date edited francis  
-				$dateF= explode("-", $value);
+/*				$dateF= explode("-", $value);
 				$c1=count($dateF);
 					 
 				if($c1==3 && $dateF[0]<9000 && $dateF[1]<13 && $dateF[2]<32)//{}
 					$value=$dateF[2].'/'.$dateF[1].'/'.$dateF[0];
-				//end of date  
+				//end of date */
 				
 				$value=$value===null ? "" : $column->grid->getFormatter()->format($value,$column->type);
 

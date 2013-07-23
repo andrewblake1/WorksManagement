@@ -12,7 +12,7 @@ $this->pageTitle=Yii::app()->name . ' - Login';
 		),
 	)); ?>
 
-<div class="span3">
+<div class="span3 pagination-centered">
   <img src="<?php echo Yii::app()->baseUrl; ?>/images/worksmanagement.png">
 </div>
 	<?php echo $form->errorSummary($model,NULL,NULL,$htmlOptions=array('class'=>'alert alert-error')); ?>
