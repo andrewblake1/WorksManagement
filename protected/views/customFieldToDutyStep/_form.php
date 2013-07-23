@@ -6,6 +6,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	CustomFieldController::listWidgetRow($model, $form, 'custom_field_id');
 
+	$form->textFieldRow('label_override');
+
 $this->endWidget();
 
 ?>

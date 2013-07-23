@@ -10,6 +10,7 @@
  * @property integer $custom_field_task_category_id
  * @property integer $show_in_admin
  * @property integer $show_in_planning
+ * @property string $label_override
  * @property integer $deleted
  * @property integer $updated_by
  *
@@ -32,8 +33,8 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchTaskTemplate;
-	public $searchCustomFieldTaskCategory;
-	public $searchCustomField;
+	public $searchCustomFieldLabel;
+	public $searchCustomFieldComment;
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -77,7 +78,9 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 			'custom_field_id' => 'Custom field',
 			'show_in_admin' => 'Show in admin page',
 			'show_in_planning' => 'Show in planning page',
-			'searchCustomField' => 'Custom field',
+			'searchCustomFieldLabel' => 'Custom field',
+			'searchCustomFieldComment' => 'Custom field comment',
+            'label_override' => 'Label override',
 		));
 	}
 
@@ -94,14 +97,17 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.custom_field_task_category_id',
 			't.custom_field_id',
-			'customField.description AS searchCustomField',
+			't.label_override',
+			'customField.label AS searchCustomFieldLabel',
+			'customField.comment AS searchCustomFieldComment',
 			't.show_in_admin',
 			't.show_in_planning',
 		);
 
 		// where
-		$criteria->compare('customField.description',$this->searchCustomField,true);
-		$criteria->compare('t.custom_field_task_category_id',$this->custom_field_task_category_id);
+		$criteria->compare('customField.label',$this->searchCustomFieldLabel,true);
+		$criteria->compare('customField.comment',$this->searchCustomFieldComment,true);
+		$criteria->compare('t.label_override',$this->label_override,true);
 		$criteria->compare('t.custom_field_task_category_id',$this->custom_field_task_category_id);
 		
 		// with 
@@ -127,7 +133,9 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'customField->description',
+			'label_override',
+			'searchCustomFieldLabel',
+			'searchCustomFieldComment',
 		);
 	}
 

@@ -2,7 +2,7 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 
-	$form->textFieldRow('description');
+	$form->textFieldRow('label');
 
 	$form->checkBoxRow('mandatory');	
 

@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'tbl_custom_field':
  * @property integer $id
- * @property string $description
+ * @property string $label
  * @property integer $mandatory
  * @property integer $allow_new
  * @property string $validation_type
@@ -82,11 +82,8 @@ class CustomField extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('description, validation_type, data_type', 'required'),
+			array('label, validation_type, data_type', 'required'),
 			array('mandatory, allow_new', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>64),
-			array('validation_type', 'length', 'max'=>10),
-			array('data_type', 'length', 'max'=>5),
 			array('validation_text, validation_error', 'safe'),
 			array('validation_text', 'validation_text'),
 		));
@@ -189,7 +186,7 @@ class CustomField extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
-		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.label',$this->label,true);
 		$criteria->compare('t.mandatory',Yii::app()->format->toMysqlBool($this->mandatory));
 		$criteria->compare('t.allow_new',Yii::app()->format->toMysqlBool($this->allow_new));
 		$criteria->compare('t.validation_type',$this->validation_type,true);
@@ -199,7 +196,7 @@ class CustomField extends ActiveRecord
 
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			't.description',
+			't.label',
 			't.mandatory',
 			't.allow_new',
 			't.validation_type',
@@ -213,7 +210,7 @@ class CustomField extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('description');
+		$columns[] = $this->linkThisColumn('label');
 		$columns[] = 'mandatory:boolean';
 		$columns[] = 'allow_new:boolean';
 		$columns[] = 'validation_type';

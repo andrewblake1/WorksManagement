@@ -126,10 +126,10 @@ class CustomFieldToDutyStep extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$return = array(
+		return array(
 			'label_override',
 			'searchCustomFieldLabel',
-			'earchCustomFieldComment',
+			'searchCustomFieldComment',
 		);
 	}
 

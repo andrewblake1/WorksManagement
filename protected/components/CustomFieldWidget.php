@@ -26,7 +26,8 @@ class CustomFieldWidget extends CWidget
 		// get the attribute name to be saving to - post array hence []
 		$attribute = "[{$this->customField->id}]custom_value";
 		// get the label
-		$this->htmlOptions = array_merge($this->htmlOptions, array('labelOptions' => array('label'=>$customField->description)));
+		eval('$relationToCustomField = $customField->' . $this->relationToCustomField . ';');
+		$this->htmlOptions = array_merge($this->htmlOptions, array('labelOptions' => array('label'=>$relationToCustomField->label ? $relationToCustomField->label : $customField->label)));
 		// set up validation
 		$customValue->customValidatorParams = array(
 			'customField' => $customField,

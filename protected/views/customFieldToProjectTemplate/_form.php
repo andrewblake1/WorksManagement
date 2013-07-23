@@ -10,6 +10,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->checkBoxRow('show_in_planning');	
 
+	$form->textFieldRow('label_override');
+
 $this->endWidget();
 
 ?>
