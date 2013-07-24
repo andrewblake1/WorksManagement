@@ -75,17 +75,18 @@ class DutyStepBranch extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'customField.description AS searchCustomField',
+			'COALESCE(customFieldToDutyStep.label_override, customField.label) AS searchCustomField',
 			't.compare',
 		);
 
 		// where
 		$criteria->compare('t.duty_step_dependency_id',$this->duty_step_dependency_id);
 		$criteria->compare('t.compare',$this->compare, true);
-		$criteria->compare('customField.description',$this->searchCustomField, true);
+		$criteria->compare('COALESCE(customFieldToDutyStep.label_override',$this->searchCustomField, true);
 		
 		// with
 		$criteria->with = array(
+			'customFieldToDutyStep',
 			'customFieldToDutyStep.customField',
 		);
 
@@ -103,7 +104,8 @@ class DutyStepBranch extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'customFieldToDutyStep->customField->description',
+			'customFieldToDutyStep->customField->label',
+			'customFieldToDutyStep->label_override',
 			'compare',
 		);
 	}
