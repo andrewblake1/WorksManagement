@@ -96,9 +96,8 @@ class Action extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('description, updated_by', 'required'),
-			array('deleted, updated_by', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>255),
-			array('client_id, project_template_id, override_id', 'safe'),
+			array('client_id, project_template_id, ', 'numerical', 'integerOnly'=>true),
+			array('override_id', 'safe'),
 		));
 	}
 

@@ -10,8 +10,8 @@
  * @property integer $resource_id
  * @property integer $mode_id
  * @property integer $resource_to_supplier_id
- * @property integer $quantity
- * @property string $duration
+ * @property integer $estimated_total_quantity
+ * @property string $estimated_total_duration
  * @property string $start
  * @property integer $updated_by
  *
@@ -45,10 +45,10 @@ class ResourceData extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('planning_id, level, resource_id, mode_id, quantity, duration', 'required'),
-			array('resource_id, mode_id, resource_to_supplier_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('planning_id, level, resource_id, mode_id', 'required'),
+			array('resource_id, mode_id, resource_to_supplier_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level', 'length', 'max'=>10),
-			array('start, duration', 'date', 'format'=>'H:m'),
+			array('start, estimated_total_duration', 'time', 'format'=>'H:m'),
 		));
 	}
 

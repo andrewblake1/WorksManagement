@@ -7,6 +7,8 @@
  * @property string $id
  * @property string $task_id
  * @property string $resource_data_id
+ * @property string $duration
+ * @property integer $quantity
  * @property integer $updated_by
  *
  * The followings are the available model relations:
@@ -24,15 +26,18 @@ class TaskToResource extends ActiveRecord
 	public $searchResourceToSupplierId;
 	public $searchResource;
 	public $searchTaskQuantity;
-	public $searchTotalDuration;
 	public $searchMode;
+	public $searchEstimatedTotalDuration;
+	public $searchEstimatedTotalQuantity;
+	public $searchCalculatedTotalDuration;
+	public $searchCalculatedTotalQuantity;
 	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Resource';
 
-	public $quantity;
-	public $duration;
+	public $estimated_total_quantity;
+	public $estimated_total_duration;
 	public $start;
 	public $description;
 	public $resource_to_supplier_id;
@@ -49,12 +54,10 @@ class TaskToResource extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_id, resource_id, mode_id, quantity, duration', 'required'),
+			array('task_id, resource_id, mode_id, quantity, estimated_total_quantity, duration', 'required'),
 			array('level, resource_id, mode_id, resource_to_supplier_id, quantity', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>255),
 			array('task_id', 'length', 'max'=>10),
-			array('resource_to_supplier_id', 'safe'),
-			array('start, duration', 'date', 'format'=>'H:m'),
+			array('start, duration, estimated_total_duration', 'time', 'format'=>'H:m'),
 		));
 	}
 
@@ -82,14 +85,14 @@ class TaskToResource extends ActiveRecord
 			'searchSupplier' => 'Supplier',
 			'searchResource' => 'Resource',
 			'resource_to_supplier_id' => 'Supplier',
-			'resource_id' => 'Resource type',
 			'description' => 'Resource type',
-			'duration' => 'Duration (HH:mm)',
-			'start' => 'Start time (HH:mm)',
-			'searchTaskQuantity' => 'Task quantity',
-			'searchTotalDuration' => 'Total time',
-			'searchLevel' => 'Level',
 			'searchMode' => 'Mode',
+			'searchTaskQuantity' => 'Task quantity',
+			'searchEstimatedTotalDuration' => 'Override level duration',
+			'searchEstimatedTotalQuantity' => 'Override level quantity',
+			'searchCalculatedTotalDuration' => 'Level duration',
+			'searchCalculatedTotalQuantity' => 'Level quantity',
+			'searchLevel' => 'Level',
 		));
 	}
 
@@ -107,27 +110,37 @@ class TaskToResource extends ActiveRecord
 			'resourceData.resource_id AS resource_id',
 			'resource.description AS searchResource',
 			'supplier.name AS searchSupplier',
-			'resourceData.quantity AS quantity',
-			'task.quantity AS searchTaskQuantity',
-			'SEC_TO_TIME(TIME_TO_SEC(duration) * resourceData.quantity * task.quantity) AS searchTotalDuration',
-			'resourceData.duration AS duration',
 			'resourceData.start AS start',
 			'level0.name AS searchLevel',
 			'mode.description AS searchMode',
+			'task.quantity AS searchTaskQuantity',
+			'resourceData.estimated_total_quantity AS searchEstimatedTotalQuantity',
+			'resourceData.estimated_total_duration AS searchEstimatedTotalDuration',
+			't.duration AS duration',
+			't.quantity AS quantity',
+			'(SELECT MAX(quantity) AS searchCalculatedTotalQuantity FROM tbl_task_to_resource
+				WHERE duty_data_id = t.duty_data_id)',
+			'(SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) AS searchCalculatedTotalDuration FROM tbl_task_to_resource
+				WHERE duty_data_id = t.duty_data_id)',
 		);
 
 		// where
 		$criteria->compare('mode.description',$this->searchMode,true);
 		$criteria->compare('resource.description',$this->searchResource,true);
 		$criteria->compare('supplier.name',$this->searchSupplier,true);
-		$criteria->compare('quantity',$this->quantity);
 		$criteria->compare('t.searchTaskQuantity',$this->searchTaskQuantity);
-		$criteria->compare('resourceData.quantity * task.quantity',$this->searchTotalDuration);
-		$criteria->compare('duration',Yii::app()->format->toMysqlTime($this->duration));
 		$criteria->compare('start',Yii::app()->format->toMysqlTime($this->start));
 		$criteria->compare('level0.name',$this->searchLevel,true);
 		$criteria->compare('t.task_id',$this->task_id);
-		
+		$criteria->compare('quantity',$this->quantity);
+		$criteria->compare('duration',Yii::app()->format->toMysqlTime($this->duration));
+		$criteria->compare('resourceData.estimated_total_quantity',$this->searchEstimatedTotalQuantity);
+		$criteria->compare('resourceData.estimated_total_duration',Yii::app()->format->toMysqlTime($this->searchEstimatedTotalDuration));
+		$criteria->compare('(SELECT MAX(quantity) FROM tbl_task_to_resource
+			WHERE duty_data_id = t.duty_data_id)',$this->searchEstimatedTotalQuantity);
+		$criteria->compare('(SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration) * task.quantity)) FROM tbl_task_to_resource
+			WHERE duty_data_id = t.duty_data_id)',Yii::app()->format->toMysqlTime($this->searchEstimatedTotalDuration));
+
 		// limit to matching task mode
 		$criteria->join = "
 			JOIN tbl_task task ON t.task_id = task.id
@@ -148,35 +161,20 @@ class TaskToResource extends ActiveRecord
 	{
         $columns[] = 'searchResource';
         $columns[] = static::linkColumn('searchSupplier', 'ResourceToSupplier', 'searchResourceToSupplierId');
-		$columns[] = 'quantity';
 		$columns[] = 'searchTaskQuantity';
-		$columns[] = 'duration:time';
-		$columns[] = 'searchTotalDuration:time';
 		$columns[] = 'start:time';
 		$columns[] = 'searchLevel';
 		$columns[] = 'searchMode';
+		$columns[] = 'quantity';
+		$columns[] = 'duration:time';
+		$columns[] = 'searchTotalQuantity';
+		$columns[] = 'searchTotalDuration:time';
+		$columns[] = 'searchCalculatedQuantity';
+		$columns[] = 'searchCalculatedDuration:time';
 		
 		return $columns;
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-/*	public function getSearchSort()
-	{
-		return array(
-			'searchResourceToSupplier',
-			'description',
-			'quantity',
-			'searchTaskQuantity',
-			'duration',
-			'searchTotalDuration',
-			'searchMode',
-			'start',
-		);
-	}*/
-	
 	static function getDisplayAttr()
 	{
 		return array(
@@ -187,8 +185,8 @@ class TaskToResource extends ActiveRecord
 
 	public function beforeSave()
 	{
-		$this->resourceData->quantity = $this->quantity;
-		$this->resourceData->duration = $this->duration;
+		$this->resourceData->estimated_total_quantity = $this->estimated_total_quantity;
+		$this->resourceData->estimated_total_duration = $this->estimated_total_duration;
 		$this->resourceData->start = $this->start;
 		$this->resourceData->resource_id = $this->resource_id;
 		$this->resourceData->level = $this->level;
@@ -201,8 +199,8 @@ class TaskToResource extends ActiveRecord
 		parent::afterFind();
 
 		$this->resource_to_supplier_id = $this->resourceData->resource_to_supplier_id;
-		$this->quantity = $this->resourceData->quantity;
-		$this->duration = $this->resourceData->duration;
+		$this->estimated_total_quantity = $this->resourceData->estimated_total_quantity;
+		$this->estimated_total_duration = $this->resourceData->estimated_total_duration;
 		$this->start = $this->resourceData->start;
 		$this->resource_id = $this->resourceData->resource_id;
 		$this->level = $this->resourceData->level;
@@ -255,24 +253,12 @@ class TaskToResource extends ActiveRecord
 			$resourceData->resource_id = $this->resource_id;
 			$resourceData->level = $level;
 			$resourceData->resource_to_supplier_id = $this->resource_to_supplier_id;
-			$resourceData->quantity = $this->quantity;
-			$resourceData->duration = $this->duration;
+			$resourceData->estimated_total_quantity = $this->estimated_total_quantity;
+			$resourceData->estimated_total_duration = $this->estimated_total_duration;
 			$resourceData->start = $this->start;
 			$resourceData->mode_id = $this->mode_id;
 			$resourceData->updated_by = Yii::app()->user->id;
 			$resourceData->insert();
-/*			// add modes if this from template
-			if($taskTemplateToResource)
-			{
-				foreach($taskTemplateToResource->taskTemplateToResourceToModes as $taskTemplateToResourceToMode)
-				{
-					$resourceDataToMode = new ResourceDataToMode;
-					$resourceDataToMode->resource_data_id = $resourceData->id;
-					$resourceDataToMode->mode_id = $taskTemplateToResourceToMode->mode_id;
-					$resourceDataToMode->updated_by = $resourceData->updated_by;
-					$resourceDataToMode->insert();
-				}
-			}*/
 		}
 
 		// link this Resource to the ResourceData
@@ -301,32 +287,6 @@ class TaskToResource extends ActiveRecord
 		
 		return $saved & parent::updateSave($models);
 	}
-
-	/*
-	 * overidden as mulitple models
-	 
-	public function updateSave(&$models=array())
-	{
-		$saved = true;
-		
-		// ensure the related items are set
-		$this->beforeSave();
-
-		// ensure the ResourceData has correct level by inserting a new one if necassary or linking to correct
-		$this->insertResourceData();
-
-		return $saved & parent::updateSave($models);
-	}*/
-
-	/*
-	 * overidden as mulitple models
-	 
-	public function createSave(&$models=array())
-	{
-		$this->insertResourceData();
-	
-		return parent::createSave($models);
-	}*/
 
 }
 
