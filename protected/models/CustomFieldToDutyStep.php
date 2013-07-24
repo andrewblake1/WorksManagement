@@ -139,7 +139,8 @@ class CustomFieldToDutyStep extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'customField->description',
+			'customField->label',
+			'label_override',
 		);
 	}
 
