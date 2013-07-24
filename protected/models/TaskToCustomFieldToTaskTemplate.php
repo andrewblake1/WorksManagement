@@ -78,7 +78,7 @@ class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'customField.description AS searchCustomField',
+			'COALESCE(customFieldToTaskTemplate.label_override, customField.label) AS searchCustomField',
 			't.custom_value',
 			't.task_id',
 		);
@@ -86,7 +86,7 @@ class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
 		// where
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.task_id',$this->task_id);
-		$criteria->compare('customField.description',$this->searchCustomField, true);
+		$criteria->compare('COALESCE(customFieldToTaskTemplate.label_override, customField.label)', $this->searchCustomField, true);
 		$criteria->compare('t.custom_value',$this->custom_value, true);
 
 		// with
@@ -108,7 +108,10 @@ class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
 	
 	static function getDisplayAttr()
 	{
-		return array('customFieldToProjectTemplate->customField->description');
+		return array(
+			'customFieldToProjectTemplate->customField->description',
+			'customFieldToProjectTemplate->label_override',
+		);
 	}
 	
 	public function beforeValidate()

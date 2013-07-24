@@ -80,7 +80,7 @@ class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'customField.description AS searchCustomField',
+			'COALESCE(customFieldToDutyStep.label_override, customField.label) AS searchCustomField',
 			't.custom_value',
 			't.duty_data_id',
 		);
@@ -88,11 +88,12 @@ class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
 		// where
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.duty_data_id',$this->duty_data_id);
-		$criteria->compare('customField.description',$this->searchCustomField, true);
+		$criteria->compare('COALESCE(customFieldToDutyStep.label_override',$this->searchCustomField, true);
 		$criteria->compare('t.custom_value',$this->custom_value, true);
 
 		// with
 		$criteria->with=array(
+			'customFieldToDutyStep',
 			'customFieldToDutyStep.customField',
 		);
 
@@ -101,7 +102,10 @@ class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
 	
 	static function getDisplayAttr()
 	{
-		return array('customFieldToDutyStep->customField->description');
+		return array(
+			'customFieldToDutyStep->customField->label',
+			'customFieldToDutyStep->label_override',
+		);
 	}
 	
 	public function beforeValidate()

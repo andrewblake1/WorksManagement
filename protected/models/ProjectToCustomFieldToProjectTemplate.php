@@ -80,7 +80,7 @@ class ProjectToCustomFieldToProjectTemplate extends CustomValueActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'customField.description AS searchCustomField',
+			'COALESCE(customFieldToProjectTemplate.label_override, customField.label) AS searchCustomField',
 			't.custom_value',
 			't.project_id',
 		);
@@ -88,11 +88,12 @@ class ProjectToCustomFieldToProjectTemplate extends CustomValueActiveRecord
 		// where
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.project_id',$this->project_id);
-		$criteria->compare('customField.description',$this->searchCustomField, true);
+		$criteria->compare('COALESCE(customFieldToProjectTemplate.label_override, customField.label)', $this->searchCustomField, true);
 		$criteria->compare('t.custom_value',$this->custom_value, true);
 
 		// with
 		$criteria->with=array(
+			'customFieldToProjectTemplate',
 			'customFieldToProjectTemplate.customField',
 		);
 
@@ -101,7 +102,10 @@ class ProjectToCustomFieldToProjectTemplate extends CustomValueActiveRecord
 	
 	static function getDisplayAttr()
 	{
-		return array('customFieldToProjectTemplate->customField->description');
+		return array(
+			'customFieldToProjectTemplate->customField->label',
+			'customFieldToProjectTemplate->label_override',
+			);
 	}
 	
 	public function beforeValidate()
