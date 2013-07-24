@@ -106,6 +106,7 @@ class CustomFieldWidgets extends CWidget
 			$this->controller->widget('CustomFieldWidget', array(
 				'form'=>$this->form,
 				'customValue'=>$toCustomField,
+				'customFieldModelTemplate'=>$customFieldModelTemplate,
 				'customField'=>$toCustomField->{$this->relationCustomFieldModelTemplate}->customField,
 				'relationToCustomField'=>"{$this->relationModelToCustomFieldModelTemplate}->{$this->relationCustomFieldModelTemplate}->customField",
 				'htmlOptions'=>$this->htmlOptions,

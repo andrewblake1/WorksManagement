@@ -213,15 +213,20 @@ class Task extends CustomFieldActiveRecord
 			{
 				continue;
 			}
+
 			// if not already in our list of columns to show
 			if(!array_key_exists($tempTableColumnName, $columns))
 			{
-				$customField = CustomField::model()->findByPk(str_replace('custom_field_id_', '', $tempTableColumnName));
+				$customFieldToTaskTemplate = CustomFieldToTaskTemplate::model()->findByPk(str_replace('custom_field_to_task_template_id_', '', $tempTableColumnName));
+				$label = $customFieldToTaskTemplate->label_override
+					? $customFieldToTaskTemplate->label_override
+					: $customFieldToTaskTemplate->customField->label;
+				
 				// use setter to dynamically create an attribute
-				$columns[] = "$tempTableColumnName::$customField->description";
+				$columns[] = "$tempTableColumnName::$label";
 			}
 		}
-		
+
 		return $columns;
 	}
 

@@ -46,9 +46,9 @@ class ResourceData extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('planning_id, level, resource_id, mode_id', 'required'),
-			array('resource_id, mode_id, resource_to_supplier_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
+			array('resource_id, mode_id, resource_to_supplier_id', 'numerical', 'integerOnly'=>true),
 			array('planning_id, level', 'length', 'max'=>10),
-			array('start, estimated_total_duration', 'time', 'format'=>'H:m'),
+			array('start, estimated_total_duration', 'date', 'format'=>'H:m'),
 		));
 	}
 
