@@ -165,7 +165,7 @@ class DutyStep extends ActiveRecord
 	{
 		return array(
 			'lead_in_days',
-			'description',
+			't.description',
 		);
 	}
  

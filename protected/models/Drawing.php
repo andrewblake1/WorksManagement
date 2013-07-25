@@ -117,9 +117,9 @@ class Drawing extends TraitAdjacencyListWithFileActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'id',
-			'description',
-			'alias',
+			't.id',
+			't.description',
+			't.alias',
 		);
 	}
  

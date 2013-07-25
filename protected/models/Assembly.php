@@ -44,7 +44,6 @@ class Assembly extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('description, standard_id', 'required'),
 			array('drawing_id, standard_id', 'numerical', 'integerOnly'=>true),
-			array('description, alias', 'length', 'max'=>255),
 		));
 	}
 
@@ -80,8 +79,6 @@ class Assembly extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'standard_id' => 'Standard',
-			'drawing_id' => 'Drawing',
 			'searchDrawingDescription' => 'Drawing',
 		));
 	}
@@ -137,9 +134,9 @@ class Assembly extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'id',
-			'alias',
-			'description',
+			't.id',
+			't.alias',
+			't.description',
 		);
 	}
  
@@ -161,7 +158,7 @@ class Assembly extends ActiveRecord
 	public function scopeStandard($standard_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compareNull('standard_id', $standard_id);
+		$criteria->compareNull('t.standard_id', $standard_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		

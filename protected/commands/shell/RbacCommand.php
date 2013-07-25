@@ -234,11 +234,6 @@ EOD;
 			$this->_authManager->createOperation('ProjectTemplateToAuthItemRead', 'ProjectTemplateToAuthItem read');
 			$task->addChild('ProjectTemplateToAuthItemRead');
 
-			$task=$this->_authManager->createTask('ProjectToCustomFieldToProjectTemplate', 'ProjectToCustomFieldToProjectTemplate task');
-			$systemAdminRole->addChild('ProjectToCustomFieldToProjectTemplate');
-			$this->_authManager->createOperation('ProjectToCustomFieldToProjectTemplateRead', 'ProjectToCustomFieldToProjectTemplate read');
-			$task->addChild('ProjectToCustomFieldToProjectTemplateRead');
-
 			$task=$this->_authManager->createTask('ProjectType', 'ProjectType task');
 			$systemAdminRole->addChild('ProjectType');
 			$this->_authManager->createOperation('ProjectTypeRead', 'ProjectType read');
@@ -268,11 +263,6 @@ EOD;
 			$systemAdminRole->addChild('ResourceToSupplier');
 			$this->_authManager->createOperation('ResourceToSupplierRead', 'ResourceToSupplier read');
 			$task->addChild('ResourceToSupplierRead');
-
-			$task=$this->_authManager->createTask('ResourceCategory', 'ResourceCategory task');
-			$systemAdminRole->addChild('ResourceCategory');
-			$this->_authManager->createOperation('ResourceCategoryRead', 'ResourceCategory read');
-			$task->addChild('ResourceCategoryRead');
 
 			$task=$this->_authManager->createTask('Stage', 'Stage task');
 			$systemAdminRole->addChild('Stage');
@@ -446,11 +436,6 @@ EOD;
 			$task->addChild('TaskToAssemblyToTaskTemplateToAssemblyGroupRead');
 			$task2->addChild('TaskToAssemblyToAssemblyToAssemblyGroupRead');
 			$task2->addChild('TaskToAssemblyToTaskTemplateToAssemblyGroupRead');
-
-			$task=$this->_authManager->createTask('TaskToCustomFieldToTaskTemplate', 'TaskToCustomFieldToTaskTemplate task');
-			$systemAdminRole->addChild('TaskToCustomFieldToTaskTemplate');
-			$this->_authManager->createOperation('TaskToCustomFieldToTaskTemplateRead', 'TaskToCustomFieldToTaskTemplate read');
-			$task->addChild('TaskToCustomFieldToTaskTemplateRead');
 
 /*			$task=$this->_authManager->createTask('TaskToPurchaseOrder', 'TaskToPurchaseOrder task');
 			$projectManagerRole->addChild('TaskToPurchaseOrder');

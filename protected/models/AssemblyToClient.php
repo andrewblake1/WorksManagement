@@ -109,7 +109,7 @@ class AssemblyToClient extends ActiveRecord
 		return array(
 			'searchAssemblyDescription',
 			'searchAssemblyAlias',
-			'alias',
+			't.alias',
 		);
 	}
 

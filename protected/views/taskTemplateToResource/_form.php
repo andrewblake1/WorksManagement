@@ -8,10 +8,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('duration');
 
-	$form->textFieldRow('estimated_total_quantity');
-
-	$form->textFieldRow('estimated_total_duration');
-
 	ModeController::listWidgetRow($model, $form, 'mode_id');
 
 $this->endWidget();

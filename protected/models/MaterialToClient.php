@@ -135,7 +135,7 @@ class MaterialToClient extends ActiveRecord
 			'searchMaterialDescription',
 			'searchMaterialUnit',
 			'searchMaterialAlias',
-			'alias',
+			't.alias',
 		);
 	}
 

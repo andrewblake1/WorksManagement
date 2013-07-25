@@ -138,15 +138,15 @@ class Material extends FileActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'alias',
-			'description',
+			't.alias',
+			't.description',
 		);
 	}
 
 	public function scopeStandard($standard_id)
 	{
 		$criteria=new DbCriteria;
-		$criteria->compareNull('standard_id', $standard_id);
+		$criteria->compareNull('t.standard_id', $standard_id);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		

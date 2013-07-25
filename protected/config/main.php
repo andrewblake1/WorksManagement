@@ -191,16 +191,13 @@ return array(
 							'Crew'=>array(
 								'Task'=>array(
 									'TaskToAction'=>array(
-										'Duty'=>array(
-											'DutyDataToCustomFieldToDutyStep',
-										),
+										'Duty',
 									),
 									'TaskToMaterial',
 									'TaskToAssembly'=>array(
 										'TaskToAssemblyToAssemblyToAssemblyGroup',
 										'TaskToAssemblyToTaskTemplateToAssemblyGroup',
 									),
-									'TaskToCustomFieldToTaskTemplate',
 //									'TaskToPurchaseOrder',
 									'TaskToResource',
 								),
@@ -210,7 +207,6 @@ return array(
 						'ProjectToAuthItem'=>array(
 							'ProjectToAuthItemToAuthAssignment',
 						),
-						'ProjectToCustomFieldToProjectTemplate',
 						'Planning',
 					),
 					'ProjectTemplate'=>array(
@@ -250,10 +246,8 @@ return array(
 					'ReportToAuthItem',
 					'SubReport',
 				),
-				'ResourceCategory'=>array(
-					'Resource'=>array(
-						'ResourceToSupplier',
-					),
+				'Resource'=>array(
+					'ResourceToSupplier',
 				),
 				'AuthItem'=>array(
 					'AuthItemChild',

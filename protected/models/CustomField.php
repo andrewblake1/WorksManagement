@@ -220,6 +220,11 @@ class CustomField extends ActiveRecord
 		
 		return $columns;
 	}
+	
+	public static function getDisplayAttr()
+	{
+		return array('label');
+	}
 
 }
 

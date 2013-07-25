@@ -215,7 +215,13 @@ abstract class ActiveRecord extends RangeActiveRecord
 		{
 			// need to bear in mind here that may not have necassary attributes defined so re-get the model
 			// using its id and standard admin search criteria
-			$attribModel = $model->find($model->searchCriteria);
+			$criteria = new CDbCriteria();
+			$criteria = $model->searchCriteria;
+			$criteria->condition = '';
+			$criteria->params = array();
+			$primaryKeyName = static::primaryKeyName();
+			$criteria->compare("t.$primaryKeyName" , $model->$primaryKeyName);
+			$attribModel = static::model()->find($criteria);
 			foreach(static::getDisplayAttr() as $attribute)
 			{
 				$attribute = str_replace('t.', '', $attribute);
@@ -328,7 +334,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 	public static function getListData($scopes = array())
 	{
 		$model = static::model();
-		$criteria = $model->searchCriteria;
+		$criteria = $model->getSearchCriteria($model);
 		$criteria->condition = '';
 		$displayAttr = $model::getDisplayAttr();
 		$criteria->scopes = empty($scopes) ? null : $scopes;
@@ -341,7 +347,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 		$display = str_replace('t.', '', implode(Yii::app()->params['delimiter']['display'], $displayAttr));
 		// order
 		$criteria->order = implode(', ', $order);
-			
+	
 		return CHtml::listData(
 			static::model()->findAll($criteria), 
 			static::model()->tableSchema->primaryKey,

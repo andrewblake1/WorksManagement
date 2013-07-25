@@ -92,8 +92,8 @@ class DefaultValue extends ActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'table',
-			'column',
+			't.table',
+			't.column',
 		);
 	}
 

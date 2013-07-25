@@ -15,7 +15,6 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property ResourceCategory $resourceCategory
  * @property User $updatedBy
  * @property Level $level0
  * @property Action $action
@@ -55,7 +54,6 @@ class Resource extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'resourceCategory' => array(self::BELONGS_TO, 'ResourceCategory', 'resource_category_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'action' => array(self::BELONGS_TO, 'Action', 'action_id'),

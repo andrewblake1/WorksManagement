@@ -55,7 +55,6 @@
  * @property Report[] $reports
  * @property ReportToAuthItem[] $reportToAuthItems
  * @property Resource[] $resources
- * @property ResourceCategory[] $resourceCategories
  * @property ResourceData[] $resourceDatas
  * @property ResourceToSupplier[] $resourceToSuppliers
  * @property Stage[] $stages
@@ -159,7 +158,6 @@ class User extends ContactActiveRecord
             'reports' => array(self::HAS_MANY, 'Report', 'updated_by'),
             'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'updated_by'),
             'resources' => array(self::HAS_MANY, 'Resource', 'updated_by'),
-            'resourceCategories' => array(self::HAS_MANY, 'ResourceCategory', 'updated_by'),
             'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'updated_by'),
             'resourceToSuppliers' => array(self::HAS_MANY, 'ResourceToSupplier', 'updated_by'),
             'stages' => array(self::HAS_MANY, 'Stage', 'updated_by'),

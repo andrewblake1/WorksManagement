@@ -124,7 +124,7 @@ class CustomFieldToProjectTemplate extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = static::linkColumn('searchCustomField', 'CustomField', 'custom_field_id');
+		$columns[] = static::linkColumn('searchCustomFieldLabel', 'CustomField', 'custom_field_id');
 		$columns[] = 'show_in_admin:boolean';
 		$columns[] = 'show_in_planning:boolean';
 		
