@@ -30,10 +30,6 @@ class AssemblyGroup extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('description, standard_id', 'required'),
 			array('standard_id', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, description, standard_id', 'safe', 'on'=>'search'),
 		));
 	}
 

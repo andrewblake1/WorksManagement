@@ -62,7 +62,6 @@ class AuthAssignment extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('itemname, userid', 'required'),
 			array('userid', 'numerical', 'integerOnly'=>true),
-			array('itemname', 'length', 'max'=>64),
 			array('bizrule, data', 'safe'),
 		));
 	}

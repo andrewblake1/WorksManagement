@@ -35,10 +35,6 @@ class AssemblyToClient extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('assembly_id, client_id', 'required'),
 			array('assembly_id, client_id', 'numerical', 'integerOnly'=>true),
-			array('alias', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, client_id, searchAssemblyDescription, searchAssemblyAlias, alias', 'safe', 'on'=>'search'),
 		));
 	}
 

@@ -54,7 +54,6 @@ class AssemblyToMaterialGroup extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('assembly_id, material_group_id, stage_id, standard_id, quantity', 'required'),
 			array('assembly_id, material_group_id, stage_id, standard_id, detail_drawing_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
-			array('quantity_tooltip, selection_tooltip, comment', 'length', 'max'=>255),
 			array('select', 'safe'),
 		));
 	}
