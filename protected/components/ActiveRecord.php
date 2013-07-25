@@ -327,28 +327,25 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 */
 	public static function getListData($scopes = array())
 	{
-		$model = self::model();
+		$model = static::model();
 		$criteria = $model->searchCriteria;
 		$criteria->condition = '';
 		$displayAttr = $model::getDisplayAttr();
-		
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-				't.'.static::model()->tableSchema->primaryKey,
-				"CONCAT_WS('$delimiter'," . implode(',', $displayAttr).") AS naturalKey",
-			);
 		$criteria->scopes = empty($scopes) ? null : $scopes;
-		// order
 		foreach($displayAttr as &$attr)
 		{
 			$order[] = "$attr ASC";
+			$attr = '$p->' . $attr;
 		}
+		// NB: here replaceing possible alias inserted if using ActiveRecord::getDisplayAttr()
+		$display = str_replace('t.', '', implode(Yii::app()->params['delimiter']['display'], $displayAttr));
+		// order
 		$criteria->order = implode(', ', $order);
-		
+			
 		return CHtml::listData(
 			static::model()->findAll($criteria), 
 			static::model()->tableSchema->primaryKey,
-			'naturalKey'
+			function ($p) use ($display) { return eval("return \"$display\";"); }
 		);
 	}
 

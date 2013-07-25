@@ -119,9 +119,9 @@ class TaskToResource extends ActiveRecord
 			't.duration AS duration',
 			't.quantity AS quantity',
 			'(SELECT MAX(quantity) AS searchCalculatedTotalQuantity FROM tbl_task_to_resource
-				WHERE duty_data_id = t.duty_data_id)',
+				WHERE resource_data_id = t.resource_data_id)',
 			'(SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) AS searchCalculatedTotalDuration FROM tbl_task_to_resource
-				WHERE duty_data_id = t.duty_data_id)',
+				WHERE resource_data_id = t.resource_data_id)',
 		);
 
 		// where
@@ -137,9 +137,9 @@ class TaskToResource extends ActiveRecord
 		$criteria->compare('resourceData.estimated_total_quantity',$this->searchEstimatedTotalQuantity);
 		$criteria->compare('resourceData.estimated_total_duration',Yii::app()->format->toMysqlTime($this->searchEstimatedTotalDuration));
 		$criteria->compare('(SELECT MAX(quantity) FROM tbl_task_to_resource
-			WHERE duty_data_id = t.duty_data_id)',$this->searchEstimatedTotalQuantity);
+			WHERE resource_data_id = t.resource_data_id)',$this->searchCalculatedTotalQuantity);
 		$criteria->compare('(SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration) * task.quantity)) FROM tbl_task_to_resource
-			WHERE duty_data_id = t.duty_data_id)',Yii::app()->format->toMysqlTime($this->searchEstimatedTotalDuration));
+			WHERE resource_data_id = t.resource_data_id)',Yii::app()->format->toMysqlTime($this->searchCalculatedTotalDuration));
 
 		// limit to matching task mode
 		$criteria->join = "
@@ -167,10 +167,10 @@ class TaskToResource extends ActiveRecord
 		$columns[] = 'searchMode';
 		$columns[] = 'quantity';
 		$columns[] = 'duration:time';
-		$columns[] = 'searchTotalQuantity';
-		$columns[] = 'searchTotalDuration:time';
-		$columns[] = 'searchCalculatedQuantity';
-		$columns[] = 'searchCalculatedDuration:time';
+		$columns[] = 'searchEstimatedTotalQuantity';
+		$columns[] = 'searchEstimatedTotalDuration:time';
+		$columns[] = 'searchCalculatedTotalQuantity';
+		$columns[] = 'searchCalculatedTotalDuration:time';
 		
 		return $columns;
 	}
