@@ -1,21 +1,40 @@
 <?php
 class ContactActiveRecord extends ActiveRecord
 {
-	protected $defaultSort = array('contact.email');
+	public $first_name;
+	public $last_name;
+	public $email;
+	
+	protected $defaultSort = array('email');
 	/**
 	 * @var string nice model name for use in output
 	 */
 	static $niceName = 'Contact';
 	
-	/**
-	 * @return array the list of columns to be concatenated for use in drop down lists
-	 */
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
+
+		$criteria->select=array(
+			't.*',
+			'contact.first_name AS first_name',
+			'contact.last_name AS last_name',
+			'contact.email AS email',
+		);
+
+		$criteria->with=array(
+			'contact',
+		);
+
+		return $criteria;
+	}
+
 	public static function getDisplayAttr()
 	{
 		return array(
-			'contact->first_name',
-			'contact->last_name',
-			'contact->email',
+			'first_name',
+			'last_name',
+			'email',
 		);
 	}
 

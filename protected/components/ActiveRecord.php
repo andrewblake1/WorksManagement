@@ -379,6 +379,12 @@ abstract class ActiveRecord extends RangeActiveRecord
 				"CONCAT_WS('$delimiter',".implode(',', $displayAttr).") AS naturalKey",
 			);
 		$criteria->scopes = empty($scopes) ? null : $scopes;
+		// order
+		foreach($displayAttr as &$attr)
+		{
+			$order[] = "$attr ASC";
+		}
+		$criteria->order = implode(', ', $order);
 		
 		return CHtml::listData(
 			static::model()->findAll($criteria), 
@@ -796,15 +802,6 @@ $t = $model->attributes;
 	{
 		$searchCriteria = $model->searchCriteria;
 		
-		// if this model has a updated_by property
-/*		if(in_array('updated_by', $model->tableSchema->getColumnNames()))
-		{
-			$this->compositeCriteria($searchCriteria, array('updatedBy.first_name','updatedBy.last_name','updatedBy.email'), $model->searchUser);
-			$searchCriteria->with[] = 'updatedBy';
-			$delimiter = Yii::app()->params['delimiter']['display'];
-			$searchCriteria->select[] = "CONCAT_WS('$delimiter', updatedBy.first_name, updatedBy.last_name, updatedBy.email) AS searchUser";
-		}*/
-
 		$modelName = get_class($model);
 		if(!isset($_GET["{$modelName}_sort"]))
 		{
@@ -832,16 +829,9 @@ $t = $model->attributes;
 			else
 			{
 				// get first display attribute to use for inititial sort
-				foreach($modelName::getDisplayAttr() as $key => $displayAttr);
-				
-				if(preg_match('/(((.*)->)?(\w*))->(\w*)$/', $displayAttr, $matches))
-				{
-					$searchCriteria->order = "{$matches[4]}.{$matches[5]}  ASC";
-				}
-				else
-				{
-					$searchCriteria->order = "t.$displayAttr  ASC";
-				}
+				foreach($modelName::getDisplayAttr() as $displayAttr);
+
+				$searchCriteria->order = "$displayAttr  ASC";
 			}
 
 		}

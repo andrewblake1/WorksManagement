@@ -172,9 +172,9 @@ class Project extends CustomFieldActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		$displaAttr[]='name';
+		$displayAttr[]='name';
 
-		return $displaAttr;
+		return $displayAttr;
 	}
 
 	public function afterFind() {

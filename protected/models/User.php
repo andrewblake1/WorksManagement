@@ -104,12 +104,6 @@ class User extends ContactActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('first_name, last_name, email', 'required'),
-			array('first_name, last_name, phone_mobile', 'length', 'max'=>64),
-			array('email', 'length', 'max'=>255),
-			array('password', 'length', 'max'=>32),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, first_name, last_name, phone_mobile, email', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -258,15 +252,6 @@ class User extends ContactActiveRecord
 		return $columns;
 	}
 
-/*	public static function getDisplayAttr()
-	{
-		return array(
-			'contact->first_name',
-			'contact->flast_name',
-			'contact->email',
-		);
-	}*/ 
- 
 	/**
 	 * perform one-way encryption on the password before we standard it in the database
 	 */

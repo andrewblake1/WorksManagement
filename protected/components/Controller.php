@@ -221,11 +221,14 @@ class Controller extends CController
 			// get a display string
 			foreach($displayAttr as &$attr)
 			{
+				$order[] = "$attr ASC";
 				$attr = '$p->' . $attr;
 			}
 			$display = implode(Yii::app()->params['delimiter']['display'], $displayAttr);
 			// add scopes
 			$criteria->scopes = empty($_GET['scopes']) ? null : $_GET['scopes'];
+			// order
+			$criteria->order = implode(', ', $order);
 
 			// get models
 			$fKModels = $model->findAll($criteria);
