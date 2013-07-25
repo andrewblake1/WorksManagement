@@ -21,6 +21,7 @@ class Day extends ActiveRecord
 {
 	static $niceNamePlural = 'Days';
 	public $searchInCharge;
+	public $searchName;
 	public $name;
 	public $in_charge_id;
 
@@ -35,9 +36,6 @@ class Day extends ActiveRecord
 			array('project_id', 'required'),
 			array('id, level, project_id, in_charge_id', 'length', 'max'=>10),
 			array('name, scheduled', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, name, level, searchInCharge, project_id, scheduled', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -75,7 +73,7 @@ class Day extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
-			'id0.name AS name',
+			'id0.name AS searchName',
 			't.scheduled',
 			"CONCAT_WS('$delimiter',
 				contact.first_name,
@@ -86,7 +84,7 @@ class Day extends ActiveRecord
 
 		// where
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('name',$this->name,true);
+		$criteria->compare('name',$this->searchName,true);
 		$criteria->compare('t.scheduled',Yii::app()->format->toMysqlDate($this->scheduled));
 		$criteria->compare('t.project_id',$this->project_id);
 		$this->compositeCriteria($criteria,
@@ -110,7 +108,7 @@ class Day extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = $this->linkThisColumn('id');
-		$columns[] = $this->linkThisColumn('name');
+		$columns[] = $this->linkThisColumn('searchName');
  		$columns[] = 'scheduled:date';
 		$columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
 		

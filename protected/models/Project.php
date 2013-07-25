@@ -33,6 +33,7 @@ class Project extends CustomFieldActiveRecord
 	 */
 	public $searchProjectType;
 	public $searchInCharge;
+	public $searchName;
 	public $name;
 	public $in_charge_id;
 	public $project_template_id;
@@ -112,7 +113,7 @@ class Project extends CustomFieldActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
-			'id0.name AS name',
+			'id0.name AS searchName',
 			"CONCAT_WS('$delimiter',
 				contact.first_name,
 				contact.last_name,
@@ -128,7 +129,7 @@ class Project extends CustomFieldActiveRecord
 
 		// where
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('name',$this->name,true);
+		$criteria->compare('name',$this->searchName,true);
 		$criteria->compare('t.travel_time_1_way',Yii::app()->format->toMysqlTime($this->travel_time_1_way));
 		$criteria->compare('t.critical_completion',Yii::app()->format->toMysqlDate($this->critical_completion));
 		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
@@ -157,7 +158,7 @@ class Project extends CustomFieldActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'id';
-		$columns[] = 'name';
+		$columns[] = 'searchName';
         $columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
 		$columns[] = 'searchProjectType';
 		$columns[] = 'travel_time_1_way';
@@ -172,7 +173,7 @@ class Project extends CustomFieldActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		$displayAttr[]='name';
+		$displayAttr[]='searchName';
 
 		return $displayAttr;
 	}

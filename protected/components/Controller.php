@@ -195,10 +195,6 @@ class Controller extends CController
 		{
 			$modelName = $this->modelName;
 			$model = $modelName::model();
-
-			$concat = array();
-//			$display = array();
-//			$criteria = $modelName::getCriteriaFromDisplayAttr($concat, $display);
 			$criteria = $model->searchCriteria;
 			$criteria->condition = '';
 			$displayAttr = $modelName::getDisplayAttr();
@@ -224,7 +220,8 @@ class Controller extends CController
 				$order[] = "$attr ASC";
 				$attr = '$p->' . $attr;
 			}
-			$display = implode(Yii::app()->params['delimiter']['display'], $displayAttr);
+			// NB: here replaceing possible alias inserted if using ActiveRecord::getDisplayAttr()
+			$display = str_replace('t.', '', implode(Yii::app()->params['delimiter']['display'], $displayAttr));
 			// add scopes
 			$criteria->scopes = empty($_GET['scopes']) ? null : $_GET['scopes'];
 			// order

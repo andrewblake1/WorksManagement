@@ -157,40 +157,6 @@ abstract class ActiveRecord extends RangeActiveRecord
 		return array_merge($this->customValidators, array(array(implode(',', $this->allAttributes), 'safe', 'on'=>'search')));
 	}
  
-	static public function evalDisplayAttr($model)
-	{
-		$attributes = array();
-		
-		foreach(static::getDisplayAttr() as $relationAttribute)
-		{
-			$eval = '$model';
-
-			// would just eval the whole thing but can spit php notice if non existing child class hence this longer way
-			foreach(explode('->', $relationAttribute) as $relationAttribute)
-			{
-				eval('$value = '.$eval.'->'.$relationAttribute.';');
-				if(empty($value))
-				{
-					break;
-				}
-				else
-				{
-					$eval .= '->'.$relationAttribute;
-				}
-			}
-
-			if(!empty($value))
-			{
-				$attributes[] = $value;
-			}
-		}
-
-		// get the value of that attribute
-		$attributes = implode(Yii::app()->params['delimiter']['display'], $attributes);
-		
-		return $attributes;
-	}
-
 	static public function getNiceNamePlural($primaryKey=null, $model=null)
 	{
 		if(!empty(static::$niceNamePlural))
@@ -247,26 +213,22 @@ abstract class ActiveRecord extends RangeActiveRecord
 		
 		if(!empty($model))
 		{
-			$attributes = static::evalDisplayAttr($model);
-
-/*			// if the attribute is longer than 30 characters
-			if(mb_strlen($attributes) > 20)
+			// need to bear in mind here that may not have necassary attributes defined so re-get the model
+			// using its id and standard admin search criteria
+			$attribModel = $model->find($model->searchCriteria);
+			foreach(static::getDisplayAttr() as $attribute)
 			{
-				// shorten to 20 characters total
-				$attributes = mb_substr($attributes, 0, 17) . '...';
-			}*/
+				$attribute = str_replace('t.', '', $attribute);
+				$attributes[] = $attribModel->$attribute;
+			}
 
 			// make this our nice name - if it isn't empty
-			if($attributes)
-			{
-				$niceName = $attributes;
-			}
-			elseif($primaryKey)
+			if(!($niceName = implode(Yii::app()->params['delimiter']['display'], $attributes)) && $primaryKey)
 			{
 				$niceName .= " $primaryKey";
 			}
 		}
-		
+
 		return $niceName;
 	}
 
@@ -365,9 +327,6 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 */
 	public static function getListData($scopes = array())
 	{
-//		$concat = array();
-//		$display = array();
-//		$criteria = static::getCriteriaFromDisplayAttr($concat, $display);
 		$model = self::model();
 		$criteria = $model->searchCriteria;
 		$criteria->condition = '';
@@ -376,7 +335,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 				't.'.static::model()->tableSchema->primaryKey,
-				"CONCAT_WS('$delimiter',".implode(',', $displayAttr).") AS naturalKey",
+				"CONCAT_WS('$delimiter'," . implode(',', $displayAttr).") AS naturalKey",
 			);
 		$criteria->scopes = empty($scopes) ? null : $scopes;
 		// order
@@ -402,11 +361,11 @@ abstract class ActiveRecord extends RangeActiveRecord
 		// choose the best column
 		if(in_array('description', static::model()->tableSchema->getColumnNames()))
 		{
-			return array('description');
+			return array('t.description');
 		}
 		elseif(in_array('name', static::model()->tableSchema->getColumnNames()))
 		{
-			return array('name');
+			return array('t.name');
 		}
 		else
 		{
@@ -423,12 +382,6 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 */
 	public function compositeCriteria(&$criteria, $columns, $term)
 	{
-/*		foreach(explode(Yii::app()->params['delimiter']['search'], $term) as $term)
-		{
-			list($key, $column) = each($columns);
-			$criteria->compare($column, $term, true);
-		}*/
-		
 		// placeholder for bound params - must exist after the end of this call to bind
 		static $boundParams = array(); 
 		
@@ -438,7 +391,6 @@ abstract class ActiveRecord extends RangeActiveRecord
 			// protect against possible injection
 			$concat = "CONCAT_WS(' ', ". implode(', ', $columns) . ")";
 			$cntr = 0;
-	//		$criteria->params = array();
 			foreach($terms = explode(' ', $term) as $term)
 			{
 				$term = trim($term);
