@@ -334,7 +334,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 	public static function getListData($scopes = array())
 	{
 		$model = static::model();
-		$criteria = $model->getSearchCriteria($model);
+		$criteria = $model->searchCriteria;
 		$criteria->condition = '';
 		$displayAttr = $model::getDisplayAttr();
 		$criteria->scopes = empty($scopes) ? null : $scopes;
@@ -535,7 +535,7 @@ $t = $model->attributes;
 		// add all other attributes
 		$sort[] = '*';
 		$dataProvider = new ActiveDataProvider($this, array(
-			'criteria'=>self::getSearchCriteria($this),
+			'criteria'=>$this->getSearchCriteriaSorted($this),
 			'sort'=>array('attributes'=>$sort),
 			'pagination' => $pagination,
 		));
@@ -748,16 +748,21 @@ $t = $model->attributes;
 		return $name;
 	}
 
+	public function getSearchCriteria()
+	{
+		return new DbCriteria;
+	}
+
 	/**
 	 * Sets common criteria for search.
 	 * @return CDbCriteria the search/filter conditions.
 	 * @param CDbCriteria $criteria the criteria object to set.
 	 */
-	public function getSearchCriteria($model)
+	private function getSearchCriteriaSorted()
 	{
-		$searchCriteria = $model->searchCriteria;
+		$searchCriteria = $this->searchCriteria;
 		
-		$modelName = get_class($model);
+		$modelName = get_class($this);
 		if(!isset($_GET["{$modelName}_sort"]))
 		{
 			// set default sort

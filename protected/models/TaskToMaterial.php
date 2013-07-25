@@ -29,6 +29,14 @@ class TaskToMaterial extends ActiveRecord
 	 */
 	static $niceName = 'Material';
 
+	public $searchStage;
+	public $searchMaterialDescription;
+	public $searchMaterialUnit;
+	public $searchMaterialGroup;
+	public $searchMaterialAlias;
+	public $searchAssemblyQuantity;
+	public $searchTotalQuantity;
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */

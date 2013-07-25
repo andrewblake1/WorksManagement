@@ -32,6 +32,12 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	 */
 	static $niceName = 'Assembly';
 	
+	public $searchAssemblyDescription;
+	public $searchAssemblyGroup;
+	public $searchAssemblyAlias;
+	public $searchTaskQuantity;
+	public $searchTotalQuantity;
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
