@@ -155,7 +155,7 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'materialGroup->description',
+			'searchMaterialGroupDescription',
 			'comment',
 		);
 	}

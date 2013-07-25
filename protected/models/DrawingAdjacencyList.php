@@ -16,6 +16,8 @@
  */
 class DrawingAdjacencyList extends ActiveRecord
 {
+	public $searchParent;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -36,9 +38,6 @@ class DrawingAdjacencyList extends ActiveRecord
 		return array_merge(parent::rules(), array(
 			array('parent_id, child_id, updated_by', 'required'),
 			array('parent_id, child_id, updated_by', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, parent_id, child_id, updated_by', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -64,18 +63,41 @@ class DrawingAdjacencyList extends ActiveRecord
 		return array(
 			'id' => 'ID',
 			'parent_id' => 'Parent',
+			'searchParent' => 'Parent',
 			'child_id' => 'Child',
 			'updated_by' => 'User',
 		);
 	}
 
+	/**
+	 * @return DbCriteria the search/filter conditions.
+	 */
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
+
+		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria->select=array(
+			't.*',	// needed for delete and update buttons
+			"CONCAT_WS('$delimiter',
+				parent.id,
+				parent.description
+				parent.alias
+			) AS searchParent",
+		);
+
+		// with
+		$criteria->with = array(
+			'parent',
+		);
+		
+		return $criteria;
+	}
+
 	public static function getDisplayAttr()
 	{
-		return array(
-			'parent->id',
-			'parent->description',
-			'parent->alias',
-		);
+		return array('searchParent');
 	}
  
 	/**

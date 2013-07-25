@@ -124,8 +124,8 @@ class TaskTemplateToResource extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'resource->description',
-			'mode->description',
+			'searchResource',
+			'searchMode',
 		);
 	}
 

@@ -24,6 +24,8 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 {
 	public $task_id;
 	public $quantity;
+	
+	public $searchMaterialGroup;
 
 	/**
 	 * @var string nice model name for use in output
@@ -63,10 +65,27 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
             'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
             'material' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_id'),
             'materialGroupToMaterial' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_to_material_id'),
-            'materialGroup' => array(self::BELONGS_TO, 'TaskTemplateToMaterialGroup', 'material_group_id'),
+            'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
             'taskTemplateToMaterialGroup' => array(self::BELONGS_TO, 'TaskTemplateToMaterialGroup', 'task_template_to_material_group_id'),
         );
     }
+
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
+
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria->select=array(
+			't.*',
+			'materialGroup.description AS searchMaterialGroup',
+		);
+
+		$criteria->with = array(
+			'materialGroup',
+		);
+
+		return $criteria;
+	}
 
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
@@ -74,23 +93,10 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'materialGroup->materialGroup->description',
+			'searchMaterialGroup',
 		);
 	}
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'task_to_material_id' => 'Task To Material',
-			'material_group_id' => 'Material Group',
-			'material_group_to_material_id' => 'Material Group',
-			'material_id' => 'Material',
-		);
-	}
-	
 	public function assertFromParent($modelName = null) {
 		
 		// need to trick it here into using task to material model instead as this model not in navigation hierachy

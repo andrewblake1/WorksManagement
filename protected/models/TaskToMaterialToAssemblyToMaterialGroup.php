@@ -25,6 +25,8 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	public $task_id;
 	public $quantity;
 	public $task_to_assembly_id;
+	
+	public $searchMaterialGroup;
 
 	/**
 	 * @var string nice model name for use in output
@@ -72,10 +74,27 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
             'material' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'assemblyToMaterialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'assembly_to_material_group_id'),
-            'materialGroup' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_id'),
+            'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
             'materialGroupToMaterial' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_to_material_id'),
         );
     }
+
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
+
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria->select=array(
+			't.*',
+			'materialGroup.description AS searchMaterialGroup',
+		);
+
+		$criteria->with = array(
+			'materialGroup',
+		);
+
+		return $criteria;
+	}
 
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
@@ -83,7 +102,7 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'materialGroup->materialGroup->description',
+			'searchMaterialGroup',
 		);
 	}
 
@@ -93,10 +112,7 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'task_to_material_id' => 'Task To Material',
-			'material_group_id' => 'Material Group',
-			'material_group_to_material_id' => 'Material Group',
-			'material_id' => 'Material',
+			'searchMaterialGroup' => 'Material group',
 		);
 	}
 	

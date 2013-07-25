@@ -163,7 +163,7 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'assemblyGroup->description',
+			'searchAssemblyGroupDescription',
 			'comment',
 		);
 	}

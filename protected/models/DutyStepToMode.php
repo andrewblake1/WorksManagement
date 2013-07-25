@@ -93,7 +93,7 @@ class DutyStepToMode extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'mode->description',
+			'searchMode',
 		);
 	}
  

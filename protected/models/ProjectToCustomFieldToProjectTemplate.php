@@ -103,8 +103,7 @@ class ProjectToCustomFieldToProjectTemplate extends CustomValueActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'customFieldToProjectTemplate->customField->label',
-			'customFieldToProjectTemplate->label_override',
+			'searchCustomField',
 			);
 	}
 	

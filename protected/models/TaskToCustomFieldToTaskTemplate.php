@@ -109,8 +109,7 @@ class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'customFieldToProjectTemplate->customField->description',
-			'customFieldToProjectTemplate->label_override',
+			'searchCustomField',
 		);
 	}
 	

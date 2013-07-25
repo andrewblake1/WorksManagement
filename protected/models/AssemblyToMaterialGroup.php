@@ -173,9 +173,9 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'materialGroup->description',
+			'searchMaterialGroupDescription',
 			'comment',
-			'stage->description',
+			'searchStage',
 		);
 	}
 	

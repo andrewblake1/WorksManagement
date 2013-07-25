@@ -113,7 +113,7 @@ class DutyStepDependency extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchLeadInDays';
-		$columns[] = static::linkColumn('searchChildDutyStep', 'DutyStep', 'child_duty_step_id');
+		$columns[] = 'searchChildDutyStep';
  		
 		return $columns;
 	}
@@ -121,7 +121,7 @@ class DutyStepDependency extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'childDutyStep->description',
+			'searchChildDutyStep',
 		);
 	}
  

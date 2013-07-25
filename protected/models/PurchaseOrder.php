@@ -103,7 +103,7 @@ class PurchaseOrder extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'supplier->name',
+			'searchSupplier',
 			'number',
 		);
 	}

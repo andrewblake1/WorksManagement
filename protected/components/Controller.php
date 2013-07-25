@@ -197,11 +197,14 @@ class Controller extends CController
 			$model = $modelName::model();
 
 			$concat = array();
-			$display = array();
-			$criteria = $modelName::getCriteriaFromDisplayAttr($concat, $display);
+//			$display = array();
+//			$criteria = $modelName::getCriteriaFromDisplayAttr($concat, $display);
+			$criteria = $model->searchCriteria;
+			$criteria->condition = '';
+			$displayAttr = $modelName::getDisplayAttr();
 
 			// create the search term
-			$concat = "CONCAT_WS(' ', " . implode(', ', $concat) . ")";
+			$concat = "CONCAT_WS(' ', " . implode(', ', $displayAttr) . ")";
 			$cntr = 0;
 			$criteria->params = array();
 			foreach($terms = explode(' ', $_GET['term']) as $term)
@@ -215,9 +218,16 @@ class Controller extends CController
 
 			// limit the results
 			$criteria->limit = Yii::app()->params->listMax;
-			$display = implode(Yii::app()->params['delimiter']['display'], $display);
+			// get a display string
+			foreach($displayAttr as &$attr)
+			{
+				$attr = '$p->' . $attr;
+			}
+			$display = implode(Yii::app()->params['delimiter']['display'], $displayAttr);
+			// add scopes
 			$criteria->scopes = empty($_GET['scopes']) ? null : $_GET['scopes'];
 
+			// get models
 			$fKModels = $model->findAll($criteria);
 
 			// if some models founds

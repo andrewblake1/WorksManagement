@@ -60,9 +60,6 @@ class AuthItem extends ActiveRecord
 			array('name', 'required'),
 			array('name', 'length', 'max'=>64),
 			array('description, bizrule, data', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('name, type, description, bizrule, data', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -104,11 +101,9 @@ class AuthItem extends ActiveRecord
 
 		$criteria->compare('t.name',$this->name,true);
 		$criteria->compare('t.type', self::typeRole);
-//		$criteria->compare('t.description',$this->description,true);
 
 		$criteria->select=array(
 			't.name',
-//			't.description',
 		);
 
 		return $criteria;
@@ -117,7 +112,6 @@ class AuthItem extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = $this->linkThisColumn('name');
-//		$columns[] = 'description';
 		
 		return $columns;
 	}
@@ -129,7 +123,6 @@ class AuthItem extends ActiveRecord
 	{
 		return array(
 			'name',
-//			'description',
 		);
 	}
 

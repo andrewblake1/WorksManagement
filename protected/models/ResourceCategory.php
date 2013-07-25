@@ -34,7 +34,6 @@ class ResourceCategory extends CategoryActiveRecord {
 		//rgt,lft,root,level,id.
 		return array_merge(parent::rules(), array(
 			array('name', 'required'),
-			array('name', 'length', 'max' => 64),
 		));
 	}
 

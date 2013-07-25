@@ -164,7 +164,7 @@ class TaskTemplateToAction extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'action->description',
+			'searchAction',
 		);
 	}
 	

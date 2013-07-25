@@ -64,9 +64,6 @@ class AuthAssignment extends ActiveRecord
 			array('userid', 'numerical', 'integerOnly'=>true),
 			array('itemname', 'length', 'max'=>64),
 			array('bizrule, data', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, itemname, userid, searchUser, bizrule, data', 'safe', 'on'=>'search'),
 		));
 	}
 
@@ -92,8 +89,8 @@ class AuthAssignment extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'itemname' => 'Role',
-			'userid' => 'User, First/Last/Email',
-			'searchUser' => 'User, First/Last/Email',
+			'userid' => 'User',
+			'searchUser' => 'User',
 			'bizrule' => 'Bizrule',
 			'data' => 'Data',
 		));
@@ -107,15 +104,26 @@ class AuthAssignment extends ActiveRecord
 		$criteria=new DbCriteria;
 
 		// select
+		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',
 			't.itemname',
 			't.userid',
+			"CONCAT_WS('$delimiter',
+				contact.first_name,
+				contact.last_name,
+				contact.email
+				) AS searchUser",
 		);
 
 		// where
 		$criteria->compare('t.itemname',$this->itemname,true);
 		$criteria->compare('t.userid', $this->userid,true);
+		
+		// with
+		$criteria->with = array(
+			'user.contact',
+		);
 
 		return $criteria;
 	}
@@ -136,10 +144,8 @@ class AuthAssignment extends ActiveRecord
 
 		if(!isset($_GET['userid']))
 		{
-			static::$labelOverrides['auth_assignment_id'] = 'Role/First/Last/Email';
-			$displaAttr[]='user->contact->first_name';
-			$displaAttr[]='user->contact->last_name';
-			$displaAttr[]='user->contact->email';
+			static::$labelOverrides['auth_assignment_id'] = 'User';
+			$displaAttr[]='searchUser';
 		}
 
 

@@ -149,10 +149,10 @@ class TaskTemplateToAssembly extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'taskTemplate->description',
-			'assembly->description',
-			'assembly->unit',
-			'assembly->alias',
+//			'taskTemplate->description',
+			'searchAssemblyDescription',
+//			'assembly->unit',
+			'searchAssemblyAlias',
 		);
 	}
 

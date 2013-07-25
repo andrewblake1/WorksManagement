@@ -133,10 +133,10 @@ class MaterialGroupToMaterial extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'materialGroup->description',
-			'material->description',
-			'material->unit',
-			'material->alias',
+//			'materialGroup->description',
+			'searchMaterialDescription',
+			'searchMaterialUnit',
+			'searchMaterialAlias',
 		);
 	}
 

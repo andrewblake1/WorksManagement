@@ -138,7 +138,7 @@ class Duty extends CustomFieldActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'dutyData->dutyStep->description',
+			'description',
 		);
 	}
 

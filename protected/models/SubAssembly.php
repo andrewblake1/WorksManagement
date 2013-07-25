@@ -161,9 +161,8 @@ class SubAssembly extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'childAssembly->description',
+			'searchChildAssembly',
 			'comment',
-			'childAssembly->alias',
 		);
 	}
  

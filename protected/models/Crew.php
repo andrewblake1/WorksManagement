@@ -113,8 +113,7 @@ class Crew extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		$displaAttr[]='id0->inCharge->contact->first_name';
-		$displaAttr[]='id0->inCharge->contact->last_name';
+		$displaAttr[]='searchInCharge';
 
 		return $displaAttr;
 	}

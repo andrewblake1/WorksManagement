@@ -112,7 +112,7 @@ class ProjectTemplateToAuthItem extends ActiveRecord
 	
 	public function getAdminColumns()
 	{
-        $columns[] = $this->linkThisColumn('searchAuthItem');
+        $columns[] = 'searchAuthItem';
 		
 		return $columns;
 	}
@@ -122,7 +122,7 @@ class ProjectTemplateToAuthItem extends ActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		$displaAttr[]='authItemName->description';
+		$displaAttr[]='searchAuthItem';
 
 		return $displaAttr;
 	}

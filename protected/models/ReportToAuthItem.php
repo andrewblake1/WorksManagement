@@ -32,9 +32,6 @@ class ReportToAuthItem extends ActiveRecord
 			array('report_id, auth_item_name', 'required'),
 			array('report_id', 'length', 'max'=>10),
 			array('auth_item_name', 'length', 'max'=>64),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, report_id, auth_item_name', 'safe', 'on'=>'search'),
 		));
 	}
 

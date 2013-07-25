@@ -23,6 +23,7 @@
  */
 class DutyData extends ActiveRecord
 {
+	public $searchDutyStep;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -88,10 +89,28 @@ class DutyData extends ActiveRecord
 		return parent::beforeSave();
 	}
 
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
+
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria->select=array(
+			't.*',
+			'dutyStep.description AS searchDutyStep',
+		);
+
+		
+		$criteria->with = array(
+			'dutyStep',
+		);
+
+		return $criteria;
+	}
+
 	static function getDisplayAttr()
 	{
 		return array(
-			'dutyStep->description',
+			'searchDutyStep',
 		);
 	}
 	

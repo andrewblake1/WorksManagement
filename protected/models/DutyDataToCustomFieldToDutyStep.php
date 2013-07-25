@@ -103,8 +103,7 @@ class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'customFieldToDutyStep->customField->label',
-			'customFieldToDutyStep->label_override',
+			'searchCustomField',
 		);
 	}
 	

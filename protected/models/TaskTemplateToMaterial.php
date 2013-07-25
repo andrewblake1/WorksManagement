@@ -156,10 +156,10 @@ class TaskTemplateToMaterial extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'taskTemplate->description',
-			'material->description',
-			'material->unit',
-			'material->alias',
+//			'taskTemplate->description',
+			'searchMaterialDescription',
+			'searchMaterialUnit',
+			'searchMaterialAlias',
 		);
 	}
 

@@ -82,7 +82,7 @@ class DutyStepBranch extends ActiveRecord
 		// where
 		$criteria->compare('t.duty_step_dependency_id',$this->duty_step_dependency_id);
 		$criteria->compare('t.compare',$this->compare, true);
-		$criteria->compare('COALESCE(customFieldToDutyStep.label_override',$this->searchCustomField, true);
+		$criteria->compare('COALESCE(customFieldToDutyStep.label_override, customField.label',$this->searchCustomField, true);
 		
 		// with
 		$criteria->with = array(
@@ -104,8 +104,7 @@ class DutyStepBranch extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'customFieldToDutyStep->customField->label',
-			'customFieldToDutyStep->label_override',
+			'searchCustomField',
 			'compare',
 		);
 	}

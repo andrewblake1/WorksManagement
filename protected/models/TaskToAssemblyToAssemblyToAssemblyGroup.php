@@ -24,6 +24,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 {
 	public $task_id;
 	public $quantity;
+	public $searchAssemblyGroup;
 
 	/**
 	 * @var string nice model name for use in output
@@ -71,11 +72,27 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
             'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
             'assembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_id'),
             'assemblyToAssemblyGroup' => array(self::BELONGS_TO, 'AssemblyToAssemblyGroup', 'assembly_to_assembly_group_id'),
-            'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_id'),
+            'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup ', 'assembly_group_id'),
             'assemblyGroupToAssembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_to_assembly_id'),
         );
     }
 
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
+
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria->select=array(
+			't.*',
+			'assemblyGroup.description AS searchAssemblyGroup',
+		);
+
+		$criteria->with = array(
+			'assemblyGroup',
+		);
+
+		return $criteria;
+	}
 
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
@@ -83,7 +100,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'assemblyGroup->assemblyGroup->description',
+			'searchAssemblyGroup',
 		);
 	}
 
@@ -95,6 +112,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 		return array(
 			'assembly_group_id' => 'Assembly Group',
 			'assembly_group_to_assembly_id' => 'Assembly Group',
+			'searchAssemblyGroup' => 'Assembly group',
 			'assembly_id' => 'Assembly',
 		);
 	}

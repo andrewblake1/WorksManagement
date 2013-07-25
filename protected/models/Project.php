@@ -156,8 +156,8 @@ class Project extends CustomFieldActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('id');
-		$columns[] = $this->linkThisColumn('name');
+		$columns[] = 'id';
+		$columns[] = 'name';
         $columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
 		$columns[] = 'searchProjectType';
 		$columns[] = 'travel_time_1_way';
@@ -172,7 +172,7 @@ class Project extends CustomFieldActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		$displaAttr[]='id0->name';
+		$displaAttr[]='name';
 
 		return $displaAttr;
 	}

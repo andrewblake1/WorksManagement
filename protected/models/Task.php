@@ -236,7 +236,8 @@ class Task extends CustomFieldActiveRecord
 	public static function getDisplayAttr()
 	{
 		$displaAttr[]='id';
-		$displaAttr[]='id0->name';
+		$displaAttr[]='name';
+//		$displaAttr[]='id0->name';
 
 		return $displaAttr;
 	}

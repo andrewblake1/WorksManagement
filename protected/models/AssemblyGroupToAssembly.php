@@ -124,9 +124,8 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'assemblyGroup->description',
-			'assembly->description',
-			'assembly->alias',
+			'searchAssemblyDescription',
+			'searchAssemblyAlias',
 		);
 	}
 

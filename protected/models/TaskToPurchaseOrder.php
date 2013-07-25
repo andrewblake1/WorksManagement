@@ -119,8 +119,7 @@ class TaskToPurchaseOrder extends ActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'purchaseOrder->supplier->name',
-			'purchaseOrder->number',
+			'searchPurchaseOrder',
 		);
 	}
 

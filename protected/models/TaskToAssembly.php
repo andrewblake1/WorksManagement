@@ -108,8 +108,8 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'assembly->description',
-			'assembly->alias',
+			'searchAssemblyDescription',
+			'searchAssemblyAlias',
 		);
 	}
 

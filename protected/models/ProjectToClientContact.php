@@ -158,9 +158,9 @@ class ProjectToClientContact extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'clientContact->contact->first_name',
-			'clientContact->contact->last_name',
-			'clientContact->contact->email',
+			'searchFirstName',
+			'searchLastName',
+			'searchEmail',
 		);
 	}
 

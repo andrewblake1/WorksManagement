@@ -29,12 +29,7 @@ class Report extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('description', 'required'),
-			array('description', 'length', 'max'=>255),
-			array('context', 'length', 'max'=>64),
 			array('template_html, sub_report_template', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, description, template_html, context', 'safe', 'on'=>'search'),
 		));
 	}
 

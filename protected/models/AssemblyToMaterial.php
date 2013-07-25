@@ -171,10 +171,10 @@ class AssemblyToMaterial extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'material->description',
-			'material->unit',
-			'material->alias',
-			'stage->description',
+			'searchMaterialDescription',
+			'searchMaterialUnit',
+			'searchMaterialAlias',
+			'searchStage',
 		);
 	}
 	

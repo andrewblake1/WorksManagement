@@ -125,7 +125,7 @@ class TaskTemplateToAssemblyGroup extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = $this->linkThisColumn('searchAssemblyGroupDescription');
+        $columns[] = 'searchAssemblyGroupDescription';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
@@ -143,7 +143,7 @@ class TaskTemplateToAssemblyGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'assemblyGroup->description',
+			'searchAssemblyGroupDescription',
 			'comment',
 		);
 	}

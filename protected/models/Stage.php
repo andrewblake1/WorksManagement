@@ -25,7 +25,6 @@ class Stage extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('description', 'required'),
-			array('description', 'length', 'max'=>255),
 		));
 	}
 

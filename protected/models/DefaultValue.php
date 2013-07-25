@@ -94,7 +94,7 @@ class DefaultValue extends ActiveRecord
 		return array(
 			'table',
 			'column',
-			);
+		);
 	}
 
 }

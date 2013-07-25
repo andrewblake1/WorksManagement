@@ -125,7 +125,7 @@ class ResourceToSupplier extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'supplier->name',
+			'searchSupplier',
 		);
 	}
 

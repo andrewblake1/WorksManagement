@@ -111,8 +111,8 @@ class AssemblyToClient extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'assembly->description',
-			'assembly->alias',
+			'searchAssemblyDescription',
+			'searchAssemblyAlias',
 			'alias',
 		);
 	}

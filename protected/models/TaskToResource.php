@@ -178,8 +178,8 @@ class TaskToResource extends ActiveRecord
 	static function getDisplayAttr()
 	{
 		return array(
-			'resourceData->resourceToSupplier->resource->description',
-			'resourceData->mode->description',
+			'searchResource',
+			'searchMode',
 		);
 	}
 

@@ -299,7 +299,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 		return $parentForeignKey;
 	}
 	
-	public static function getCriteriaFromDisplayAttr(&$concat = array(), &$display = array())
+/*	public static function getCriteriaFromDisplayAttr(&$concat = array(), &$display = array())
 	{
 		$criteria = new DbCriteria();
 		$model = self::model();
@@ -356,7 +356,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 		$criteria->order = implode(', ', $criteria->order);
 
 		return $criteria;
-	}
+	}*/
 
 	/**
 	 * Returns the listdata of specified bound column and display column.
@@ -365,14 +365,18 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 */
 	public static function getListData($scopes = array())
 	{
-		$concat = array();
-		$display = array();
-		$criteria = static::getCriteriaFromDisplayAttr($concat, $display);
+//		$concat = array();
+//		$display = array();
+//		$criteria = static::getCriteriaFromDisplayAttr($concat, $display);
+		$model = self::model();
+		$criteria = $model->searchCriteria;
+		$criteria->condition = '';
+		$displayAttr = $model::getDisplayAttr();
 		
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 				't.'.static::model()->tableSchema->primaryKey,
-				"CONCAT_WS('$delimiter',".implode(',', $concat).") AS naturalKey",
+				"CONCAT_WS('$delimiter',".implode(',', $displayAttr).") AS naturalKey",
 			);
 		$criteria->scopes = empty($scopes) ? null : $scopes;
 		
