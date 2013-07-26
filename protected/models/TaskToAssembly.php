@@ -67,7 +67,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 
 		return ($this->scenario == 'search') || static::$_inSearch
 			? 'tmp_planning_to_assembly'
-			: 'tbl_task_to_material';
+			: 'tbl_task_to_assembly';
 	}
 	
 	// needed due to database view
@@ -143,7 +143,10 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	}
 
 	public function afterFind() {
-		$this->standard_id = $this->assembly->standard_id;
+		if($this->id)
+		{
+			$this->standard_id = $this->assembly->standard_id;
+		}
 		
 		return parent::afterFind();
 	}
