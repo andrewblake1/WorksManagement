@@ -23,7 +23,8 @@ class CategoryController extends Controller
 			'size' => 'small', // '', 'large', 'small' or 'mini'
 			'htmlOptions' => array(
 				'data-toggle' => 'modal',
-				'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').first().focus();',
+// removed until boostrap updated - currently causes issues if tooltip on same form
+//				'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').first().focus();',
 			),
 		));
 	}

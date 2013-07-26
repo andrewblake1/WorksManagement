@@ -145,7 +145,10 @@ class TaskToMaterial extends ActiveRecord
 	}
 
 	public function afterFind() {
-		$this->standard_id = $this->material->standard_id;
+		if($this->id)
+		{
+			$this->standard_id = $this->material->standard_id;
+		}
 		
 		return parent::afterFind();
 	}
@@ -157,7 +160,7 @@ class TaskToMaterial extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 		$delimiter = Yii::app()->params['delimiter']['display'];
-		
+$t = $this->tableName();	
 		// update
 		if(($this->tableName()) == 'tbl_task_to_material')
 		{

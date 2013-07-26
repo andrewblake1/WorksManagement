@@ -1,0 +1,128 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/bootstrap-yii.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/jquery-ui-bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/bootstrap-notify.css" />
+<script type="text/javascript" src="/WorksManagement/assets/d65abdbc/jquery.js"></script>
+<script type="text/javascript" src="/WorksManagement/assets/d65abdbc/jquery.ba-bbq.js"></script>
+<script type="text/javascript" src="/WorksManagement/assets/d65abdbc/jquery.yiiactiveform.js"></script>
+<script type="text/javascript" src="/WorksManagement/assets/8e185744/js/bootstrap.bootbox.min.js"></script>
+<script type="text/javascript" src="/WorksManagement/assets/8e185744/js/bootstrap.notify.js"></script>
+<script type="text/javascript" src="/WorksManagement/assets/8e185744/js/bootstrap.js"></script>
+<title>Works Management - Admin TaskToAssembly</title>
+
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="viewport" content="width=device-width">
+	<link rel="stylesheet" type="text/css" href="/WorksManagement/themes/base/css/style.css" />
+	<link rel="icon" href="/WorksManagement/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="/WorksManagement/favicon.ico" type="image/x-icon">
+
+</head>
+<body>
+
+<div class="container">
+	<div class="row">
+		<header class="span12">
+
+			<div class="navbar-inverse navbar"><div class="navbar-inner"><div class="container"><a class="btn btn-navbar" data-toggle="collapse" data-target="#yii_bootstrap_collapse_0"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand">Works Management</a><div class="nav-collapse collapse" id="yii_bootstrap_collapse_0"><ul id="yw4" class="nav"><li><a href="http://localhost/phpmyadmin">Database</a></li></ul><ul class="pull-right nav" id="yw5"><li><a href="/WorksManagement/site/logout">Logout (username)</a></li></ul></div></div></div></div>			
+			<!-- breadcrumbs -->
+							﻿﻿<ul class="breadcrumbs breadcrumb"><li class="active"><a href="/WorksManagement/">Home</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Client/admin">Clients</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Client/update/8">SP Ausnet</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Project/admin?client_id=8">Projects</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Project/update/572">SP Ausnet Project</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Day/admin?project_id=572">Days</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Day/update/573">30 Jul, 2013</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Crew/admin?day_id=573">Crews</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Crew/update/574"> 574</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Task/admin?crew_id=574">Tasks</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Task/update/588">588 test1</a><span class="divider">/</span></li><li class="active">Assemblies</li></ul>			
+			<!-- tabs -->
+			<div id="yw6"><ul id="yw7" class="nav nav-tabs"><li><a href="/WorksManagement/Task/update/588">588 test1</a></li><li><a href="/WorksManagement/TaskToAction/admin?task_id=588">Actions</a></li><li><a href="/WorksManagement/TaskToMaterial/admin?task_id=588">Materials</a></li><li class="active"><a href="/WorksManagement/TaskToAssembly/admin?task_id=588">Assemblies</a></li><li><a href="/WorksManagement/TaskToResource/admin?task_id=588">Resources</a></li></ul><div class="tab-content"><div id="yw6_tab_1" class="tab-pane fade"></div><div id="yw6_tab_2" class="tab-pane fade"></div><div id="yw6_tab_3" class="tab-pane fade"></div><div id="yw6_tab_4" class="tab-pane fade active in"></div><div id="yw6_tab_5" class="tab-pane fade"></div></div></div>				
+			<h2>Assemblies</h2>		</header>
+	</div>
+	
+	<div class="row">
+		<div class="span12">
+			<div id="yw0"></div><div id="TaskToAssembly-grid" class="grid-view">
+<div class="summary">Displaying 1-4 of 4 results.</div>
+<table class="items table table-striped">
+<thead>
+<tr>
+<th class="checkbox-column" id="TaskToAssembly-grid_c0"><input type="checkbox" value="1" name="TaskToAssembly-grid_c0_all" id="TaskToAssembly-grid_c0_all" /></th><th class="button-column" id="TaskToAssembly-grid_c1">&nbsp;</th><th id="TaskToAssembly-grid_c2"><a class="sort-link" href="/WorksManagement/taskToAssembly/admin?task_id=588&amp;TaskToAssembly_sort=id">Assembly<span class="caret"></span></a></th><th id="TaskToAssembly-grid_c3"><a class="sort-link" href="/WorksManagement/taskToAssembly/admin?task_id=588&amp;TaskToAssembly_sort=parent_id">Parent<span class="caret"></span></a></th><th id="TaskToAssembly-grid_c4"><a class="sort-link" href="/WorksManagement/taskToAssembly/admin?task_id=588&amp;TaskToAssembly_sort=searchAssemblyDescription">Assembly<span class="caret"></span></a></th><th id="TaskToAssembly-grid_c5"><a class="sort-link" href="/WorksManagement/taskToAssembly/admin?task_id=588&amp;TaskToAssembly_sort=searchAssemblyAlias">Aliases<span class="caret"></span></a></th><th id="TaskToAssembly-grid_c6"><a class="sort-link" href="/WorksManagement/taskToAssembly/admin?task_id=588&amp;TaskToAssembly_sort=searchAssemblyGroup">Group<span class="caret"></span></a></th><th id="TaskToAssembly-grid_c7"><a class="sort-link" href="/WorksManagement/taskToAssembly/admin?task_id=588&amp;TaskToAssembly_sort=quantity">Quantity<span class="caret"></span></a></th><th id="TaskToAssembly-grid_c8"><a class="sort-link" href="/WorksManagement/taskToAssembly/admin?task_id=588&amp;TaskToAssembly_sort=searchTaskQuantity">Task quantity<span class="caret"></span></a></th><th id="TaskToAssembly-grid_c9"><a class="sort-link" href="/WorksManagement/taskToAssembly/admin?task_id=588&amp;TaskToAssembly_sort=searchTotalQuantity">Accumlated total<span class="caret"></span></a></th></tr>
+<tr class="filters">
+<td>&nbsp;</td><td>&nbsp;</td><td><div class="filter-container"><input name="TaskToAssembly[id]" id="TaskToAssembly_id" type="text" /></div></td><td><div class="filter-container"><input name="TaskToAssembly[parent_id]" id="TaskToAssembly_parent_id" type="text" maxlength="10" /></div></td><td><div class="filter-container"><input name="TaskToAssembly[searchAssemblyDescription]" id="TaskToAssembly_searchAssemblyDescription" type="text" /></div></td><td><div class="filter-container"><input name="TaskToAssembly[searchAssemblyAlias]" id="TaskToAssembly_searchAssemblyAlias" type="text" /></div></td><td><div class="filter-container"><input name="TaskToAssembly[searchAssemblyGroup]" id="TaskToAssembly_searchAssemblyGroup" type="text" /></div></td><td><div class="filter-container"><input name="TaskToAssembly[quantity]" id="TaskToAssembly_quantity" type="text" /></div></td><td><div class="filter-container"><input name="TaskToAssembly[searchTaskQuantity]" id="TaskToAssembly_searchTaskQuantity" type="text" /></div></td><td><div class="filter-container"><input name="TaskToAssembly[searchTotalQuantity]" id="TaskToAssembly_searchTotalQuantity" type="text" /></div></td></tr>
+</thead>
+<tfoot>
+<tr><td colspan="10"><div id="egw0" style="position:relative" class="pull-left">&nbsp;<a class="bulk-action disabled bulk-actions-btn btn btn-primary btn-small" id="bulk_delete_button_1" href="/WorksManagement/taskToAssembly/batchDelete"><i class="icon-trash"></i> Delete Selected</a>&nbsp;<div style="position:absolute;top:0;left:0;height:100%;width:100%;display:block;" class="bulk-actions-blocker"></div></div> <a class="btn btn-primary btn-small" id="yw1" href="/WorksManagement/TaskToAssembly/admin?task_id=588&amp;action=download"><i class="icon-download"></i> Download Excel</a> <a data-toggle="modal" onclick="$(&#039;#myModal input&#039;).first().focus();" class="btn btn-primary btn-small" id="yw2" href="#myModal"><i class="icon-plus"></i> New</a></td></tr></tfoot>
+<tbody>
+<tr class="odd">
+<td class="checkbox-column"><input value="7" id="TaskToAssembly-grid_c0_0" type="checkbox" name="TaskToAssembly-grid_c0[]" /></td><td class="button-column"><a class="update" href="/WorksManagement/TaskToAssembly/update/7"><i class="icon-pencil"></i></a><a class="delete" href="/WorksManagement/TaskToAssembly/delete/7"><i class="icon-trash"></i></a></td><td>7</td><td>5</td><td>HV Wood Pole/Steel Crossarm Construction Bonding &#039;A&#039;</td><td>EVX9/72/4 - Bonding &#039;A&#039;</td><td></td><td>&nbsp;</td><td>1</td><td>&nbsp;</td></tr>
+<tr class="even">
+<td class="checkbox-column"><input value="8" id="TaskToAssembly-grid_c0_1" type="checkbox" name="TaskToAssembly-grid_c0[]" /></td><td class="button-column"><a class="update" href="/WorksManagement/TaskToAssembly/update/8"><i class="icon-pencil"></i></a><a class="delete" href="/WorksManagement/TaskToAssembly/delete/8"><i class="icon-trash"></i></a></td><td>8</td><td>5</td><td>HV Wood Pole/Steel Crossarm Construction Bonding &#039;C&#039;</td><td>EVX9/72/4 - Bonding &#039;C&#039;</td><td></td><td>&nbsp;</td><td>1</td><td>&nbsp;</td></tr>
+<tr class="odd">
+<td class="checkbox-column"><input value="6" id="TaskToAssembly-grid_c0_2" type="checkbox" name="TaskToAssembly-grid_c0[]" /></td><td class="button-column"><a class="update" href="/WorksManagement/TaskToAssembly/update/6"><i class="icon-pencil"></i></a><a class="delete" href="/WorksManagement/TaskToAssembly/delete/6"><i class="icon-trash"></i></a></td><td>6</td><td>5</td><td>Steel Crossarm Assemblies for Wood Poles - &#039;F&#039;</td><td>EVX9/72/6 - Assembly &#039;F&#039;</td><td></td><td>&nbsp;</td><td>1</td><td>&nbsp;</td></tr>
+<tr class="even">
+<td class="checkbox-column"><input value="5" id="TaskToAssembly-grid_c0_3" type="checkbox" name="TaskToAssembly-grid_c0[]" /></td><td class="button-column"><a class="update" href="/WorksManagement/TaskToAssemblyToTaskTemplateToAssemblyGroup/returnForm/2?TaskToAssemblyToTaskTemplateToAssemblyGroup%5Bassembly_group_to_assembly_id%5D=158&amp;TaskToAssemblyToTaskTemplateToAssemblyGroup%5Bassembly_group_id%5D=38&amp;TaskToAssemblyToTaskTemplateToAssemblyGroup%5Btask_id%5D=588&amp;TaskToAssemblyToTaskTemplateToAssemblyGroup%5Btask_to_assembly_id%5D=5&amp;TaskToAssemblyToTaskTemplateToAssemblyGroup%5Btask_template_to_assembly_group_id%5D=14"><i class="icon-pencil"></i></a><a class="delete" href="/WorksManagement/TaskToAssemblyToTaskTemplateToAssemblyGroup/delete/5"><i class="icon-trash"></i></a></td><td>5</td><td>&nbsp;</td><td>22kV Subsidiary Wood Pole Steel Crossarm Construction - Int &amp; Semi-Anchor (Normal Conditions)</td><td>EVX9/75 - Int &amp; Semi-Anchor</td><td>22kV INT/ ANGLE/ SEMI-ANCH CROSSARMS</td><td>1</td><td>1</td><td>1</td></tr>
+</tbody>
+</table>
+
+<div  class="extended-summary"></div><div class="keys" style="display:none" title="/WorksManagement/TaskToAssembly/admin?task_id=588"><span>7</span><span>8</span><span>6</span><span>5</span></div>
+<div class="keys" style="display:none" title="/WorksManagement/TaskToAssembly/admin?task_id=588"><span>7</span><span>8</span><span>6</span><span>5</span></div>
+</div><div id="myModal" class="modal hide fade"><div id="form-createTaskToAssembly" class="modal-body"><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/bootstrap-yii.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/jquery-ui-bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/8e185744/css/bootstrap-notify.css" />
+<div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>Assembly...</h3></div><div class="alert alert-block alert-error" id="TaskToAssemblyToTaskTemplateToAssemblyGroup-form_es_" style="display:none"><p>Please fix the following input errors:</p>
+<input type="textarea" data-original-title="Select c">asdfsadf</input>
+	
+	<ul><li>dummy</li></ul></div><form class="well form-vertical" id="TaskToAssemblyToTaskTemplateToAssemblyGroup-form" action="/WorksManagement/taskToAssemblyToTaskTemplateToAssemblyGroup/Update/2" method="post"><input name="TaskToAssemblyToTaskTemplateToAssemblyGroup[assembly_group_to_assembly_id]" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_assembly_group_to_assembly_id" type="hidden" value="158" /><input name="TaskToAssemblyToTaskTemplateToAssemblyGroup[assembly_group_id]" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_assembly_group_id" type="hidden" value="38" /><input name="TaskToAssemblyToTaskTemplateToAssemblyGroup[task_id]" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_task_id" type="hidden" value="588" /><input name="TaskToAssemblyToTaskTemplateToAssemblyGroup[task_to_assembly_id]" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_task_to_assembly_id" type="hidden" value="5" /><input name="TaskToAssemblyToTaskTemplateToAssemblyGroup[task_template_to_assembly_group_id]" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_task_template_to_assembly_group_id" type="hidden" value="14" /><label for="TaskToAssemblyToTaskTemplateToAssemblyGroup_assembly_id" class="required">Assembly <span class="required">*</span></label><select class="span5" data-original-title="Select crossarm from list; as per construction plan" name="TaskToAssemblyToTaskTemplateToAssemblyGroup[assembly_id]" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_assembly_id">
+<option value="">Please select</option>
+<option value="12" selected="selected">12 EVX9/75 - Int &amp; Semi-Anchor 22kV Subsidiary Wood Pole Steel Crossarm Construction - Int &amp; Semi-Anchor (Normal Conditions)</option>
+<option value="293">293 EVX9/7033/11 D 22kV Single Circuit Concrete Pole/Steel Crossarm Construction Angle Type 1B, Material Schedule</option>
+<option value="411">411 EVX9/7029 D - INT 22kV Single Cricuit Wood Pole Steel Crossarm Construction Intermediate</option>
+<option value="413">413 EVX9/7029 D - S/A 22kV Single Cricuit Wood Pole Steel Crossarm Construction Semi-Anchor Poles</option>
+<option value="415">415 EVX9/7029 D - A.T.1 22kV Single Cricuit Wood Pole Steel Crossarm Construction ANG T1A</option>
+<option value="612">612 EVX9/7033 E - INT 22kV Single Circuit Concrete Pole Steel Crossarm Construction - Intermediate</option>
+<option value="632">632 EVX9/7033/9 C 22kV Single Circuit Concrete Pole Extreme Offset Intermediate &amp; Angle Type 1 Poles </option>
+<option value="708">708 EVX9/76/9 A 22kV Subsidiary Concrete Pole Steel Crossarm Construction Intermediate &amp; Semi-Anchor</option>
+</select><span class="help-block error" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_assembly_id_em_" style="display: none"></span>
+<label for="TaskToAssemblyToTaskTemplateToAssemblyGroup_quantity" class="required">Quantity <span class="required">*</span></label><select class="span5" name="TaskToAssemblyToTaskTemplateToAssemblyGroup[quantity]" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_quantity">
+<option value="1" selected="selected">1</option>
+</select><span class="help-block error" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_quantity_em_" style="display: none"></span>
+<input class="span5" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_quantity_dummy" type="text" value="1" /><input type="hidden" value="TaskToAssemblyToTaskTemplateToAssemblyGroup" name="controller" id="controller" /><input name="TaskToAssemblyToTaskTemplateToAssemblyGroup[task_to_assembly_id]" id="TaskToAssemblyToTaskTemplateToAssemblyGroup_task_to_assembly_id" type="hidden" value="5" /><div class="form-actions"><input class="form-button btn btn-primary btn-large" type="submit" name="yt0" value="Update" /></div></form><script type="text/javascript">
+/*<![CDATA[*/
+
+</script>
+
+ 	
+</div></div>		
+				</div>
+	</div>
+
+</div>
+	
+<script type="text/javascript" src="/WorksManagement/assets/7f532143/gridview/jquery.yiigridview.js"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+
+		
+jQuery(function($) {
+
+$('#myModal').on('shown', function () { 
+				$('#myModal input:visible:enabled:first').first().focus();
+			})
+$("[data-original-title]").tooltip();
+				
+jQuery('#myModal').modal({'show':false});
+jQuery('#yii_bootstrap_collapse_0').collapse({'parent':false,'toggle':false});
+jQuery('#yw6').tab('show');
+});
+/*]]>*/
+</script>
+</body>
+</html>

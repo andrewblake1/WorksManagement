@@ -90,13 +90,13 @@ class Controller extends CController
 			 * new version of bootstrap or yiibooster will resolve it - several people working on it
 			 * There is a jquery-ui solution evidently using $.widget.bridge from https://github.com/twitter/bootstrap/issues/6303
 			 */
-			'jquery-ui.min.js' => 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js',
+//			'jquery-ui.min.js' => 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js',
 		);
 
 		// These eaiest here in order to save binding elements after ajax (not bound in doc ready)
 		$cs = Yii::app()->getClientScript();
 		$cs->registerCoreScript('jquery');
-		$cs->registerScriptFile('jquery-ui.min.js');
+		$cs->registerCoreScript('jquery.ui');
 
 		parent::__construct($id, $module);
 	}
@@ -1564,13 +1564,15 @@ class Controller extends CController
 		// get the id used from the triggering item
 		CHtml::resolveNameID($model, $dependantOnAttribute, $dependsOnHtmlOptions);
 
-
-		// trigger the change handler on document load to ensure that the dependency is set correctly to begin with
-		Yii::app()->clientScript->registerScript('dropDownListRow' . $htmlOptions['id'], "
-			// trigger the change handler
-			$('#{$dependsOnHtmlOptions['id']}').trigger('change');
-			", CClientScript::POS_READY
-		);
+		if($model->isNewRecord)
+		{
+			// trigger the change handler on document load to ensure that the dependency is set correctly to begin with
+			Yii::app()->clientScript->registerScript('dropDownListRow' . $htmlOptions['id'], "
+				// trigger the change handler
+				$('#{$dependsOnHtmlOptions['id']}').trigger('change');
+				", CClientScript::POS_READY
+			);
+		}
 
 		// NB: need to set this here as otherwise in wmfkautocomplete the soure url has standard_id=, in it which gets stripped
 		static::listWidgetRow($model, $form, $fkField, $htmlOptions, $scopes);
@@ -1666,8 +1668,8 @@ class Controller extends CController
 				'size' => 'small', // '', 'large', 'small' or 'mini'
 				'htmlOptions' => array(
 					'data-toggle' => 'modal',
-//					'onclick' => '$(\'[id^=myModal] input:not([class="hasDatepicker"]):visible:enabled:first, [id^=myModal] textarea:first\').first().hide();',
-					'onclick' => '$(\'#myModal input\').first().focus();',
+// removed until boostrap updated - currently causes issues if tooltip on same form
+//					'onclick' => '$(\'#myModal input\').first().focus();',
 				),
 			));
 		}

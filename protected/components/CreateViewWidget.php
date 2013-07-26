@@ -28,12 +28,13 @@ class CreateViewWidget extends CWidget
 			'id'=>$this->modal_id,
 		));
 	
-		// set focus to first suitable field when modal opens
+// removed until boostrap updated - currently causes issues if tooltip on same form
+/*		// set focus to first suitable field when modal opens
 		Yii::app()->clientScript->registerScript('focus',
 			"$('#myModal').on('shown', function () {
 				$('#myModal input:not([class=\"hasDatepicker\"]):visible:enabled:first, #myModal textarea:first').first().focus();
 			})",
-			CClientScript::POS_READY);
+			CClientScript::POS_READY);*/
 
 		// if there is a view file then show as modal otherwise ignore
 		try

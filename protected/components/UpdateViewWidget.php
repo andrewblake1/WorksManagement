@@ -22,11 +22,12 @@ class UpdateViewWidget extends CWidget
  
     public function run()
     {
-		// set focus to first suitable field when modal opens
+// removed until boostrap updated - currently causes issues if tooltip on same form
+/*		// set focus to first suitable field when modal opens
 		Yii::app()->clientScript->registerScript('focus',
 			"$('form input:not([class=\"hasDatepicker\"]):visible:enabled:first, textarea:first').first().focus();",
 
-			CClientScript::POS_READY);
+			CClientScript::POS_READY);*/
 		echo $this->controller->render('_form',array(
 			'model'=>$this->model,
 			'models'=>$this->models,

@@ -48,11 +48,11 @@ class AdjacencyListController extends Controller {
 		$ids = array();
 
 		// if there is a parent
-		for(; $model = $modelName::model()->findByPk($parentId); $parentId = $model->parent_id)
+		for(; $parentId && $model = $modelName::model()->findByPk($parentId); $parentId = $model->parent_id)
 		{
 			$ids[] = $parentId;
 		}
-		
+
 		return $ids;
 	}
 	
@@ -66,7 +66,10 @@ class AdjacencyListController extends Controller {
 	
 	protected function restoreAdminSettings(&$modelName, &$container = NULL)
 	{
-		parent::restoreAdminSettings($modelName, $_SESSION['admin'][$modelName][static::currentTabLevel()]);
+		if(isset($_SESSION['admin'][$modelName][static::currentTabLevel()]))
+		{
+			parent::restoreAdminSettings($modelName, $_SESSION['admin'][$modelName][static::currentTabLevel()]);
+		}
 	}	
 	
 	protected function storeAdminSettings(&$modelName, &$container = NULL)

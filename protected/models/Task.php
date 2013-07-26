@@ -87,14 +87,17 @@ class Task extends CustomFieldActiveRecord
 
 		// need to create a single shot instance of creating the temp table that appends required custom columns - only if in search scenario will actually
 		// do the search later when attribute assignments have been made which will repeat this - however some methods need the table architecture earlier
-		static $tableName = NULL;
-		if(!$tableName && strcasecmp(Yii::app()->controller->id, __CLASS__)  == 0 && Yii::app()->controller->action->id == 'admin')
+		static $called = false;
+
+		if(!$called && $this->scenario == 'search')
 		{
 			Yii::app()->db->createCommand("CALL pro_get_tasks_from_planning_admin_view({$_GET['crew_id']})")->execute();
-			return $tableName = 'tmp_table';
+			$called = true;
 		}
 
-		return parent::tableName();
+		return ($this->scenario == 'search') || static::$_inSearch
+			? 'tmp_table'
+			: 'tbl_task';
 	}
 	
 	/**
