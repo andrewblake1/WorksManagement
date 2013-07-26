@@ -37,6 +37,29 @@ class TaskToMaterial extends ActiveRecord
 	public $searchAssemblyQuantity;
 	public $searchTotalQuantity;
 
+	public function tableName() {
+
+		// need to create the temp table that we will use - required to get the accumlated total - only want to do one shot though hence the atatic
+		static $called = false;
+
+		if(!$called && $this->scenario == 'search')
+		{
+			// generate the temp table used by the view
+			Yii::app()->db->createCommand("CALL pro_planning_to_assembly({$_GET['task_id']})")->execute();
+			$called = true;
+		}
+
+		return ($this->scenario == 'search') || static::$_inSearch
+			? 'v_task_to_material'
+			: 'tbl_task_to_material';
+	}
+	
+	// needed due to database view
+	public function primaryKey()
+	{
+		return 'id';
+	}
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -72,7 +95,7 @@ class TaskToMaterial extends ActiveRecord
 		parent::setCustomValidators();
 	}
 	
-	/**5
+	/**
 	 * @return array relational rules.
 	 */
 	public function relations()
@@ -127,6 +150,135 @@ class TaskToMaterial extends ActiveRecord
 		return parent::afterFind();
 	}
 	
+	/**
+	 * @return DbCriteria the search/filter conditions.
+	 */
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		
+		// update
+		if(($this->tableName()) == 'tbl_task_to_material')
+		{
+			$criteria->select=array(
+				't.*',	// needed for delete and update buttons
+				'material.description AS searchMaterialDescription',
+				'material.unit AS searchMaterialUnit',
+				"CONCAT_WS('$delimiter',
+					materialToClient.alias,
+					material.alias
+					) AS searchMaterialAlias",
+			);
+
+			$criteria->compare('t.id',$this->id);
+			
+			// join
+			$criteria->join = '
+				JOIN tbl_material material ON t.material_id = material.id
+				JOIN tbl_task task ON t.task_id = task.id
+				JOIN tbl_project project ON task.project_id = project.id
+				LEFT JOIN tbl_material_to_client materialToClient ON project.client_id = materialToClient.client_id
+					AND t.material_id = materialToClient.material_id
+			';
+
+			return $criteria;
+		}
+		
+		// admin
+		
+		// select
+		$criteria->select=array(
+			't.*',
+			'stage.description AS searchStage',
+			'material.description AS searchMaterialDescription',
+			'material.unit AS searchMaterialUnit',
+			't.quantity * task.quantity * taskToAssembly.accumulated_total AS searchTotalQuantity',
+			"CONCAT_WS('$delimiter',
+				materialToClient.alias,
+				material.alias
+				) AS searchMaterialAlias",
+			"taskToAssembly.accumulated_total AS searchAssemblyQuantity",
+			"CONCAT_WS('$delimiter',
+				materialGroup.description,
+				t.comment
+			) AS searchMaterialGroup",
+		);
+		
+		// join
+		$criteria->join = '
+			LEFT JOIN tbl_stage stage ON t.stage_id = stage.id
+			LEFT JOIN tbl_material_group materialGroup ON t.material_group_id = materialGroup.id
+			LEFT JOIN tbl_material material ON t.material_id = material.id
+			LEFT JOIN tmp_planning_to_assembly taskToAssembly ON t.task_to_assembly_id = taskToAssembly.id
+			LEFT JOIN tbl_task task ON t.task_id = task.id
+			LEFT JOIN tbl_project project ON task.project_id = project.id
+			LEFT JOIN tbl_material_to_client materialToClient ON project.client_id = materialToClient.client_id
+				AND t.material_id = materialToClient.material_id
+		';
+		
+		// where
+		$criteria->compare('material.description',$this->searchMaterialDescription,true);
+		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
+		$this->compositeCriteria($criteria,
+			array(
+				'materialToClient.alias',
+				'material.alias'
+			),
+			$this->searchMaterialAlias
+		);
+		$criteria->compare('t.search_assembly',$this->search_assembly,true);
+		$criteria->compare('stage.description',$this->searchStage,true);
+		$this->compositeCriteria($criteria,
+			array(
+			'materialGroup.description',
+			't.comment'
+			),
+			$this->searchMaterialGroup
+		);
+		$criteria->compare('t.task_to_assembly_id',$this->task_to_assembly_id);
+		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('t.search_task_quantity',$this->search_task_quantity);
+		$criteria->compare('t.searchAssemblyQuantity',$this->searchAssemblyQuantity);
+		$criteria->compare('t.searchTotalQuantity',$this->searchTotalQuantity);
+		$criteria->compare('t.task_id',$this->task_id);
+
+		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+ 		$columns[] = 'searchMaterialDescription';
+ 		$columns[] = 'searchMaterialUnit';
+ 		$columns[] = 'searchMaterialAlias';
+		$columns[] = 'searchMaterialGroup';
+		$columns[] = 'searchStage';
+		$columns[] = 'quantity';
+		$columns[] = 'search_task_quantity';
+		$columns[] = 'searchAssemblyQuantity';
+		$columns[] = 'searchTotalQuantity';
+		$columns[] = static::linkColumn('search_assembly', 'TaskToAssembly', 'task_to_assembly_id');
+		
+		return $columns;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array(
+			'searchMaterialDescription',
+			'searchMaterialUnit',
+			'searchMaterialAlias',
+			'searchMaterialGroup',
+			'searchAssemblyQuantity',
+			'searchStage',
+			'searchTotalQuantity',
+		);
+	}
+
 }
 
 ?>

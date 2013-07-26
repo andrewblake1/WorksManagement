@@ -42,6 +42,11 @@ abstract class ActiveRecord extends RangeActiveRecord
 	 * but the actual record hidding within its normaly model, lists to block further selection.
 	 */
 	public static $showSoftDeletes = FALSE;
+	/**
+	 * @var bool flag used as addional scenerio indicator when forcing re-read of meta data - needed in tableName()
+	 */
+	public static $_inSearch = false;
+
 
 	public static function primaryKeyName()
 	{
@@ -221,6 +226,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 			$criteria->params = array();
 			$primaryKeyName = static::primaryKeyName();
 			$criteria->compare("t.$primaryKeyName" , $model->$primaryKeyName);
+		
 			$attribModel = static::model()->find($criteria);
 			foreach(static::getDisplayAttr() as $attribute)
 			{

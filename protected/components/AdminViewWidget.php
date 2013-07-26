@@ -9,7 +9,6 @@ class AdminViewWidget extends CWidget
 {
 	private $_controller;
 	public $model;
-	public $createModel;
 	public $columns;
 
 	/**
@@ -25,6 +24,8 @@ class AdminViewWidget extends CWidget
  
     public function run()
     {
+		$modelName = $this->_controller->modelName;
+
 		// add instructions/ warnings errors via Yii::app()->user->setFlash
 		// NB: thia won't work on ajax update as in delete hence afterDelete javascript added in WMTbButtonColumn
 		$this->_controller->widget('bootstrap.widgets.TbAlert');
@@ -34,6 +35,10 @@ class AdminViewWidget extends CWidget
 			// show buttons on row by row basis i.e. do access check on context
 			array_unshift($this->columns, $buttons);
 		}
+		
+		// a hack needed to allow tablename change to view name for admin view
+		$modelName::$_inSearch = true;
+		$this->model->refreshMetaData();
 		
 		$params = array(
 			'id'=>$this->_controller->modelName.'-grid',
@@ -50,7 +55,7 @@ class AdminViewWidget extends CWidget
 			 * check at top of action admin when get ajax defined for and empty state but had to ensure page 1 actually had a page number param
 			 */
 		);
-		
+
 		// should we allow bulk delete
 		// determine whether form elements should be enabled or disabled by on access rights
 		$controllerName = get_class($this->_controller);
@@ -85,9 +90,14 @@ class AdminViewWidget extends CWidget
 		// display the grid
 		$this->_controller->widget('WMTbExtendedGridView', $params);
 
+
+		// a hack needed to allow tablename change to view name for admin view
+		$modelName::$_inSearch = false;
+		$this->model->refreshMetaData();
+
 		// as using boostrap modal for create the html for the modal needs to be on
 		// the calling page
-		$this->_controller->actionCreate('myModal', $this->createModel);
+		$this->_controller->actionCreate('myModal', $this->model);
 		
 		parent::run();
 		

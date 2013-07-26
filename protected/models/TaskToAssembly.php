@@ -53,6 +53,29 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 		));
 	}
 
+	public function tableName() {
+
+		// need to create the temp table that we will use - required to get the accumlated total - only want to do one shot though hence the atatic
+		static $called = false;
+
+		if(!$called && $this->scenario == 'search')
+		{
+			// generate the temp table used by the view
+			Yii::app()->db->createCommand("CALL pro_planning_to_assembly({$_GET['task_id']})")->execute();
+			$called = true;
+		}
+
+		return ($this->scenario == 'search') || static::$_inSearch
+			? 'tmp_planning_to_assembly'
+			: 'tbl_task_to_material';
+	}
+	
+	// needed due to database view
+	public function primaryKey()
+	{
+		return 'id';
+	}
+
 	public function setCustomValidators()
 	{
 		if(!empty($this->subAssembly))
@@ -131,6 +154,137 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 	public function createSave(&$models=array())
 	{
 		return TaskToAssemblyController::addAssembly($this->task_id, $this->assembly_id, $this->quantity, $this->parent_id, $this->sub_assembly_id, $models, $this);
+	}
+	
+	/**
+	 * @return DbCriteria the search/filter conditions.
+	 */
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria;
+		$delimiter = Yii::app()->params['delimiter']['display'];
+		
+		// update
+		if(($this->tableName()) == 'tbl_task_to_assembly')
+		{
+			$criteria->select=array(
+				't.*',	// needed for delete and update buttons
+				'assembly.description AS searchAssemblyDescription',
+				"CONCAT_WS('$delimiter',
+					assemblyToClient.alias,
+					assembly.alias
+					) AS searchAssemblyAlias",
+			);
+
+			$criteria->compare('t.id',$this->id);
+
+			// join
+			$criteria->join = '
+				JOIN tbl_assembly assembly ON t.assembly_id = assembly.id
+				JOIN tbl_task task ON t.task_id = task.id
+				JOIN tbl_project project ON task.project_id = project.id
+				LEFT JOIN tbl_assembly_to_client assemblyToClient ON project.client_id = assemblyToClient.client_id
+					AND t.assembly_id = assemblyToClient.assembly_id
+			';
+
+			return $criteria;
+		}
+		
+		// admin
+		
+		// select
+		$criteria->select=array(
+			't.id',	// needed for delete and update buttons
+			't.task_id',
+			't.parent_id',
+			't.assembly_id',
+			'assembly.description AS searchAssemblyDescription',
+			"CONCAT_WS('$delimiter',
+				assemblyToClient.alias,
+				assembly.alias
+				) AS searchAssemblyAlias",
+			't.quantity',
+			'task.quantity AS searchTaskQuantity',
+			't.accumulated_total * task.quantity AS searchTotalQuantity',
+			't.assembly_group_to_assembly_id',
+			't.assembly_group_id',
+			't.task_to_assembly_to_assembly_to_assembly_group_id',
+			't.assembly_to_assembly_group_id',
+
+			't.task_to_assembly_to_task_template_to_assembly_group_id',
+			't.task_template_to_assembly_group_id',
+	
+			"CONCAT_WS('$delimiter',
+				assemblyGroup.description,
+				t.comment
+				) AS searchAssemblyGroup",
+		);
+				
+		// join
+		$criteria->join = '
+			LEFT JOIN tbl_assembly_group assemblyGroup ON t.assembly_group_id = assemblyGroup.id
+			LEFT JOIN tbl_assembly assembly ON t.assembly_id = assembly.id
+			LEFT JOIN tbl_task task ON t.task_id = task.id
+			LEFT JOIN tbl_project project ON task.project_id = project.id
+			LEFT JOIN tbl_assembly_to_client assemblyToClient ON project.client_id = assemblyToClient.client_id
+				AND t.assembly_id = assemblyToClient.assembly_id
+		';
+		
+		// where
+		$criteria->compare('assembly.description',$this->searchAssemblyDescription,true);
+		$this->compositeCriteria($criteria,
+			array(
+				'assemblyToClient.alias',
+				'assembly.alias'
+			),
+			$this->searchAssemblyAlias
+		);
+		$this->compositeCriteria($criteria,
+			array(
+				'assemblyGroup.description',
+				't.comment'
+			),
+			$this->searchAssemblyGroup
+		);
+		$criteria->compare('t.quantity',$this->quantity);
+		$criteria->compare('task.quantity',$this->searchTaskQuantity);
+		$criteria->compare('t.searchTotalQuantity',$this->searchTotalQuantity);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.task_id',$this->task_id);
+		$criteria->compare('t.parent_id',$this->parent_id);
+
+		return $criteria;
+	}
+
+	public function getAdminColumns()
+	{
+		$columns[] = 'id';
+ 		$columns[] = 'parent_id';
+		$columns[] = 'searchAssemblyDescription';
+ 		$columns[] = 'searchAssemblyAlias';
+		$columns[] = 'searchAssemblyGroup';
+		$columns[] = 'quantity';
+		$columns[] = 'searchTaskQuantity';
+		$columns[] = 'searchTotalQuantity';
+
+		return $columns;
+	}
+
+	/**
+	 * Retrieves a sort array for use in CActiveDataProvider.
+	 * @return array the for data provider that contains the sort condition.
+	 */
+	public function getSearchSort()
+	{
+		return array(
+			'searchAssemblyDescription',
+			'searchAssemblyAlias',
+			'searchAssemblyGroup',
+			'parent_id',
+			'quantity',
+			'searchTaskQuantity',
+			'searchTotalQuantity',
+		);
 	}
 	
 }

@@ -55,11 +55,6 @@ class Controller extends CController
 	 */
 
 	/**
-	 * @var string the name of the model to use in the admin view - the model may serve a database view as opposed to a table  
-	 */
-	protected $_adminViewModel;
-
-	/**
 	 * @var string the name of the admin view
 	 */
 	protected $_adminView = '/admin';
@@ -73,10 +68,6 @@ class Controller extends CController
 	public function __construct($id, $module = null)
 	{
 		$this->modelName = static::modelName();
-		if(empty($this->_adminViewModel))
-		{
-			$this->_adminViewModel = $this->modelName;
-		}
 
 		// clear the labelOverrides that may have been used in previous view
 		ActiveRecord::$labelOverrides = array();
@@ -505,7 +496,7 @@ class Controller extends CController
 		}
 	}
 
-	protected function restoreAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
+	protected function restoreAdminSettings(&$modelName, &$container = NULL)
 	{
 		if($container === NULL)
 		{
@@ -515,27 +506,27 @@ class Controller extends CController
 		// restore pagination
 		if(isset($container['page']))
 		{
-			$_GET["{$viewModelName}_page"] = $container['page'];
+			$_GET["{$modelName}_page"] = $container['page'];
 		}
 		// restore sort
 		if(isset($container['sort']))
 		{
-			$_GET["{$viewModelName}_sort"] = $container['sort'];
+			$_GET["{$modelName}_sort"] = $container['sort'];
 		}
 		// restore filters
 		if(isset($container['filter']))
 		{
-			if(isset($_GET["{$viewModelName}"]))
+			if(isset($_GET["{$modelName}"]))
 			{
-				$_GET["{$viewModelName}"] += $container['filter'];
+				$_GET["{$modelName}"] += $container['filter'];
 			} else
 			{
-				$_GET["{$viewModelName}"] = $container['filter'];
+				$_GET["{$modelName}"] = $container['filter'];
 			}
 		}
 	}
 
-	protected function storeAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
+	protected function storeAdminSettings(&$modelName, &$container = NULL)
 	{
 		if($container === NULL)
 		{
@@ -543,10 +534,10 @@ class Controller extends CController
 		}
 
 		// if some filters
-		if(isset($_GET[$viewModelName]))
+		if(isset($_GET[$modelName]))
 		{
 			// store filters
-			$container['filter'] = $_GET[$viewModelName];
+			$container['filter'] = $_GET[$modelName];
 		} elseif(isset($container['filter']))
 		{
 			// clear filters
@@ -554,10 +545,10 @@ class Controller extends CController
 		}
 
 		// if pagination
-		if(isset($_GET["{$viewModelName}_page"]))
+		if(isset($_GET["{$modelName}_page"]))
 		{
 			// store pagination
-			$container['page'] = $_GET["{$viewModelName}_page"];
+			$container['page'] = $_GET["{$modelName}_page"];
 		} elseif(isset($container['page']))
 		{
 			// clear filters
@@ -565,10 +556,10 @@ class Controller extends CController
 		}
 
 		// if sorting
-		if(isset($_GET["{$viewModelName}_sort"]))
+		if(isset($_GET["{$modelName}_sort"]))
 		{
 			// store sorting
-			$container['sort'] = $_GET["{$viewModelName}_sort"];
+			$container['sort'] = $_GET["{$modelName}_sort"];
 		} elseif(isset($container['sort']))
 		{
 			// clear sorting
@@ -579,10 +570,6 @@ class Controller extends CController
 	public function actionAdmin($exportColumns = array())
 	{
 		$modelName = $this->modelName;
-		// may be using a database view instead of main table model
-		$adminViewModelName = $this->_adminViewModel;
-		$adminViewModel = new $adminViewModelName('search');
-		$adminViewModel->unsetAttributes();  // clear any default values
 		$model = new $modelName('search');
 		$model->unsetAttributes();  // clear any default values
 		// clear the primary key set by update
@@ -595,44 +582,43 @@ class Controller extends CController
 			// in parsing the url with params. Was recording somewhere in the yii forum by someone else
 			// This means we have to extend the pager in order to add a paging link for page 1 or that won't work
 			// if paging or filtering or sorting
-			if(isset($_GET["{$adminViewModelName}_sort"]) || isset($_GET["{$adminViewModelName}_page"]) || isset($_GET[$adminViewModelName]))
+			if(isset($_GET["{$modelName}_sort"]) || isset($_GET["{$modelName}_page"]) || isset($_GET[$modelName]))
 			{
-				$this->storeAdminSettings($adminViewModelName, $modelName);
+				$this->storeAdminSettings($modelName);
 			}
 		}
 		// otherwise non ajax call
 		elseif(isset($_GET))
 		{
 			// store admin url paramters
-			static::setAdminParams($_GET, $adminViewModelName);
+			static::setAdminParams($_GET, $modelName);
 		}
 
-		$this->restoreAdminSettings($adminViewModelName, $modelName);
+		$this->restoreAdminSettings($modelName);
 
 		$attributes = array();
 		if(!empty($_GET))
 		{
 			$attributes += $_GET;
 		}
-		if(!empty($_GET[$this->_adminViewModel]))
+		if(!empty($_GET[$modelName]))
 		{
-			$attributes += $_GET[$this->_adminViewModel];
+			$attributes += $_GET[$modelName];
 		}
-		if(!empty($_POST[$this->_adminViewModel]))
+		if(!empty($_POST[$modelName]))
 		{
-			$attributes += $_POST[$this->_adminViewModel];
+			$attributes += $_POST[$modelName];
 		}
 
-		$model->attributes = $adminViewModel->attributes = $attributes;
+		$model->attributes = $attributes;
 		// ensure that where possible a pk has been passed from parent
 		$model->assertFromParent();
-		$adminViewModel->attributes = $model->attributes;
 
 		// if exporting to xl
 		if(isset($_GET['action']) && $_GET['action'] == 'download')
 		{
 			// Export it
-			$this->toExcel($adminViewModel->search(false), $adminViewModel->exportColumns, null, array()/* , 'CSV' 'Excel5' */);
+			$this->toExcel($model->search(false), $model->exportColumns, null, array());
 		}
 
 // TODO excel5 has issue on isys server likely caused by part of phpexcel wanting access to /tmp but denied		
@@ -646,10 +632,10 @@ class Controller extends CController
 		$this->breadcrumbs = static::getBreadCrumbTrail();
 
 		// render the view
-		$this->adminRender($adminViewModel, $model);
+		$this->adminRender($model);
 	}
 
-	protected function adminRender($adminViewModel, $createModel = NULL)
+	protected function adminRender($model)
 	{
 		if(!isset($_GET['ajax']))
 		{
@@ -657,14 +643,8 @@ class Controller extends CController
 			$this->tabs = false;
 		}
 
-		if($createModel === NULL)
-		{
-			$createModel = $adminViewModel;
-		}
-
 		$this->render(lcfirst($this->_adminView), array(
-			'model' => $adminViewModel,
-			'createModel' => $createModel,
+			'model' => $model,
 		));
 	}
 

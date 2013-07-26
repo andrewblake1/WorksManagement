@@ -20,8 +20,32 @@ class DashboardDuty extends Duty
 	protected $defaultSort = array('t.due' => 'ASC', 'description');
 
 	public function tableName() {
-		return 'tbl_duty';
+
+		// need to create the temp table that we will use - required to get the accumlated total - only want to do one shot though hence the atatic
+		static $called = false;
+
+		if(!$called && $this->scenario == 'search')
+		{
+			// create argument string for procedure call that generates the temporary table used here */
+			// (IN in_planning_id INT, IN in_action_id INT, IN in_derived_assigned_to_id INT)
+			$args = empty($_GET['task_id']) ? 'NULL' : $_GET['task_id'];
+			$args .= ", ";
+			$args .= empty($_GET['action_id']) ? 'NULL' : $_GET['action_id'];
+			$user = User::model()->findByPk(Yii::app()->user->id);
+			$args .= ", {$user->contact_id}";
+
+			//NB: need this in here rather than in tableName() so can be called externally
+			Yii::app()->db->createCommand("CALL pro_get_duties_from_planning($args)")->execute();
+			$called = true;
+
+			return $tableName = 'tmp_duty';
+		}
+
+		return ($this->scenario == 'search') || static::$_inSearch
+			? 'v_duty'
+			: 'tbl_duty';
 	}
+	
 
 	/**
 	 * @return DbCriteria the search/filter conditions.

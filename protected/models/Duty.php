@@ -35,6 +35,24 @@ class Duty extends CustomFieldActiveRecord
 	public $action_id;
 	public $lead_in_days;
 	
+/*	protected $defaultSort = array(
+		't.updated',
+		't.due',
+		't.lead_in_days'=>'DESC',
+	);
+
+	public $task_id;		// place holder for parent
+	public $id;
+	public $duty_data_id;
+	public $duty_step_id;
+	public $description;
+	public $due;
+	public $derived_assigned_to_id;
+	public $derived_assigned_to_name;
+	public $derived_updated;
+	public $derived_importance;
+	public $lead_in_days;*/
+	
 	/**
 	 * @var string label on button in update view
 	 */
@@ -49,6 +67,13 @@ class Duty extends CustomFieldActiveRecord
 	protected $evalCustomFieldPivot = 'customFieldToDutyStep';
 	protected $evalThisColumnEndId = 'duty_data_id';
 
+	public function tableName() {
+
+		return ($this->scenario == 'search') || static::$_inSearch
+			? 'v_duty'
+			: 'tbl_duty';
+	}
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
