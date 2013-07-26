@@ -64,12 +64,12 @@ class AdjacencyListController extends Controller {
 		return sizeof($parentIds);
 	}
 	
-	protected function restoreAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
+	protected function restoreAdminSettings(&$modelName, &$container = NULL)
 	{
-		parent::restoreAdminSettings($viewModelName, $modelName, $_SESSION['admin'][$modelName][static::currentTabLevel()]);
+		parent::restoreAdminSettings($modelName, $_SESSION['admin'][$modelName][static::currentTabLevel()]);
 	}	
 	
-	protected function storeAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
+	protected function storeAdminSettings(&$modelName, &$container = NULL)
 	{
 		$tabLevel = static::currentTabLevel();
 		
@@ -78,7 +78,7 @@ class AdjacencyListController extends Controller {
 			$_SESSION['admin'][$modelName][$tabLevel] = array();
 		}
 
-		parent::storeAdminSettings($viewModelName, $modelName, $_SESSION['admin'][$modelName][$tabLevel]);
+		parent::storeAdminSettings($modelName, $_SESSION['admin'][$modelName][$tabLevel]);
 	}
 	
 }

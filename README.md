@@ -59,7 +59,7 @@ echo "max_sp_recursion_depth = 255">>max_sp_recursion_depth.cnf
 #### tidy up the above - could just be put both in 1 file under conf.d
 
 
-/etc/init.d/mysql restartselessss
+/etc/init.d/mysql restart
 
 #4./ Installing application
 # need to install as user www-data which means www-data needs access to the .ssh folder

@@ -90,7 +90,6 @@ class AdminViewWidget extends CWidget
 		// display the grid
 		$this->_controller->widget('WMTbExtendedGridView', $params);
 
-
 		// a hack needed to allow tablename change to view name for admin view
 		$modelName::$_inSearch = false;
 		$this->model->refreshMetaData();

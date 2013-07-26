@@ -27,7 +27,7 @@ class CreateViewWidget extends CWidget
 		$this->beginWidget('bootstrap.widgets.TbModal', array(
 			'id'=>$this->modal_id,
 		));
-		
+	
 		// set focus to first suitable field when modal opens
 		Yii::app()->clientScript->registerScript('focus',
 			"$('#myModal').on('shown', function () {
@@ -49,6 +49,8 @@ class CreateViewWidget extends CWidget
 		}
 		catch(Exception $e)
 		{
+
+//print_r($e);
 			// ignore errors rendering 
 // TODO just make this ignore not found errors as in drawing to assembly view
 $t = 1;

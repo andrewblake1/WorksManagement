@@ -143,7 +143,7 @@ class WMTbActiveForm extends TbActiveForm
  
     public function run()
     {
-		$this->hiddenField('updated_by');
+//		$this->hiddenField('updated_by');
 		
 		// pass thru the original controller so we know can potentially return here
 		echo CHtml::hiddenField('controller', Yii::app()->controller->modelName);

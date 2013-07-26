@@ -141,12 +141,12 @@ class SubAssemblyController extends Controller
 		return sizeof(static::$tabs);
 	}
 	
-	protected function restoreAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
+	protected function restoreAdminSettings(&$modelName, &$container = NULL)
 	{
-		parent::restoreAdminSettings($viewModelName, $modelName, $_SESSION['admin'][$modelName][$this->currentTabLevel()]);
+		parent::restoreAdminSettings($modelName, $_SESSION['admin'][$modelName][$this->currentTabLevel()]);
 	}	
 	
-	protected function storeAdminSettings(&$viewModelName, &$modelName, &$container = NULL)
+	protected function storeAdminSettings(&$modelName, &$container = NULL)
 	{
 		$tabLevel = $this->currentTabLevel();
 		
@@ -155,7 +155,7 @@ class SubAssemblyController extends Controller
 			$_SESSION['admin'][$modelName][$tabLevel] = array();
 		}
 
-		parent::storeAdminSettings($viewModelName, $modelName, $_SESSION['admin'][$modelName][$tabLevel]);
+		parent::storeAdminSettings($modelName, $_SESSION['admin'][$modelName][$tabLevel]);
 	}
 	
 	
