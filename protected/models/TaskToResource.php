@@ -88,6 +88,8 @@ class TaskToResource extends ActiveRecord
 			'description' => 'Resource type',
 			'searchMode' => 'Mode',
 			'searchTaskQuantity' => 'Task quantity',
+			'estimated_total_duration' => 'Override level duration',
+			'estimated_total_quantity' => 'Override level quantity',
 			'searchEstimatedTotalDuration' => 'Override level duration',
 			'searchEstimatedTotalQuantity' => 'Override level quantity',
 			'searchCalculatedTotalDuration' => 'Level duration',
@@ -118,10 +120,10 @@ class TaskToResource extends ActiveRecord
 			'resourceData.estimated_total_duration AS searchEstimatedTotalDuration',
 			't.duration AS duration',
 			't.quantity AS quantity',
-			'(SELECT MAX(quantity) AS searchCalculatedTotalQuantity FROM tbl_task_to_resource
-				WHERE resource_data_id = t.resource_data_id)',
-			'(SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) AS searchCalculatedTotalDuration FROM tbl_task_to_resource
-				WHERE resource_data_id = t.resource_data_id)',
+			'(SELECT MAX(quantity) FROM tbl_task_to_resource
+				WHERE resource_data_id = t.resource_data_id) AS searchCalculatedTotalQuantity',
+			'(SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) FROM tbl_task_to_resource
+				WHERE resource_data_id = t.resource_data_id) AS searchCalculatedTotalDuration',
 		);
 
 		// where
@@ -181,18 +183,6 @@ class TaskToResource extends ActiveRecord
 			'searchResource',
 			'searchMode',
 		);
-	}
-
-	public function beforeSave()
-	{
-		$this->resourceData->estimated_total_quantity = $this->estimated_total_quantity;
-		$this->resourceData->estimated_total_duration = $this->estimated_total_duration;
-		$this->resourceData->start = $this->start;
-		$this->resourceData->resource_id = $this->resource_id;
-		$this->resourceData->level = $this->level;
-		$this->resourceData->mode_id = $this->mode_id;
-
-		return parent::beforeSave();
 	}
 
 	public function afterFind() {
@@ -273,9 +263,14 @@ class TaskToResource extends ActiveRecord
 	public function updateSave(&$models=array())
 	{	
 		$saved = true;
-		$this->resourceData->attributes = $_POST['ResourceData'];
 
 		// attempt save of related ResourceData
+		$this->resourceData->estimated_total_quantity = $this->estimated_total_quantity;
+		$this->resourceData->estimated_total_duration = $this->estimated_total_duration;
+		$this->resourceData->start = $this->start;
+		$this->resourceData->resource_id = $this->resource_id;
+		$this->resourceData->level = $this->level;
+		$this->resourceData->mode_id = $this->mode_id;
 		if($saved &= $this->resourceData->updateSave($models))
 		{
 			if(!$saved = $this->dbCallback('save'))

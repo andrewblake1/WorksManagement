@@ -6,9 +6,13 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('quantity');
 
+	$form->textFieldRow('estimated_total_quantity');
+
 	$form->textFieldRow('duration');
 
-	$form->textFieldRow('start');
+	$form->timepickerRow('estimated_total_duration');
+
+	$form->timepickerRow('start');
 
 	$form->dropDownListRow('level', Planning::$levels);
 

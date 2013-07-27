@@ -1024,7 +1024,7 @@ class Controller extends CController
 			$model = $this->loadModel($id);
 		}
 		$models = array();
-		$t = $model->attributes;
+
 		// add primary key into global so it can be retrieved for future use in breadcrumbs
 		static::setUpdateId($id, $modelName);
 
@@ -1037,8 +1037,7 @@ class Controller extends CController
 
 		if(isset($_POST[$modelName]))
 		{
-			$t = $model->attributes = $_POST[$modelName];
-
+			$model->attributes = $_POST[$modelName];
 			// start a transaction
 			$transaction = Yii::app()->db->beginTransaction();
 
