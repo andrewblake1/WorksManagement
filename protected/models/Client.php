@@ -29,7 +29,6 @@ class Client extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('name', 'required'),
-			array('name', 'length', 'max'=>64),
 		));
 	}
 

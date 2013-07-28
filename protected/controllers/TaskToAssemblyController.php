@@ -183,7 +183,7 @@ class TaskToAssemblyController extends Controller
 		// recurse thru sub assemblies
 		foreach(SubAssembly::model()->findAllByAttributes(array('parent_assembly_id'=>$assembly_id)) as $subAssembly)
 		{
-			$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, $subAssembly->default, $taskToAssembly->id, $subAssembly->id, $models);
+			$saved &= static::addAssembly($task_id, $subAssembly->child_assembly_id, TaskToAssembly::getDefault($subAssembly), $taskToAssembly->id, $subAssembly->id, $models);
 		}
 		
 		return $saved;

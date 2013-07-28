@@ -8,7 +8,6 @@
  * @property string $description
  * @property string $level
  * @property string $unit_price
- * @property integer $resource_category_id
  * @property integer $maximum
  * @property string $action_id
  * @property integer $deleted
@@ -40,7 +39,7 @@ class Resource extends ActiveRecord
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('description', 'required'),
-			array('resource_category_id, maximum', 'numerical', 'integerOnly'=>true),
+			array('maximum', 'numerical', 'integerOnly'=>true),
 			array('unit_price', 'length', 'max'=>7),
             array('level, action_id', 'length', 'max'=>10),
 		));
@@ -69,7 +68,6 @@ class Resource extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'resource_category_id' => 'Resource category',
 			'unit_price' => 'Unit price',
 			'maximum' => 'Maximum',
 			'searchLevel' => 'Level',
@@ -99,7 +97,6 @@ class Resource extends ActiveRecord
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.unit_price',$this->unit_price);
 		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('t.resource_category_id', $this->resource_category_id);
 		$criteria->compare('level0.name',$this->searchLevel,true);
 		$criteria->compare('action.description',$this->searchAction,true);
 

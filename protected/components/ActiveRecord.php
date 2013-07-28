@@ -1062,7 +1062,7 @@ elseif(!$return)
 		}
 		elseif($_validators === NULL)
 		{
-			$_validators = parent::getValidators($attribute);
+			$_validators = parent::getValidators();
 		}
 
 		$validators=array();
@@ -1089,7 +1089,16 @@ elseif(!$return)
 		foreach($validators as $validator)
 		{
 			if($validator instanceof CStringValidator)
+			{
 				return $validator->max;
+			}
+		}
+		
+		if(isset($this->tableSchema->columns[$attribute]))
+		{
+$t = $this->tableSchema->columns[$attribute];
+			// if not specified in rules then get from database
+			return $this->tableSchema->columns[$attribute]->size;
 		}
 	}
 
