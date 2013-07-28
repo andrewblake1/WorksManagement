@@ -9,18 +9,23 @@
  * @property string $description
  * @property string $alias
  * @property integer $default_order
+ * @property integer $parent_id
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Assembly[] $assemblies
  * @property Assembly[] $assemblies1
+ * @property AssemblyToAssemblyGroup[] $assemblyToAssemblyGroups
+ * @property AssemblyToMaterial[] $assemblyToMaterials
+ * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
  * @property User $updatedBy
  * @property Standard $standard
- * @property DrawingAdjacencyList[] $drawingAdjacencyLists
- * @property DrawingAdjacencyList[] $drawingAdjacencyLists1
+ * @property Drawing $parent
+ * @property Drawing[] $drawings
  * @property Material[] $materials
  * @property Material[] $materials1
+ * @property SubAssembly[] $subAssemblies
  */
 class Drawing extends TraitAdjacencyListWithFileActiveRecord
 {
@@ -43,7 +48,6 @@ class Drawing extends TraitAdjacencyListWithFileActiveRecord
 		return array_merge(parent::rules(), array(
 			array('standard_id, description', 'required'),
 			array('parent_id, standard_id, default_order', 'numerical', 'integerOnly'=>true),
-			array('description alias', 'length', 'max'=>255),
 		));
 	}
 
@@ -57,12 +61,16 @@ class Drawing extends TraitAdjacencyListWithFileActiveRecord
         return array(
             'assemblies' => array(self::HAS_MANY, 'Assembly', 'standard_id'),
             'assemblies1' => array(self::HAS_MANY, 'Assembly', 'drawing_id'),
+            'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'detail_drawing_id'),
+            'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'detail_drawing_id'),
+            'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'detail_drawing_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'standard' => array(self::BELONGS_TO, 'Standard', 'standard_id'),
-            'drawingAdjacencyLists' => array(self::HAS_MANY, 'DrawingAdjacencyList', 'parent_id'),
-            'drawingAdjacencyLists1' => array(self::HAS_MANY, 'DrawingAdjacencyList', 'child_id'),
+            'parent' => array(self::BELONGS_TO, 'Drawing', 'parent_id'),
+            'drawings' => array(self::HAS_MANY, 'Drawing', 'parent_id'),
             'materials' => array(self::HAS_MANY, 'Material', 'standard_id'),
             'materials1' => array(self::HAS_MANY, 'Material', 'drawing_id'),
+            'subAssemblies' => array(self::HAS_MANY, 'SubAssembly', 'detail_drawing_id'),
         );
     }
 
@@ -89,7 +97,7 @@ class Drawing extends TraitAdjacencyListWithFileActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.description',
-			'drawingAdjacencyLists1.parent_id AS parent_id',
+			't.parent_id',
 			't.alias',
 		);
 
@@ -100,17 +108,12 @@ class Drawing extends TraitAdjacencyListWithFileActiveRecord
 		$criteria->compare('t.standard_id', $this->standard_id);
 		if(!empty($this->parent_id))
 		{
-			$criteria->compare('drawingAdjacencyLists1.parent_id',$this->parent_id);
+			$criteria->compare('t.parent_id',$this->parent_id);
 		}
 
 		// NB: without this the has_many relations aren't returned and some select columns don't exist
 		$criteria->together = true;
 
-		// with
-		$criteria->with = array(
-			'drawingAdjacencyLists1',
-		);
-		
 		return $criteria;
 	}
 
@@ -151,7 +154,7 @@ class Drawing extends TraitAdjacencyListWithFileActiveRecord
 			$params = var_export(Controller::getAdminParams($modelName), true);
 			$columns[] = array(
 				'name'=>$name,
-				'value'=> 'DrawingAdjacencyList::model()->findByAttributes(array("'.$parentAttrib.'" => $data->'.$primaryKeyName.')) !== null
+				'value'=> 'Drawing::model()->findByAttributes(array("'.$parentAttrib.'" => $data->'.$primaryKeyName.')) !== null
 					? CHtml::link($data->'.$name.', Yii::app()->createUrl("'."$modelName/admin".'", array("'.$parentAttrib.'"=>$data->'.$primaryKeyName.') + '.$params.'))
 					: $data->'.$name,
 				'type'=>'raw',
@@ -183,66 +186,6 @@ class Drawing extends TraitAdjacencyListWithFileActiveRecord
 		return $this;
 	}
 	
-	public function afterFind() {
-		if($this->drawingAdjacencyLists1)
-		{
-			if($this->parent = $this->drawingAdjacencyLists1[0]->parent)
-			{
-				$this->parent_id = $this->parent->id;
-			}
-		}
-
-		parent::afterFind();
-	}
-	
-	public function insert($attributes = null) {
-		
-		$return = parent::insert($attributes);
-
-		// if parent_id is not null
-		if($return && !empty($this->parent_id))
-		{
-			$drawingAdjacencyList = new DrawingAdjacencyList();
-			$drawingAdjacencyList->updated_by = $this->updated_by;
-			$drawingAdjacencyList->child_id = $this->id;
-			$drawingAdjacencyList->parent_id = $this->parent_id;
-			$return = $drawingAdjacencyList->insert();
-		}
-		
-		return $return;
-	}
-	
-	public function update($attributes = null) {
-
-		// if there is currently a parent - if find record in adjacency list
-		if($drawingAdjacencyList = DrawingAdjacencyList::model()->findByAttributes(array('child_id' => $this->id)))
-		{
-			// if removing parent
-			if($this->parent_id === NULL)
-			{
-				// remove
-				$this->delete();
-			}
-			else
-			{
-				$drawingAdjacencyList->updated_by = $this->updated_by;
-				$drawingAdjacencyList->parent_id = $this->parent_id;
-				$drawingAdjacencyList->save();
-			}
-		}
-		// otherwise no parent currently - if adding parent
-		elseif($this->parent_id)
-		{
-			$drawingAdjacencyList = new DrawingAdjacencyList();
-			$drawingAdjacencyList->child_id = $this->id;
-			$drawingAdjacencyList->parent_id = $this->parent_id;
-			$drawingAdjacencyList->updated_by = $this->updated_by;
-			$drawingAdjacencyList->insert();
-		}
-		
-		return parent::update($attributes);
-	}
-
 }
 
 ?>

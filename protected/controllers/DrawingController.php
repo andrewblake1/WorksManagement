@@ -11,7 +11,7 @@ class DrawingController extends TraitAdjacencyListWithFileController
 		parent::setTabs($model, $tabs);
 		
 		// dont add empty tabs if no write access
-		if(static::checkAccess(self::accessWrite, $modelName) || DrawingAdjacencyList::model()->countByAttributes(array('parent_id' => $model->id)))
+		if(static::checkAccess(self::accessWrite, $modelName) || Drawing::model()->countByAttributes(array('parent_id' => $model->id)))
 		{
 			// add tab to drawings
 			$this->addTab(

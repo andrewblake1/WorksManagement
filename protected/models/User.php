@@ -32,7 +32,6 @@
  * @property Day[] $days
  * @property DefaultValue[] $defaultValues
  * @property Drawing[] $drawings
- * @property DrawingAdjacencyList[] $drawingAdjacencyLists
  * @property Duty[] $duties
  * @property DutyData[] $dutyDatas
  * @property DutyData[] $dutyDatas1
@@ -135,7 +134,6 @@ class User extends ContactActiveRecord
             'days' => array(self::HAS_MANY, 'Day', 'updated_by'),
             'defaultValues' => array(self::HAS_MANY, 'DefaultValue', 'updated_by'),
             'drawings' => array(self::HAS_MANY, 'Drawing', 'updated_by'),
-            'drawingAdjacencyLists' => array(self::HAS_MANY, 'DrawingAdjacencyList', 'updated_by'),
             'duties' => array(self::HAS_MANY, 'Duty', 'updated_by'),
             'dutyDatas' => array(self::HAS_MANY, 'DutyData', 'updated_by'),
             'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'responsible'),
