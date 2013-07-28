@@ -1,10 +1,7 @@
 <?php
-// TODO: replace this with trait use once in php 5.4
-abstract class RangeActiveRecord extends CActiveRecord
+trait RangeActiveRecordTrait
 {
-	public $rangeModel = NULL;
-	
-	public function setCustomValidators()
+	public function setCustomValidatorsFromSource($rangeModel = NULL)
 	{
 		if($this->rangeModel)
 		{
@@ -42,9 +39,9 @@ abstract class RangeActiveRecord extends CActiveRecord
 		return $default;
 	}
 	
-	public function getDefault()
+	public static function getDefault($rangeModel)
 	{
-		return static::getDefaultValue($this->select, $this->minimum, $this->maximum);
+		return static::getDefaultValue($rangeModel->select, $rangeModel->minimum, $rangeModel->maximum);
 	}
 }
 ?>

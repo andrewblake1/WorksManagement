@@ -1,7 +1,9 @@
 <?php
 
-class SupplierController extends FileController
+class SupplierController extends Controller
 {
+	use FileControllerTrait;
+
 	public $multiple = false;
 }
 

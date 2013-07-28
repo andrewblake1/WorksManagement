@@ -69,7 +69,7 @@ class Duty extends CustomFieldActiveRecord
 
 	public function tableName() {
 
-		return ($this->scenario == 'search') || static::$_inSearch
+		return ($this->scenario == 'search') || static::$inSearch
 			? 'v_duty'
 			: 'tbl_duty';
 	}

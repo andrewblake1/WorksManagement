@@ -27,10 +27,11 @@
  * @property Material[] $materials1
  * @property SubAssembly[] $subAssemblies
  */
-class Drawing extends TraitAdjacencyListWithFileActiveRecord
+class Drawing extends ActiveRecord
 {
-	public $parent_id;
-	public $parent;		// the missing relation
+	use  AdjacencyListActiveRecordTrait;
+	use  FileActiveRecordTrait;
+
 	protected $defaultSort = array('t.default_order');
 	
 	/**

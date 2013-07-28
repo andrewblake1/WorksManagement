@@ -1,7 +1,6 @@
 <?php
-abstract class FileActiveRecord extends ActiveRecord
+trait FileActiveRecordTrait
 {
-// todo: this to go into trait ImageActiveRecord
 	public function expose()
 	{
 		$modelDir = lcfirst(get_class($this));

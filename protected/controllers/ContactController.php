@@ -1,7 +1,9 @@
 <?php
 
-class ContactController  extends FileController
+class ContactController  extends Controller
 {
+	use FileControllerTrait;
+
 	public $multiple = false;
 }
 

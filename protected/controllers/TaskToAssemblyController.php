@@ -1,7 +1,9 @@
 <?php
 
-class TaskToAssemblyController extends AdjacencyListController
+class TaskToAssemblyController extends Controller
 {
+	use AdjacencyListControllerTrait;
+
 	// called within AdminViewWidget
 	public function getButtons($model)
 	{
@@ -167,7 +169,7 @@ class TaskToAssemblyController extends AdjacencyListController
 			$taskToMaterial->material_id = $assemblyToMaterial->material_id;
 			$taskToMaterial->task_to_assembly_id = $taskToAssembly->id;
 			$taskToMaterial->standard_id = $taskToAssembly->assembly->standard_id;
-			$taskToMaterial->quantity = $assemblyToMaterial->default;
+			$taskToMaterial->quantity = $taskToMaterial->getDefault($assemblyToMaterial);
 			if($saved &= $taskToMaterial->createSave($models))
 			{
 				// add a row into pivot table so can join to get quantity comment and stage etc

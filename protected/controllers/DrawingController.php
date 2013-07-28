@@ -1,7 +1,23 @@
 <?php
 
-class DrawingController extends TraitAdjacencyListWithFileController
+class DrawingController extends Controller
 {
+	use AdjacencyListControllerTrait, FileControllerTrait {
+		FileControllerTrait::actionUpdate insteadof AdjacencyListControllerTrait;
+		AdjacencyListControllerTrait::actionUpdate as actionUpdateAdjacencyList;
+	}
+
+	public $multiple = true;
+
+	// trait conflict resolution
+	public function actionUpdate($id, $model = null) {
+		// this from file controller first
+		$model = $this->loadModel($id, $model);
+		$model->expose();
+		
+		// then finish with adjacency list version
+		$this->actionUpdateAdjacencyList($id, $model);
+	}
 
 	public function getChildTabs($model, $last = FALSE)
 	{

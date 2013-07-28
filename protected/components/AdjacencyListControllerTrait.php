@@ -1,5 +1,5 @@
 <?php
-class AdjacencyListController extends Controller {
+trait AdjacencyListControllerTrait {
 
 	public function actionUpdate($id, $model = null) {
 		$modelName = $this->modelName;

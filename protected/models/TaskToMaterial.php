@@ -22,6 +22,8 @@
  */
 class TaskToMaterial extends ActiveRecord
 {
+	use RangeActiveRecordTrait;
+
 	public $standard_id;
 
 	/**
@@ -49,7 +51,7 @@ class TaskToMaterial extends ActiveRecord
 			$called = true;
 		}
 
-		return ($this->scenario == 'search') || static::$_inSearch
+		return ($this->scenario == 'search') || static::$inSearch
 			? 'v_task_to_material'
 			: 'tbl_task_to_material';
 	}
@@ -76,23 +78,25 @@ class TaskToMaterial extends ActiveRecord
 
 	public function setCustomValidators()
 	{
+		$rangeModel = null;
+		
 		if(!empty($this->taskToMaterialToAssemblyToMaterials))
 		{
 			// validate quantity against related assemblyToMaterial record
-			$this->rangeModel = $this->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial;
+			$rangeModel = $this->taskToMaterialToAssemblyToMaterials[0]->assemblyToMaterial;
 		}
 		elseif(!empty($this->taskToMaterialToAssemblyToMaterialGroups))
 		{
 			// validate quantity against related assemblyToMaterial record
-			$this->rangeModel = $this->taskToMaterialToAssemblyToMaterialGroups[0]->assemblyToMaterialGroup;
+			$rangeModel = $this->taskToMaterialToAssemblyToMaterialGroups[0]->assemblyToMaterialGroup;
 		}
 		elseif(!empty($this->taskToMaterialToTaskTemplateToMaterialGroups))
 		{
 			// validate quantity against related assemblyToMaterial record
-			$this->rangeModel = $this->taskToMaterialToTaskTemplateToMaterialGroups[0]->taskTemplateToMaterialGroup;
+			$rangeModel = $this->taskToMaterialToTaskTemplateToMaterialGroups[0]->taskTemplateToMaterialGroup;
 		}
 		
-		parent::setCustomValidators();
+		$this->setCustomValidatorsFromSource($rangeModel);
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 <?php
-abstract class ActiveRecord extends RangeActiveRecord
+abstract class ActiveRecord extends CActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
@@ -45,7 +45,7 @@ abstract class ActiveRecord extends RangeActiveRecord
 	/**
 	 * @var bool flag used as addional scenerio indicator when forcing re-read of meta data - needed in tableName()
 	 */
-	public static $_inSearch = false;
+	public static $inSearch = false;
 
 
 	public static function primaryKeyName()

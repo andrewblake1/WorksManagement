@@ -22,6 +22,8 @@
  */
 class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 {
+	use RangeActiveRecordTrait;
+
 	public $task_id;
 	public $quantity;
 	public $searchAssemblyGroup;
@@ -55,9 +57,9 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 
 	public function setCustomValidators()
 	{
-		$this->rangeModel = TaskTemplateToAssemblyGroup::model()->findByPk($this->task_template_to_assembly_group_id);
+		$rangeModel = TaskTemplateToAssemblyGroup::model()->findByPk($this->task_template_to_assembly_group_id);
 		
-		parent::setCustomValidators();
+		$this->setCustomValidatorsFromSource($rangeModel);
 	}
 
 	/**

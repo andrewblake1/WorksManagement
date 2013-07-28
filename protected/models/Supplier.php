@@ -16,7 +16,7 @@
  * @property User $updatedBy
  * @property SupplierContact[] $supplierContacts
  */
-class Supplier extends FileActiveRecord
+class Supplier extends ActiveRecord
 {
 
 	/**

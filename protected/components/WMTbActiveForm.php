@@ -361,7 +361,7 @@ class WMTbActiveForm extends TbActiveForm
 		{
 			// set local default - if single select then select, or if min === max then to min
 			$model->$attribute = $default === NULL
-				? RangeActiveRecord::getDefaultValue($select, $minimum, $maximum)
+				? $model::getDefaultValue($select, $minimum, $maximum)
 				: $default;
 		}
 		

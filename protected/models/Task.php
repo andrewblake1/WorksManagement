@@ -95,7 +95,7 @@ class Task extends CustomFieldActiveRecord
 			$called = true;
 		}
 
-		return ($this->scenario == 'search') || static::$_inSearch
+		return ($this->scenario == 'search') || static::$inSearch
 			? 'tmp_table'
 			: 'tbl_task';
 	}
@@ -438,7 +438,7 @@ class Task extends CustomFieldActiveRecord
 		// loop thru all all assemblies related to the tasks type
 		foreach($this->taskTemplate->taskTemplateToAssemblies as $taskTemplateToAssembly)
 		{
-			$saved = TaskToAssemblyController::addAssembly($this->id, $taskTemplateToAssembly->assembly_id, $taskTemplateToAssembly->default, null, null, $models);
+			$saved = TaskToAssemblyController::addAssembly($this->id, $taskTemplateToAssembly->assembly_id, TaskToAssembly::getDefault($taskTemplateToAssembly), null, null, $models);
 		}
 		
 		return $saved;
@@ -462,7 +462,7 @@ class Task extends CustomFieldActiveRecord
 			// create a new materials
 			$taskToMaterial = new TaskToMaterial();
 			// copy any useful attributes from
-			$taskToMaterial->quantity = $taskTemplateToMaterial->default;
+			$taskToMaterial->quantity = $taskToMaterial->getDefault($taskTemplateToMaterial);
 			$taskToMaterial->material_id = $taskTemplateToMaterial->material_id;
 			$taskToMaterial->updated_by = null;
 			$taskToMaterial->task_id = $this->id;

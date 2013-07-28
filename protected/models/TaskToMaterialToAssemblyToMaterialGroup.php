@@ -22,6 +22,8 @@
  */
 class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 {
+	use RangeActiveRecordTrait;
+
 	public $task_id;
 	public $quantity;
 	public $task_to_assembly_id;
@@ -57,9 +59,9 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 
 	public function setCustomValidators()
 	{
-		$this->rangeModel = AssemblyToMaterialGroup::model()->findByPk($this->assembly_to_material_group_id);
+		$rangeModel = AssemblyToMaterialGroup::model()->findByPk($this->assembly_to_material_group_id);
 		
-		parent::setCustomValidators();
+		$this->setCustomValidatorsFromSource($rangeModel);
 	}
 	
 	/**

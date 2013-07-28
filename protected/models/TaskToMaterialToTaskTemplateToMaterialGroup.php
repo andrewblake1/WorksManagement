@@ -22,6 +22,8 @@
  */
 class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 {
+	use RangeActiveRecordTrait;
+
 	public $task_id;
 	public $quantity;
 	
@@ -48,9 +50,9 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 
 	public function setCustomValidators()
 	{
-		$this->rangeModel = TaskTemplateToMaterialGroup::model()->findByPk($this->task_template_to_material_group_id);
+		$rangeModel = TaskTemplateToMaterialGroup::model()->findByPk($this->task_template_to_material_group_id);
 		
-		parent::setCustomValidators();
+		$this->setCustomValidatorsFromSource($rangeModel);
 	}
 	
 	/**

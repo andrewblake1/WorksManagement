@@ -16,8 +16,9 @@
  * @property MaterialToClient[] $materialToClients
  * @property ProjectTemplate[] $projectTemplates
  */
-class Client extends FileActiveRecord
+class Client extends ActiveRecord
 {
+	use FileActiveRecordTrait;
 
 	/**
 	 * @return array validation rules for model attributes.

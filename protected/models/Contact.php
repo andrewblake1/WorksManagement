@@ -27,8 +27,9 @@
  * @property SupplierContact[] $supplierContacts
  * @property User[] $users
  */
-class Contact extends FileActiveRecord
+class Contact extends ActiveRecord
 {
+	use FileActiveRecordTrait;
 
 	/**
 	 * @return array validation rules for model attributes.

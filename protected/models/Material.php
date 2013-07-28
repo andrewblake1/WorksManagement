@@ -25,8 +25,10 @@
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskToMaterial[] $taskToMaterials
  */
-class Material extends FileActiveRecord
+class Material extends ActiveRecord
 {
+	use FileActiveRecordTrait;
+
 	public $searchDrawingDescription;
 
 	/**

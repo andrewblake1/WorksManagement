@@ -1,7 +1,10 @@
 <?php
 
-class ClientController extends FileController
+class ClientController extends Controller
 {
+	use FileControllerTrait;
+
+	// this needs to be in the
 	public $multiple = false;
 }
 

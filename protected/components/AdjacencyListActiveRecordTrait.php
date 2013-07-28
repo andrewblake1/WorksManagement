@@ -1,5 +1,5 @@
 <?php
-class AdjacencyListActiveRecord extends ActiveRecord {
+trait AdjacencyListActiveRecordTrait {
 
 	/*
 	 * attribute to be used in breadcrumb trail  - will use models display attribute otherwise

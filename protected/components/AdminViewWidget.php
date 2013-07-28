@@ -37,7 +37,7 @@ class AdminViewWidget extends CWidget
 		}
 		
 		// a hack needed to allow tablename change to view name for admin view
-		$modelName::$_inSearch = true;
+		$modelName::$inSearch = true;
 		$this->model->refreshMetaData();
 		
 		$params = array(
@@ -91,7 +91,7 @@ class AdminViewWidget extends CWidget
 		$this->_controller->widget('WMTbExtendedGridView', $params);
 
 		// a hack needed to allow tablename change to view name for admin view
-		$modelName::$_inSearch = false;
+		$modelName::$inSearch = false;
 		$this->model->refreshMetaData();
 
 		// as using boostrap modal for create the html for the modal needs to be on

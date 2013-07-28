@@ -1,8 +1,8 @@
 <?php
 
-class TraitAdjacencyListWithFileController extends AdjacencyListController {
+trait FileControllerTrait {
 	private $uploadHandler;
-	public $multiple = true;
+	//public $multiple = true;
 
 	private function initUploadHandler($id)
 	{

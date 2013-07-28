@@ -23,8 +23,11 @@
  * @property TaskToAssemblyToTaskTemplateToAssemblyGroup[] $taskToAssemblyToTaskTemplateToAssemblyGroups
  * @property TaskToMaterial[] $taskToMaterials
  */
-class TaskToAssembly extends AdjacencyListActiveRecord
+class TaskToAssembly extends ActiveRecord
 {
+	use AdjacencyListActiveRecordTrait;
+	use RangeActiveRecordTrait;
+	
 	public $standard_id;
 
 	/**
@@ -65,7 +68,7 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 			$called = true;
 		}
 
-		return ($this->scenario == 'search') || static::$_inSearch
+		return ($this->scenario == 'search') || static::$inSearch
 			? 'tmp_planning_to_assembly'
 			: 'tbl_task_to_assembly';
 	}
@@ -78,23 +81,25 @@ class TaskToAssembly extends AdjacencyListActiveRecord
 
 	public function setCustomValidators()
 	{
+		$rangeModel = NULL;
+	
 		if(!empty($this->subAssembly))
 		{
 			// validate quantity against related assemblyToAssembly record
-			$this->rangeModel = $this->subAssembly;
+			$rangeModel = $this->subAssembly;
 		}
 		elseif(!empty($this->taskToAssemblyToAssemblyToAssemblyGroups))
 		{
 			// validate quantity against related assemblyToAssembly record
-			$this->rangeModel = $this->taskToAssemblyToAssemblyToAssemblyGroups[0]->assemblyToAssemblyGroup;
+			$rangeModel = $this->taskToAssemblyToAssemblyToAssemblyGroups[0]->assemblyToAssemblyGroup;
 		}
 		elseif(!empty($this->taskToAssemblyToTaskTemplateToAssemblyGroups))
 		{
 			// validate quantity against related assemblyToAssembly record
-			$this->rangeModel = $this->taskToAssemblyToTaskTemplateToAssemblyGroups[0]->taskTemplateToAssemblyGroup;
+			$rangeModel = $this->taskToAssemblyToTaskTemplateToAssemblyGroups[0]->taskTemplateToAssemblyGroup;
 		}
 		
-		parent::setCustomValidators();
+		$this->setCustomValidatorsFromSource($rangeModel);
 	}
 	
 	/**
