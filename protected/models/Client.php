@@ -28,7 +28,7 @@ class Client extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('name', 'required'),
+//			array('name', 'numerical', 'integerOnly'=>true),
 		));
 	}
 

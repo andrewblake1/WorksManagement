@@ -149,17 +149,68 @@ abstract class ActiveRecord extends CActiveRecord
 	}
 	
 	/**
-	 * @return array validation rules for model attributes.
+	 * @return array validation rules for model attributes. Calculate all so that only need rules for non model
+	 * database attributes i.e. attributes that don't come from the models corresponding table
 	 */
 	public function rules()
 	{
-		// because only setting search attribues names herer and not actually assigning variables
-		// it should be fine to use all object varialbles. This technically means that things like defaultSort could
-		// be injected so we need to be aware and remove these here or not use this if there is potential issue
+		$validators = $this->customValidators;
+
+		// because search is not altering data it should be safe to allow all attributes for search scenario
+		$searchValidator = array(array(implode(',', $this->allAttributes), 'safe', 'on'=>'search'));
 		
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge($this->customValidators, array(array(implode(',', $this->allAttributes), 'safe', 'on'=>'search')));
+		// length and required
+		$requiredValidator = array();
+		$dateOnlyValidator = array();
+		$timeOnlyValidator = array();
+		$dateTimeOnlyValidator = array();
+		$lengthValidators = array();
+		$integerOnlyValidator = array();
+		$safeValidator = array();
+		foreach($this->tableSchema->columns as $column)
+		{
+			if(!$column->allowNull)
+			{
+				$requiredValidator[] = $column->name;
+			}
+
+			if($column->dbType == 'date')
+			{
+				$dateOnlyValidator[] = $column->name;
+			}
+			elseif($column->dbType == 'time')
+			{
+				$timeOnlyValidator[] = $column->name;
+			}
+			elseif($column->type == 'integer')
+			{
+				$integerOnlyValidator[] = $column->name;
+			}
+			elseif($column->name != 'deleted' && $column->name != 'updated_by')
+			{
+				if($column->size)
+				{
+					$lengthValidators[$column->size][] = $column->name;
+				}
+				else
+				{
+					$safeValidator[] = $column->name;
+				}
+			}
+		}
+		$validators = array_merge($validators, array(array(implode(',', $requiredValidator), 'required')));
+		$validators = array_merge($validators, array(array(implode(',', $integerOnlyValidator), 'numerical', 'integerOnly'=>true)));
+		$validators = array_merge($validators, array(array(implode(',', $dateOnlyValidator), 'date', 'format'=>'H:m')));
+		$validators = array_merge($validators, array(array(implode(',', $timeOnlyValidator), 'date', 'format'=>'H:m')));
+		$validators = array_merge($validators, array(array(implode(',', $dateTimeOnlyValidator), 'date', 'format'=>'H:m')));
+		$validators = array_merge($validators, array(array(implode(',', $safeValidator), 'safe')));
+			
+		foreach($lengthValidators as $size => $columns)
+		{
+			$validators = array_merge($validators, array(array(implode(',', $columns), 'length', 'max'=>$size)));
+		}
+		
+		return $validators;
 	}
  
 	static public function getNiceNamePlural($primaryKey=null, $model=null)
@@ -858,7 +909,7 @@ $t = $model->attributes;
 
 	public function setCustomValidators()
 	{
-		parent::setCustomValidators();
+//		parent::setCustomValidators();
 	}
 		
 	/**
@@ -1094,12 +1145,12 @@ elseif(!$return)
 			}
 		}
 		
-		if(isset($this->tableSchema->columns[$attribute]))
+/*		if(isset($this->tableSchema->columns[$attribute]))
 		{
 $t = $this->tableSchema->columns[$attribute];
 			// if not specified in rules then get from database
 			return $this->tableSchema->columns[$attribute]->size;
-		}
+		}*/
 	}
 
 	/*
