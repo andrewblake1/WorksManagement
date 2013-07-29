@@ -19,20 +19,6 @@
  */
 class Standard extends ActiveRecord
 {
-	
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('name', 'required'),
-			array('name', 'length', 'max'=>64),
-		));
-	}
-
 	/**
 	 * @return array relational rules.
 	 */

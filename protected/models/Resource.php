@@ -31,21 +31,6 @@ class Resource extends ActiveRecord
 	public $searchAction;
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('description', 'required'),
-			array('maximum', 'numerical', 'integerOnly'=>true),
-			array('unit_price', 'length', 'max'=>7),
-            array('level, action_id', 'length', 'max'=>10),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

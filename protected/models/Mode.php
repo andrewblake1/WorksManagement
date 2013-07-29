@@ -18,20 +18,6 @@
 class Mode extends ActiveRecord
 {
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('description, updated_by', 'required'),
-			array('deleted, updated_by', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>255),
-		);
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

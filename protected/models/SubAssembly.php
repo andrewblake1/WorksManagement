@@ -39,21 +39,6 @@ class SubAssembly extends ActiveRecord
 	protected $defaultSort = array('childAssembly.description');
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('standard_id, parent_assembly_id, child_assembly_id, quantity', 'required'),
-			array('standard_id, parent_assembly_id, child_assembly_id, detail_drawing_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
-			array('quantity_tooltip, comment', 'length', 'max'=>255),
-			array('select', 'safe'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

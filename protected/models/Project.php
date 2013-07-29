@@ -52,14 +52,9 @@ class Project extends CustomFieldActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('project_type_id, client_id', 'required'),
-			array('project_type_id, client_id', 'numerical', 'integerOnly'=>true),
-			array('id, level, in_charge_id', 'length', 'max'=>10),
-			array('critical_completion, planned, client_id, name', 'safe'),
-			array('travel_time_1_way', 'date', 'format'=>'H:m'),
+			array('in_charge_id', 'numerical', 'integerOnly'=>true),
+			array('name', 'length', 'max'=>255),
 		));
 	}
 

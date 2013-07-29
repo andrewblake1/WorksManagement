@@ -30,23 +30,6 @@ class TaskToAction extends ViewActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('action_id, task_id', 'required'),
-            array('client_id, project_template_id', 'numerical', 'integerOnly'=>true),
-            array('action_id, override_id, task_id', 'length', 'max'=>10),
-            array('description', 'length', 'max'=>255),
-            array('derived_importance', 'length', 'max'=>8),
-			array('derived_importance, description, task_id', 'safe', 'on'=>'search'),
-		);
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()

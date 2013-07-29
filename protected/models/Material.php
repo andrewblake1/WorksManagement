@@ -32,22 +32,6 @@ class Material extends ActiveRecord
 	public $searchDrawingDescription;
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('description, standard_id', 'required'),
-			array('standard_id, drawing_id', 'numerical', 'integerOnly'=>true),
-			array('description, alias', 'length', 'max'=>255),
-			array('unit', 'length', 'max'=>64),
-            array('category', 'safe'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

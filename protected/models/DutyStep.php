@@ -64,23 +64,6 @@ class DutyStep extends ActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-            array('action_id, description', 'required'),
-            array('lead_in_days', 'numerical', 'integerOnly'=>true),
-            array('action_id, level', 'length', 'max'=>10),
-            array('description', 'length', 'max'=>64),
-            array('comment', 'length', 'max'=>255),
-            array('project_template_id, client_id, auth_item_name', 'safe'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

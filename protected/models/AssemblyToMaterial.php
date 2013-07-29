@@ -45,20 +45,6 @@ class AssemblyToMaterial extends ActiveRecord
 	static $niceName = 'Material';
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('assembly_id, material_id, stage_id, standard_id, quantity', 'required'),
-			array('assembly_id, material_id, stage_id, standard_id, detail_drawing_id, quantity, minimum, maximum', 'numerical', 'integerOnly'=>true),
-			array('select', 'safe'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

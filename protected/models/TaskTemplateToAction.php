@@ -76,20 +76,6 @@ class TaskTemplateToAction extends ActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('task_template_id, action_id, importance', 'required'),
-			array('task_template_id, action_id', 'numerical', 'integerOnly'=>true),
-			array('importance', 'length', 'max'=>8),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

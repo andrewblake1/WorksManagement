@@ -30,21 +30,6 @@ class ProjectToCustomFieldToProjectTemplate extends CustomValueActiveRecord
 	static $niceName = 'Custom field';
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('custom_field_to_project_template_id, project_id', 'required'),
-			array('custom_field_to_project_template_id', 'numerical', 'integerOnly'=>true),
-			array('project_id', 'length', 'max'=>10),
-			array('custom_value', 'length', 'max'=>255),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

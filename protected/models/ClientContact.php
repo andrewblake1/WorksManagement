@@ -39,11 +39,10 @@ class ClientContact extends ContactActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('client_id, first_name, last_name, email', 'required'),
-			array('client_id', 'numerical', 'integerOnly'=>true),
+			array('first_name, last_name, email', 'required'),
+			array('first_name, last_name', 'length', 'max'=>64),
+			array('email', 'length', 'max'=>255),
 		));
 	}
 

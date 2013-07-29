@@ -24,22 +24,6 @@
 class ProjectType extends CategoryActiveRecord {
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules() {
-		// NOTE1: you should only define rules for those attributes that
-		// will receive user inputs.
-		// NOTE2: Remove ALL rules associated with the nested Behavior:
-		//rgt,lft,root,level,id.
-		return array_merge(parent::rules(), array(
-			array('name, project_template_id, client_id', 'required'),
-            array('project_template_id, client_id', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max' => 64),
-			array('client_id', 'safe'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

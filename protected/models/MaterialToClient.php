@@ -31,21 +31,6 @@ class MaterialToClient extends ActiveRecord
 	static $niceName = 'Material';
 	
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('material_id, client_id, supplier_id', 'required'),
-			array('material_id, client_id, supplier_id', 'numerical', 'integerOnly'=>true),
-			array('unit_price', 'length', 'max'=>7),
-			array('alias', 'length', 'max'=>255),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

@@ -39,12 +39,9 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_template_to_material_group_id, quantity, task_id, material_group_id, material_id, updated_by', 'required'),
-			array('task_template_to_material_group_id, quantity, material_group_id, material_id, material_group_to_material_id, updated_by', 'numerical', 'integerOnly'=>true),
-			array('task_id, task_to_material_id', 'length', 'max'=>10),
+			array('quantity, task_id', 'required'),
+			array('task_id, quantity', 'numerical', 'integerOnly'=>true),
 		));
 	}
 

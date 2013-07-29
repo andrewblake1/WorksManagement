@@ -30,20 +30,6 @@ class ProjectToAuthItemToAuthAssignment extends ActiveRecord
 	public $phone_fax;
 	
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('project_to_auth_item_id, auth_assignment_id', 'required'),
-			array('auth_assignment_id', 'numerical', 'integerOnly'=>true),
-			array('project_to_auth_item_id', 'length', 'max'=>10),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

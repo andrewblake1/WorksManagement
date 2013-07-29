@@ -32,22 +32,6 @@ class Contact extends ActiveRecord
 	use FileActiveRecordTrait;
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('first_name, last_name, email', 'required'),
-			array('deleted, updated_by', 'numerical', 'integerOnly'=>true),
-			array('first_name, last_name, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
-			array('first_name, last_name, email', 'required'),
-			array('post_code', 'length', 'max'=>16),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

@@ -98,10 +98,10 @@ class User extends ContactActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('first_name, last_name, email', 'required'),
+			array('first_name, last_name', 'length', 'max'=>64),
+			array('email', 'length', 'max'=>255),
 		));
 	}
 

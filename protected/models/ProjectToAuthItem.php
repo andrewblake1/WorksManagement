@@ -23,20 +23,6 @@ class ProjectToAuthItem extends ActiveRecord
 	static $niceName = 'Role';
 	
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('project_id, auth_item_name', 'required'),
-			array('project_id', 'length', 'max'=>10),
-			array('auth_item_name', 'length', 'max'=>64),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

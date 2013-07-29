@@ -37,32 +37,6 @@ class SubReport extends ActiveRecord
 		);
 	}
 
-/*	public function scopeSubReport($report_id)
-	{
-		$criteria=new DbCriteria;
-		$criteria->compare('report_id',$report_id);
-
-		$this->getDbCriteria()->mergeWith($criteria);
-
-		return $this;
-	}*/
-	
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('description, select, report_id, format', 'required'),
-			array('description', 'length', 'max'=>255),
-			array('report_id', 'length', 'max'=>10),
-			array('format', 'length', 'max'=>9),
-			array('select', 'validationSQLSelect'),
-		));
-	}
-
 	/**
 	 * @return array relational rules.
 	 */

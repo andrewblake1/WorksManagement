@@ -53,20 +53,6 @@ class AuthAssignment extends ActiveRecord
 	}
 	
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('itemname, userid', 'required'),
-			array('userid', 'numerical', 'integerOnly'=>true),
-			array('bizrule, data', 'safe'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

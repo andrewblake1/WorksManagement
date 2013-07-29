@@ -42,22 +42,6 @@ class ResourceToSupplier extends ActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('resource_id, supplier_id', 'required'),
-			array('resource_id, supplier_id', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, searchSupplier, resource_id, supplier_id,', 'safe', 'on'=>'search'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

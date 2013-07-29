@@ -36,19 +36,6 @@ class CustomFieldToDutyStep extends ActiveRecord
 	public $searchCustomFieldLabel;
 	public $searchCustomFieldComment;
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('custom_field_id, custom_field_duty_step_category_id', 'required'),
-			array('duty_step_id, custom_field_id, custom_field_duty_step_category_id', 'numerical', 'integerOnly'=>true),
-		));
-	}
-
 	public function scopeDutyStep($duty_step_id)
 	{
 		$criteria=new DbCriteria;

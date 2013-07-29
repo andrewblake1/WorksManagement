@@ -46,13 +46,8 @@ class TaskToAssembly extends ActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_id, assembly_id', 'required'),
-			array('standard_id', 'safe'),
-//			array('lengthassembly_id, sub_assembly_id, quantity', 'numerical', 'integerOnly'=>true),
-//			array('parent_id, task_id, quantity', 'length', 'max'=>10),
+			array('standard_id', 'numerical', 'integerOnly'=>true),
 		));
 	}
 

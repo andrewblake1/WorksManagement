@@ -17,18 +17,6 @@
 class Stage extends ActiveRecord
 {
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('description', 'required'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()
@@ -52,18 +40,12 @@ class Stage extends ActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
 
-		$criteria->select=array(
-			't.id',
-			't.description',
-		);
-
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
-		$columns[] = $this->linkThisColumn('description');
+		$columns[] = 'description';
 		
 		return $columns;
 	}

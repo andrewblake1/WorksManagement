@@ -27,19 +27,6 @@ class CustomFieldDutyStepCategory extends CategoryActiveRecord {
 	static $niceName = 'Custom field set';
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-            array('duty_step_id', 'required'),
-            array('duty_step_id', 'numerical', 'integerOnly'=>true),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

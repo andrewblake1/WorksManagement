@@ -38,22 +38,6 @@ class MaterialGroupToMaterial extends ActiveRecord
 	static $niceName = 'Material';
 	
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('material_id, material_group_id, standard_id,', 'required'),
-			array('material_id, material_group_id, standard_id', 'numerical', 'integerOnly'=>true),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, searchMaterialDescription, searchMaterialUnit, searchMaterialAlias, material_id, material_group_id', 'safe', 'on'=>'search'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

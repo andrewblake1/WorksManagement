@@ -35,24 +35,6 @@ class Duty extends CustomFieldActiveRecord
 	public $action_id;
 	public $lead_in_days;
 	
-/*	protected $defaultSort = array(
-		't.updated',
-		't.due',
-		't.lead_in_days'=>'DESC',
-	);
-
-	public $task_id;		// place holder for parent
-	public $id;
-	public $duty_data_id;
-	public $duty_step_id;
-	public $description;
-	public $due;
-	public $derived_assigned_to_id;
-	public $derived_assigned_to_name;
-	public $derived_updated;
-	public $derived_importance;
-	public $lead_in_days;*/
-	
 	/**
 	 * @var string label on button in update view
 	 */
@@ -82,10 +64,7 @@ class Duty extends CustomFieldActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_id', 'required'),
-			array('duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
-			array('task_id, duty_data_id', 'length', 'max'=>10),
-			array('action_id, updated', 'safe'),
+			array('action_id, updated, duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 		));
 	}
 

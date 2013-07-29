@@ -75,21 +75,6 @@ class CustomField extends ActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('label, validation_type, data_type', 'required'),
-			array('mandatory, allow_new', 'numerical', 'integerOnly'=>true),
-			array('validation_text, validation_error', 'safe'),
-			array('validation_text', 'validation_text'),
-		));
-	}
-
-	/**
 	* @param string $attribute the name of the attribute to be validated
 	* @param array $params options specified in the validation rule
 	*/

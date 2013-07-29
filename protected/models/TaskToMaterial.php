@@ -67,12 +67,9 @@ class TaskToMaterial extends ActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('standard_id, material_id, task_id', 'required'),
-			array('standard_id, material_id, quantity', 'numerical', 'integerOnly'=>true),
-			array('task_id, task_to_assembly_id', 'length', 'max'=>10),
+			array('standard_id', 'required'),
+			array('standard_id', 'numerical', 'integerOnly'=>true),
 		));
 	}
 

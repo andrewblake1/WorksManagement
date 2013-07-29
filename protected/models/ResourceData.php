@@ -26,22 +26,6 @@
  */
 class ResourceData extends ActiveRecord
 {
-	
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('planning_id, level, resource_id, mode_id', 'required'),
-			array('resource_id, mode_id, resource_to_supplier_id', 'numerical', 'integerOnly'=>true),
-			array('planning_id, level', 'length', 'max'=>10),
-			array('start, estimated_total_duration', 'date', 'format'=>'H:m'),
-		));
-	}
-
 	/**
 	 * @return array relational rules.
 	 */

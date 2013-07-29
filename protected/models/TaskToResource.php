@@ -51,13 +51,10 @@ class TaskToResource extends ActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('task_id, resource_id, mode_id, quantity, duration', 'required'),
-			array('level, resource_id, mode_id, resource_to_supplier_id, quantity, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
-			array('task_id', 'length', 'max'=>10),
-			array('start, duration, estimated_total_duration', 'date', 'format'=>'H:m'),
+			array('resource_id, mode_id', 'required'),
+			array('level, resource_id, mode_id, resource_to_supplier_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
+			array('start, estimated_total_duration', 'date', 'format'=>'H:m'),
 		));
 	}
 

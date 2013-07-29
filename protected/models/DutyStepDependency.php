@@ -37,20 +37,6 @@ class DutyStepDependency extends ActiveRecord
 	);
 	
     /**
-     * @return array validation rules for model attributes.
-     */
-    public function rules()
-    {
-        // NOTE: you should only define rules for those attributes that
-        // will receive user inputs.
-		return array_merge(parent::rules(), array(
-            array('child_duty_step_id, action_id, updated_by', 'required'),
-            array('parent_duty_step_id, child_duty_step_id', 'numerical', 'integerOnly'=>true),
-            array('id, action_id', 'length', 'max'=>10),
-        ));
-    }
-
-    /**
      * @return array relational rules.
      */
     public function relations()

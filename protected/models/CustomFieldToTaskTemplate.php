@@ -37,19 +37,6 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 	public $searchCustomFieldComment;
 	
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('custom_field_id, custom_field_task_category_id', 'required'),
-			array('task_template_id, custom_field_id, custom_field_task_category_id, show_in_admin, show_in_planning', 'numerical', 'integerOnly'=>true),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

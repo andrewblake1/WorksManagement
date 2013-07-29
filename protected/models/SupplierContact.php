@@ -36,17 +36,12 @@ class SupplierContact extends ContactActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array_merge(parent::rules(), array(
 			array('supplier_id, first_name, last_name, email', 'required'),
 			array('supplier_id', 'numerical', 'integerOnly'=>true),
 			array('first_name, last_name, role, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),
 			array('email, address_line_1, address_line_2', 'length', 'max'=>255),
 			array('post_code', 'length', 'max'=>16),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, supplier_id, first_name, last_name, role, email, address_line_1, address_line_2, post_code, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'safe', 'on'=>'search'),
 		));
 	}
 

@@ -25,21 +25,6 @@ class DutyStepBranch extends ActiveRecord
 	static $niceName = 'Condition';
 	
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('duty_step_dependency_id, custom_field_to_duty_step_id, compare, duty_step_id, updated_by', 'required'),
-			array('custom_field_to_duty_step_id, duty_step_id, updated_by', 'numerical', 'integerOnly'=>true),
-			array('duty_step_dependency_id', 'length', 'max'=>10),
-			array('compare', 'length', 'max'=>255),
-		);
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

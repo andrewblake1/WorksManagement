@@ -88,20 +88,6 @@ class Action extends ActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('description, updated_by', 'required'),
-			array('client_id, project_template_id, ', 'numerical', 'integerOnly'=>true),
-			array('override_id', 'safe'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

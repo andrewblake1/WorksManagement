@@ -17,20 +17,6 @@
 class TaskToMaterialToAssemblyToMaterial extends ActiveRecord
 {
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('task_to_material_id, assembly_to_material_id, updated_by', 'required'),
-			array('assembly_to_material_id, updated_by', 'numerical', 'integerOnly'=>true),
-			array('task_to_material_id', 'length', 'max'=>10),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

@@ -24,23 +24,6 @@ class DrawingToMaterial extends ActiveRecord
 	}
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('description', 'required'),
-			array('id, drawing_id', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, alias, drawing_id, description', 'safe', 'on'=>'search'),
-		);
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

@@ -23,23 +23,6 @@ class PurchaseOrder extends ActiveRecord
 	public $searchSupplier;
 	
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('supplier_id, number', 'required'),
-			array('supplier_id', 'numerical', 'integerOnly'=>true),
-			array('number', 'length', 'max'=>64),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, searchSupplier, number', 'safe', 'on'=>'search'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

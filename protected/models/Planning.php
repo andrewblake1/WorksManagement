@@ -65,8 +65,7 @@ class Planning extends CategoryActiveRecord {
 	public function rules()
 	{
 		$rules = parent::rules();
-		$rules[] = array('project_id, in_charge_id, levelName', 'safe');
-		$rules[] = array('name', 'length', 'max' => 255);
+		$rules[] = array('project_id', 'numerical', 'integerOnly'=>true);
 		
 		return $rules;
 	}

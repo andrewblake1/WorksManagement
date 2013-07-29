@@ -40,19 +40,6 @@ class Drawing extends ActiveRecord
 	static $niceName = 'Drawing';
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('standard_id, description', 'required'),
-			array('parent_id, standard_id, default_order', 'numerical', 'integerOnly'=>true),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

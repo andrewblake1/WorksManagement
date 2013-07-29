@@ -21,21 +21,6 @@ class DefaultValue extends ActiveRecord
 	static $niceName = 'Default';
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('table, column, select', 'required'),
-			array('table, column', 'length', 'max'=>64),
-			array('select', 'validationSQLSelect'),
-//			array('id, table, column, select', 'safe', 'on'=>'search'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

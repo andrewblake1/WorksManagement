@@ -33,20 +33,6 @@ class ProjectToClientContact extends ActiveRecord
 	static $niceName = 'Contact';
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('project_id, client_contact_id', 'required'),
-			array('client_id, client_contact_id', 'numerical', 'integerOnly'=>true),
-			array('project_id', 'length', 'max'=>10),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

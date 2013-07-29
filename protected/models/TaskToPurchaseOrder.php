@@ -28,22 +28,6 @@ class TaskToPurchaseOrder extends ActiveRecord
 	static $niceName = 'Purhase order';
 
 	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array_merge(parent::rules(), array(
-			array('task_id, purchase_order_id', 'required'),
-			array('task_id, purchase_order_id', 'length', 'max'=>10),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, task_id, searchTask, searchPurchaseOrder', 'safe', 'on'=>'search'),
-		));
-	}
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

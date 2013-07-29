@@ -169,6 +169,12 @@ abstract class ActiveRecord extends CActiveRecord
 		$safeValidator = array();
 		foreach($this->tableSchema->columns as $column)
 		{
+			// ignore these columns
+			if($column->name == 'id' || $column->name == 'deleted' || $column->name == 'updated_by')
+			{
+				continue;
+			}
+			
 			if(!$column->allowNull)
 			{
 				$requiredValidator[] = $column->name;
@@ -186,23 +192,20 @@ abstract class ActiveRecord extends CActiveRecord
 			{
 				$integerOnlyValidator[] = $column->name;
 			}
-			elseif($column->name != 'deleted' && $column->name != 'updated_by')
+			elseif($column->size)
 			{
-				if($column->size)
-				{
-					$lengthValidators[$column->size][] = $column->name;
-				}
-				else
-				{
-					$safeValidator[] = $column->name;
-				}
+				$lengthValidators[$column->size][] = $column->name;
+			}
+			else
+			{
+				$safeValidator[] = $column->name;
 			}
 		}
 		$validators = array_merge($validators, array(array(implode(',', $requiredValidator), 'required')));
 		$validators = array_merge($validators, array(array(implode(',', $integerOnlyValidator), 'numerical', 'integerOnly'=>true)));
 		$validators = array_merge($validators, array(array(implode(',', $dateOnlyValidator), 'date', 'format'=>'H:m')));
-		$validators = array_merge($validators, array(array(implode(',', $timeOnlyValidator), 'date', 'format'=>'H:m')));
-		$validators = array_merge($validators, array(array(implode(',', $dateTimeOnlyValidator), 'date', 'format'=>'H:m')));
+		$validators = array_merge($validators, array(array(implode(',', $timeOnlyValidator), 'date', 'format'=>'d M, Y')));
+		$validators = array_merge($validators, array(array(implode(',', $dateTimeOnlyValidator), 'date', 'format'=>'d M Y, H:i:s')));
 		$validators = array_merge($validators, array(array(implode(',', $safeValidator), 'safe')));
 			
 		foreach($lengthValidators as $size => $columns)

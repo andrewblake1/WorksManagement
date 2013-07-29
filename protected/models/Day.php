@@ -33,9 +33,8 @@ class Day extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(), array(
-			array('project_id', 'required'),
-			array('id, level, project_id, in_charge_id', 'length', 'max'=>10),
-			array('name, scheduled', 'safe'),
+			array('in_charge_id', 'numerical', 'integerOnly'=>true),
+			array('name', 'length', 'max'=>255),
 		));
 	}
 
