@@ -19,7 +19,7 @@
  * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblies
  * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblies1
  * @property AssemblyToAssemblyGroup[] $assemblyToAssemblyGroups
- * @property AssemblyToClient[] $assemblyToClients
+ * @property ClientToAssembly[] $clientToAssemblys
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
  * @property SubAssembly[] $subAssemblies
@@ -48,7 +48,7 @@ class Assembly extends ActiveRecord
             'assemblyGroupToAssemblies' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'standard_id'),
             'assemblyGroupToAssemblies1' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'assembly_id'),
             'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'assembly_id'),
-            'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'assembly_id'),
+            'clientToAssemblys' => array(self::HAS_MANY, 'ClientToAssembly', 'assembly_id'),
             'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'assembly_id'),
             'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'assembly_id'),
             'subAssemblies' => array(self::HAS_MANY, 'SubAssembly', 'parent_assembly_id'),

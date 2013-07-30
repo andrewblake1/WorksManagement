@@ -94,10 +94,10 @@ EOD;
 			$this->_authManager->createOperation('AssemblyToMaterialGroupRead', 'AssemblyToMaterialGroup read');
 			$task->addChild('AssemblyToMaterialGroupRead');
 
-			$task=$this->_authManager->createTask('AssemblyToClient', 'AssemblyToClient task');
-			$systemAdminRole->addChild('AssemblyToClient');
-			$this->_authManager->createOperation('AssemblyToClientRead', 'AssemblyToClient read');
-			$task->addChild('AssemblyToClientRead');
+			$task=$this->_authManager->createTask('ClientToAssembly', 'ClientToAssembly task');
+			$systemAdminRole->addChild('ClientToAssembly');
+			$this->_authManager->createOperation('ClientToAssemblyRead', 'ClientToAssembly read');
+			$task->addChild('ClientToAssemblyRead');
 
 			$task=$this->_authManager->createTask('AuthAssignment', 'AuthAssignment task');
 			$systemAdminRole->addChild('AuthAssignment');
@@ -400,11 +400,6 @@ EOD;
 			$this->_authManager->createOperation('TaskTemplateToActionToProjectTemplateToAuthItemRead', 'TaskTemplateToActionToProjectTemplateToAuthItem read');
 			$task->addChild('TaskTemplateToActionToProjectTemplateToAuthItemRead');
 
-/*			$task=$this->_authManager->createTask('PurchaseOrder', 'PurchaseOrder task');
-			$projectManagerRole->addChild('PurchaseOrder');
-			$this->_authManager->createOperation('PurchaseOrderRead', 'PurchaseOrder read');
-			$task->addChild('PurchaseOrderRead');*/
-
 			$task=$this->_authManager->createTask('Planning', 'Planning task');
 			$projectManagerRole->addChild('Planning');
 			$this->_authManager->createOperation('PlanningRead', 'Planning read');
@@ -436,11 +431,6 @@ EOD;
 			$task->addChild('TaskToAssemblyToTaskTemplateToAssemblyGroupRead');
 			$task2->addChild('TaskToAssemblyToAssemblyToAssemblyGroupRead');
 			$task2->addChild('TaskToAssemblyToTaskTemplateToAssemblyGroupRead');
-
-/*			$task=$this->_authManager->createTask('TaskToPurchaseOrder', 'TaskToPurchaseOrder task');
-			$projectManagerRole->addChild('TaskToPurchaseOrder');
-			$this->_authManager->createOperation('TaskToPurchaseOrderRead', 'TaskToPurchaseOrder read');
-			$task->addChild('TaskToPurchaseOrderRead');*/
 
 			$task=$this->_authManager->createTask('TaskToResource', 'TaskToResource task');
 			$projectManagerRole->addChild('TaskToResource');
@@ -535,7 +525,6 @@ EOD;
 			$foremanRole->addChild('ClientRead');
 			$foremanRole->addChild('MaterialRead');
 			$foremanRole->addChild('AssemblyRead');
-//			$foremanRole->addChild('PurchaseOrderRead');
 
 			// STOREMAN
 			$storemanRole=$this->_authManager->createRole('storeman', 'Standards');
@@ -546,7 +535,6 @@ EOD;
 			$storemanRole->addChild('ClientRead');
 			$storemanRole->addChild('Material');
 			$storemanRole->addChild('Assembly');
-//			$storemanRole->addChild('PurchaseOrderRead');
 
 			// DATAENTRY
 			$dataentryRole=$this->_authManager->createRole('dataentry', 'Data entry');

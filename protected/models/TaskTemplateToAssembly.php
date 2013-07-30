@@ -75,7 +75,7 @@ class TaskTemplateToAssembly extends ActiveRecord
 			'assembly.description AS searchAssembly',
 			"CONCAT_WS('$delimiter',
 				assembly.alias,
-				assemblyToClient.alias
+				clientToAssembly.alias
 			) AS searchAlias",
 			't.quantity',
 			't.minimum',
@@ -87,8 +87,8 @@ class TaskTemplateToAssembly extends ActiveRecord
 		// join
 		$criteria->join = '
 			LEFT JOIN tbl_task_template taskTemplate ON t.task_template_id = taskTemplate.id
-			LEFT JOIN tbl_assembly_to_client assemblyToClient ON t.assembly_id = assemblyToClient.assembly_id
-				AND taskTemplate.client_id = assemblyToClient.client_id
+			LEFT JOIN tbl_client_to_assembly clientToAssembly ON t.assembly_id = clientToAssembly.assembly_id
+				AND taskTemplate.client_id = clientToAssembly.client_id
 		';
 		
 		// where
@@ -138,12 +138,12 @@ class TaskTemplateToAssembly extends ActiveRecord
 	public function afterFind() {
 		$this->standard_id = $this->assembly->standard_id;
 		
-		if($assemblyToClient = AssemblyToClient::model()->findByAttributes(array(
+		if($clientToAssembly = ClientToAssembly::model()->findByAttributes(array(
 			'assembly_id'=>$this->assembly_id,
 			'client_id'=>$this->taskTemplate->client_id,
 		)))
 		{
-			$this->clientAlias = $assemblyToClient->alias;
+			$this->clientAlias = $clientToAssembly->alias;
 		}
 		
 		return parent::afterFind();

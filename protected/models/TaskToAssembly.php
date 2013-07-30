@@ -152,7 +152,7 @@ class TaskToAssembly extends ActiveRecord
 				't.*',	// needed for delete and update buttons
 				'assembly.description AS searchAssembly',
 				"CONCAT_WS('$delimiter',
-					assemblyToClient.alias,
+					clientToAssembly.alias,
 					assembly.alias
 					) AS searchAliases",
 			);
@@ -164,8 +164,8 @@ class TaskToAssembly extends ActiveRecord
 				JOIN tbl_assembly assembly ON t.assembly_id = assembly.id
 				JOIN tbl_task task ON t.task_id = task.id
 				JOIN tbl_project project ON task.project_id = project.id
-				LEFT JOIN tbl_assembly_to_client assemblyToClient ON project.client_id = assemblyToClient.client_id
-					AND t.assembly_id = assemblyToClient.assembly_id
+				LEFT JOIN tbl_client_to_assembly clientToAssembly ON project.client_id = clientToAssembly.client_id
+					AND t.assembly_id = clientToAssembly.assembly_id
 			';
 
 			return $criteria;
@@ -181,7 +181,7 @@ class TaskToAssembly extends ActiveRecord
 			't.assembly_id',
 			'assembly.description AS searchAssembly',
 			"CONCAT_WS('$delimiter',
-				assemblyToClient.alias,
+				clientToAssembly.alias,
 				assembly.alias
 				) AS searchAliases",
 			't.quantity',
@@ -207,15 +207,15 @@ class TaskToAssembly extends ActiveRecord
 			LEFT JOIN tbl_assembly assembly ON t.assembly_id = assembly.id
 			LEFT JOIN tbl_task task ON t.task_id = task.id
 			LEFT JOIN tbl_project project ON task.project_id = project.id
-			LEFT JOIN tbl_assembly_to_client assemblyToClient ON project.client_id = assemblyToClient.client_id
-				AND t.assembly_id = assemblyToClient.assembly_id
+			LEFT JOIN tbl_client_to_assembly clientToAssembly ON project.client_id = clientToAssembly.client_id
+				AND t.assembly_id = clientToAssembly.assembly_id
 		';
 		
 		// where
 		$criteria->compare('assembly.description',$this->searchAssembly,true);
 		$this->compositeCriteria($criteria,
 			array(
-				'assemblyToClient.alias',
+				'clientToAssembly.alias',
 				'assembly.alias'
 			),
 			$this->searchAliases

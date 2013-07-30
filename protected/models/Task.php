@@ -34,7 +34,6 @@
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToCustomFieldToTaskTemplate[] $taskToCustomFieldToTaskTemplates
  * @property TaskToMaterial[] $taskToMaterials
- * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
  * @property TaskToResource[] $taskToResources
  */
 class Task extends CustomFieldActiveRecord
@@ -115,7 +114,6 @@ class Task extends CustomFieldActiveRecord
             'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
             'taskToCustomFieldToTaskTemplates' => array(self::HAS_MANY, 'TaskToCustomFieldToTaskTemplate', 'task_id'),
             'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_id'),
-            'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'task_id'),
             'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'task_id'),
         );
     }

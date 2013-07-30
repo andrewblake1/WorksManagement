@@ -10,7 +10,7 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property AssemblyToClient[] $assemblyToClients
+ * @property ClientToAssembly[] $clientToAssemblys
  * @property User $updatedBy
  * @property ClientContact[] $clientContacts
  * @property MaterialToClient[] $materialToClients
@@ -28,7 +28,7 @@ class Client extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'client_id'),
+            'clientToAssemblys' => array(self::HAS_MANY, 'ClientToAssembly', 'client_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'clientContacts' => array(self::HAS_MANY, 'ClientContact', 'client_id'),
             'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'client_id'),

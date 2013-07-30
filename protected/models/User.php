@@ -16,7 +16,7 @@
  * @property AssemblyGroup[] $assemblyGroups
  * @property AssemblyGroupToAssembly[] $assemblyGroupToAssemblies
  * @property AssemblyToAssemblyGroup[] $assemblyToAssemblyGroups
- * @property AssemblyToClient[] $assemblyToClients
+ * @property ClientToAssembly[] $clientToAssemblys
  * @property AssemblyToMaterial[] $assemblyToMaterials
  * @property AssemblyToMaterialGroup[] $assemblyToMaterialGroups
  * @property Client[] $clients
@@ -50,7 +50,6 @@
  * @property ProjectToAuthItemToAuthAssignment[] $projectToAuthItemToAuthAssignments
  * @property ProjectToClientContact[] $projectToClientContacts
  * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
- * @property PurchaseOrder[] $purchaseOrders
  * @property Report[] $reports
  * @property ReportToAuthItem[] $reportToAuthItems
  * @property Resource[] $resources
@@ -78,7 +77,6 @@
  * @property TaskToMaterialToAssemblyToMaterial[] $taskToMaterialToAssemblyToMaterials
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
  * @property TaskToMaterialToTaskTemplateToMaterialGroup[] $taskToMaterialToTaskTemplateToMaterialGroups
- * @property TaskToPurchaseOrder[] $taskToPurchaseOrders
  * @property TaskToResource[] $taskToResources
  * @property User $updatedBy
  * @property User[] $users
@@ -116,7 +114,7 @@ class User extends ContactActiveRecord
             'assemblyGroups' => array(self::HAS_MANY, 'AssemblyGroup', 'updated_by'),
             'assemblyGroupToAssemblies' => array(self::HAS_MANY, 'AssemblyGroupToAssembly', 'updated_by'),
             'assemblyToAssemblyGroups' => array(self::HAS_MANY, 'AssemblyToAssemblyGroup', 'updated_by'),
-            'assemblyToClients' => array(self::HAS_MANY, 'AssemblyToClient', 'updated_by'),
+            'clientToAssemblys' => array(self::HAS_MANY, 'ClientToAssembly', 'updated_by'),
             'assemblyToMaterials' => array(self::HAS_MANY, 'AssemblyToMaterial', 'updated_by'),
             'assemblyToMaterialGroups' => array(self::HAS_MANY, 'AssemblyToMaterialGroup', 'updated_by'),
             'clients' => array(self::HAS_MANY, 'Client', 'updated_by'),
@@ -150,7 +148,6 @@ class User extends ContactActiveRecord
             'projectToAuthItemToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthItemToAuthAssignment', 'updated_by'),
             'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'updated_by'),
             'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'updated_by'),
-            'purchaseOrders' => array(self::HAS_MANY, 'PurchaseOrder', 'updated_by'),
             'reports' => array(self::HAS_MANY, 'Report', 'updated_by'),
             'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'updated_by'),
             'resources' => array(self::HAS_MANY, 'Resource', 'updated_by'),
@@ -178,7 +175,6 @@ class User extends ContactActiveRecord
             'taskToMaterialToAssemblyToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterial', 'updated_by'),
             'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'updated_by'),
             'taskToMaterialToTaskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTemplateToMaterialGroup', 'updated_by'),
-            'taskToPurchaseOrders' => array(self::HAS_MANY, 'TaskToPurchaseOrder', 'updated_by'),
             'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'updated_by'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'users' => array(self::HAS_MANY, 'User', 'updated_by'),

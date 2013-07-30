@@ -183,7 +183,7 @@ return array(
 							'DutyStepToMode',
 						),
 					),
-					'AssemblyToClient',
+					'ClientToAssembly',
 					'MaterialToClient',
 					'ClientContact',
 					'Project'=>array( 
@@ -198,7 +198,6 @@ return array(
 										'TaskToAssemblyToAssemblyToAssemblyGroup',
 										'TaskToAssemblyToTaskTemplateToAssemblyGroup',
 									),
-//									'TaskToPurchaseOrder',
 									'TaskToResource',
 								),
 							),
@@ -273,7 +272,6 @@ return array(
 					),
 				),
 				'Supplier'=>array(
-//					'PurchaseOrder',
 					'SupplierContact',
 				),
 				'User'=>array(

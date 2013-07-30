@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tbl_assembly_to_client".
+ * This is the model class for table "tbl_client_to_assembly".
  *
- * The followings are the available columns in table 'tbl_assembly_to_client':
+ * The followings are the available columns in table 'tbl_client_to_assembly':
  * @property integer $id
  * @property integer $assembly_id
  * @property integer $client_id
@@ -15,7 +15,7 @@
  * @property Client $client
  * @property User $updatedBy
  */
-class AssemblyToClient extends ActiveRecord
+class ClientToAssembly extends ActiveRecord
 {
 	public $searchAssembly;
 	public $searchAlias;
