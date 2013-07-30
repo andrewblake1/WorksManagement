@@ -84,44 +84,17 @@ class Project extends CustomFieldActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',
-			'id0.name AS searchName',
-			"CONCAT_WS('$delimiter',
-				contact.first_name,
-				contact.last_name,
-				contact.email
-				) AS searchInCharge",
-			'travel_time_1_way',
-			'id0.in_charge_id AS in_charge_id',
-			't.critical_completion',
-			't.planned',
-			't.project_type_id',	// though not displayed, needed to get id for link field
-			'projectType.name AS searchProjectType',
-		);
+		$criteria->compareAs('searchName', $this->searchName, 'id0.name', true);
+		$criteria->compareAs('searchProjectType', $this->searchProjectType, 'projectType.name', true);
+		$criteria->compareAs('in_charge_id', $this->in_charge_id, 'id0.in_charge_id');
+		$criteria->composite('searchInCharge', $this->searchInCharge, array(
+			'contact.first_name',
+			'contact.last_name',
+			'contact.email'
+		));
 
-		// where
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('name',$this->searchName,true);
-		$criteria->compare('t.travel_time_1_way',Yii::app()->format->toMysqlTime($this->travel_time_1_way));
-		$criteria->compare('t.critical_completion',Yii::app()->format->toMysqlDate($this->critical_completion));
-		$criteria->compare('t.planned',Yii::app()->format->toMysqlDate($this->planned));
-		$criteria->compare('projectType.name', $this->searchProjectType, true);
-		$criteria->compare('t.client_id', $this->client_id);
-		$this->compositeCriteria($criteria,
-			array(
-				'contact.first_name',
-				'contact.last_name',
-				'contact.email',
-			),
-			$this->searchInCharge
-		);
-
-		// with
 		$criteria->with = array(
 			'projectType',
 			'projectType.client',

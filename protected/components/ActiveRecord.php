@@ -185,6 +185,10 @@ abstract class ActiveRecord extends CActiveRecord
 			{
 				$timeOnlyValidator[] = $column->name;
 			}
+			elseif($column->dbType == 'datetime')
+			{
+				$dateTimeOnlyValidator[] = $column->name;
+			}
 			elseif($column->type == 'integer')
 			{
 				$integerOnlyValidator[] = $column->name;
@@ -425,37 +429,8 @@ abstract class ActiveRecord extends CActiveRecord
 		}
 		else
 		{
-		$t=static::model()->tableSchema->getColumnNames();
+$t=static::model()->tableSchema->getColumnNames();
 			throw new Exception;	// just a debugging exception to ensure correct attrib names etc - shouldn't ever happen live
-		}
-	}
-
-	/**
-	 * Sets criteria for composite search i.e. a search where 1 term given with a delimter refers to more than 1 field.
-	 * @param CDbCriteria $criteria the criteria object to set.
-	 * @param array $columns the columns.
-	 * @param string $term the term
-	 */
-	public function compositeCriteria(&$criteria, $columns, $term)
-	{
-		// placeholder for bound params - must exist after the end of this call to bind
-		static $boundParams = array(); 
-		
-		// if something has been entered
-		if($term)
-		{
-			// protect against possible injection
-			$concat = "CONCAT_WS(' ', ". implode(', ', $columns) . ")";
-			$cntr = 0;
-			foreach($terms = explode(' ', $term) as $term)
-			{
-				$term = trim($term);
-				$paramName = ":param$cntr";
-				$boundParams[":param$cntr"] = "%$term%";
-				$criteria->condition .= ($criteria->condition ? " AND " : '')."$concat LIKE $paramName";
-				$criteria->params[$paramName] = $boundParams[":param$cntr"];
-				$cntr++;
-			}
 		}
 	}
 
@@ -738,7 +713,7 @@ $t = $model->attributes;
 
 	public function getSearchCriteria()
 	{
-		return new DbCriteria;
+		return new DbCriteria($this);
 	}
 
 	/**

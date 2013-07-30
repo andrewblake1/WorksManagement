@@ -73,24 +73,12 @@ class DutyStepToCustomField extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
 		// select
 		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.custom_field_duty_step_category_id',
-			't.custom_field_id',
-			't.label_override',
-			'customField.label AS searchCustomFieldLabel',
-			'customField.comment AS searchCustomFieldComment',
-		);
-
-		// where
-		$criteria->compare('customField.label',$this->searchCustomFieldLabel,true);
-		$criteria->compare('customField.comment',$this->searchCustomFieldComment,true);
-		$criteria->compare('t.label_override',$this->label_override,true);
-		$criteria->compare('t.custom_field_duty_step_category_id',$this->custom_field_duty_step_category_id);
+		$criteria->compareAs('searchCustomFieldLabel', $this->searchCustomFieldLabel, 'customField.label', true);
+		$criteria->compareAs('searchCustomFieldComment', $this->searchCustomFieldComment, 'customField.comment', true);
 
 		// with 
 		$criteria->with = array(
@@ -115,8 +103,8 @@ class DutyStepToCustomField extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchCustomFieldLabel',
 			'label_override',
+			'searchCustomFieldLabel',
 		);
 	}
 

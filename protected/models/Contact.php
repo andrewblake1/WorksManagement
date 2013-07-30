@@ -46,22 +46,6 @@ class Contact extends ActiveRecord
         );
     }
 	
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.first_name',$this->first_name,true);
-		$criteria->compare('t.last_name',$this->last_name,true);
-		$criteria->compare('t.phone_mobile',$this->phone_mobile,true);
-		$criteria->compare('t.email',$this->email,true);
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
 		$columns[] = $this->imageColumn();

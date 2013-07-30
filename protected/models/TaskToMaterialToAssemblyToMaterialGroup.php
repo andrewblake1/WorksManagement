@@ -80,13 +80,9 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.*',
-			'materialGroup.description AS searchMaterialGroup',
-		);
+		$criteria->compareAs('searchMaterialGroup', $this->searchMaterialGroup, 'materialGroup.description', true);
 
 		$criteria->with = array(
 			'materialGroup',

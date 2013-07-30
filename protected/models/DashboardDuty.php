@@ -64,12 +64,6 @@ class DashboardDuty extends Duty
 		// filter to current active duties for this user
 		$user = User::model()->findByPk(Yii::app()->user->id);
 		$criteria->compare('t.derived_assigned_to_id', $user->contact_id);
-		$criteria->compare('t.wbs', $this->wbs, true);
-		$criteria->compare('t.project_name', $this->project_name, true);
-		$criteria->compare('t.action_description', $this->action_description, true);
-		$criteria->compare('t.due', $this->due);
-		$criteria->compareNull('t.updated');
-		$criteria->addCondition("t.planned IS NOT NULL");
 		
 		// group by
 		$criteria->group = 't.duty_data_id';

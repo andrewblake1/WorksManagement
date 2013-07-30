@@ -142,24 +142,18 @@ class TaskToAssembly extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		
+		$criteria->compareAs('searchAssembly', $this->searchAssembly, 'assembly.description', true);
+		$criteria->composite('searchAliases', $this->searchAliases, array(
+			'clientToAssembly.alias',
+			'assembly.alias'
+		));
+
 		// update
 		if(($this->tableName()) == 'tbl_task_to_assembly')
 		{
-			$criteria->select=array(
-				't.*',	// needed for delete and update buttons
-				'assembly.description AS searchAssembly',
-				"CONCAT_WS('$delimiter',
-					clientToAssembly.alias,
-					assembly.alias
-					) AS searchAliases",
-			);
-
-			$criteria->compare('t.id',$this->id);
-
-			// join
 			$criteria->join = '
 				JOIN tbl_assembly assembly ON t.assembly_id = assembly.id
 				JOIN tbl_task task ON t.task_id = task.id
@@ -172,34 +166,11 @@ class TaskToAssembly extends ActiveRecord
 		}
 		
 		// admin
-		
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.task_id',
-			't.parent_id',
-			't.assembly_id',
-			'assembly.description AS searchAssembly',
-			"CONCAT_WS('$delimiter',
-				clientToAssembly.alias,
-				assembly.alias
-				) AS searchAliases",
-			't.quantity',
-			'task.quantity AS searchTaskQuantity',
-			't.accumulated_total * task.quantity AS searchAccumlatedTotal',
-			't.assembly_group_to_assembly_id',
-			't.assembly_group_id',
-			't.task_to_assembly_to_assembly_to_assembly_group_id',
-			't.assembly_to_assembly_group_id',
-
-			't.task_to_assembly_to_task_template_to_assembly_group_id',
-			't.task_template_to_assembly_group_id',
-	
-			"CONCAT_WS('$delimiter',
-				assemblyGroup.description,
-				t.comment
-				) AS searchGroup",
-		);
+		$criteria->compareAs('searchTaskQuantity', $this->searchTaskQuantity, 'task.quantity', true);
+		$criteria->composite('searchGroup', $this->searchGroup, array(
+			'assemblyGroup.description',
+			't.comment'
+		));
 				
 		// join
 		$criteria->join = '
@@ -210,29 +181,6 @@ class TaskToAssembly extends ActiveRecord
 			LEFT JOIN tbl_client_to_assembly clientToAssembly ON project.client_id = clientToAssembly.client_id
 				AND t.assembly_id = clientToAssembly.assembly_id
 		';
-		
-		// where
-		$criteria->compare('assembly.description',$this->searchAssembly,true);
-		$this->compositeCriteria($criteria,
-			array(
-				'clientToAssembly.alias',
-				'assembly.alias'
-			),
-			$this->searchAliases
-		);
-		$this->compositeCriteria($criteria,
-			array(
-				'assemblyGroup.description',
-				't.comment'
-			),
-			$this->searchGroup
-		);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('task.quantity',$this->searchTaskQuantity);
-		$criteria->compare('t.searchAccumlatedTotal',$this->searchAccumlatedTotal);
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.task_id',$this->task_id);
-		$criteria->compare('t.parent_id',$this->parent_id);
 
 		return $criteria;
 	}

@@ -50,22 +50,6 @@ class SubReport extends ActiveRecord
         );
     }
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// where
-		$criteria->compare('t.description', $this->description, true);
-		$criteria->compare('t.format', $this->format, true);
-		$criteria->compare('t.select', $this->select, true);
-		$criteria->compare('t.report_id', $this->report_id);
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
 		$columns[] = 'description';

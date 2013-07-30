@@ -160,18 +160,14 @@ class Planning extends CategoryActiveRecord {
 			{
 				case Planning::planningLevelDayInt :
 					$day = Day::model()->findByPk($category->id);
-//					++$dayCounter;
 					$label = "D{$category->id} ";
 					$label .= empty($day->scheduled) ? '' : $day->scheduled;
-//					$label .= empty($day->scheduled) ? "Day $dayCounter" : $day->scheduled;
 					$crewCounter = 0;
 					break;
 				case Planning::planningLevelCrewInt :
 					$crew =Crew::model()->findByPk($category->id);
-//					++$crewCounter;
 					$label = "C{$category->id} ";
-					$label .= empty($category->in_charge_id) ? '' : Crew::getNiceName(null, $crew);
-//					$label .= empty($category->in_charge_id) ? "Crew $crewCounter" : Crew::getNiceName(null, $crew);
+					$label .= empty($category->in_charge_id) ? '' : Crew::getNiceName(null, $crew);//					$label .= empty($category->in_charge_id) ? "Crew $crewCounter" : Crew::getNiceName(null, $crew);
 					break;
 				case Planning::planningLevelTaskInt :
 					$label = "T{$category->id} ";

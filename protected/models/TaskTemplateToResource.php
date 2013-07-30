@@ -48,25 +48,10 @@ class TaskTemplateToResource extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.resource_id',
-			'resource.description AS searchResource',
-			't.quantity',
-			't.duration',
-			'mode.description AS searchMode',
-		);
-
-		// where
-		$criteria->compare('mode.description',$this->searchMode,true);
-		$criteria->compare('resource.description',$this->searchResource);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.duration',Yii::app()->format->toMysqlTime($this->duration));
-		$criteria->compare('t.task_template_id',$this->task_template_id);
+		$criteria->compareAs('searchResource', $this->searchResource, 'resource.description', true);
+		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 
 		// with
 		$criteria->with = array(

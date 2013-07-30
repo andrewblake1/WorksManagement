@@ -187,23 +187,12 @@ class User extends ContactActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$criteria->select=array(
-			't.id',
-			'contact.first_name AS first_name',
-			'contact.last_name AS last_name',
-			'contact.phone_mobile AS phone_mobile',
-			'contact.email AS email',
-		);
-		
-		// where
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('contact.first_name',$this->first_name,true);
-		$criteria->compare('contact.last_name',$this->last_name,true);
-		$criteria->compare('contact.phone_mobile',$this->phone_mobile,true);
-		$criteria->compare('contact.email',$this->email,true);
+		$criteria->compareAs('first_name', $this->first_name, 'contact.first_name', true);
+		$criteria->compareAs('last_name', $this->last_name, 'contact.last_name', true);
+		$criteria->compareAs('phone_mobile', $this->phone_mobile, 'contact.phone_mobile', true);
+		$criteria->compareAs('email', $this->email, 'contact.email', true);
 
 		// with
 		$criteria->with=array(

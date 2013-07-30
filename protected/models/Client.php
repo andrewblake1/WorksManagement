@@ -36,19 +36,6 @@ class Client extends ActiveRecord
         );
     }
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.name',$this->name,true);
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
 		$columns[] = $this->imageColumn();

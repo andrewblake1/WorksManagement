@@ -71,17 +71,9 @@ class ProjectTemplateToAuthItem extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			'authItemName.description AS searchAuthItem',
-		);
-
-		// where
-		$criteria->compare('authItemName.description',$this->searchAuthItem,true);
-		$criteria->compare('t.project_template_id',$this->project_template_id);
+		$criteria->compareAs('searchAuthItem', $this->searchAuthItem,'authItemName.description',true);
 		
 		// join
 		$criteria->with = array(

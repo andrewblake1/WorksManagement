@@ -83,24 +83,13 @@ class AuthAssignment extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
 		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',
-			't.itemname',
-			't.userid',
-			"CONCAT_WS('$delimiter',
-				contact.first_name,
-				contact.last_name,
-				contact.email
-				) AS searchUser",
-		);
-
-		// where
-		$criteria->compare('t.itemname',$this->itemname,true);
-		$criteria->compare('t.userid', $this->userid,true);
+		$criteria->composite('searchUser', $this->searchUser, array(
+			'contact.first_name',
+			'contact.last_name',
+			'contact.email'));
 		
 		// with
 		$criteria->with = array(

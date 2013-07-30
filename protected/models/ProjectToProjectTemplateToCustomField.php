@@ -40,23 +40,10 @@ class ProjectToProjectTemplateToCustomField extends CustomValueActiveRecord
 
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			'COALESCE(projectTemplateToCustomField.label_override, customField.label) AS searchCustomField',
-			't.custom_value',
-			't.project_id',
-		);
+		$criteria->compareAs('searchCustomField', $this->searchCustomField, 'COALESCE(projectTemplateToCustomField.label_override, customField.label)', true);
 
-		// where
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.project_id',$this->project_id);
-		$criteria->compare('COALESCE(projectTemplateToCustomField.label_override, customField.label)', $this->searchCustomField, true);
-		$criteria->compare('t.custom_value',$this->custom_value, true);
-
-		// with
 		$criteria->with=array(
 			'projectTemplateToCustomField',
 			'projectTemplateToCustomField.customField',

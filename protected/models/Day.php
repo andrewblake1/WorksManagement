@@ -56,34 +56,16 @@ class Day extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
 		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',
-			'id0.name AS searchName',
-			't.scheduled',
-			"CONCAT_WS('$delimiter',
-				contact.first_name,
-				contact.last_name,
-				contact.email
-				) AS searchInCharge",
-		);
-
-		// where
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('name',$this->searchName,true);
-		$criteria->compare('t.scheduled',Yii::app()->format->toMysqlDate($this->scheduled));
-		$criteria->compare('t.project_id',$this->project_id);
-		$this->compositeCriteria($criteria,
-			array(
-				'contact.first_name',
-				'contact.last_name',
-				'contact.email',
-			),
-			$this->searchInCharge
-		);
+		$criteria->compareAs('searchName', $this->searchName, 'id0.name', true);
+		$criteria->composite('searchInCharge', $this->searchInCharge, array(
+			'contact.first_name',
+			'contact.last_name',
+			'contact.email',)
+			);
+//		$criteria->compare('t.scheduled',Yii::app()->format->toMysqlDate($this->scheduled));
 
 		// with
 		$criteria->with = array(

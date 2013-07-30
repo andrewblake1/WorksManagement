@@ -30,23 +30,9 @@ class TaskToAction extends ViewActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$criteria->select=array(
-			't.id',
-			't.description',
-			't.derived_importance',
-			't.task_id',
-		);
-		
-		// where
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.derived_importance',$this->derived_importance,true);
-		$criteria->compare('t.task_id',$this->task_id);
-		
 		// elimate actions where due to mode or branching there are no duties
-//		ViewDuty::createTmpDuty();
 		$criteria->distinct = TRUE;
 		$criteria->join = "
 			JOIN v_duty duty

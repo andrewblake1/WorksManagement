@@ -74,14 +74,9 @@ class DutyData extends ActiveRecord
 
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.*',
-			'dutyStep.description AS searchDutyStep',
-		);
-
+		$criteria->compareAs('searchDutyStep', $this->searchDutyStep, 'dutyStep.description', true);
 		
 		$criteria->with = array(
 			'dutyStep',

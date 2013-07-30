@@ -149,35 +149,6 @@ class CustomField extends ActiveRecord
         );
     }
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		$criteria->compare('t.label',$this->label,true);
-		$criteria->compare('t.mandatory',Yii::app()->format->toMysqlBool($this->mandatory));
-		$criteria->compare('t.allow_new',Yii::app()->format->toMysqlBool($this->allow_new));
-		$criteria->compare('t.validation_type',$this->validation_type,true);
-		$criteria->compare('t.data_type',$this->data_type,true);
-		$criteria->compare('t.validation_text',$this->validation_text,true);
-		$criteria->compare('t.validation_error',$this->validation_error,true);
-
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.label',
-			't.mandatory',
-			't.allow_new',
-			't.validation_type',
-			't.data_type',
-			't.validation_text',
-			't.validation_error',
-		);
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
 		$columns[] = 'label';

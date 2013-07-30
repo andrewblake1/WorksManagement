@@ -53,20 +53,6 @@ class AuthItemChild extends ActiveRecord
 		));
 	}
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// where
-		$criteria->compare('t.parent',$this->parent);
-		$criteria->compare('t.child',$this->child, true);
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
  		$columns[] = 'child';

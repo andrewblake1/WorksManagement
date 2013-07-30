@@ -92,27 +92,13 @@ class TaskTemplateToAction extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.action_id',
-			'action.description AS searchAction',
-			't.importance',
-		);
-
-		// where
-		$criteria->compare('action.description',$this->searchAction);
-		$criteria->compare('t.task_template_id',$this->task_template_id);
-		$criteria->compare('t.importance',$this->importance,true);
+		$criteria->compareAs('searchAction', $this->searchAction, 'action.description', TRUE);
 
 		// with
 		$criteria->with = array(
 			'action',
-			'taskTemplate',
-			'taskTemplate.projectTemplate',
 		);
 
 		return $criteria;

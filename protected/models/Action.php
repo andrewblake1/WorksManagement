@@ -110,27 +110,10 @@ class Action extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.description',
-			't.client_id',
-			't.project_template_id',
-			'override.description AS searchOverride',
-		);
+		$criteria->compareAs('searchOverride', $this->searchOverride, 'override.description',true);
 
-		// where
-		
-		// need to only show at top level
-		$criteria->compare('t.id',$this->id);
-		$criteria->compareNull('t.client_id',$this->client_id);
-		$criteria->compareNull('t.project_template_id',$this->project_template_id);
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('override.description',$this->searchOverride,true);
-
-		// with
 		$criteria->with=array(
 			'override',
 		);

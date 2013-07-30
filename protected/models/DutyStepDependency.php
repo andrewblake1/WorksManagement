@@ -68,23 +68,10 @@ class DutyStepDependency extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',
-			't.action_id',
-			't.parent_duty_step_id',
-			't.child_duty_step_id',
-			'childDutyStep.description AS searchDependsOn',
-			'childDutyStep.lead_in_days AS searchLeadInDays',
-		);
-
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.action_id',$this->action_id);
-		$criteria->compareNull('t.parent_duty_step_id',$this->parent_duty_step_id);
-		$criteria->compare('childDutyStep.description',$this->searchDependsOn,true);
-		$criteria->compare('childDutyStep.lead_in_days',$this->searchLeadInDays);
+		$criteria->compareAs('searchDependsOn', $this->searchDependsOn, 'childDutyStep.description', true);
+		$criteria->compareAs('searchLeadInDays', $this->searchLeadInDays, 'childDutyStep.lead_in_days');
 
 		$criteria->with = array(
 			'childDutyStep',

@@ -18,27 +18,6 @@ class DrawingToAssembly extends ActiveRecord
 		return 'v_drawing_to_assembly';
 	}
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.drawing_id',
-			't.description',
-		);
-
-		// where
-		$criteria->compare('t.drawing_id', $this->drawing_id);
-		$criteria->compare('t.description', $this->description, true);
-		
-		return $criteria;
-	}
-	
 	public function getAdminColumns()
 	{
 		$columns[] = self::linkColumn('description', 'Assembly', 'id');

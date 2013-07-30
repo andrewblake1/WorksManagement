@@ -68,37 +68,6 @@ class Drawing extends ActiveRecord
 		));
 	}
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.description',
-			't.parent_id',
-			't.alias',
-		);
-
-		// where
-		$criteria->compare('t.id', $this->id);
-		$criteria->compare('t.description', $this->description, true);
-		$criteria->compare('t.alias', $this->alias,true);
-		$criteria->compare('t.standard_id', $this->standard_id);
-		if(!empty($this->parent_id))
-		{
-			$criteria->compare('t.parent_id',$this->parent_id);
-		}
-
-		// NB: without this the has_many relations aren't returned and some select columns don't exist
-		$criteria->together = true;
-
-		return $criteria;
-	}
-
 	public static function getDisplayAttr()
 	{
 		return array(

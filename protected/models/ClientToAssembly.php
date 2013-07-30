@@ -44,22 +44,10 @@ class ClientToAssembly extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			'assembly.description AS searchAssembly',
-			'assembly.alias AS searchAlias',
-			't.alias',
-			'assembly_id',
-			't.client_id',
-		);
-
-		$criteria->compare('assembly.description',$this->searchAssembly,true);
-		$criteria->compare('assembly.alias',$this->searchAlias,true);
-		$criteria->compare('t.client_id',$this->client_id,true);
-		$criteria->compare('t.alias',$this->alias);
+		$criteria->compareAs('searchAssembly', $this->searchAssembly, 'assembly.description', true);
+		$criteria->compareAs('searchAlias', $this->searchAlias, 'assembly.alias', true);
 
 		$criteria->with = array('assembly');
 

@@ -45,26 +45,6 @@ class ReportToAuthItem extends ActiveRecord
 		));
 	}
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			'auth_item_name',
-		);
-
-		// where
-		$criteria->compare('t.auth_item_name',$this->auth_item_name,true);
-		$criteria->compare('t.report_id',$this->report_id);
-		
-		return $criteria;
-	}
-	
 	public function getAdminColumns()
 	{
 		$columns[] = 'auth_item_name';

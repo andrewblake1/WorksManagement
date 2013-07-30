@@ -47,32 +47,16 @@ class ProjectToClientContact extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.client_contact_id',
-			'clientContact.role AS searchRole',
-			'contact.first_name AS searchFirstName',
-			'contact.last_name AS searchLastName',
-			'contact.email AS searchEmail',
-			'contact.phone_mobile AS searchPhoneMobile',
-			'contact.phone_home AS searchPhoneHome',
-			'contact.phone_work AS searchPhoneWork',
-			'contact.phone_fax AS searchPhoneFax',
-		);
-
-		$criteria->compare('project_id',$this->project_id);
-		$criteria->compare('clientContact.role',$this->searchRole,true);
-		$criteria->compare('contact.first_name',$this->searchFirstName,true);
-		$criteria->compare('contact.last_name',$this->searchLastName,true);
-		$criteria->compare('contact.email',$this->searchEmail,true);
-		$criteria->compare('contact.phone_mobile',$this->searchPhoneMobile,true);
-		$criteria->compare('contact.phone_home',$this->searchPhoneHome,true);
-		$criteria->compare('contact.phone_work',$this->searchPhoneWork,true);
-		$criteria->compare('contact.phone_fax',$this->searchPhoneFax,true);
+		$criteria->compareAs('searchRole', $this->searchRole, 'clientContact.role', true);
+		$criteria->compareAs('searchFirstName', $this->searchFirstName, 'contact.first_name', true);
+		$criteria->compareAs('searchLastName', $this->searchLastName, 'contact.first_name', true);
+		$criteria->compareAs('searchEmail', $this->searchEmail, 'contact.first_name', true);
+		$criteria->compareAs('searchPhoneMobile', $this->searchPhoneMobile, 'contact.phone_mobile', true);
+		$criteria->compareAs('searchPhoneHome', $this->searchPhoneHome, 'contact.phone_home', true);
+		$criteria->compareAs('searchPhoneWork', $this->searchPhoneWork, 'contact.phone_work', true);
+		$criteria->compareAs('searchPhoneFax', $this->searchPhoneFax, 'contact.phone_fax', true);
 
 		// with
 		$criteria->with = array(

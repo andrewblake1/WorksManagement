@@ -56,20 +56,11 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
 		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			'assembly.description AS searchAssembly',
-			'assembly.alias AS searchAlias',
-		);
-
-		// where
-		$criteria->compare('assembly_group_id',$this->assembly_group_id);
-		$criteria->compare('assembly.description',$this->searchAssembly,true);
-		$criteria->compare('assembly.alias',$this->searchAlias,true);
+		$criteria->compareAs('searchAssembly', $this->searchAssembly, 'assembly.description', true);
+		$criteria->compareAs('searchAlias', $this->searchAlias, 'assembly.alias', true);
 
 		// with
 		$criteria->with = array(

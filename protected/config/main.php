@@ -9,7 +9,7 @@ return array(
 
 	// Set YII_DEBUG and YII_TRACE_LEVEL flags
 	'yiiDebug' => true,
-	'yiiTraceLevel' => 0,
+	'yiiTraceLevel' => 3,
 
 	// Static function Yii::setPathOfAlias()
 	'yiiSetPathOfAlias' => array(
@@ -321,6 +321,11 @@ return array(
 					array(
 						'class' => 'CFileLogRoute',
 						'levels' => 'error, warning, trace, info',
+					),
+					// output errors to view
+					array(
+						'class' => 'CWebLogRoute',
+						'levels' => 'error, warning',
 					),
 				),
 			),

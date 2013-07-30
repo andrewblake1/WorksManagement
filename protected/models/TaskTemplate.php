@@ -80,26 +80,6 @@ class TaskTemplate extends ActiveRecord
         );
     }
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// where
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.unit_price',$this->unit_price);
-		$criteria->compare('t.project_template_id',$this->project_template_id);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.minimium',$this->minimum);
-		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
-		$criteria->compare('t.select',$this->select,true);
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
 		$columns[] = 'description';

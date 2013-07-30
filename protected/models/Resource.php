@@ -46,27 +46,11 @@ class Resource extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$criteria->select=array(
-			't.id',
-			't.description',
-			't.unit_price',
-			't.maximum',
-			'level0.name AS searchLevel',
-			'action.description AS searchAction',
-		);
+		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
+		$criteria->compareAs('searchAction', $this->searchAction, 'action.description', true);
 
-		// where
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.unit_price',$this->unit_price);
-		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('level0.name',$this->searchLevel,true);
-		$criteria->compare('action.description',$this->searchAction,true);
-
-		// with
 		$criteria->with = array(
 			'level0',
 			'action',

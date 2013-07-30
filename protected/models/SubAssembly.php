@@ -65,52 +65,16 @@ class SubAssembly extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',
-			't.parent_assembly_id',
-			't.child_assembly_id',
-			"CONCAT_WS('$delimiter',
-				childAssembly.description,
-				childAssembly.alias
-				) AS searchChildAssembly",
-			"CONCAT_WS('$delimiter',
-				detailDrawing.alias,
-				detailDrawing.description
-				) AS searchDetailDrawing",
-			't.detail_drawing_id',
-			't.select',
-			't.quantity_tooltip',
-			't.quantity',
-			't.minimum',
-			't.maximum',
-			't.comment',
-		);
-
-		$criteria->compare('t.id',$this->id);
-		$criteria->compareNull('t.parent_assembly_id',$this->parent_assembly_id);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.minimium',$this->minimum);
-		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
-		$criteria->compare('t.select',$this->select,true);
-		$criteria->compare('t.comment',$this->comment,true);
-		$this->compositeCriteria($criteria,
-			array(
+		$criteria->composite('searchChildAssembly', $this->searchChildAssembly, array(
 			'childAssembly.description',
 			'childAssembly.alias'
-			),
-			$this->searchChildAssembly
-		);
-		$this->compositeCriteria($criteria,
-			array(
-				'detailDrawing.alias',
-				'detailDrawing.description',
-			),
-			$this->searchDetailDrawing
-		);
+		));
+		$criteria->composite('searchDetailDrawing', $this->searchDetailDrawing, array(
+			'detailDrawing.alias',
+			'detailDrawing.description'
+		));
 
 		$criteria->with = array(
 			'childAssembly',

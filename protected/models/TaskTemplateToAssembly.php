@@ -64,25 +64,13 @@ class TaskTemplateToAssembly extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.assembly_id',
-			't.task_template_id',
-			'assembly.description AS searchAssembly',
-			"CONCAT_WS('$delimiter',
-				assembly.alias,
-				clientToAssembly.alias
-			) AS searchAlias",
-			't.quantity',
-			't.minimum',
-			't.maximum',
-			't.select',
-			't.quantity_tooltip',
-		);
+		$criteria->compareAs('searchAssembly', $this->searchAssembly, 'assembly.description', true);
+		$criteria->composite('searchAlias', $this->searchAlias, array(
+			'assembly.alias',
+			'clientToAssembly.alias'
+		));
 
 		// join
 		$criteria->join = '
@@ -90,16 +78,6 @@ class TaskTemplateToAssembly extends ActiveRecord
 			LEFT JOIN tbl_client_to_assembly clientToAssembly ON t.assembly_id = clientToAssembly.assembly_id
 				AND taskTemplate.client_id = clientToAssembly.client_id
 		';
-		
-		// where
-		$criteria->compare('assembly.description',$this->searchAssembly,true);
-		$criteria->compare('assembly.alias',$this->searchAlias,true);
-		$criteria->compare('t.task_template_id',$this->task_template_id);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.minimium',$this->minimum);
-		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
-		$criteria->compare('t.select',$this->select,true);
 
 		// with
 		$criteria->with = array(

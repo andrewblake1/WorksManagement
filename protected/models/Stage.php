@@ -30,19 +30,6 @@ class Stage extends ActiveRecord
         );
     }
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.description',$this->description,true);
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
 		$columns[] = 'description';

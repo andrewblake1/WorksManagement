@@ -56,35 +56,12 @@ class Material extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',
-			't.description',
-			't.alias',
-			't.unit',
-			't.category',
-			't.drawing_id',
-			"CONCAT_WS('$delimiter',
-				drawing.alias,
-				drawing.description
-				) AS searchDrawing",
-		);
-
-		$criteria->compare('t.id', $this->id);
-		$criteria->compare('t.description', $this->description,true);
-		$criteria->compare('t.alias', $this->alias,true);
-		$criteria->compare('t.unit', $this->unit);
-		$criteria->compare('t.standard_id', $this->standard_id);
-		$criteria->compare('t.category',$this->category,true);
-		$this->compositeCriteria($criteria,
-			array(
-				'drawing.alias',
-				'drawing.description',
-			),
-			$this->searchDrawing
-		);
+		$criteria->composite('searchDrawing', $this->searchDrawing, array(
+			'drawing.alias',
+			'drawing.description'
+		));
 
 		$criteria->with = array(
 			'drawing',

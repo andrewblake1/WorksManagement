@@ -62,46 +62,16 @@ class AssemblyToMaterial extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.assembly_id',
-			'stage.description AS searchStage',
-			'material.description AS searchMaterial',
-			"CONCAT_WS('$delimiter',
-				detailDrawing.alias,
-				detailDrawing.description
-				) AS searchDetailDrawing",
-			't.detail_drawing_id',
-			'material.unit AS searchUnit',
-			'material.alias AS searchAlias',
-			't.material_id',
-			't.quantity',
-			't.minimum',
-			't.maximum',
-			't.select',
-			't.quantity_tooltip',
-		);
-		$this->compositeCriteria($criteria,
-			array(
-				'detailDrawing.alias',
-				'detailDrawing.description',
-			),
-			$this->searchDetailDrawing
-		);
-
-		$criteria->compare('stage.description',$this->searchStage,true);
-		$criteria->compare('material.description',$this->searchMaterial,true);
-		$criteria->compare('material.unit',$this->searchUnit,true);
-		$criteria->compare('material.alias',$this->searchAlias,true);
-		$criteria->compare('t.assembly_id',$this->assembly_id);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.minimium',$this->minimum);
-		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
-		$criteria->compare('t.select',$this->select,true);
+		$criteria->composite('searchDetailDrawing', $this->searchDetailDrawing, array(
+			'detailDrawing.alias',
+			'detailDrawing.description'
+		));
+		$criteria->compareAs('searchStage', $this->searchStage, 'stage.description', true);
+		$criteria->compareAs('searchMaterial', $this->searchMaterial, 'material.description', true);
+		$criteria->compareAs('searchUnit', $this->searchUnit, 'material.unit', true);
+		$criteria->compareAs('searchAlias', $this->searchAlias, 'material.alias', true);
 
 		$criteria->with = array(
 			'material',

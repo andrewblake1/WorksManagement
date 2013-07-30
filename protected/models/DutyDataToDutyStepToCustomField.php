@@ -39,21 +39,9 @@ class DutyDataToDutyStepToCustomField extends CustomValueActiveRecord
 
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			'COALESCE(dutyStepToCustomField.label_override, customField.label) AS searchCustomField',
-			't.custom_value',
-			't.duty_data_id',
-		);
-
-		// where
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.duty_data_id',$this->duty_data_id);
-		$criteria->compare('COALESCE(dutyStepToCustomField.label_override',$this->searchCustomField, true);
-		$criteria->compare('t.custom_value',$this->custom_value, true);
+		$criteria->compareAs('searchCustomField', $this->searchCustomField, 'COALESCE(dutyStepToCustomField.label_override, customField.label)', true);
 
 		// with
 		$criteria->with=array(

@@ -78,13 +78,9 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.*',
-			'assemblyGroup.description AS searchAssemblyGroup',
-		);
+		$criteria->compareAs('searchAssemblyGroup', $this->searchAssemblyGroup, 'assemblyGroup.description', true);
 
 		$criteria->with = array(
 			'assemblyGroup',

@@ -57,18 +57,9 @@ class ResourceToSupplier extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			'supplier.name AS searchSupplier',
-		);
-
-		// where
-		$criteria->compare('resource_id',$this->resource_id);
-		$criteria->compare('supplier.name',$this->searchSupplier);
+		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
 
 		// with
 		$criteria->with = array(

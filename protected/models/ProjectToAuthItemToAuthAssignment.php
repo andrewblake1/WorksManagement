@@ -59,29 +59,15 @@ class ProjectToAuthItemToAuthAssignment extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			'contact.first_name AS first_name',
-			'contact.last_name AS last_name',
-			'contact.email AS email',
-			'contact.phone_mobile AS phone_mobile',
-			'contact.phone_home AS phone_home',
-			'contact.phone_work AS phone_work',
-			'contact.phone_fax AS phone_fax',
-		);
-
-		// where
-		$criteria->compare('t.project_to_auth_item_id',$this->project_to_auth_item_id);
-		$criteria->compare('contact.first_name',$this->first_name,true);
-		$criteria->compare('contact.last_name',$this->last_name,true);
-		$criteria->compare('contact.email',$this->email,true);
-		$criteria->compare('contact.phone_mobile',$this->phone_mobile,true);
-		$criteria->compare('contact.phone_home',$this->phone_home,true);
-		$criteria->compare('contact.phone_work',$this->phone_work,true);
-		$criteria->compare('contact.phone_fax',$this->phone_fax,true);
+		$criteria->compareAs('first_name', $this->first_name, 'contact.first_name', true);
+		$criteria->compareAs('last_name', $this->last_name, 'contact.last_name', true);
+		$criteria->compareAs('email', $this->email, 'contact.email', true);
+		$criteria->compareAs('phone_mobile', $this->phone_mobile, 'contact.phone_mobile', true);
+		$criteria->compareAs('phone_home', $this->phone_home, 'contact.phone_home', true);
+		$criteria->compareAs('phone_work', $this->phone_work, 'contact.phone_work', true);
+		$criteria->compareAs('phone_fax', $this->phone_fax, 'contact.phone_fax', true);
 		
 		$criteria->with=array(
 			'authAssignment.user.contact',

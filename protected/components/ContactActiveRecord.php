@@ -13,7 +13,7 @@ class ContactActiveRecord extends ActiveRecord
 	
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
 		$criteria->select=array(
 			't.*',

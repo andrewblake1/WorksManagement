@@ -101,32 +101,6 @@ class Duty extends CustomFieldActiveRecord
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// select
-		// NB: taking first non null of either the user assigned to duty at project or user in charge at target duty level
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.*',
-		);
-
-		// where
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.derived_assigned_to_name',$this->derived_assigned_to_name,true);
-		$criteria->compare('t.updated',Yii::app()->format->toMysqlDateTime($this->updated));
-		$criteria->compare('t.due',Yii::app()->format->toMysqlDateTime($this->due));
-		$criteria->compare('t.task_id',$this->task_id);
-		$criteria->compare('t.lead_in_days',$this->lead_in_days);
-		$criteria->compare('t.action_id',$this->action_id);
-		
-		// NB: without this the has_many relations aren't returned and some select columns don't exist
-		$criteria->together = true;
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
         $columns[] = 'description';

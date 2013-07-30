@@ -55,28 +55,12 @@ class ClientToMaterial extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.material_id',
-			'material.description AS searchMaterial',
-			'material.unit AS searchUnit',
-			'material.alias AS searchAlias',
-			'supplier.name AS searchSupplier',
-			't.unit_price',
-			"t.alias",
-			't.client_id',
-		);
-
-		$criteria->compare('material.description',$this->searchMaterial,true);
-		$criteria->compare('material.unit',$this->searchUnit,true);
-		$criteria->compare('material.alias',$this->searchAlias,true);
-		$criteria->compare('supplier.name',$this->searchSupplier,true);
-		$criteria->compare('t.alias',$this->alias,true);
- 		$criteria->compare('t.client_id',$this->client_id);
-		$criteria->compare('t.unit_price', $this->unit_price);
+		$criteria->compareAs('searchMaterial', $this->searchMaterial, 'material.description', true);
+		$criteria->compareAs('searchUnit', $this->searchUnit, 'material.unit', true);
+		$criteria->compareAs('searchAlias', $this->searchAlias, 'material.alias', true);
+		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
 
 		$criteria->with = array(
 			'material',

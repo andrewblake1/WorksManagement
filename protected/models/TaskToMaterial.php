@@ -132,25 +132,18 @@ class TaskToMaterial extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
-		$delimiter = Yii::app()->params['delimiter']['display'];
+		$criteria=new DbCriteria($this);
 
 		// update
 		if(($this->tableName()) == 'tbl_task_to_material')
 		{
-			$criteria->select=array(
-				't.*',	// needed for delete and update buttons
-				'material.description AS searchMaterial',
-				'material.unit AS searchUnit',
-				"CONCAT_WS('$delimiter',
-					clientToMaterial.alias,
-					material.alias
-					) AS searchAlias",
-			);
-
-			$criteria->compare('t.id',$this->id);
+			$criteria->compareAs('searchMaterial', $this->searchMaterial, 'material.description', true);
+			$criteria->compareAs('searchUnit', $this->searchUnit, 'material.unit', true);
+			$criteria->composite('searchAlias', $this->searchAlias, array(
+				'clientToMaterial.alias',
+				'material.alias'
+			));
 			
-			// join
 			$criteria->join = '
 				JOIN tbl_material material ON t.material_id = material.id
 				JOIN tbl_task task ON t.task_id = task.id
@@ -164,25 +157,20 @@ class TaskToMaterial extends ActiveRecord
 		
 		// admin
 		
-		// select
-		$criteria->select=array(
-			't.*',
-			'stage.description AS searchStage',
-			'material.description AS searchMaterial',
-			'material.unit AS searchUnit',
-			't.quantity * task.quantity * taskToAssembly.accumulated_total AS searchAccumlatedTotal',
-			"CONCAT_WS('$delimiter',
-				clientToMaterial.alias,
-				material.alias
-				) AS searchAlias",
-			"taskToAssembly.accumulated_total AS searchAssemblyQuantity",
-			"CONCAT_WS('$delimiter',
-				materialGroup.description,
-				t.comment
-			) AS searchGroup",
-		);
+		$criteria->compareAs('searchStage', $this->searchStage, 'stage.description', true);
+		$criteria->compareAs('searchMaterial', $this->searchMaterial, 'material.description', true);
+		$criteria->compareAs('searchUnit', $this->searchUnit, 'material.unit', true);
+		$criteria->compareAs('searchAccumlatedTotal', $this->searchAccumlatedTotal, 't.quantity * task.quantity * taskToAssembly.accumulated_total', true);
+		$criteria->compareAs('searchAssemblyQuantity', $this->searchAssemblyQuantity, 'taskToAssembly.accumulated_total', true);
+		$criteria->composite('searchAlias', $this->searchAlias, array(
+			'clientToMaterial.alias',
+			'material.alias'
+		));
+		$criteria->composite('searchGroup', $this->searchGroup, array(
+			'materialGroup.description',
+			't.comment'
+		));
 		
-		// join
 		$criteria->join = '
 			LEFT JOIN tbl_stage stage ON t.stage_id = stage.id
 			LEFT JOIN tbl_material_group materialGroup ON t.material_group_id = materialGroup.id
@@ -193,32 +181,6 @@ class TaskToMaterial extends ActiveRecord
 			LEFT JOIN tbl_client_to_material clientToMaterial ON project.client_id = clientToMaterial.client_id
 				AND t.material_id = clientToMaterial.material_id
 		';
-		
-		// where
-		$criteria->compare('material.description',$this->searchMaterial,true);
-		$criteria->compare('material.unit',$this->searchUnit,true);
-		$this->compositeCriteria($criteria,
-			array(
-				'clientToMaterial.alias',
-				'material.alias'
-			),
-			$this->searchAlias
-		);
-		$criteria->compare('t.search_assembly',$this->search_assembly,true);
-		$criteria->compare('stage.description',$this->searchStage,true);
-		$this->compositeCriteria($criteria,
-			array(
-			'materialGroup.description',
-			't.comment'
-			),
-			$this->searchGroup
-		);
-		$criteria->compare('t.task_to_assembly_id',$this->task_to_assembly_id);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.search_task_quantity',$this->search_task_quantity);
-		$criteria->compare('t.searchAssemblyQuantity',$this->searchAssemblyQuantity);
-		$criteria->compare('t.searchAccumlatedTotal',$this->searchAccumlatedTotal);
-		$criteria->compare('t.task_id',$this->task_id);
 
 		return $criteria;
 	}

@@ -65,46 +65,21 @@ class TaskTemplateToMaterial extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.material_id',
-			't.task_template_id',
-			'material.description AS searchDescription',
-			'material.unit AS searchUnit',
-			"CONCAT_WS('$delimiter',
-				material.alias,
-				clientToMaterial.alias
-			) AS searchAlias",
-			't.quantity',
-			't.minimum',
-			't.maximum',
-			't.select',
-			't.quantity_tooltip',
-		);
+		$criteria->compareAs('searchDescription', $this->searchDescription, 'material.description', true);
+		$criteria->compareAs('searchUnit', $this->searchUnit, 'material.unit', true);
+		$criteria->composite('searchAlias', $this->searchAlias, array(
+			'material.alias',
+			'clientToMaterial.alias'
+		));
 
-		// join
 		$criteria->join = '
 			LEFT JOIN tbl_task_template taskTemplate ON t.task_template_id = taskTemplate.id
 			LEFT JOIN tbl_client_to_material clientToMaterial ON t.material_id = clientToMaterial.material_id
 				AND taskTemplate.client_id = clientToMaterial.client_id
 		';
-		
-		// where
-		$criteria->compare('t.task_template_id',$this->task_template_id);
-		$criteria->compare('material.description',$this->searchDescription,true);
-		$criteria->compare('material.unit',$this->searchUnit,true);
-		$criteria->compare('material.alias',$this->searchAlias,true);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.minimium',$this->minimum);
-		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
-		$criteria->compare('t.select',$this->select,true);
 
-		// with
 		$criteria->with = array(
 			'material',
 		);

@@ -147,16 +147,16 @@ class Task extends CustomFieldActiveRecord
 		foreach($this->searchSort as $attribute)
 		{
 			$sort[$attribute] = array(
-						'asc'=>" $attribute ",
-						'desc'=>" $attribute DESC",
-					);
+				'asc'=>" $attribute ",
+				'desc'=>" $attribute DESC",
+			);
 		}
 		
 		// add searchUser
 		$sort['searchUser'] = array(
-					'asc'=>" searchUser ",
-					'desc'=>" searchUser DESC",
-				);
+			'asc'=>" searchUser ",
+			'desc'=>" searchUser DESC",
+		);
 
 		// add all other attributes
 		$sort[] = '*';
@@ -169,16 +169,6 @@ class Task extends CustomFieldActiveRecord
 		));
 	
 		return $dataProvider;
-	}
-
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		return $criteria;
 	}
 
 	public function getAdminColumns()

@@ -62,54 +62,19 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.assembly_id',
-			'stage.description AS searchStage',
-			't.material_group_id',
-			'materialGroup.description AS searchMaterialGroup',
-			"CONCAT_WS('$delimiter',
-				detailDrawing.alias,
-				detailDrawing.description
-				) AS searchDetailDrawing",
-			't.detail_drawing_id',
-			't.select',
-			't.quantity_tooltip',
-			't.selection_tooltip',
-			't.comment',
-			't.quantity',
-			't.minimum',
-			't.maximum',
-		);
-
-		$criteria->compare('materialGroup.description',$this->searchMaterialGroup,true);
-		$criteria->compare('stage.description',$this->searchStage,true);
-		$criteria->compare('t.assembly_id',$this->assembly_id);
-		$criteria->compare('t.assembly_id',$this->assembly_id);
-		$criteria->compare('t.quantity',$this->quantity);
-		$criteria->compare('t.minimium',$this->minimum);
-		$criteria->compare('t.maximum',$this->maximum);
-		$criteria->compare('t.select',$this->select,true);
-		$criteria->compare('t.quantity_tooltip',$this->quantity_tooltip,true);
-		$criteria->compare('t.selection_tooltip',$this->selection_tooltip,true);
-		$criteria->compare('t.comment',$this->comment,true);
-		$this->compositeCriteria($criteria,
-			array(
-				'detailDrawing.alias',
-				'detailDrawing.description',
-			),
-			$this->searchDetailDrawing
-		);
-
+		$criteria->composite('searchDetailDrawing', $this->searchDetailDrawing, array(
+			'detailDrawing.alias',
+			'detailDrawing.description'));
+		$criteria->compareAs('searchStage', $this->searchStage, 'stage.description', true);
+		$criteria->compareAs('searchMaterialGroup', $this->searchMaterialGroup, 'materialGroup.description', true);
 		
 		$criteria->with = array(
 			'materialGroup',
 			'stage',
 			'detailDrawing',
-			);
+		);
 
 		return $criteria;
 	}

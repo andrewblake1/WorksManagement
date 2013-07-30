@@ -75,23 +75,6 @@ class AuthItem extends ActiveRecord
 		));
 	}
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.type', self::typeRole);
-
-		$criteria->select=array(
-			't.name',
-		);
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
 		$columns[] = 'name';

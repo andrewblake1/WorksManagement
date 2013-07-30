@@ -90,45 +90,20 @@ class TaskToResource extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$criteria->select=array(
-			't.*',	// needed for after find
-			'resourceData.resource_to_supplier_id AS searchResourceToSupplierId',
-			'resourceData.resource_id AS resource_id',
-			'resource.description AS searchResource',
-			'supplier.name AS searchSupplier',
-			'resourceData.start AS start',
-			'level0.name AS searchLevel',
-			'mode.description AS searchMode',
-			'task.quantity AS searchTaskQuantity',
-			'resourceData.estimated_total_quantity AS searchEstimatedTotalQuantity',
-			'resourceData.estimated_total_duration AS searchEstimatedTotalDuration',
-			't.duration AS duration',
-			't.quantity AS quantity',
-			'(SELECT MAX(quantity) FROM tbl_task_to_resource
-				WHERE resource_data_id = t.resource_data_id) AS searchCalculatedTotalQuantity',
-			'(SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) FROM tbl_task_to_resource
-				WHERE resource_data_id = t.resource_data_id) AS searchCalculatedTotalDuration',
-		);
-
-		// where
-		$criteria->compare('mode.description',$this->searchMode,true);
-		$criteria->compare('resource.description',$this->searchResource,true);
-		$criteria->compare('supplier.name',$this->searchSupplier,true);
-		$criteria->compare('t.searchTaskQuantity',$this->searchTaskQuantity);
-		$criteria->compare('start',Yii::app()->format->toMysqlTime($this->start));
-		$criteria->compare('level0.name',$this->searchLevel,true);
-		$criteria->compare('t.task_id',$this->task_id);
-		$criteria->compare('quantity',$this->quantity);
-		$criteria->compare('duration',Yii::app()->format->toMysqlTime($this->duration));
-		$criteria->compare('resourceData.estimated_total_quantity',$this->searchEstimatedTotalQuantity);
-		$criteria->compare('resourceData.estimated_total_duration',Yii::app()->format->toMysqlTime($this->searchEstimatedTotalDuration));
-		$criteria->compare('(SELECT MAX(quantity) FROM tbl_task_to_resource
-			WHERE resource_data_id = t.resource_data_id)',$this->searchCalculatedTotalQuantity);
-		$criteria->compare('(SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration) * task.quantity)) FROM tbl_task_to_resource
-			WHERE resource_data_id = t.resource_data_id)',Yii::app()->format->toMysqlTime($this->searchCalculatedTotalDuration));
+		$criteria->compareAs('searchResourceToSupplierId', $this->searchResourceToSupplierId, 'resourceData.resource_to_supplier_id', true);
+		$criteria->compareAs('resource_id', $this->resource_id, 'resourceData.resource_id', true);
+		$criteria->compareAs('searchResource', $this->searchResource, 'resource.description', true);
+		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
+		$criteria->compareAs('start', $this->start, 'resourceData.start', true);
+		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
+		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
+		$criteria->compareAs('searchTaskQuantity', $this->searchTaskQuantity, 'task.quantity', true);
+		$criteria->compareAs('searchEstimatedTotalQuantity', $this->searchEstimatedTotalQuantity, 'resourceData.estimated_total_quantity', true);
+		$criteria->compareAs('searchEstimatedTotalDuration', $this->searchEstimatedTotalDuration, 'resourceData.estimated_total_duration', true);
+		$criteria->compareAs('searchCalculatedTotalQuantity', $this->searchCalculatedTotalQuantity, '(SELECT MAX(quantity) FROM tbl_task_to_resource WHERE resource_data_id = t.resource_data_id)', true);
+		$criteria->compareAs('searchCalculatedTotalDuration', $this->searchCalculatedTotalDuration, '(SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) FROM tbl_task_to_resource WHERE resource_data_id = t.resource_data_id)', true);
 
 		// limit to matching task mode
 		$criteria->join = "

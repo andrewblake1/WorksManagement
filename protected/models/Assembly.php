@@ -64,32 +64,13 @@ class Assembly extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.*',
-			"CONCAT_WS('$delimiter',
-				drawing.alias,
-				drawing.description
-				) AS searchDrawing",
-		);
-		
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.alias',$this->alias,true);
-		$criteria->compare('t.standard_id',$this->standard_id);
-		$criteria->compare("CONCAT_WS('$delimiter',
-				drawing.alias,
-				drawing.description
-			)",$this->searchDrawing,true);
-/*		$this->compositeCriteria($criteria,
+		$criteria->composite('searchDrawing', $this->searchDrawing,
 			array(
 				'drawing.alias',
 				'drawing.description',
-			),
-			$this->searchDrawing
-		);*/
+			));
 
 		$criteria->with=array(
 			'drawing',

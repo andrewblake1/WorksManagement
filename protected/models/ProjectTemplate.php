@@ -45,20 +45,6 @@ class ProjectTemplate extends ActiveRecord
         );
     }
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// where
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.client_id', $this->client_id);
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
 		$columns[] = 'description';

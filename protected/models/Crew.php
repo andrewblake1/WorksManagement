@@ -54,30 +54,13 @@ class Crew extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
 		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',
-			"CONCAT_WS('$delimiter',
-				contact.first_name,
-				contact.last_name,
-				contact.email
-				) AS searchInCharge",
-		);
-
-		// where
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.day_id',$this->day_id);
-		$this->compositeCriteria($criteria,
-			array(
-				'contact.first_name',
-				'contact.last_name',
-				'contact.email',
-			),
-			$this->searchInCharge
-		);
+		$criteria->composite('searchInCharge', $this->searchInCharge, array(
+			'contact.first_name',
+			'contact.last_name',
+			'contact.email'));
 
 		// with
 		$criteria->with = array(

@@ -45,29 +45,6 @@ class Report extends ActiveRecord
 		));
 	}
 
-	/**
-	 * @return DbCriteria the search/filter conditions.
-	 */
-	public function getSearchCriteria()
-	{
-		$criteria=new DbCriteria;
-
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.description',
-			't.template_html',
-			't.context',
-		);
-
-		// where
-		$criteria->compare('t.description', $this->description, true);
-		$criteria->compare('t.template_html', $this->template_html, true);
-		$criteria->compare('t.context', $this->context, true);
-
-		return $criteria;
-	}
-
 	public function getAdminColumns()
 	{
 		$columns[] = 'description';

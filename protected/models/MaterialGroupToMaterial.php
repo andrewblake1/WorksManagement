@@ -57,23 +57,11 @@ class MaterialGroupToMaterial extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.material_group_id',
-			'material.description AS searchMaterial',
-			'material.unit AS searchUnit',
-			'material.alias AS searchAlias',
-		);
-
-		// where
-		$criteria->compare('material_group_id',$this->material_group_id);
-		$criteria->compare('material.description',$this->searchMaterial,true);
-		$criteria->compare('material.unit',$this->searchUnit,true);
-		$criteria->compare('material.alias',$this->searchAlias,true);
+		$criteria->compareAs('searchMaterial', $this->searchMaterial,'material.description',true);
+		$criteria->compareAs('searchUnit', $this->searchUnit,'material.unit',true);
+		$criteria->compareAs('searchAlias', $this->searchAlias,'material.alias',true);
  
 		// with
 		$criteria->with = array(

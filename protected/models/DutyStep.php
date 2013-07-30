@@ -90,27 +90,11 @@ class DutyStep extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.action_id',
-			't.description',
-			't.comment',
-			't.lead_in_days',
-			'level0.name AS searchLevel',
-			'authItemName.name AS searchRole',
-		);
+		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
+		$criteria->compareAs('searchRole', $this->searchRole, 'authItemName.name', true);
 
-		// where
-		$criteria->compare('t.description',$this->description,true);
-		$criteria->compare('t.comment',$this->comment,true);
-		$criteria->compare('t.action_id',$this->action_id);
-		$criteria->compare('t.lead_in_days',$this->lead_in_days);
-		$criteria->compare('level0.name',$this->searchLevel,true);
-		$criteria->compare('authItemName.name',$this->searchRole, true);
-		
 		// with
 		$criteria->with = array(
 			'authItemName',

@@ -37,16 +37,10 @@ class DutyStepToMode extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria;
+		$criteria=new DbCriteria($this);
 
 		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			'mode.description AS searchMode',
-		);
-
-		$criteria->compare('mode.description',$this->searchMode,true);
-		$criteria->compare('t.duty_step_id', $this->duty_step_id);
+		$criteria->compareAs(searchMode, $this->searchMode, 'mode.description', true);
 
 		$criteria->with = array(
 			'mode',
