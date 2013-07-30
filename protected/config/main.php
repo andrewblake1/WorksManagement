@@ -221,7 +221,7 @@ return array(
 							),
 						),
 						'CustomFieldProjectCategory'=>array(
-							'CustomFieldToProjectTemplate',
+							'ProjectTemplateToCustomField',
 						),
 						'ProjectTemplateToAuthItem',
 						'TaskTemplate'=>array(

@@ -17,8 +17,8 @@
  * The followings are the available model relations:
  * @property User $updatedBy
  * @property ProjectTemplate $projectTemplate
- * @property CustomFieldToProjectTemplate[] $customFieldToProjectTemplates
- * @property CustomFieldToProjectTemplate[] $customFieldToProjectTemplates1
+ * @property ProjectTemplateToCustomField[] $projectTemplateToCustomFields
+ * @property ProjectTemplateToCustomField[] $projectTemplateToCustomFields1
  */
 class CustomFieldProjectCategory extends CategoryActiveRecord {
 
@@ -37,8 +37,8 @@ class CustomFieldProjectCategory extends CategoryActiveRecord {
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
-            'customFieldToProjectTemplates' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'project_template_id'),
-            'customFieldToProjectTemplates1' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'custom_field_project_category_id'),
+            'projectTemplateToCustomFields' => array(self::HAS_MANY, 'ProjectTemplateToCustomField', 'project_template_id'),
+            'projectTemplateToCustomFields1' => array(self::HAS_MANY, 'ProjectTemplateToCustomField', 'custom_field_project_category_id'),
         );
     }
 

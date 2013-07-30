@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tbl_custom_field_to_project_template".
+ * This is the model class for table "tbl_project_template_to_custom_field".
  *
- * The followings are the available columns in table 'tbl_custom_field_to_project_template':
+ * The followings are the available columns in table 'tbl_project_template_to_custom_field':
  * @property integer $id
  * @property integer $project_template_id
  * @property integer $custom_field_id
@@ -19,9 +19,9 @@
  * @property User $updatedBy
  * @property CustomFieldProjectCategory $projectTemplate
  * @property CustomFieldProjectCategory $customFieldProjectCategory
- * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
+ * @property ProjectToProjectTemplateToCustomField[] $projectToProjectTemplateToCustomFields
  */
-class CustomFieldToProjectTemplate extends ActiveRecord
+class ProjectTemplateToCustomField extends ActiveRecord
 {
 	/**
 	 * @var string nice model name for use in output
@@ -48,7 +48,7 @@ class CustomFieldToProjectTemplate extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'projectTemplate' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'project_template_id'),
             'customFieldProjectCategory' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'custom_field_project_category_id'),
-            'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'custom_field_to_project_template_id'),
+            'projectToProjectTemplateToCustomFields' => array(self::HAS_MANY, 'ProjectToProjectTemplateToCustomField', 'project_template_to_custom_field_id'),
         );
     }
 

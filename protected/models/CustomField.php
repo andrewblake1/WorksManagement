@@ -18,7 +18,7 @@
  *
  * The followings are the available model relations:
  * @property User $updatedBy
- * @property CustomFieldToProjectTemplate[] $customFieldToProjectTemplates
+ * @property ProjectTemplateToCustomField[] $projectTemplateToCustomFields
  * @property CustomFieldToTaskTemplate[] $customFieldToTaskTemplates
  * @property DutyStep[] $dutySteps
  */
@@ -143,7 +143,7 @@ class CustomField extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'customFieldToProjectTemplates' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'custom_field_id'),
+            'projectTemplateToCustomFields' => array(self::HAS_MANY, 'ProjectTemplateToCustomField', 'custom_field_id'),
             'customFieldToTaskTemplates' => array(self::HAS_MANY, 'CustomFieldToTaskTemplate', 'custom_field_id'),
             'dutySteps' => array(self::HAS_MANY, 'DutyStep', 'custom_field_id'),
         );

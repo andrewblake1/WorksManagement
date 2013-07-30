@@ -26,7 +26,7 @@
  * @property CustomField[] $customFields
  * @property CustomFieldProjectCategory[] $customFieldProjectCategories
  * @property CustomFieldTaskCategory[] $customFieldTaskCategories
- * @property CustomFieldToProjectTemplate[] $customFieldToProjectTemplates
+ * @property ProjectTemplateToCustomField[] $projectTemplateToCustomFields
  * @property CustomFieldToTaskTemplate[] $customFieldToTaskTemplates
  * @property CustomValue[] $customValues
  * @property Day[] $days
@@ -49,7 +49,7 @@
  * @property ProjectToAuthItem[] $projectToAuthItems
  * @property ProjectToAuthItemToAuthAssignment[] $projectToAuthItemToAuthAssignments
  * @property ProjectToClientContact[] $projectToClientContacts
- * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
+ * @property ProjectToProjectTemplateToCustomField[] $projectToProjectTemplateToCustomFields
  * @property Report[] $reports
  * @property ReportToAuthItem[] $reportToAuthItems
  * @property Resource[] $resources
@@ -124,7 +124,7 @@ class User extends ContactActiveRecord
             'customFields' => array(self::HAS_MANY, 'CustomField', 'updated_by'),
             'customFieldProjectCategories' => array(self::HAS_MANY, 'CustomFieldProjectCategory', 'updated_by'),
             'customFieldTaskCategories' => array(self::HAS_MANY, 'CustomFieldTaskCategory', 'updated_by'),
-            'customFieldToProjectTemplates' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'updated_by'),
+            'projectTemplateToCustomFields' => array(self::HAS_MANY, 'ProjectTemplateToCustomField', 'updated_by'),
             'customFieldToTaskTemplates' => array(self::HAS_MANY, 'CustomFieldToTaskTemplate', 'updated_by'),
             'customValues' => array(self::HAS_MANY, 'CustomValue', 'updated_by'),
             'days' => array(self::HAS_MANY, 'Day', 'updated_by'),
@@ -147,7 +147,7 @@ class User extends ContactActiveRecord
             'projectToAuthItems' => array(self::HAS_MANY, 'ProjectToAuthItem', 'updated_by'),
             'projectToAuthItemToAuthAssignments' => array(self::HAS_MANY, 'ProjectToAuthItemToAuthAssignment', 'updated_by'),
             'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'updated_by'),
-            'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'updated_by'),
+            'projectToProjectTemplateToCustomFields' => array(self::HAS_MANY, 'ProjectToProjectTemplateToCustomField', 'updated_by'),
             'reports' => array(self::HAS_MANY, 'Report', 'updated_by'),
             'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'updated_by'),
             'resources' => array(self::HAS_MANY, 'Resource', 'updated_by'),

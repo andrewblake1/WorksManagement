@@ -22,7 +22,7 @@
  * @property ProjectType $client
  * @property ProjectToAuthItem[] $projectToAuthItems
  * @property ProjectToClientContact[] $projectToClientContacts
- * @property ProjectToCustomFieldToProjectTemplate[] $projectToCustomFieldToProjectTemplates
+ * @property ProjectToProjectTemplateToCustomField[] $projectToProjectTemplateToCustomFields
  * @property Task[] $tasks
  */
 class Project extends CustomFieldActiveRecord
@@ -40,12 +40,12 @@ class Project extends CustomFieldActiveRecord
 	public $projectTemplate;
 
 	// CustomFieldActiveRecord
-	protected $evalCustomFieldPivots = '$this->projectTemplate->customFieldToProjectTemplates';
-	protected $evalClassEndToCustomFieldPivot = 'ProjectToCustomFieldToProjectTemplate';
-	protected $evalColumnCustomFieldModelTemplateId = 'custom_field_to_project_template_id';
+	protected $evalCustomFieldPivots = '$this->projectTemplate->projectTemplateToCustomFields';
+	protected $evalClassEndToCustomFieldPivot = 'ProjectToProjectTemplateToCustomField';
+	protected $evalColumnCustomFieldModelTemplateId = 'project_template_to_custom_field_id';
 	protected $evalColumnEndId = 'project_id';
-	protected $evalEndToCustomFieldPivots = '$this->projectToCustomFieldToProjectTemplates';
-	protected $evalCustomFieldPivot = 'customFieldToProjectTemplate';
+	protected $evalEndToCustomFieldPivots = '$this->projectToProjectTemplateToCustomFields';
+	protected $evalCustomFieldPivot = 'projectTemplateToCustomField';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -74,7 +74,7 @@ class Project extends CustomFieldActiveRecord
             'client' => array(self::BELONGS_TO, 'ProjectType', 'client_id'),
             'projectToAuthItems' => array(self::HAS_MANY, 'ProjectToAuthItem', 'project_id'),
             'projectToClientContacts' => array(self::HAS_MANY, 'ProjectToClientContact', 'project_id'),
-            'projectToCustomFieldToProjectTemplates' => array(self::HAS_MANY, 'ProjectToCustomFieldToProjectTemplate', 'project_id'),
+            'projectToProjectTemplateToCustomFields' => array(self::HAS_MANY, 'ProjectToProjectTemplateToCustomField', 'project_id'),
             'tasks' => array(self::HAS_MANY, 'Task', 'project_id'),
         );
     }
