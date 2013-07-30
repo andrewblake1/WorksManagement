@@ -21,7 +21,7 @@
  * @property Drawing $standard
  * @property Drawing $drawing
  * @property MaterialGroupToMaterial[] $materialGroupToMaterials
- * @property MaterialToClient[] $materialToClients
+ * @property ClientToMaterial[] $clientToMaterials
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskToMaterial[] $taskToMaterials
  */
@@ -45,7 +45,7 @@ class Material extends ActiveRecord
             'standard' => array(self::BELONGS_TO, 'Drawing', 'standard_id'),
             'drawing' => array(self::BELONGS_TO, 'Drawing', 'drawing_id'),
             'materialGroupToMaterials' => array(self::HAS_MANY, 'MaterialGroupToMaterial', 'material_id'),
-            'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'material_id'),
+            'clientToMaterials' => array(self::HAS_MANY, 'ClientToMaterial', 'material_id'),
             'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'material_id'),
             'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'material_id'),
         );

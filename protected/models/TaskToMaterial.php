@@ -143,7 +143,7 @@ class TaskToMaterial extends ActiveRecord
 				'material.description AS searchMaterial',
 				'material.unit AS searchUnit',
 				"CONCAT_WS('$delimiter',
-					materialToClient.alias,
+					clientToMaterial.alias,
 					material.alias
 					) AS searchAlias",
 			);
@@ -155,8 +155,8 @@ class TaskToMaterial extends ActiveRecord
 				JOIN tbl_material material ON t.material_id = material.id
 				JOIN tbl_task task ON t.task_id = task.id
 				JOIN tbl_project project ON task.project_id = project.id
-				LEFT JOIN tbl_material_to_client materialToClient ON project.client_id = materialToClient.client_id
-					AND t.material_id = materialToClient.material_id
+				LEFT JOIN tbl_client_to_material clientToMaterial ON project.client_id = clientToMaterial.client_id
+					AND t.material_id = clientToMaterial.material_id
 			';
 
 			return $criteria;
@@ -172,7 +172,7 @@ class TaskToMaterial extends ActiveRecord
 			'material.unit AS searchUnit',
 			't.quantity * task.quantity * taskToAssembly.accumulated_total AS searchAccumlatedTotal',
 			"CONCAT_WS('$delimiter',
-				materialToClient.alias,
+				clientToMaterial.alias,
 				material.alias
 				) AS searchAlias",
 			"taskToAssembly.accumulated_total AS searchAssemblyQuantity",
@@ -190,8 +190,8 @@ class TaskToMaterial extends ActiveRecord
 			LEFT JOIN tmp_planning_to_assembly taskToAssembly ON t.task_to_assembly_id = taskToAssembly.id
 			LEFT JOIN tbl_task task ON t.task_id = task.id
 			LEFT JOIN tbl_project project ON task.project_id = project.id
-			LEFT JOIN tbl_material_to_client materialToClient ON project.client_id = materialToClient.client_id
-				AND t.material_id = materialToClient.material_id
+			LEFT JOIN tbl_client_to_material clientToMaterial ON project.client_id = clientToMaterial.client_id
+				AND t.material_id = clientToMaterial.material_id
 		';
 		
 		// where
@@ -199,7 +199,7 @@ class TaskToMaterial extends ActiveRecord
 		$criteria->compare('material.unit',$this->searchUnit,true);
 		$this->compositeCriteria($criteria,
 			array(
-				'materialToClient.alias',
+				'clientToMaterial.alias',
 				'material.alias'
 			),
 			$this->searchAlias

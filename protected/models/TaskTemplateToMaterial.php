@@ -77,7 +77,7 @@ class TaskTemplateToMaterial extends ActiveRecord
 			'material.unit AS searchUnit',
 			"CONCAT_WS('$delimiter',
 				material.alias,
-				materialToClient.alias
+				clientToMaterial.alias
 			) AS searchAlias",
 			't.quantity',
 			't.minimum',
@@ -89,8 +89,8 @@ class TaskTemplateToMaterial extends ActiveRecord
 		// join
 		$criteria->join = '
 			LEFT JOIN tbl_task_template taskTemplate ON t.task_template_id = taskTemplate.id
-			LEFT JOIN tbl_material_to_client materialToClient ON t.material_id = materialToClient.material_id
-				AND taskTemplate.client_id = materialToClient.client_id
+			LEFT JOIN tbl_client_to_material clientToMaterial ON t.material_id = clientToMaterial.material_id
+				AND taskTemplate.client_id = clientToMaterial.client_id
 		';
 		
 		// where
@@ -141,12 +141,12 @@ class TaskTemplateToMaterial extends ActiveRecord
 	public function afterFind() {
 		$this->standard_id = $this->material->standard_id;
 
-		if($materialToClient = MaterialToClient::model()->findByAttributes(array(
+		if($clientToMaterial = ClientToMaterial::model()->findByAttributes(array(
 			'material_id'=>$this->material_id,
 			'client_id'=>$this->taskTemplate->client_id,
 		)))
 		{
-			$this->clientAlias = $materialToClient->alias;
+			$this->clientAlias = $clientToMaterial->alias;
 		}
 		
 		return parent::afterFind();

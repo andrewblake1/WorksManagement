@@ -184,7 +184,7 @@ return array(
 						),
 					),
 					'ClientToAssembly',
-					'MaterialToClient',
+					'ClientToMaterial',
 					'ClientContact',
 					'Project'=>array( 
 						'Day'=>array(

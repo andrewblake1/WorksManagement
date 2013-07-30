@@ -204,10 +204,10 @@ EOD;
 			$this->_authManager->createOperation('MaterialGroupToMaterialRead', 'MaterialGroupToMaterial read');
 			$task->addChild('MaterialGroupToMaterialRead');
 
-			$task=$this->_authManager->createTask('MaterialToClient', 'MaterialToClient task');
-			$systemAdminRole->addChild('MaterialToClient');
-			$this->_authManager->createOperation('MaterialToClientRead', 'MaterialToClient read');
-			$task->addChild('MaterialToClientRead');
+			$task=$this->_authManager->createTask('ClientToMaterial', 'ClientToMaterial task');
+			$systemAdminRole->addChild('ClientToMaterial');
+			$this->_authManager->createOperation('ClientToMaterialRead', 'ClientToMaterial read');
+			$task->addChild('ClientToMaterialRead');
 
 			$task=$this->_authManager->createTask('Material', 'Material task');
 			$systemAdminRole->addChild('Material');

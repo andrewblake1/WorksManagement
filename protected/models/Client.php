@@ -13,7 +13,7 @@
  * @property ClientToAssembly[] $clientToAssemblys
  * @property User $updatedBy
  * @property ClientContact[] $clientContacts
- * @property MaterialToClient[] $materialToClients
+ * @property ClientToMaterial[] $clientToMaterials
  * @property ProjectTemplate[] $projectTemplates
  */
 class Client extends ActiveRecord
@@ -31,7 +31,7 @@ class Client extends ActiveRecord
             'clientToAssemblys' => array(self::HAS_MANY, 'ClientToAssembly', 'client_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'clientContacts' => array(self::HAS_MANY, 'ClientContact', 'client_id'),
-            'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'client_id'),
+            'clientToMaterials' => array(self::HAS_MANY, 'ClientToMaterial', 'client_id'),
             'projectTemplates' => array(self::HAS_MANY, 'ProjectTemplate', 'client_id'),
         );
     }

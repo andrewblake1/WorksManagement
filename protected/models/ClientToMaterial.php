@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tbl_material_to_client".
+ * This is the model class for table "tbl_client_to_material".
  *
- * The followings are the available columns in table 'tbl_material_to_client':
+ * The followings are the available columns in table 'tbl_client_to_material':
  * @property integer $id
  * @property integer $material_id
  * @property integer $client_id
@@ -18,17 +18,12 @@
  * @property User $updatedBy
  * @property Supplier $supplier
  */
-class MaterialToClient extends ActiveRecord
+class ClientToMaterial extends ActiveRecord
 {
 	public $searchMaterial;
 	public $searchUnit;
 	public $searchAlias;
 	public $searchSupplier;
-
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Material';
 	
 	/**
 	 * @return array relational rules.

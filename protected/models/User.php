@@ -40,7 +40,7 @@
  * @property Material[] $materials
  * @property MaterialGroup[] $materialGroups
  * @property MaterialGroupToMaterial[] $materialGroupToMaterials
- * @property MaterialToClient[] $materialToClients
+ * @property ClientToMaterial[] $clientToMaterials
  * @property Planning[] $plannings
  * @property Planning[] $plannings1
  * @property Project[] $projects
@@ -138,7 +138,7 @@ class User extends ContactActiveRecord
             'materials' => array(self::HAS_MANY, 'Material', 'updated_by'),
             'materialGroups' => array(self::HAS_MANY, 'MaterialGroup', 'updated_by'),
             'materialGroupToMaterials' => array(self::HAS_MANY, 'MaterialGroupToMaterial', 'updated_by'),
-            'materialToClients' => array(self::HAS_MANY, 'MaterialToClient', 'updated_by'),
+            'clientToMaterials' => array(self::HAS_MANY, 'ClientToMaterial', 'updated_by'),
             'plannings' => array(self::HAS_MANY, 'Planning', 'updated_by'),
             'plannings1' => array(self::HAS_MANY, 'Planning', 'in_charge_id'),
             'projects' => array(self::HAS_MANY, 'Project', 'updated_by'),
