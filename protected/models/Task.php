@@ -68,7 +68,7 @@ class Task extends CustomFieldActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(), array(
-			array('in_charge_id', 'integerOnly'=>true),
+			array('in_charge_id', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>255),
 		));
 	}

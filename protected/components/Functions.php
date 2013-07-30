@@ -37,17 +37,26 @@ class Functions extends CApplicationComponent
 	/**
 	 * convert from camel or pascal case to lowercase with space seperators and capital first letter of each word or just first
 	 */
-	public function sentencize($string, $firstOnlyToCaptital=TRUE) 
+	public function sentencize($subject, $firstOnlyToCaptital=TRUE) 
 	{ 
-		$string = preg_replace('/\B([A-Z])/', ' $1', $string);
+		$subject = preg_replace('/\B([A-Z])/', ' $1', $subject);
 		
 		if($firstOnlyToCaptital)
 		{
-			$string = strtolower($string);
-			$string = ucfirst($string);
+			if(is_string($subject))
+			{
+				$subject = ucfirst(strtolower(str_replace('_', ' ', $subject)));
+			}
+			else // must be array
+			{
+				foreach($subject as $key => &$string)
+				{
+					$string = ucfirst(strtolower(str_replace('_', ' ', $string)));
+				}
+			}
 		}
 		
-		return $string; 
+		return $subject; 
 	}
 
 	public function multidimensional_arraySearch($array, &$search, $level = 0)

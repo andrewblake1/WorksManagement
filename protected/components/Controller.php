@@ -611,6 +611,7 @@ class Controller extends CController
 		}
 
 		$model->attributes = $attributes;
+
 		// ensure that where possible a pk has been passed from parent
 		$model->assertFromParent();
 

@@ -155,9 +155,6 @@ abstract class ActiveRecord extends CActiveRecord
 	public function rules()
 	{
 		$validators = $this->customValidators;
-
-		// because search is not altering data it should be safe to allow all attributes for search scenario
-		$searchValidator = array(array(implode(',', $this->allAttributes), 'safe', 'on'=>'search'));
 		
 		// length and required
 		$requiredValidator = array();
@@ -207,7 +204,8 @@ abstract class ActiveRecord extends CActiveRecord
 		$validators = array_merge($validators, array(array(implode(',', $timeOnlyValidator), 'date', 'format'=>'d M, Y')));
 		$validators = array_merge($validators, array(array(implode(',', $dateTimeOnlyValidator), 'date', 'format'=>'d M Y, H:i:s')));
 		$validators = array_merge($validators, array(array(implode(',', $safeValidator), 'safe')));
-			
+		// because search is not altering data it should be safe to allow all attributes for search scenario
+		$validators = array_merge($validators, array(array(implode(',', $this->allAttributes), 'safe', 'on'=>'search')));
 		foreach($lengthValidators as $size => $columns)
 		{
 			$validators = array_merge($validators, array(array(implode(',', $columns), 'length', 'max'=>$size)));
@@ -257,7 +255,7 @@ abstract class ActiveRecord extends CActiveRecord
 		
 		$niceName = !empty(static::$niceName)
 			? static::$niceName
-			: preg_replace('/(.* to ).*$/', '', Yii::app()->functions->sentencize(get_called_class()));
+			: ucfirst(preg_replace('/(.* to )(.*)$/', '$2', Yii::app()->functions->sentencize(get_called_class())));
 		
 		// if a primary key has been given
 		if($primaryKey)
@@ -573,22 +571,32 @@ $t = $model->attributes;
 	public function search($pagination = array())
 	{
 		// get the sort order
-		foreach($this->searchSort as $attribute)
+		foreach($this->adminColumns as $adminColumn)
 		{
+			if(is_array($adminColumn))
+			{
+				if(isset($adminColumn['name']))
+				{
+					$attribute = $adminColumn['name'];
+				}
+				else
+				{
+					continue;;
+				}
+			}
+			else
+			{
+				$attribute = $adminColumn;
+			}
+
+			$attribute = preg_replace('/:.*/', '', $attribute);
 			$sort[$attribute] = array(
 						'asc'=>" $attribute ",
 						'desc'=>" $attribute DESC",
 					);
 		}
 		
-		// add searchUser
-		$sort['searchUser'] = array(
-					'asc'=>" searchUser ",
-					'desc'=>" searchUser DESC",
-				);
-
 		// add all other attributes
-		$sort[] = '*';
 		$dataProvider = new ActiveDataProvider($this, array(
 			'criteria'=>$this->getSearchCriteriaSorted($this),
 			'sort'=>array('attributes'=>$sort),
@@ -598,24 +606,8 @@ $t = $model->attributes;
 		return $dataProvider;
 	}
 
- 	/**
-	 * Named scopes to use when searching.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-	 */
-   public function scopes()
+     public function defaultScope()
     {
-        return array(
- /*           'recently'=>array(
-                'order'=>'create_time DESC',
-                'limit'=>5,
-            ),*/
-        );
-    }
-	
-    public function defaultScope()
-    {
-//		// add in any run time scopes accessibly to outside classes
-//		$defaultScope = static::$defaultScope;
 		$defaultScope = array();
 	
 		// if we should be blocking soft deleted records from being returned
@@ -642,32 +634,6 @@ $t = $model->attributes;
 		
         return $defaultScope;
     }
-
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		foreach ($this->rules() as $rule)
-		{
-			if(isset($rule['on']) && $rule['on'] == 'search' && $rule[1] == 'safe')
-			{
-				$theseColumns = $this->tableSchema->columnNames;
-				$sorts = explode(',', str_replace(' ', '', $rule[0]));
-				foreach($sorts as $key => &$value)
-				{
-					if(in_array($value, $theseColumns))
-					{
-						$value = "t.$value";
-					}
-				}
-				return $sorts;
-			}
-		}
-
-		return array();
-	}
 	
 	/**
 	 * @return array customized attribute labels (name=>label)

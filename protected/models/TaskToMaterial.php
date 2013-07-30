@@ -239,23 +239,6 @@ class TaskToMaterial extends ActiveRecord
 		return $columns;
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array(
-			'searchMaterial',
-			'searchUnit',
-			'searchAlias',
-			'searchGroup',
-			'searchAssemblyQuantity',
-			'searchStage',
-			'searchAccumlatedTotal',
-		);
-	}
-
 }
 
 ?>

@@ -138,19 +138,6 @@ class TaskTemplateToMaterial extends ActiveRecord
 		);
 	}
 
-	/**
-	 * Retrieves a sort array for use in CActiveDataProvider.
-	 * @return array the for data provider that contains the sort condition.
-	 */
-	public function getSearchSort()
-	{
-		return array(
-			'searchDescription',
-			'searchUnit',
-			'searchAlias',
-		);
-	}
-
 	public function afterFind() {
 		$this->standard_id = $this->material->standard_id;
 
