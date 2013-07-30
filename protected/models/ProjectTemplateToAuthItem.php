@@ -61,8 +61,6 @@ class ProjectTemplateToAuthItem extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'id' => 'Project type to role',
-			'project_template_id' => 'Project type',
 			'searchAuthItem' => 'Role',			
 			'auth_item_name' => 'Role',
 		));

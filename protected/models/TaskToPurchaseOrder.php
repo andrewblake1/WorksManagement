@@ -22,10 +22,6 @@ class TaskToPurchaseOrder extends ActiveRecord
 	 */
 	public $searchTask;
 	public $searchPurchaseOrder;
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Purhase order';
 
 	/**
 	 * @return array relational rules.
@@ -40,20 +36,6 @@ class TaskToPurchaseOrder extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
         );
     }
-
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'task_id' => 'Task',
-			'searchTask' => 'Task',
-			'purchase_order_id' => 'Supplier/Purchase order',
-			'searchPurchaseOrder' => 'Purchase order',
-		));
-	}
 
 	/**
 	 * @return DbCriteria the search/filter conditions.

@@ -255,14 +255,9 @@ abstract class ActiveRecord extends CActiveRecord
 	static public function getNiceName($primaryKey=null, $model=null)
 	{
 		
-		if(!empty(static::$niceName))
-		{
-			$niceName = static::$niceName;
-		}
-		else
-		{
-			$niceName = Yii::app()->functions->sentencize(get_called_class());
-		}
+		$niceName = !empty(static::$niceName)
+			? static::$niceName
+			: preg_replace('/(.* to ).*$/', '', Yii::app()->functions->sentencize(get_called_class()));
 		
 		// if a primary key has been given
 		if($primaryKey)
@@ -680,40 +675,15 @@ $t = $model->attributes;
 	public function attributeLabels($attributeLabels = array())
 	{
 		// array union plus means duplicated members in the right hand array don't overwrite the left
-		return ActiveRecord::$labelOverrides + $attributeLabels + array(
-			'id' => static::getNiceName(),
-			'naturalKey' => static::getNiceName(),
-			'searchUser' => 'User, First/Last/Email',
-			'updated_by' => 'User, First/Last/Email',
-			'description' => 'Description',
-			'deleted' => 'Deleted',
-			'parent_id' => 'Parent',
-			'alias' => 'Alias',
-			'quantity' => 'Quantity',
-			'minimum' => 'Minimum',
-			'maximum' => 'Maximum',
-			'select' => 'Specific values',
-			'name' => 'Name',
-			'first_name' => 'First name',
-			'last_name' => 'Last name',
-			'role' => 'Role',
-			'email' => 'Email',
-			'address_line_1' => 'Address line 1',
-			'address_line_2' => 'Address line 2',
-			'post_code' => 'Post code',
-			'town_city' => 'Town/city',
-			'state_province' => 'State/province',
-			'country' => 'Country',
-			'phone_mobile' => 'Phone mobile',
-			'phone_home' => 'Phone home',
-			'phone_work' => 'Phone work',
-			'phone_fax' => 'Phone fax',
-			'level' => 'Level',
-			'hours' => 'Hours',
-			'start' => 'Start',
-			'quantity_tooltip' => 'Quantity tooltip',
-			'selection_tooltip' => 'Selection tooltip',
-		);
+		return
+			ActiveRecord::$labelOverrides
+			+ $attributeLabels + array(
+				'id' => static::getNiceName(),
+				'naturalKey' => static::getNiceName(),
+				'select' => 'Specific values',
+				'town_city' => 'Town/city',
+				'state_province' => 'State/province',)
+			+ Yii::app()->functions->sentencize(preg_replace('/(.* to ).*$/', '', str_replace('_id', '', str_ireplace('search', '', $this->allAttributes))));
 	}
 
 	/**
@@ -798,14 +768,6 @@ $t = $model->attributes;
 			// create text
 			$columns[] = $name;
 		}
-	}
-	
-	protected function linkThisColumn($name)
-	{
-		// NB: want id intead of $this->tableSchema->primaryKey because yii wants a variable by the same as in the function signature
-		// even though this confusing here
-//		return self::linkColumn($name, get_class($this), $this->tableSchema->primaryKey);
-		return $name;
 	}
 
 	public function getSearchCriteria()

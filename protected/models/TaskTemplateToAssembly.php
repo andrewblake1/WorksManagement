@@ -26,13 +26,8 @@ class TaskTemplateToAssembly extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchAssemblyDescription;
-	public $searchAssemblyAlias;
-
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Assembly';
+	public $searchAssembly;
+	public $searchAlias;
 
 	public $standard_id;
 	public $clientAlias;
@@ -65,19 +60,6 @@ class TaskTemplateToAssembly extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'task_template_id' => 'Task Type',
-//			'assembly_id' => 'Assembly',
-			'searchAssemblyDescription' => 'Assembly',
-			'searchAssemblyAlias' => 'Alias',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -90,11 +72,11 @@ class TaskTemplateToAssembly extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.assembly_id',
 			't.task_template_id',
-			'assembly.description AS searchAssemblyDescription',
+			'assembly.description AS searchAssembly',
 			"CONCAT_WS('$delimiter',
 				assembly.alias,
 				assemblyToClient.alias
-			) AS searchAssemblyAlias",
+			) AS searchAlias",
 			't.quantity',
 			't.minimum',
 			't.maximum',
@@ -110,8 +92,8 @@ class TaskTemplateToAssembly extends ActiveRecord
 		';
 		
 		// where
-		$criteria->compare('assembly.description',$this->searchAssemblyDescription,true);
-		$criteria->compare('assembly.alias',$this->searchAssemblyAlias,true);
+		$criteria->compare('assembly.description',$this->searchAssembly,true);
+		$criteria->compare('assembly.alias',$this->searchAlias,true);
 		$criteria->compare('t.task_template_id',$this->task_template_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.minimium',$this->minimum);
@@ -129,8 +111,8 @@ class TaskTemplateToAssembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'searchAssemblyDescription';
- 		$columns[] = 'searchAssemblyAlias';
+		$columns[] = 'searchAssembly';
+ 		$columns[] = 'searchAlias';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
@@ -147,9 +129,9 @@ class TaskTemplateToAssembly extends ActiveRecord
 	{
 		return array(
 //			'taskTemplate->description',
-			'searchAssemblyDescription',
+			'searchAssembly',
 //			'assembly->unit',
-			'searchAssemblyAlias',
+			'searchAlias',
 		);
 	}
 

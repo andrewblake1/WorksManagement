@@ -30,12 +30,8 @@ class TaskTemplateToAssemblyGroup extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchAssemblyGroupDescription;
+	public $searchAssemblyGroup;
 	public $standard_id;
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Assembly group';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -67,20 +63,6 @@ class TaskTemplateToAssemblyGroup extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'task_template_id' => 'Assembly',
-			'assembly_group_id' => 'Assembly group',
-			'searchAssemblyGroupDescription' => 'Assembly group',
-			'quantity_tooltip' => 'Quantity tooltip',
-			'selection_tooltip' => 'Selection tooltip',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -92,7 +74,7 @@ class TaskTemplateToAssemblyGroup extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.task_template_id',
 			't.assembly_group_id',
-			'assemblyGroup.description AS searchAssemblyGroupDescription',
+			'assemblyGroup.description AS searchAssemblyGroup',
 			't.select',
 			't.quantity_tooltip',
 			't.selection_tooltip',
@@ -102,7 +84,7 @@ class TaskTemplateToAssemblyGroup extends ActiveRecord
 			't.maximum',
 		);
 
-		$criteria->compare('assemblyGroup.description',$this->searchAssemblyGroupDescription,true);
+		$criteria->compare('assemblyGroup.description',$this->searchAssemblyGroup,true);
 		$criteria->compare('t.task_template_id',$this->task_template_id);
 		$criteria->compare('t.task_template_id',$this->task_template_id);
 		$criteria->compare('t.quantity',$this->quantity);
@@ -122,7 +104,7 @@ class TaskTemplateToAssemblyGroup extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = 'searchAssemblyGroupDescription';
+        $columns[] = 'searchAssemblyGroup';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
@@ -140,7 +122,7 @@ class TaskTemplateToAssemblyGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchAssemblyGroupDescription',
+			'searchAssemblyGroup',
 			'comment',
 		);
 	}

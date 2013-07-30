@@ -29,17 +29,12 @@ class TaskToAssembly extends ActiveRecord
 	use RangeActiveRecordTrait;
 	
 	public $standard_id;
-
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Assembly';
 	
-	public $searchAssemblyDescription;
-	public $searchAssemblyGroup;
-	public $searchAssemblyAlias;
+	public $searchAssembly;
+	public $searchGroup;
+	public $searchAliases;
 	public $searchTaskQuantity;
-	public $searchTotalQuantity;
+	public $searchAccumlatedTotal;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -117,28 +112,11 @@ class TaskToAssembly extends ActiveRecord
         );
     }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'task_id' => 'Task',
-			'assembly_id' => 'Assembly',
-			'searchTask' => 'Task',
-			'searchAssemblyDescription' => 'Assembly',
-			'searchAssemblyAlias' => 'Aliases',
-			'searchTaskQuantity' => 'Task quantity',
-			'searchTotalQuantity' => 'Accumlated total',
-			'searchAssemblyGroup' => 'Group',
-		));
-	}
-
 	static function getDisplayAttr()
 	{
 		return array(
-			'searchAssemblyDescription',
-			'searchAssemblyAlias',
+			'searchAssembly',
+			'searchAliases',
 		);
 	}
 
@@ -172,11 +150,11 @@ class TaskToAssembly extends ActiveRecord
 		{
 			$criteria->select=array(
 				't.*',	// needed for delete and update buttons
-				'assembly.description AS searchAssemblyDescription',
+				'assembly.description AS searchAssembly',
 				"CONCAT_WS('$delimiter',
 					assemblyToClient.alias,
 					assembly.alias
-					) AS searchAssemblyAlias",
+					) AS searchAliases",
 			);
 
 			$criteria->compare('t.id',$this->id);
@@ -201,14 +179,14 @@ class TaskToAssembly extends ActiveRecord
 			't.task_id',
 			't.parent_id',
 			't.assembly_id',
-			'assembly.description AS searchAssemblyDescription',
+			'assembly.description AS searchAssembly',
 			"CONCAT_WS('$delimiter',
 				assemblyToClient.alias,
 				assembly.alias
-				) AS searchAssemblyAlias",
+				) AS searchAliases",
 			't.quantity',
 			'task.quantity AS searchTaskQuantity',
-			't.accumulated_total * task.quantity AS searchTotalQuantity',
+			't.accumulated_total * task.quantity AS searchAccumlatedTotal',
 			't.assembly_group_to_assembly_id',
 			't.assembly_group_id',
 			't.task_to_assembly_to_assembly_to_assembly_group_id',
@@ -220,7 +198,7 @@ class TaskToAssembly extends ActiveRecord
 			"CONCAT_WS('$delimiter',
 				assemblyGroup.description,
 				t.comment
-				) AS searchAssemblyGroup",
+				) AS searchGroup",
 		);
 				
 		// join
@@ -234,24 +212,24 @@ class TaskToAssembly extends ActiveRecord
 		';
 		
 		// where
-		$criteria->compare('assembly.description',$this->searchAssemblyDescription,true);
+		$criteria->compare('assembly.description',$this->searchAssembly,true);
 		$this->compositeCriteria($criteria,
 			array(
 				'assemblyToClient.alias',
 				'assembly.alias'
 			),
-			$this->searchAssemblyAlias
+			$this->searchAliases
 		);
 		$this->compositeCriteria($criteria,
 			array(
 				'assemblyGroup.description',
 				't.comment'
 			),
-			$this->searchAssemblyGroup
+			$this->searchGroup
 		);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('task.quantity',$this->searchTaskQuantity);
-		$criteria->compare('t.searchTotalQuantity',$this->searchTotalQuantity);
+		$criteria->compare('t.searchAccumlatedTotal',$this->searchAccumlatedTotal);
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.task_id',$this->task_id);
 		$criteria->compare('t.parent_id',$this->parent_id);
@@ -263,12 +241,12 @@ class TaskToAssembly extends ActiveRecord
 	{
 		$columns[] = 'id';
  		$columns[] = 'parent_id';
-		$columns[] = 'searchAssemblyDescription';
- 		$columns[] = 'searchAssemblyAlias';
-		$columns[] = 'searchAssemblyGroup';
+		$columns[] = 'searchAssembly';
+ 		$columns[] = 'searchAliases';
+		$columns[] = 'searchGroup';
 		$columns[] = 'quantity';
 		$columns[] = 'searchTaskQuantity';
-		$columns[] = 'searchTotalQuantity';
+		$columns[] = 'searchAccumlatedTotal';
 
 		return $columns;
 	}
@@ -280,13 +258,13 @@ class TaskToAssembly extends ActiveRecord
 	public function getSearchSort()
 	{
 		return array(
-			'searchAssemblyDescription',
-			'searchAssemblyAlias',
-			'searchAssemblyGroup',
+			'searchAssembly',
+			'searchAliases',
+			'searchGroup',
 			'parent_id',
 			'quantity',
 			'searchTaskQuantity',
-			'searchTotalQuantity',
+			'searchAccumlatedTotal',
 		);
 	}
 	

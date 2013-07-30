@@ -46,28 +46,11 @@ class ProjectTemplate extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'client_id' => 'Client',
-			'searchClient' => 'Client',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
 		$criteria=new DbCriteria;
-
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.description',
-		);
 
 		// where
 		$criteria->compare('t.description',$this->description,true);
@@ -78,7 +61,7 @@ class ProjectTemplate extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('description');
+		$columns[] = 'description';
 		
 		return $columns;
 	}

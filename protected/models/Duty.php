@@ -88,7 +88,6 @@ class Duty extends CustomFieldActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'task_id' => 'Task',
 			'duty_step_id' => 'Duty',
 			'description' => 'Duty',
 			'responsible' => 'Assigned to',
@@ -130,7 +129,7 @@ class Duty extends CustomFieldActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = $this->linkThisColumn('description');
+        $columns[] = 'description';
         $columns[] = static::linkColumn('derived_assigned_to_name', 'User', 'derived_assigned_to_id');
 		$columns[] = 'due:date';
 		$columns[] = 'updated:datetime';

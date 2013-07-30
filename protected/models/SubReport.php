@@ -51,31 +51,11 @@ class SubReport extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'select' => 'Select',
-			'report_id' => 'Report',
-			'format' => 'Format',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
 		$criteria=new DbCriteria;
-
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.description',
-			't.format',
-			't.select',
-		);
 
 		// where
 		$criteria->compare('t.description', $this->description, true);
@@ -88,7 +68,7 @@ class SubReport extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('description');
+		$columns[] = 'description';
 		$columns[] = 'format';
 		$columns[] = 'select';
 		

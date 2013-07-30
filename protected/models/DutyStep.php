@@ -38,7 +38,7 @@ class DutyStep extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchCustomField;
-	public $searchAuthItem;
+	public $searchRole;
 	public $searchLevel;
 	/*
 	 * these just here for purpose of tabs - ensuring these variables exist ensures than can be added to the url from currrent $_GET
@@ -86,19 +86,6 @@ class DutyStep extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'lead_in_days' => 'Lead in days',
-			'searchIntegralTo' => 'Integral to', 
-			'searchAuthItem' => 'Role',
-			'searchLevel' => 'Level',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -113,7 +100,7 @@ class DutyStep extends ActiveRecord
 			't.comment',
 			't.lead_in_days',
 			'level0.name AS searchLevel',
-			'authItemName.name AS searchAuthItem',
+			'authItemName.name AS searchRole',
 		);
 
 		// where
@@ -122,7 +109,7 @@ class DutyStep extends ActiveRecord
 		$criteria->compare('t.action_id',$this->action_id);
 		$criteria->compare('t.lead_in_days',$this->lead_in_days);
 		$criteria->compare('level0.name',$this->searchLevel,true);
-		$criteria->compare('authItemName.name',$this->searchAuthItem, true);
+		$criteria->compare('authItemName.name',$this->searchRole, true);
 		
 		// with
 		$criteria->with = array(
@@ -135,10 +122,10 @@ class DutyStep extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('description');
+		$columns[] = 'description';
 		$columns[] = 'lead_in_days';
 		$columns[] = 'searchLevel';
-        $columns[] = 'searchAuthItem';
+        $columns[] = 'searchRole';
 		$columns[] = 'comment';
 		
 		return $columns;

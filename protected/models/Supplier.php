@@ -55,7 +55,7 @@ class Supplier extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = $this->imageColumn();
-		$columns[] = $this->linkThisColumn('name');
+		$columns[] = 'name';
 
 		return $columns;
 	}

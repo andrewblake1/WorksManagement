@@ -38,16 +38,6 @@ class AssemblyGroup extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'standard_id' => 'Standard',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -58,18 +48,13 @@ class AssemblyGroup extends ActiveRecord
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.standard_id',$this->standard_id);
 
-		$criteria->select=array(
-			't.id',
-			't.description',
-		);
-
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
 		$columns[] = 'id';
-		$columns[] = $this->linkThisColumn('description');
+		$columns[] = 'description';
 		
 		return $columns;
 	}

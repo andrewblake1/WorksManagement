@@ -32,13 +32,9 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchMaterialGroupDescription;
+	public $searchMaterialGroup;
 	
 	public $standard_id;
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Material group';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -69,18 +65,6 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'task_template_id' => 'Assembly',
-			'material_group_id' => 'Material group',
-			'searchMaterialGroupDescription' => 'Material group',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -92,7 +76,7 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.task_template_id',
 			't.material_group_id',
-			'materialGroup.description AS searchMaterialGroupDescription',
+			'materialGroup.description AS searchMaterialGroup',
 			't.select',
 			't.quantity_tooltip',
 			't.selection_tooltip',
@@ -102,7 +86,7 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
 			't.maximum',
 		);
 
-		$criteria->compare('materialGroup.description',$this->searchMaterialGroupDescription,true);
+		$criteria->compare('materialGroup.description',$this->searchMaterialGroup,true);
 		$criteria->compare('t.task_template_id',$this->task_template_id);
 		$criteria->compare('t.task_template_id',$this->task_template_id);
 		$criteria->compare('t.quantity',$this->quantity);
@@ -122,7 +106,7 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = $this->linkThisColumn('searchMaterialGroupDescription');
+        $columns[] = 'searchMaterialGroup';
  		$columns[] = 'comment';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
@@ -140,7 +124,7 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
 	public function getSearchSort()
 	{
 		return array(
-			'searchMaterialGroupDescription',
+			'searchMaterialGroup',
 		);
 	}
 
@@ -150,7 +134,7 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchMaterialGroupDescription',
+			'searchMaterialGroup',
 			'comment',
 		);
 	}

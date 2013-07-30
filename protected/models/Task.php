@@ -126,13 +126,9 @@ class Task extends CustomFieldActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'in_charge_id' => 'In charge',
 			'derived_in_charge' => 'In charge',
-			'task_template_id' => 'Template',
 			'derived_task_template_description' => 'Template',
-			'planned' => 'Planned',
 			'name' => 'Task',
-			'location' => 'Location',
 			'derived_earliest' => 'Earliest',
 			'preferred_mon' => 'Mo',
 			'preferred_tue' => 'Tu',
@@ -189,8 +185,8 @@ class Task extends CustomFieldActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns['id'] = $this->linkThisColumn('id');
-		$columns['name'] = $this->linkThisColumn('name');
+		$columns['id'] = 'id';
+		$columns['name'] = 'name';
 		$columns['quantity'] = 'quantity';
 		$columns['location'] = 'location';
         $columns['derived_in_charge'] = static::linkColumn('derived_in_charge', 'User', 'in_charge_id');
@@ -236,7 +232,6 @@ class Task extends CustomFieldActiveRecord
 	{
 		$displaAttr[]='id';
 		$displaAttr[]='name';
-//		$displaAttr[]='id0->name';
 
 		return $displaAttr;
 	}

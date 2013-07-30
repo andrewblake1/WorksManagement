@@ -11,11 +11,6 @@
 class DrawingToMaterial extends ActiveRecord
 {
 	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Material';
-	
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -35,29 +30,11 @@ class DrawingToMaterial extends ActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'drawing_id' => 'Drawing',
-		);
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
 		$criteria=new DbCriteria;
-
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.drawing_id',
-			't.description',
-			't.alias',
-		);
 
 		// where
 		$criteria->compare('t.drawing_id', $this->drawing_id);

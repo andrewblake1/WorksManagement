@@ -51,7 +51,6 @@ class ProjectToAuthItemToAuthAssignment extends ActiveRecord
 		return array(
 			'project_to_auth_item_id' => 'Role',
 			'auth_assignment_id' => 'User',
-			'searchUser' => 'User',
 		);
 	}
 

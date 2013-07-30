@@ -28,10 +28,6 @@ class TaskTemplateToAction extends ActiveRecord
 	 */
 	public $searchAction;
 	public $searchTaskTemplate;
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Action';
 
 	/**
 	 * Importance. These are the emum values set by the importance Custom field within 
@@ -90,20 +86,6 @@ class TaskTemplateToAction extends ActiveRecord
             'client' => array(self::BELONGS_TO, 'TaskTemplate', 'client_id'),
         );
     }
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'action_id' => 'Action',
-			'searchAction' => 'Action',
-			'task_template_id' => 'Client/Project type/Task type',
-			'searchTaskTemplate' => 'Client/Project type/Task type',
-			'importance' => 'Standard Optional',
-		));
-	}
 
 	/**
 	 * @return DbCriteria the search/filter conditions.

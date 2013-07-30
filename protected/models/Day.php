@@ -51,16 +51,6 @@ class Day extends ActiveRecord
         );
     }
 
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'in_charge_id' => 'In charge, First/Last/Email',
-			'searchInCharge' => 'In charge, First/Last/Email',
-			'scheduled' => 'Scheduled',
-			'name' => 'Comment',
-		));
-	}
-
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
@@ -106,8 +96,8 @@ class Day extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('id');
-		$columns[] = $this->linkThisColumn('searchName');
+		$columns[] = 'id';
+		$columns[] = 'searchName';
  		$columns[] = 'scheduled:date';
 		$columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
 		
@@ -182,7 +172,6 @@ class Day extends ActiveRecord
 	public function createSave(&$models=array())
 	{
 		// need to insert a row into the planning nested set model so that the id can be used here
-$t= $this->attributes;		
 		// create a root node
 		// NB: the project description is actually the name field in the nested set model
 		$planning = new Planning;

@@ -49,14 +49,6 @@ class Crew extends ActiveRecord
         );
     }
 
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'in_charge_id' => 'In charge, First/Last/Email',
-			'searchInCharge' => 'In charge, First/Last/Email',
-		));
-	}
-
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
@@ -98,7 +90,7 @@ class Crew extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('id');
+		$columns[] = 'id';
         $columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
 		
 		return $columns;

@@ -17,8 +17,8 @@
  */
 class AssemblyToClient extends ActiveRecord
 {
-	public $searchAssemblyDescription;
-	public $searchAssemblyAlias;
+	public $searchAssembly;
+	public $searchAlias;
 
 	/**
 	 * @var string nice model name for use in output
@@ -40,19 +40,6 @@ class AssemblyToClient extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'assembly_id' => 'Assembly',
-			'searchAssemblyDescription' => 'Assembly',
-			'searchAssemblyAlias' => 'Alias',
-			'client_id' => 'Client',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -62,15 +49,15 @@ class AssemblyToClient extends ActiveRecord
 		$delimiter = Yii::app()->params['delimiter']['display'];
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'assembly.description AS searchAssemblyDescription',
-			'assembly.alias AS searchAssemblyAlias',
+			'assembly.description AS searchAssembly',
+			'assembly.alias AS searchAlias',
 			't.alias',
 			'assembly_id',
 			't.client_id',
 		);
 
-		$criteria->compare('assembly.description',$this->searchAssemblyDescription,true);
-		$criteria->compare('assembly.alias',$this->searchAssemblyAlias,true);
+		$criteria->compare('assembly.description',$this->searchAssembly,true);
+		$criteria->compare('assembly.alias',$this->searchAlias,true);
 		$criteria->compare('t.client_id',$this->client_id,true);
 		$criteria->compare('t.alias',$this->alias);
 
@@ -81,8 +68,8 @@ class AssemblyToClient extends ActiveRecord
 
 	public function getAdminColumns()
 	{
- 		$columns[] = 'searchAssemblyDescription';
- 		$columns[] = 'searchAssemblyAlias';
+ 		$columns[] = 'searchAssembly';
+ 		$columns[] = 'searchAlias';
  		$columns[] = 'alias';
 
 		return $columns;
@@ -94,8 +81,8 @@ class AssemblyToClient extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchAssemblyDescription',
-			'searchAssemblyAlias',
+			'searchAssembly',
+			'searchAlias',
 			't.alias',
 		);
 	}

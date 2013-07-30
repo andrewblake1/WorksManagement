@@ -38,16 +38,6 @@ class ProjectType extends CategoryActiveRecord {
         );
     }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels() {
-		return array(
-			'client_id' => 'Client',
-			'project_template_id' => 'Template',
-		) + parent::attributeLabels();
-	}
-
 	public function scopeClient($client_id)
 	{
 		$criteria=new DbCriteria;

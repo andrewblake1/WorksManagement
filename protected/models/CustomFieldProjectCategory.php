@@ -25,7 +25,7 @@ class CustomFieldProjectCategory extends CategoryActiveRecord {
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Custom field set';
+	static $niceName = 'Field set';
 				
 	/**
 	 * @return array relational rules.
@@ -41,14 +41,5 @@ class CustomFieldProjectCategory extends CategoryActiveRecord {
             'customFieldToProjectTemplates1' => array(self::HAS_MANY, 'CustomFieldToProjectTemplate', 'custom_field_project_category_id'),
         );
     }
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels() {
-		return array(
-			'id' => 'Project category',
-		) + parent::attributeLabels();
-	}
 
 }

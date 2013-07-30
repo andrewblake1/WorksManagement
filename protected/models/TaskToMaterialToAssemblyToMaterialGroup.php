@@ -105,16 +105,6 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 		);
 	}
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'searchMaterialGroup' => 'Material group',
-		);
-	}
-	
 	public function assertFromParent($modelName = null) {
 		
 		// need to trick it here into using task to material model instead as this model not in navigation hierachy

@@ -29,7 +29,7 @@ class DutyStepDependency extends ActiveRecord
 	 */
 	static $niceName = 'Dependency';
 
-	public $searchChildDutyStep;
+	public $searchDependsOn;
 	public $searchLeadInDays;
 	protected $defaultSort = array(
 		'childDutyStep.lead_in_days'=>'DESC',
@@ -60,9 +60,6 @@ class DutyStepDependency extends ActiveRecord
         return array(
             'child_duty_step_id' => 'Depends on',
             'parent_duty_step_id' => 'Depended on by',
-            'action_id' => 'Action',
-			'searchChildDutyStep' => 'Depends on',
-			'searchLeadInDays' => 'Lead in days',
         );
     }
 
@@ -79,14 +76,14 @@ class DutyStepDependency extends ActiveRecord
 			't.action_id',
 			't.parent_duty_step_id',
 			't.child_duty_step_id',
-			'childDutyStep.description AS searchChildDutyStep',
+			'childDutyStep.description AS searchDependsOn',
 			'childDutyStep.lead_in_days AS searchLeadInDays',
 		);
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.action_id',$this->action_id);
 		$criteria->compareNull('t.parent_duty_step_id',$this->parent_duty_step_id);
-		$criteria->compare('childDutyStep.description',$this->searchChildDutyStep,true);
+		$criteria->compare('childDutyStep.description',$this->searchDependsOn,true);
 		$criteria->compare('childDutyStep.lead_in_days',$this->searchLeadInDays);
 
 		$criteria->with = array(
@@ -99,7 +96,7 @@ class DutyStepDependency extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchLeadInDays';
-		$columns[] = 'searchChildDutyStep';
+		$columns[] = 'searchDependsOn';
  		
 		return $columns;
 	}
@@ -107,7 +104,7 @@ class DutyStepDependency extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchChildDutyStep',
+			'searchDependsOn',
 		);
 	}
  

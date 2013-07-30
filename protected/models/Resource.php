@@ -22,11 +22,6 @@
  */
 class Resource extends ActiveRecord
 {
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Resource';
-
 	public $searchLevel;
 	public $searchAction;
 
@@ -45,20 +40,6 @@ class Resource extends ActiveRecord
             'taskTemplateToResources' => array(self::HAS_MANY, 'TaskTemplateToResource', 'resource_id'),
         );
     }
-
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'unit_price' => 'Unit price',
-			'maximum' => 'Maximum',
-			'searchLevel' => 'Level',
-			'searchAction' => 'Action',
-		));
-	}
 
 	/**
 	 * @return DbCriteria the search/filter conditions.

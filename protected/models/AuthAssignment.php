@@ -75,9 +75,6 @@ class AuthAssignment extends ActiveRecord
 		return parent::attributeLabels(array(
 			'itemname' => 'Role',
 			'userid' => 'User',
-			'searchUser' => 'User',
-			'bizrule' => 'Bizrule',
-			'data' => 'Data',
 		));
 	}
 
@@ -115,7 +112,7 @@ class AuthAssignment extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('itemname');
+		$columns[] = 'itemname';
  		
 		return $columns;
 	}

@@ -29,7 +29,7 @@ class Material extends ActiveRecord
 {
 	use FileActiveRecordTrait;
 
-	public $searchDrawingDescription;
+	public $searchDrawing;
 
 	/**
 	 * @return array relational rules.
@@ -52,19 +52,6 @@ class Material extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'unit' => 'Unit',
-			'standard_id' => 'Standard',
-			'drawing_id' => 'Drawing',
-			'searchDrawingDescription' => 'Drawing',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -82,7 +69,7 @@ class Material extends ActiveRecord
 			"CONCAT_WS('$delimiter',
 				drawing.alias,
 				drawing.description
-				) AS searchDrawingDescription",
+				) AS searchDrawing",
 		);
 
 		$criteria->compare('t.id', $this->id);
@@ -96,7 +83,7 @@ class Material extends ActiveRecord
 				'drawing.alias',
 				'drawing.description',
 			),
-			$this->searchDrawingDescription
+			$this->searchDrawing
 		);
 
 		$criteria->with = array(
@@ -109,11 +96,11 @@ class Material extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = $this->imageColumn();
-		$columns[] = $this->linkThisColumn('description');
+		$columns[] = 'description';
 		$columns[] = 'alias';
  		$columns[] = 'category';
 		$columns[] = 'unit';
-		$columns[] = static::linkColumn('searchDrawingDescription', 'Drawing', 'drawing_id');
+		$columns[] = static::linkColumn('searchDrawing', 'Drawing', 'drawing_id');
 
 		return $columns;
 	}

@@ -35,11 +35,6 @@ class Drawing extends ActiveRecord
 	protected $defaultSort = array('t.default_order');
 	
 	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Drawing';
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()
@@ -69,7 +64,6 @@ class Drawing extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'standard_id' => 'Standard',
 			'default_order' => 'Default order no.',
 		));
 	}

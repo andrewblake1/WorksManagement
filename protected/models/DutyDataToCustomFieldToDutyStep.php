@@ -21,8 +21,6 @@ class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchCustomFieldToDutyStep;
-	public $searchDutyData;
 	public $searchCustomField;
 	/**
 	 * @var string nice model name for use in output
@@ -50,11 +48,6 @@ class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'custom_field_to_duty_step_id' => 'Custom field',
-			'searchCustomFieldToDutyStep' => 'Custom field',
-			'duty_data_id' => 'Client/DutyData',
-			'searchDutyData' => 'Client/DutyData',
-			'custom_value' => 'Custom Value',
-			'searchCustomField' => 'Custom Value',
 		));
 	}
 

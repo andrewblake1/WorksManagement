@@ -109,10 +109,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'assembly_group_id' => 'Assembly Group',
 			'assembly_group_to_assembly_id' => 'Assembly Group',
-			'searchAssemblyGroup' => 'Assembly group',
-			'assembly_id' => 'Assembly',
 		);
 	}
 	

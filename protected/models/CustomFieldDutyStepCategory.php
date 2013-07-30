@@ -24,7 +24,7 @@ class CustomFieldDutyStepCategory extends CategoryActiveRecord {
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Custom field set';
+	static $niceName = 'Field set';
 
 	/**
 	 * @return array relational rules.
@@ -40,14 +40,5 @@ class CustomFieldDutyStepCategory extends CategoryActiveRecord {
             'customFieldToDutySteps1' => array(self::HAS_MANY, 'CustomFieldToDutyStep', 'custom_field_duty_step_category_id'),
         );
     }
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels() {
-		return array(
-			'id' => 'Duty step category',
-		) + parent::attributeLabels();
-	}
 
 }

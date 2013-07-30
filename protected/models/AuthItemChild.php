@@ -60,12 +60,6 @@ class AuthItemChild extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.child',
-		);	
-
 		// where
 		$criteria->compare('t.parent',$this->parent);
 		$criteria->compare('t.child',$this->child, true);
@@ -75,7 +69,7 @@ class AuthItemChild extends ActiveRecord
 
 	public function getAdminColumns()
 	{
- 		$columns[] = $this->linkThisColumn('child');
+ 		$columns[] = 'child';
 		
 		return $columns;
 	}

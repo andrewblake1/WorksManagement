@@ -72,9 +72,6 @@ class AuthItem extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'name' => 'Role',
-			'type' => 'Type',
-			'bizrule' => 'Bizrule',
-			'data' => 'Data',
 		));
 	}
 
@@ -97,7 +94,7 @@ class AuthItem extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('name');
+		$columns[] = 'name';
 		
 		return $columns;
 	}

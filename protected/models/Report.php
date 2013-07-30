@@ -41,8 +41,6 @@ class Report extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'template_html' => 'Template Html',
-			'context' => 'Context',
 			'sub_report_template' => 'Sub report',
 		));
 	}
@@ -72,7 +70,7 @@ class Report extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('description');
+		$columns[] = 'description';
 		$columns[] = 'context';
 		
 		return $columns;

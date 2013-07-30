@@ -24,11 +24,6 @@ class ResourceToSupplier extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchSupplier;
-
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Supplier';
 	
 	public function scopeResource($resourceId)
 	{
@@ -56,19 +51,6 @@ class ResourceToSupplier extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
         );
     }
-
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'resource_id' => 'Resource Type',
-			'supplier_id' => 'Supplier',
-			'searchSupplier' => 'Supplier',
-		));
-	}
 
 	/**
 	 * @return DbCriteria the search/filter conditions.

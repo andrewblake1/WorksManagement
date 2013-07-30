@@ -79,24 +79,6 @@ class Project extends CustomFieldActiveRecord
         );
     }
 
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'in_charge_id' => 'In charge, First/Last/Email',
-			'searchInCharge' => 'In charge, First/Last/Email',
-			'travel_time_1_way' => 'Travel time 1 way (HH:mm)',
-			'critical_completion' => 'Critical completion',
-			'planned' => 'Planned',
-			'project_type_id' => 'Project type',
-			'name' => 'Project name',
-			'searchProjectType' => 'Project type',
-		));
-	}
-
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */

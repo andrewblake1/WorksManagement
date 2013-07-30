@@ -33,16 +33,11 @@ class AssemblyToMaterial extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchMaterialDescription;
-	public $searchMaterialUnit;
-	public $searchMaterialAlias;
+	public $searchMaterial;
+	public $searchUnit;
+	public $searchAlias;
 	public $searchStage;
-	public $searchDetailDrawingDescription;
-
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Material';
+	public $searchDetailDrawing;
 
 	/**
 	 * @return array relational rules.
@@ -63,23 +58,6 @@ class AssemblyToMaterial extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'assembly_id' => 'Assembly',
-			'material_id' => 'Material/Unit/Alias/Stage',
-			'searchMaterialDescription' => 'Material',
-			'searchMaterialUnit' => 'Unit',
-			'searchMaterialAlias' => 'Alias',
-			'stage_id' => 'Stage',
-			'searchStage' => 'Stage',
-			'searchDetailDrawingDescription' => 'Detail drawing',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -91,14 +69,14 @@ class AssemblyToMaterial extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.assembly_id',
 			'stage.description AS searchStage',
-			'material.description AS searchMaterialDescription',
+			'material.description AS searchMaterial',
 			"CONCAT_WS('$delimiter',
 				detailDrawing.alias,
 				detailDrawing.description
-				) AS searchDetailDrawingDescription",
+				) AS searchDetailDrawing",
 			't.detail_drawing_id',
-			'material.unit AS searchMaterialUnit',
-			'material.alias AS searchMaterialAlias',
+			'material.unit AS searchUnit',
+			'material.alias AS searchAlias',
 			't.material_id',
 			't.quantity',
 			't.minimum',
@@ -111,13 +89,13 @@ class AssemblyToMaterial extends ActiveRecord
 				'detailDrawing.alias',
 				'detailDrawing.description',
 			),
-			$this->searchDetailDrawingDescription
+			$this->searchDetailDrawing
 		);
 
 		$criteria->compare('stage.description',$this->searchStage,true);
-		$criteria->compare('material.description',$this->searchMaterialDescription,true);
-		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
-		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
+		$criteria->compare('material.description',$this->searchMaterial,true);
+		$criteria->compare('material.unit',$this->searchUnit,true);
+		$criteria->compare('material.alias',$this->searchAlias,true);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.minimium',$this->minimum);
@@ -136,11 +114,11 @@ class AssemblyToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'searchMaterialDescription';
- 		$columns[] = 'searchMaterialUnit';
- 		$columns[] = 'searchMaterialAlias';
+		$columns[] = 'searchMaterial';
+ 		$columns[] = 'searchUnit';
+ 		$columns[] = 'searchAlias';
  		$columns[] = 'searchStage';
-		$columns[] = static::linkColumn('searchDetailDrawingDescription', 'Drawing', 'detail_drawing_id');
+		$columns[] = static::linkColumn('searchDetailDrawing', 'Drawing', 'detail_drawing_id');
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
@@ -156,9 +134,9 @@ class AssemblyToMaterial extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchMaterialDescription',
-			'searchMaterialUnit',
-			'searchMaterialAlias',
+			'searchMaterial',
+			'searchUnit',
+			'searchAlias',
 			'searchStage',
 		);
 	}

@@ -33,13 +33,8 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchAssemblyGroupDescription;
-	public $searchDetailDrawingDescription;
-
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Assembly group';
+	public $searchAssemblyGroup;
+	public $searchDetailDrawing;
 
 	/**
 	 * @return array relational rules.
@@ -59,21 +54,6 @@ class AssemblyToAssemblyGroup extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'assembly_id' => 'Assembly',
-			'assembly_group_id' => 'Assembly group',
-			'searchAssemblyGroupDescription' => 'Assembly group',
-			'quantity_tooltip' => 'Quantity tooltip',
-			'selection_tooltip' => 'Selection tooltip',
-			'searchDetailDrawingDescription' => 'Detail drawing',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -85,11 +65,11 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.assembly_id',
 			't.assembly_group_id',
-			'assemblyGroup.description AS searchAssemblyGroupDescription',
+			'assemblyGroup.description AS searchAssemblyGroup',
 			"CONCAT_WS('$delimiter',
 				detailDrawing.alias,
 				detailDrawing.description
-				) AS searchDetailDrawingDescription",
+				) AS searchDetailDrawing",
 			't.detail_drawing_id',
 			't.select',
 			't.quantity_tooltip',
@@ -100,7 +80,7 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 			't.maximum',
 		);
 
-		$criteria->compare('assemblyGroup.description',$this->searchAssemblyGroupDescription,true);
+		$criteria->compare('assemblyGroup.description',$this->searchAssemblyGroup,true);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
@@ -115,7 +95,7 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 				'detailDrawing.alias',
 				'detailDrawing.description',
 			),
-			$this->searchDetailDrawingDescription
+			$this->searchDetailDrawing
 		);
 
 		
@@ -129,9 +109,9 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = $this->linkThisColumn('searchAssemblyGroupDescription');
+        $columns[] = 'searchAssemblyGroup';
  		$columns[] = 'comment';
-		$columns[] = static::linkColumn('searchDetailDrawingDescription', 'Drawing', 'detail_drawing_id');
+		$columns[] = static::linkColumn('searchDetailDrawing', 'Drawing', 'detail_drawing_id');
  		$columns[] = 'selection_tooltip';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
@@ -148,7 +128,7 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchAssemblyGroupDescription',
+			'searchAssemblyGroup',
 			'comment',
 		);
 	}

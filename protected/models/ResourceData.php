@@ -45,18 +45,6 @@ class ResourceData extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'planning_id' => 'Planning',
-			'resource_id' => 'Resource',
-			'resource_to_supplier_id' => 'Supplier',
-		));
-	}
-
-	/**
 	 * Need to deal with level modification here as can't do easily within trigger due to trigger
 	 * not allowing modification of same table outside the row being modified. Could use blackhole table
 	 * with trigger on it to do what we need but can't see advantage over doing it in application here - would

@@ -46,18 +46,13 @@ class Client extends ActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.name',$this->name,true);
 
-		$criteria->select=array(
-			't.id',
-			't.name',
-		);
-
 		return $criteria;
 	}
 
 	public function getAdminColumns()
 	{
 		$columns[] = $this->imageColumn();
-        $columns[] = $this->linkThisColumn('name');
+        $columns[] = 'name';
 
 		return $columns;
 	}

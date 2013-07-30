@@ -35,14 +35,9 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchMaterialGroupDescription;
+	public $searchMaterialGroup;
 	public $searchStage;
-	public $searchDetailDrawingDescription;
-
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Material group';
+	public $searchDetailDrawing;
 
 	/**
 	 * @return array relational rules.
@@ -63,23 +58,6 @@ class AssemblyToMaterialGroup extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'assembly_id' => 'Assembly',
-			'material_group_id' => 'Material group/Stage',
-			'searchMaterialGroupDescription' => 'Material group',
-			'stage_id' => 'Stage',
-			'quantity_tooltip' => 'Quantity tooltip',
-			'selection_tooltip' => 'Selection tooltip',
-			'searchStage' => 'Stage',
-			'searchDetailDrawingDescription' => 'Detail drawing',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -92,11 +70,11 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			't.assembly_id',
 			'stage.description AS searchStage',
 			't.material_group_id',
-			'materialGroup.description AS searchMaterialGroupDescription',
+			'materialGroup.description AS searchMaterialGroup',
 			"CONCAT_WS('$delimiter',
 				detailDrawing.alias,
 				detailDrawing.description
-				) AS searchDetailDrawingDescription",
+				) AS searchDetailDrawing",
 			't.detail_drawing_id',
 			't.select',
 			't.quantity_tooltip',
@@ -107,7 +85,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 			't.maximum',
 		);
 
-		$criteria->compare('materialGroup.description',$this->searchMaterialGroupDescription,true);
+		$criteria->compare('materialGroup.description',$this->searchMaterialGroup,true);
 		$criteria->compare('stage.description',$this->searchStage,true);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
 		$criteria->compare('t.assembly_id',$this->assembly_id);
@@ -123,7 +101,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 				'detailDrawing.alias',
 				'detailDrawing.description',
 			),
-			$this->searchDetailDrawingDescription
+			$this->searchDetailDrawing
 		);
 
 		
@@ -138,9 +116,9 @@ class AssemblyToMaterialGroup extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = $this->linkThisColumn('searchMaterialGroupDescription');
+        $columns[] = 'searchMaterialGroup';
  		$columns[] = 'comment';
-		$columns[] = static::linkColumn('searchDetailDrawingDescription', 'Drawing', 'detail_drawing_id');
+		$columns[] = static::linkColumn('searchDetailDrawing', 'Drawing', 'detail_drawing_id');
  		$columns[] = 'selection_tooltip';
  		$columns[] = 'searchStage';
  		$columns[] = 'quantity';
@@ -158,7 +136,7 @@ class AssemblyToMaterialGroup extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchMaterialGroupDescription',
+			'searchMaterialGroup',
 			'comment',
 			'searchStage',
 		);

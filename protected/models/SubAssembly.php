@@ -28,13 +28,8 @@
  */
 class SubAssembly extends ActiveRecord
 {
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Sub assembly';
-
 	public $searchChildAssembly;
-	public $searchDetailDrawingDescription;
+	public $searchDetailDrawing;
 
 	protected $defaultSort = array('childAssembly.description');
 
@@ -61,11 +56,7 @@ class SubAssembly extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'standard_id' => 'Standard',
-			'parent_assembly_id' => 'Parent assembly',
 			'child_assembly_id' => 'Sub assembly',
-			'searchChildAssembly' => 'Child assembly',
-			'searchDetailDrawingDescription' => 'Detail drawing',
 		));
 	}
 
@@ -88,7 +79,7 @@ class SubAssembly extends ActiveRecord
 			"CONCAT_WS('$delimiter',
 				detailDrawing.alias,
 				detailDrawing.description
-				) AS searchDetailDrawingDescription",
+				) AS searchDetailDrawing",
 			't.detail_drawing_id',
 			't.select',
 			't.quantity_tooltip',
@@ -118,7 +109,7 @@ class SubAssembly extends ActiveRecord
 				'detailDrawing.alias',
 				'detailDrawing.description',
 			),
-			$this->searchDetailDrawingDescription
+			$this->searchDetailDrawing
 		);
 
 		$criteria->with = array(
@@ -133,7 +124,7 @@ class SubAssembly extends ActiveRecord
 	{
         $columns[] = 'searchChildAssembly';
   		$columns[] = 'comment';
-		$columns[] = static::linkColumn('searchDetailDrawingDescription', 'Drawing', 'detail_drawing_id');
+		$columns[] = static::linkColumn('searchDetailDrawing', 'Drawing', 'detail_drawing_id');
 		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';

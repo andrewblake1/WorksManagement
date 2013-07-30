@@ -31,10 +31,6 @@ class TaskToResource extends ActiveRecord
 	public $searchEstimatedTotalQuantity;
 	public $searchCalculatedTotalDuration;
 	public $searchCalculatedTotalQuantity;
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Resource';
 
 	public $estimated_total_quantity;
 	public $estimated_total_duration;
@@ -78,20 +74,14 @@ class TaskToResource extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'task_id' => 'Task',
-			'searchSupplier' => 'Supplier',
-			'searchResource' => 'Resource',
 			'resource_to_supplier_id' => 'Supplier',
-			'description' => 'Resource type',
-			'searchMode' => 'Mode',
-			'searchTaskQuantity' => 'Task quantity',
+			'description' => 'Resource',
 			'estimated_total_duration' => 'Override level duration',
 			'estimated_total_quantity' => 'Override level quantity',
 			'searchEstimatedTotalDuration' => 'Override level duration',
 			'searchEstimatedTotalQuantity' => 'Override level quantity',
 			'searchCalculatedTotalDuration' => 'Level duration',
 			'searchCalculatedTotalQuantity' => 'Level quantity',
-			'searchLevel' => 'Level',
 		));
 	}
 

@@ -43,7 +43,6 @@ class ProjectToAuthItem extends ActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'project_id' => 'Project',
 			'auth_item_name' => 'Role',
 		);
 	}
@@ -70,7 +69,7 @@ class ProjectToAuthItem extends ActiveRecord
 	
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('auth_item_name');
+		$columns[] = 'auth_item_name';
 		
 		return $columns;
 	}

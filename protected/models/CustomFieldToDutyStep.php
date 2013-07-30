@@ -32,7 +32,6 @@ class CustomFieldToDutyStep extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchDutyStep;
 	public $searchCustomFieldLabel;
 	public $searchCustomFieldComment;
 
@@ -69,13 +68,7 @@ class CustomFieldToDutyStep extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'duty_step_id' => 'Duty step',
-			'searchDutyStep' => 'Duty step',
 			'custom_field_duty_step_category_id' => 'Custom field set',
-			'custom_field_id' => 'Custom field',
-			'searchCustomFieldLabel' => 'Custom field',
-			'searchCustomFieldComment' => 'Custom field comment',
-            'label_override' => 'Label override',
 		));
 	}
 

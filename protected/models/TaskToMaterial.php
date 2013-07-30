@@ -26,18 +26,13 @@ class TaskToMaterial extends ActiveRecord
 
 	public $standard_id;
 
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Material';
-
 	public $searchStage;
-	public $searchMaterialDescription;
-	public $searchMaterialUnit;
-	public $searchMaterialGroup;
-	public $searchMaterialAlias;
+	public $searchMaterial;
+	public $searchUnit;
+	public $searchGroup;
+	public $searchAlias;
 	public $searchAssemblyQuantity;
-	public $searchTotalQuantity;
+	public $searchAccumlatedTotal;
 
 	public function tableName() {
 
@@ -114,34 +109,12 @@ class TaskToMaterial extends ActiveRecord
         );
     }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'material_id' => 'Material',
-			'searchTask' => 'Task',
-			'searchMaterialDescription' => 'Material',
-			'searchMaterialUnit' => 'Unit',
-			'searchMaterialAlias' => 'Alias',
-			'searchAssemblyQuantity' => 'Assembly quantity',
-			'search_task_quantity' => 'Task quantity',
-			'searchTotalQuantity' => 'Accumlated total',
-			'searchMaterialGroup' => 'Group',
-			'search_assembly' => 'Assembly',
-			'searchStage' => 'Stage',
-			'task_id' => 'Task',
-			'task_to_assembly_id' => 'Assembly',
-		));
-	}
-
 	static function getDisplayAttr()
 	{
 		return array(
-			'searchMaterialDescription',
-			'searchMaterialUnit',
-			'searchMaterialAlias',
+			'searchMaterial',
+			'searchUnit',
+			'searchAlias',
 		);
 	}
 
@@ -161,18 +134,18 @@ class TaskToMaterial extends ActiveRecord
 	{
 		$criteria=new DbCriteria;
 		$delimiter = Yii::app()->params['delimiter']['display'];
-$t = $this->tableName();	
+
 		// update
 		if(($this->tableName()) == 'tbl_task_to_material')
 		{
 			$criteria->select=array(
 				't.*',	// needed for delete and update buttons
-				'material.description AS searchMaterialDescription',
-				'material.unit AS searchMaterialUnit',
+				'material.description AS searchMaterial',
+				'material.unit AS searchUnit',
 				"CONCAT_WS('$delimiter',
 					materialToClient.alias,
 					material.alias
-					) AS searchMaterialAlias",
+					) AS searchAlias",
 			);
 
 			$criteria->compare('t.id',$this->id);
@@ -195,18 +168,18 @@ $t = $this->tableName();
 		$criteria->select=array(
 			't.*',
 			'stage.description AS searchStage',
-			'material.description AS searchMaterialDescription',
-			'material.unit AS searchMaterialUnit',
-			't.quantity * task.quantity * taskToAssembly.accumulated_total AS searchTotalQuantity',
+			'material.description AS searchMaterial',
+			'material.unit AS searchUnit',
+			't.quantity * task.quantity * taskToAssembly.accumulated_total AS searchAccumlatedTotal',
 			"CONCAT_WS('$delimiter',
 				materialToClient.alias,
 				material.alias
-				) AS searchMaterialAlias",
+				) AS searchAlias",
 			"taskToAssembly.accumulated_total AS searchAssemblyQuantity",
 			"CONCAT_WS('$delimiter',
 				materialGroup.description,
 				t.comment
-			) AS searchMaterialGroup",
+			) AS searchGroup",
 		);
 		
 		// join
@@ -222,14 +195,14 @@ $t = $this->tableName();
 		';
 		
 		// where
-		$criteria->compare('material.description',$this->searchMaterialDescription,true);
-		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
+		$criteria->compare('material.description',$this->searchMaterial,true);
+		$criteria->compare('material.unit',$this->searchUnit,true);
 		$this->compositeCriteria($criteria,
 			array(
 				'materialToClient.alias',
 				'material.alias'
 			),
-			$this->searchMaterialAlias
+			$this->searchAlias
 		);
 		$criteria->compare('t.search_assembly',$this->search_assembly,true);
 		$criteria->compare('stage.description',$this->searchStage,true);
@@ -238,13 +211,13 @@ $t = $this->tableName();
 			'materialGroup.description',
 			't.comment'
 			),
-			$this->searchMaterialGroup
+			$this->searchGroup
 		);
 		$criteria->compare('t.task_to_assembly_id',$this->task_to_assembly_id);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.search_task_quantity',$this->search_task_quantity);
 		$criteria->compare('t.searchAssemblyQuantity',$this->searchAssemblyQuantity);
-		$criteria->compare('t.searchTotalQuantity',$this->searchTotalQuantity);
+		$criteria->compare('t.searchAccumlatedTotal',$this->searchAccumlatedTotal);
 		$criteria->compare('t.task_id',$this->task_id);
 
 		return $criteria;
@@ -252,15 +225,15 @@ $t = $this->tableName();
 
 	public function getAdminColumns()
 	{
- 		$columns[] = 'searchMaterialDescription';
- 		$columns[] = 'searchMaterialUnit';
- 		$columns[] = 'searchMaterialAlias';
-		$columns[] = 'searchMaterialGroup';
+ 		$columns[] = 'searchMaterial';
+ 		$columns[] = 'searchUnit';
+ 		$columns[] = 'searchAlias';
+		$columns[] = 'searchGroup';
 		$columns[] = 'searchStage';
 		$columns[] = 'quantity';
 		$columns[] = 'search_task_quantity';
 		$columns[] = 'searchAssemblyQuantity';
-		$columns[] = 'searchTotalQuantity';
+		$columns[] = 'searchAccumlatedTotal';
 		$columns[] = static::linkColumn('search_assembly', 'TaskToAssembly', 'task_to_assembly_id');
 		
 		return $columns;
@@ -273,13 +246,13 @@ $t = $this->tableName();
 	public function getSearchSort()
 	{
 		return array(
-			'searchMaterialDescription',
-			'searchMaterialUnit',
-			'searchMaterialAlias',
-			'searchMaterialGroup',
+			'searchMaterial',
+			'searchUnit',
+			'searchAlias',
+			'searchGroup',
 			'searchAssemblyQuantity',
 			'searchStage',
-			'searchTotalQuantity',
+			'searchAccumlatedTotal',
 		);
 	}
 

@@ -106,18 +106,6 @@ class Action extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'standard_id' => 'Standard',
-			'drawing_id' => 'Drawing',
-			'searchOverride' => 'Replace',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()

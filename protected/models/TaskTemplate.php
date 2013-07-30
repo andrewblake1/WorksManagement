@@ -81,34 +81,11 @@ class TaskTemplate extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'project_template_id' => 'Project type',
-			'unit_price' => 'Unit price',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
 		$criteria=new DbCriteria;
-
-		// select
-		$criteria->select=array(
-			't.id',	// needed for delete and update buttons
-			't.description',
-			't.unit_price',
-			't.select',
-			't.quantity_tooltip',
-			't.quantity',
-			't.minimum',
-			't.maximum',
-		);
 
 		// where
 		$criteria->compare('t.description',$this->description,true);
@@ -125,7 +102,7 @@ class TaskTemplate extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('description');
+		$columns[] = 'description';
 		$columns[] = 'unit_price';
   		$columns[] = 'quantity';
  		$columns[] = 'minimum';

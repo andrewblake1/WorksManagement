@@ -150,21 +150,6 @@ class CustomField extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute descriptions (name=>description)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'mandatory' => 'Mandatory',
-			'allow_new' => 'Allow new',
-			'validation_type' => 'Validation type',
-			'data_type' => 'Data type',
-			'validation_text' => 'Validation text',
-			'validation_error' => 'Validation error',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -195,7 +180,7 @@ class CustomField extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('label');
+		$columns[] = 'label';
 		$columns[] = 'mandatory:boolean';
 		$columns[] = 'allow_new:boolean';
 		$columns[] = 'validation_type';

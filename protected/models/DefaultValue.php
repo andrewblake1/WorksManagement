@@ -16,11 +16,6 @@
 class DefaultValue extends ActiveRecord
 {
 	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Default';
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()
@@ -31,18 +26,6 @@ class DefaultValue extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
         );
     }
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'table' => 'Table',
-			'column' => 'Attribute',
-			'select' => 'Select',
-		));
-	}
 
 	/**
 	 * @return DbCriteria the search/filter conditions.

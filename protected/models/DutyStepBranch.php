@@ -46,7 +46,6 @@ class DutyStepBranch extends ActiveRecord
 	{
 		return array(
 			'custom_field_to_duty_step_id' => 'Custom field',
-			'searchCustomField' => 'Custom field',
 		);
 	}
 

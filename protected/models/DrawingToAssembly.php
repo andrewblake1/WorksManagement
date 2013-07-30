@@ -11,37 +11,11 @@
 class DrawingToAssembly extends ActiveRecord
 {
 	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Assembly';
-	
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
 		return 'v_drawing_to_assembly';
-	}
-
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-		);
-	}
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'drawing_id' => 'Drawing',
-		);
 	}
 
 	/**

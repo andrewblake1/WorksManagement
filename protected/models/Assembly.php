@@ -32,7 +32,7 @@ class Assembly extends ActiveRecord
 {
 	protected $defaultSort = array('t.description');
 	
-	public $searchDrawingDescription;
+	public $searchDrawing;
 
 	/**
 	 * @return array relational rules.
@@ -59,17 +59,6 @@ class Assembly extends ActiveRecord
         );
     }
 
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'searchDrawingDescription' => 'Drawing',
-		));
-	}
-
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
@@ -86,20 +75,20 @@ class Assembly extends ActiveRecord
 			"CONCAT_WS('$delimiter',
 				drawing.alias,
 				drawing.description
-				) AS searchDrawingDescription",
+				) AS searchDrawing",
 		);
 		
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.description',$this->description,true);
 		$criteria->compare('t.alias',$this->alias,true);
 		$criteria->compare('t.standard_id',$this->standard_id);
-		$criteria->compare('drawing.description',$this->searchDrawingDescription,true);
+		$criteria->compare('drawing.description',$this->searchDrawing,true);
 		$this->compositeCriteria($criteria,
 			array(
 				'drawing.alias',
 				'drawing.description',
 			),
-			$this->searchDrawingDescription
+			$this->searchDrawing
 		);
 
 		$criteria->with=array(
@@ -113,7 +102,7 @@ class Assembly extends ActiveRecord
 	{
         $columns[] = 'description';
 		$columns[] = 'alias';
-		$columns[] = static::linkColumn('searchDrawingDescription', 'Drawing', 'drawing_id');
+		$columns[] = static::linkColumn('searchDrawing', 'Drawing', 'drawing_id');
  		
 		return $columns;
 	}

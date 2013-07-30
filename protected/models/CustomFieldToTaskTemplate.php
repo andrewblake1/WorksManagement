@@ -32,7 +32,6 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchTaskTemplate;
 	public $searchCustomFieldLabel;
 	public $searchCustomFieldComment;
 	
@@ -58,16 +57,7 @@ class CustomFieldToTaskTemplate extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'task_template_id' => 'Task template',
-			'searchTaskTemplate' => 'Task templat',
 			'custom_field_task_category_id' => 'Custom field set',
-			'searchCustomFieldTaskCategory' => 'Custom field set',
-			'custom_field_id' => 'Custom field',
-			'show_in_admin' => 'Show in admin page',
-			'show_in_planning' => 'Show in planning page',
-			'searchCustomFieldLabel' => 'Custom field',
-			'searchCustomFieldComment' => 'Custom field comment',
-            'label_override' => 'Label override',
 		));
 	}
 

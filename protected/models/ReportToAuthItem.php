@@ -41,7 +41,6 @@ class ReportToAuthItem extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'report_id' => 'Report',
 			'auth_item_name' => 'Role',
 		));
 	}
@@ -68,7 +67,7 @@ class ReportToAuthItem extends ActiveRecord
 	
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('auth_item_name');
+		$columns[] = 'auth_item_name';
 		
 		return $columns;
 	}

@@ -28,11 +28,6 @@ class ProjectToClientContact extends ActiveRecord
 	public $searchPhoneFax;
 
 	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Contact';
-
-	/**
 	 * @return array relational rules.
 	 */
 	public function relations()
@@ -46,26 +41,6 @@ class ProjectToClientContact extends ActiveRecord
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
         );
     }
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'project_id' => 'Project',
-			'client_id' => 'Client',
-			'client_contact_id' => 'Contact',
-			'searchRole' => 'Role',
-			'searchFirstName' => 'First name',
-			'searchLastName' => 'Last name',
-			'searchEmail' => 'Email',
-			'searchPhoneMobile' => 'Phone mobile',
-			'searchPhoneHome' => 'Phone home',
-			'searchPhoneWork' => 'Phone work',
-			'searchPhoneFax' => 'Phone fax',
-		));
-	}
 
 	/**
 	 * @return DbCriteria the search/filter conditions.
@@ -111,8 +86,8 @@ class ProjectToClientContact extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[]='searchRole';
-		$columns[]=$this->linkThisColumn('searchFirstName');
-		$columns[]=$this->linkThisColumn('searchLastName');
+		$columns[]='searchFirstName';
+		$columns[]='searchLastName';
         $columns[] = array(
 			'name'=>'searchPhoneMobile',
 			'value'=>'CHtml::link($data->searchPhoneMobile, "tel:".$data->searchPhoneMobile)',

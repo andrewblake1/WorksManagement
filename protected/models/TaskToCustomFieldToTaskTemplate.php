@@ -41,21 +41,6 @@ class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
         );
     }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'custom_field_to_task_template_id' => 'Task type/Custom field)',
-			'searchCustomFieldToTaskTemplate' => 'Task type/Custom field)',
-			'task_id' => 'Client/Task',
-			'searchTask' => 'Client/Task',
-			'custom_value' => 'Custom value',
-			'searchCustomField' => 'Custom value',
-		));
-	}
-
 	public function getSearchCriteria()
 	{
 		$criteria=new DbCriteria;

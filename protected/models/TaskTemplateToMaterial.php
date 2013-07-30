@@ -26,17 +26,12 @@ class TaskTemplateToMaterial extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchMaterialDescription;
-	public $searchMaterialUnit;
-	public $searchMaterialAlias;
+	public $searchDescription;
+	public $searchUnit;
+	public $searchAlias;
 
 	public $standard_id;
 	public $clientAlias;
-
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Material';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -65,22 +60,6 @@ class TaskTemplateToMaterial extends ActiveRecord
         );
     }
 
-
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'task_template_id' => 'Task Type',
-//			'material_id' => 'Material',
-			'searchMaterialDescription' => 'Material',
-			'searchMaterialUnit' => 'Unit',
-			'searchMaterialAlias' => 'Alias',
-		));
-	}
-
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
@@ -94,12 +73,12 @@ class TaskTemplateToMaterial extends ActiveRecord
 			't.id',	// needed for delete and update buttons
 			't.material_id',
 			't.task_template_id',
-			'material.description AS searchMaterialDescription',
-			'material.unit AS searchMaterialUnit',
+			'material.description AS searchDescription',
+			'material.unit AS searchUnit',
 			"CONCAT_WS('$delimiter',
 				material.alias,
 				materialToClient.alias
-			) AS searchMaterialAlias",
+			) AS searchAlias",
 			't.quantity',
 			't.minimum',
 			't.maximum',
@@ -116,9 +95,9 @@ class TaskTemplateToMaterial extends ActiveRecord
 		
 		// where
 		$criteria->compare('t.task_template_id',$this->task_template_id);
-		$criteria->compare('material.description',$this->searchMaterialDescription,true);
-		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
-		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
+		$criteria->compare('material.description',$this->searchDescription,true);
+		$criteria->compare('material.unit',$this->searchUnit,true);
+		$criteria->compare('material.alias',$this->searchAlias,true);
 		$criteria->compare('t.quantity',$this->quantity);
 		$criteria->compare('t.minimium',$this->minimum);
 		$criteria->compare('t.maximum',$this->maximum);
@@ -135,9 +114,9 @@ class TaskTemplateToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'searchMaterialDescription';
- 		$columns[] = 'searchMaterialUnit';
- 		$columns[] = 'searchMaterialAlias';
+		$columns[] = 'searchDescription';
+ 		$columns[] = 'searchUnit';
+ 		$columns[] = 'searchAlias';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
@@ -153,10 +132,9 @@ class TaskTemplateToMaterial extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-//			'taskTemplate->description',
-			'searchMaterialDescription',
-			'searchMaterialUnit',
-			'searchMaterialAlias',
+			'searchDescription',
+			'searchUnit',
+			'searchAlias',
 		);
 	}
 
@@ -167,9 +145,9 @@ class TaskTemplateToMaterial extends ActiveRecord
 	public function getSearchSort()
 	{
 		return array(
-			'searchMaterialDescription',
-			'searchMaterialUnit',
-			'searchMaterialAlias',
+			'searchDescription',
+			'searchUnit',
+			'searchAlias',
 		);
 	}
 

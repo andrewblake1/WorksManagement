@@ -20,10 +20,10 @@
  */
 class MaterialToClient extends ActiveRecord
 {
-	public $searchMaterialDescription;
-	public $searchMaterialUnit;
-	public $searchMaterialAlias;
-	public $searchSupplierName;
+	public $searchMaterial;
+	public $searchUnit;
+	public $searchAlias;
+	public $searchSupplier;
 
 	/**
 	 * @var string nice model name for use in output
@@ -51,14 +51,7 @@ class MaterialToClient extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'unit_price' => 'Unit price',
-			'material_id' => 'Material/Unit/Alias',
-			'client_id' => 'Client',
 			'alias' => 'Client alias',
-			'searchMaterialDescription' => 'Material',
-			'searchMaterialUnit' => 'Unit',
-			'searchMaterialAlias' => 'Alias',
-			'searchSupplierName' => 'Supplier',
 		));
 	}
 
@@ -73,19 +66,19 @@ class MaterialToClient extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.material_id',
-			'material.description AS searchMaterialDescription',
-			'material.unit AS searchMaterialUnit',
-			'material.alias AS searchMaterialAlias',
-			'supplier.name AS searchSupplierName',
+			'material.description AS searchMaterial',
+			'material.unit AS searchUnit',
+			'material.alias AS searchAlias',
+			'supplier.name AS searchSupplier',
 			't.unit_price',
 			"t.alias",
 			't.client_id',
 		);
 
-		$criteria->compare('material.description',$this->searchMaterialDescription,true);
-		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
-		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
-		$criteria->compare('supplier.name',$this->searchSupplierName,true);
+		$criteria->compare('material.description',$this->searchMaterial,true);
+		$criteria->compare('material.unit',$this->searchUnit,true);
+		$criteria->compare('material.alias',$this->searchAlias,true);
+		$criteria->compare('supplier.name',$this->searchSupplier,true);
 		$criteria->compare('t.alias',$this->alias,true);
  		$criteria->compare('t.client_id',$this->client_id);
 		$criteria->compare('t.unit_price', $this->unit_price);
@@ -100,11 +93,11 @@ class MaterialToClient extends ActiveRecord
 
 	public function getAdminColumns()
 	{
- 		$columns[] = 'searchMaterialDescription';
+ 		$columns[] = 'searchMaterial';
  		$columns[] = 'category';
- 		$columns[] = 'searchMaterialUnit';
- 		$columns[] = 'searchMaterialAlias';
- 		$columns[] = 'searchSupplierName';
+ 		$columns[] = 'searchUnit';
+ 		$columns[] = 'searchAlias';
+ 		$columns[] = 'searchSupplier';
  		$columns[] = 'alias';
 		$columns[] = 'unit_price';
 
@@ -117,9 +110,9 @@ class MaterialToClient extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchMaterialDescription',
-			'searchMaterialUnit',
-			'searchMaterialAlias',
+			'searchMaterial',
+			'searchUnit',
+			'searchAlias',
 			't.alias',
 		);
 	}

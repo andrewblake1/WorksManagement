@@ -27,10 +27,6 @@ class TaskTemplateToResource extends ActiveRecord
 	public $searchResource;
 	public $searchTaskTemplate;
 	public $searchMode;
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Resource';
 
 	/**
 	 * @return array relational rules.
@@ -46,19 +42,6 @@ class TaskTemplateToResource extends ActiveRecord
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
         );
     }
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'task_template_id' => 'Task Type',
-			'resource_id' => 'Resource Type',
-			'duration' => 'Duration (HH:mm)',
-			'searchMode' => 'Mode',
-		));
-	}
 
 	/**
 	 * @return DbCriteria the search/filter conditions.

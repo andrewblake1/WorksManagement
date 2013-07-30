@@ -21,7 +21,6 @@ class ProjectToCustomFieldToProjectTemplate extends CustomValueActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchCustomFieldToProjectTemplate;
 	public $searchProject;
 	public $searchCustomField;
 	/**
@@ -50,11 +49,6 @@ class ProjectToCustomFieldToProjectTemplate extends CustomValueActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'custom_field_to_project_template_id' => 'Custom field',
-			'searchCustomFieldToProjectTemplate' => 'Custom field',
-			'project_id' => 'Client/Project',
-			'searchProject' => 'Client/Project',
-			'custom_value' => 'Custom Value',
-			'searchCustomField' => 'Custom Value',
 		));
 	}
 

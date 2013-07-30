@@ -16,10 +16,6 @@
  */
 class TaskToAction extends ViewActiveRecord
 {
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Action';
 	
 	/**
 	 * @return string the associated database table name
@@ -75,7 +71,6 @@ class TaskToAction extends ViewActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'task_id' => 'Task',
 			'description' => 'Action',
 			'derived_importance' => 'Importance',
 		));

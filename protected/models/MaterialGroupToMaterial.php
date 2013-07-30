@@ -28,14 +28,9 @@ class MaterialGroupToMaterial extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchMaterialDescription;
-	public $searchMaterialUnit;
-	public $searchMaterialAlias;
-
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Material';
+	public $searchMaterial;
+	public $searchUnit;
+	public $searchAlias;
 	
 	/**
 	 * @return array relational rules.
@@ -58,20 +53,6 @@ class MaterialGroupToMaterial extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'material_group_id' => 'Material Group',
-//			'material_id' => 'Material group/Material/Unit/Alias',
-			'searchMaterialDescription' => 'Material',
-			'searchMaterialUnit' => 'Unit',
-			'searchMaterialAlias' => 'Alias',
-		);
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -83,16 +64,16 @@ class MaterialGroupToMaterial extends ActiveRecord
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
 			't.material_group_id',
-			'material.description AS searchMaterialDescription',
-			'material.unit AS searchMaterialUnit',
-			'material.alias AS searchMaterialAlias',
+			'material.description AS searchMaterial',
+			'material.unit AS searchUnit',
+			'material.alias AS searchAlias',
 		);
 
 		// where
 		$criteria->compare('material_group_id',$this->material_group_id);
-		$criteria->compare('material.description',$this->searchMaterialDescription,true);
-		$criteria->compare('material.unit',$this->searchMaterialUnit,true);
-		$criteria->compare('material.alias',$this->searchMaterialAlias,true);
+		$criteria->compare('material.description',$this->searchMaterial,true);
+		$criteria->compare('material.unit',$this->searchUnit,true);
+		$criteria->compare('material.alias',$this->searchAlias,true);
  
 		// with
 		$criteria->with = array(
@@ -104,9 +85,9 @@ class MaterialGroupToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'searchMaterialDescription';
- 		$columns[] = 'searchMaterialUnit';
- 		$columns[] = 'searchMaterialAlias';
+		$columns[] = 'searchMaterial';
+ 		$columns[] = 'searchUnit';
+ 		$columns[] = 'searchAlias';
 		
 		return $columns;
 	}
@@ -118,9 +99,9 @@ class MaterialGroupToMaterial extends ActiveRecord
 	{
 		return array(
 //			'materialGroup->description',
-			'searchMaterialDescription',
-			'searchMaterialUnit',
-			'searchMaterialAlias',
+			'searchMaterial',
+			'searchUnit',
+			'searchAlias',
 		);
 	}
 

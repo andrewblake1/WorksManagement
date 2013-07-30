@@ -86,8 +86,6 @@
  */
 class User extends ContactActiveRecord
 {
-	static $niceNamePlural = 'User';
-
 	public $first_name;
 	public $last_name;
 	public $phone_mobile;
@@ -189,16 +187,6 @@ class User extends ContactActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'password' => 'Password',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -231,9 +219,9 @@ class User extends ContactActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = $this->linkThisColumn('id');
-		$columns[] = $this->linkThisColumn('first_name');
-		$columns[] = $this->linkThisColumn('last_name');
+		$columns[] = 'id';
+		$columns[] = 'first_name';
+		$columns[] = 'last_name';
         $columns[] = array(
 			'name'=>'phone_mobile',
 			'value'=>'CHtml::link($data->phone_mobile, "tel:".$data->phone_mobile)',

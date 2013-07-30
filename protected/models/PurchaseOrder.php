@@ -37,18 +37,6 @@ class PurchaseOrder extends ActiveRecord
     }
 
 	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'supplier_id' => 'Supplier',
-			'searchSupplier' => 'Supplier',
-			'number' => 'Number',
-		));
-	}
-
-	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -73,9 +61,8 @@ class PurchaseOrder extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-//		$columns[] = 'id';
         $columns[] = static::linkColumn('searchSupplier', 'Supplier', 'supplier_id');
-		$columns[] = $this->linkThisColumn('number');
+		$columns[] = 'number';
 		
 		return $columns;
 	}

@@ -79,7 +79,7 @@ class DashboardDuty extends Duty
 
 	public function getAdminColumns()
 	{
-        $columns[] = $this->linkThisColumn('description');
+        $columns[] = 'description';
 		$columns[] = 'project_name';
 		$columns[] = 'wbs';
 		$columns[] = 'action_description';

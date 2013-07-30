@@ -16,11 +16,6 @@
  */
 class DutyStepToMode extends ActiveRecord
 {
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Mode';
-
 	public $searchMode;
 
 	/**
@@ -34,16 +29,6 @@ class DutyStepToMode extends ActiveRecord
 			'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
 			'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-		);
-	}
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'searchMode' => 'Mode',
 		);
 	}
 
