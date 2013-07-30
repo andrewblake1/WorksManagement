@@ -124,10 +124,10 @@ EOD;
 			$this->_authManager->createOperation('ProjectTemplateToCustomFieldRead', 'ProjectTemplateToCustomField read');
 			$task->addChild('ProjectTemplateToCustomFieldRead');
 
-			$task=$this->_authManager->createTask('CustomFieldToTaskTemplate', 'CustomFieldToTaskTemplate task');
-			$systemAdminRole->addChild('CustomFieldToTaskTemplate');
-			$this->_authManager->createOperation('CustomFieldToTaskTemplateRead', 'CustomFieldToTaskTemplate read');
-			$task->addChild('CustomFieldToTaskTemplateRead');
+			$task=$this->_authManager->createTask('TaskTemplateToCustomField', 'TaskTemplateToCustomField task');
+			$systemAdminRole->addChild('TaskTemplateToCustomField');
+			$this->_authManager->createOperation('TaskTemplateToCustomFieldRead', 'TaskTemplateToCustomField read');
+			$task->addChild('TaskTemplateToCustomFieldRead');
 
 			$task=$this->_authManager->createTask('CustomField', 'CustomField task');
 			$systemAdminRole->addChild('CustomField');

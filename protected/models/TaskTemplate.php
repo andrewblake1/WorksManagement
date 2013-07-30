@@ -19,7 +19,7 @@
  *
  * The followings are the available model relations:
  * @property CustomFieldTaskCategory[] $customFieldTaskCategories
- * @property CustomFieldToTaskTemplate[] $customFieldToTaskTemplates
+ * @property TaskTemplateToCustomField[] $taskTemplateToCustomFields
  * @property Task[] $tasks
  * @property User $updatedBy
  * @property ProjectTemplate $projectTemplate
@@ -64,7 +64,7 @@ class TaskTemplate extends ActiveRecord
             'customFieldTaskCategories' => array(self::HAS_MANY, 'CustomFieldTaskCategory', 'task_template_id'),
 // NB: be very careful when updating as gii or mysql workbench only giving the next relation if double up on the index custom field to task template!!!!!
 // and we need it!
-            'customFieldToTaskTemplates' => array(self::HAS_MANY, 'CustomFieldToTaskTemplate', 'task_template_id'),
+            'taskTemplateToCustomFields' => array(self::HAS_MANY, 'TaskTemplateToCustomField', 'task_template_id'),
             'tasks' => array(self::HAS_MANY, 'Task', 'task_template_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),

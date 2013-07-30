@@ -23,9 +23,9 @@ class TaskController extends Controller
 			$this->widget('CustomFieldWidgets',array(
 				'model'=>$model,
 				'form'=>new WMTbActiveForm(),
-				'relationModelToCustomFieldModelTemplate'=>'taskToCustomFieldToTaskTemplate',
-				'relationModelToCustomFieldModelTemplates'=>'taskToCustomFieldToTaskTemplates',
-				'relationCustomFieldModelTemplate'=>'customFieldToTaskTemplate',
+				'relationModelToCustomFieldModelTemplate'=>'taskToTaskTemplateToCustomField',
+				'relationModelToCustomFieldModelTemplates'=>'taskToTaskTemplateToCustomFields',
+				'relationCustomFieldModelTemplate'=>'taskTemplateToCustomField',
 				'relation_category'=>'customFieldTaskCategory',
 				'categoryModelName'=>'CustomFieldTaskCategory',
 			));

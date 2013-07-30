@@ -79,9 +79,9 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	$this->widget('CustomFieldWidgets',array(
 		'model'=>$model,
 		'form'=>$form,
-		'relationModelToCustomFieldModelTemplate'=>'taskToCustomFieldToTaskTemplate',
-		'relationModelToCustomFieldModelTemplates'=>'taskToCustomFieldToTaskTemplates',
-		'relationCustomFieldModelTemplate'=>'customFieldToTaskTemplate',
+		'relationModelToCustomFieldModelTemplate'=>'taskToTaskTemplateToCustomField',
+		'relationModelToCustomFieldModelTemplates'=>'taskToTaskTemplateToCustomFields',
+		'relationCustomFieldModelTemplate'=>'taskTemplateToCustomField',
 		'relation_category'=>'customFieldTaskCategory',
 		'categoryModelName'=>'CustomFieldTaskCategory',
 	));

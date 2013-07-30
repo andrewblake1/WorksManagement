@@ -32,7 +32,7 @@
  * @property Planning $id0
  * @property Mode $mode
  * @property TaskToAssembly[] $taskToAssemblies
- * @property TaskToCustomFieldToTaskTemplate[] $taskToCustomFieldToTaskTemplates
+ * @property TaskToTaskTemplateToCustomField[] $taskToTaskTemplateToCustomFields
  * @property TaskToMaterial[] $taskToMaterials
  * @property TaskToResource[] $taskToResources
  */
@@ -54,12 +54,12 @@ class Task extends CustomFieldActiveRecord
 	public $preferred = array();
 	
 	// CustomFieldActiveRecord
-	protected $evalCustomFieldPivots = '$this->taskTemplate->customFieldToTaskTemplates';
-	protected $evalClassEndToCustomFieldPivot = 'TaskToCustomFieldToTaskTemplate';
-	protected $evalColumnCustomFieldModelTemplateId = 'custom_field_to_task_template_id';
+	protected $evalCustomFieldPivots = '$this->taskTemplate->taskTemplateToCustomFields';
+	protected $evalClassEndToCustomFieldPivot = 'TaskToTaskTemplateToCustomField';
+	protected $evalColumnCustomFieldModelTemplateId = 'task_template_to_custom_field_id';
 	protected $evalColumnEndId = 'task_id';
-	protected $evalEndToCustomFieldPivots = '$this->taskToCustomFieldToTaskTemplates';
-	protected $evalCustomFieldPivot = 'customFieldToTaskTemplate';
+	protected $evalEndToCustomFieldPivots = '$this->taskToTaskTemplateToCustomFields';
+	protected $evalCustomFieldPivot = 'taskTemplateToCustomField';
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -112,7 +112,7 @@ class Task extends CustomFieldActiveRecord
             'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
             'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
-            'taskToCustomFieldToTaskTemplates' => array(self::HAS_MANY, 'TaskToCustomFieldToTaskTemplate', 'task_id'),
+            'taskToTaskTemplateToCustomFields' => array(self::HAS_MANY, 'TaskToTaskTemplateToCustomField', 'task_id'),
             'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_id'),
             'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'task_id'),
         );
@@ -210,10 +210,10 @@ class Task extends CustomFieldActiveRecord
 			// if not already in our list of columns to show
 			if(!array_key_exists($tempTableColumnName, $columns))
 			{
-				$customFieldToTaskTemplate = CustomFieldToTaskTemplate::model()->findByPk(str_replace('custom_field_to_task_template_id_', '', $tempTableColumnName));
-				$label = $customFieldToTaskTemplate->label_override
-					? $customFieldToTaskTemplate->label_override
-					: $customFieldToTaskTemplate->customField->label;
+				$taskTemplateToCustomField = TaskTemplateToCustomField::model()->findByPk(str_replace('task_template_to_custom_field_id_', '', $tempTableColumnName));
+				$label = $taskTemplateToCustomField->label_override
+					? $taskTemplateToCustomField->label_override
+					: $taskTemplateToCustomField->customField->label;
 				
 				// use setter to dynamically create an attribute
 				$columns[] = "$tempTableColumnName::$label";

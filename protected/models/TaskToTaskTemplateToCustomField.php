@@ -1,31 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "tbl_task_to_custom_field_to_task_template".
+ * This is the model class for table "tbl_task_to_task_template_to_custom_field".
  *
- * The followings are the available columns in table 'tbl_task_to_custom_field_to_task_template':
+ * The followings are the available columns in table 'tbl_task_to_task_template_to_custom_field':
  * @property string $id
  * @property string $task_id
- * @property integer $custom_field_to_task_template_id
+ * @property integer $task_template_to_custom_field_id
  * @property string $custom_value
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property Task $task
  * @property User $updatedBy
- * @property CustomFieldToTaskTemplate $customFieldToTaskTemplate
+ * @property TaskTemplateToCustomField $taskTemplateToCustomField
  */
-class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
+class TaskToTaskTemplateToCustomField extends CustomValueActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchCustomField;
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Custom field';
 	
 	/**
 	 * @return array relational rules.
@@ -37,7 +33,7 @@ class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
         return array(
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'customFieldToTaskTemplate' => array(self::BELONGS_TO, 'CustomFieldToTaskTemplate', 'custom_field_to_task_template_id'),
+            'taskTemplateToCustomField' => array(self::BELONGS_TO, 'TaskTemplateToCustomField', 'task_template_to_custom_field_id'),
         );
     }
 
@@ -48,7 +44,7 @@ class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'COALESCE(customFieldToTaskTemplate.label_override, customField.label) AS searchCustomField',
+			'COALESCE(taskTemplateToCustomField.label_override, customField.label) AS searchCustomField',
 			't.custom_value',
 			't.task_id',
 		);
@@ -56,12 +52,12 @@ class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
 		// where
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.task_id',$this->task_id);
-		$criteria->compare('COALESCE(customFieldToTaskTemplate.label_override, customField.label)', $this->searchCustomField, true);
+		$criteria->compare('COALESCE(taskTemplateToCustomField.label_override, customField.label)', $this->searchCustomField, true);
 		$criteria->compare('t.custom_value',$this->custom_value, true);
 
 		// with
 		$criteria->with=array(
-			'customFieldToTaskTemplate.customField',
+			'taskTemplateToCustomField.customField',
 		);
 
 		return $criteria;
@@ -78,15 +74,15 @@ class TaskToCustomFieldToTaskTemplate extends CustomValueActiveRecord
 	{
 		// set any custom validators
 		$this->customValidatorParams = array(
-			'customField' => $this->customFieldToTaskTemplate->customField,
-			'params' => array('relationToCustomField'=>'taskToCustomFieldToTaskTemplate->customFieldToTaskTemplate->customField'),
+			'customField' => $this->taskTemplateToCustomField->customField,
+			'params' => array('relationToCustomField'=>'taskToTaskTemplateToCustomField->taskTemplateToCustomField->customField'),
 		);
 
 		return parent::beforeValidate();
 	}
 
 	public function createSave(&$models = array()) {
-		$this->setDefault($this->customFieldToTaskTemplate->customField);
+		$this->setDefault($this->taskTemplateToCustomField->customField);
 
 		return parent::createSave($models);
 	}

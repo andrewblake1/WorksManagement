@@ -17,8 +17,8 @@
  * The followings are the available model relations:
  * @property User $updatedBy
  * @property TaskTemplate $taskTemplate
- * @property CustomFieldToTaskTemplate[] $customFieldToTaskTemplates
- * @property CustomFieldToTaskTemplate[] $customFieldToTaskTemplates1
+ * @property TaskTemplateToCustomField[] $taskTemplateToCustomFields
+ * @property TaskTemplateToCustomField[] $taskTemplateToCustomFields1
  */
 class CustomFieldTaskCategory extends CategoryActiveRecord {
 	/**
@@ -36,8 +36,8 @@ class CustomFieldTaskCategory extends CategoryActiveRecord {
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
-            'customFieldToTaskTemplates' => array(self::HAS_MANY, 'CustomFieldToTaskTemplate', 'task_template_id'),
-            'customFieldToTaskTemplates1' => array(self::HAS_MANY, 'CustomFieldToTaskTemplate', 'custom_field_task_category_id'),
+            'taskTemplateToCustomFields' => array(self::HAS_MANY, 'TaskTemplateToCustomField', 'task_template_id'),
+            'taskTemplateToCustomFields1' => array(self::HAS_MANY, 'TaskTemplateToCustomField', 'custom_field_task_category_id'),
         );
     }
 

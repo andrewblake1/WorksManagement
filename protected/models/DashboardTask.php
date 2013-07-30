@@ -30,7 +30,7 @@
  * @property Crew $crew
  * @property Planning $id0
  * @property TaskToAssembly[] $taskToAssemblies
- * @property TaskToCustomFieldToTaskTemplate[] $taskToCustomFieldToTaskTemplates
+ * @property TaskToTaskTemplateToCustomField[] $taskToTaskTemplateToCustomFields
  * @property TaskToMaterial[] $taskToMaterials
  * @property TaskToResource[] $taskToResources
  */

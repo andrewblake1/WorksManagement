@@ -226,7 +226,7 @@ return array(
 						'ProjectTemplateToAuthItem',
 						'TaskTemplate'=>array(
 							'CustomFieldTaskCategory'=>array(
-								'CustomFieldToTaskTemplate',
+								'TaskTemplateToCustomField',
 							),
 							'TaskTemplateToAssembly',
 							'TaskTemplateToAssemblyGroup',

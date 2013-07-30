@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tbl_custom_field_to_task_template".
+ * This is the model class for table "tbl_task_template_to_custom_field".
  *
- * The followings are the available columns in table 'tbl_custom_field_to_task_template':
+ * The followings are the available columns in table 'tbl_task_template_to_custom_field':
  * @property integer $id
  * @property integer $task_template_id
  * @property integer $custom_field_id
@@ -19,9 +19,9 @@
  * @property User $updatedBy
  * @property CustomFieldTaskCategory $taskTemplate
  * @property CustomFieldTaskCategory $customFieldTaskCategory
- * @property TaskToCustomFieldToTaskTemplate[] $taskToCustomFieldToTaskTemplates
+ * @property TaskToTaskTemplateToCustomField[] $taskToTaskTemplateToCustomFields
  */
-class CustomFieldToTaskTemplate extends ActiveRecord
+class TaskTemplateToCustomField extends ActiveRecord
 {
 	/**
 	 * @var string nice model name for use in output
@@ -47,7 +47,7 @@ class CustomFieldToTaskTemplate extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskTemplate' => array(self::BELONGS_TO, 'CustomFieldTaskCategory', 'task_template_id'),
             'customFieldTaskCategory' => array(self::BELONGS_TO, 'CustomFieldTaskCategory', 'custom_field_task_category_id'),
-            'taskToCustomFieldToTaskTemplates' => array(self::HAS_MANY, 'TaskToCustomFieldToTaskTemplate', 'custom_field_to_task_template_id'),
+            'taskToTaskTemplateToCustomFields' => array(self::HAS_MANY, 'TaskToTaskTemplateToCustomField', 'task_template_to_custom_field_id'),
         );
     }
 

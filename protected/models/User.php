@@ -27,7 +27,7 @@
  * @property CustomFieldProjectCategory[] $customFieldProjectCategories
  * @property CustomFieldTaskCategory[] $customFieldTaskCategories
  * @property ProjectTemplateToCustomField[] $projectTemplateToCustomFields
- * @property CustomFieldToTaskTemplate[] $customFieldToTaskTemplates
+ * @property TaskTemplateToCustomField[] $taskTemplateToCustomFields
  * @property CustomValue[] $customValues
  * @property Day[] $days
  * @property DefaultValue[] $defaultValues
@@ -72,7 +72,7 @@
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups
  * @property TaskToAssemblyToTaskTemplateToAssemblyGroup[] $taskToAssemblyToTaskTemplateToAssemblyGroups
- * @property TaskToCustomFieldToTaskTemplate[] $taskToCustomFieldToTaskTemplates
+ * @property TaskToTaskTemplateToCustomField[] $taskToTaskTemplateToCustomFields
  * @property TaskToMaterial[] $taskToMaterials
  * @property TaskToMaterialToAssemblyToMaterial[] $taskToMaterialToAssemblyToMaterials
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
@@ -125,7 +125,7 @@ class User extends ContactActiveRecord
             'customFieldProjectCategories' => array(self::HAS_MANY, 'CustomFieldProjectCategory', 'updated_by'),
             'customFieldTaskCategories' => array(self::HAS_MANY, 'CustomFieldTaskCategory', 'updated_by'),
             'projectTemplateToCustomFields' => array(self::HAS_MANY, 'ProjectTemplateToCustomField', 'updated_by'),
-            'customFieldToTaskTemplates' => array(self::HAS_MANY, 'CustomFieldToTaskTemplate', 'updated_by'),
+            'taskTemplateToCustomFields' => array(self::HAS_MANY, 'TaskTemplateToCustomField', 'updated_by'),
             'customValues' => array(self::HAS_MANY, 'CustomValue', 'updated_by'),
             'days' => array(self::HAS_MANY, 'Day', 'updated_by'),
             'defaultValues' => array(self::HAS_MANY, 'DefaultValue', 'updated_by'),
@@ -170,7 +170,7 @@ class User extends ContactActiveRecord
             'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'updated_by'),
             'taskToAssemblyToAssemblyToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'updated_by'),
             'taskToAssemblyToTaskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToTaskTemplateToAssemblyGroup', 'updated_by'),
-            'taskToCustomFieldToTaskTemplates' => array(self::HAS_MANY, 'TaskToCustomFieldToTaskTemplate', 'updated_by'),
+            'taskToTaskTemplateToCustomFields' => array(self::HAS_MANY, 'TaskToTaskTemplateToCustomField', 'updated_by'),
             'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'updated_by'),
             'taskToMaterialToAssemblyToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterial', 'updated_by'),
             'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'updated_by'),
