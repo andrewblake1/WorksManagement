@@ -19,7 +19,7 @@
  * @property Planning $level0
  * @property User $responsible0
  * @property DutyStep $dutyStep
- * @property DutyDataToCustomFieldToDutyStep[] $dutyDataToCustomFieldToDutySteps
+ * @property DutyDataToDutyStepToCustomField[] $dutyDataToDutyStepToCustomFields
  */
 class DutyData extends ActiveRecord
 {
@@ -39,7 +39,7 @@ class DutyData extends ActiveRecord
             'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
             'responsible0' => array(self::BELONGS_TO, 'User', 'responsible'),
             'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
-            'dutyDataToCustomFieldToDutySteps' => array(self::HAS_MANY, 'DutyDataToCustomFieldToDutyStep', 'duty_data_id'),
+            'dutyDataToDutyStepToCustomFields' => array(self::HAS_MANY, 'DutyDataToDutyStepToCustomField', 'duty_data_id'),
         );
     }
 
@@ -138,11 +138,11 @@ class DutyData extends ActiveRecord
 					$exisDutyDataTarget->setIsNewRecord(false);
 					// merge the custom values
 					Yii::app()->db->createCommand('
-						UPDATE (SELECT * FROM tbl_duty_data_to_custom_field_to_duty_step customExis
+						UPDATE (SELECT * FROM tbl_duty_data_to_duty_step_to_custom_field customExis
 							WHERE duty_data_id = :exisDutyDataTargetid) AS exis
-						JOIN (SELECT * FROM tbl_duty_data_to_custom_field_to_duty_step
+						JOIN (SELECT * FROM tbl_duty_data_to_duty_step_to_custom_field
 							WHERE duty_data_id = :mergeDutyDataTargetid) AS merge
-						USING(custom_field_to_duty_step_id)
+						USING(duty_step_to_custom_field_id)
 						SET customExis.custom_value = COALESCE(exis.custom_value, merge.custom_value)
 					')->execute(array(':exisDutyDataTargetid'=>$exisDutyDataTarget->id, ':mergeDutyDataTargetid'=>$this->id));
 					// update existing duty records to now point at this target
@@ -197,18 +197,18 @@ class DutyData extends ActiveRecord
 					
 					// create new set of custom fields for each
 					Yii::app()->db->createCommand('
-					INSERT INTO tbl_duty_data_to_custom_field_to_duty_step (
+					INSERT INTO tbl_duty_data_to_duty_step_to_custom_field (
 						custom_value,
-						custom_field_to_duty_step_id,
+						duty_step_to_custom_field_id,
 						duty_data_id,
 						updated_by
 						)
 						SELECT
 							custom_value,
-							custom_field_to_duty_step_id,
+							duty_step_to_custom_field_id,
 							:newDutyDataId,
 							:updatedBy
-						FROM tbl_duty_data_to_custom_field_to_duty_step
+						FROM tbl_duty_data_to_duty_step_to_custom_field
 						WHERE duty_data_id = :oldDutyDataId
 					')->execute(array(
 						':newDutyDataId'=>$dutyData->id,

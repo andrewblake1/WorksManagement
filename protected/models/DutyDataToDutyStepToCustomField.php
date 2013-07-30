@@ -1,31 +1,27 @@
 <?php
 
 /**
- * This is the model class for table "tbl_dutyData_to_custom_field_to_duty_step".
+ * This is the model class for table "tbl_dutyData_to_duty_step_to_custom_field".
  *
- * The followings are the available columns in table 'tbl_dutyData_to_custom_field_to_duty_step':
+ * The followings are the available columns in table 'tbl_dutyData_to_duty_step_to_custom_field':
  * @property string $id
- * @property integer $custom_field_to_duty_step_id
+ * @property integer $duty_step_to_custom_field_id
  * @property string $duty_data_id
  * @property string $custom_value
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property User $updatedBy
- * @property CustomFieldToDutyStep $customFieldToDutyStep
+ * @property DutyStepToCustomField $dutyStepToCustomField
  * @property DutyData $dutyData
  */
-class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
+class DutyDataToDutyStepToCustomField extends CustomValueActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchCustomField;
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Custom field';
 
 	/**
 	 * @return array relational rules.
@@ -36,20 +32,10 @@ class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'customFieldToDutyStep' => array(self::BELONGS_TO, 'CustomFieldToDutyStep', 'custom_field_to_duty_step_id'),
+            'dutyStepToCustomField' => array(self::BELONGS_TO, 'DutyStepToCustomField', 'duty_step_to_custom_field_id'),
             'dutyData' => array(self::BELONGS_TO, 'DutyData', 'duty_data_id'),
         );
     }
-
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return parent::attributeLabels(array(
-			'custom_field_to_duty_step_id' => 'Custom field',
-		));
-	}
 
 	public function getSearchCriteria()
 	{
@@ -58,7 +44,7 @@ class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'COALESCE(customFieldToDutyStep.label_override, customField.label) AS searchCustomField',
+			'COALESCE(dutyStepToCustomField.label_override, customField.label) AS searchCustomField',
 			't.custom_value',
 			't.duty_data_id',
 		);
@@ -66,13 +52,13 @@ class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
 		// where
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.duty_data_id',$this->duty_data_id);
-		$criteria->compare('COALESCE(customFieldToDutyStep.label_override',$this->searchCustomField, true);
+		$criteria->compare('COALESCE(dutyStepToCustomField.label_override',$this->searchCustomField, true);
 		$criteria->compare('t.custom_value',$this->custom_value, true);
 
 		// with
 		$criteria->with=array(
-			'customFieldToDutyStep',
-			'customFieldToDutyStep.customField',
+			'dutyStepToCustomField',
+			'dutyStepToCustomField.customField',
 		);
 
 		return $criteria;
@@ -89,15 +75,15 @@ class DutyDataToCustomFieldToDutyStep extends CustomValueActiveRecord
 	{
 		// set any custom validators
 		$this->customValidatorParams = array(
-			'customField' => $this->customFieldToDutyStep->customField,
-			'params' => array('relationToCustomField'=>'dutyDataToCustomFieldToDutyStep->customFieldToDutyStep->customField'),
+			'customField' => $this->dutyStepToCustomField->customField,
+			'params' => array('relationToCustomField'=>'dutyDataToDutyStepToCustomField->dutyStepToCustomField->customField'),
 		);
 
 		return parent::beforeValidate();
 	}
 	
 	public function createSave(&$models = array()) {
-		$this->setDefault($this->customFieldToDutyStep->customField);
+		$this->setDefault($this->dutyStepToCustomField->customField);
 		
 		return parent::createSave($models);
 	}

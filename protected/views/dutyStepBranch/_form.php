@@ -9,7 +9,7 @@
 		$form->hiddenField('duty_step_id');
 	}
 
-	CustomFieldToDutyStepController::listWidgetRow($model, $form, 'custom_field_to_duty_step_id', array(), array('scopeDutyStep'=>array($model->duty_step_id)));
+	DutyStepToCustomFieldController::listWidgetRow($model, $form, 'duty_step_to_custom_field_id', array(), array('scopeDutyStep'=>array($model->duty_step_id)));
 
 	$form->textFieldRow('compare');
 

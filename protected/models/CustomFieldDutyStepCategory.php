@@ -17,8 +17,8 @@
  * The followings are the available model relations:
  * @property User $updatedBy
  * @property DutyStep $dutyStep
- * @property CustomFieldToDutyStep[] $customFieldToDutySteps
- * @property CustomFieldToDutyStep[] $customFieldToDutySteps1
+ * @property DutyStepToCustomField[] $dutyStepToCustomFields
+ * @property DutyStepToCustomField[] $dutyStepToCustomFields1
  */
 class CustomFieldDutyStepCategory extends CategoryActiveRecord {
 	/**
@@ -36,8 +36,8 @@ class CustomFieldDutyStepCategory extends CategoryActiveRecord {
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
-            'customFieldToDutySteps' => array(self::HAS_MANY, 'CustomFieldToDutyStep', 'duty_step_id'),
-            'customFieldToDutySteps1' => array(self::HAS_MANY, 'CustomFieldToDutyStep', 'custom_field_duty_step_category_id'),
+            'dutyStepToCustomFields' => array(self::HAS_MANY, 'DutyStepToCustomField', 'duty_step_id'),
+            'dutyStepToCustomFields1' => array(self::HAS_MANY, 'DutyStepToCustomField', 'custom_field_duty_step_category_id'),
         );
     }
 

@@ -166,7 +166,7 @@ return array(
 						),
 					'DutyStep'=>array(
 						'CustomFieldDutyStepCategory'=>array(
-							'CustomFieldToDutyStep',
+							'DutyStepToCustomField',
 						),
 						'DutyStepToMode',
 					),
@@ -178,7 +178,7 @@ return array(
 							),
 						'DutyStep'=>array(
 							'CustomFieldDutyStepCategory'=>array(
-								'CustomFieldToDutyStep',
+								'DutyStepToCustomField',
 							),
 							'DutyStepToMode',
 						),
@@ -215,7 +215,7 @@ return array(
 								),
 							'DutyStep'=>array(
 								'CustomFieldDutyStepCategory'=>array(
-									'CustomFieldToDutyStep',
+									'DutyStepToCustomField',
 								),
 								'DutyStepToMode',
 							),

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tbl_custom_field_to_duty_step".
+ * This is the model class for table "tbl_duty_step_to_custom_field".
  *
- * The followings are the available columns in table 'tbl_custom_field_to_duty_step':
+ * The followings are the available columns in table 'tbl_duty_step_to_custom_field':
  * @property integer $id
  * @property integer $custom_field_duty_step_category_id
  * @property integer $duty_step_id
@@ -17,16 +17,12 @@
  * @property CustomFieldDutyStepCategory $dutyStep
  * @property CustomField $customField
  * @property CustomFieldDutyStepCategory $customFieldDutyStepCategory
- * @property DutyDataToCustomFieldToDutyStep[] $dutyDataToCustomFieldToDutySteps
+ * @property DutyDataToDutyStepToCustomField[] $dutyDataToDutyStepToCustomFields
  * @property DutyStepBranch[] $dutyStepBranches
  * @property DutyStepBranch[] $dutyStepBranches1
  */
-class CustomFieldToDutyStep extends ActiveRecord
+class DutyStepToCustomField extends ActiveRecord
 {
-	/**
-	 * @var string nice model name for use in output
-	 */
-	static $niceName = 'Custom field';
 
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
@@ -58,7 +54,7 @@ class CustomFieldToDutyStep extends ActiveRecord
             'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
             'customFieldDutyStepCategory' => array(self::BELONGS_TO, 'CustomFieldDutyStepCategory', 'custom_field_duty_step_category_id'),
             'customFieldProjectCategory' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'custom_field_project_category_id'),
-            'dutyDataToCustomFieldToDutySteps' => array(self::HAS_MANY, 'DutyDataToCustomFieldToDutyStep', 'custom_field_to_duty_step_id'),
+            'dutyDataToDutyStepToCustomFields' => array(self::HAS_MANY, 'DutyDataToDutyStepToCustomField', 'duty_step_to_custom_field_id'),
         );
     }
 

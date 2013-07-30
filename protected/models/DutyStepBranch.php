@@ -6,16 +6,16 @@
  * The followings are the available columns in table 'tbl_duty_step_branch':
  * @property integer $id
  * @property string $duty_step_dependency_id
- * @property integer $custom_field_to_duty_step_id
+ * @property integer $duty_step_to_custom_field_id
  * @property string $compare
  * @property integer $duty_step_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property CustomFieldToDutyStep $customFieldToDutyStep
+ * @property DutyStepToCustomField $dutyStepToCustomField
  * @property User $updatedBy
  * @property DutyStepDependency $dutyStepDependency
- * @property CustomFieldToDutyStep $dutyStep
+ * @property DutyStepToCustomField $dutyStep
  */
 class DutyStepBranch extends ActiveRecord
 {
@@ -32,10 +32,10 @@ class DutyStepBranch extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'customFieldToDutyStep' => array(self::BELONGS_TO, 'CustomFieldToDutyStep', 'custom_field_to_duty_step_id'),
+			'dutyStepToCustomField' => array(self::BELONGS_TO, 'DutyStepToCustomField', 'duty_step_to_custom_field_id'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
 			'dutyStepDependency' => array(self::BELONGS_TO, 'DutyStepDependency', 'duty_step_dependency_id'),
-			'dutyStep' => array(self::BELONGS_TO, 'CustomFieldToDutyStep', 'duty_step_id'),
+			'dutyStep' => array(self::BELONGS_TO, 'DutyStepToCustomField', 'duty_step_id'),
 		);
 	}
 
@@ -45,7 +45,7 @@ class DutyStepBranch extends ActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'custom_field_to_duty_step_id' => 'Custom field',
+			'duty_step_to_custom_field_id' => 'Custom field',
 		);
 	}
 
@@ -59,19 +59,19 @@ class DutyStepBranch extends ActiveRecord
 		// select
 		$criteria->select=array(
 			't.id',	// needed for delete and update buttons
-			'COALESCE(customFieldToDutyStep.label_override, customField.label) AS searchCustomField',
+			'COALESCE(dutyStepToCustomField.label_override, customField.label) AS searchCustomField',
 			't.compare',
 		);
 
 		// where
 		$criteria->compare('t.duty_step_dependency_id',$this->duty_step_dependency_id);
 		$criteria->compare('t.compare',$this->compare, true);
-		$criteria->compare('COALESCE(customFieldToDutyStep.label_override, customField.label',$this->searchCustomField, true);
+		$criteria->compare('COALESCE(dutyStepToCustomField.label_override, customField.label',$this->searchCustomField, true);
 		
 		// with
 		$criteria->with = array(
-			'customFieldToDutyStep',
-			'customFieldToDutyStep.customField',
+			'dutyStepToCustomField',
+			'dutyStepToCustomField.customField',
 		);
 
 		return $criteria;

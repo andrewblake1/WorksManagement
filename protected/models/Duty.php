@@ -41,12 +41,12 @@ class Duty extends CustomFieldActiveRecord
 	static $updateButtonText;
 	
 	// CustomFieldActiveRecord
-	protected $evalCustomFieldPivots = '$this->dutyData->dutyStep->customFieldToDutySteps';
-	protected $evalClassEndToCustomFieldPivot = 'DutyDataToCustomFieldToDutyStep';
-	protected $evalColumnCustomFieldModelTemplateId = 'custom_field_to_duty_step_id';
+	protected $evalCustomFieldPivots = '$this->dutyData->dutyStep->dutyStepToCustomFields';
+	protected $evalClassEndToCustomFieldPivot = 'DutyDataToDutyStepToCustomField';
+	protected $evalColumnCustomFieldModelTemplateId = 'duty_step_to_custom_field_id';
 	protected $evalColumnEndId = 'duty_data_id';
-	protected $evalEndToCustomFieldPivots = '$this->dutyData->dutyDataToCustomFieldToDutySteps';
-	protected $evalCustomFieldPivot = 'customFieldToDutyStep';
+	protected $evalEndToCustomFieldPivots = '$this->dutyData->dutyDataToDutyStepToCustomFields';
+	protected $evalCustomFieldPivot = 'dutyStepToCustomField';
 	protected $evalThisColumnEndId = 'duty_data_id';
 
 	public function tableName() {
@@ -480,7 +480,7 @@ class Duty extends CustomFieldActiveRecord
 				// just loose the error - don't really want to update the custom field as exis may already contain good data
 				// already exists so retrieve and update instead
 	/*			$exisEndToCustomFieldPivot = $evalClassEndToCustomFieldPivot::model()->findByAttibutes(array(
-					'custom_field_to_duty_step_id'=>$endToCustomFieldPivot->custom_field_to_duty_step_id,
+					'duty_step_to_custom_field_id'=>$endToCustomFieldPivot->duty_step_to_custom_field_id,
 					'duty_data_id'=>$endToCustomFieldPivot->duty_data_id,
 				));*/
 			}

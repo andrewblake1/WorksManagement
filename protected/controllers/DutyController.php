@@ -162,9 +162,9 @@ class DutyController extends Controller
 			$this->widget('CustomFieldWidgets',array(
 				'model'=>$duty,
 				'form'=>$form,
-				'relationModelToCustomFieldModelTemplate'=>'dutyDataToCustomFieldToDutyStep',
-				'relationModelToCustomFieldModelTemplates'=>'dutyData->dutyDataToCustomFieldToDutySteps',
-				'relationCustomFieldModelTemplate'=>'customFieldToDutyStep',
+				'relationModelToCustomFieldModelTemplate'=>'dutyDataToDutyStepToCustomField',
+				'relationModelToCustomFieldModelTemplates'=>'dutyData->dutyDataToDutyStepToCustomFields',
+				'relationCustomFieldModelTemplate'=>'dutyStepToCustomField',
 				'relation_category'=>'customFieldDutyStepCategory',
 				'categoryModelName'=>'CustomFieldDutyStepCategory',
 				'htmlOptions'=>array('disabled'=>'disabled'),

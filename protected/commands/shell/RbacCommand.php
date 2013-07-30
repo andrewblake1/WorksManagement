@@ -134,10 +134,10 @@ EOD;
 			$this->_authManager->createOperation('CustomFieldRead', 'CustomField read');
 			$task->addChild('CustomFieldRead');
 
-			$task=$this->_authManager->createTask('CustomFieldToDutyStep', 'CustomFieldToDutyStep task');
-			$systemAdminRole->addChild('CustomFieldToDutyStep');
-			$this->_authManager->createOperation('CustomFieldToDutyStepRead', 'CustomFieldToDutyStep read');
-			$task->addChild('CustomFieldToDutyStepRead');
+			$task=$this->_authManager->createTask('DutyStepToCustomField', 'DutyStepToCustomField task');
+			$systemAdminRole->addChild('DutyStepToCustomField');
+			$this->_authManager->createOperation('DutyStepToCustomFieldRead', 'DutyStepToCustomField read');
+			$task->addChild('DutyStepToCustomFieldRead');
 
 			$task=$this->_authManager->createTask('CustomFieldDutyStepCategory', 'CustomFieldDutyStepCategory task');
 			$systemAdminRole->addChild('CustomFieldDutyStepCategory');
