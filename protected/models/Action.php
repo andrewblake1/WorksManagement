@@ -110,8 +110,11 @@ class Action extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria($this);
+		$criteria=new DbCriteria($this, array('client_id', 'project_template_id'));
 
+		// need to only show at top level
+		$criteria->compareNull('t.client_id',$this->client_id);
+		$criteria->compareNull('t.project_template_id',$this->project_template_id);
 		$criteria->compareAs('searchOverride', $this->searchOverride, 'override.description',true);
 
 		$criteria->with=array(

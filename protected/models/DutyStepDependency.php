@@ -68,10 +68,11 @@ class DutyStepDependency extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria($this);
+		$criteria=new DbCriteria($this, array('parent_duty_step_id'));
 
 		$criteria->compareAs('searchDependsOn', $this->searchDependsOn, 'childDutyStep.description', true);
 		$criteria->compareAs('searchLeadInDays', $this->searchLeadInDays, 'childDutyStep.lead_in_days');
+		$criteria->compareNull('t.parent_duty_step_id',$this->parent_duty_step_id);
 
 		$criteria->with = array(
 			'childDutyStep',

@@ -65,8 +65,9 @@ class SubAssembly extends ActiveRecord
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria($this);
+		$criteria=new DbCriteria($this, array('parent_assembly_id'));
 
+		$criteria->compareNull('t.parent_assembly_id',$this->parent_assembly_id);
 		$criteria->composite('searchChildAssembly', $this->searchChildAssembly, array(
 			'childAssembly.description',
 			'childAssembly.alias'
