@@ -31,7 +31,7 @@
  * @property TaskTemplateToAssemblyGroup[] $taskTemplateToAssemblyGroups
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskTemplateToMaterialGroup[] $taskTemplateToMaterialGroups
- * @property TaskTemplateToResource[] $taskTemplateToResources
+ * @property TaskTemplateToHumanResource[] $taskTemplateToHumanResources
  */
 class TaskTemplate extends ActiveRecord
 {
@@ -76,7 +76,7 @@ class TaskTemplate extends ActiveRecord
             'taskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskTemplateToAssemblyGroup', 'task_template_id'),
             'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'task_template_id'),
             'taskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskTemplateToMaterialGroup', 'task_template_id'),
-            'taskTemplateToResources' => array(self::HAS_MANY, 'TaskTemplateToResource', 'task_template_id'),
+            'taskTemplateToHumanResources' => array(self::HAS_MANY, 'TaskTemplateToHumanResource', 'task_template_id'),
         );
     }
 

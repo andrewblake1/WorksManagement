@@ -1,12 +1,13 @@
 <?php
 
 /**
- * This is the model class for table "tbl_task_template_to_resource".
+ * This is the model class for table "tbl_task_template_to_human_resource".
  *
- * The followings are the available columns in table 'tbl_task_template_to_resource':
+ * The followings are the available columns in table 'tbl_task_template_to_human_resource':
  * @property integer $id
  * @property integer $task_template_id
- * @property integer $resource_id
+ * @property integer $human_resource_id
+ * @property string $level
  * @property integer $mode_id
  * @property integer $quantity
  * @property string $duration
@@ -14,18 +15,15 @@
  *
  * The followings are the available model relations:
  * @property TaskTemplate $taskTemplate
- * @property Resource $resource
+ * @property HumanResource $humanResource
  * @property User $updatedBy
+ * @property Level $level0
  * @property Mode $mode
  */
-class TaskTemplateToResource extends ActiveRecord
+class TaskTemplateToHumanResource extends ActiveRecord
 {
-	/**
-	 * @var string search variables - foreign key lookups sometimes composite.
-	 * these values are entered by user in admin view to search
-	 */
-	public $searchResource;
-	public $searchTaskTemplate;
+	public $searchHumanResource;
+	public $searchLevel;
 	public $searchMode;
 
 	/**
@@ -37,8 +35,9 @@ class TaskTemplateToResource extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
-            'resource' => array(self::BELONGS_TO, 'Resource', 'resource_id'),
+            'humanResource' => array(self::BELONGS_TO, 'HumanResource', 'human_resource_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
         );
     }
@@ -50,12 +49,14 @@ class TaskTemplateToResource extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchResource', $this->searchResource, 'resource.description', true);
+		$criteria->compareAs('searchHumanResource', $this->searchHumanResource, 'humanResource.description', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
+		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
 
 		// with
 		$criteria->with = array(
-			'resource',
+			'humanResource',
+			'level0',
 			'mode',
 		);
 
@@ -64,10 +65,11 @@ class TaskTemplateToResource extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchResource', 'Resource', 'resource_id');
+        $columns[] = static::linkColumn('searchHumanResource', 'HumanResource', 'human_resource_id');
  		$columns[] = 'quantity';
 		$columns[] = 'duration';
  		$columns[] = 'searchMode';
+ 		$columns[] = 'searchLevel';
 		
 		return $columns;
 	}
@@ -78,8 +80,7 @@ class TaskTemplateToResource extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchResource',
-			'searchMode',
+			'searchHumanResource',
 		);
 	}
 

@@ -1,15 +1,15 @@
 <?php
 
 /**
- * This is the model class for table "tbl_resource_data".
+ * This is the model class for table "tbl_human_resource_data".
  *
- * The followings are the available columns in table 'tbl_resource_data':
+ * The followings are the available columns in table 'tbl_human_resource_data':
  * @property string $id
  * @property string $planning_id
  * @property string $level
- * @property integer $resource_id
+ * @property integer $human_resource_id
  * @property integer $mode_id
- * @property integer $resource_to_supplier_id
+ * @property integer $human_resource_to_supplier_id
  * @property integer $estimated_total_quantity
  * @property string $estimated_total_duration
  * @property string $start
@@ -19,12 +19,12 @@
  * @property Planning $planning
  * @property Planning $level0
  * @property User $updatedBy
- * @property ResourceToSupplier $resource
- * @property ResourceToSupplier $resourceToSupplier
+ * @property HumanResourceToSupplier $humanResource
+ * @property HumanResourceToSupplier $humanResourceToSupplier
  * @property Mode $mode
- * @property TaskToResource[] $taskToResources
+ * @property TaskToHumanResource[] $taskToHumanResources
  */
-class ResourceData extends ActiveRecord
+class HumanResourceData extends ActiveRecord
 {
 	/**
 	 * @return array relational rules.
@@ -37,10 +37,10 @@ class ResourceData extends ActiveRecord
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
             'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'resource' => array(self::BELONGS_TO, 'Resource', 'resource_id'),
-			'resourceToSupplier' => array(self::BELONGS_TO, 'ResourceToSupplier', 'resource_to_supplier_id'),
+            'humanResource' => array(self::BELONGS_TO, 'HumanResource', 'human_resource_id'),
+			'resourceToSupplier' => array(self::BELONGS_TO, 'HumanResourceToSupplier', 'human_resource_to_supplier_id'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
-            'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'resource_data_id'),
+            'taskToHumanResources' => array(self::HAS_MANY, 'TaskToHumanResource', 'human_resource_data_id'),
         );
     }
 
@@ -48,7 +48,8 @@ class ResourceData extends ActiveRecord
 	 * Need to deal with level modification here as can't do easily within trigger due to trigger
 	 * not allowing modification of same table outside the row being modified. Could use blackhole table
 	 * with trigger on it to do what we need but can't see advantage over doing it in application here - would
-	 * need to alter table name here to black hole table name
+	 * need to alter table name here to black hole table name. Np advantage as if user alters direct in database, would
+	 * only work if they used the black hole table
 	 * @param type $attributes
 	 */
 	public function update($attributes = null)
@@ -70,25 +71,25 @@ class ResourceData extends ActiveRecord
 						AND planning.root = (SELECT root FROM tbl_planning WHERE id = :planningId)
 				')->queryScalar(array(':newLevel'=>$newLevel, ':planningId'=>$this->planning_id));
 		
-				// if a resource_data already exists for this at new target level
-				if($exisResourceDataRow=Yii::app()->db->createCommand('
-					SELECT * FROM tbl_resource_data
-					WHERE resource_id = :resourceId
+				// if a human_resource_data already exists for this at new target level
+				if($exisHumanResourceDataRow=Yii::app()->db->createCommand('
+					SELECT * FROM tbl_human_resource_data
+					WHERE human_resource_id = :humanResourceId
 						AND planning_id = :targetPlanningId
-					')->queryRow(true, array(':resourceId'=>$this->resource_id, ':targetPlanningId'=>$targetPlanningId)))
+					')->queryRow(true, array(':humanResourceId'=>$this->human_resource_id, ':targetPlanningId'=>$targetPlanningId)))
 				{
-					$exisResourceDataTarget = new self;
-					$exisResourceDataTarget->attributes = $exisResourceDataRow;
+					$exisHumanResourceDataTarget = new self;
+					$exisHumanResourceDataTarget->attributes = $exisHumanResourceDataRow;
 // beware - not sure if id is safe?
-					$exisResourceDataTarget->setIsNewRecord(false);
-					// update existing resource records to now point at this target
+					$exisHumanResourceDataTarget->setIsNewRecord(false);
+					// update existing tbl_task_to_human_resource records to now point at this target
 					Yii::app()->db->createCommand('
-						UPDATE tbl_resource resource
-						SET resource_data_id = :exisResourceDataTargetid
-						WHERE resource_data_id = :mergeResourceId
-					')->execute(array(':exisResourceDataTargetid'=>$exisResourceDataTarget->id, ':mergeResourceId'=>$this->id));
+						UPDATE tbl_task_to_human_resource taskToHumanResource
+						SET human_resource_data_id = :exisHumanResourceDataTargetid
+						WHERE human_resource_data_id = :mergeHumanResourceId
+					')->execute(array(':exisHumanResourceDataTargetid'=>$exisHumanResourceDataTarget->id, ':mergeHumanResourceId'=>$this->id));
 					
-					// remove this record as all the related resource items should now point at the correct new target
+					// remove this record as all the related humanResource items should now point at the correct new target
 					return $this->delete();
 				}
 				// otherwise just shifting this one to the new level
@@ -101,14 +102,17 @@ class ResourceData extends ActiveRecord
 			// otherwise the level number is increasing - heading toward task - diverge
 			else
 			{
-				// insert new suitable resource data records at the desired level of each related item at the desired level
-				// and modify existing resource records to point at the new relevant resource_data
-				$resourceData = new self;
-				$resourceData->resource_id = $this->resource_id;
-				$resourceData->level = $newLevel;
-				$resourceData->responsible = $this->responsible;
-				$resourceData->updated = $this->updated;
-				$resourceData->updated_by = Yii::app()->user->id;
+				// insert new suitable humanResource data records at the desired level of each related item at the desired level
+				// and modify existing humanResource records to point at the new relevant human_resource_data
+				$humanResourceData = new self;
+				$humanResourceData->human_resource_id = $this->human_resource_id;
+				$humanResourceData->level = $newLevel;
+				$humanResourceData->mode_id = $this->mode_id;
+				$humanResourceData->human_resource_to_supplier_id = $this->human_resource_to_supplier_id;
+				$humanResourceData->estimated_total_quantity = $this->estimated_total_quantity;
+				$humanResourceData->estimated_total_duration = $this->estimated_total_duration;
+				$humanResourceData->start = $this->start;
+				$humanResourceData->updated_by = Yii::app()->user->id;
 				// loop thru all relevant new planning id's
 				// child hunt
 				$command=Yii::app()->db->createCommand('
@@ -120,23 +124,23 @@ class ResourceData extends ActiveRecord
 				');
 				foreach($command->queryColumn(array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planningId)
 				{
-					$resourceData->planning_id = $planningId;
-					$resourceData->insert();
+					$humanResourceData->planning_id = $planningId;
+					$humanResourceData->insert();
 					
-					// make the relevant resource items relate
+					// make the relevant tbl_task_to_human_resource items relate
 					Yii::app()->db->createCommand('
-						UPDATE tbl_resource
-						SET resource_data_id = :newResourceDataId
-						WHERE resource_data_id = :oldResourceDataId
-					')->execute(array(':newResourceDataId'=>$resourceData->id, ':oldResourceDataId'=>$this->id));
+						UPDATE tbl_task_to_human_resource
+						SET human_resource_data_id = :newHumanResourceDataId
+						WHERE human_resource_data_id = :oldHumanResourceDataId
+					')->execute(array(':newHumanResourceDataId'=>$humanResourceData->id, ':oldHumanResourceDataId'=>$this->id));
 					
 					// reset for next iteration
-					$resourceData->id = NULL;
-					$resourceData->setIsNewRecord(true);
+					$humanResourceData->id = NULL;
+					$humanResourceData->setIsNewRecord(true);
 				}
 
-				// remove this record as all the related resource items should now point at the correct new target
-				// NB: don't return the delete as may delete 0 rows due to orphan maintenance in resource update trigger
+				// remove this record as all the related humanResource items should now point at the correct new target
+				// NB: don't return the delete as may delete 0 rows due to orphan maintenance in humanResource update trigger
 				$this->delete();
 				
 				return true;

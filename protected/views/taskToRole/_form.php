@@ -1,16 +1,16 @@
 <?php
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
+	
+	$form->dropDownListRow('level', Planning::$levels);
 
-	HumanResourceController::listWidgetRow($model, $form, 'human_resource_id');
+	AuthItemController::listWidgetRow($model, $form, 'auth_item_name', array(), array('roles'));
 
 	$form->textFieldRow('quantity');
 
-	$form->textFieldRow('duration');
+	$form->textFieldRow('estimated_total_quantity');
 
 	ModeController::listWidgetRow($model, $form, 'mode_id');
-
-	$form->dropDownListRow('level', Planning::$levels);
 
 $this->endWidget();
 

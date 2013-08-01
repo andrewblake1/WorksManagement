@@ -52,7 +52,7 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
 	 *
 	 * @var resource
 	 */
-	private $_imageResource;
+	private $_imageHumanResource;
 
 	/**
 	 * Rendering function
@@ -81,7 +81,7 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
     public function __construct()
     {
     	// Initialise values
-    	$this->_imageResource		= null;
+    	$this->_imageHumanResource		= null;
     	$this->_renderingFunction 	= self::RENDERING_DEFAULT;
     	$this->_mimeType			= self::MIMETYPE_DEFAULT;
     	$this->_uniqueName			= md5(rand(0, 9999). time() . rand(0, 9999));
@@ -95,8 +95,8 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
      *
      * @return resource
      */
-    public function getImageResource() {
-    	return $this->_imageResource;
+    public function getImageHumanResource() {
+    	return $this->_imageHumanResource;
     }
 
     /**
@@ -105,13 +105,13 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
      * @param	$value resource
      * @return PHPExcel_Worksheet_MemoryDrawing
      */
-    public function setImageResource($value = null) {
-    	$this->_imageResource = $value;
+    public function setImageHumanResource($value = null) {
+    	$this->_imageHumanResource = $value;
 
-    	if (!is_null($this->_imageResource)) {
+    	if (!is_null($this->_imageHumanResource)) {
 	    	// Get width/height
-	    	$this->_width	= imagesx($this->_imageResource);
-	    	$this->_height	= imagesy($this->_imageResource);
+	    	$this->_width	= imagesx($this->_imageHumanResource);
+	    	$this->_height	= imagesy($this->_imageHumanResource);
     	}
     	return $this;
     }

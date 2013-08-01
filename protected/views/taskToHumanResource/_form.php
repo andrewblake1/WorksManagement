@@ -2,7 +2,7 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
-	ResourceToSupplierController::dependantListWidgetRow($model, $form, 'resource_to_supplier_id', 'Resource', 'resource_id', array(), array('scopeResource'=>array($model->resource_id === null ? 0 : $model->resource_id)));
+	HumanResourceToSupplierController::dependantListWidgetRow($model, $form, 'human_resource_to_supplier_id', 'HumanResource', 'human_resource_id', array(), array('scopeHumanResource'=>array($model->human_resource_id === null ? 0 : $model->human_resource_id)));
 
 	$form->textFieldRow('quantity');
 

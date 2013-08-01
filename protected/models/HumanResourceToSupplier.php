@@ -1,23 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "tbl_resource_to_supplier".
+ * This is the model class for table "tbl_human_resource_to_supplier".
  *
- * The followings are the available columns in table 'tbl_resource_to_supplier':
+ * The followings are the available columns in table 'tbl_human_resource_to_supplier':
  * @property integer $id
- * @property integer $resource_id
+ * @property integer $human_resource_id
  * @property integer $supplier_id
  * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property ResourceData[] $resourceDatas
- * @property ResourceData[] $resourceDatas1
- * @property Resource $resource
+ * @property HumanResourceData[] $humanResourceDatas
+ * @property HumanResourceData[] $humanResourceDatas1
+ * @property HumanResource $humanResource
  * @property Supplier $supplier
  * @property User $updatedBy
  */
-class ResourceToSupplier extends ActiveRecord
+class HumanResourceToSupplier extends ActiveRecord
 {
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
@@ -25,11 +25,11 @@ class ResourceToSupplier extends ActiveRecord
 	 */
 	public $searchSupplier;
 	
-	public function scopeResource($resourceId)
+	public function scopeHumanResource($humanResourceId)
 	{
 		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
 		$criteria=new DbCriteria;
-		$criteria->compare('t.resource_id', $resourceId);
+		$criteria->compare('t.human_resource_id', $humanResourceId);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		
@@ -44,9 +44,9 @@ class ResourceToSupplier extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'resource_id'),
-            'resourceDatas1' => array(self::HAS_MANY, 'ResourceData', 'resource_to_supplier_id'),
-            'resource' => array(self::BELONGS_TO, 'Resource', 'resource_id'),
+            'resourceDatas' => array(self::HAS_MANY, 'HumanResourceData', 'human_resource_id'),
+            'resourceDatas1' => array(self::HAS_MANY, 'HumanResourceData', 'human_resource_to_supplier_id'),
+            'humanResource' => array(self::BELONGS_TO, 'HumanResource', 'human_resource_id'),
             'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
         );

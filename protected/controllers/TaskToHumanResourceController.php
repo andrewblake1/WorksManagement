@@ -1,6 +1,6 @@
 <?php
 
-class TaskToResourceController extends Controller
+class TaskToHumanResourceController extends Controller
 {
 
 }

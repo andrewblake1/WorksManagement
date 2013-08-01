@@ -1,6 +1,6 @@
 <?php
 
-class ResourceController extends Controller
+class HumanResourceController extends Controller
 {
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-class ResourceToSupplierController extends Controller
+class HumanResourceToSupplierController extends Controller
 {
 }
 

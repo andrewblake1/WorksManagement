@@ -1,12 +1,12 @@
 <?php
 
 /**
- * This is the model class for table "tbl_resource".
+ * This is the model class for table "tbl_human_resource".
  *
- * The followings are the available columns in table 'tbl_resource':
+ * The followings are the available columns in table 'tbl_human_resource':
  * @property integer $id
- * @property string $description
  * @property string $level
+ * @property string $auth_item_name
  * @property string $unit_price
  * @property integer $maximum
  * @property string $action_id
@@ -17,10 +17,11 @@
  * @property User $updatedBy
  * @property Level $level0
  * @property Action $action
- * @property ResourceToSupplier[] $resourceToSuppliers
- * @property TaskTemplateToResource[] $taskTemplateToResources
+ * @property AuthItem $authItemName
+ * @property HumanResourceToSupplier[] $humanResourceToSuppliers
+ * @property TaskTemplateToHumanResource[] $taskTemplateToHumanResources
  */
-class Resource extends ActiveRecord
+class HumanResource extends ActiveRecord
 {
 	public $searchLevel;
 	public $searchAction;
@@ -36,8 +37,9 @@ class Resource extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
-            'resourceToSuppliers' => array(self::HAS_MANY, 'ResourceToSupplier', 'resource_id'),
-            'taskTemplateToResources' => array(self::HAS_MANY, 'TaskTemplateToResource', 'resource_id'),
+            'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
+            'humanResourceToSuppliers' => array(self::HAS_MANY, 'HumanResourceToSupplier', 'human_resource_id'),
+            'taskTemplateToHumanResources' => array(self::HAS_MANY, 'TaskTemplateToHumanResource', 'human_resource_id'),
         );
     }
 
@@ -61,7 +63,7 @@ class Resource extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'description';
+		$columns[] = 'auth_item_name';
 		$columns[] = 'unit_price';
 		$columns[] = 'maximum';
 		$columns[] = 'searchLevel';

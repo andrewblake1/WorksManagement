@@ -52,9 +52,9 @@
  * @property ProjectToProjectTemplateToCustomField[] $projectToProjectTemplateToCustomFields
  * @property Report[] $reports
  * @property ReportToAuthItem[] $reportToAuthItems
- * @property Resource[] $resources
- * @property ResourceData[] $resourceDatas
- * @property ResourceToSupplier[] $resourceToSuppliers
+ * @property HumanResource[] $humanResources
+ * @property HumanResourceData[] $humanResourceDatas
+ * @property HumanResourceToSupplier[] $humanResourceToSuppliers
  * @property Stage[] $stages
  * @property Standard[] $standards
  * @property SubAssembly[] $subAssemblies
@@ -68,7 +68,7 @@
  * @property TaskTemplateToAssemblyGroup[] $taskTemplateToAssemblyGroups
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskTemplateToMaterialGroup[] $taskTemplateToMaterialGroups
- * @property TaskTemplateToResource[] $taskTemplateToResources
+ * @property TaskTemplateToHumanResource[] $taskTemplateToHumanResources
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToAssemblyToAssemblyToAssemblyGroup[] $taskToAssemblyToAssemblyToAssemblyGroups
  * @property TaskToAssemblyToTaskTemplateToAssemblyGroup[] $taskToAssemblyToTaskTemplateToAssemblyGroups
@@ -77,7 +77,7 @@
  * @property TaskToMaterialToAssemblyToMaterial[] $taskToMaterialToAssemblyToMaterials
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
  * @property TaskToMaterialToTaskTemplateToMaterialGroup[] $taskToMaterialToTaskTemplateToMaterialGroups
- * @property TaskToResource[] $taskToResources
+ * @property TaskToHumanResource[] $taskToHumanResources
  * @property User $updatedBy
  * @property User[] $users
  * @property Contact $contact
@@ -150,9 +150,9 @@ class User extends ContactActiveRecord
             'projectToProjectTemplateToCustomFields' => array(self::HAS_MANY, 'ProjectToProjectTemplateToCustomField', 'updated_by'),
             'reports' => array(self::HAS_MANY, 'Report', 'updated_by'),
             'reportToAuthItems' => array(self::HAS_MANY, 'ReportToAuthItem', 'updated_by'),
-            'resources' => array(self::HAS_MANY, 'Resource', 'updated_by'),
-            'resourceDatas' => array(self::HAS_MANY, 'ResourceData', 'updated_by'),
-            'resourceToSuppliers' => array(self::HAS_MANY, 'ResourceToSupplier', 'updated_by'),
+            'resources' => array(self::HAS_MANY, 'HumanResource', 'updated_by'),
+            'resourceDatas' => array(self::HAS_MANY, 'HumanResourceData', 'updated_by'),
+            'resourceToSuppliers' => array(self::HAS_MANY, 'HumanResourceToSupplier', 'updated_by'),
             'stages' => array(self::HAS_MANY, 'Stage', 'updated_by'),
             'standards' => array(self::HAS_MANY, 'Standard', 'updated_by'),
             'subAssemblies' => array(self::HAS_MANY, 'SubAssembly', 'updated_by'),
@@ -166,7 +166,7 @@ class User extends ContactActiveRecord
             'taskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskTemplateToAssemblyGroup', 'updated_by'),
             'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'updated_by'),
             'taskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskTemplateToMaterialGroup', 'updated_by'),
-            'taskTemplateToResources' => array(self::HAS_MANY, 'TaskTemplateToResource', 'updated_by'),
+            'taskTemplateToHumanResources' => array(self::HAS_MANY, 'TaskTemplateToHumanResource', 'updated_by'),
             'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'updated_by'),
             'taskToAssemblyToAssemblyToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToAssemblyToAssemblyGroup', 'updated_by'),
             'taskToAssemblyToTaskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskToAssemblyToTaskTemplateToAssemblyGroup', 'updated_by'),
@@ -175,7 +175,7 @@ class User extends ContactActiveRecord
             'taskToMaterialToAssemblyToMaterials' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterial', 'updated_by'),
             'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'updated_by'),
             'taskToMaterialToTaskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTemplateToMaterialGroup', 'updated_by'),
-            'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'updated_by'),
+            'taskToHumanResources' => array(self::HAS_MANY, 'TaskToHumanResource', 'updated_by'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'users' => array(self::HAS_MANY, 'User', 'updated_by'),
             'contact' => array(self::BELONGS_TO, 'Contact', 'contact_id'),

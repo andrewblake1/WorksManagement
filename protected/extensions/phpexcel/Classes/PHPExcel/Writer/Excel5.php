@@ -498,7 +498,7 @@ class PHPExcel_Writer_Excel5 implements PHPExcel_Writer_IWriter
 					}
 
 					ob_start();
-					call_user_func($renderingFunction, $drawing->getImageResource());
+					call_user_func($renderingFunction, $drawing->getImageHumanResource());
 					$blipData = ob_get_contents();
 					ob_end_clean();
 

@@ -361,7 +361,7 @@ class PHPExcel_Writer_Excel2007 implements PHPExcel_Writer_IWriter
 					ob_start();
 					call_user_func(
 						$this->getDrawingHashTable()->getByIndex($i)->getRenderingFunction(),
-						$this->getDrawingHashTable()->getByIndex($i)->getImageResource()
+						$this->getDrawingHashTable()->getByIndex($i)->getImageHumanResource()
 					);
 					$imageContents = ob_get_contents();
 					ob_end_clean();

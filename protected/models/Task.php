@@ -34,7 +34,7 @@
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToTaskTemplateToCustomField[] $taskToTaskTemplateToCustomFields
  * @property TaskToMaterial[] $taskToMaterials
- * @property TaskToResource[] $taskToResources
+ * @property TaskToHumanResource[] $taskToHumanResources
  */
 class Task extends CustomFieldActiveRecord
 {
@@ -114,7 +114,7 @@ class Task extends CustomFieldActiveRecord
             'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
             'taskToTaskTemplateToCustomFields' => array(self::HAS_MANY, 'TaskToTaskTemplateToCustomField', 'task_id'),
             'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_id'),
-            'taskToResources' => array(self::HAS_MANY, 'TaskToResource', 'task_id'),
+            'taskToHumanResources' => array(self::HAS_MANY, 'TaskToHumanResource', 'task_id'),
         );
     }
 
@@ -357,7 +357,7 @@ class Task extends CustomFieldActiveRecord
 			if($saved = parent::createSave($models, $runValidation))
 			{
 				// attempt creation of resources
-				$saved &= $this->createResources($models);
+				$saved &= $this->createHumanResources($models);
 				// attempt creation of assemblies
 				$saved &= $this->createAssemblies($models);
 				// attempt creation of materials
@@ -377,27 +377,27 @@ class Task extends CustomFieldActiveRecord
 // Also update triggers possibly to maintain ref integ. easiest for now in application code but not great for integrity.
 	
 	/**
-	 * Creates the intial resource rows for a task
+	 * Creates the intial humanResource rows for a task
 	 * @param CActiveRecord $model the model (task)
 	 * @param array of CActiveRecord models to extract errors from if necassary
 	 * @return returns 0, or null on error of any inserts
 	 */
-	private function createResources(&$models=array())
+	private function createHumanResources(&$models=array())
 	{
 		// initialise the saved variable to show no errors in case the are no
 		// model customValues - otherwise will return null indicating a save error
 		$saved = true;
 		
 		// loop thru all customValue model types associated to this models model type
-		foreach($this->taskTemplate->taskTemplateToResources as $taskTemplateToResource)
+		foreach($this->taskTemplate->taskTemplateToHumanResources as $taskTemplateToHumanResource)
 		{
-			// create a new resource
-			$taskToResource = new TaskToResource();
+			// create a new humanResource
+			$taskToHumanResource = new TaskToHumanResource();
 			// copy any useful attributes from
-			$taskToResource->attributes = $taskTemplateToResource->attributes;
-			$taskToResource->updated_by = null;
-			$taskToResource->task_id = $this->id;
-			$saved &= $taskToResource->createSave($models, $taskTemplateToResource);
+			$taskToHumanResource->attributes = $taskTemplateToHumanResource->attributes;
+			$taskToHumanResource->updated_by = null;
+			$taskToHumanResource->task_id = $this->id;
+			$saved &= $taskToHumanResource->createSave($models, $taskTemplateToHumanResource);
 		}
 		
 		return $saved;

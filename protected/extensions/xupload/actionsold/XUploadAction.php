@@ -34,7 +34,7 @@
  * by the 'file' validator.
  * 3. In the controller view, insert a XUpload widget.
  *
- * ###Resources
+ * ###HumanResources
  * - [xupload](http://www.yiiframework.com/extension/xupload)
  *
  * @version 0.3

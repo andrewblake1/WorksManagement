@@ -1,6 +1,6 @@
 <?php
 
-class TaskTemplateToResourceController extends Controller
+class TaskTemplateToHumanResourceController extends Controller
 {
 }
 

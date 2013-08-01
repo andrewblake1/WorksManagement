@@ -1008,7 +1008,7 @@ class PHPExcel_Reader_Excel5 implements PHPExcel_Reader_IReader
 					if ($blip = $BSE->getBlip()) {
 						$ih = imagecreatefromstring($blip->getData());
 						$drawing = new PHPExcel_Worksheet_MemoryDrawing();
-						$drawing->setImageResource($ih);
+						$drawing->setImageHumanResource($ih);
 
 						// width, height, offsetX, offsetY
 						$drawing->setResizeProportional(false);
