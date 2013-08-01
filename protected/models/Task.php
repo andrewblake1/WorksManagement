@@ -144,20 +144,31 @@ class Task extends CustomFieldActiveRecord
 	public function search($pagination = array())
 	{
 		// get the sort order
-		foreach($this->searchSort as $attribute)
+		foreach($this->adminColumns as $adminColumn)
 		{
+			if(is_array($adminColumn))
+			{
+				if(isset($adminColumn['name']))
+				{
+					$attribute = $adminColumn['name'];
+				}
+				else
+				{
+					continue;;
+				}
+			}
+			else
+			{
+				$attribute = $adminColumn;
+			}
+
+			$attribute = preg_replace('/:.*/', '', $attribute);
 			$sort[$attribute] = array(
-				'asc'=>" $attribute ",
-				'desc'=>" $attribute DESC",
-			);
+						'asc'=>" $attribute ",
+						'desc'=>" $attribute DESC",
+					);
 		}
 		
-		// add searchUser
-		$sort['searchUser'] = array(
-			'asc'=>" searchUser ",
-			'desc'=>" searchUser DESC",
-		);
-
 		// add all other attributes
 		$sort[] = '*';
 		

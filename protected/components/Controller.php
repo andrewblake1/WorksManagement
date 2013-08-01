@@ -1586,7 +1586,10 @@ class Controller extends CController
 		$lookupModelName = $this->getFKModelType($modelName::model(), $_GET['fkField']);
 		$form = $this->beginWidget('WMTbActiveForm', array('model' => $modelName::model(), 'parent_fk' => $_GET['fkField']));
 		ob_end_clean();
-		self::listWidgetRow($modelName::model(), $form, $_GET['fkField'], array(), array('scope' . $_GET['dependantOnModelName'] => array($_POST[$modelName][$_GET['dependantOnAttribute']])));
+		$scopeValue = isset($_POST[$modelName][$_GET['dependantOnAttribute']])
+			? $_POST[$modelName][$_GET['dependantOnAttribute']]
+			: NULL;
+		self::listWidgetRow($modelName::model(), $form, $_GET['fkField'], array(), array('scope' . $_GET['dependantOnModelName'] => array($scopeValue)));
 	}
 
 	// recursive to find our way thru relations to target fk model

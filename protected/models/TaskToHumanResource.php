@@ -35,7 +35,7 @@ class TaskToHumanResource extends ActiveRecord
 	public $estimated_total_quantity;
 	public $estimated_total_duration;
 	public $start;
-	public $description;
+	public $auth_item_name;
 	public $human_resource_to_supplier_id;
 	public $searchLevel;
 	public $human_resource_id;
@@ -75,7 +75,7 @@ class TaskToHumanResource extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'human_resource_to_supplier_id' => 'Supplier',
-			'description' => 'HumanResource',
+			'auth_item_name' => 'HumanResource',
 			'estimated_total_duration' => 'Override level duration',
 			'estimated_total_quantity' => 'Override level quantity',
 			'searchEstimatedTotalDuration' => 'Override level duration',
@@ -92,7 +92,7 @@ class TaskToHumanResource extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchHumanResource', $this->searchHumanResource, 'humanResource.description', true);
+		$criteria->compareAs('searchHumanResource', $this->searchHumanResource, 'humanResource.auth_item_name', true);
 		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
 		$criteria->compareAs('start', $this->start, 'humanResourceData.start', true);
 		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);

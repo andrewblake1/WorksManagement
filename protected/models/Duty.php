@@ -423,6 +423,13 @@ class Duty extends CustomFieldActiveRecord
 		// model customValues - otherwise will return null indicating a save error
 		$saved = true;
 
+/*$t = $this->attributes;
+$t1 = $this->dutyData;
+$t2 = $this->dutyData->attributes;
+$t3 = $this->dutyData->dutyStep;
+$t4 = $this->dutyData->attributes;
+$t5 = $t3->dutyStepToCustomFields;
+//$this->dutyData->dutyStep->dutyStepToCustomFields;*/
 		// loop thru all custom fields pivots
 		foreach(eval("return {$this->evalCustomFieldPivots};") as $customFieldPivot)
 		{
