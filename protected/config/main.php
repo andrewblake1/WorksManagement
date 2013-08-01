@@ -58,23 +58,6 @@ return array(
 				'class'=>'application.components.Formatter',
 			),
 
-			// Application Log
-			'log' => array(
-				'class' => 'CLogRouter',
-				'routes' => array(
-					// Save log messages on file
-					array(
-						'class' => 'CFileLogRoute',
-						'levels' => 'error, warning, trace, info',
-					),
-					// output errors to view
-					array(
-						'class' => 'CWebLogRoute',
-						'levels' => 'error, warning',
-					),
-				),
-			),
-
 			// uncomment the following to enable URLs in path-format
 			'urlManager'=>array(
 				'urlFormat'=>'path',
@@ -301,41 +284,6 @@ return array(
 					'AuthAssignment',
 				),
 			),
-		),
-
-	),
-
-	// This is the Console application configuration. Any writable
-	// CConsoleApplication properties can be configured here.
-    // Leave array empty if not used.
-    // Use value 'inherit' to copy from generated configWeb.
-	'configConsole' => array(
-
-		'basePath' => dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-		'name' => 'My Console Application',
-
-		// Preloading 'log' component
-		'preload' => array('log'),
-
-		// Autoloading model and component classes
-		'import'=>'inherit',
-		
-		'params'=>'inherit',
-
-		// Application components home
-		'components'=>array(
-
-			// RBAC
-			'authManager'=>'inherit',
-			
-			// site wide functions
-			'functions'=>array(
-				'class'=>'application.components.Functions',
-			),
-
-// TODO: would like to use in inherit but for some reason globabl $wceDatabaseName is blank in here
-// in console app ??
-
 		),
 
 	),
