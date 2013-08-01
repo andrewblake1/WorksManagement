@@ -5,7 +5,6 @@
  *
  * The followings are the available columns in table 'tbl_human_resource':
  * @property integer $id
- * @property string $level
  * @property string $auth_item_name
  * @property string $unit_price
  * @property integer $maximum
@@ -15,7 +14,6 @@
  *
  * The followings are the available model relations:
  * @property User $updatedBy
- * @property Level $level0
  * @property Action $action
  * @property AuthItem $authItemName
  * @property HumanResourceToSupplier[] $humanResourceToSuppliers
@@ -23,7 +21,6 @@
  */
 class HumanResource extends ActiveRecord
 {
-	public $searchLevel;
 	public $searchAction;
 
 	/**
@@ -35,7 +32,6 @@ class HumanResource extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
             'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
             'humanResourceToSuppliers' => array(self::HAS_MANY, 'HumanResourceToSupplier', 'human_resource_id'),
@@ -50,11 +46,9 @@ class HumanResource extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
 		$criteria->compareAs('searchAction', $this->searchAction, 'action.description', true);
 
 		$criteria->with = array(
-			'level0',
 			'action',
 		);
 
@@ -66,11 +60,18 @@ class HumanResource extends ActiveRecord
 		$columns[] = 'auth_item_name';
 		$columns[] = 'unit_price';
 		$columns[] = 'maximum';
-		$columns[] = 'searchLevel';
 		$columns[] = 'searchAction';
 		
 		return $columns;
 	}
+	
+	public static function getDisplayAttr()
+	{
+		return array(
+			'auth_item_name',
+		);
+	}
+
 
 }
 
