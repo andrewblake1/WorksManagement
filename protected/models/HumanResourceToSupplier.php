@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $human_resource_id
  * @property integer $supplier_id
+ * @property string $unit_price
  * @property integer $deleted
  * @property integer $updated_by
  *
@@ -72,6 +73,7 @@ class HumanResourceToSupplier extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = static::linkColumn('searchSupplier', 'Supplier', 'supplier_id');
+        $columns[] = 'unit_price';
 		
 		return $columns;
 	}

@@ -6,8 +6,6 @@
  * The followings are the available columns in table 'tbl_human_resource':
  * @property integer $id
  * @property string $auth_item_name
- * @property string $unit_price
- * @property integer $maximum
  * @property string $action_id
  * @property integer $deleted
  * @property integer $updated_by
@@ -55,11 +53,19 @@ class HumanResource extends ActiveRecord
 		return $criteria;
 	}
 
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels()
+	{
+		return parent::attributeLabels(array(
+			'auth_item_name' => 'Role',
+		));
+	}
+
 	public function getAdminColumns()
 	{
 		$columns[] = 'auth_item_name';
-		$columns[] = 'unit_price';
-		$columns[] = 'maximum';
 		$columns[] = 'searchAction';
 		
 		return $columns;
