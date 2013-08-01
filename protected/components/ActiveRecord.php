@@ -152,7 +152,7 @@ abstract class ActiveRecord extends CActiveRecord
 	 * @return array validation rules for model attributes. Calculate all so that only need rules for non model
 	 * database attributes i.e. attributes that don't come from the models corresponding table
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		$validators = $this->customValidators;
 		
@@ -167,7 +167,7 @@ abstract class ActiveRecord extends CActiveRecord
 		foreach($this->tableSchema->columns as $column)
 		{
 			// ignore these columns
-			if($column->name == 'id' || $column->name == 'deleted' || $column->name == 'updated_by')
+			if(in_array($column->name, $ignores) || $column->name == 'id' || $column->name == 'deleted' || $column->name == 'updated_by')
 			{
 				continue;
 			}

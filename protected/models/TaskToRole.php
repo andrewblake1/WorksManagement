@@ -33,7 +33,7 @@ class TaskToRole extends ActiveRecord
 	 */
 	public function rules()
 	{
-		return array_merge(parent::rules(), array(
+		return array_merge(parent::rules(array('role_data_id')), array(
 			array('auth_item_name, mode_id', 'required'),
 			array('level, auth_item_name, mode_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
 		));

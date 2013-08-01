@@ -63,7 +63,7 @@ class Duty extends CustomFieldActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array_merge(parent::rules(), array(
+		return array_merge(parent::rules(array('duty_data_id')), array(
 			array('action_id, updated, duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 		));
 	}

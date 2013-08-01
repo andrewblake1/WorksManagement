@@ -47,7 +47,7 @@ class TaskToHumanResource extends ActiveRecord
 	 */
 	public function rules()
 	{
-		return array_merge(parent::rules(), array(
+		return array_merge(parent::rules(array('human_resource_data_id')), array(
 			array('human_resource_id, mode_id', 'required'),
 			array('level, human_resource_id, mode_id, human_resource_to_supplier_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
 			array('start, estimated_total_duration', 'date', 'format'=>'H:m'),
