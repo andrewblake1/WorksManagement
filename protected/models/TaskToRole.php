@@ -40,7 +40,7 @@ class TaskToRole extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(array('role_data_id')), array(
-			array('human_resource_id, mode_id', 'required'),
+			array('human_resource_id', 'required'),
 			array('level, human_resource_id, mode_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
 		));
 	}
@@ -194,7 +194,6 @@ class TaskToRole extends ActiveRecord
 		$this->roleData->estimated_total_quantity = $this->estimated_total_quantity;
 		$this->roleData->human_resource_id = $this->human_resource_id;
 		$this->roleData->level = $this->level;
-		$this->roleData->mode_id = $this->mode_id;
 		if($saved &= $this->roleData->updateSave($models))
 		{
 			// problem here is that the the ...data may have completely changed as a result of convergence or divergence
@@ -209,14 +208,6 @@ class TaskToRole extends ActiveRecord
 		}
 		
 		return $saved & parent::updateSave($models);
-	}
-	
-	public function beforeValidate()
-	{
-		// set mode
-		$this->mode_id = $this->task->mode_id;
-
-		return parent::beforeValidate();
 	}
 
 }

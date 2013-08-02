@@ -48,7 +48,7 @@ class TaskToHumanResource extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(array('human_resource_data_id')), array(
-			array('human_resource_id, mode_id', 'required'),
+			array('human_resource_id', 'required'),
 			array('level, human_resource_id, mode_id, human_resource_to_supplier_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
 			array('start, estimated_total_duration', 'date', 'format'=>'H:m'),
 		));
@@ -230,7 +230,6 @@ class TaskToHumanResource extends ActiveRecord
 		$this->humanResourceData->start = $this->start;
 		$this->humanResourceData->human_resource_id = $this->human_resource_id;
 		$this->humanResourceData->level = $this->level;
-		$this->humanResourceData->mode_id = $this->mode_id;
 		if($saved &= $this->humanResourceData->updateSave($models))
 		{
 			// problem here is that the the ...data may have completely changed as a result of convergence or divergence
@@ -245,14 +244,6 @@ class TaskToHumanResource extends ActiveRecord
 		}
 		
 		return $saved & parent::updateSave($models);
-	}
-	
-	public function beforeValidate()
-	{
-		// set mode
-		$this->mode_id = $this->task->mode_id;
-
-		return parent::beforeValidate();
 	}
 
 }
