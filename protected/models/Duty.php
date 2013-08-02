@@ -347,9 +347,10 @@ class Duty extends CustomFieldActiveRecord
 		// attempt save of related DutyData
 		if($saved &= $this->dutyData->updateSave($models))
 		{
-			// duty data_id may well have changed in the database so re-read this for this this model
-			$duty = Duty::model()->findByPk($this->id);
-			$this->duty_data_id = $duty->duty_data_id;
+			// problem here is that the the ...data may have completely changed as a result of convergence or divergence
+			// due to a level change
+			unset($this->duty_data_id);
+
 			if(!$saved = $this->dbCallback('save'))
 			{
 				// put the model into the models array used for showing all errors

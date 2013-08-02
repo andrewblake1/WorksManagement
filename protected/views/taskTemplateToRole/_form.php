@@ -2,7 +2,7 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 	
-	AuthItemController::listWidgetRow($model, $form, 'auth_item_name', array(), array('roles'));
+	HumanResourceController::listWidgetRow($model, $form, 'human_resource_id');
 
 	ModeController::listWidgetRow($model, $form, 'mode_id');
 

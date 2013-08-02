@@ -109,11 +109,11 @@ class TaskToHumanResource extends ActiveRecord
 			JOIN tbl_human_resource_data humanResourceData ON t.human_resource_data_id = humanResourceData.id
 			JOIN tbl_human_resource humanResource ON humanResourceData.human_resource_id = humanResource.id
 			JOIN tbl_level level0 ON humanResourceData.level = level0.id
-			JOIN tbl_mode mode
+			LEFT JOIN tbl_mode mode
 				ON humanResourceData.mode_id = mode.id
-				AND task.mode_id = humanResourceData.mode_id
-			LEFT JOIN tbl_human_resource_to_supplier resourceToSupplier ON humanResource.id = resourceToSupplier.human_resource_id
-			LEFT JOIN tbl_supplier supplier ON resourceToSupplier.supplier_id = supplier.id
+			LEFT JOIN tbl_human_resource_to_supplier humanResourceToSupplier
+				ON humanResourceData.human_resource_to_supplier_id = humanResourceToSupplier.id
+			LEFT JOIN tbl_supplier supplier ON humanResourceToSupplier.supplier_id = supplier.id
 		";
 		
 		return $criteria;
@@ -232,6 +232,10 @@ class TaskToHumanResource extends ActiveRecord
 		$this->humanResourceData->mode_id = $this->mode_id;
 		if($saved &= $this->humanResourceData->updateSave($models))
 		{
+			// problem here is that the the ...data may have completely changed as a result of convergence or divergence
+			// due to a level change
+			unset($this->human_resource_data_id);
+			
 			if(!$saved = $this->dbCallback('save'))
 			{
 				// put the model into the models array used for showing all errors

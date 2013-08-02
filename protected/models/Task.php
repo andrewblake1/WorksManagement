@@ -369,6 +369,8 @@ class Task extends CustomFieldActiveRecord
 			{
 				// attempt creation of resources
 				$saved &= $this->createHumanResources($models);
+				// attempt creation of resources
+				$saved &= $this->createRoles($models);
 				// attempt creation of assemblies
 				$saved &= $this->createAssemblies($models);
 				// attempt creation of materials
@@ -395,11 +397,8 @@ class Task extends CustomFieldActiveRecord
 	 */
 	private function createHumanResources(&$models=array())
 	{
-		// initialise the saved variable to show no errors in case the are no
-		// model customValues - otherwise will return null indicating a save error
 		$saved = true;
 		
-		// loop thru all customValue model types associated to this models model type
 		foreach($this->taskTemplate->taskTemplateToHumanResources as $taskTemplateToHumanResource)
 		{
 			// create a new humanResource
@@ -409,6 +408,30 @@ class Task extends CustomFieldActiveRecord
 			$taskToHumanResource->updated_by = null;
 			$taskToHumanResource->task_id = $this->id;
 			$saved &= $taskToHumanResource->createSave($models, $taskTemplateToHumanResource);
+		}
+		
+		return $saved;
+	}
+
+	/**
+	 * Creates the intial roles rows for a task
+	 * @param CActiveRecord $model the model (task)
+	 * @param array of CActiveRecord models to extract errors from if necassary
+	 * @return returns 0, or null on error of any inserts
+	 */
+	private function createRoles(&$models=array())
+	{
+		$saved = true;
+				// loop thru all customValue model types associated to this models model type
+		foreach($this->taskTemplate->taskTemplateToRoles as $taskTemplateToRolee)
+		{
+			// create a new role
+			$taskToRole = new TaskToRole();
+			// copy any useful attributes from
+			$taskToRole->attributes = $taskTemplateToRole->attributes;
+			$taskToRole->updated_by = null;
+			$taskToRole->task_id = $this->id;
+			$saved &= $taskToRole->createSave($models, $taskTemplateToRole);
 		}
 		
 		return $saved;

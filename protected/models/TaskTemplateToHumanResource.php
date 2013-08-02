@@ -49,7 +49,7 @@ class TaskTemplateToHumanResource extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchHumanResource', $this->searchHumanResource, 'humanResource.description', true);
+		$criteria->compareAs('searchHumanResource', $this->searchHumanResource, 'humanResource.auth_item_name', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
 

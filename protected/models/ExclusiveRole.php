@@ -18,6 +18,20 @@
  */
 class ExclusiveRole extends ActiveRecord
 {
+	public $searchExclusiveTo;
+	public $task_to_role_id;
+	
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		return array_merge(parent::rules(), array(
+			array('task_to_role_id', 'numerical', 'integerOnly'=>true),
+			array('task_to_role_id', 'safe'),
+		));
+	}
+
 	/**
 	 * @return array relational rules.
 	 */
@@ -46,10 +60,14 @@ class ExclusiveRole extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchExclusiveTo', $this->searchExclusiveTo, 'child.auth_item_name', true);
+		// a slight difference here due to the schema where parent isn't actually task_to_role
+		$taskToRole = TaskToRole::model()->findByPk($this->task_to_role_id);
+		$this->parent_id = $taskToRole->role_data_id;
+		
+		$criteria->compareAs('searchExclusiveTo', $this->searchExclusiveTo, 'humanResource.auth_item_name', true);
 
 		$criteria->with = array(
-			'childDutyStep',
+			'child.humanResource',
 		);
 
 		return $criteria;
@@ -69,20 +87,13 @@ class ExclusiveRole extends ActiveRecord
 		);
 	}
  
-	/**
-	 * Returns foreign key attribute name within this model that references another model.
-	 * @param string $referencesModel the name name of the model that the foreign key references.
-	 * @return string the foreign key attribute name within this model that references another model
-	 */
-	static function getParentForeignKey($referencesModel)
-	{
-		return parent::getParentForeignKey($referencesModel, array('RoleData'=>'parent_id'));
-	}	
-	
 	public function beforeValidate()
 	{
+		// a slight difference here due to the schema where parent isn't actually task_to_role
+		$taskToRole = TaskToRole::model()->findByPk($this->task_to_role_id);
+		$this->parent_id = $taskToRole->role_data_id;
 		$this->planning_id = $this->parent->planning_id;
-		parent::beforeValidate();
+		return parent::beforeValidate();
 	}
 
 }

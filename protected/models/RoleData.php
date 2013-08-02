@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'tbl_role_data':
  * @property string $id
- * @property string $auth_item_name
+ * @property integer $human_resource_id
  * @property string $planning_id
  * @property string $level
  * @property integer $mode_id
@@ -20,30 +20,32 @@
  * @property Planning $level0
  * @property User $updatedBy
  * @property Mode $mode
- * @property AuthItem $authItemName
+ * @property HumanResource $humanResource
  * @property TaskToRole[] $taskToRoles
  */
 class RoleData extends ActiveRecord
 {
+	public $searchRole;
+	
 	/**
 	 * @return array relational rules.
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'exclusiveRoles' => array(self::HAS_MANY, 'ExclusiveRole', 'planning_id'),
-			'exclusiveRoles1' => array(self::HAS_MANY, 'ExclusiveRole', 'parent_id'),
-			'exclusiveRoles2' => array(self::HAS_MANY, 'ExclusiveRole', 'child_id'),
-			'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-			'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
-			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-			'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
-			'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
-			'taskToRoles' => array(self::HAS_MANY, 'TaskToRole', 'role_data_id'),
-		);
-	}
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'exclusiveRoles' => array(self::HAS_MANY, 'ExclusiveRole', 'planning_id'),
+            'exclusiveRoles1' => array(self::HAS_MANY, 'ExclusiveRole', 'parent_id'),
+            'exclusiveRoles2' => array(self::HAS_MANY, 'ExclusiveRole', 'child_id'),
+            'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
+            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
+            'humanResource' => array(self::BELONGS_TO, 'HumanResource', 'human_resource_id'),
+            'taskToRoles' => array(self::HAS_MANY, 'TaskToRole', 'role_data_id'),
+        );
+    }
 
 // todo: repeated in humanresourcedata and dutydata -- move to trait
 	/**
@@ -76,9 +78,9 @@ class RoleData extends ActiveRecord
 				// if a role_data already exists for this at new target level
 				if($exisRoleDataRow=Yii::app()->db->createCommand('
 					SELECT * FROM tbl_role_data
-					WHERE auth_item_name = :authItemName
+					WHERE human_resource_id = :human_resource_id
 						AND planning_id = :targetPlanningId
-					')->queryRow(true, array(':authItemName'=>$this->auth_item_name, ':targetPlanningId'=>$targetPlanningId)))
+					')->queryRow(true, array(':human_resource_id'=>$this->human_resource_id, ':targetPlanningId'=>$targetPlanningId)))
 				{
 					$exisRoleDataTarget = new self;
 					$exisRoleDataTarget->attributes = $exisRoleDataRow;
@@ -107,7 +109,7 @@ class RoleData extends ActiveRecord
 				// insert new suitable role data records at the desired level of each related item at the desired level
 				// and modify existing role records to point at the new relevant role_data
 				$roleData = new self;
-				$roleData->auth_item_name = $this->auth_item_name;
+				$roleData->human_resource_id = $this->human_resource_id;
 				$roleData->level = $newLevel;
 				$roleData->estimated_total_quantity = $this->estimated_total_quantity;
 				$roleData->mode_id = $this->mode_id;
@@ -150,4 +152,41 @@ class RoleData extends ActiveRecord
 			return parent::update();
 		}
 	}
+
+	/**
+	 * @return DbCriteria the search/filter conditions.
+	 */
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria($this);
+
+		$criteria->compareAs('searchRole', $this->searchRole, 'humanResource.auth_item_name', true);
+
+		// with
+		$criteria->with = array(
+			'humanResource',
+		);
+
+		return $criteria;
+	}
+
+	public static function getDisplayAttr()
+	{
+		// just a dummy
+		return array(
+			'searchRole',
+		);
+	}
+ 
+	public function scopePlanning($exclude_id, $planning_id)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('t.planning_id', $planning_id);
+		$criteria->addNotInCondition('t.id', array($exclude_id));
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+	
 }

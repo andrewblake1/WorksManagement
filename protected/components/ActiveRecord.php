@@ -271,7 +271,7 @@ abstract class ActiveRecord extends CActiveRecord
 		{
 			// need to bear in mind here that may not have necassary attributes defined so re-get the model
 			// using its id and standard admin search criteria
-			$criteria = new CDbCriteria();
+//			$criteria = new CDbCriteria();
 			$criteria = $model->searchCriteria;
 			$criteria->condition = '';
 			$criteria->params = array();

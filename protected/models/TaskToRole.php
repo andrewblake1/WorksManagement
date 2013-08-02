@@ -19,23 +19,29 @@ class TaskToRole extends ActiveRecord
 {
 	public $searchTaskQuantity;
 	public $searchMode;
+	public $searchRole;
 	public $searchEstimatedTotalQuantity;
 	public $searchCalculatedTotalQuantity;
 
 	public $estimated_total_quantity;
 	public $searchLevel;
-	public $auth_item_name;
+	public $human_resource_id;
 	public $mode_id;
 	public $level;
 
+	/**
+	 * @var string nice model name for use in output
+	 */
+	static $niceName = 'Addtional HR Role';
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
 	{
 		return array_merge(parent::rules(array('role_data_id')), array(
-			array('auth_item_name, mode_id', 'required'),
-			array('level, auth_item_name, mode_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
+			array('human_resource_id, mode_id', 'required'),
+			array('level, human_resource_id, mode_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -59,7 +65,7 @@ class TaskToRole extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'auth_item_name' => 'Role',
+			'human_resource_id' => 'Role',
 			'estimated_total_quantity' => 'Override level quantity',
 			'searchEstimatedTotalQuantity' => 'Override level quantity',
 			'searchCalculatedTotalQuantity' => 'Level quantity',
@@ -73,7 +79,7 @@ class TaskToRole extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchRole', $this->searchRole, 'role.description', true);
+		$criteria->compareAs('searchRole', $this->searchRole, 'humanResource.auth_item_name', true);
 		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 		$criteria->compareAs('searchTaskQuantity', $this->searchTaskQuantity, 'task.quantity');
@@ -84,9 +90,9 @@ class TaskToRole extends ActiveRecord
 		$criteria->join = "
 			JOIN tbl_task task ON t.task_id = task.id
 			JOIN tbl_role_data roleData ON t.role_data_id = roleData.id
-			JOIN AuthItem role ON roleData.auth_item_name = role.id
 			JOIN tbl_level level0 ON roleData.level = level0.id
-			JOIN tbl_mode mode
+			JOIN tbl_human_resource humanResource ON roleData.human_resource_id = humanResource.id
+			LEFT JOIN tbl_mode mode
 				ON roleData.mode_id = mode.id
 				AND task.mode_id = roleData.mode_id
 		";
@@ -114,8 +120,8 @@ class TaskToRole extends ActiveRecord
 	public function afterFind() {
 		parent::afterFind();
 
-		$this->estimated_total_quantity = $this->humanResourceData->estimated_total_quantity;
-		$this->auth_item_name = $this->roleData->auth_item_name;
+		$this->estimated_total_quantity = $this->roleData->estimated_total_quantity;
+		$this->human_resource_id = $this->roleData->human_resource_id;
 		$this->level = $this->roleData->level;
 		$this->mode_id = $this->roleData->mode_id;
 		
@@ -125,7 +131,7 @@ class TaskToRole extends ActiveRecord
 	/*
 	 * overidden as mulitple models
 	 */
-	public function createSave(&$models=array(), $taskTemplateToHumanResource=null)
+	public function createSave(&$models=array()/*, $taskTemplateToRole=null*/)
 	{
 		// ensure existance of a related RoleData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level
@@ -158,12 +164,12 @@ class TaskToRole extends ActiveRecord
 		// retrieve RoleData - or insert if doesn't exist
 		if(!$roleData = RoleData::model()->findByAttributes(array(
 			'planning_id'=>$planning_id,
-			'auth_item_name'=>$this->auth_item_name,
+			'human_resource_id'=>$this->human_resource_id,
 		)))
 		{
 			$roleData = new RoleData;
 			$roleData->planning_id = $planning_id;
-			$roleData->auth_item_name = $this->auth_item_name;
+			$roleData->human_resource_id = $this->human_resource_id;
 			$roleData->estimated_total_quantity = $this->estimated_total_quantity;
 			$roleData->level = $level;
 			$roleData->mode_id = $this->mode_id;
@@ -186,11 +192,15 @@ class TaskToRole extends ActiveRecord
 
 		// attempt save of related RoleData
 		$this->roleData->estimated_total_quantity = $this->estimated_total_quantity;
-		$this->roleData->auth_item_name = $this->auth_item_name;
+		$this->roleData->human_resource_id = $this->human_resource_id;
 		$this->roleData->level = $this->level;
 		$this->roleData->mode_id = $this->mode_id;
 		if($saved &= $this->roleData->updateSave($models))
 		{
+			// problem here is that the the ...data may have completely changed as a result of convergence or divergence
+			// due to a level change
+			unset($this->role_data_id);
+
 			if(!$saved = $this->dbCallback('save'))
 			{
 				// put the model into the models array used for showing all errors

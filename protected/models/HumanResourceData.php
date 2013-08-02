@@ -139,7 +139,7 @@ class HumanResourceData extends ActiveRecord
 					$humanResourceData->setIsNewRecord(true);
 				}
 
-				// remove this record as all the related humanResource items should now point at the correct new target
+				// remove this record as all the related tasktohumanResource items should now point at the correct new target
 				// NB: don't return the delete as may delete 0 rows due to orphan maintenance in humanResource update trigger
 				$this->delete();
 				
