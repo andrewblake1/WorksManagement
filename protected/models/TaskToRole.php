@@ -172,7 +172,7 @@ class TaskToRole extends ActiveRecord
 			$roleData->human_resource_id = $this->human_resource_id;
 			$roleData->estimated_total_quantity = $this->estimated_total_quantity;
 			$roleData->level = $level;
-			$roleData->mode_id = $this->mode_id;
+			$roleData->mode_id = $this->task->mode_id;
 			$roleData->updated_by = Yii::app()->user->id;
 			$roleData->insert();
 		}

@@ -206,7 +206,7 @@ class TaskToHumanResource extends ActiveRecord
 			$humanResourceData->estimated_total_quantity = $this->estimated_total_quantity;
 			$humanResourceData->estimated_total_duration = $this->estimated_total_duration;
 			$humanResourceData->start = $this->start;
-			$humanResourceData->mode_id = $this->mode_id;
+			$humanResourceData->mode_id = $this->task->mode_id;
 			$humanResourceData->updated_by = Yii::app()->user->id;
 			$humanResourceData->insert();
 		}
