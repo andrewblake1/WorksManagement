@@ -10,7 +10,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('estimated_total_quantity');
 
-	ModeController::listWidgetRow($model, $form, 'mode_id');
+//	ModeController::listWidgetRow($model, $form, 'mode_id');
 
 $this->endWidget();
 

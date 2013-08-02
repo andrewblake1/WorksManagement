@@ -111,6 +111,7 @@ class TaskToHumanResource extends ActiveRecord
 			JOIN tbl_level level0 ON humanResourceData.level = level0.id
 			LEFT JOIN tbl_mode mode
 				ON humanResourceData.mode_id = mode.id
+				AND task.mode_id = humanResourceData.mode_id
 			LEFT JOIN tbl_human_resource_to_supplier humanResourceToSupplier
 				ON humanResourceData.human_resource_to_supplier_id = humanResourceToSupplier.id
 			LEFT JOIN tbl_supplier supplier ON humanResourceToSupplier.supplier_id = supplier.id
@@ -126,7 +127,7 @@ class TaskToHumanResource extends ActiveRecord
 		$columns[] = 'searchTaskQuantity';
 		$columns[] = 'start:time';
 		$columns[] = 'searchLevel';
-		$columns[] = 'searchMode';
+//		$columns[] = 'searchMode';
 		$columns[] = 'quantity';
 		$columns[] = 'duration:time';
 		$columns[] = 'searchEstimatedTotalQuantity';
@@ -244,6 +245,14 @@ class TaskToHumanResource extends ActiveRecord
 		}
 		
 		return $saved & parent::updateSave($models);
+	}
+	
+	public function beforeValidate()
+	{
+		// set mode
+		$this->mode_id = $this->task->mode_id;
+
+		return parent::beforeValidate();
 	}
 
 }

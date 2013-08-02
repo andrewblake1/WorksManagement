@@ -422,11 +422,13 @@ class Task extends CustomFieldActiveRecord
 	private function createRoles(&$models=array())
 	{
 		$saved = true;
-				// loop thru all customValue model types associated to this models model type
-		foreach($this->taskTemplate->taskTemplateToRoles as $taskTemplateToRolee)
+
+		// loop thru all customValue model types associated to this models model type
+		foreach($this->taskTemplate->taskTemplateToRoles as $taskTemplateToRole)
 		{
 			// create a new role
 			$taskToRole = new TaskToRole();
+
 			// copy any useful attributes from
 			$taskToRole->attributes = $taskTemplateToRole->attributes;
 			$taskToRole->updated_by = null;

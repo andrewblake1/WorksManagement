@@ -92,7 +92,7 @@ class TaskToRole extends ActiveRecord
 			JOIN tbl_role_data roleData ON t.role_data_id = roleData.id
 			JOIN tbl_level level0 ON roleData.level = level0.id
 			JOIN tbl_human_resource humanResource ON roleData.human_resource_id = humanResource.id
-			LEFT JOIN tbl_mode mode
+			JOIN tbl_mode mode
 				ON roleData.mode_id = mode.id
 				AND task.mode_id = roleData.mode_id
 		";
@@ -104,7 +104,7 @@ class TaskToRole extends ActiveRecord
 	{
         $columns[] = 'searchRole';
 		$columns[] = 'searchLevel';
-		$columns[] = 'searchMode';
+//		$columns[] = 'searchMode';
 		
 		return $columns;
 	}
@@ -209,6 +209,14 @@ class TaskToRole extends ActiveRecord
 		}
 		
 		return $saved & parent::updateSave($models);
+	}
+	
+	public function beforeValidate()
+	{
+		// set mode
+		$this->mode_id = $this->task->mode_id;
+
+		return parent::beforeValidate();
 	}
 
 }
