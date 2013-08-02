@@ -675,7 +675,7 @@ $t = $model->attributes;
 		$modelName = str_replace('View', '', get_class($this));
 		$controllerName = "{$modelName}Controller";
 
-		// add addtional columns for managment of the adjacency list if user has write access
+		// add additional columns for managment of the adjacency list if user has write access
 		if($controllerName::checkAccess(Controller::accessWrite))
 		{
 			if(!is_array($columns) || !in_array($primaryKeyName, $columns))

@@ -32,7 +32,7 @@ class TaskToRole extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Addtional HR Role';
+	static $niceName = 'Additional HR Role';
 	
 	/**
 	 * @return array validation rules for model attributes.

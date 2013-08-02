@@ -12,14 +12,14 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property TblTaskTemplateToExclusiveRole[] $tblTaskTemplateToExclusiveRoles
- * @property TblTaskTemplateToExclusiveRole[] $tblTaskTemplateToExclusiveRoles1
- * @property TblTaskTemplateToExclusiveRole[] $tblTaskTemplateToExclusiveRoles2
- * @property TblTaskTemplate $taskTemplate
- * @property TblUser $updatedBy
- * @property TblMode $mode
- * @property TblLevel $level0
- * @property TblHumanResource $humanResource
+ * @property TaskTemplateToExclusiveRole[] $tblTaskTemplateToExclusiveRoles
+ * @property TaskTemplateToExclusiveRole[] $tblTaskTemplateToExclusiveRoles1
+ * @property TaskTemplateToExclusiveRole[] $tblTaskTemplateToExclusiveRoles2
+ * @property TaskTemplate $taskTemplate
+ * @property User $updatedBy
+ * @property Mode $mode
+ * @property Level $level0
+ * @property HumanResource $humanResource
  */
 class TaskTemplateToRole extends ActiveRecord
 {
@@ -30,7 +30,7 @@ class TaskTemplateToRole extends ActiveRecord
 	/**
 	 * @var string nice model name for use in output
 	 */
-	static $niceName = 'Addtional HR Role';
+	static $niceName = 'Additional HR Role';
 	
 	/**
 	 * @return array relational rules.
@@ -40,14 +40,14 @@ class TaskTemplateToRole extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'tblTaskTemplateToExclusiveRoles' => array(self::HAS_MANY, 'TblTaskTemplateToExclusiveRole', 'task_template_id'),
-            'tblTaskTemplateToExclusiveRoles1' => array(self::HAS_MANY, 'TblTaskTemplateToExclusiveRole', 'parent_id'),
-            'tblTaskTemplateToExclusiveRoles2' => array(self::HAS_MANY, 'TblTaskTemplateToExclusiveRole', 'child_id'),
-            'taskTemplate' => array(self::BELONGS_TO, 'TblTaskTemplate', 'task_template_id'),
-            'updatedBy' => array(self::BELONGS_TO, 'TblUser', 'updated_by'),
-            'mode' => array(self::BELONGS_TO, 'TblMode', 'mode_id'),
-            'level0' => array(self::BELONGS_TO, 'TblLevel', 'level'),
-            'humanResource' => array(self::BELONGS_TO, 'TblHumanResource', 'human_resource_id'),
+            'tblTaskTemplateToExclusiveRoles' => array(self::HAS_MANY, 'TaskTemplateToExclusiveRole', 'task_template_id'),
+            'tblTaskTemplateToExclusiveRoles1' => array(self::HAS_MANY, 'TaskTemplateToExclusiveRole', 'parent_id'),
+            'tblTaskTemplateToExclusiveRoles2' => array(self::HAS_MANY, 'TaskTemplateToExclusiveRole', 'child_id'),
+            'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
+            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'humanResource' => array(self::BELONGS_TO, 'HumanResource', 'human_resource_id'),
         );
     }
 
