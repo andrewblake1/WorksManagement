@@ -178,10 +178,11 @@ class RoleData extends ActiveRecord
 		);
 	}
  
-	public function scopePlanning($exclude_id, $planning_id)
+	public function scopePlanning($exclude_id, $planning_id, $mode_id)
 	{
 		$criteria=new DbCriteria;
 		$criteria->compare('t.planning_id', $planning_id);
+		$criteria->compare('t.mode_id', $mode_id);
 		$criteria->addNotInCondition('t.id', array($exclude_id));
 
 		$this->getDbCriteria()->mergeWith($criteria);

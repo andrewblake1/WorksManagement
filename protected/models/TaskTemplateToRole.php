@@ -91,10 +91,11 @@ class TaskTemplateToRole extends ActiveRecord
 		);
 	}
 
-	public function scopeTaskTemplate($exclude_id, $task_template_id)
+	public function scopeTaskTemplate($exclude_id, $task_template_id, $mode_id)
 	{
 		$criteria=new DbCriteria;
 		$criteria->compare('t.task_template_id', $task_template_id);
+		$criteria->compare('t.mode_id', $mode_id);
 		$criteria->addNotInCondition('t.id', array($exclude_id));
 
 		$this->getDbCriteria()->mergeWith($criteria);
