@@ -13,15 +13,20 @@
  * @property integer $estimated_total_quantity
  * @property string $estimated_total_duration
  * @property string $start
+ * @property integer $action_to_human_resource_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
+ * @property ExclusiveRole[] $exclusiveRoles
+ * @property ExclusiveRole[] $exclusiveRoles1
+ * @property ExclusiveRole[] $exclusiveRoles2
  * @property Planning $planning
  * @property Planning $level0
  * @property User $updatedBy
  * @property HumanResourceToSupplier $humanResource
  * @property HumanResourceToSupplier $humanResourceToSupplier
  * @property Mode $mode
+ * @property ActionToHumanResource $actionToHumanResource
  * @property TaskToHumanResource[] $taskToHumanResources
  */
 class HumanResourceData extends ActiveRecord
@@ -34,12 +39,16 @@ class HumanResourceData extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'exclusiveRoles' => array(self::HAS_MANY, 'ExclusiveRole', 'planning_id'),
+            'exclusiveRoles1' => array(self::HAS_MANY, 'ExclusiveRole', 'parent_id'),
+            'exclusiveRoles2' => array(self::HAS_MANY, 'ExclusiveRole', 'child_id'),
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'humanResource' => array(self::BELONGS_TO, 'HumanResource', 'human_resource_id'),
-			'resourceToSupplier' => array(self::BELONGS_TO, 'HumanResourceToSupplier', 'human_resource_to_supplier_id'),
+            'humanResource' => array(self::BELONGS_TO, 'HumanResourceToSupplier', 'human_resource_id'),
+            'humanResourceToSupplier' => array(self::BELONGS_TO, 'HumanResourceToSupplier', 'human_resource_to_supplier_id'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
+            'actionToHumanResource' => array(self::BELONGS_TO, 'ActionToHumanResource', 'action_to_human_resource_id'),
             'taskToHumanResources' => array(self::HAS_MANY, 'TaskToHumanResource', 'human_resource_data_id'),
         );
     }

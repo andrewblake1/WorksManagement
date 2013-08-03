@@ -170,6 +170,9 @@ return array(
 						),
 						'DutyStepToMode',
 					),
+					'ActionToHumanResource'=>array(
+						'ActionToHumanResourceBranch'
+					),
 				),
 				'Client'=>array(
 					'Action'=>array(
@@ -181,6 +184,9 @@ return array(
 								'DutyStepToCustomField',
 							),
 							'DutyStepToMode',
+						),
+						'ActionToHumanResource'=>array(
+							'ActionToHumanResourceBranch'
 						),
 					),
 					'ClientToAssembly',
@@ -197,11 +203,10 @@ return array(
 										'TaskToAssemblyToAssemblyToAssemblyGroup',
 										'TaskToAssemblyToTaskTemplateToAssemblyGroup',
 									),
-									'TaskToMaterial',
-									'TaskToHumanResource',
-									'TaskToRole'=>array(
+									'TaskToHumanResource'=>array(
 										'ExclusiveRole',
 									),
+									'TaskToMaterial',
 								),
 							),
 						),
@@ -222,6 +227,9 @@ return array(
 								),
 								'DutyStepToMode',
 							),
+							'ActionToHumanResource'=>array(
+								'ActionToHumanResourceBranch'
+							),
 						),
 						'CustomFieldProjectCategory'=>array(
 							'ProjectTemplateToCustomField',
@@ -231,15 +239,16 @@ return array(
 							'CustomFieldTaskCategory'=>array(
 								'TaskTemplateToCustomField',
 							),
-							'TaskTemplateToAction',
+							'TaskTemplateToAction'=>array(
+								'TaskTemplateToActionToHumanResource',
+							),
 							'TaskTemplateToAssembly',
 							'TaskTemplateToAssemblyGroup',
-							'TaskTemplateToHumanResource',
-							'TaskTemplateToMaterial',
-							'TaskTemplateToMaterialGroup',
-							'TaskTemplateToRole'=>array(
+							'TaskTemplateToHumanResource'=>array(
 								'TaskTemplateToExclusiveRole',
 							),
+							'TaskTemplateToMaterial',
+							'TaskTemplateToMaterialGroup',
 						),
 					),
 					'ProjectType',

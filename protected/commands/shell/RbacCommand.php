@@ -63,6 +63,16 @@ EOD;
 			$this->_authManager->createOperation('ActionRead', 'Action read');
 			$task->addChild('ActionRead');
 
+			$task=$this->_authManager->createTask('ActionToHumanResource', 'ActionToHumanResource task');
+			$systemAdminRole->addChild('ActionToHumanResource');
+			$this->_authManager->createOperation('ActionToHumanResourceRead', 'ActionToHumanResource read');
+			$task->addChild('ActionToHumanResourceRead');
+
+			$task=$this->_authManager->createTask('ActionToHumanResourceBranch', 'ActionToHumanResourceBranch task');
+			$systemAdminRole->addChild('ActionToHumanResourceBranch');
+			$this->_authManager->createOperation('ActionToHumanResourceBranchRead', 'ActionToHumanResourceBranch read');
+			$task->addChild('ActionToHumanResourceBranchRead');
+
 			$task=$this->_authManager->createTask('Assembly', 'Assembly task');
 			$systemAdminRole->addChild('Assembly');
 			$this->_authManager->createOperation('AssemblyRead', 'Assembly read');
@@ -118,25 +128,15 @@ EOD;
 			$this->_authManager->createOperation('ClientRead', 'Client read');
 			$task->addChild('ClientRead');
 
-			$task=$this->_authManager->createTask('ProjectTemplateToCustomField', 'ProjectTemplateToCustomField task');
-			$systemAdminRole->addChild('ProjectTemplateToCustomField');
-			$this->_authManager->createOperation('ProjectTemplateToCustomFieldRead', 'ProjectTemplateToCustomField read');
-			$task->addChild('ProjectTemplateToCustomFieldRead');
-
-			$task=$this->_authManager->createTask('TaskTemplateToCustomField', 'TaskTemplateToCustomField task');
-			$systemAdminRole->addChild('TaskTemplateToCustomField');
-			$this->_authManager->createOperation('TaskTemplateToCustomFieldRead', 'TaskTemplateToCustomField read');
-			$task->addChild('TaskTemplateToCustomFieldRead');
+			$task=$this->_authManager->createTask('ClientToMaterial', 'ClientToMaterial task');
+			$systemAdminRole->addChild('ClientToMaterial');
+			$this->_authManager->createOperation('ClientToMaterialRead', 'ClientToMaterial read');
+			$task->addChild('ClientToMaterialRead');
 
 			$task=$this->_authManager->createTask('CustomField', 'CustomField task');
 			$systemAdminRole->addChild('CustomField');
 			$this->_authManager->createOperation('CustomFieldRead', 'CustomField read');
 			$task->addChild('CustomFieldRead');
-
-			$task=$this->_authManager->createTask('DutyStepToCustomField', 'DutyStepToCustomField task');
-			$systemAdminRole->addChild('DutyStepToCustomField');
-			$this->_authManager->createOperation('DutyStepToCustomFieldRead', 'DutyStepToCustomField read');
-			$task->addChild('DutyStepToCustomFieldRead');
 
 			$task=$this->_authManager->createTask('CustomFieldDutyStepCategory', 'CustomFieldDutyStepCategory task');
 			$systemAdminRole->addChild('CustomFieldDutyStepCategory');
@@ -188,10 +188,25 @@ EOD;
 			$this->_authManager->createOperation('DutyStepDependencyRead', 'DutyStepDependency read');
 			$task->addChild('DutyStepDependencyRead');
 
+			$task=$this->_authManager->createTask('DutyStepToCustomField', 'DutyStepToCustomField task');
+			$systemAdminRole->addChild('DutyStepToCustomField');
+			$this->_authManager->createOperation('DutyStepToCustomFieldRead', 'DutyStepToCustomField read');
+			$task->addChild('DutyStepToCustomFieldRead');
+
 			$task=$this->_authManager->createTask('DutyStepToMode', 'DutyStepToMode task');
 			$systemAdminRole->addChild('DutyStepToMode');
 			$this->_authManager->createOperation('DutyStepToModeRead', 'DutyStepToMode read');
 			$task->addChild('DutyStepToModeRead');
+
+			$task=$this->_authManager->createTask('HumanResource', 'HumanResource task');
+			$systemAdminRole->addChild('HumanResource');
+			$this->_authManager->createOperation('HumanResourceRead', 'HumanResource read');
+			$task->addChild('HumanResourceRead');
+
+			$task=$this->_authManager->createTask('HumanResourceToSupplier', 'HumanResourceToSupplier task');
+			$systemAdminRole->addChild('HumanResourceToSupplier');
+			$this->_authManager->createOperation('HumanResourceToSupplierRead', 'HumanResourceToSupplier read');
+			$task->addChild('HumanResourceToSupplierRead');
 
 			$task=$this->_authManager->createTask('MaterialGroup', 'MaterialGroup task');
 			$systemAdminRole->addChild('MaterialGroup');
@@ -202,11 +217,6 @@ EOD;
 			$systemAdminRole->addChild('MaterialGroupToMaterial');
 			$this->_authManager->createOperation('MaterialGroupToMaterialRead', 'MaterialGroupToMaterial read');
 			$task->addChild('MaterialGroupToMaterialRead');
-
-			$task=$this->_authManager->createTask('ClientToMaterial', 'ClientToMaterial task');
-			$systemAdminRole->addChild('ClientToMaterial');
-			$this->_authManager->createOperation('ClientToMaterialRead', 'ClientToMaterial read');
-			$task->addChild('ClientToMaterialRead');
 
 			$task=$this->_authManager->createTask('Material', 'Material task');
 			$systemAdminRole->addChild('Material');
@@ -233,6 +243,11 @@ EOD;
 			$this->_authManager->createOperation('ProjectTemplateToAuthItemRead', 'ProjectTemplateToAuthItem read');
 			$task->addChild('ProjectTemplateToAuthItemRead');
 
+			$task=$this->_authManager->createTask('ProjectTemplateToCustomField', 'ProjectTemplateToCustomField task');
+			$systemAdminRole->addChild('ProjectTemplateToCustomField');
+			$this->_authManager->createOperation('ProjectTemplateToCustomFieldRead', 'ProjectTemplateToCustomField read');
+			$task->addChild('ProjectTemplateToCustomFieldRead');
+
 			$task=$this->_authManager->createTask('ProjectType', 'ProjectType task');
 			$systemAdminRole->addChild('ProjectType');
 			$this->_authManager->createOperation('ProjectTypeRead', 'ProjectType read');
@@ -252,16 +267,6 @@ EOD;
 			$systemAdminRole->addChild('ReportToAuthItem');
 			$this->_authManager->createOperation('ReportToAuthItemRead', 'ReportToAuthItem read');
 			$task->addChild('ReportToAuthItemRead');
-
-			$task=$this->_authManager->createTask('HumanResource', 'HumanResource task');
-			$systemAdminRole->addChild('HumanResource');
-			$this->_authManager->createOperation('HumanResourceRead', 'HumanResource read');
-			$task->addChild('HumanResourceRead');
-
-			$task=$this->_authManager->createTask('HumanResourceToSupplier', 'HumanResourceToSupplier task');
-			$systemAdminRole->addChild('HumanResourceToSupplier');
-			$this->_authManager->createOperation('HumanResourceToSupplierRead', 'HumanResourceToSupplier read');
-			$task->addChild('HumanResourceToSupplierRead');
 
 			$task=$this->_authManager->createTask('Stage', 'Stage task');
 			$systemAdminRole->addChild('Stage');
@@ -298,6 +303,11 @@ EOD;
 			$this->_authManager->createOperation('TaskTemplateToActionRead', 'TaskTemplateToAction read');
 			$task->addChild('TaskTemplateToActionRead');
 
+			$task=$this->_authManager->createTask('TaskTemplateToActionToHumanResource', 'TaskTemplateToActionToHumanResource task');
+			$systemAdminRole->addChild('TaskTemplateToActionToHumanResource');
+			$this->_authManager->createOperation('TaskTemplateToActionToHumanResourceRead', 'TaskTemplateToActionToHumanResource read');
+			$task->addChild('TaskTemplateToActionToHumanResourceRead');
+
 			$task=$this->_authManager->createTask('TaskTemplateToAssembly', 'TaskTemplateToAssembly task');
 			$systemAdminRole->addChild('TaskTemplateToAssembly');
 			$this->_authManager->createOperation('TaskTemplateToAssemblyRead', 'TaskTemplateToAssembly read');
@@ -308,6 +318,11 @@ EOD;
 			$this->_authManager->createOperation('TaskTemplateToAssemblyGroupRead', 'TaskTemplateToAssemblyGroup read');
 			$task->addChild('TaskTemplateToAssemblyGroupRead');
 
+			$task=$this->_authManager->createTask('TaskTemplateToCustomField', 'TaskTemplateToCustomField task');
+			$systemAdminRole->addChild('TaskTemplateToCustomField');
+			$this->_authManager->createOperation('TaskTemplateToCustomFieldRead', 'TaskTemplateToCustomField read');
+			$task->addChild('TaskTemplateToCustomFieldRead');
+
 			$task=$this->_authManager->createTask('TaskTemplateToExclusiveRole', 'TaskTemplateToExclusiveRole task');
 			$systemAdminRole->addChild('TaskTemplateToExclusiveRole');
 			$this->_authManager->createOperation('TaskTemplateToExclusiveRoleRead', 'TaskTemplateToExclusiveRole read');
@@ -317,11 +332,6 @@ EOD;
 			$systemAdminRole->addChild('TaskTemplateToHumanResource');
 			$this->_authManager->createOperation('TaskTemplateToHumanResourceRead', 'TaskTemplateToHumanResource read');
 			$task->addChild('TaskTemplateToHumanResourceRead');
-
-			$task=$this->_authManager->createTask('TaskTemplateToRole', 'TaskTemplateToRole task');
-			$systemAdminRole->addChild('TaskTemplateToRole');
-			$this->_authManager->createOperation('TaskTemplateToRoleRead', 'TaskTemplateToRole read');
-			$task->addChild('TaskTemplateToRoleRead');
 
 			$task=$this->_authManager->createTask('TaskTemplateToMaterial', 'TaskTemplateToMaterial task');
 			$systemAdminRole->addChild('TaskTemplateToMaterial');
@@ -444,11 +454,6 @@ EOD;
 			$projectManagerRole->addChild('TaskToHumanResource');
 			$this->_authManager->createOperation('TaskToHumanResourceRead', 'TaskToHumanResource read');
 			$task->addChild('TaskToHumanResourceRead');
-
-			$task=$this->_authManager->createTask('TaskToRole', 'TaskToRole task');
-			$projectManagerRole->addChild('TaskToRole');
-			$this->_authManager->createOperation('TaskToRoleRead', 'TaskToRole read');
-			$task->addChild('TaskToRoleRead');
 
 			$task=$this->_authManager->createTask('TaskTemplateToActionToProjectTemplateToAuthItem', 'TaskTemplateToActionToProjectTemplateToAuthItem task');
 			$projectManagerRole->addChild('TaskTemplateToActionToProjectTemplateToAuthItem');

@@ -1,29 +1,29 @@
 <?php
 
 /**
- * This is the model class for table "tbl_task_template_to_human_resource".
+ * This is the model class for table "tbl_action_to_human_resource".
  *
- * The followings are the available columns in table 'tbl_task_template_to_human_resource':
+ * The followings are the available columns in table 'tbl_action_to_human_resource':
  * @property integer $id
- * @property integer $task_template_id
+ * @property string $action_id
  * @property integer $human_resource_id
- * @property string $level
  * @property integer $mode_id
- * @property integer $quantity
- * @property string $duration
+ * @property string $level_id
+ * @property integer $deleted
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property TaskTemplateToExclusiveRole[] $taskTemplateToExclusiveRoles
- * @property TaskTemplateToExclusiveRole[] $taskTemplateToExclusiveRoles1
- * @property TaskTemplateToExclusiveRole[] $taskTemplateToExclusiveRoles2
- * @property TaskTemplate $taskTemplate
+ * @property Action $action
  * @property HumanResource $humanResource
  * @property User $updatedBy
  * @property Mode $mode
- * @property Level $level0
+ * @property Level $level
+ * @property ActionToHumanResourceBranch[] $actionToHumanResourceBranches
+ * @property ActionToHumanResourceBranch[] $actionToHumanResourceBranches1
+ * @property HumanResourceData[] $humanResourceDatas
+ * @property TaskTemplateToActionToHumanResource[] $taskTemplateToActionToHumanResources
  */
-class TaskTemplateToHumanResource extends ActiveRecord
+class ActionToHumanResource extends ActiveRecord
 {
 	public $searchHumanResource;
 	public $searchLevel;
@@ -37,14 +37,15 @@ class TaskTemplateToHumanResource extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'taskTemplateToExclusiveRoles' => array(self::HAS_MANY, 'TaskTemplateToExclusiveRole', 'task_template_id'),
-            'taskTemplateToExclusiveRoles1' => array(self::HAS_MANY, 'TaskTemplateToExclusiveRole', 'parent_id'),
-            'taskTemplateToExclusiveRoles2' => array(self::HAS_MANY, 'TaskTemplateToExclusiveRole', 'child_id'),
-            'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
+            'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
             'humanResource' => array(self::BELONGS_TO, 'HumanResource', 'human_resource_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'level' => array(self::BELONGS_TO, 'Level', 'level_id'),
+            'actionToHumanResourceBranches' => array(self::HAS_MANY, 'ActionToHumanResourceBranch', 'action_id'),
+            'actionToHumanResourceBranches1' => array(self::HAS_MANY, 'ActionToHumanResourceBranch', 'action_to_human_resource_id'),
+            'humanResourceDatas' => array(self::HAS_MANY, 'HumanResourceData', 'action_to_human_resource_id'),
+            'taskTemplateToActionToHumanResources' => array(self::HAS_MANY, 'TaskTemplateToActionToHumanResource', 'action_to_human_resource_id'),
         );
     }
 
@@ -62,7 +63,7 @@ class TaskTemplateToHumanResource extends ActiveRecord
 		// with
 		$criteria->with = array(
 			'humanResource',
-			'level0',
+			'level',
 			'mode',
 		);
 
@@ -71,9 +72,7 @@ class TaskTemplateToHumanResource extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchHumanResource', 'HumanResource', 'human_resource_id');
- 		$columns[] = 'quantity';
-		$columns[] = 'duration';
+        $columns[] = 'searchHumanResource';
  		$columns[] = 'searchMode';
  		$columns[] = 'searchLevel';
 		

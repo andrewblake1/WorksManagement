@@ -11,15 +11,15 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property TaskTemplateToRole $taskTemplate
+ * @property TaskTemplateToHumanResource $taskTemplate
  * @property User $updatedBy
- * @property TaskTemplateToRole $parent
- * @property TaskTemplateToRole $child
+ * @property TaskTemplateToHumanResource $parent
+ * @property TaskTemplateToHumanResource $child
  */
 class TaskTemplateToExclusiveRole extends ActiveRecord
 {
 	public $searchExclusiveTo;
-	public $task_template_to_role_id;
+	public $task_template_to_human_resource_id;
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -27,8 +27,8 @@ class TaskTemplateToExclusiveRole extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(), array(
-			array('task_template_to_role_id', 'numerical', 'integerOnly'=>true),
-			array('task_template_to_role_id', 'safe'),
+			array('task_template_to_human_resource_id', 'numerical', 'integerOnly'=>true),
+			array('task_template_to_human_resource_id', 'safe'),
 		));
 	}
 
@@ -40,10 +40,10 @@ class TaskTemplateToExclusiveRole extends ActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplateToRole', 'task_template_id'),
+			'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplateToHumanResource', 'task_template_id'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-			'parent' => array(self::BELONGS_TO, 'TaskTemplateToRole', 'parent_id'),
-			'child' => array(self::BELONGS_TO, 'TaskTemplateToRole', 'child_id'),
+			'parent' => array(self::BELONGS_TO, 'TaskTemplateToHumanResource', 'parent_id'),
+			'child' => array(self::BELONGS_TO, 'TaskTemplateToHumanResource', 'child_id'),
 		);
 	}
 
@@ -61,9 +61,9 @@ class TaskTemplateToExclusiveRole extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		// a slight difference here due to the schema where parent isn't actually task_to_role
-		$taskTemplateToRole = TaskTemplateToRole::model()->findByPk($this->task_template_to_role_id);
-		$this->parent_id = $taskTemplateToRole->id;
+		// a slight difference here due to the schema where parent isn't actually task_to_human_resource
+		$taskTemplateToHumanResource = TaskTemplateToHumanResource::model()->findByPk($this->task_template_to_human_resource_id);
+		$this->parent_id = $taskTemplateToHumanResource->id;
 		
 		$criteria->compareAs('searchExclusiveTo', $this->searchExclusiveTo, 'humanResource.auth_item_name', true);
 
@@ -90,9 +90,9 @@ class TaskTemplateToExclusiveRole extends ActiveRecord
  
 	public function beforeValidate()
 	{
-		// a slight difference here due to the schema where parent isn't actually task_to_role
-		$taskTemplateToRole = TaskTemplateToRole::model()->findByPk($this->task_template_to_role_id);
-		$this->parent_id = $taskTemplateToRole->id;
+		// a slight difference here due to the schema where parent isn't actually task_to_human_resource
+		$taskTemplateToHumanResource = TaskTemplateToHumanResource::model()->findByPk($this->task_template_to_human_resource_id);
+		$this->parent_id = $taskTemplateToHumanResource->id;
 		$this->task_template_id = $this->parent->task_template_id;
 		return parent::beforeValidate();
 	}

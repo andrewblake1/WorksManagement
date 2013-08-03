@@ -12,14 +12,14 @@
  *
  * The followings are the available model relations:
  * @property User $updatedBy
- * @property RoleData $planning
- * @property RoleData $parent
- * @property RoleData $child
+ * @property HumanResource $planning
+ * @property HumanResource $parent
+ * @property HumanResource $child
  */
 class ExclusiveRole extends ActiveRecord
 {
 	public $searchExclusiveTo;
-	public $task_to_role_id;
+	public $task_to_human_resource_id;
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -27,8 +27,8 @@ class ExclusiveRole extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(), array(
-			array('task_to_role_id', 'numerical', 'integerOnly'=>true),
-			array('task_to_role_id', 'safe'),
+			array('task_to_human_resource_id', 'numerical', 'integerOnly'=>true),
+			array('task_to_human_resource_id', 'safe'),
 		));
 	}
 
@@ -41,9 +41,9 @@ class ExclusiveRole extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-			'planning' => array(self::BELONGS_TO, 'RoleData', 'planning_id'),
-			'parent' => array(self::BELONGS_TO, 'RoleData', 'parent_id'),
-			'child' => array(self::BELONGS_TO, 'RoleData', 'child_id'),
+			'planning' => array(self::BELONGS_TO, 'HumanResource', 'planning_id'),
+			'parent' => array(self::BELONGS_TO, 'HumanResource', 'parent_id'),
+			'child' => array(self::BELONGS_TO, 'HumanResource', 'child_id'),
 		);
 	}
    public function attributeLabels()
@@ -60,9 +60,9 @@ class ExclusiveRole extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		// a slight difference here due to the schema where parent isn't actually task_to_role
-		$taskToRole = TaskToRole::model()->findByPk($this->task_to_role_id);
-		$this->parent_id = $taskToRole->role_data_id;
+		// a slight difference here due to the schema where parent isn't actually task_to_human_resource
+		$taskToHumanResource = TaskToHumanResource::model()->findByPk($this->task_to_human_resource_id);
+		$this->parent_id = $taskToHumanResource->human_resource_data_id;
 		
 		$criteria->compareAs('searchExclusiveTo', $this->searchExclusiveTo, 'humanResource.auth_item_name', true);
 
@@ -89,9 +89,9 @@ class ExclusiveRole extends ActiveRecord
  
 	public function beforeValidate()
 	{
-		// a slight difference here due to the schema where parent isn't actually task_to_role
-		$taskToRole = TaskToRole::model()->findByPk($this->task_to_role_id);
-		$this->parent_id = $taskToRole->role_data_id;
+		// a slight difference here due to the schema where parent isn't actually task_to_human_resource
+		$taskToHumanResource = TaskToHumanResource::model()->findByPk($this->task_to_human_resource_id);
+		$this->parent_id = $taskToHumanResource->human_resource_data_id;
 		$this->planning_id = $this->parent->planning_id;
 		return parent::beforeValidate();
 	}
