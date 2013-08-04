@@ -411,24 +411,26 @@ class Task extends CustomFieldActiveRecord
 		// Adding exclusives has to been done after as the child records may not exist until the above loop has been processed
 		foreach($this->taskTemplate->taskTemplateToHumanResources as $taskTemplateToHumanResource)
 		{
+			$criteria = new DbCriteria;
+			$criteria->with = 'humanResourceData';
+			$criteria->compare('task_id',$this->id);
+			$criteria->compare('humanResourceData.human_resource_id',$taskTemplateToHumanResource->human_resource_id);
+			$criteria->compare('humanResourceData.mode_id',$taskTemplateToHumanResource->mode_id);
+			$criteria->compare('humanResourceData.level',$taskTemplateToHumanResource->level);
 			// find the corresponding task to human resource record - will be the parent
-			$taskToHumanResourceParent = TaskToHumanResource::model()->with('humanResourceData')->findByAttributes(array(
-				'task_id'=>$this->id,
-				'humanResourceData.human_resource_id'=>$taskTemplateToHumanResource->human_resource_id,
-				'humanResourceData.mode_id'=>$taskTemplateToHumanResource->mode_id,
-				'humanResourceData.level'=>$taskTemplateToHumanResource->level_id,
-			));
+			$taskToHumanResourceParent = TaskToHumanResource::model()->find($criteria);
 
 			// loop thru template children exlusives
 			foreach($taskTemplateToHumanResource->taskTemplateToExclusiveRoles1 as $taskTemplateToExlusiveRoleChild)
 			{
+				$criteria = new DbCriteria;
+				$criteria->with = 'humanResourceData';
+				$criteria->compare('task_id',$this->id);
+				$criteria->compare('humanResourceData.human_resource_id',$taskTemplateToExlusiveRoleChild->child->human_resource_id);
+				$criteria->compare('humanResourceData.mode_id',$taskTemplateToExlusiveRoleChild->child->mode_id);
+				$criteria->compare('humanResourceData.level',$taskTemplateToExlusiveRoleChild->child->level);
 				// we have the parent above but still need to find the child in the same way
-				$taskToHumanResourceChild = TaskToHumanResource::model()->with('humanResourceData')->findByAttributes(array(
-					'task_id'=>$this->id,
-					'humanResourceData.human_resource_id'=>$taskTemplateToExlusiveRoleChild->child->human_resource_id,
-					'humanResourceData.mode_id'=>$taskTemplateToExlusiveRoleChild->child->mode_id,
-					'humanResourceData.level'=>$taskTemplateToExlusiveRoleChild->child->level_id,
-				));
+				$taskToHumanResourceChild = TaskToHumanResource::model()->find($criteria);
 
 				$exclusiveRole = new ExclusiveRole;
 				$exclusiveRole->parent_id = $taskToHumanResourceParent->id;
