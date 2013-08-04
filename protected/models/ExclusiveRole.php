@@ -41,9 +41,9 @@ class ExclusiveRole extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-			'planning' => array(self::BELONGS_TO, 'HumanResource', 'planning_id'),
-			'parent' => array(self::BELONGS_TO, 'HumanResource', 'parent_id'),
-			'child' => array(self::BELONGS_TO, 'HumanResource', 'child_id'),
+			'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
+			'parent' => array(self::BELONGS_TO, 'HumanResourceData', 'parent_id'),
+			'child' => array(self::BELONGS_TO, 'HumanResourceData', 'child_id'),
 		);
 	}
    public function attributeLabels()

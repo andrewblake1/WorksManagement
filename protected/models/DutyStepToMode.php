@@ -40,7 +40,7 @@ class DutyStepToMode extends ActiveRecord
 		$criteria=new DbCriteria($this);
 
 		$delimiter = Yii::app()->params['delimiter']['display'];
-		$criteria->compareAs(searchMode, $this->searchMode, 'mode.description', true);
+		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 
 		$criteria->with = array(
 			'mode',

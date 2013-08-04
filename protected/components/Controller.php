@@ -911,11 +911,11 @@ class Controller extends CController
 		$models = array();
 
 		$model->attributes = $_GET;
+$t = $model->attributes;
 
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating = $this->performAjaxValidation($model);
 // TODO: this is untested without javascript
-		$t = $model->attributes;
 		if(isset($_POST[$this->modelName]))
 		{
 			$model->attributes = $_POST[$this->modelName];
@@ -1512,7 +1512,7 @@ class Controller extends CController
 		));
 	}
 
-	static function dependantListWidgetRow($model, $form, $fkField, $dependantOnModelName, $dependantOnAttribute, $htmlOptions, $scopes = array(), $label = null)
+	static function dependantListWidgetRow($model, $form, $fkField, $dependantOnModelName, $dependantOnAttribute, $htmlOptions, $scopes = array(), $label = null, $modelScopes = array())
 	{
 		$modelName = get_class($model);
 		$listModelName = static::modelName();
@@ -1558,7 +1558,7 @@ class Controller extends CController
 						}
 					}",
 			)
-			), array(), $label
+			), $modelScopes, $label
 		);
 
 		// get the id used from the triggering item

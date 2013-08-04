@@ -60,10 +60,10 @@ class DutyController extends Controller
 		// if a duty given
 		if($dutyId = static::getUpdateId())
 		{
-			$viewDuty = ViewDuty::model()->findByPk($dutyId);
+			$duty = Duty::model()->findByPk($dutyId);
 			return array($displays => array("$modelName/admin") + array(
-				'task_id'=>$viewDuty->task_id,
-				'action_id'=>$viewDuty->action_id,
+				'task_id'=>$duty->task_id,
+				'action_id'=>$duty->action_id,
 			));
 		}
 		else

@@ -396,7 +396,7 @@ class Task extends CustomFieldActiveRecord
 	private function createHumanResources(&$models=array())
 	{
 		$saved = true;
-		
+
 		foreach($this->taskTemplate->taskTemplateToHumanResources as $taskTemplateToHumanResource)
 		{
 			// create a new humanResource
@@ -406,6 +406,36 @@ class Task extends CustomFieldActiveRecord
 			$taskToHumanResource->updated_by = null;
 			$taskToHumanResource->task_id = $this->id;
 			$saved &= $taskToHumanResource->createSave($models, $taskTemplateToHumanResource);
+		}
+
+		// Adding exclusives has to been done after as the child records may not exist until the above loop has been processed
+		foreach($this->taskTemplate->taskTemplateToHumanResources as $taskTemplateToHumanResource)
+		{
+			// find the corresponding task to human resource record - will be the parent
+			$taskToHumanResourceParent = TaskToHumanResource::model()->with('humanResourceData')->findByAttributes(array(
+				'task_id'=>$this->id,
+				'humanResourceData.human_resource_id'=>$taskTemplateToHumanResource->human_resource_id,
+				'humanResourceData.mode_id'=>$taskTemplateToHumanResource->mode_id,
+				'humanResourceData.level'=>$taskTemplateToHumanResource->level_id,
+			));
+
+			// loop thru template children exlusives
+			foreach($taskTemplateToHumanResource->taskTemplateToExclusiveRoles1 as $taskTemplateToExlusiveRoleChild)
+			{
+				// we have the parent above but still need to find the child in the same way
+				$taskToHumanResourceChild = TaskToHumanResource::model()->with('humanResourceData')->findByAttributes(array(
+					'task_id'=>$this->id,
+					'humanResourceData.human_resource_id'=>$taskTemplateToExlusiveRoleChild->child->human_resource_id,
+					'humanResourceData.mode_id'=>$taskTemplateToExlusiveRoleChild->child->mode_id,
+					'humanResourceData.level'=>$taskTemplateToExlusiveRoleChild->child->level_id,
+				));
+
+				$exclusiveRole = new ExclusiveRole;
+				$exclusiveRole->parent_id = $taskToHumanResourceParent->id;
+				$exclusiveRole->child_id = $taskToHumanResourceChild->id;
+				$exclusiveRole->planning_id = $planning_id;
+				$saved &= $exclusiveRole->insert();
+			}
 		}
 		
 		return $saved;
@@ -477,7 +507,7 @@ class Task extends CustomFieldActiveRecord
 		foreach($this->taskTemplate->taskTemplateToActions1 as $taskTemplateToAction)
 		{
 			// factory method to create duties
-			$saved &= Duty::addDuties($taskTemplateToAction->action_id, $this->id, $models);
+			$saved &= Duty::addDuties($taskTemplateToAction->action_id, $this, $models);
 		}
 		
 		return $saved;

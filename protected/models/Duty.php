@@ -56,6 +56,12 @@ class Duty extends CustomFieldActiveRecord
 			: 'tbl_duty';
 	}
 	
+	// needed as using a view
+	public function primaryKey()
+	{
+		return 'id';
+	}
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -249,7 +255,7 @@ class Duty extends CustomFieldActiveRecord
 	/* 
 	 * factory method for creating Duties based on actionid and task id
 	 */
-	public static function addDuties($actionId, $taskId, &$models=array())
+	public static function addDuties($actionId, $task, &$models=array())
 	{
 		// initialise the saved variable to show no errors in case the are no
 		// model customValues - otherwise will return null indicating a save error
@@ -264,11 +270,14 @@ class Duty extends CustomFieldActiveRecord
 			// create a new duty
 			$duty = new Duty();
 			// copy any useful attributes from
-			$duty->task_id = $taskId;
+			$duty->task_id = $task->id;
 			$duty->duty_step_id = $dutyStep->id;
 			$saved &= $duty->createSave($models);
 		}
-		
+			
+		// factory method add related human resoruces
+		$saved &= ActionToHumanResource::addHumanResources($actionId, $task, $models);
+
 		return $saved;
 	}
 
@@ -329,7 +338,7 @@ class Duty extends CustomFieldActiveRecord
 		else
 		{
 			// if write access all duties, or write access on this duty
-			return Yii::app()->user->checkAccess($mode == Controller::accessWrite ? 'Duty' : 'DutyRead') || ViewDuty::model()->findByAttributes(array(
+			return Yii::app()->user->checkAccess($mode == Controller::accessWrite ? 'Duty' : 'DutyRead') || Duty::model()->findByAttributes(array(
 				"duty_data_id"=>$this->duty_data_id,
 				"derived_assigned_to_id"=>$user->contact_id,
 			));

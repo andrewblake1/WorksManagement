@@ -22,6 +22,7 @@
 class ActionToHumanResourceBranch extends ActiveRecord
 {
 	public $searchDutyStep;
+	public $searchCustomField;
 
 	/**
 	 * @return array relational rules.
@@ -33,7 +34,7 @@ class ActionToHumanResourceBranch extends ActiveRecord
 		return array(
 			'dutyStepToCustomField' => array(self::BELONGS_TO, 'DutyStepToCustomField', 'duty_step_to_custom_field_id'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-			'dutyStep' => array(self::BELONGS_TO, 'DutyStepToCustomField', 'duty_step_id'),
+			'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
 			'action' => array(self::BELONGS_TO, 'ActionToHumanResource', 'action_id'),
 			'actionToHumanResource' => array(self::BELONGS_TO, 'ActionToHumanResource', 'action_to_human_resource_id'),
 		);
@@ -71,5 +72,4 @@ class ActionToHumanResourceBranch extends ActiveRecord
 			'searchCustomField',
 		);
 	}
- 
-}
+ }

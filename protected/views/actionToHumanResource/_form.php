@@ -8,6 +8,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->dropDownListRow('level', Planning::$levels);
 
+	$form->textFieldRow('quantity');
+
 $this->endWidget();
 
 ?>

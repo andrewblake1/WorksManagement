@@ -31,6 +31,8 @@
  */
 class HumanResourceData extends ActiveRecord
 {
+	public $searchHumanResource;
+
 	/**
 	 * @return array relational rules.
 	 */
@@ -45,7 +47,7 @@ class HumanResourceData extends ActiveRecord
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
             'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'humanResource' => array(self::BELONGS_TO, 'HumanResourceToSupplier', 'human_resource_id'),
+            'humanResource' => array(self::BELONGS_TO, 'HumanResource', 'human_resource_id'),
             'humanResourceToSupplier' => array(self::BELONGS_TO, 'HumanResourceToSupplier', 'human_resource_to_supplier_id'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
             'actionToHumanResource' => array(self::BELONGS_TO, 'ActionToHumanResource', 'action_to_human_resource_id'),
@@ -160,4 +162,42 @@ class HumanResourceData extends ActiveRecord
 			return parent::update();
 		}
 	}
+
+	/**
+	 * @return DbCriteria the search/filter conditions.
+	 */
+	public function getSearchCriteria()
+	{
+		$criteria=new DbCriteria($this);
+
+		$criteria->compareAs('searchHumanResource', $this->searchHumanResource, 'humanResource.auth_item_name', true);
+
+		// with
+		$criteria->with = array(
+			'humanResource',
+		);
+
+		return $criteria;
+	}
+
+	public static function getDisplayAttr()
+	{
+		// just a dummy
+		return array(
+			'searchHumanResource',
+		);
+	}
+ 
+	public function scopePlanning($exclude_id, $planning_id, $mode_id)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('t.planning_id', $planning_id);
+		$criteria->compare('t.mode_id', $mode_id);
+		$criteria->addNotInCondition('t.id', array($exclude_id));
+
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+	
 }

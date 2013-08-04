@@ -26,7 +26,7 @@ class Action extends ActiveRecord
 	public $searchOverride;
 	
 	// used with task and task template to limit actions
-	public function scopeTaskTemplate($taskTemplateId)
+	public function scopeTaskTemplate($taskTemplateId, $modeId=null)
 	{
 		$taskTemplate = TaskTemplate::model()->findByPk($taskTemplateId);
 		$projectTemplate = ProjectTemplate::model()->findByPk($taskTemplate->project_template_id);
@@ -39,7 +39,7 @@ class Action extends ActiveRecord
 		$criteria2=new DbCriteria;
 		$criteria2->compare('t.client_id', $projectTemplate->client_id);
 		$criteria2->addCondition('t.client_id IS NULL', 'OR');
-
+		
 		// this gives us a list which is basically correct but doesn't take into account the overrides
 		$criteria->mergeWith($criteria2, 'AND');
 
@@ -55,6 +55,21 @@ class Action extends ActiveRecord
 		// and finally - exclude any records that have a child
 		$criteria->addCondition('override2.override_id IS NULL');
 		
+		// if a mode has been passed then we also want to limit by this - no point showing actions not applicable to current task mode and
+		// and also no where to divert to afterwards as action would have no visible duties - causes crash unless hack around that
+		if($modeId)
+		{
+			// this will be working with tbl_task_to_action as t only
+			$criteria2->compare('tbl_duty_step_to_mode.mode_id', $modeId);
+			
+			$criteria->join .= '
+				JOIN tbl_duty_step ON tbl_duty_step.action_id = t.id
+				JOIN tbl_duty_step_to_mode ON tbl_duty_step.id = tbl_duty_step_to_mode.duty_step_id
+			';
+	
+			$criteria->distinct = true;
+		}
+
 		$this->getDbCriteria()->mergeWith($criteria);
 
 		return $this;

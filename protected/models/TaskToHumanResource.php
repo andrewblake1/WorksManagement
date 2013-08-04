@@ -214,7 +214,10 @@ class TaskToHumanResource extends ActiveRecord
 		// link this HumanResource to the HumanResourceData
 		$this->human_resource_data_id = $humanResourceData->id;
 		
-		return parent::createSave($models);
+		parent::createSave($models);
+		
+		// not interested in failed duplicates
+		return true;
 	}
 	
 	/*

@@ -40,15 +40,7 @@ class TaskToActionController extends Controller
 			{
 				// we only allow deletion via POST request
 				$model = $this->loadModel($id);
-				// this is a virtual model - loop thru the actual models
-				foreach(ViewDuty::model()->findAllByAttributes(array(
-					'action_id'=>$_GET['action_id'],
-					'task_id'=>$_GET['task_id'])) as $viewDuty)
-				{
-					$dutyData = DutyData::model()->findByPk($viewDuty->duty_data_id);
-					$dutyData->delete();
-				}
-
+				$model->delete();
 			}
 			catch (CDbException $e)
 			{

@@ -278,17 +278,20 @@ abstract class ActiveRecord extends CActiveRecord
 			$primaryKeyName = static::primaryKeyName();
 			$criteria->compare("t.$primaryKeyName" , $model->$primaryKeyName);
 		
-			$attribModel = static::model()->find($criteria);
-			foreach(static::getDisplayAttr() as $attribute)
+			// model may not be found due to criteria - join etc
+			if($attribModel = static::model()->find($criteria))
 			{
-				$attribute = str_replace('t.', '', $attribute);
-				$attributes[] = $attribModel->$attribute;
-			}
+				foreach(static::getDisplayAttr() as $attribute)
+				{
+					$attribute = str_replace('t.', '', $attribute);
+					$attributes[] = $attribModel->$attribute;
+				}
 
-			// make this our nice name - if it isn't empty
-			if(!($niceName = implode(Yii::app()->params['delimiter']['display'], $attributes)) && $primaryKey)
-			{
-				$niceName .= " $primaryKey";
+				// make this our nice name - if it isn't empty
+				if(!($niceName = implode(Yii::app()->params['delimiter']['display'], $attributes)) && $primaryKey)
+				{
+					$niceName .= " $primaryKey";
+				}
 			}
 		}
 

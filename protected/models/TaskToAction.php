@@ -25,6 +25,22 @@ class TaskToAction extends ViewActiveRecord
 		return 'v_task_to_action';
 	}
 
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return parent::rules(array('description'));
+	}
+
+	public function relations()
+	{
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
+        );
+    }
+
 	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
@@ -67,15 +83,25 @@ class TaskToAction extends ViewActiveRecord
 		// only need to call factory method to add duties as no actual TaskToAction table
 		// factory method to create duties
 		 
-		return Duty::addDuties($this->id = $this->action_id, $this->task_id, $models);
+		return Duty::addDuties($this->id = $this->action_id, $this->task, $models);
 	}
 	
 	// again - no actual table, however need to remove duties
 	public function delete() {
-		return Duty::deleteAllByAttributes(array(
-			'action_id' => $this->action_id,
-			'task_id' => $this->task_id,
-		));
+		$criteria = new DbCriteria();
+		
+		$criteria->compare('dutyStep.action_id', $this->action_id);
+		$criteria->compare('task_id', $this->task_id);
+		
+		$criteria->with = array(
+			'dutyData.dutyStep',
+		);
+
+		// must delete individually as can't join to duty data as duty contains trigger refering to dutydata - mysql limitation 1442
+		foreach(Duty::model()->findAll($criteria) as $duty)
+		{
+			$duty->delete();
+		}
 	}
 }
 
