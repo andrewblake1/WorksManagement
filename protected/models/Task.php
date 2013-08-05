@@ -367,8 +367,11 @@ class Task extends CustomFieldActiveRecord
 			// NB: by calling the parent this is added into $models
 			if($saved = parent::createSave($models, $runValidation))
 			{
-				// attempt creation of resources
-				$saved &= $this->createHumanResources($models);
+				// attempt creation of resources - only if mode set
+				if($this->mode_id)
+				{
+					$saved &= $this->createHumanResources($models);
+				}
 				// attempt creation of assemblies
 				$saved &= $this->createAssemblies($models);
 				// attempt creation of materials
@@ -431,12 +434,18 @@ class Task extends CustomFieldActiveRecord
 				$criteria->compare('humanResourceData.level',$taskTemplateToExlusiveRoleChild->child->level);
 				// we have the parent above but still need to find the child in the same way
 				$taskToHumanResourceChild = TaskToHumanResource::model()->find($criteria);
-
 				$exclusiveRole = new ExclusiveRole;
-				$exclusiveRole->parent_id = $taskToHumanResourceParent->id;
-				$exclusiveRole->child_id = $taskToHumanResourceChild->id;
-				$exclusiveRole->planning_id = $planning_id;
-				$saved &= $exclusiveRole->insert();
+				$exclusiveRole->parent_id = $taskToHumanResourceParent->human_resource_data_id;
+				$exclusiveRole->child_id = $taskToHumanResourceChild->human_resource_data_id;
+				$exclusiveRole->planning_id = $taskToHumanResourceChild->humanResourceData->planning_id;
+				try
+				{
+					$exclusiveRole->insert();
+				}
+				catch(CDbException $e)
+				{
+					// ignore duplicates - need try and catch as no insert ignore support yii
+				}
 			}
 		}
 		

@@ -13,15 +13,15 @@
 <link rel="stylesheet" type="text/css" href="/WorksManagement/assets/da909dd9/css/bootstrap-yii.css" />
 <link rel="stylesheet" type="text/css" href="/WorksManagement/assets/da909dd9/css/jquery-ui-bootstrap.css" />
 <link rel="stylesheet" type="text/css" href="/WorksManagement/assets/da909dd9/css/bootstrap-notify.css" />
-<link rel="stylesheet" type="text/css" href="/WorksManagement/assets/da909dd9/css/bootstrap-timepicker.css" />
+<link rel="stylesheet" type="text/css" href="/WorksManagement/css/client_val_form.css" media="screen" />
 <script type="text/javascript" src="/WorksManagement/assets/a2a0ee2d/jquery.js"></script>
-<script type="text/javascript" src="/WorksManagement/assets/a2a0ee2d/jquery.ba-bbq.js"></script>
-<script type="text/javascript" src="/WorksManagement/assets/a2a0ee2d/jquery.yiiactiveform.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/WorksManagement/assets/da909dd9/js/bootstrap.bootbox.min.js"></script>
 <script type="text/javascript" src="/WorksManagement/assets/da909dd9/js/bootstrap.notify.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/WorksManagement/assets/da909dd9/js/bootstrap.js"></script>
-<title>Works Management - Admin TaskToHumanResource</title>
+<script type="text/javascript" src="/WorksManagement/assets/41f4b99f//jquery.jstree.js"></script>
+<script type="text/javascript" src="/WorksManagement/js_plugins/json2/json2.js"></script>
+<title>Works Management - Admin Planning</title>
 
 	<meta name="description" content="">
 	<meta name="author" content="">
@@ -37,278 +37,410 @@
 	<div class="row">
 		<header class="span12">
 
-			<div class="navbar-inverse navbar"><div class="navbar-inner"><div class="container"><a class="btn btn-navbar" data-toggle="collapse" data-target="#yii_bootstrap_collapse_0"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand">Works Management</a><div class="nav-collapse collapse" id="yii_bootstrap_collapse_0"><ul id="yw9" class="nav"><li><a href="http://localhost/phpmyadmin">Database</a></li></ul><ul class="pull-right nav" id="yw10"><li><a href="/WorksManagement/site/logout">Logout (username)</a></li></ul></div></div></div></div>			
+			<div class="navbar-inverse navbar"><div class="navbar-inner"><div class="container"><a class="btn btn-navbar" data-toggle="collapse" data-target="#yii_bootstrap_collapse_0"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a href="#" class="brand">Works Management</a><div class="nav-collapse collapse" id="yii_bootstrap_collapse_0"><ul id="yw1" class="nav"><li><a href="http://localhost/phpmyadmin">Database</a></li></ul><ul class="pull-right nav" id="yw2"><li><a href="/WorksManagement/site/logout">Logout (username)</a></li></ul></div></div></div></div>			
 			<!-- breadcrumbs -->
-							﻿﻿<ul class="breadcrumbs breadcrumb"><li class="active"><a href="/WorksManagement/">Home</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Client/admin">Clients</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Client/update/8">SP Ausnet</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Project/admin?client_id=8">Projects</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Project/update/644">test1</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Day/admin?project_id=644">Days</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Day/update/645"> 645</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Crew/admin?day_id=645">Crews</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Crew/update/646"> 646</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Task/admin?crew_id=646">Tasks</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Task/update/650">650 task1</a><span class="divider">/</span></li><li class="active">Human resources</li></ul>			
+							﻿﻿<ul class="breadcrumbs breadcrumb"><li class="active"><a href="/WorksManagement/">Home</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Client/admin">Clients</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Client/update/8">SP Ausnet</a><span class="divider">/</span></li><li class="active"><a href="/WorksManagement/Project/admin?client_id=8">Projects</a><span class="divider">/</span></li><li class="active"><span data-original-title="SP AusNet Test Project">SP AusNet Test Pr...</span></li></ul>			
 			<!-- tabs -->
-			<div id="yw11"><ul id="yw12" class="nav nav-tabs"><li><a href="/WorksManagement/Task/update/650">650 task1</a></li><li><a href="/WorksManagement/TaskToAction/admin?task_id=650">Actions</a></li><li><a href="/WorksManagement/TaskToAssembly/admin?task_id=650">Assemblies</a></li><li class="active"><a href="/WorksManagement/TaskToHumanResource/admin?task_id=650">Human resources</a></li><li><a href="/WorksManagement/TaskToMaterial/admin?task_id=650">Materials</a></li></ul><div class="tab-content"><div id="yw11_tab_1" class="tab-pane fade"></div><div id="yw11_tab_2" class="tab-pane fade"></div><div id="yw11_tab_3" class="tab-pane fade"></div><div id="yw11_tab_4" class="tab-pane fade active in"></div><div id="yw11_tab_5" class="tab-pane fade"></div></div></div>				
-			<h2>Human resources</h2>		</header>
+			<div id="yw3"><ul id="yw4" class="nav nav-tabs"><li data-original-title="SP AusNet Test Project"><a href="/WorksManagement/Project/update/7">SP AusNet Test Pr...</a></li><li><a href="/WorksManagement/Day/admin?project_id=7">Days</a></li><li><a href="/WorksManagement/ProjectToClientContact/admin?project_id=7">Client contacts</a></li><li><a href="/WorksManagement/ProjectToAuthItem/admin?project_id=7">Roles</a></li><li class="active"><a href="/WorksManagement/Planning/admin?project_id=7">Planning</a></li></ul><div class="tab-content"><div id="yw3_tab_1" class="tab-pane fade"></div><div id="yw3_tab_2" class="tab-pane fade"></div><div id="yw3_tab_3" class="tab-pane fade"></div><div id="yw3_tab_4" class="tab-pane fade"></div><div id="yw3_tab_5" class="tab-pane fade active in"></div></div></div>				
+			<h2>Planning</h2>		</header>
 	</div>
 	
 	<div class="row">
 		<div class="span12">
-			<div id="yw0"></div><div id="TaskToHumanResource-grid" class="grid-view">
-<div class="summary">Displaying 1-2 of 2 results.</div>
-<table class="items table table-striped">
-<thead>
-<tr>
-<th class="checkbox-column" id="TaskToHumanResource-grid_c0"><input type="checkbox" value="1" name="TaskToHumanResource-grid_c0_all" id="TaskToHumanResource-grid_c0_all" /></th><th class="button-column" id="TaskToHumanResource-grid_c1">&nbsp;</th><th id="TaskToHumanResource-grid_c2"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=searchHumanResource">Human resource<span class="caret"></span></a></th><th id="TaskToHumanResource-grid_c3"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=searchSupplier">Supplier<span class="caret"></span></a></th><th id="TaskToHumanResource-grid_c4"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=searchTaskQuantity">Task quantity<span class="caret"></span></a></th><th id="TaskToHumanResource-grid_c5"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=start">Start<span class="caret"></span></a></th><th id="TaskToHumanResource-grid_c6"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=searchLevel">Level<span class="caret"></span></a></th><th id="TaskToHumanResource-grid_c7"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=quantity">Quantity<span class="caret"></span></a></th><th id="TaskToHumanResource-grid_c8"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=duration">Duration<span class="caret"></span></a></th><th id="TaskToHumanResource-grid_c9"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=searchEstimatedTotalQuantity">Override level quantity<span class="caret"></span></a></th><th id="TaskToHumanResource-grid_c10"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=searchEstimatedTotalDuration">Override level duration<span class="caret"></span></a></th><th id="TaskToHumanResource-grid_c11"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=searchCalculatedTotalQuantity">Level quantity<span class="caret"></span></a></th><th id="TaskToHumanResource-grid_c12"><a class="sort-link" href="/WorksManagement/taskToHumanResource/admin?task_id=650&amp;TaskToHumanResource_sort=searchCalculatedTotalDuration">Level duration<span class="caret"></span></a></th></tr>
-<tr class="filters">
-<td>&nbsp;</td><td>&nbsp;</td><td><div class="filter-container"><input name="TaskToHumanResource[searchHumanResource]" id="TaskToHumanResource_searchHumanResource" type="text" /></div></td><td><div class="filter-container"><input name="TaskToHumanResource[searchSupplier]" id="TaskToHumanResource_searchSupplier" type="text" /></div></td><td><div class="filter-container"><input name="TaskToHumanResource[searchTaskQuantity]" id="TaskToHumanResource_searchTaskQuantity" type="text" /></div></td><td><div class="filter-container"><input name="TaskToHumanResource[start]" id="TaskToHumanResource_start" type="text" /></div></td><td><div class="filter-container"><input name="TaskToHumanResource[searchLevel]" id="TaskToHumanResource_searchLevel" type="text" /></div></td><td><div class="filter-container"><input name="TaskToHumanResource[quantity]" id="TaskToHumanResource_quantity" type="text" /></div></td><td><div class="filter-container"><input name="TaskToHumanResource[duration]" id="TaskToHumanResource_duration" type="text" /></div></td><td><div class="filter-container"><input name="TaskToHumanResource[searchEstimatedTotalQuantity]" id="TaskToHumanResource_searchEstimatedTotalQuantity" type="text" /></div></td><td><div class="filter-container"><input name="TaskToHumanResource[searchEstimatedTotalDuration]" id="TaskToHumanResource_searchEstimatedTotalDuration" type="text" /></div></td><td><div class="filter-container"><input name="TaskToHumanResource[searchCalculatedTotalQuantity]" id="TaskToHumanResource_searchCalculatedTotalQuantity" type="text" /></div></td><td><div class="filter-container"><input name="TaskToHumanResource[searchCalculatedTotalDuration]" id="TaskToHumanResource_searchCalculatedTotalDuration" type="text" /></div></td></tr>
-</thead>
-<tfoot>
-<tr><td colspan="13"><div id="egw0" style="position:relative" class="pull-left">&nbsp;<a class="bulk-action disabled bulk-actions-btn btn btn-primary btn-small" id="bulk_delete_button_1" href="/WorksManagement/taskToHumanResource/batchDelete"><i class="icon-trash"></i> Delete Selected</a>&nbsp;<div style="position:absolute;top:0;left:0;height:100%;width:100%;display:block;" class="bulk-actions-blocker"></div></div> <a class="btn btn-primary btn-small" id="yw1" href="/WorksManagement/TaskToHumanResource/admin?task_id=650&amp;action=download"><i class="icon-download"></i> Download Excel</a> <a data-toggle="modal" class="btn btn-primary btn-small" id="yw2" href="#myModal"><i class="icon-plus"></i> New</a></td></tr></tfoot>
-<tbody>
-<tr class="odd">
-<td class="checkbox-column"><input value="7" id="TaskToHumanResource-grid_c0_0" type="checkbox" name="TaskToHumanResource-grid_c0[]" /></td><td class="button-column"><a class="update" href="/WorksManagement/TaskToHumanResource/update/7"><i class="icon-pencil"></i></a><a class="delete" href="/WorksManagement/TaskToHumanResource/delete/7"><i class="icon-trash"></i></a></td><td>switching operator</td><td><a href="/WorksManagement/HumanResourceToSupplier/update/"></a></td><td>1</td><td></td><td>Day</td><td>1</td><td>05:15</td><td>&nbsp;</td><td>&nbsp;</td><td>1</td><td>05:15</td></tr>
-<tr class="even">
-<td class="checkbox-column"><input value="8" id="TaskToHumanResource-grid_c0_1" type="checkbox" name="TaskToHumanResource-grid_c0[]" /></td><td class="button-column"><a class="update" href="/WorksManagement/TaskToHumanResource/update/8"><i class="icon-pencil"></i></a><a class="delete" href="/WorksManagement/TaskToHumanResource/delete/8"><i class="icon-trash"></i></a></td><td>foreman</td><td><a href="/WorksManagement/HumanResourceToSupplier/update/"></a></td><td>1</td><td></td><td>Crew</td><td>2</td><td>03:00</td><td>&nbsp;</td><td>&nbsp;</td><td>2</td><td>03:00</td></tr>
-</tbody>
-</table>
+			<div class="modal fade" id="myModal" style="display: block;"><div class="modal-body" id="form-modal"></div></div><div id="category_admin_tree" ></div>
+<script  type="text/javascript">
+	$(function ()
+	{
+		// get the users rights
+		writeAccessProject = true;
+		writeAccessDay = true;
+		writeAccessCrew = true;
+		writeAccessTask = true;
+		readAccessProject = true;
+		readAccessDay = true;
+		readAccessCrew = true;
+		readAccessTask = true;
+		isScheduler = true;
+		
+					
+		function getAction(obj)
+		{
+			// get target mode level
+			id=obj.attr("id").replace("node_","");
 
-<div  class="extended-summary"></div><div class="keys" style="display:none" title="/WorksManagement/TaskToHumanResource/admin?task_id=650"><span>7</span><span>8</span></div>
-<div class="keys" style="display:none" title="/WorksManagement/TaskToHumanResource/admin?task_id=650"><span>7</span><span>8</span></div>
-</div><div id="myModal" class="modal hide fade"><div id="form-createTaskToHumanResource" class="modal-body"><div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>Create</h3></div><div class="alert alert-block alert-error" id="TaskToHumanResource-form_es_" style="display:none"><p>Please fix the following input errors:</p>
-<ul><li>dummy</li></ul></div><form class="well form-vertical" id="TaskToHumanResource-form" action="/WorksManagement/TaskToHumanResource/Create" method="post"><label for="TaskToHumanResource_human_resource_id" class="required">Human resource <span class="required">*</span></label><select class="span5" name="TaskToHumanResource[human_resource_id]" id="TaskToHumanResource_human_resource_id">
-<option value="">Please select</option>
-<option value="10">Crane Operator</option>
-<option value="8">Dogger</option>
-<option value="4">foreman</option>
-<option value="6">LV operator</option>
-<option value="2">switching operator</option>
-</select><span class="help-block error" id="TaskToHumanResource_human_resource_id_em_" style="display: none"></span>
-<input name="TaskToHumanResource[human_resource_to_supplier_id]" id="TaskToHumanResource_human_resource_to_supplier_id" type="hidden" /><label for="TaskToHumanResource_quantity" class="required">Quantity <span class="required">*</span></label><input class="span5" name="TaskToHumanResource[quantity]" id="TaskToHumanResource_quantity" type="text" /><span class="help-block error" id="TaskToHumanResource_quantity_em_" style="display: none"></span>
-<label for="TaskToHumanResource_estimated_total_quantity">Override level quantity</label><input class="span5" name="TaskToHumanResource[estimated_total_quantity]" id="TaskToHumanResource_estimated_total_quantity" type="text" /><span class="help-block error" id="TaskToHumanResource_estimated_total_quantity_em_" style="display: none"></span>
-<div class="btn-group" data-toggle="buttons-radio"><a class="btn btn-primary" id="yw4">Primary role</a><a class="btn btn-primary" id="yw5">Secondary role</a></div><div class="btn-group" data-toggle="buttons-checkbox"><a class="btn btn-primary" id="yw6">Left</a><a class="btn btn-primary" id="yw7">Middle</a><a class="btn btn-primary" id="yw8">Right</a></div><label for="TaskToHumanResource_duration">Duration</label><div class="bootstrap-timepicker"><div class="input-append"><input id="duration" class="no-user-select" name="TaskToHumanResource[duration]" type="text" /><span class="add-on"><i class="icon-time"></i></span></div><span class="help-block error" id="TaskToHumanResource_duration_em_" style="display: none"></span></div>
-<label for="TaskToHumanResource_estimated_total_duration">Override level duration</label><div class="bootstrap-timepicker"><div class="input-append"><input id="estimated_total_duration" class="no-user-select" name="TaskToHumanResource[estimated_total_duration]" type="text" /><span class="add-on"><i class="icon-time"></i></span></div><span class="help-block error" id="TaskToHumanResource_estimated_total_duration_em_" style="display: none"></span></div>
-<label for="TaskToHumanResource_start">Start</label><div class="bootstrap-timepicker"><div class="input-append"><input id="start" class="no-user-select" name="TaskToHumanResource[start]" type="text" /><span class="add-on"><i class="icon-time"></i></span></div><span class="help-block error" id="TaskToHumanResource_start_em_" style="display: none"></span></div>
-<label for="TaskToHumanResource_level">Level</label><select class="span5" name="TaskToHumanResource[level]" id="TaskToHumanResource_level">
-<option value="1">Project</option>
-<option value="2">Day</option>
-<option value="3">Crew</option>
-<option value="4">Task</option>
-</select><span class="help-block error" id="TaskToHumanResource_level_em_" style="display: none"></span>
-<input type="hidden" value="TaskToHumanResource" name="controller" id="controller" /><input name="TaskToHumanResource[task_id]" id="TaskToHumanResource_task_id" type="hidden" value="650" /><div class="modal-footer"><input class="form-button btn btn-primary btn-large" type="submit" name="yt0" value="Create" /></div></form></div></div>		<script type="text/javascript">
-			// as a global variable
-			var grid_id = "yiisession-grid";
+			if(obj.is("DIV"))
+			{
+				level = 1;
+			}
+			else
+			{
+				level = obj.find('[class^="level"]').first().attr("class").replace("level","");
+			}
 
-			$(function(){
-				// prevent the click event
-				$(document).on('click','#yiisession-grid a.bulk-action',function() {
-					return false;
-				});
-			});
+			if(level == 1)
+			{
+				writeAccess = writeAccessProject;
+				readAccess = readAccessProject;
+				modelName = "Project";
+				reportItemsProject = null;
+			}
+			else if(level == 2)
+			{
+				writeAccess = writeAccessDay && isScheduler;
+				readAccess = readAccessDay;
+				modelName = "Day";
+				reportItemsProject = null;
+			}
+			else if(level == 3)
+			{
+				writeAccess = writeAccessCrew && isScheduler;
+				readAccess = readAccessCrew;
+				modelName = "Crew";
+				reportItemsProject = { reports : { 'label' : 'Reports', 'submenu' : {
+								item0 : {
+								"label"             : "Daily brief",
+								"action"            : function (obj) { window.location = "/WorksManagement/Report/show/1?context=Crew&pk=" + id}
+							},item1 : {
+								"label"             : "Material take off",
+								"action"            : function (obj) { window.location = "/WorksManagement/Report/show/2?context=Crew&pk=" + id}
+							}
+							}}};
+			}
+			else if(level == 4)
+			{
+				writeAccess = writeAccessTask;
+				readAccess = readAccessTask;
+				modelName = "Task";
+				reportItemsProject = null;
+			}
 
-			function batchActions(values){
-				var url = "/WorksManagement/TaskToHumanResource/batchDelete";
-				var ids = new Array();
-				if(values.size()>0){
-					values.each(function(idx){
-						ids.push($(this).val());
-					});
+			if(writeAccess)
+			{
+				action = "Update";
+			}
+			else if(readAccess)
+			{
+				action = "View";
+			}
+			else
+			{
+				action = false;
+			}
+		}
 
-					bootbox.confirm("Delete selected?",
-						function(confirmed){
-							if(confirmed)
-							{
-								$.ajax({
-									type: "POST",
-									url: url,
-									data: {"ids":ids},
-									dataType:'json',
-									success: function(resp){
-										if(resp.status == "success"){
-											if(resp.msg) {
-												$('#yw0').html(resp.msg);
-											}
-											$.fn.yiiGridView.update("TaskToHumanResource-grid");
-										} else {
-											alert(resp.status);
+		$("#category_admin_tree").jstree(
+		{
+			"html_data" :
+				{
+				"ajax" :
+					{
+					"type":"POST",
+					"url" : "/WorksManagement/Planning/fetchTree?project_id=7",
+					"data" : function (n)
+					{
+						return{
+							id : n.attr ? n.attr("id") : 0,
+							"YII_CSRF_TOKEN":"6d514233912700190ae058da8fd6f43df428bbeb"
+						};
+					}
+				}
+			},
+
+			"contextmenu":  { 'items': function(obj){
+					contextMenu = {};		
+					getAction(obj);
+					if(action)
+					{
+						update = {
+							"update" : {
+								"label"	: action,
+								"action" : function (obj) {
+
+									// need to re-read modal contents first as selecting a different record
+									$.ajax({
+										type: "POST",
+										url: "/WorksManagement/Planning/returnForm?project_id=7",
+										data:{
+											"id":  id,
+											"action": action,
+											"model_name":  modelName,
+											"YII_CSRF_TOKEN":"6d514233912700190ae058da8fd6f43df428bbeb"
+										},
+										'beforeSend' : function(){
+											$("#category_admin_tree").addClass("ajax-sending");
+										},
+										'complete' : function(){
+											$("#category_admin_tree").removeClass("ajax-sending");
+										},
+										success: function(data){
+											// change the contents
+											$("#form-modal").html(data);
+											formAction = $("#form-modal form[action]").attr('action');
+											$("#form-modal form[action]").attr('action', formAction + '?project_id=7');
+											// display the modal
+											$("#myModal").modal('show');
+
+										} //success
+									});//ajax
+
+								}//action function
+
+							}
+						};//update
+						$.extend(contextMenu, update);
+
+						if(writeAccess)
+						{
+							remove = {
+								"remove" : {
+									"label"	: "Delete",
+									"action" : function (obj) {
+
+										if(confirm('Are you sure you want to remove ' + (obj).attr('rel') + 'and any sub categories'))
+										{
+											jQuery("#category_admin_tree").jstree("remove",obj);
 										}
 									}
-								});
-							}
-						}
-					);
+								}
+							};//remove
+							$.extend(contextMenu, remove);
 
+							if(level != 4)
+							{
+								create = {
+									"create" : {
+										"label"	: "Create",
+										"action" : function (obj) {
+											ajaxdata = { "YII_CSRF_TOKEN":"6d514233912700190ae058da8fd6f43df428bbeb" };
+
+											// get the target model name
+											if(level == 1)
+											{
+												targetName = "Day";
+												$.extend(ajaxdata, {project_id : id});
+											}
+											else if(level == 2)
+											{
+												targetName = "Crew";
+												$.extend(ajaxdata, {day_id : id});
+											}
+											else if(level == 3)
+											{
+												targetName = "Task";
+												$.extend(ajaxdata, {crew_id : id});
+											}
+
+											$.extend(ajaxdata, {model_name : targetName});
+
+											// need to re-read modal contents first as selecting a different record
+											$.ajax({
+												type: "POST",
+												url: "/WorksManagement/Planning/returnForm?project_id=7",
+												data: ajaxdata,
+												'beforeSend' : function(){
+													$("#category_admin_tree").addClass("ajax-sending");
+												},
+												'complete' : function(){
+													$("#category_admin_tree").removeClass("ajax-sending");
+												},
+												success: function(data){
+													// change the contents
+													$("#form-modal").html(data);
+													// display the modal
+													$("#myModal").modal('show');
+
+												} //success
+											});//ajax
+
+										}//actions
+									}
+								};
+								$.extend(contextMenu, create);
+							}//create
+						}//if(writeAccess)
+					}//if(action)
+					
+					// add any reports
+					if(reportItemsProject !== null)
+					{
+						$.extend(contextMenu, reportItemsProject);
+					}
+					
+					return contextMenu;
+				}//items funtcion
+			},//context menu
+
+			// the `plugins` array allows you to configure the active plugins on this instance
+			"plugins" : ["themes","html_data","contextmenu","crrm","dnd"],
+			// each plugin you have included can have its own config object
+			"core" : { "initially_open" : [ 'node_7','node_8','node_9','node_21' ],'open_parents':true},
+			// it makes sense to configure a plugin only if overriding the defaults
+
+			// restrict to moving only to correct levels
+			"crrm" : {
+				move : {
+					check_move : function (m) {
+						target = m.o.find('[class^="level"]').first().attr("class").replace("level","");
+
+						if(m.np.is("DIV"))
+						{
+							destination = 1;
+						}
+						else
+						{
+							destination = m.np.find('[class^="level"]').first().attr("class").replace("level","");
+						}
+
+						return (target - destination) == 1;
+					}
 				}
 			}
-		</script>
-				</div>
+		})
+
+		.bind("remove.jstree", function (e, data) {
+			$.ajax({
+				type:"POST",
+				url:"/WorksManagement/Planning/remove?project_id=7",
+				data:{
+					"id" : data.rslt.obj.attr("id").replace("node_",""),
+					"YII_CSRF_TOKEN":"6d514233912700190ae058da8fd6f43df428bbeb"
+				},
+				beforeSend : function(){
+					$("#category_admin_tree").addClass("ajax-sending");
+				},
+				complete: function(){
+					$("#category_admin_tree").removeClass("ajax-sending");
+				},
+				success:function (r) {  response= $.parseJSON(r);
+					if(!response.success) {
+						$.jstree.rollback(data.rlbk);
+					};
+				}
+			});
+		})
+
+		.bind("move_node.jstree", function (e, data) {
+			data.rslt.o.each(function (i) {
+
+				//jstree provides a whole  bunch of properties for the move_node event
+				//not all are needed for this view,but they are there if you need them.
+				//Commented out logs  are for debugging and exploration of jstree.
+
+				next= jQuery.jstree._reference('#category_admin_tree')._get_next (this, true);
+				previous= jQuery.jstree._reference('#category_admin_tree')._get_prev(this,true);
+
+				pos=data.rslt.cp;
+				moved_node=$(this).attr('id').replace("node_","");
+				next_node=next!=false?$(next).attr('id').replace("node_",""):false;
+				previous_node= previous!=false?$(previous).attr('id').replace("node_",""):false;
+				new_parent=$(data.rslt.np).attr('id').replace("node_","");
+				old_parent=$(data.rslt.op).attr('id').replace("node_","");
+				ref_node=$(data.rslt.r).attr('id').replace("node_","");
+				ot=data.rslt.ot;
+				rt=data.rslt.rt;
+				copy= typeof data.rslt.cy!='undefined'?data.rslt.cy:false;
+				copied_node= (typeof $(data.rslt.oc).attr('id') !='undefined')? $(data.rslt.oc).attr('id').replace("node_",""):'UNDEFINED';
+				new_parent_root=data.rslt.cr!=-1?$(data.rslt.cr).attr('id').replace("node_",""):'root';
+				replaced_node= (typeof $(data.rslt.or).attr('id') !='undefined')? $(data.rslt.or).attr('id').replace("node_",""):'UNDEFINED';
+
+
+				//                      console.log(data.rslt);
+				//                      console.log(pos,'POS');
+				//                      console.log(previous_node,'PREVIOUS NODE');
+				//                      console.log(moved_node,'MOVED_NODE');
+				//                      console.log(next_node,'NEXT_NODE');
+				//                      console.log(new_parent,'NEW PARENT');
+				//                      console.log(old_parent,'OLD PARENT');
+				//                      console.log(ref_node,'REFERENCE NODE');
+				//                      console.log(ot,'ORIGINAL TREE');
+				//                      console.log(rt,'REFERENCE TREE');
+				//                      console.log(copy,'IS IT A COPY');
+				//                      console.log( copied_node,'COPIED NODE');
+				//                      console.log( new_parent_root,'NEW PARENT INCLUDING ROOT');
+				//                      console.log(replaced_node,'REPLACED NODE');
+
+
+				$.ajax({
+					async : false,
+					type: 'POST',
+					url: "/WorksManagement/Planning/moveCopy?project_id=7",
+
+					data : {
+						"moved_node" : moved_node,
+						"new_parent":new_parent,
+						"new_parent_root":new_parent_root,
+						"old_parent":old_parent,
+						"pos" : pos,
+						"previous_node":previous_node,
+						"next_node":next_node,
+						"copy" : copy,
+						"copied_node":copied_node,
+						"replaced_node":replaced_node,
+						"YII_CSRF_TOKEN":"6d514233912700190ae058da8fd6f43df428bbeb"
+					},
+					beforeSend : function(){
+						$("#category_admin_tree").addClass("ajax-sending");
+					},
+					complete : function(){
+						$("#category_admin_tree").removeClass("ajax-sending");
+					},
+					success : function (r) {
+						response=$.parseJSON(r);
+						if(!response.success) {
+							$.jstree.rollback(data.rlbk);
+							alert(response.message);
+						}
+						else {
+							//if it's a copy
+							if  (data.rslt.cy){
+								$(data.rslt.oc).attr("id", "node_" + response.id);                         
+								if(data.rslt.cy && $(data.rslt.oc).children("UL").length) {
+									data.inst.refresh(data.inst._get_parent(data.rslt.oc));
+								}
+							}
+						}
+
+					}
+				}); //ajax
+
+			});//each function
+		});   //bind move event
+
+		;//JSTREE FINALLY ENDS (PHEW!)
+
+		$("#reload").click(function ()
+		{
+			jQuery("#category_admin_tree").jstree("refresh");
+		});
+
+		$("#category_admin_tree").delegate("a","click", function(e) {
+//TODO: make this a function as exact repeat of above - pass in object and return the other required variables
+			// get target mode level
+			getAction($(this).parent());
+
+			if(action)
+			{
+				// go to the admin screen - filtering by this parent id
+				window.location = encodeURI("/WorksManagement/" + modelName + "/" + action + "/" + id + "?project_id=7");
+			}
+			
+		});
+
+	});
+
+</script>
+<br><a class="btn btn-primary btn-small" id="yw0" href="/WorksManagement/Planning/addDay?project_id=7">New day</a>		</div>
 	</div>
 
 </div>
 	
-<script type="text/javascript" src="/WorksManagement/assets/ab58b94b/gridview/jquery.yiigridview.js"></script>
-<script type="text/javascript" src="/WorksManagement/assets/da909dd9/js/bootstrap.timepicker.js"></script>
 <script type="text/javascript">
 /*<![CDATA[*/
 jQuery(function($) {
 jQuery('body').tooltip({'selector':'[rel=tooltip]'});
 jQuery('body').popover({'selector':'[rel=popover]'});
-jQuery('#yw0 .alert').alert();
-jQuery(document).on('click','#TaskToHumanResource-grid_c0_all',function() {
-	var checked=this.checked;
-	jQuery("input[name='TaskToHumanResource-grid_c0\[\]']:enabled").each(function() {this.checked=checked;});
-});
-jQuery(document).on('click', "input[name='TaskToHumanResource-grid_c0\[\]']", function() {
-	jQuery('#TaskToHumanResource-grid_c0_all').prop('checked', jQuery("input[name='TaskToHumanResource-grid_c0\[\]']").length==jQuery("input[name='TaskToHumanResource-grid_c0\[\]']:checked").length);
-});
-jQuery(document).on('click','#TaskToHumanResource-grid a.delete',function() {
-	if(!confirm('Are you sure you want to delete this item?')) return false;
-	var th = this,
-		afterDelete = function(link,success,data) {
-			if(success)
-			{
-				$("#yw0").html(data);
-			}
-		};
-	jQuery('#TaskToHumanResource-grid').yiiGridView('update', {
-		type: 'POST',
-		url: jQuery(this).attr('href'),
-		success: function(data) {
-			jQuery('#TaskToHumanResource-grid').yiiGridView('update');
-			afterDelete(th, true, data);
-		},
-		error: function(XHR) {
-			return afterDelete(th, false, XHR);
-		}
-	});
-	return false;
-});
-jQuery('#TaskToHumanResource-grid').yiiGridView({'ajaxUpdate':['TaskToHumanResource-grid'],'ajaxVar':'ajax','pagerClass':'pagination','loadingClass':'grid-view-loading','filterClass':'filters','tableClass':'items table table-striped','selectableRows':1,'enableHistory':false,'updateSelector':'{page}, {sort}','filterSelector':'{filter}','url':'/WorksManagement/TaskToHumanResource/admin?task_id=650','pageVar':'TaskToHumanResource_page','afterAjaxUpdate':function() {
-			jQuery('.popover').remove();
-			jQuery('body').popover();
-			jQuery('.tooltip').remove();
-			jQuery('body').tooltip();
-		}});
-$(document).on("click", "#TaskToHumanResource-grid input[type=checkbox]", function(){
-	var grid = $("#TaskToHumanResource-grid");
-	if ($("input[name='TaskToHumanResource-grid_c0\[\]']:checked", grid).length)
-	{
-
-		$(".bulk-actions-btn", grid).removeClass("disabled");
-		$("div.bulk-actions-blocker",grid).hide();
-	}
-	else
-	{
-		$(".bulk-actions-btn", grid).addClass("disabled");
-		$("div.bulk-actions-blocker",grid).show();
-	}
-});
-$(document).on('click','#bulk_delete_button_1', function(){var checked = $('input[name="TaskToHumanResource-grid_c0\[\]"]:checked');
-
-			var fn = batchActions; if ($.isFunction(fn)){fn(checked);}
-return false;});
-
-
-			$grid = $("#TaskToHumanResource-grid");
-			
-			if ($(".extended-summary", $grid).length)
-			{
-				$(".extended-summary", $grid).html($("#TaskToHumanResource-grid-extended-summary", $grid).html());
-			}
-			
-			$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-				var qs = $.deparam.querystring(options.url);
-				if (qs.hasOwnProperty("ajax") && qs.ajax == "TaskToHumanResource-grid")
-				{
-					options.realsuccess = options.success;
-					options.success = function(data)
-					{
-						if (options.realsuccess) {
-							options.realsuccess(data);
-							var $data = $("<div>" + data + "</div>");
-							// we need to get the grid again... as it has been updated
-							if ($(".extended-summary", $("#TaskToHumanResource-grid")))
-							{
-								$(".extended-summary", $("#TaskToHumanResource-grid")).html($("#TaskToHumanResource-grid-extended-summary", $data).html());
-							}
-							
-						}
-					}
-				}
-			});
-$("[data-original-title]").tooltip();
-
-			$('#TaskToHumanResource-form').change(function(event){
-				$('[value=""]:not(:empty)', event.target).remove();
-			});
-			
-jQuery('body').on('change','#TaskToHumanResource_human_resource_id',function(){jQuery.ajax({'type':'POST','url':'/WorksManagement/HumanResourceToSupplier/DependantList?fkField=human_resource_to_supplier_id&dependantOnModelName=HumanResource&dependantOnAttribute=human_resource_id','success':function(data) {
-						if(data)
-						{
-							data = $(data);
-
-							// if single item list box then need to hide the listbox as a non editable text box will have been sent also
-							if($(data).filter('#TaskToHumanResource_human_resource_to_supplier_id_dummy').length != 0)
-							{
-								data = data.filter('select').hide().end();
-							}
-							
-							$('[for="TaskToHumanResource_human_resource_to_supplier_id"]').remove();
-							$('#TaskToHumanResource_human_resource_to_supplier_id_save').remove();
-							$('#TaskToHumanResource_human_resource_to_supplier_id_em_').remove();
-							$('#TaskToHumanResource_human_resource_to_supplier_id_lookup').remove();
-							// may also need to remove other related disable text box if last item produced one
-							// as a result of being a single item select - subbed with non-editing text box
-							$('#TaskToHumanResource_human_resource_to_supplier_id_dummy').remove();
-								
-							// do the final substitution
-							$('#TaskToHumanResource_human_resource_to_supplier_id').replaceWith(data);
-							// if this is autotext
-							lookup = $('#TaskToHumanResource_human_resource_to_supplier_id_lookup');
-							if(lookup.length)
-							{
-								human_resource_id = $('#TaskToHumanResource_human_resource_id').val();
-								lookup.autocomplete({'minLength':1,'maxHeight':'100','select':function(event, ui){$('#TaskToHumanResource_human_resource_to_supplier_id').val(ui.item.id);$('#TaskToHumanResource_human_resource_to_supplier_id_save').val(ui.item.value);},'source':'/WorksManagement/HumanResourceToSupplier/autocomplete?model=TaskToHumanResource&attribute=human_resource_to_supplier_id&scopes%5BscopeHumanResource%5D%5B0%5D=' + human_resource_id});
-							}
-						}
-					},'cache':false,'data':jQuery(this).parents("form").serialize()});return false;});
-
-				// trigger the change handler
-				$('#TaskToHumanResource_human_resource_id').trigger('change');
-				
-jQuery('#duration').timepicker({'showMeridian':false,'disableFocus':true,'defaultTime':false});
-jQuery('#estimated_total_duration').timepicker({'showMeridian':false,'disableFocus':true,'defaultTime':false});
-jQuery('#start').timepicker({'showMeridian':false,'disableFocus':true,'defaultTime':false});
-jQuery('#TaskToHumanResource-form').yiiactiveform({'validateOnSubmit':true,'validateOnChange':false,'afterValidate': function(form, data, hasError)
-		{
-			// If adding/editing multiple models as a result of what appears visually to be a single model form
-			// then their are errors returned in the json data object but hasError is false as it hasnt detected errors matching inputs
-			// on the form as they dont exist. This function puts those erros into the error block at the top and stops the form being submitted
-			var $lis = "";
-
-			// if afterValidate is being told there are no errors what it really means is no form inputs have errors
-			if(!hasError)
-			{
-			
-				// loop thru json object which is 2 dimensional array
-				$.each(data, function()
-				{
-					$.each(this, function(k, v)
-					{
-						$lis = $lis + "<li>" + v + "</li>";
-					});
-				});
-
-				// if there are errors with the models but not on the form inputs
-				if($lis != "")
-				{
-					$errorhtml = '<div id="-form_es_" class="alert alert-block alert-error" style="">\
-					<p>Please fix the following input errors:</p><ul>' + $lis + '</ul></div>';
-					
-					$("[id*=-form_es_]").replaceWith($errorhtml);
-					
-					return false;
-				}
-			}
-
-			return true;
-		},'attributes':[{'id':'TaskToHumanResource_human_resource_id','inputID':'TaskToHumanResource_human_resource_id','errorID':'TaskToHumanResource_human_resource_id_em_','model':'TaskToHumanResource','name':'TaskToHumanResource[human_resource_id]','enableAjaxValidation':true,'inputContainer':'div.control-group','summary':true},{'id':'TaskToHumanResource_quantity','inputID':'TaskToHumanResource_quantity','errorID':'TaskToHumanResource_quantity_em_','model':'TaskToHumanResource','name':'TaskToHumanResource[quantity]','enableAjaxValidation':true,'inputContainer':'div.control-group','summary':true},{'id':'TaskToHumanResource_estimated_total_quantity','inputID':'TaskToHumanResource_estimated_total_quantity','errorID':'TaskToHumanResource_estimated_total_quantity_em_','model':'TaskToHumanResource','name':'TaskToHumanResource[estimated_total_quantity]','enableAjaxValidation':true,'inputContainer':'div.control-group','summary':true},{'id':'TaskToHumanResource_duration','inputID':'TaskToHumanResource_duration','errorID':'TaskToHumanResource_duration_em_','model':'TaskToHumanResource','name':'TaskToHumanResource[duration]','enableAjaxValidation':true,'inputContainer':'div.control-group','summary':true},{'id':'TaskToHumanResource_estimated_total_duration','inputID':'TaskToHumanResource_estimated_total_duration','errorID':'TaskToHumanResource_estimated_total_duration_em_','model':'TaskToHumanResource','name':'TaskToHumanResource[estimated_total_duration]','enableAjaxValidation':true,'inputContainer':'div.control-group','summary':true},{'id':'TaskToHumanResource_start','inputID':'TaskToHumanResource_start','errorID':'TaskToHumanResource_start_em_','model':'TaskToHumanResource','name':'TaskToHumanResource[start]','enableAjaxValidation':true,'inputContainer':'div.control-group','summary':true},{'id':'TaskToHumanResource_level','inputID':'TaskToHumanResource_level','errorID':'TaskToHumanResource_level_em_','model':'TaskToHumanResource','name':'TaskToHumanResource[level]','enableAjaxValidation':true,'inputContainer':'div.control-group','summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true},{'summary':true}],'summaryID':'TaskToHumanResource-form_es_','errorCss':'error'});
-jQuery('#myModal').modal({'show':false});
 jQuery('#yii_bootstrap_collapse_0').collapse({'parent':false,'toggle':false});
-jQuery('#yw11').tab('show');
+jQuery('#yw3').tab('show');
 });
 /*]]>*/
 </script>

@@ -65,6 +65,7 @@ class TaskTemplateToExclusiveRole extends ActiveRecord
 		$taskTemplateToHumanResource = TaskTemplateToHumanResource::model()->findByPk($this->task_template_to_human_resource_id);
 		$this->parent_id = $taskTemplateToHumanResource->id;
 		
+		$criteria->compare('parent_id', $this->parent_id);
 		$criteria->compareAs('searchExclusiveTo', $this->searchExclusiveTo, 'humanResource.auth_item_name', true);
 
 		$criteria->with = array(

@@ -72,4 +72,14 @@ class ActionToHumanResourceBranch extends ActiveRecord
 			'searchCustomField',
 		);
 	}
+	
+	public function beforeValidate()
+	{
+		if($this->duty_step_to_custom_field_id)
+		{
+			$this->action_id = $this->dutyStepToCustomField->dutyStep->action_id;
+		}
+
+		return parent::beforeValidate();
+	}
  }

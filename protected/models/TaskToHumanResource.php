@@ -23,6 +23,7 @@ class TaskToHumanResource extends ActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchSupplier;
+	public $searchPrimarySecondary;
 	public $searchHumanResourceToSupplierId;
 	public $searchHumanResource;
 	public $searchTaskQuantity;
@@ -43,6 +44,8 @@ class TaskToHumanResource extends ActiveRecord
 	public $mode_id;
 	public $level;
 	
+	public $durationTemp;	// used to get around an awkward validation situation where want duration to be required if Primary role but not if Secondary role or type not set
+	
 	public $type;	// role type ie. Primary role or Secondary role
 
 	/**
@@ -50,10 +53,11 @@ class TaskToHumanResource extends ActiveRecord
 	 */
 	public function rules()
 	{
-		return array_merge(parent::rules(array('human_resource_data_id')), array(
-			array('human_resource_id, duration, type', 'required'),
+		return array_merge(parent::rules(array('human_resource_data_id', 'type')), array(
+			array('human_resource_id, durationTemp', 'required'),
 			array('level, action_to_human_resource_id, human_resource_id, mode_id, human_resource_to_supplier_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
-			array('start, estimated_total_duration', 'date', 'format'=>'H:m'),
+			array('start, duration, estimated_total_duration', 'date', 'format'=>'H:m'),
+			array('type', 'safe'),
 		));
 	}
 
@@ -85,6 +89,8 @@ class TaskToHumanResource extends ActiveRecord
 			'searchEstimatedTotalQuantity' => 'Override level quantity',
 			'searchCalculatedTotalDuration' => 'Level duration',
 			'searchCalculatedTotalQuantity' => 'Level quantity',
+			'durationTemp' => 'Duration',
+			'searchPrimarySecondary' => 'Role type',
 		));
 	}
 
@@ -94,7 +100,16 @@ class TaskToHumanResource extends ActiveRecord
 	public function getSearchCriteria()
 	{
 		$criteria=new DbCriteria($this);
+		
+		$criteria->select=array(
+			't.*',
+			'IF(primarySecondary.human_resource_data_id, "Primary", "Secondary") AS searchPrimarySecondary',
+		);
+		
+		$criteria->distinct = true;
 
+		$criteria->compareAs('searchHumanResource', $this->searchHumanResource, 'humanResource.auth_item_name', true);
+		$criteria->compareAs('searchPrimarySecondary', $this->searchPrimarySecondary, 'IF(primarySecondary.human_resource_data_id, "Primary", "Secondary")', true);
 		$criteria->compareAs('searchHumanResource', $this->searchHumanResource, 'humanResource.auth_item_name', true);
 		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
 		$criteria->compareAs('start', $this->start, 'humanResourceData.start', true);
@@ -118,7 +133,11 @@ class TaskToHumanResource extends ActiveRecord
 			LEFT JOIN tbl_human_resource_to_supplier humanResourceToSupplier
 				ON humanResourceData.human_resource_to_supplier_id = humanResourceToSupplier.id
 			LEFT JOIN tbl_supplier supplier ON humanResourceToSupplier.supplier_id = supplier.id
+			LEFT JOIN tbl_task_to_human_resource primarySecondary
+				ON t.human_resource_data_id = primarySecondary.human_resource_data_id
+				AND primarySecondary.duration IS NOT NULL
 		";
+		
 		
 		return $criteria;
 	}
@@ -126,6 +145,7 @@ class TaskToHumanResource extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchHumanResource';
+        $columns[] = 'searchPrimarySecondary';
         $columns[] = static::linkColumn('searchSupplier', 'HumanResourceToSupplier', 'searchHumanResourceToSupplierId');
 		$columns[] = 'searchTaskQuantity';
 		$columns[] = 'start:time';
@@ -205,6 +225,10 @@ class TaskToHumanResource extends ActiveRecord
 			$this->human_resource_to_supplier_id = null;
 			$this->estimated_total_duration = null;
 		}
+		else
+		{
+			$this->duration = $this->durationTemp;
+		}
 
 		// retrieve HumanResourceData - or insert if doesn't exist
 		if(!$humanResourceData = HumanResourceData::model()->findByAttributes(array(
@@ -229,6 +253,9 @@ class TaskToHumanResource extends ActiveRecord
 		// link this HumanResource to the HumanResourceData
 		$this->human_resource_data_id = $humanResourceData->id;
 		
+		// a hack to get around not easily being able to adjust rules
+		$this->durationTemp = 0;
+
 		parent::createSave($models);
 		
 		// clear task to human resource values to indicated secondary role
@@ -262,6 +289,10 @@ class TaskToHumanResource extends ActiveRecord
 			$this->human_resource_to_supplier_id = null;
 			$this->estimated_total_duration = null;
 		}
+		else
+		{
+			$this->duration = $this->durationTemp;
+		}
 
 		// attempt save of related HumanResourceData
 		$this->humanResourceData->estimated_total_quantity = $this->estimated_total_quantity;
@@ -276,7 +307,10 @@ class TaskToHumanResource extends ActiveRecord
 			// problem here is that the the ...data may have completely changed as a result of convergence or divergence
 			// due to a level change
 			unset($this->human_resource_data_id);
-			
+
+			// a hack to get around not easily being able to adjust rules
+			$this->durationTemp = 0;
+
 			if(!($saved = $this->dbCallback('save')))
 			{
 				// put the model into the models array used for showing all errors
@@ -291,9 +325,9 @@ class TaskToHumanResource extends ActiveRecord
 		{
 			$command = Yii::app()->db->createCommand("
 				UPDATE `tbl_task_to_human_resource`
-				SET `duration` = NULL, `start` = NULL
+				SET `duration` = NULL
 				WHERE `human_resource_data_id` = :human_resource_data_id");
-			$command->bindParam($command, $temp = $this->human_resource_data_id);
+			$command->bindParam(':human_resource_data_id', $temp = $this->human_resource_data_id);
 			$command->execute();
 		}
 
@@ -305,10 +339,17 @@ class TaskToHumanResource extends ActiveRecord
 		// if secondary role then duration can be null so just set as 0
 		if($this->type == 'Secondary role')
 		{
-			$this->duration = '00:00:00';
+			$this->duration = NULL;
+			$this->durationTemp = 1;
 		}
 
 		return parent::beforeValidate();
+	}
+	
+	// see if this is deleteable in the application - not blocked by trigger as could interfere with all removals ultimately
+	public function getCanDelete()
+	{
+		return $this->action_to_human_resource_id ? !$this->actionToHumanResource->mandatory : true;
 	}
 
 }

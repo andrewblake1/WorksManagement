@@ -187,7 +187,7 @@ class HumanResourceData extends ActiveRecord
 			'searchHumanResource',
 		);
 	}
- 
+
 	public function scopePlanning($exclude_id, $planning_id, $mode_id)
 	{
 		$criteria=new DbCriteria;
@@ -199,5 +199,5 @@ class HumanResourceData extends ActiveRecord
 		
 		return $this;
 	}
-	
+
 }

@@ -73,7 +73,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	
 	echo "<div id=\"primary-role\" $style>";
-	$form->textFieldRow('duration');
+	$form->timepickerRow('durationTemp');
 
 	$form->timepickerRow('estimated_total_duration');
 

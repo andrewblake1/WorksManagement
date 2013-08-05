@@ -56,7 +56,7 @@ return array(
 							'js'=>array('jquery-ui.min.js'),
 					),
 				),
-			),		
+			),	
 
 
 			'user' => array(
