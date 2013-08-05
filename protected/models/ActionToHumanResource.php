@@ -30,6 +30,12 @@ class ActionToHumanResource extends ActiveRecord
 	public $searchLevel;
 	public $searchMode;
 
+	/*
+	 * these just here for purpose of tabs - ensuring these variables exist ensures than can be added to the url from currrent $_GET
+	 */
+	public $client_id;
+	public $project_template_id;
+
 	/**
 	 * @return array relational rules.
 	 */
