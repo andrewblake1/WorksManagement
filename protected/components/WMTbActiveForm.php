@@ -217,7 +217,7 @@ class WMTbActiveForm extends TbActiveForm
 	public function textAreaRow($attribute, $htmlOptions = array(), $model = NULL)
 	{
 		echo parent::textAreaRow($model ? $model : $this->model, $attribute,
-				array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+				$htmlOptions + array('class'=>'span5') + $this->_htmlOptionReadonly);
 	}
 	
 	public function dropDownListRow($attribute, $data = array(), $htmlOptions = array(), $model = NULL)
@@ -237,7 +237,7 @@ class WMTbActiveForm extends TbActiveForm
 				
 				// create list box
 				echo parent::dropDownListRow($model, $attribute,
-					$data, array('class'=>'span5') + $htmlOptions);
+					$data, $htmlOptions + array('class'=>'span5'));
 				
 				// add a dummy field as the list will be hidden on doc load
 				echo CHtml::textField(NULL, current($data), array(
@@ -264,7 +264,7 @@ class WMTbActiveForm extends TbActiveForm
 		elseif(sizeof($data) > 1 || $model->isAttributeRequired($attribute))
 		{
 			echo parent::dropDownListRow($model, $attribute,
-				$data, array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+				$data,  $htmlOptions + array('class'=>'span5') + $this->_htmlOptionReadonly);
 		}
 		// otherwise create a hidden item that is blank in case needed by javascript
 		else
@@ -291,7 +291,7 @@ class WMTbActiveForm extends TbActiveForm
 		{
 			self::maxLength($model, $attribute, $htmlOptions);
 			echo parent::textFieldRow($model, $attribute,
-				array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+				$htmlOptions + array('class'=>'span5') + $this->_htmlOptionReadonly);
 		}
 	}
 
@@ -335,7 +335,7 @@ class WMTbActiveForm extends TbActiveForm
 	{
 		self::maxLength($model ? $model : $this->model, $attribute, $htmlOptions);
 		echo parent::passwordFieldRow($model ? $model : $this->model, $attribute,
-			array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+			$htmlOptions + array('class'=>'span5') + $this->_htmlOptionReadonly);
 	}
 
 	public function hiddenField($attribute, $htmlOptions = array(), $model = NULL)
@@ -347,7 +347,7 @@ class WMTbActiveForm extends TbActiveForm
 	public function fileFieldRow($attribute, $htmlOptions = array(), $model = NULL)
 	{
 		echo parent::fileFieldRow($model ? $model : $this->model, $attribute,
-			array('class'=>'span5') + $htmlOptions + $this->_htmlOptionReadonly);
+			$htmlOptions + array('class'=>'span5') + $this->_htmlOptionReadonly);
 	}
 	
 	public function rangeFieldRow($attribute, $default, $minimum, $maximum, $select = '', $quantity_tooltip = '', $htmlOptions = array(), $model = NULL) {

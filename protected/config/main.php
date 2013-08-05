@@ -47,7 +47,18 @@ return array(
 
 		// Application components
 		'components' => array(
-		
+
+			'clientScript'=>array(
+				'class'=>'CClientScript',
+				'packages'=>array(
+					'jquery.ui'=>array(
+						'baseUrl'=>'//ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/',
+							'js'=>array('jquery-ui.min.js'),
+					),
+				),
+			),		
+
+
 			'user' => array(
 				// enable cookie-based authentication
 				'allowAutoLogin' => true,

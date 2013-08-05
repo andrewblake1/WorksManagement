@@ -19,14 +19,13 @@
  * The followings are the available model relations:
  * @property ExclusiveRole[] $exclusiveRoles
  * @property ExclusiveRole[] $exclusiveRoles1
- * @property ExclusiveRole[] $exclusiveRoles2
  * @property Planning $planning
  * @property Planning $level0
- * @property User $updatedBy
  * @property HumanResourceToSupplier $humanResource
  * @property HumanResourceToSupplier $humanResourceToSupplier
- * @property Mode $mode
+ * @property User $updatedBy
  * @property ActionToHumanResource $actionToHumanResource
+ * @property Mode $mode
  * @property TaskToHumanResource[] $taskToHumanResources
  */
 class HumanResourceData extends ActiveRecord
@@ -45,12 +44,12 @@ class HumanResourceData extends ActiveRecord
             'exclusiveRoles1' => array(self::HAS_MANY, 'ExclusiveRole', 'parent_id'),
             'exclusiveRoles2' => array(self::HAS_MANY, 'ExclusiveRole', 'child_id'),
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'humanResource' => array(self::BELONGS_TO, 'HumanResource', 'human_resource_id'),
             'humanResourceToSupplier' => array(self::BELONGS_TO, 'HumanResourceToSupplier', 'human_resource_to_supplier_id'),
-            'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'actionToHumanResource' => array(self::BELONGS_TO, 'ActionToHumanResource', 'action_to_human_resource_id'),
+            'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
             'taskToHumanResources' => array(self::HAS_MANY, 'TaskToHumanResource', 'human_resource_data_id'),
         );
     }
@@ -122,6 +121,7 @@ class HumanResourceData extends ActiveRecord
 				$humanResourceData->human_resource_to_supplier_id = $this->human_resource_to_supplier_id;
 				$humanResourceData->estimated_total_quantity = $this->estimated_total_quantity;
 				$humanResourceData->estimated_total_duration = $this->estimated_total_duration;
+				$humanResourceData->action_to_human_resource_id = $this->action_to_human_resource_id;
 				$humanResourceData->start = $this->start;
 				$humanResourceData->updated_by = Yii::app()->user->id;
 				// loop thru all relevant new planning id's

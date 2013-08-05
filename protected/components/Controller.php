@@ -84,19 +84,11 @@ class Controller extends CController
 			),
 		);
 
-		Yii::app()->clientScript->scriptMap = array(
-			// TODO: remove this once the bug is fixed in future release of yiibooster
-			/* NB: currently version 1.9 of jqueryUI introduces tootip which conflicts with bootstrap.
-			 * new version of bootstrap or yiibooster will resolve it - several people working on it
-			 * There is a jquery-ui solution evidently using $.widget.bridge from https://github.com/twitter/bootstrap/issues/6303
-			 */
-//			'jquery-ui.min.js' => 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js',
-		);
-
-		// These eaiest here in order to save binding elements after ajax (not bound in doc ready)
+//		// These eaiest here in order to save binding elements after ajax (not bound in doc ready)
 		$cs = Yii::app()->getClientScript();
-		$cs->registerCoreScript('jquery');
 		$cs->registerCoreScript('jquery.ui');
+		$cs->registerCoreScript('jquery');
+//		$cs->registerScriptFile('jquery-ui.min.js');
 
 		parent::__construct($id, $module);
 	}
@@ -1512,11 +1504,12 @@ $t = $model->attributes;
 		));
 	}
 
-	static function dependantListWidgetRow($model, $form, $fkField, $dependantOnModelName, $dependantOnAttribute, $htmlOptions, $scopes = array(), $label = null, $modelScopes = array())
+	static function dependantListWidgetRow($model, $form, $fkField, $dependantOnModelName, $dependantOnAttribute, $htmlOptions, $scopes = array(), $label = null, $modelScopes = array(), $betweenHtml = null)
 	{
 		$modelName = get_class($model);
 		$listModelName = static::modelName();
 
+		$inHtmlOptions = $htmlOptions;	// without the id that is about to calculated
 		CHtml::resolveNameID($model, $attribute = $fkField, $htmlOptions);
 
 		$source = Yii::app()->createUrl("$listModelName/autocomplete") . "?model=$modelName&attribute=$fkField&scopes%5Bscope$dependantOnModelName%5D%5B0%5D=";
@@ -1558,9 +1551,12 @@ $t = $model->attributes;
 						}
 					}",
 			)
-			), $modelScopes, $label
+			) + $inHtmlOptions, $modelScopes, $label
 		);
-
+		
+		// append any html in between
+		echo $betweenHtml;								
+								
 		// get the id used from the triggering item
 		CHtml::resolveNameID($model, $dependantOnAttribute, $dependsOnHtmlOptions);
 
@@ -1575,7 +1571,10 @@ $t = $model->attributes;
 		}
 
 		// NB: need to set this here as otherwise in wmfkautocomplete the soure url has standard_id=, in it which gets stripped
+		echo "<div id=\"dependant-$fkField\">";
 		static::listWidgetRow($model, $form, $fkField, $htmlOptions, $scopes);
+		echo '</div>';
+		
 	}
 
 	public function actionDependantList()

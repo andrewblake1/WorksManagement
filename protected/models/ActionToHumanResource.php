@@ -99,6 +99,7 @@ class ActionToHumanResource extends ActiveRecord
 			// create a new humanResource
 			$taskToHumanResource = new TaskToHumanResource();
 			$taskToHumanResource->attributes = $actionToHumanResource->attributes;
+			$taskToHumanResource->action_to_human_resource_id = $actionToHumanResource->id;
 			// if there is an associated task_template
 			if($taskTemplateToActionToHumanResource = TaskTemplateToActionToHumanResource::model()->findByAttributes(array(
 				'task_template_id'=>$task->taskTemplate->id,

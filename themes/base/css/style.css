@@ -94,3 +94,7 @@ fieldset {
 form {
 	margin: 0;
 }
+
+.btn-group {
+    padding-bottom: 10px;
+}

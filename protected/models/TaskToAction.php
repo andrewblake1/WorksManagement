@@ -25,6 +25,12 @@ class TaskToAction extends ViewActiveRecord
 		return 'v_task_to_action';
 	}
 
+	// needed as using a view
+	public function primaryKey()
+	{
+		return 'id';
+	}
+
 	public function rules()
 	{
 		// NOTE: you should only define rules for those attributes that
