@@ -34,7 +34,7 @@
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToTaskTemplateToCustomField[] $taskToTaskTemplateToCustomFields
  * @property TaskToMaterial[] $taskToMaterials
- * @property TaskToHumanResource[] $taskToHumanResources
+ * @property TaskToLabourResource[] $taskToLabourResources
  */
 class Task extends CustomFieldActiveRecord
 {
@@ -114,7 +114,7 @@ class Task extends CustomFieldActiveRecord
             'taskToAssemblies' => array(self::HAS_MANY, 'TaskToAssembly', 'task_id'),
             'taskToTaskTemplateToCustomFields' => array(self::HAS_MANY, 'TaskToTaskTemplateToCustomField', 'task_id'),
             'taskToMaterials' => array(self::HAS_MANY, 'TaskToMaterial', 'task_id'),
-            'taskToHumanResources' => array(self::HAS_MANY, 'TaskToHumanResource', 'task_id'),
+            'taskToLabourResources' => array(self::HAS_MANY, 'TaskToLabourResource', 'task_id'),
         );
     }
 
@@ -370,7 +370,7 @@ class Task extends CustomFieldActiveRecord
 				// attempt creation of resources - only if mode set
 				if($this->mode_id)
 				{
-					$saved &= $this->createHumanResources($models);
+					$saved &= $this->createLabourResources($models);
 				}
 				// attempt creation of assemblies
 				$saved &= $this->createAssemblies($models);
@@ -391,56 +391,56 @@ class Task extends CustomFieldActiveRecord
 // Also update triggers possibly to maintain ref integ. easiest for now in application code but not great for integrity.
 	
 	/**
-	 * Creates the intial humanResource rows for a task
+	 * Creates the intial labourResource rows for a task
 	 * @param CActiveRecord $model the model (task)
 	 * @param array of CActiveRecord models to extract errors from if necassary
 	 * @return returns 0, or null on error of any inserts
 	 */
-	private function createHumanResources(&$models=array())
+	private function createLabourResources(&$models=array())
 	{
 		$saved = true;
 
-		foreach($this->taskTemplate->taskTemplateToHumanResources as $taskTemplateToHumanResource)
+		foreach($this->taskTemplate->taskTemplateToLabourResources as $taskTemplateToLabourResource)
 		{
-			// create a new humanResource
-			$taskToHumanResource = new TaskToHumanResource();
+			// create a new labourResource
+			$taskToLabourResource = new TaskToLabourResource();
 			// copy any useful attributes from
-			$taskToHumanResource->attributes = $taskTemplateToHumanResource->attributes;
-			$taskToHumanResource->updated_by = null;
-			$taskToHumanResource->task_id = $this->id;
-			$saved &= $taskToHumanResource->createSave($models, $taskTemplateToHumanResource);
+			$taskToLabourResource->attributes = $taskTemplateToLabourResource->attributes;
+			$taskToLabourResource->updated_by = null;
+			$taskToLabourResource->task_id = $this->id;
+			$saved &= $taskToLabourResource->createSave($models, $taskTemplateToLabourResource);
 		}
 
 		// Adding exclusives has to been done after as the child records may not exist until the above loop has been processed
-		foreach($this->taskTemplate->taskTemplateToHumanResources as $taskTemplateToHumanResource)
+		foreach($this->taskTemplate->taskTemplateToLabourResources as $taskTemplateToLabourResource)
 		{
 			$criteria = new DbCriteria;
-			$criteria->with = 'humanResourceData';
+			$criteria->with = 'labourResourceData';
 			$criteria->compare('task_id',$this->id);
-			$criteria->compare('humanResourceData.human_resource_id',$taskTemplateToHumanResource->human_resource_id);
-			$criteria->compare('humanResourceData.mode_id',$taskTemplateToHumanResource->mode_id);
-			$criteria->compare('humanResourceData.level',$taskTemplateToHumanResource->level);
-			// find the corresponding task to human resource record - will be the parent
-			$taskToHumanResourceParent = TaskToHumanResource::model()->find($criteria);
+			$criteria->compare('labourResourceData.labour_resource_id',$taskTemplateToLabourResource->labour_resource_id);
+			$criteria->compare('labourResourceData.mode_id',$taskTemplateToLabourResource->mode_id);
+			$criteria->compare('labourResourceData.level',$taskTemplateToLabourResource->level);
+			// find the corresponding task to labour resource record - will be the parent
+			$taskToLabourResourceParent = TaskToLabourResource::model()->find($criteria);
 
 			// loop thru template children exlusives
-			foreach($taskTemplateToHumanResource->taskTemplateToExclusiveRoles1 as $taskTemplateToExlusiveRoleChild)
+			foreach($taskTemplateToLabourResource->taskTemplateToMutuallyExclusiveRoles1 as $taskTemplateToExlusiveRoleChild)
 			{
 				$criteria = new DbCriteria;
-				$criteria->with = 'humanResourceData';
+				$criteria->with = 'labourResourceData';
 				$criteria->compare('task_id',$this->id);
-				$criteria->compare('humanResourceData.human_resource_id',$taskTemplateToExlusiveRoleChild->child->human_resource_id);
-				$criteria->compare('humanResourceData.mode_id',$taskTemplateToExlusiveRoleChild->child->mode_id);
-				$criteria->compare('humanResourceData.level',$taskTemplateToExlusiveRoleChild->child->level);
+				$criteria->compare('labourResourceData.labour_resource_id',$taskTemplateToExlusiveRoleChild->child->labour_resource_id);
+				$criteria->compare('labourResourceData.mode_id',$taskTemplateToExlusiveRoleChild->child->mode_id);
+				$criteria->compare('labourResourceData.level',$taskTemplateToExlusiveRoleChild->child->level);
 				// we have the parent above but still need to find the child in the same way
-				$taskToHumanResourceChild = TaskToHumanResource::model()->find($criteria);
-				$exclusiveRole = new ExclusiveRole;
-				$exclusiveRole->parent_id = $taskToHumanResourceParent->human_resource_data_id;
-				$exclusiveRole->child_id = $taskToHumanResourceChild->human_resource_data_id;
-				$exclusiveRole->planning_id = $taskToHumanResourceChild->humanResourceData->planning_id;
+				$taskToLabourResourceChild = TaskToLabourResource::model()->find($criteria);
+				$mutuallyExclusiveRole = new MutuallyExclusiveRole;
+				$mutuallyExclusiveRole->parent_id = $taskToLabourResourceParent->labour_resource_data_id;
+				$mutuallyExclusiveRole->child_id = $taskToLabourResourceChild->labour_resource_data_id;
+				$mutuallyExclusiveRole->planning_id = $taskToLabourResourceChild->labourResourceData->planning_id;
 				try
 				{
-					$exclusiveRole->insert();
+					$mutuallyExclusiveRole->insert();
 				}
 				catch(CDbException $e)
 				{

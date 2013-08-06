@@ -1,6 +1,6 @@
 <?php
 
-class ActionToHumanResourceController extends Controller
+class ActionToLabourResourceController extends Controller
 {
 	public function __construct($id, $module = null) {
 		

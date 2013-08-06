@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tbl_exclusive_role".
+ * This is the model class for table "tbl_mutually_exclusive_role".
  *
- * The followings are the available columns in table 'tbl_exclusive_role':
+ * The followings are the available columns in table 'tbl_mutually_exclusive_role':
  * @property string $id
  * @property string $parent_id
  * @property string $child_id
@@ -12,14 +12,14 @@
  *
  * The followings are the available model relations:
  * @property User $updatedBy
- * @property HumanResource $planning
- * @property HumanResource $parent
- * @property HumanResource $child
+ * @property LabourResource $planning
+ * @property LabourResource $parent
+ * @property LabourResource $child
  */
-class ExclusiveRole extends ActiveRecord
+class MutuallyExclusiveRole extends ActiveRecord
 {
 	public $searchExclusiveTo;
-	public $task_to_human_resource_id;
+	public $task_to_labour_resource_id;
 	
 	/**
 	 * @return array validation rules for model attributes.
@@ -27,8 +27,8 @@ class ExclusiveRole extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(), array(
-			array('task_to_human_resource_id', 'numerical', 'integerOnly'=>true),
-			array('task_to_human_resource_id', 'safe'),
+			array('task_to_labour_resource_id', 'numerical', 'integerOnly'=>true),
+			array('task_to_labour_resource_id', 'safe'),
 		));
 	}
 
@@ -42,8 +42,8 @@ class ExclusiveRole extends ActiveRecord
 		return array(
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
 			'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-			'parent' => array(self::BELONGS_TO, 'HumanResourceData', 'parent_id'),
-			'child' => array(self::BELONGS_TO, 'HumanResourceData', 'child_id'),
+			'parent' => array(self::BELONGS_TO, 'LabourResourceData', 'parent_id'),
+			'child' => array(self::BELONGS_TO, 'LabourResourceData', 'child_id'),
 		);
 	}
    public function attributeLabels()
@@ -60,14 +60,14 @@ class ExclusiveRole extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		// a slight difference here due to the schema where parent isn't actually task_to_human_resource
-		$taskToHumanResource = TaskToHumanResource::model()->findByPk($this->task_to_human_resource_id);
-		$this->parent_id = $taskToHumanResource->human_resource_data_id;
+		// a slight difference here due to the schema where parent isn't actually task_to_labour_resource
+		$taskToLabourResource = TaskToLabourResource::model()->findByPk($this->task_to_labour_resource_id);
+		$this->parent_id = $taskToLabourResource->labour_resource_data_id;
 		
-		$criteria->compareAs('searchExclusiveTo', $this->searchExclusiveTo, 'humanResource.auth_item_name', true);
+		$criteria->compareAs('searchExclusiveTo', $this->searchExclusiveTo, 'labourResource.auth_item_name', true);
 
 		$criteria->with = array(
-			'child.humanResource',
+			'child.labourResource',
 		);
 
 		return $criteria;
@@ -89,9 +89,9 @@ class ExclusiveRole extends ActiveRecord
  
 	public function beforeValidate()
 	{
-		// a slight difference here due to the schema where parent isn't actually task_to_human_resource
-		$taskToHumanResource = TaskToHumanResource::model()->findByPk($this->task_to_human_resource_id);
-		$this->parent_id = $taskToHumanResource->human_resource_data_id;
+		// a slight difference here due to the schema where parent isn't actually task_to_labour_resource
+		$taskToLabourResource = TaskToLabourResource::model()->findByPk($this->task_to_labour_resource_id);
+		$this->parent_id = $taskToLabourResource->labour_resource_data_id;
 		$this->planning_id = $this->parent->planning_id;
 		return parent::beforeValidate();
 	}

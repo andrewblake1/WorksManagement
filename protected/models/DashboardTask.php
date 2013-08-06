@@ -32,7 +32,7 @@
  * @property TaskToAssembly[] $taskToAssemblies
  * @property TaskToTaskTemplateToCustomField[] $taskToTaskTemplateToCustomFields
  * @property TaskToMaterial[] $taskToMaterials
- * @property TaskToHumanResource[] $taskToHumanResources
+ * @property TaskToLabourResource[] $taskToLabourResources
  */
 class DashboardTask extends Task
 {

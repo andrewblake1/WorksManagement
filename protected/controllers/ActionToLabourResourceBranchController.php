@@ -1,6 +1,6 @@
 <?php
 
-class ActionToHumanResourceBranchController extends Controller
+class ActionToLabourResourceBranchController extends Controller
 {
 	public function __construct($id, $module = null) {
 		

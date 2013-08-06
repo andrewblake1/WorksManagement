@@ -1,12 +1,12 @@
 <?php
 
 /**
- * This is the model class for table "tbl_action_to_human_resource_branch".
+ * This is the model class for table "tbl_action_to_labour_resource_branch".
  *
- * The followings are the available columns in table 'tbl_action_to_human_resource_branch':
+ * The followings are the available columns in table 'tbl_action_to_labour_resource_branch':
  * @property integer $id
  * @property integer $duty_step_to_custom_field_id
- * @property integer $action_to_human_resource_id
+ * @property integer $action_to_labour_resource_id
  * @property string $action_id
  * @property string $compare
  * @property integer $duty_step_id
@@ -16,10 +16,10 @@
  * @property DutyStepToCustomField $dutyStepToCustomField
  * @property User $updatedBy
  * @property DutyStepToCustomField $dutyStep
- * @property ActionToHumanResource $action
- * @property ActionToHumanResource $actionToHumanResource
+ * @property ActionToLabourResource $action
+ * @property ActionToLabourResource $actionToLabourResource
  */
-class ActionToHumanResourceBranch extends ActiveRecord
+class ActionToLabourResourceBranch extends ActiveRecord
 {
 	public $searchDutyStep;
 	public $searchCustomField;
@@ -41,8 +41,8 @@ class ActionToHumanResourceBranch extends ActiveRecord
 			'dutyStepToCustomField' => array(self::BELONGS_TO, 'DutyStepToCustomField', 'duty_step_to_custom_field_id'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
 			'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
-			'action' => array(self::BELONGS_TO, 'ActionToHumanResource', 'action_id'),
-			'actionToHumanResource' => array(self::BELONGS_TO, 'ActionToHumanResource', 'action_to_human_resource_id'),
+			'action' => array(self::BELONGS_TO, 'ActionToLabourResource', 'action_id'),
+			'actionToLabourResource' => array(self::BELONGS_TO, 'ActionToLabourResource', 'action_to_labour_resource_id'),
 		);
 	}
 

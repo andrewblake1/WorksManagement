@@ -63,15 +63,15 @@ EOD;
 			$this->_authManager->createOperation('ActionRead', 'Action read');
 			$task->addChild('ActionRead');
 
-			$task=$this->_authManager->createTask('ActionToHumanResource', 'ActionToHumanResource task');
-			$systemAdminRole->addChild('ActionToHumanResource');
-			$this->_authManager->createOperation('ActionToHumanResourceRead', 'ActionToHumanResource read');
-			$task->addChild('ActionToHumanResourceRead');
+			$task=$this->_authManager->createTask('ActionToLabourResource', 'ActionToLabourResource task');
+			$systemAdminRole->addChild('ActionToLabourResource');
+			$this->_authManager->createOperation('ActionToLabourResourceRead', 'ActionToLabourResource read');
+			$task->addChild('ActionToLabourResourceRead');
 
-			$task=$this->_authManager->createTask('ActionToHumanResourceBranch', 'ActionToHumanResourceBranch task');
-			$systemAdminRole->addChild('ActionToHumanResourceBranch');
-			$this->_authManager->createOperation('ActionToHumanResourceBranchRead', 'ActionToHumanResourceBranch read');
-			$task->addChild('ActionToHumanResourceBranchRead');
+			$task=$this->_authManager->createTask('ActionToLabourResourceBranch', 'ActionToLabourResourceBranch task');
+			$systemAdminRole->addChild('ActionToLabourResourceBranch');
+			$this->_authManager->createOperation('ActionToLabourResourceBranchRead', 'ActionToLabourResourceBranch read');
+			$task->addChild('ActionToLabourResourceBranchRead');
 
 			$task=$this->_authManager->createTask('Assembly', 'Assembly task');
 			$systemAdminRole->addChild('Assembly');
@@ -198,15 +198,15 @@ EOD;
 			$this->_authManager->createOperation('DutyStepToModeRead', 'DutyStepToMode read');
 			$task->addChild('DutyStepToModeRead');
 
-			$task=$this->_authManager->createTask('HumanResource', 'HumanResource task');
-			$systemAdminRole->addChild('HumanResource');
-			$this->_authManager->createOperation('HumanResourceRead', 'HumanResource read');
-			$task->addChild('HumanResourceRead');
+			$task=$this->_authManager->createTask('LabourResource', 'LabourResource task');
+			$systemAdminRole->addChild('LabourResource');
+			$this->_authManager->createOperation('LabourResourceRead', 'LabourResource read');
+			$task->addChild('LabourResourceRead');
 
-			$task=$this->_authManager->createTask('HumanResourceToSupplier', 'HumanResourceToSupplier task');
-			$systemAdminRole->addChild('HumanResourceToSupplier');
-			$this->_authManager->createOperation('HumanResourceToSupplierRead', 'HumanResourceToSupplier read');
-			$task->addChild('HumanResourceToSupplierRead');
+			$task=$this->_authManager->createTask('LabourResourceToSupplier', 'LabourResourceToSupplier task');
+			$systemAdminRole->addChild('LabourResourceToSupplier');
+			$this->_authManager->createOperation('LabourResourceToSupplierRead', 'LabourResourceToSupplier read');
+			$task->addChild('LabourResourceToSupplierRead');
 
 			$task=$this->_authManager->createTask('MaterialGroup', 'MaterialGroup task');
 			$systemAdminRole->addChild('MaterialGroup');
@@ -303,10 +303,10 @@ EOD;
 			$this->_authManager->createOperation('TaskTemplateToActionRead', 'TaskTemplateToAction read');
 			$task->addChild('TaskTemplateToActionRead');
 
-			$task=$this->_authManager->createTask('TaskTemplateToActionToHumanResource', 'TaskTemplateToActionToHumanResource task');
-			$systemAdminRole->addChild('TaskTemplateToActionToHumanResource');
-			$this->_authManager->createOperation('TaskTemplateToActionToHumanResourceRead', 'TaskTemplateToActionToHumanResource read');
-			$task->addChild('TaskTemplateToActionToHumanResourceRead');
+			$task=$this->_authManager->createTask('TaskTemplateToActionToLabourResource', 'TaskTemplateToActionToLabourResource task');
+			$systemAdminRole->addChild('TaskTemplateToActionToLabourResource');
+			$this->_authManager->createOperation('TaskTemplateToActionToLabourResourceRead', 'TaskTemplateToActionToLabourResource read');
+			$task->addChild('TaskTemplateToActionToLabourResourceRead');
 
 			$task=$this->_authManager->createTask('TaskTemplateToAssembly', 'TaskTemplateToAssembly task');
 			$systemAdminRole->addChild('TaskTemplateToAssembly');
@@ -323,15 +323,15 @@ EOD;
 			$this->_authManager->createOperation('TaskTemplateToCustomFieldRead', 'TaskTemplateToCustomField read');
 			$task->addChild('TaskTemplateToCustomFieldRead');
 
-			$task=$this->_authManager->createTask('TaskTemplateToExclusiveRole', 'TaskTemplateToExclusiveRole task');
-			$systemAdminRole->addChild('TaskTemplateToExclusiveRole');
-			$this->_authManager->createOperation('TaskTemplateToExclusiveRoleRead', 'TaskTemplateToExclusiveRole read');
-			$task->addChild('TaskTemplateToExclusiveRoleRead');
+			$task=$this->_authManager->createTask('TaskTemplateToMutuallyExclusiveRole', 'TaskTemplateToMutuallyExclusiveRole task');
+			$systemAdminRole->addChild('TaskTemplateToMutuallyExclusiveRole');
+			$this->_authManager->createOperation('TaskTemplateToMutuallyExclusiveRoleRead', 'TaskTemplateToMutuallyExclusiveRole read');
+			$task->addChild('TaskTemplateToMutuallyExclusiveRoleRead');
 
-			$task=$this->_authManager->createTask('TaskTemplateToHumanResource', 'TaskTemplateToHumanResource task');
-			$systemAdminRole->addChild('TaskTemplateToHumanResource');
-			$this->_authManager->createOperation('TaskTemplateToHumanResourceRead', 'TaskTemplateToHumanResource read');
-			$task->addChild('TaskTemplateToHumanResourceRead');
+			$task=$this->_authManager->createTask('TaskTemplateToLabourResource', 'TaskTemplateToLabourResource task');
+			$systemAdminRole->addChild('TaskTemplateToLabourResource');
+			$this->_authManager->createOperation('TaskTemplateToLabourResourceRead', 'TaskTemplateToLabourResource read');
+			$task->addChild('TaskTemplateToLabourResourceRead');
 
 			$task=$this->_authManager->createTask('TaskTemplateToMaterial', 'TaskTemplateToMaterial task');
 			$systemAdminRole->addChild('TaskTemplateToMaterial');
@@ -376,10 +376,10 @@ EOD;
 			$this->_authManager->createOperation('DutyRead', 'Duty read');
 			$task->addChild('DutyRead');
 
-			$task=$this->_authManager->createTask('ExclusiveRole', 'ExclusiveRole task');
-			$projectManagerRole->addChild('ExclusiveRole');
-			$this->_authManager->createOperation('ExclusiveRoleRead', 'ExclusiveRole read');
-			$task->addChild('ExclusiveRoleRead');
+			$task=$this->_authManager->createTask('MutuallyExclusiveRole', 'MutuallyExclusiveRole task');
+			$projectManagerRole->addChild('MutuallyExclusiveRole');
+			$this->_authManager->createOperation('MutuallyExclusiveRoleRead', 'MutuallyExclusiveRole read');
+			$task->addChild('MutuallyExclusiveRoleRead');
 
 			$task=$this->_authManager->createTask('Planning', 'Planning task');
 			$projectManagerRole->addChild('Planning');
@@ -450,10 +450,10 @@ EOD;
 			$task2->addChild('TaskToMaterialToAssemblyToMaterialGroupRead');
 			$task3->addChild('TaskToMaterialToTaskTemplateToMaterialGroupRead');
 
-			$task=$this->_authManager->createTask('TaskToHumanResource', 'TaskToHumanResource task');
-			$projectManagerRole->addChild('TaskToHumanResource');
-			$this->_authManager->createOperation('TaskToHumanResourceRead', 'TaskToHumanResource read');
-			$task->addChild('TaskToHumanResourceRead');
+			$task=$this->_authManager->createTask('TaskToLabourResource', 'TaskToLabourResource task');
+			$projectManagerRole->addChild('TaskToLabourResource');
+			$this->_authManager->createOperation('TaskToLabourResourceRead', 'TaskToLabourResource read');
+			$task->addChild('TaskToLabourResourceRead');
 
 			$task=$this->_authManager->createTask('TaskTemplateToActionToProjectTemplateToAuthItem', 'TaskTemplateToActionToProjectTemplateToAuthItem task');
 			$projectManagerRole->addChild('TaskTemplateToActionToProjectTemplateToAuthItem');

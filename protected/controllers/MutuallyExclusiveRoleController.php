@@ -1,6 +1,6 @@
 <?php
 
-class TaskTemplateToExclusiveRoleController extends Controller
+class MutuallyExclusiveRoleController extends Controller
 {
 	public function getButtons($model)
 	{

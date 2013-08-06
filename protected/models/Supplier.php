@@ -11,7 +11,7 @@
  *
  * The followings are the available model relations:
  * @property ClientToMaterial[] $clientToMaterials
- * @property HumanResourceToSupplier[] $humanResourceToSuppliers
+ * @property LabourResourceToSupplier[] $labourResourceToSuppliers
  * @property User $updatedBy
  * @property SupplierContact[] $supplierContacts
  */
@@ -26,7 +26,7 @@ class Supplier extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'clientToMaterials' => array(self::HAS_MANY, 'ClientToMaterial', 'supplier_id'),
-            'resourceToSuppliers' => array(self::HAS_MANY, 'HumanResourceToSupplier', 'supplier_id'),
+            'resourceToSuppliers' => array(self::HAS_MANY, 'LabourResourceToSupplier', 'supplier_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'supplierContacts' => array(self::HAS_MANY, 'SupplierContact', 'supplier_id'),
         );

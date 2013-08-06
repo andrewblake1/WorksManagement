@@ -1,22 +1,22 @@
 <?php
 
 /**
- * This is the model class for table "tbl_task_template_to_action_to_human_resource".
+ * This is the model class for table "tbl_task_template_to_action_to_labour_resource".
  *
- * The followings are the available columns in table 'tbl_task_template_to_action_to_human_resource':
+ * The followings are the available columns in table 'tbl_task_template_to_action_to_labour_resource':
  * @property integer $id
  * @property integer $task_template_id
- * @property integer $action_to_human_resource_id
+ * @property integer $action_to_labour_resource_id
  * @property integer $quantity
  * @property string $duration
  * @property integer $updated_by
  *
  * The followings are the available model relations:
  * @property TaskTemplate $taskTemplate
- * @property ActionToHumanResource $actionToHumanResource
+ * @property ActionToLabourResource $actionToLabourResource
  * @property User $updatedBy
  */
-class TaskTemplateToActionToHumanResource extends ActiveRecord
+class TaskTemplateToActionToLabourResource extends ActiveRecord
 {
 
 	/**
@@ -28,7 +28,7 @@ class TaskTemplateToActionToHumanResource extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
-			'actionToHumanResource' => array(self::BELONGS_TO, 'ActionToHumanResource', 'action_to_human_resource_id'),
+			'actionToLabourResource' => array(self::BELONGS_TO, 'ActionToLabourResource', 'action_to_labour_resource_id'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
 		);
 	}
@@ -38,10 +38,10 @@ class TaskTemplateToActionToHumanResource extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchHumanResource', $this->searchHumanResource, 'humanResource.auth_item_name', true);
+		$criteria->compareAs('searchLabourResource', $this->searchLabourResource, 'labourResource.auth_item_name', true);
 
 		$criteria->with=array(
-			'actionToHumanResource.humanResource',
+			'actionToLabourResource.labourResource',
 		);
 
 		return $criteria;
@@ -49,7 +49,7 @@ class TaskTemplateToActionToHumanResource extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = 'searchHumanResource';
+        $columns[] = 'searchLabourResource';
  		
 		return $columns;
 	}
@@ -57,7 +57,7 @@ class TaskTemplateToActionToHumanResource extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchHumanResource',
+			'searchLabourResource',
 		);
 	}
  

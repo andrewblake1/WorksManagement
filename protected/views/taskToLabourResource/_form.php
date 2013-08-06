@@ -10,8 +10,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	{
 		// deterime if role is primary or secondary - determined by duration not being set for any of the
 		// children
-		if(!TaskToHumanResource::model()->findByAttributes(array(
-			'human_resource_data_id'=>$model->human_resource_data_id,
+		if(!TaskToLabourResource::model()->findByAttributes(array(
+			'labour_resource_data_id'=>$model->labour_resource_data_id,
 		), 'duration IS NOT NULL'))
 		{
 			$primary = false;
@@ -40,30 +40,30 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	Yii::app()->clientScript->registerScript('primarySecondary', "
 		$('.btn-group .btn').click(function() {
 			// whenever a button is clicked, set the hidden helper
-			$('#TaskToHumanResource_type').val($(this).text());
+			$('#TaskToLabourResource_type').val($(this).text());
 			if($(this).text() == 'Secondary')
 			{
 				// hide the irrelvenat fields
 				$('#primary-role').fadeOut('slow');
-				$('#dependant-human_resource_to_supplier_id').fadeOut('slow');
+				$('#dependant-labour_resource_to_supplier_id').fadeOut('slow');
 			}
 			else
 			{
 				$('#primary-role').fadeIn('slow');
-				$('#dependant-human_resource_to_supplier_id').fadeIn('slow');
+				$('#dependant-labour_resource_to_supplier_id').fadeIn('slow');
 			}
 		}); 
 		", CClientScript::POS_READY
 	);
 
-	HumanResourceToSupplierController::dependantListWidgetRow(
+	LabourResourceToSupplierController::dependantListWidgetRow(
 		$model,
 		$form,
-		'human_resource_to_supplier_id',
-		'HumanResource',
-		'human_resource_id',
+		'labour_resource_to_supplier_id',
+		'LabourResource',
+		'labour_resource_id',
 		array('class'=>'span3'),
-		array('scopeHumanResource'=>array($model->human_resource_id === null ? null : $model->human_resource_id)),
+		array('scopeLabourResource'=>array($model->labour_resource_id === null ? null : $model->labour_resource_id)),
 		'Role',
 		array(),
 		$betweenHtml

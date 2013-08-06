@@ -24,8 +24,8 @@
  * @property Level $level0
  * @property Project[] $projects
  * @property Project $project
- * @property HumanResourceData[] $humanResourceDatas
- * @property HumanResourceData[] $humanResourceDatas1
+ * @property LabourResourceData[] $labourResourceDatas
+ * @property LabourResourceData[] $labourResourceDatas1
  * @property Task[] $tasks
  * @property Task $task
  */
@@ -86,8 +86,8 @@ class Planning extends CategoryActiveRecord {
             'inCharge' => array(self::BELONGS_TO, 'User', 'in_charge_id'),
             'level0' => array(self::BELONGS_TO, 'Level', 'level'),
             'project' => array(self::HAS_ONE, 'Project', 'id'),
-            'resourceDatas' => array(self::HAS_MANY, 'HumanResourceData', 'planning_id'),
-            'resourceDatas1' => array(self::HAS_MANY, 'HumanResourceData', 'level'),
+            'resourceDatas' => array(self::HAS_MANY, 'LabourResourceData', 'planning_id'),
+            'resourceDatas1' => array(self::HAS_MANY, 'LabourResourceData', 'level'),
             'task' => array(self::HAS_ONE, 'Task', 'id'),
         );
     }

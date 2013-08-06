@@ -29,7 +29,7 @@
  * @property TaskTemplateToAssembly[] $taskTemplateToAssemblies
  * @property TaskTemplateToAssemblyGroup[] $taskTemplateToAssemblyGroups
  * @property TaskTemplateToCustomField[] $taskTemplateToCustomFields
- * @property TaskTemplateToHumanResource[] $taskTemplateToHumanResources
+ * @property TaskTemplateToLabourResource[] $taskTemplateToLabourResources
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskTemplateToMaterialGroup[] $taskTemplateToMaterialGroups
  */
@@ -72,7 +72,7 @@ class TaskTemplate extends ActiveRecord
             'taskTemplateToAssemblies' => array(self::HAS_MANY, 'TaskTemplateToAssembly', 'task_template_id'),
             'taskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskTemplateToAssemblyGroup', 'task_template_id'),
             'taskTemplateToCustomFields' => array(self::HAS_MANY, 'TaskTemplateToCustomField', 'task_template_id'),
-            'taskTemplateToHumanResources' => array(self::HAS_MANY, 'TaskTemplateToHumanResource', 'task_template_id'),
+            'taskTemplateToLabourResources' => array(self::HAS_MANY, 'TaskTemplateToLabourResource', 'task_template_id'),
             'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'task_template_id'),
             'taskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskTemplateToMaterialGroup', 'task_template_id'),
         );

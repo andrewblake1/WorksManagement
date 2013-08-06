@@ -181,8 +181,8 @@ return array(
 						),
 						'DutyStepToMode',
 					),
-					'ActionToHumanResource'=>array(
-						'ActionToHumanResourceBranch'
+					'ActionToLabourResource'=>array(
+						'ActionToLabourResourceBranch'
 					),
 				),
 				'Client'=>array(
@@ -196,8 +196,8 @@ return array(
 							),
 							'DutyStepToMode',
 						),
-						'ActionToHumanResource'=>array(
-							'ActionToHumanResourceBranch'
+						'ActionToLabourResource'=>array(
+							'ActionToLabourResourceBranch'
 						),
 					),
 					'ClientToAssembly',
@@ -214,8 +214,8 @@ return array(
 										'TaskToAssemblyToAssemblyToAssemblyGroup',
 										'TaskToAssemblyToTaskTemplateToAssemblyGroup',
 									),
-									'TaskToHumanResource'=>array(
-										'ExclusiveRole',
+									'TaskToLabourResource'=>array(
+										'MutuallyExclusiveRole',
 									),
 									'TaskToMaterial',
 								),
@@ -238,8 +238,8 @@ return array(
 								),
 								'DutyStepToMode',
 							),
-							'ActionToHumanResource'=>array(
-								'ActionToHumanResourceBranch'
+							'ActionToLabourResource'=>array(
+								'ActionToLabourResourceBranch'
 							),
 						),
 						'CustomFieldProjectCategory'=>array(
@@ -251,12 +251,12 @@ return array(
 								'TaskTemplateToCustomField',
 							),
 							'TaskTemplateToAction'=>array(
-								'TaskTemplateToActionToHumanResource',
+								'TaskTemplateToActionToLabourResource',
 							),
 							'TaskTemplateToAssembly',
 							'TaskTemplateToAssemblyGroup',
-							'TaskTemplateToHumanResource'=>array(
-								'TaskTemplateToExclusiveRole',
+							'TaskTemplateToLabourResource'=>array(
+								'TaskTemplateToMutuallyExclusiveRole',
 							),
 							'TaskTemplateToMaterial',
 							'TaskTemplateToMaterialGroup',
@@ -271,8 +271,8 @@ return array(
 					'ReportToAuthItem',
 					'SubReport',
 				),
-				'HumanResource'=>array(
-					'HumanResourceToSupplier',
+				'LabourResource'=>array(
+					'LabourResourceToSupplier',
 				),
 				'AuthItem'=>array(
 					'AuthItemChild',

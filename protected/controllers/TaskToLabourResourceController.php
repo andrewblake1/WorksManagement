@@ -1,18 +1,20 @@
 <?php
 
-class ExclusiveRoleController extends Controller
+class TaskToLabourResourceController extends Controller
 {
+
 	public function getButtons($model)
 	{
 		return array(
 			'class' => 'WMTbButtonColumn',
 			'buttons' => array(
 				'delete' => array(
-					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
+					'visible' => '$data->canDelete && Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
 					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/delete", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
 				),
 				'update' => array(
-					'visible' => 'false',
+					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
+					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/update", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
 				),
 				'view' => array(
 					'visible' => '
@@ -25,3 +27,5 @@ class ExclusiveRoleController extends Controller
 	}
 
 }
+
+?>

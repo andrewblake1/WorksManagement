@@ -1,12 +1,12 @@
 <?php
 
 /**
- * This is the model class for table "tbl_task_template_to_human_resource".
+ * This is the model class for table "tbl_task_template_to_labour_resource".
  *
- * The followings are the available columns in table 'tbl_task_template_to_human_resource':
+ * The followings are the available columns in table 'tbl_task_template_to_labour_resource':
  * @property integer $id
  * @property integer $task_template_id
- * @property integer $human_resource_id
+ * @property integer $labour_resource_id
  * @property string $level
  * @property integer $mode_id
  * @property integer $quantity
@@ -14,18 +14,18 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property TaskTemplateToExclusiveRole[] $taskTemplateToExclusiveRoles
- * @property TaskTemplateToExclusiveRole[] $taskTemplateToExclusiveRoles1
- * @property TaskTemplateToExclusiveRole[] $taskTemplateToExclusiveRoles2
+ * @property TaskTemplateToMutuallyExclusiveRole[] $taskTemplateToMutuallyExclusiveRoles
+ * @property TaskTemplateToMutuallyExclusiveRole[] $taskTemplateToMutuallyExclusiveRoles1
+ * @property TaskTemplateToMutuallyExclusiveRole[] $taskTemplateToMutuallyExclusiveRoles2
  * @property TaskTemplate $taskTemplate
- * @property HumanResource $humanResource
+ * @property LabourResource $labourResource
  * @property User $updatedBy
  * @property Mode $mode
  * @property Level $level0
  */
-class TaskTemplateToHumanResource extends ActiveRecord
+class TaskTemplateToLabourResource extends ActiveRecord
 {
-	public $searchHumanResource;
+	public $searchLabourResource;
 	public $searchLevel;
 	public $searchMode;
 
@@ -37,11 +37,11 @@ class TaskTemplateToHumanResource extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'taskTemplateToExclusiveRoles' => array(self::HAS_MANY, 'TaskTemplateToExclusiveRole', 'task_template_id'),
-            'taskTemplateToExclusiveRoles1' => array(self::HAS_MANY, 'TaskTemplateToExclusiveRole', 'parent_id'),
-            'taskTemplateToExclusiveRoles2' => array(self::HAS_MANY, 'TaskTemplateToExclusiveRole', 'child_id'),
+            'taskTemplateToMutuallyExclusiveRoles' => array(self::HAS_MANY, 'TaskTemplateToMutuallyExclusiveRole', 'task_template_id'),
+            'taskTemplateToMutuallyExclusiveRoles1' => array(self::HAS_MANY, 'TaskTemplateToMutuallyExclusiveRole', 'parent_id'),
+            'taskTemplateToMutuallyExclusiveRoles2' => array(self::HAS_MANY, 'TaskTemplateToMutuallyExclusiveRole', 'child_id'),
             'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
-            'humanResource' => array(self::BELONGS_TO, 'HumanResource', 'human_resource_id'),
+            'labourResource' => array(self::BELONGS_TO, 'LabourResource', 'labour_resource_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
             'level0' => array(self::BELONGS_TO, 'Level', 'level'),
@@ -55,13 +55,13 @@ class TaskTemplateToHumanResource extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchHumanResource', $this->searchHumanResource, 'humanResource.auth_item_name', true);
+		$criteria->compareAs('searchLabourResource', $this->searchLabourResource, 'labourResource.auth_item_name', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
 
 		// with
 		$criteria->with = array(
-			'humanResource',
+			'labourResource',
 			'level0',
 			'mode',
 		);
@@ -71,7 +71,7 @@ class TaskTemplateToHumanResource extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchHumanResource', 'HumanResource', 'human_resource_id');
+        $columns[] = static::linkColumn('searchLabourResource', 'LabourResource', 'labour_resource_id');
  		$columns[] = 'quantity';
 		$columns[] = 'duration';
  		$columns[] = 'searchMode';
@@ -86,7 +86,7 @@ class TaskTemplateToHumanResource extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchHumanResource',
+			'searchLabourResource',
 			'searchMode',
 			'searchLevel',
 		);
