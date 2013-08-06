@@ -22,18 +22,9 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 
 	const ADMIN_TREE_CONTAINER_ID = 'category_admin_tree';
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules() {
-		// NOTE1: you should only define rules for those attributes that
-		// will receive user inputs.
-		// NOTE2: Remove ALL rules associated with the nested Behavior:
-		//rgt,lft,root,level,id.
-		return array(
-			array('updated_by', 'required'),
-			array('name', 'length', 'max' => 64),
-		);
+	public function rules()
+	{
+		return parent::rules(array('rgt','lft','root','level','id'));
 	}
 
 	/**

@@ -4,7 +4,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$primary = true;
 	$style = '';
-	$model->type = 'Primary role';
+	$model->type = 'Primary';
 
 	if(!$model->isNewRecord)
 	{
@@ -16,7 +16,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		{
 			$primary = false;
 			$style = 'style="display: none;"';
-			$model->type = 'Secondary role';
+			$model->type = 'Secondary';
 		}
 	}
 
@@ -28,8 +28,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		'toggle' => 'radio',
 		'size' => 'small',
 		'buttons' => array(
-			array('label'=>'Primary role', 'active'=>$primary),
-			array('label'=>'Secondary role', 'active'=>!$primary),
+			array('label'=>'Primary', 'active'=>$primary),
+			array('label'=>'Secondary', 'active'=>!$primary),
 		),
 	));
 	$betweenHtml = ob_get_clean();
@@ -41,7 +41,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		$('.btn-group .btn').click(function() {
 			// whenever a button is clicked, set the hidden helper
 			$('#TaskToHumanResource_type').val($(this).text());
-			if($(this).text() == 'Secondary role')
+			if($(this).text() == 'Secondary')
 			{
 				// hide the irrelvenat fields
 				$('#primary-role').fadeOut('slow');
@@ -64,7 +64,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		'human_resource_id',
 		array('class'=>'span3'),
 		array('scopeHumanResource'=>array($model->human_resource_id === null ? null : $model->human_resource_id)),
-		null,
+		'Role',
 		array(),
 		$betweenHtml
 	);

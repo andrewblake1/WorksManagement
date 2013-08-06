@@ -82,7 +82,7 @@ class TaskToHumanResource extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'human_resource_to_supplier_id' => 'Supplier',
-			'auth_item_name' => 'HumanResource',
+			'auth_item_name' => 'HumanResource2',
 			'estimated_total_duration' => 'Override level duration',
 			'estimated_total_quantity' => 'Override level quantity',
 			'searchEstimatedTotalDuration' => 'Override level duration',
@@ -90,7 +90,9 @@ class TaskToHumanResource extends ActiveRecord
 			'searchCalculatedTotalDuration' => 'Level duration',
 			'searchCalculatedTotalQuantity' => 'Level quantity',
 			'durationTemp' => 'Duration',
-			'searchPrimarySecondary' => 'Role type',
+			'searchPrimarySecondary' => 'Type',
+			'searchHumanResource' => 'Role',
+			'human_resource_id' => 'Role',
 		));
 	}
 
@@ -176,6 +178,7 @@ class TaskToHumanResource extends ActiveRecord
 		$this->estimated_total_quantity = $this->humanResourceData->estimated_total_quantity;
 		$this->estimated_total_duration = $this->humanResourceData->estimated_total_duration;
 		$this->start = $this->humanResourceData->start;
+		$this->durationTemp = $this->duration;
 		$this->human_resource_id = $this->humanResourceData->human_resource_id;
 		$this->level = $this->humanResourceData->level;
 		$this->mode_id = $this->humanResourceData->mode_id;
@@ -218,7 +221,7 @@ class TaskToHumanResource extends ActiveRecord
 		
 		// if primary role then all values can be inserted, if secondary then we want to clear
 		// start, duration, estimated duration, and supplier for data item and children
-		if($this->type == 'Secondary role')
+		if($this->type == 'Secondary')
 		{
 			$this->duration = null;
 			$this->start = null;
@@ -259,7 +262,7 @@ class TaskToHumanResource extends ActiveRecord
 		parent::createSave($models);
 		
 		// clear task to human resource values to indicated secondary role
-		if($this->type == 'Secondary role')
+		if($this->type == 'Secondary')
 		{
 			$command = Yii::app()->db->createCommand("
 				UPDATE `tbl_task_to_human_resource`
@@ -282,7 +285,7 @@ class TaskToHumanResource extends ActiveRecord
 
 		// if primary role then all values can be inserted, if secondary then we want to clear
 		// start, duration, estimated duration, and supplier for data item and children
-		if($this->type == 'Secondary role')
+		if($this->type == 'Secondary')
 		{
 			$this->duration = null;
 			$this->start = null;
@@ -321,7 +324,7 @@ class TaskToHumanResource extends ActiveRecord
 		$return = $saved & parent::updateSave($models);
 		
 		// clear task to human resource values to indicated secondary role
-		if($this->type == 'Secondary role')
+		if($this->type == 'Secondary')
 		{
 			$command = Yii::app()->db->createCommand("
 				UPDATE `tbl_task_to_human_resource`
@@ -337,7 +340,7 @@ class TaskToHumanResource extends ActiveRecord
 	public function beforeValidate()
 	{
 		// if secondary role then duration can be null so just set as 0
-		if($this->type == 'Secondary role')
+		if($this->type == 'Secondary')
 		{
 			$this->duration = NULL;
 			$this->durationTemp = 1;
