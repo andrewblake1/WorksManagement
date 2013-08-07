@@ -73,6 +73,16 @@ EOD;
 			$this->_authManager->createOperation('ActionToLabourResourceBranchRead', 'ActionToLabourResourceBranch read');
 			$task->addChild('ActionToLabourResourceBranchRead');
 
+			$task=$this->_authManager->createTask('ActionToPlant', 'ActionToPlant task');
+			$systemAdminRole->addChild('ActionToPlant');
+			$this->_authManager->createOperation('ActionToPlantRead', 'ActionToPlant read');
+			$task->addChild('ActionToPlantRead');
+
+			$task=$this->_authManager->createTask('ActionToPlantBranch', 'ActionToPlantBranch task');
+			$systemAdminRole->addChild('ActionToPlantBranch');
+			$this->_authManager->createOperation('ActionToPlantBranchRead', 'ActionToPlantBranch read');
+			$task->addChild('ActionToPlantBranchRead');
+
 			$task=$this->_authManager->createTask('Assembly', 'Assembly task');
 			$systemAdminRole->addChild('Assembly');
 			$this->_authManager->createOperation('AssemblyRead', 'Assembly read');
@@ -233,6 +243,21 @@ EOD;
 			$this->_authManager->createOperation('PlanRead', 'Plan read');
 			$task->addChild('PlanRead');
 
+			$task=$this->_authManager->createTask('Plant', 'Plant task');
+			$systemAdminRole->addChild('Plant');
+			$this->_authManager->createOperation('PlantRead', 'Plant read');
+			$task->addChild('PlantRead');
+
+			$task=$this->_authManager->createTask('PlantCapability', 'PlantCapability task');
+			$systemAdminRole->addChild('PlantCapability');
+			$this->_authManager->createOperation('PlantCapabilityRead', 'PlantCapability read');
+			$task->addChild('PlantCapabilityRead');
+
+			$task=$this->_authManager->createTask('PlantToSupplier', 'PlantToSupplier task');
+			$systemAdminRole->addChild('PlantToSupplier');
+			$this->_authManager->createOperation('PlantToSupplierRead', 'PlantToSupplier read');
+			$task->addChild('PlantToSupplierRead');
+
 			$task=$this->_authManager->createTask('ProjectTemplate', 'ProjectTemplate task');
 			$systemAdminRole->addChild('ProjectTemplate');
 			$this->_authManager->createOperation('ProjectTemplateRead', 'ProjectTemplate read');
@@ -308,6 +333,11 @@ EOD;
 			$this->_authManager->createOperation('TaskTemplateToActionToLabourResourceRead', 'TaskTemplateToActionToLabourResource read');
 			$task->addChild('TaskTemplateToActionToLabourResourceRead');
 
+			$task=$this->_authManager->createTask('TaskTemplateToActionToPlant', 'TaskTemplateToActionToPlant task');
+			$systemAdminRole->addChild('TaskTemplateToActionToPlant');
+			$this->_authManager->createOperation('TaskTemplateToActionToPlantRead', 'TaskTemplateToActionToPlant read');
+			$task->addChild('TaskTemplateToActionToPlant');
+
 			$task=$this->_authManager->createTask('TaskTemplateToAssembly', 'TaskTemplateToAssembly task');
 			$systemAdminRole->addChild('TaskTemplateToAssembly');
 			$this->_authManager->createOperation('TaskTemplateToAssemblyRead', 'TaskTemplateToAssembly read');
@@ -342,6 +372,16 @@ EOD;
 			$systemAdminRole->addChild('TaskTemplateToMaterialGroup');
 			$this->_authManager->createOperation('TaskTemplateToMaterialGroupRead', 'TaskTemplateToMaterialGroup read');
 			$task->addChild('TaskTemplateToMaterialGroupRead');
+
+			$task=$this->_authManager->createTask('TaskTemplateToPlant', 'TaskTemplateToPlant task');
+			$systemAdminRole->addChild('TaskTemplateToPlant');
+			$this->_authManager->createOperation('TaskTemplateToPlantRead', 'TaskTemplateToPlant read');
+			$task->addChild('TaskTemplateToPlantRead');
+
+			$task=$this->_authManager->createTask('TaskTemplateToPlantCapability', 'TaskTemplateToPlantCapability task');
+			$systemAdminRole->addChild('TaskTemplateToPlantCapability');
+			$this->_authManager->createOperation('TaskTemplateToPlantCapabilityRead', 'TaskTemplateToPlantCapability read');
+			$task->addChild('TaskTemplateToPlantCapabilityRead');
 
 			$task=$this->_authManager->createTask('User', 'User task');
 			$systemAdminRole->addChild('User');
@@ -385,6 +425,11 @@ EOD;
 			$projectManagerRole->addChild('Planning');
 			$this->_authManager->createOperation('PlanningRead', 'Planning read');
 			$task->addChild('PlanningRead');
+
+			$task=$this->_authManager->createTask('PlantCapability', 'PlantCapability task');
+			$projectManagerRole->addChild('PlantCapability');
+			$this->_authManager->createOperation('PlantCapabilityRead', 'PlantCapability read');
+			$task->addChild('PlantCapabilityRead');
 
 			$task=$this->_authManager->createTask('Project', 'Project task');
 			$projectManagerRole->addChild('Project');
@@ -455,10 +500,10 @@ EOD;
 			$this->_authManager->createOperation('TaskToLabourResourceRead', 'TaskToLabourResource read');
 			$task->addChild('TaskToLabourResourceRead');
 
-			$task=$this->_authManager->createTask('TaskTemplateToActionToProjectTemplateToAuthItem', 'TaskTemplateToActionToProjectTemplateToAuthItem task');
-			$projectManagerRole->addChild('TaskTemplateToActionToProjectTemplateToAuthItem');
-			$this->_authManager->createOperation('TaskTemplateToActionToProjectTemplateToAuthItemRead', 'TaskTemplateToActionToProjectTemplateToAuthItem read');
-			$task->addChild('TaskTemplateToActionToProjectTemplateToAuthItemRead');
+			$task=$this->_authManager->createTask('TaskToPlant', 'TaskToPlant task');
+			$projectManagerRole->addChild('TaskToPlant');
+			$this->_authManager->createOperation('TaskToPlantRead', 'TaskToPlant read');
+			$task->addChild('TaskToPlantRead');
 
 			// SCHEDULER
 			// NB: this role is hard coded into the task _form view

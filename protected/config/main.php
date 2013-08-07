@@ -184,6 +184,9 @@ return array(
 					'ActionToLabourResource'=>array(
 						'ActionToLabourResourceBranch'
 					),
+					'ActionToPlant'=>array(
+						'ActionToPlantBranch'
+					),
 				),
 				'Client'=>array(
 					'Action'=>array(
@@ -198,6 +201,9 @@ return array(
 						),
 						'ActionToLabourResource'=>array(
 							'ActionToLabourResourceBranch'
+						),
+						'ActionToPlant'=>array(
+							'ActionToPlantBranch'
 						),
 					),
 					'ClientToAssembly',
@@ -216,6 +222,9 @@ return array(
 									),
 									'TaskToLabourResource'=>array(
 										'MutuallyExclusiveRole',
+									),
+									'TaskToPlant'=>array(
+										'PlantDataToPlantCapability',
 									),
 									'TaskToMaterial',
 								),
@@ -241,6 +250,9 @@ return array(
 							'ActionToLabourResource'=>array(
 								'ActionToLabourResourceBranch'
 							),
+							'ActionToPlant'=>array(
+								'ActionToPlantBranch'
+							),
 						),
 						'CustomFieldProjectCategory'=>array(
 							'ProjectTemplateToCustomField',
@@ -252,11 +264,15 @@ return array(
 							),
 							'TaskTemplateToAction'=>array(
 								'TaskTemplateToActionToLabourResource',
+								'TaskTemplateToActionToPlant',
 							),
 							'TaskTemplateToAssembly',
 							'TaskTemplateToAssemblyGroup',
 							'TaskTemplateToLabourResource'=>array(
 								'TaskTemplateToMutuallyExclusiveRole',
+							),
+							'TaskTemplateToPlant'=>array(
+								'TaskTemplateToPlantCapability',
 							),
 							'TaskTemplateToMaterial',
 							'TaskTemplateToMaterialGroup',
@@ -273,6 +289,12 @@ return array(
 				),
 				'LabourResource'=>array(
 					'LabourResourceToSupplier',
+				),
+				'Plant'=>array(
+					'PlantCapability',
+					'PlantToSupplier'=>array(
+						'PlantToSupplierToPlantCapability'
+					),
 				),
 				'AuthItem'=>array(
 					'AuthItemChild',

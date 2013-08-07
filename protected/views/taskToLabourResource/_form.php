@@ -63,7 +63,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		'LabourResource',
 		'labour_resource_id',
 		array('class'=>'span3'),
-		array('scopeLabourResource'=>array($model->labour_resource_id === null ? null : $model->labour_resource_id)),
+		array('scopeLabourResource'=>array($model->labour_resource_id)),
 		'Role',
 		array(),
 		$betweenHtml
