@@ -1,11 +1,11 @@
 <?php
 
 /**
- * This is the model class for table "tbl_task_template_to_plant_capability".
+ * This is the model class for table "tbl_action_to_plant_to_plant_capability".
  *
- * The followings are the available columns in table 'tbl_task_template_to_plant_capability':
+ * The followings are the available columns in table 'tbl_action_to_plant_to_plant_capability':
  * @property integer $id
- * @property integer $task_template_to_plant_id
+ * @property integer $action_to_plant_to_plant_id
  * @property integer $plant_capability_id
  * @property integer $plant_to_supplier_to_plant_capability_id
  * @property integer $plant_to_supplier_id
@@ -14,12 +14,12 @@
  *
  * The followings are the available model relations:
  * @property User $updatedBy
- * @property TaskTemplateToPlant $taskTemplateToPlant
+ * @property ActionToPlantToPlant $actionToPlantToPlant
  * @property PlantToSupplierToPlantCapability $plantToSupplier
  * @property PlantToSupplierToPlantCapability $plantToSupplierToPlantCapability
  * @property PlantToSupplierToPlantCapability $plantCapability
  */
-class TaskTemplateToPlantCapability extends ActiveRecord
+class ActionToPlantToPlantCapability extends ActiveRecord
 {
 	public $searchPlantCapability;
 	
@@ -32,7 +32,7 @@ class TaskTemplateToPlantCapability extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'taskTemplateToPlant' => array(self::BELONGS_TO, 'TaskTemplateToPlant', 'task_template_to_plant_id'),
+            'actionToPlantToPlant' => array(self::BELONGS_TO, 'ActionToPlantToPlant', 'action_to_plant_to_plant_id'),
             'plantToSupplier' => array(self::BELONGS_TO, 'PlantToSupplier', 'plant_to_supplier_id'),
             'plantToSupplierToPlantCapability' => array(self::BELONGS_TO, 'PlantToSupplierToPlantCapability', 'plant_to_supplier_to_plant_capability_id'),
             'plantCapability' => array(self::BELONGS_TO, 'PlantCapability', 'plant_capability_id'),

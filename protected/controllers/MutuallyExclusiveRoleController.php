@@ -23,5 +23,5 @@ class MutuallyExclusiveRoleController extends Controller
 			),
 		);
 	}
-
+	
 }

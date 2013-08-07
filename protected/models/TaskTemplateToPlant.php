@@ -25,6 +25,8 @@
  */
 class TaskTemplateToPlant extends ActiveRecord
 {
+	static $niceNamePlural = 'Plant';
+
 	public $searchPlant;
 	public $searchLevel;
 	public $searchMode;
@@ -55,7 +57,7 @@ class TaskTemplateToPlant extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.auth_item_name', true);
+		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
 		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);

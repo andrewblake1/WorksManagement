@@ -1,12 +1,12 @@
 <?php
 
 /**
- * This is the model class for table "tbl_plant_to_supplier_to_plant_capabilty".
+ * This is the model class for table "tbl_plant_to_supplier_to_plant_capability".
  *
- * The followings are the available columns in table 'tbl_plant_to_supplier_to_plant_capabilty':
+ * The followings are the available columns in table 'tbl_plant_to_supplier_to_plant_capability':
  * @property integer $id
  * @property integer $plant_to_supplier_id
- * @property integer $plant_capabilty_id
+ * @property integer $plant_capability_id
  * @property string $unit_price
  * @property integer $deleted
  * @property integer $updated_by
@@ -15,13 +15,13 @@
  * @property PlantDataToPlantCapability[] $plantDataToPlantCapabilities
  * @property PlantDataToPlantCapability[] $plantDataToPlantCapabilities1
  * @property PlantToSupplier $plantToSupplier
- * @property PlantCapabilty $plantCapabilty
+ * @property PlantCapability $plantCapability
  * @property User $updatedBy
  * @property TaskTemplateToPlantCapability[] $taskTemplateToPlantCapabilities
  * @property TaskTemplateToPlantCapability[] $taskTemplateToPlantCapabilities1
  * @property TaskTemplateToPlantCapability[] $taskTemplateToPlantCapabilities2
  */
-class PlantToSupplierToPlantCapabilty extends ActiveRecord
+class PlantToSupplierToPlantCapability extends ActiveRecord
 {
 
 	public $searchPlantCapability;
@@ -34,14 +34,14 @@ class PlantToSupplierToPlantCapabilty extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'plantDataToPlantCapabilities' => array(self::HAS_MANY, 'PlantDataToPlantCapability', 'plant_capabilty_id'),
+            'plantDataToPlantCapabilities' => array(self::HAS_MANY, 'PlantDataToPlantCapability', 'plant_capability_id'),
             'plantDataToPlantCapabilities1' => array(self::HAS_MANY, 'PlantDataToPlantCapability', 'plant_to_supplier_id'),
             'plantToSupplier' => array(self::BELONGS_TO, 'PlantToSupplier', 'plant_to_supplier_id'),
-            'plantCapabilty' => array(self::BELONGS_TO, 'PlantCapabilty', 'plant_capabilty_id'),
+            'plantCapability' => array(self::BELONGS_TO, 'PlantCapability', 'plant_capability_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskTemplateToPlantCapabilities' => array(self::HAS_MANY, 'TaskTemplateToPlantCapability', 'plant_to_supplier_id'),
-            'taskTemplateToPlantCapabilities1' => array(self::HAS_MANY, 'TaskTemplateToPlantCapability', 'plant_to_supplier_to_plant_capabilty_id'),
-            'taskTemplateToPlantCapabilities2' => array(self::HAS_MANY, 'TaskTemplateToPlantCapability', 'plant_capabilty_id'),
+            'taskTemplateToPlantCapabilities1' => array(self::HAS_MANY, 'TaskTemplateToPlantCapability', 'plant_to_supplier_to_plant_capability_id'),
+            'taskTemplateToPlantCapabilities2' => array(self::HAS_MANY, 'TaskTemplateToPlantCapability', 'plant_capability_id'),
         );
     }
 
@@ -52,11 +52,11 @@ class PlantToSupplierToPlantCapabilty extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchPlantCapability', $this->searchPlant, 'plantCapabilty.description', true);
+		$criteria->compareAs('searchPlantCapability', $this->searchPlantCapability, 'plantCapability.description', true);
 
 		// with
 		$criteria->with = array(
-			'plantCapabilty',
+			'plantCapability',
 		);
 
 		return $criteria;
@@ -84,7 +84,7 @@ class PlantToSupplierToPlantCapabilty extends ActiveRecord
 	{
 		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
 		$criteria=new DbCriteria;
-		$criteria->compare('t.plant_to_supplier_id', plantToSupplierId);
+		$criteria->compare('t.plant_to_supplier_id', $plantToSupplierId);
 
 		$this->getDbCriteria()->mergeWith($criteria);
 		

@@ -18,6 +18,8 @@
  */
 class TaskToPlant extends ActiveRecord
 {
+	static $niceNamePlural = 'Plant';
+
 	/**
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
@@ -36,7 +38,7 @@ class TaskToPlant extends ActiveRecord
 	public $estimated_total_quantity;
 	public $estimated_total_duration;
 	public $start;
-	public $auth_item_name;
+	public $description;
 	public $plant_to_supplier_id;
 	public $action_to_plant_id;
 	public $searchLevel;
@@ -82,7 +84,6 @@ class TaskToPlant extends ActiveRecord
 	{
 		return parent::attributeLabels(array(
 			'plant_to_supplier_id' => 'Supplier',
-			'auth_item_name' => 'Plant2',
 			'estimated_total_duration' => 'Override level duration',
 			'estimated_total_quantity' => 'Override level quantity',
 			'searchEstimatedTotalDuration' => 'Override level duration',
@@ -110,9 +111,9 @@ class TaskToPlant extends ActiveRecord
 		
 		$criteria->distinct = true;
 
-		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.auth_item_name', true);
+		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);
 		$criteria->compareAs('searchPrimarySecondary', $this->searchPrimarySecondary, 'IF(primarySecondary.plant_data_id, "Primary", "Secondary")', true);
-		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.auth_item_name', true);
+		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);
 		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
 		$criteria->compareAs('start', $this->start, 'plantData.start', true);
 		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);

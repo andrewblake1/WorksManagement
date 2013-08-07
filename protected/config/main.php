@@ -185,7 +185,8 @@ return array(
 						'ActionToLabourResourceBranch'
 					),
 					'ActionToPlant'=>array(
-						'ActionToPlantBranch'
+						'ActionToPlantBranch',
+						'ActionToPlantToPlantCapability',
 					),
 				),
 				'Client'=>array(
@@ -203,7 +204,8 @@ return array(
 							'ActionToLabourResourceBranch'
 						),
 						'ActionToPlant'=>array(
-							'ActionToPlantBranch'
+							'ActionToPlantBranch',
+							'ActionToPlantToPlantCapability',
 						),
 					),
 					'ClientToAssembly',
@@ -251,7 +253,8 @@ return array(
 								'ActionToLabourResourceBranch'
 							),
 							'ActionToPlant'=>array(
-								'ActionToPlantBranch'
+								'ActionToPlantBranch',
+								'ActionToPlantToPlantCapability',
 							),
 						),
 						'CustomFieldProjectCategory'=>array(

@@ -12,11 +12,12 @@
  * The followings are the available model relations:
  * @property ActionToPlant[] $actionToPlants
  * @property User $updatedBy
- * @property PlantCapabilty[] $plantCapabilties
+ * @property PlantCapability[] $plantCapabilties
  * @property PlantToSupplier[] $plantToSuppliers
  */
 class Plant extends ActiveRecord
 {
+	static $niceNamePlural = 'Plant';
 
 	/**
 	 * @return array relational rules.
@@ -28,7 +29,7 @@ class Plant extends ActiveRecord
 		return array(
 			'actionToPlants' => array(self::HAS_MANY, 'ActionToPlant', 'plant_id'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-			'plantCapabilties' => array(self::HAS_MANY, 'PlantCapabilty', 'plant_id'),
+			'plantCapabilties' => array(self::HAS_MANY, 'PlantCapability', 'plant_id'),
 			'plantToSuppliers' => array(self::HAS_MANY, 'PlantToSupplier', 'plant_id'),
 		);
 	}

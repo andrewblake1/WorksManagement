@@ -371,6 +371,7 @@ class Task extends CustomFieldActiveRecord
 				if($this->mode_id)
 				{
 					$saved &= $this->createLabourResources($models);
+					$saved &= $this->createPlant($models);
 				}
 				// attempt creation of assemblies
 				$saved &= $this->createAssemblies($models);
@@ -441,6 +442,49 @@ class Task extends CustomFieldActiveRecord
 				try
 				{
 					$mutuallyExclusiveRole->insert();
+				}
+				catch(CDbException $e)
+				{
+					// ignore duplicates - need try and catch as no insert ignore support yii
+				}
+			}
+		}
+		
+		return $saved;
+	}
+
+	/**
+	 * Creates the intial plant rows for a task
+	 * @param CActiveRecord $model the model (task)
+	 * @param array of CActiveRecord models to extract errors from if necassary
+	 * @return returns 0, or null on error of any inserts
+	 */
+	private function createPlant(&$models=array())
+	{
+		$saved = true;
+
+		foreach($this->taskTemplate->taskTemplateToPlants as $taskTemplateToPlant)
+		{
+			// create a new plant
+			$taskToPlant = new TaskToPlant();
+			// copy any useful attributes from
+			$taskToLabourResource->attributes = $taskTemplateToPlant->attributes;
+			$taskToPlant->updated_by = null;
+			$taskToPlant->task_id = $this->id;
+			$saved &= $taskToPlant->createSave($models, $taskTemplateToPlant);
+			
+			// add capabilities
+			foreach($taskTemplateToPlant->taskTemplateToPlantCapabilities as $taskTemplateToPlantCapability)
+			{
+				$plantDataToPlantCapability = new PlantDataToPlantCapability;
+				$plantDataToPlantCapability->plant_data_id = $taskToPlant->plant_data_id;
+				$plantDataToPlantCapability->plant_capability_id = $taskTemplateToPlantCapability->plant_capability_id;
+				$plantDataToPlantCapability->plant_to_supplier_id = $taskTemplateToPlantCapability->plant_to_supplier_id;
+				$plantDataToPlantCapability->quantity = $taskTemplateToPlantCapability->quantity;
+
+				try
+				{
+					$plantDataToPlantCapability->insert();
 				}
 				catch(CDbException $e)
 				{

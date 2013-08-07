@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "tbl_plant_capabilty".
+ * This is the model class for table "tbl_plant_capability".
  *
- * The followings are the available columns in table 'tbl_plant_capabilty':
+ * The followings are the available columns in table 'tbl_plant_capability':
  * @property integer $id
  * @property integer $plant_id
  * @property string $description
@@ -13,9 +13,9 @@
  * The followings are the available model relations:
  * @property Plant $plant
  * @property User $updatedBy
- * @property PlantToSupplierToPlantCapabilty[] $plantToSupplierToPlantCapabilties
+ * @property PlantToSupplierToPlantCapability[] $plantToSupplierToPlantCapabilties
  */
-class PlantCapabilty extends ActiveRecord
+class PlantCapability extends ActiveRecord
 {
 
 	/**
@@ -28,7 +28,7 @@ class PlantCapabilty extends ActiveRecord
 		return array(
 			'plant' => array(self::BELONGS_TO, 'Plant', 'plant_id'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-			'plantToSupplierToPlantCapabilties' => array(self::HAS_MANY, 'PlantToSupplierToPlantCapabilty', 'plant_capabilty_id'),
+			'plantToSupplierToPlantCapabilties' => array(self::HAS_MANY, 'PlantToSupplierToPlantCapability', 'plant_capability_id'),
 		);
 	}
 
@@ -44,9 +44,25 @@ class PlantCapabilty extends ActiveRecord
 		// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
 		$criteria=new DbCriteria;
 		
-		$criteria->compare('t.plant_id', plantId);
+		$criteria->compare('t.plant_id', $plantId);
 
 		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+
+	public function scopeSupplier($supplierId)
+	{
+		if($supplierId !== NULL)
+		{
+			// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
+			$criteria=new DbCriteria;
+
+			$criteria->with('plantToSupplierToPlantCapabilties');
+			$criteria->compare('plantToSupplierToPlantCapabilties.supplier_id', $supplierId);
+
+			$this->getDbCriteria()->mergeWith($criteria);
+		}
 		
 		return $this;
 	}

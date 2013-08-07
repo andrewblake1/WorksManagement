@@ -275,8 +275,9 @@ class Duty extends CustomFieldActiveRecord
 			$saved &= $duty->createSave($models);
 		}
 			
-		// factory method add related labour resoruces
+		// factory methods add related resoruces
 		$saved &= ActionToLabourResource::addLabourResources($actionId, $task, $models);
+		$saved &= ActionToPlant::addPlants($actionId, $task, $models);
 
 		return $saved;
 	}

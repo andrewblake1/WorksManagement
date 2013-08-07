@@ -17,7 +17,7 @@
  * @property Plant $plant
  * @property Supplier $supplier
  * @property User $updatedBy
- * @property PlantToSupplierToPlantCapabilty[] $plantToSupplierToPlantCapabilties
+ * @property PlantToSupplierToPlantCapability[] $plantToSupplierToPlantCapabilties
  * @property TaskTemplateToPlant[] $taskTemplateToPlants
  * @property TaskTemplateToPlant[] $taskTemplateToPlants1
  */
@@ -53,7 +53,7 @@ class PlantToSupplier extends ActiveRecord
 			'plant' => array(self::BELONGS_TO, 'Plant', 'plant_id'),
 			'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-			'plantToSupplierToPlantCapabilties' => array(self::HAS_MANY, 'PlantToSupplierToPlantCapabilty', 'plant_to_supplier_id'),
+			'plantToSupplierToPlantCapabilties' => array(self::HAS_MANY, 'PlantToSupplierToPlantCapability', 'plant_to_supplier_id'),
 			'taskTemplateToPlants' => array(self::HAS_MANY, 'TaskTemplateToPlant', 'plant_id'),
 			'taskTemplateToPlants1' => array(self::HAS_MANY, 'TaskTemplateToPlant', 'supplier_id'),
 		);
