@@ -223,9 +223,16 @@ class WMTbActiveForm extends TbActiveForm
 	public function dropDownListRow($attribute, $data = array(), $htmlOptions = array(), $model = NULL)
 	{
 		$model = $model ? $model : $this->model;
+		
+		$required = $model->isAttributeRequired($attribute);
 
-		// if only 1 item in list
-		if(sizeof($data) == 1)
+		// if no option to select and not required
+		if(!sizeof($data) && !$required)
+		{
+			$this->hiddenField($attribute);
+		}
+		// if only 1 item in list and required
+		elseif(sizeof($data) == 1 && $required)
 		{
 			// then no selection to be made so make it for the user - provided something has a value to exclude empty valued please selects
 			if(current($data) !== NULL)
@@ -260,16 +267,11 @@ class WMTbActiveForm extends TbActiveForm
 				}
 			}
 		}
-		// otherwise of multiple options or attribute required (need to show the empty list so admin can see why failing)
-		elseif(sizeof($data) > 1 || $model->isAttributeRequired($attribute))
+		// otherwise if multiple options or attribute required (need to show the empty list so admin can see why failing)
+		else
 		{
 			echo parent::dropDownListRow($model, $attribute,
 				$data,  $htmlOptions + array('class'=>'span5') + $this->_htmlOptionReadonly);
-		}
-		// otherwise create a hidden item that is blank in case needed by javascript
-		else
-		{
-			$this->hiddenField($attribute);
 		}
 	}
 

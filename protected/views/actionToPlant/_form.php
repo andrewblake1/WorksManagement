@@ -2,7 +2,15 @@
 
 $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$parent_fk));
 
-	PlantController::listWidgetRow($model, $form, 'plant_id');
+	PlantToSupplierController::dependantListWidgetRow(
+		$model,
+		$form,
+		'plant_to_supplier_id',
+		'Plant',
+		'plant_id',
+		array(),
+		array('scopePlant'=>array('plantId'=>$model->plant_id))
+	);
 
 	ModeController::listWidgetRow($model, $form, 'mode_id');
 

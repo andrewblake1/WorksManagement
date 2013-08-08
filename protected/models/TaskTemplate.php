@@ -26,12 +26,15 @@
  * @property TaskTemplateToAction[] $taskTemplateToActions
  * @property TaskTemplateToAction[] $taskTemplateToActions1
  * @property TaskTemplateToAction[] $taskTemplateToActions2
+ * @property TaskTemplateToActionToLabourResource[] $taskTemplateToActionToLabourResources
+ * @property TaskTemplateToActionToPlant[] $taskTemplateToActionToPlants
  * @property TaskTemplateToAssembly[] $taskTemplateToAssemblies
  * @property TaskTemplateToAssemblyGroup[] $taskTemplateToAssemblyGroups
  * @property TaskTemplateToCustomField[] $taskTemplateToCustomFields
  * @property TaskTemplateToLabourResource[] $taskTemplateToLabourResources
  * @property TaskTemplateToMaterial[] $taskTemplateToMaterials
  * @property TaskTemplateToMaterialGroup[] $taskTemplateToMaterialGroups
+ * @property TaskTemplateToPlant[] $taskTemplateToPlants
  */
 class TaskTemplate extends ActiveRecord
 {
@@ -69,12 +72,15 @@ class TaskTemplate extends ActiveRecord
             'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'client_id'),
             'taskTemplateToActions1' => array(self::HAS_MANY, 'TaskTemplateToAction', 'task_template_id'),
             'taskTemplateToActions2' => array(self::HAS_MANY, 'TaskTemplateToAction', 'project_template_id'),
+            'taskTemplateToActionToLabourResources' => array(self::HAS_MANY, 'TaskTemplateToActionToLabourResource', 'task_template_id'),
+            'taskTemplateToActionToPlants' => array(self::HAS_MANY, 'TaskTemplateToActionToPlant', 'task_template_id'),
             'taskTemplateToAssemblies' => array(self::HAS_MANY, 'TaskTemplateToAssembly', 'task_template_id'),
             'taskTemplateToAssemblyGroups' => array(self::HAS_MANY, 'TaskTemplateToAssemblyGroup', 'task_template_id'),
             'taskTemplateToCustomFields' => array(self::HAS_MANY, 'TaskTemplateToCustomField', 'task_template_id'),
             'taskTemplateToLabourResources' => array(self::HAS_MANY, 'TaskTemplateToLabourResource', 'task_template_id'),
             'taskTemplateToMaterials' => array(self::HAS_MANY, 'TaskTemplateToMaterial', 'task_template_id'),
             'taskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskTemplateToMaterialGroup', 'task_template_id'),
+            'taskTemplateToPlants' => array(self::HAS_MANY, 'TaskTemplateToPlant', 'task_template_id'),
         );
     }
 

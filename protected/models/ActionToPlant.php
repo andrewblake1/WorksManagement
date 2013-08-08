@@ -32,6 +32,7 @@ class ActionToPlant extends ActiveRecord
 	public $searchPlant;
 	public $searchLevel;
 	public $searchMode;
+	public $searchSupplier;
 
 	/*
 	 * these just here for purpose of tabs - ensuring these variables exist ensures than can be added to the url from currrent $_GET
@@ -71,12 +72,14 @@ class ActionToPlant extends ActiveRecord
 		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.auth_item_name', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 		$criteria->compareAs('searchLevel', $this->searchLevel, 'level.name', true);
+		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
 
 		// with
 		$criteria->with = array(
 			'plant',
 			'level',
 			'mode',
+			'plantToSupplier.supplier',
 		);
 
 		return $criteria;
@@ -85,8 +88,10 @@ class ActionToPlant extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchPlant';
- 		$columns[] = 'searchMode';
+  		$columns[] = 'searchMode';
  		$columns[] = 'searchLevel';
+ 		$columns[] = 'searchSupplier';
+		$columns[] = 'quantity';
 		
 		return $columns;
 	}

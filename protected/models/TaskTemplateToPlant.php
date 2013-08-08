@@ -75,12 +75,12 @@ class TaskTemplateToPlant extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = static::linkColumn('searchPlant', 'Plant', 'plant_id');
- 		$columns[] = 'quantity';
-		$columns[] = 'duration';
- 		$columns[] = 'searchMode';
+        $columns[] = 'searchPlant';
+  		$columns[] = 'searchMode';
  		$columns[] = 'searchLevel';
  		$columns[] = 'searchSupplier';
+		$columns[] = 'quantity';
+		$columns[] = 'duration';
 		
 		return $columns;
 	}

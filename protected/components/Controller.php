@@ -1213,17 +1213,18 @@ $t = $model->attributes;
 				$model->delete();
 			} catch(CDbException $e)
 			{
+				$message = $e->getMessage();
 				if(!isset($_GET['ajax']))
 				{
-					Yii::app()->user->setFlash('error', '<strong>Oops!</strong>
-						Unfortunately you can&#39;t delete this as at least one other record in the database refers to it.');
+					Yii::app()->user->setFlash('error', "<strong>System admin error!</strong>
+						$message");
 				} else
 				{
 					echo "
 						<div class='alert alert-block alert-error fade in'>
 							<a class='close' data-dismiss='alert'>×</a>
-							<strong>Oops!</strong>
-							Unfortunately you can&#39;t delete this as at least one other record in the database refers to it.
+							<strong>System admin error!</strong>
+							$message
 						</div>
 					";
 				}
@@ -1547,6 +1548,7 @@ $t = $model->attributes;
 							$('#{$htmlOptions['id']}_save').remove();
 							$('#{$htmlOptions['id']}_em_').remove();
 							$('#{$htmlOptions['id']}_lookup').remove();
+
 							// may also need to remove other related disable text box if last item produced one
 							// as a result of being a single item select - subbed with non-editing text box
 							$('#{$htmlOptions['id']}_dummy').remove();
