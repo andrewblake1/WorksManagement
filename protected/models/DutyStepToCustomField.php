@@ -31,6 +31,12 @@ class DutyStepToCustomField extends ActiveRecord
 	public $searchCustomFieldLabel;
 	public $searchCustomFieldComment;
 
+	
+	public function rules($ignores = array())
+	{
+		return parent::rules(array('duty_step_id'));
+	}
+
 	public function scopeDutyStep($duty_step_id)
 	{
 		$criteria=new DbCriteria;

@@ -57,10 +57,10 @@ class DutyStepDependency extends ActiveRecord
      */
     public function attributeLabels()
     {
-        return array(
+ 		return parent::attributeLabels(array(
             'child_duty_step_id' => 'Depends on',
             'parent_duty_step_id' => 'Depended on by',
-        );
+        ));
     }
 
 	/**

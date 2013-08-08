@@ -17,6 +17,8 @@
  */
 class Supplier extends ActiveRecord
 {
+	use FileActiveRecordTrait;
+
 	/**
 	 * @return array relational rules.
 	 */

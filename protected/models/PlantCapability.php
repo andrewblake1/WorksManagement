@@ -58,8 +58,8 @@ class PlantCapability extends ActiveRecord
 			// building something like (template_id IS NULL OR template_id = 5) AND (client_id IS NULL OR client_id = 7)
 			$criteria=new DbCriteria;
 
-			$criteria->with('plantToSupplierToPlantCapabilties');
-			$criteria->compare('plantToSupplierToPlantCapabilties.supplier_id', $supplierId);
+			$criteria->with = 'plantToSupplierToPlantCapabilties.plantToSupplier';
+			$criteria->compare('plantToSupplier.supplier_id', $supplierId);
 
 			$this->getDbCriteria()->mergeWith($criteria);
 		}
