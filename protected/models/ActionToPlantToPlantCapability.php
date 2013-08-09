@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'tbl_action_to_plant_to_plant_capability':
  * @property integer $id
- * @property integer $action_to_plant_to_plant_id
+ * @property integer $action_to_plant_id
  * @property integer $plant_capability_id
  * @property integer $plant_to_supplier_to_plant_capability_id
  * @property integer $plant_to_supplier_id
@@ -14,7 +14,7 @@
  *
  * The followings are the available model relations:
  * @property User $updatedBy
- * @property ActionToPlantToPlant $actionToPlantToPlant
+ * @property ActionToPlant $actionToPlant
  * @property PlantToSupplierToPlantCapability $plantToSupplier
  * @property PlantToSupplierToPlantCapability $plantToSupplierToPlantCapability
  * @property PlantToSupplierToPlantCapability $plantCapability
@@ -32,7 +32,7 @@ class ActionToPlantToPlantCapability extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'actionToPlantToPlant' => array(self::BELONGS_TO, 'ActionToPlantToPlant', 'action_to_plant_to_plant_id'),
+            'actionToPlant' => array(self::BELONGS_TO, 'ActionToPlant', 'action_to_plant_id'),
             'plantToSupplier' => array(self::BELONGS_TO, 'PlantToSupplier', 'plant_to_supplier_id'),
             'plantToSupplierToPlantCapability' => array(self::BELONGS_TO, 'PlantToSupplierToPlantCapability', 'plant_to_supplier_to_plant_capability_id'),
             'plantCapability' => array(self::BELONGS_TO, 'PlantCapability', 'plant_capability_id'),

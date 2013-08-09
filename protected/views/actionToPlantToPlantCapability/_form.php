@@ -5,11 +5,11 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	PlantCapabilityController::listWidgetRow($model, $form, 'plant_capability_id', array(),
 		array(
 			'scopePlant'=>array(
-				'plantId'=>$model->actionToPlantToPlant->plant_id,
+				'plantId'=>$model->actionToPlant->plant_id,
 			),
 			'scopeSupplier'=>array(
-				'supplierId'=> ($model->actionToPlantToPlant->plantToSupplier
-					? $model->actionToPlantToPlant->plantToSupplier->supplier_id
+				'supplierId'=> ($model->actionToPlant->plantToSupplier
+					? $model->actionToPlant->plantToSupplier->supplier_id
 					: null)
 			),
 		)

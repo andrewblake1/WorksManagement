@@ -19,7 +19,7 @@
  * @property Plant $plant
  * @property User $updatedBy
  * @property Mode $mode
- * @property Level $level0
+ * @property Level $level
  * @property PlantToSupplier $plantToSupplier
  * @property ActionToPlantBranch[] $actionToPlantBranches
  * @property ActionToPlantBranch[] $actionToPlantBranches1
@@ -29,6 +29,8 @@
  */
 class ActionToPlant extends ActiveRecord
 {
+	static $niceNamePlural = 'Plant';
+
 	public $searchPlant;
 	public $searchLevel;
 	public $searchMode;
@@ -52,7 +54,7 @@ class ActionToPlant extends ActiveRecord
             'plant' => array(self::BELONGS_TO, 'Plant', 'plant_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'level' => array(self::BELONGS_TO, 'Level', 'level'),
             'plantToSupplier' => array(self::BELONGS_TO, 'PlantToSupplier', 'plant_to_supplier_id'),
             'actionToPlantBranches' => array(self::HAS_MANY, 'ActionToPlantBranch', 'action_id'),
             'actionToPlantBranches1' => array(self::HAS_MANY, 'ActionToPlantBranch', 'action_to_plant_id'),
@@ -69,7 +71,7 @@ class ActionToPlant extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.auth_item_name', true);
+		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 		$criteria->compareAs('searchLevel', $this->searchLevel, 'level.name', true);
 		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
