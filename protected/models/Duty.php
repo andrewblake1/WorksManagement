@@ -374,13 +374,13 @@ class Duty extends CustomFieldActiveRecord
 			{
 				// clear any branches above - for purpose of loop back. Can't do this within trigger as
 				// updating the same table the triger is declared in - which is not allowed
-				$command=Yii::app()->db->createCommand('CALL pro_clear_duties_above(:duty_step_id, :task_id)');
+				$command=Yii::app()->db->createCommand('CALL pro_loopback(:duty_step_id, :task_id)');
 				$command->bindParam(":duty_step_id", $this->dutyData->duty_step_id);
 				$command->bindParam(":task_id", $this->task_id);
 				$command->execute();
 			}
 		}
-		
+	
 		return $saved & parent::updateSave($models);
 	}
 
