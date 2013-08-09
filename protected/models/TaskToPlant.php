@@ -111,6 +111,28 @@ class TaskToPlant extends ActiveRecord
 		
 		$criteria->distinct = true;
 
+		# exlude list = failed branch condition or not yet reached branch condition
+		$criteria->condition = ' t.id NOT IN (
+			SELECT taskToPlant.id
+			FROM tbl_task_to_plant taskToPlant
+			JOIN tbl_plant_data plantData
+				ON taskToPlant.plant_data_id = plantData.id
+				AND taskToPlant.task_id = :task_id
+			JOIN tbl_action_to_plant actionToPlant
+				ON plantData.action_to_plant_id = actionToPlant.id
+			JOIN tbl_action_to_plant_branch actionToPlantBranch
+				ON actionToPlant.id = actionToPlantBranch.id
+			JOIN tbl_duty duty
+				ON taskToPlant.task_id = duty.task_id
+			JOIN tbl_duty_data dutyData
+				ON duty.duty_data_id = dutyData.id
+			JOIN tbl_duty_data_to_duty_step_to_custom_field dutyDataToDutyStepToCustomField
+				ON actionToPlantBranch.duty_step_to_custom_field_id = dutyDataToDutyStepToCustomField.duty_step_to_custom_field_id
+				AND dutyData.id = dutyDataToDutyStepToCustomField.duty_data_id
+				AND (dutyData.updated IS NULL OR NOT dutyDataToDutyStepToCustomField.custom_value REGEXP actionToPlantBranch.compare)
+		) ';
+		$criteria->params = array(':task_id' => $this->task_id);
+
 		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);
 		$criteria->compareAs('searchPrimarySecondary', $this->searchPrimarySecondary, 'IF(primarySecondary.plant_data_id, "Primary", "Secondary")', true);
 		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);

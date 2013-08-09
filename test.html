@@ -1,66 +1,17 @@
--- --------------------------------------------------------------------------------
--- Routine DDL
--- Note: comments before and after the routine body will not be stored by the server
--- --------------------------------------------------------------------------------
-DELIMITER $$
-
-CREATE PROCEDURE `pro_clear_duties_above` (IN in_duty_step_id INT, IN in_task_id)
-BEGIN
-    # clear all saved information (custom field and completed) above the given duty_step_dependency. This is used to "loop back" in the process flow conditionally on a user selection. Called when saving a duty.
-	
-    # variable declarations section
-    DECLARE cur_parent_duty_step_id INT;
- 
-    DECLARE no_more_rows INT;  
-
-    # cursor declaration section
-
-    #  get list of parent duty steps
-    DECLARE cursor_branch CURSOR FOR 
-        SELECT
-			parent_duty_step_id
-		FROM tbl_duty duty 
-			JOIN tbl_duty_data dutyData
-				ON duty.task_id = in_task_id
-				AND duty.duty_data_id = dutyData.id
-				AND dutyData.duty_step_id = in_duty_step_id
-			JOIN tbl_duty_step dutyStep ON dutyData.duty_step_id = dutyStep.id
-			JOIN tbl_duty_step_dependency dutyStepDependency ON dutyStep.id = dutyStepDependency.child_duty_step_dependency_id
-
-	# handler declaration section
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET no_more_rows = TRUE;
-
-    # processing section
-	
-	# clear this duty - updated and custom fields
-	UPDATE tbl_duty duty
-		JOIN tbl_duty_data dutyData
-			ON duty.task_id = in_task_id
-			AND duty.duty_data_id = dutyData.id
-			AND dutyData.duty_step_id = in_duty_step_id
-		LEFT JOIN tbl_duty_data_to_duty_step_to_custom_field dutyDataToDutyStepToCustomField
-			ON dutyData.id = dutyDataToDutyStepToCustomField.duty_data_id
-		SET
-			dutyData.updated = NULL,
-			dutyDataToDutyStepToCustomField.custom_value = NULL;
-
-
- 	# loop thru parent branches
-    OPEN cursor_branch;
-    loop_branch: LOOP
-
-        FETCH cursor_branch INTO
-            cur_parent_duty_step_id;
-
-        IF no_more_rows THEN
-            SET no_more_rows = FALSE;
-            CLOSE cursor_branch;
-            LEAVE loop_branch:;
-        END IF;
-		
-	# recurse
-	CALL pro_flag_duty_branches ( cur_parent_duty_step_id, in_task_id );
-
-    END LOOP; # end loop thru custom values
-
-END
+# exlude list = failed branch condition or not yet reached branch condition
+SELECT taskToLabourResource.id
+FROM tbl_task_to_labour_resource taskToLabourResource
+JOIN tbl_labour_resource_data labourResourceData
+	ON taskToLabourResource.labour_resource_data_id = labourResourceData.id
+JOIN tbl_action_to_labour_resource actionToLabourResource
+	ON labourResourceData.action_to_labour_resource_id = actionToLabourResource.action_to_labour_resource_id
+JOIN tbl_action_to_labour_resource_branch actionToLabourResourceBranch
+	ON actionToLabourResource.id = actionToLabourResourceBranch.id
+JOIN tbl_duty duty
+	ON taskToLabourResource.task_id = duty.task_id
+JOIN tbl_duty_data dutyData
+	ON duty.duty_data_id = dutyData.id
+JOIN tbl_duty_data_to_duty_step_to_custom_field dutyDataToDutyStepToCustomField
+	ON actionToLabourResourceBranch.duty_step_to_custom_field_id = dutyDataToDutyStepToCustomField.duty_step_to_custom_field_id
+	AND dutyData.id = dutyDataToDutyStepToCustomField.duty_data_id
+	AND (dutyData.updated IS NULL OR NOT dutyDataToDutyStepToCustomField.custom_value REGEXP actionToLabourResourceBranch.compare)

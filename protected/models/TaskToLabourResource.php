@@ -109,6 +109,28 @@ class TaskToLabourResource extends ActiveRecord
 		);
 		
 		$criteria->distinct = true;
+		
+		# exlude list = failed branch condition or not yet reached branch condition
+		$criteria->condition = ' t.id NOT IN (
+			SELECT taskToLabourResource.id
+			FROM tbl_task_to_labour_resource taskToLabourResource
+			JOIN tbl_labour_resource_data labourResourceData
+				ON taskToLabourResource.labour_resource_data_id = labourResourceData.id
+				AND taskToLabourResource.task_id = :task_id
+			JOIN tbl_action_to_labour_resource actionToLabourResource
+				ON labourResourceData.action_to_labour_resource_id = actionToLabourResource.id
+			JOIN tbl_action_to_labour_resource_branch actionToLabourResourceBranch
+				ON actionToLabourResource.id = actionToLabourResourceBranch.id
+			JOIN tbl_duty duty
+				ON taskToLabourResource.task_id = duty.task_id
+			JOIN tbl_duty_data dutyData
+				ON duty.duty_data_id = dutyData.id
+			JOIN tbl_duty_data_to_duty_step_to_custom_field dutyDataToDutyStepToCustomField
+				ON actionToLabourResourceBranch.duty_step_to_custom_field_id = dutyDataToDutyStepToCustomField.duty_step_to_custom_field_id
+				AND dutyData.id = dutyDataToDutyStepToCustomField.duty_data_id
+				AND (dutyData.updated IS NULL OR NOT dutyDataToDutyStepToCustomField.custom_value REGEXP actionToLabourResourceBranch.compare)
+		) ';
+		$criteria->params = array(':task_id' => $this->task_id);
 
 		$criteria->compareAs('searchLabourResource', $this->searchLabourResource, 'labourResource.auth_item_name', true);
 		$criteria->compareAs('searchPrimarySecondary', $this->searchPrimarySecondary, 'IF(primarySecondary.labour_resource_data_id, "Primary", "Secondary")', true);
@@ -139,7 +161,6 @@ class TaskToLabourResource extends ActiveRecord
 				ON t.labour_resource_data_id = primarySecondary.labour_resource_data_id
 				AND primarySecondary.duration IS NOT NULL
 		";
-		
 		
 		return $criteria;
 	}
