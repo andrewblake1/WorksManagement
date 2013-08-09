@@ -146,13 +146,15 @@ class Duty extends CustomFieldActiveRecord
 	 */
 	public function getIncompleteDependencies($booeanAnswer = false)
 	{
-		// get any incomplete children
 		$criteria = new DbCriteria;
 		
 		$criteria->select = array(
 			'duty.id',
 		);
 	
+		// ensure existing of temp_table that ignores dependency if a loop back i.e. if there is a parent the same above
+		
+		
 		$criteria->join="
 			JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
 			JOIN tbl_duty_data dutyData ON dutyStepDependency.child_duty_step_id = dutyData.duty_step_id
@@ -229,7 +231,6 @@ class Duty extends CustomFieldActiveRecord
 
 	public function getImmediateDependencies()
 	{
-		// get any incomplete children
 		$criteria = new DbCriteria;
 		
 		$criteria->select = array(
@@ -361,10 +362,20 @@ class Duty extends CustomFieldActiveRecord
 			// due to a level change
 			unset($this->duty_data_id);
 
+			// save this duty
 			if(!$saved = $this->dbCallback('save'))
 			{
 				// put the model into the models array used for showing all errors
 				$models[] = $this;
+			}
+			else
+			{
+				// clear any branches above - for purpose of loop back. Can't do this within trigger as
+				// updating the same table the triger is declared in - which is not allowed
+				$command=Yii::app()->db->createCommand('CALL pro_clear_duties_above(:duty_step_id, :task_id)');
+				$command->bindParam(":duty_step_id", $this->dutyData->duty_step_id);
+				$command->bindParam(":task_id", $this->task_id);
+				$command->execute();
 			}
 		}
 		

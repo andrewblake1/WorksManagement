@@ -80,7 +80,7 @@ class DutyStepDependency extends ActiveRecord
 
 		return $criteria;
 	}
-
+	
 	public function getAdminColumns()
 	{
         $columns[] = 'searchLeadInDays';
