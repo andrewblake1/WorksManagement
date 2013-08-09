@@ -30,13 +30,22 @@ class DutyStepDependency extends ActiveRecord
 	static $niceName = 'Dependency';
 
 	public $searchDependsOn;
+	public $searchLoopBack;
+	public $searchDisplay;
 	public $searchLeadInDays;
+	
 	protected $defaultSort = array(
 		'childDutyStep.lead_in_days'=>'DESC',
 		'childDutyStep.description',
 	);
 	
-    /**
+	public function rules($ignores = array())
+	{
+		return parent::rules(array('depth'));
+	}
+
+
+	/**
      * @return array relational rules.
      */
     public function relations()
@@ -70,8 +79,11 @@ class DutyStepDependency extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this, array('parent_duty_step_id'));
 
-		$criteria->compareAs('searchDependsOn', $this->searchDependsOn, 'childDutyStep.description', true);
 		$criteria->compareAs('searchLeadInDays', $this->searchLeadInDays, 'childDutyStep.lead_in_days');
+		$criteria->compareAs('searchDisplay', $this->searchDisplay, 'childDutyStep.description', true);
+		// to determine if loop back target - this depth will be greater than the lowest depth of the child_duty_step
+		$criteria->compareAs('searchDependsOn', $this->searchDependsOn, 'IF((SELECT MIN(depth) FROM tbl_duty_step_dependency WHERE child_duty_step_id = t.child_duty_step_id) < t.depth, NULL, childDutyStep.description)', true);
+		$criteria->compareAs('searchLoopBack', $this->searchLoopBack, 'IF((SELECT MIN(depth) FROM tbl_duty_step_dependency WHERE child_duty_step_id = t.child_duty_step_id) < t.depth, childDutyStep.description, NULL)', true);
 		$criteria->compareNull('t.parent_duty_step_id',$this->parent_duty_step_id);
 
 		$criteria->with = array(
@@ -80,11 +92,12 @@ class DutyStepDependency extends ActiveRecord
 
 		return $criteria;
 	}
-	
+
 	public function getAdminColumns()
 	{
         $columns[] = 'searchLeadInDays';
 		$columns[] = 'searchDependsOn';
+		$columns[] = 'searchLoopBack';
  		
 		return $columns;
 	}
@@ -92,7 +105,7 @@ class DutyStepDependency extends ActiveRecord
 	public static function getDisplayAttr()
 	{
 		return array(
-			'searchDependsOn',
+			'searchDisplay',
 		);
 	}
  

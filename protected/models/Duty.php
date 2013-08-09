@@ -152,11 +152,11 @@ class Duty extends CustomFieldActiveRecord
 			'duty.id',
 		);
 	
-		// ensure existing of temp_table that ignores dependency if a loop back i.e. if there is a parent the same above
-		
-		
+		// NB: the depth clause in the join is to eliminate loop back dependencies i.e. exclude them from this
 		$criteria->join="
-			JOIN tbl_duty_step_dependency dutyStepDependency ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
+			JOIN tbl_duty_step_dependency dutyStepDependency
+				ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
+				AND (SELECT MIN(depth) FROM tbl_duty_step_dependency WHERE child_duty_step_id = dutyStepDependency.child_duty_step_id) >= dutyStepDependency.depth
 			JOIN tbl_duty_data dutyData ON dutyStepDependency.child_duty_step_id = dutyData.duty_step_id
 			JOIN tbl_duty_step dutyStep ON dutyData.duty_step_id = dutyStep.id
 			JOIN tbl_duty duty ON dutyData.id = duty.duty_data_id AND t.task_id = duty.task_id
@@ -239,7 +239,9 @@ class Duty extends CustomFieldActiveRecord
 		
 		$criteria->join="
 			JOIN tbl_duty_data dutyData ON t.duty_data_id = dutyData.id
-			JOIN tbl_duty_step_dependency dutyStepDependency ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
+			JOIN tbl_duty_step_dependency dutyStepDependency
+				ON dutyData.duty_step_id = dutyStepDependency.parent_duty_step_id
+				AND (SELECT MIN(depth) FROM tbl_duty_step_dependency WHERE child_duty_step_id = dutyStepDependency.child_duty_step_id) >= dutyStepDependency.depth
 			JOIN v_duty dutyChild
 				ON dutyStepDependency.child_duty_step_id = dutyChild.duty_step_id 
 				AND t.task_id = dutyChild.task_id
