@@ -86,7 +86,6 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 		echo $this->form->labelEx($this->model, $this->attribute);
 
 		parent::init(); // ensure necessary assets are loaded
-
 	}
 	
     public function run()

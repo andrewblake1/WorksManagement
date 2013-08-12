@@ -84,7 +84,7 @@ class CustomValueActiveRecord extends ActiveRecord
 
 				// test to see if the users value still exists in the list - in case of unlikely hacking of $_POST
 				$command = Yii::app()->db->createCommand("SELECT `$secondColumnName` FROM ($sql) alias1 WHERE `$firstColumnName` = :$firstColumnName");
-				$command->bindParam(":$firstColumnName", $value, PDO::PARAM_STR);
+				$command->bindParam(":$firstColumnName", $value);
 				// if no match
 				if(($display = $command->queryScalar()) === false)
 				{
@@ -93,8 +93,8 @@ class CustomValueActiveRecord extends ActiveRecord
 					{
 						$display = $value;
 					}
-					// otherwise there is an error
-					else
+					// otherwise if mandarory or not mandarotry but a value set that is wrong
+					elseif($customField->mandatory || $value)
 					{
 						$errorMessage = 'No match in list - please contact the system administrator.';
 					}
@@ -107,8 +107,10 @@ class CustomValueActiveRecord extends ActiveRecord
 		}
 
 		// if validation failed
-		if($errorMessage)
+		if(isset($errorMessage))
 		{
+			// adjust the attribute name first as per the addError function
+			CHtml::resolveName($this, $attribute);
 			$this->addError($attribute, $errorMessage);
 		}
 

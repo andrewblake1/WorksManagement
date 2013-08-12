@@ -28,6 +28,7 @@ class TaskController extends Controller
 				'relationCustomFieldModelTemplate'=>'taskTemplateToCustomField',
 				'relation_category'=>'customFieldTaskCategory',
 				'categoryModelName'=>'CustomFieldTaskCategory',
+				'ajax'=>$fromAjax,
 			));
 		}
 

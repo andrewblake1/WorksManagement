@@ -74,6 +74,9 @@ class TaskToTaskTemplateToCustomField extends CustomValueActiveRecord
 		return parent::createSave($models);
 	}
 
+	public function getHtmlId($attribute) {
+		return CHtml::activeId($this, "[{$this->taskTemplateToCustomField->customField->id}]custom_value");
+	}
 }
 
 ?>

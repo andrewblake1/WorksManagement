@@ -76,6 +76,9 @@ class DutyDataToDutyStepToCustomField extends CustomValueActiveRecord
 		return parent::createSave($models);
 	}
 
+	public function getHtmlId($attribute) {
+		return CHtml::activeId($this, "[{$this->dutyStepToCustomField->customField->id}]custom_value");
+	}
 }
 
 ?>

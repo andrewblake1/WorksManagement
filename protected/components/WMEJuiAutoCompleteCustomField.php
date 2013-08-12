@@ -4,42 +4,64 @@
  */
 class WMEJuiAutoCompleteCustomField extends WMEJuiAutoCompleteField
 {
-	/**
-	 * @var string $customField
-	 */
 	public $customField;
+	public $ajax = false;
 
     public function init()
     {
-		$dataTypeColumnNames = CustomField::getDataTypeColumnNames();
-		$data_typeColumnName = $dataTypeColumnNames[$this->customField->data_type];
-		$this->sourceUrl = Yii::app()->createUrl("customValue/autocomplete", array('custom_field_id' => $this->customField->id));
+		$attr = $this->attribute;
 
-        $tempHtmlOpts = array();
-		$this->attribute = $this->name;
-        CHtml::resolveNameID($this->model, $this->name, $tempHtmlOpts);
-        $id = $tempHtmlOpts['id'];
-        $this->_fieldID = $id;
-        $this->_saveID = $id . '_save';
-        $this->_lookupID = $id .'_lookup';
-		$this->_display = $this->model->checkLookup($this->customField, CHtml::resolveValue($this->model, $this->name), $this->name);
+		CHtml::resolveNameID($this->model, $attr, $tempHtmlOpts);
+		$id = $tempHtmlOpts['id'];
+		$this->_fieldID = $id;
+		$this->_saveID = $id . '_save';
+		$this->_lookupID = $id .'_lookup';
+
+        $value = CHtml::resolveValue($this->model, $this->attribute);
+		
+		$this->sourceUrl = Yii::app()->createUrl("customValue/autocomplete",
+			array(
+				'custom_field_id' => $this->customField->id,
+		));
+
+		$this->_display = $this->model->checkLookup($this->customField, $value, $this->attribute);
+
 		// if allow_new
 		if($this->customField->allow_new)
 		{
 			$this->htmlOptions['onblur'] = "$('#".$this->_fieldID."').val($(this).val());";
 		}
 		
-		parent::init(); // ensure necessary assets are loaded
+		$this->htmlOptions['label'] = $this->htmlOptions['labelOptions']['label'];
+		$this->htmlOptions['for'] = $this->_fieldID;
+		unset($this->htmlOptions['labelOptions']);
+		$this->htmlOptions['required']=  $this->customField->mandatory;
+		echo $this->form->labelEx($this->model, $this->attribute, $this->htmlOptions);
 		
-		echo $this->form->labelEx($this->model, '', $this->htmlOptions);
+		parent::init(); // ensure necessary assets are loaded
 	}
-	
+
     public function run()
     {
  
         parent::run();
 		
-		echo $this->form->error($this->model, $this->attribute);
+		// if ajax then we need to ensure that we have the send back the script to bind also!
+		if($this->ajax)
+		{
+			foreach(Yii::app()->getClientScript()->scripts as $value)
+			{
+				foreach($value as $key => $script)
+				{
+					if($key == "CJuiAutoComplete#{$this->_lookupID}")
+					{
+						echo CHtml::script($script);
+					}
+				}
+			}
+		}
+
+		echo $this->form->error($this->model, $this->attribute, array('class'=>'help-block error'));
     }
 }
 

@@ -49,6 +49,7 @@ class ProjectController extends Controller
 				'relationCustomFieldModelTemplate'=>'projectTemplateToCustomField',
 				'relation_category'=>'customFieldProjectCategory',
 				'categoryModelName'=>'CustomFieldProjectCategory',
+				'ajax'=>$fromAjax,
 			));
 		}
 

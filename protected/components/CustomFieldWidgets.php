@@ -78,6 +78,7 @@ class CustomFieldWidgets extends CWidget
 	public $relation_category;
 	public $categoryModelName;
 	public $htmlOptions = array();
+	public $ajax = false;
 
 	/**
 	 * Displays a particular model.
@@ -110,10 +111,10 @@ class CustomFieldWidgets extends CWidget
 				'customField'=>$toCustomField->{$this->relationCustomFieldModelTemplate}->customField,
 				'relationToCustomField'=>"{$this->relationModelToCustomFieldModelTemplate}->{$this->relationCustomFieldModelTemplate}->customField",
 				'htmlOptions'=>$this->htmlOptions,
+				'ajax'=>$this->ajax,
 			));
 			// add the widget html to the tree branch
 			$categoryTree->add(isset($category->id) ? $category->id : null, ob_get_clean());
-			
 		}
 
 		$categoryTree->display();

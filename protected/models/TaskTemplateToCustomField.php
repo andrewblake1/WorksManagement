@@ -35,6 +35,11 @@ class TaskTemplateToCustomField extends ActiveRecord
 	public $searchCustomFieldLabel;
 	public $searchCustomFieldComment;
 	
+	public function rules($ignores = array())
+	{
+		return parent::rules(array('task_template_id'));
+	}
+
 	/**
 	 * @return array relational rules.
 	 */

@@ -9,6 +9,7 @@ class CustomFieldWidget extends CWidget
 	public $customField;
 	public $relationToCustomField;
 	public $htmlOptions = array();
+	public $ajax = false;
 
 	/**
 	 * Displays a particular model.
@@ -65,7 +66,13 @@ class CustomFieldWidget extends CWidget
 				if(Yii::app()->params->listMax >= Yii::app()->db->createCommand("SELECT COUNT(*) FROM ($sql) alias1")->queryScalar())
 				{
 					// Drop down list widget
-					echo $this->form->dropDownListRow($attribute, Yii::app()->db->createCommand($sql)->query(), $this->htmlOptions, $customValue);
+					$listData = array();
+					foreach(Yii::app()->db->createCommand($sql)->query() as $row)
+					{
+						$listData[current($row)] = next($row);
+					}
+					
+					echo $this->form->dropDownListRow($attribute, $listData, $this->htmlOptions, $customValue);
 				}
 				else
 				{
@@ -74,8 +81,9 @@ class CustomFieldWidget extends CWidget
 						'model'=>$customValue,
 						'form'=>$this->form,
 						'customField'=>$customField,
-						'name'=>$attribute,
+						'attribute'=>$attribute,
 						'htmlOptions'=>$this->htmlOptions,
+						'ajax'=>$this->ajax,
 					));
 				}
 

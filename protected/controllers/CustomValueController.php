@@ -1,6 +1,6 @@
 <?php
 // TODO: not sure if this being used or tested yet - comes from custom value controller - now obsolete
-class CustomFieldController extends Controller
+class CustomValueController extends Controller
 {
 	// ajax dataprovider for autocomplete fields - only project at the moment - will need to pass somthing else to make customValue
 	public function actionAutocomplete()
@@ -11,7 +11,7 @@ class CustomFieldController extends Controller
 		if(isset($_GET['term']) && isset($_GET['custom_field_id']))
 		{
 			// get the related sql select statement
-			$command = Yii::app()->db->createCommand("SELECT validation_text FROM tbl_customField WHERE id = :custom_field_id");
+			$command = Yii::app()->db->createCommand("SELECT validation_text FROM tbl_custom_field WHERE id = :custom_field_id");
 			$command->bindParam(":custom_field_id", $_GET['custom_field_id'], PDO::PARAM_INT);
 			$sql = $command->queryScalar();
 
@@ -24,7 +24,7 @@ class CustomFieldController extends Controller
 			// query and loop
 			$command = Yii::app()->db->createCommand("$sql WHERE `$secondColumnName` LIKE :$secondColumnName ORDER BY `$secondColumnName` ASC LIMIT 20");
 			$term = $_GET['term'].'%';
-			$command->bindParam(":$secondColumnName", $term, PDO::PARAM_STR);
+			$command->bindParam(":$secondColumnName", $term);
 			foreach($command->queryAll() as $row)
 			{
 				$out[] = array(

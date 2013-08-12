@@ -126,7 +126,7 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
  
     public function run()
     {
-         // first render the FK field.  This is the actual data field, populated by autocomplete.select()
+         // first render the field.  This is the actual data field, populated by autocomplete.select()
         if ($this->showField)
 		{
             echo CHtml::activeTextField($this->model, $this->attribute, array('size'=>$this->fieldSize, 'readonly'=>'readonly'));

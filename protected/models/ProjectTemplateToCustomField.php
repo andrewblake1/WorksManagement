@@ -35,7 +35,12 @@ class ProjectTemplateToCustomField extends ActiveRecord
 	public $searchProjectTemplate;
 	public $searchCustomFieldLabel;
 	public $searchCustomFieldComment;
-	
+
+	public function rules($ignores = array())
+	{
+		return parent::rules(array('project_template_id'));
+	}
+
 	/**
 	 * @return array relational rules.
 	 */
