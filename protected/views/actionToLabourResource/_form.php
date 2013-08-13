@@ -5,11 +5,11 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	LabourResourceToSupplierController::dependantListWidgetRow(
 		$model,
 		$form,
-		'labour_resource_id',
+		'labour_resource_to_supplier_id',
 		'LabourResource',
-		'plant_id',
+		'labour_resource_id',
 		array(),
-		array('scopePlant'=>array('plantId'=>$model->plant_id))
+		array('scopeLabourResource'=>array('labourResourceId'=>$model->labour_resource_id))
 	);
 
 	ModeController::listWidgetRow($model, $form, 'mode_id');

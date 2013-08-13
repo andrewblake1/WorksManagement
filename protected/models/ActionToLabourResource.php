@@ -79,7 +79,7 @@ class ActionToLabourResource extends ActiveRecord
 			'labourResource',
 			'level',
 			'mode',
-			'labourResource.supplier',
+			'labourResourceToSupplier.supplier',
 		);
 
 		return $criteria;
@@ -87,7 +87,7 @@ class ActionToLabourResource extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-        $columns[] = 'searchPlant';
+        $columns[] = 'searchLabourResource';
   		$columns[] = 'searchMode';
  		$columns[] = 'searchLevel';
  		$columns[] = 'searchSupplier';
