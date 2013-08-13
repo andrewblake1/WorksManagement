@@ -64,7 +64,7 @@ class ProjectToProjectTemplateToCustomField extends CustomValueActiveRecord
 		// set any custom validators
 		$this->customValidatorParams = array(
 			'customField' => $this->projectTemplateToCustomField->customField,
-			'params' => array('relationToCustomField'=>'projectToProjectTemplateToCustomField->projectTemplateToCustomField->customField'),
+			'params' => array('relationToCustomField'=>'projectTemplateToCustomField->customField'),
 		);
 
 		return parent::beforeValidate();

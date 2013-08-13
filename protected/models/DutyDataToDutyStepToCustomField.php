@@ -64,7 +64,7 @@ class DutyDataToDutyStepToCustomField extends CustomValueActiveRecord
 		// set any custom validators
 		$this->customValidatorParams = array(
 			'customField' => $this->dutyStepToCustomField->customField,
-			'params' => array('relationToCustomField'=>'dutyDataToDutyStepToCustomField->dutyStepToCustomField->customField'),
+			'params' => array('relationToCustomField'=>'dutyStepToCustomField->customField'),
 		);
 
 		return parent::beforeValidate();

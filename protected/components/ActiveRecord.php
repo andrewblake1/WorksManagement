@@ -820,7 +820,8 @@ $t = $model->attributes;
 
 	public function setCustomValidators()
 	{
-//		parent::setCustomValidators();
+		// force a re-read of validators
+		$this->getValidators(NULL, TRUE);
 	}
 		
 	/**
@@ -1055,13 +1056,6 @@ elseif(!$return)
 				return $validator->max;
 			}
 		}
-		
-/*		if(isset($this->tableSchema->columns[$attribute]))
-		{
-$t = $this->tableSchema->columns[$attribute];
-			// if not specified in rules then get from database
-			return $this->tableSchema->columns[$attribute]->size;
-		}*/
 	}
 
 	/*
@@ -1069,7 +1063,6 @@ $t = $this->tableSchema->columns[$attribute];
 	 */
 	public function init()
 	{
-//$t = $this->safeAttributeNames;
 		if($this->isNewRecord)
 		{
 			// this model name

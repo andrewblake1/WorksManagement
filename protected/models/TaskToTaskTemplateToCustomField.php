@@ -62,7 +62,7 @@ class TaskToTaskTemplateToCustomField extends CustomValueActiveRecord
 		// set any custom validators
 		$this->customValidatorParams = array(
 			'customField' => $this->taskTemplateToCustomField->customField,
-			'params' => array('relationToCustomField'=>'taskToTaskTemplateToCustomField->taskTemplateToCustomField->customField'),
+			'params' => array('relationToCustomField'=>'taskTemplateToCustomField->customField'),
 		);
 
 		return parent::beforeValidate();
