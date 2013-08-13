@@ -13,7 +13,7 @@
  * The followings are the available model relations:
  * @property Crew[] $crews
  * @property User $updatedBy
- * @property Planning $level0
+ * @property Planning $level
  * @property Project $project
  * @property Planning $id0
  */
@@ -45,7 +45,7 @@ class Day extends ActiveRecord
         return array(
             'crews' => array(self::HAS_MANY, 'Crew', 'day_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+            'level' => array(self::BELONGS_TO, 'Planning', 'level'),
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
             'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
         );

@@ -16,7 +16,7 @@
  * The followings are the available model relations:
  * @property Day[] $days
  * @property User $updatedBy
- * @property Planning $level0
+ * @property Planning $level
  * @property Planning $id0
  * @property ProjectType $projectType
  * @property ProjectType $client
@@ -68,7 +68,7 @@ class Project extends CustomFieldActiveRecord
         return array(
             'days' => array(self::HAS_MANY, 'Day', 'project_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+            'level' => array(self::BELONGS_TO, 'Planning', 'level'),
             'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
             'projectType' => array(self::BELONGS_TO, 'ProjectType', 'project_type_id'),
             'client' => array(self::BELONGS_TO, 'ProjectType', 'client_id'),

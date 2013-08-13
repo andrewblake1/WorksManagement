@@ -17,7 +17,7 @@
  * The followings are the available model relations:
  * @property User $updatedBy
  * @property Mode $mode
- * @property Level $level0
+ * @property Level $level
  * @property LabourResourceToSupplier $labourResourceToSupplier
  * @property LabourResource $labourResource
  * @property Action $action
@@ -50,7 +50,7 @@ class ActionToLabourResource extends ActiveRecord
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'level' => array(self::BELONGS_TO, 'Level', 'level'),
             'labourResourceToSupplier' => array(self::BELONGS_TO, 'LabourResourceToSupplier', 'labour_resource_to_supplier_id'),
             'labourResource' => array(self::BELONGS_TO, 'LabourResource', 'labour_resource_id'),
             'action' => array(self::BELONGS_TO, 'Action', 'action_id'),

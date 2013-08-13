@@ -19,7 +19,7 @@
  * @property LabourResourceToSupplier $labourResource
  * @property User $updatedBy
  * @property Mode $mode
- * @property Level $level0
+ * @property Level $level
  * @property LabourResourceToSupplier $labourResourceToSupplier
  * @property TaskTemplateToMutuallyExclusiveRole[] $taskTemplateToMutuallyExclusiveRoles
  * @property TaskTemplateToMutuallyExclusiveRole[] $taskTemplateToMutuallyExclusiveRoles1
@@ -44,7 +44,7 @@ class TaskTemplateToLabourResource extends ActiveRecord
             'labourResource' => array(self::BELONGS_TO, 'LabourResource', 'labour_resource_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'level' => array(self::BELONGS_TO, 'Level', 'level'),
             'labourResourceToSupplier' => array(self::BELONGS_TO, 'LabourResourceToSupplier', 'labour_resource_to_supplier_id'),
             'taskTemplateToMutuallyExclusiveRoles' => array(self::HAS_MANY, 'TaskTemplateToMutuallyExclusiveRole', 'task_template_id'),
             'taskTemplateToMutuallyExclusiveRoles1' => array(self::HAS_MANY, 'TaskTemplateToMutuallyExclusiveRole', 'parent_id'),
@@ -61,13 +61,13 @@ class TaskTemplateToLabourResource extends ActiveRecord
 
 		$criteria->compareAs('searchLabourResource', $this->searchLabourResource, 'labourResource.auth_item_name', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
-		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
+		$criteria->compareAs('searchLevel', $this->searchLevel, 'level.name', true);
 		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
 
 		// with
 		$criteria->with = array(
 			'labourResource',
-			'level0',
+			'level',
 			'mode',
 			'labourResourceToSupplier.supplier',
 		);

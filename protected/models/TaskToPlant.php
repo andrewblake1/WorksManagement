@@ -138,7 +138,7 @@ class TaskToPlant extends ActiveRecord
 		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);
 		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
 		$criteria->compareAs('start', $this->start, 'plantData.start', true);
-		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
+		$criteria->compareAs('searchLevel', $this->searchLevel, 'level.name', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 		$criteria->compareAs('searchTaskQuantity', $this->searchTaskQuantity, 'task.quantity');
 		$criteria->compareAs('searchEstimatedTotalQuantity', $this->searchEstimatedTotalQuantity, 'plantData.estimated_total_quantity');
@@ -151,7 +151,7 @@ class TaskToPlant extends ActiveRecord
 			JOIN tbl_task task ON t.task_id = task.id
 			JOIN tbl_plant_data plantData ON t.plant_data_id = plantData.id
 			JOIN tbl_plant plant ON plantData.plant_id = plant.id
-			JOIN tbl_level level0 ON plantData.level = level0.id
+			JOIN tbl_level level ON plantData.level = level.id
 			LEFT JOIN tbl_mode mode
 				ON plantData.mode_id = mode.id
 				AND task.mode_id = plantData.mode_id

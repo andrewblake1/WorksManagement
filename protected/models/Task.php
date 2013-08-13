@@ -27,7 +27,7 @@
  * @property Project $project
  * @property User $updatedBy
  * @property TaskTemplate $taskTemplate
- * @property Planning $level0
+ * @property Planning $level
  * @property Crew $crew
  * @property Planning $id0
  * @property Mode $mode
@@ -107,7 +107,7 @@ class Task extends CustomFieldActiveRecord
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
-            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+            'level' => array(self::BELONGS_TO, 'Planning', 'level'),
             'crew' => array(self::BELONGS_TO, 'Crew', 'crew_id'),
             'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),

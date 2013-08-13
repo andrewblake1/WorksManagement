@@ -19,7 +19,7 @@
  * @property PlantToSupplier $plant
  * @property User $updatedBy
  * @property Mode $mode
- * @property Level $level0
+ * @property Level $level
  * @property PlantToSupplier $plantToSupplier
  * @property TaskTemplateToPlantCapability[] $taskTemplateToPlantCapabilities
  */
@@ -44,7 +44,7 @@ class TaskTemplateToPlant extends ActiveRecord
             'plant' => array(self::BELONGS_TO, 'Plant', 'plant_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'level' => array(self::BELONGS_TO, 'Level', 'level'),
             'plantToSupplier' => array(self::BELONGS_TO, 'PlantToSupplier', 'plant_to_supplier_id'),
             'taskTemplateToPlantCapabilities' => array(self::HAS_MANY, 'TaskTemplateToPlantCapability', 'task_template_to_plant_id'),
         );
@@ -59,13 +59,13 @@ class TaskTemplateToPlant extends ActiveRecord
 
 		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
-		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
+		$criteria->compareAs('searchLevel', $this->searchLevel, 'level.name', true);
 		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
 
 		// with
 		$criteria->with = array(
 			'plant',
-			'level0',
+			'level',
 			'mode',
 			'plantToSupplier.supplier',
 		);

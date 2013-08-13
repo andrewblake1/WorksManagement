@@ -137,7 +137,7 @@ class TaskToLabourResource extends ActiveRecord
 		$criteria->compareAs('searchLabourResource', $this->searchLabourResource, 'labourResource.auth_item_name', true);
 		$criteria->compareAs('searchSupplier', $this->searchSupplier, 'supplier.name', true);
 		$criteria->compareAs('start', $this->start, 'labourResourceData.start', true);
-		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
+		$criteria->compareAs('searchLevel', $this->searchLevel, 'level.name', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 		$criteria->compareAs('searchTaskQuantity', $this->searchTaskQuantity, 'task.quantity');
 		$criteria->compareAs('searchEstimatedTotalQuantity', $this->searchEstimatedTotalQuantity, 'labourResourceData.estimated_total_quantity');
@@ -150,7 +150,7 @@ class TaskToLabourResource extends ActiveRecord
 			JOIN tbl_task task ON t.task_id = task.id
 			JOIN tbl_labour_resource_data labourResourceData ON t.labour_resource_data_id = labourResourceData.id
 			JOIN tbl_labour_resource labourResource ON labourResourceData.labour_resource_id = labourResource.id
-			JOIN tbl_level level0 ON labourResourceData.level = level0.id
+			JOIN tbl_level level ON labourResourceData.level = level.id
 			LEFT JOIN tbl_mode mode
 				ON labourResourceData.mode_id = mode.id
 				AND task.mode_id = labourResourceData.mode_id

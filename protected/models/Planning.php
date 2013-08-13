@@ -21,7 +21,7 @@
  * @property DutyData[] $dutyDatas1
  * @property User $updatedBy
  * @property User $inCharge
- * @property Level $level0
+ * @property Level $level
  * @property Project[] $projects
  * @property Project $project
  * @property LabourResourceData[] $labourResourceDatas
@@ -84,7 +84,7 @@ class Planning extends CategoryActiveRecord {
             'dutyDatas1' => array(self::HAS_MANY, 'DutyData', 'level'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'inCharge' => array(self::BELONGS_TO, 'User', 'in_charge_id'),
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'level' => array(self::BELONGS_TO, 'Level', 'level'),
             'project' => array(self::HAS_ONE, 'Project', 'id'),
             'resourceDatas' => array(self::HAS_MANY, 'LabourResourceData', 'planning_id'),
             'resourceDatas1' => array(self::HAS_MANY, 'LabourResourceData', 'level'),

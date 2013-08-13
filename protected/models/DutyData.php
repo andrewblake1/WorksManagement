@@ -16,7 +16,7 @@
  * @property Duty[] $duties
  * @property User $updatedBy
  * @property Planning $planning
- * @property Planning $level0
+ * @property Planning $level
  * @property User $responsible0
  * @property DutyStep $dutyStep
  * @property DutyDataToDutyStepToCustomField[] $dutyDataToDutyStepToCustomFields
@@ -36,7 +36,7 @@ class DutyData extends ActiveRecord
             'duties' => array(self::HAS_MANY, 'Duty', 'duty_data_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-            'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+            'level' => array(self::BELONGS_TO, 'Planning', 'level'),
             'responsible0' => array(self::BELONGS_TO, 'User', 'responsible'),
             'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
             'dutyDataToDutyStepToCustomFields' => array(self::HAS_MANY, 'DutyDataToDutyStepToCustomField', 'duty_data_id'),

@@ -21,7 +21,7 @@
  * @property User $updatedBy
  * @property Action $action
  * @property AuthItem $authItemName
- * @property Level $level0
+ * @property Level $level
  * @property DutyStepDependency[] $dutyStepDependencies
  * @property DutyStepDependency[] $dutyStepDependencies1
  * @property DutyStepDependency[] $dutyStepDependencies2
@@ -78,7 +78,7 @@ class DutyStep extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
             'authItemName' => array(self::BELONGS_TO, 'AuthItem', 'auth_item_name'),
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'level' => array(self::BELONGS_TO, 'Level', 'level'),
             'dutyStepDependencies' => array(self::HAS_MANY, 'DutyStepDependency', 'parent_duty_step_id'),
             'dutyStepDependencies1' => array(self::HAS_MANY, 'DutyStepDependency', 'action_id'),
             'dutyStepDependencies2' => array(self::HAS_MANY, 'DutyStepDependency', 'child_duty_step_id'),
@@ -92,13 +92,13 @@ class DutyStep extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('searchLevel', $this->searchLevel, 'level0.name', true);
+		$criteria->compareAs('searchLevel', $this->searchLevel, 'level.name', true);
 		$criteria->compareAs('searchRole', $this->searchRole, 'authItemName.name', true);
 
 		// with
 		$criteria->with = array(
 			'authItemName',
-			'level0',
+			'level',
 		);
 
 		return $criteria;

@@ -18,7 +18,7 @@
  *
  * The followings are the available model relations:
  * @property Planning $planning
- * @property Planning $level0
+ * @property Planning $level
  * @property User $updatedBy
  * @property Mode $mode
  * @property PlantToSupplier $plant
@@ -41,7 +41,7 @@ class PlantData extends ActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-			'level0' => array(self::BELONGS_TO, 'Planning', 'level'),
+			'level' => array(self::BELONGS_TO, 'Planning', 'level'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
 			'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
 			'plant' => array(self::BELONGS_TO, 'PlantToSupplier', 'plant_id'),

@@ -20,7 +20,7 @@
  * @property MutuallyExclusiveRole[] $mutuallyExclusiveRoles
  * @property MutuallyExclusiveRole[] $mutuallyExclusiveRoles1
  * @property Planning $planning
- * @property Planning $level0
+ * @property Planning $level
  * @property LabourResourceToSupplier $labourResource
  * @property LabourResourceToSupplier $labourResourceToSupplier
  * @property User $updatedBy
@@ -44,7 +44,7 @@ class LabourResourceData extends ActiveRecord
             'mutuallyExclusiveRoles1' => array(self::HAS_MANY, 'MutuallyExclusiveRole', 'parent_id'),
             'mutuallyExclusiveRoles2' => array(self::HAS_MANY, 'MutuallyExclusiveRole', 'child_id'),
             'planning' => array(self::BELONGS_TO, 'Planning', 'planning_id'),
-            'level0' => array(self::BELONGS_TO, 'Level', 'level'),
+            'level' => array(self::BELONGS_TO, 'Level', 'level'),
             'labourResource' => array(self::BELONGS_TO, 'LabourResource', 'labour_resource_id'),
             'labourResourceToSupplier' => array(self::BELONGS_TO, 'LabourResourceToSupplier', 'labour_resource_to_supplier_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),

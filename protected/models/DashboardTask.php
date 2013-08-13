@@ -26,7 +26,7 @@
  * @property Project $project
  * @property User $updatedBy
  * @property TaskTemplate $taskTemplate
- * @property Planning $level0
+ * @property Planning $level
  * @property Crew $crew
  * @property Planning $id0
  * @property TaskToAssembly[] $taskToAssemblies

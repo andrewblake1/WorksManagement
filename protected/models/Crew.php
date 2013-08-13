@@ -11,7 +11,7 @@
  *
  * The followings are the available model relations:
  * @property Planning $id0
- * @property CrewLevel $level0
+ * @property CrewLevel $level
  * @property User $updatedBy
  * @property Day $day
  * @property Task[] $tasks
@@ -42,7 +42,7 @@ class Crew extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'id0' => array(self::BELONGS_TO, 'Planning', 'id'),
-            'level0' => array(self::BELONGS_TO, 'CrewLevel', 'level'),
+            'level' => array(self::BELONGS_TO, 'CrewLevel', 'level'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'day' => array(self::BELONGS_TO, 'Day', 'day_id'),
             'tasks' => array(self::HAS_MANY, 'Task', 'crew_id'),
