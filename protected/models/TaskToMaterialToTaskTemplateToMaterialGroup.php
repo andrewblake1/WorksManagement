@@ -39,7 +39,7 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 	 */
 	public function rules()
 	{
-		return array_merge(parent::rules(), array(
+		return array_merge(parent::rules(array('task_to_material_id', 'material_group_to_material_id')), array(
 			array('quantity, task_id', 'required'),
 			array('task_id, quantity', 'numerical', 'integerOnly'=>true),
 		));

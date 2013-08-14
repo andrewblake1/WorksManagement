@@ -49,7 +49,7 @@ class AuthItemChild extends ActiveRecord
 	public function attributeLabels()
 	{
 		return parent::attributeLabels(array(
-			'child' => 'Priveledge',
+			'child' => 'Privilege',
 		));
 	}
 

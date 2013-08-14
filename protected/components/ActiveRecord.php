@@ -1172,6 +1172,12 @@ elseif(!$return)
 	{
         foreach($this->adminColumns as $column)
 		{
+			// protect against image column
+			if(isset($column['imagePathExpression']))
+			{
+				continue;
+			}
+
 			// if no format given then use raw to stop html encoding
 			$parts = explode(':', (is_string($column) ? $column : $column['name']));
 			if(!isset($parts[1]))

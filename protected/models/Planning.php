@@ -210,7 +210,7 @@ class Planning extends CategoryActiveRecord {
 
 	public function beforeSave() {
 		
-		// if user doesn't have scheduler priveledge
+		// if user doesn't have scheduler privilege
 		if(!Yii::app()->user->checkAccess('scheduler'))
 		{
 			// reset in_charge_id - not allowed to change

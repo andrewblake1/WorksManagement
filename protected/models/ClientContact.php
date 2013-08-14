@@ -70,7 +70,7 @@ class ClientContact extends ContactActiveRecord
 
 		$criteria->compareAs('first_name', $this->first_name, 'contact.first_name', true);
 		$criteria->compareAs('last_name', $this->last_name, 'contact.last_name', true);
-		$criteria->compareAs('email', $this->email, 'contact.email AS email', true);
+		$criteria->compareAs('email', $this->email, 'contact.email', true);
 		$criteria->compareAs('phone_mobile', $this->phone_mobile, 'contact.phone_mobile', true);
 		$criteria->compareAs('phone_home', $this->phone_home, 'contact.phone_home', true);
 		$criteria->compareAs('phone_work', $this->phone_work, 'contact.phone_work', true);

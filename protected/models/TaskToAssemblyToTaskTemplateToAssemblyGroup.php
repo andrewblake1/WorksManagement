@@ -46,7 +46,7 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 	 */
 	public function rules()
 	{
-		return array_merge(parent::rules(), array(
+		return array_merge(parent::rules(array('task_to_assembly_id', 'assembly_group_to_assembly_id')), array(
 			array('quantity, task_id', 'required'),
 			array('task_id, quantity', 'numerical', 'integerOnly'=>true),
 		));
