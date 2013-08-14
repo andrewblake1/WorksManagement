@@ -26,10 +26,9 @@ class WMEJuiAutoCompleteCustomField extends WMEJuiAutoCompleteField
 
 		$this->_display = $this->model->checkLookup($this->customField, $value, $this->attribute);
 
-		// if allow_new
 		if($this->customField->allow_new)
 		{
-			$this->htmlOptions['onblur'] = "$('#".$this->_fieldID."').val($(this).val());";
+			$this->htmlOptions['onkeyup'] = "$('#".$this->_fieldID."').val($(this).val());$('#".$this->_saveID."').val($(this).val());";
 		}
 		
 		$this->htmlOptions['label'] = $this->htmlOptions['labelOptions']['label'];

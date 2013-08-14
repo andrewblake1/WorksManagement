@@ -10,10 +10,9 @@ class CustomValueController extends Controller
 		// if something has been entered
 		if(isset($_GET['term']) && isset($_GET['custom_field_id']))
 		{
-			// get the related sql select statement
-			$command = Yii::app()->db->createCommand("SELECT validation_text FROM tbl_custom_field WHERE id = :custom_field_id");
-			$command->bindParam(":custom_field_id", $_GET['custom_field_id'], PDO::PARAM_INT);
-			$sql = $command->queryScalar();
+			// get the custom field
+			$customField = CustomField::model()->findByPk($_GET['custom_field_id']);
+			$sql = $customField->validation_text;
 
 			// get first and second column names
 			$row = Yii::app()->db->createCommand($sql)->queryRow();
@@ -35,12 +34,13 @@ class CustomValueController extends Controller
 					'id' => $row[$firstColumnName],
 				);
 			}
+
 		}
-		
+
 		echo CJSON::encode($out);
 		Yii::app()->end();
 	}
-	
+
 }
 
 ?>

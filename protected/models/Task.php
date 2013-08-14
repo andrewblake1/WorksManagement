@@ -468,7 +468,7 @@ class Task extends CustomFieldActiveRecord
 			// create a new plant
 			$taskToPlant = new TaskToPlant();
 			// copy any useful attributes from
-			$taskToLabourResource->attributes = $taskTemplateToPlant->attributes;
+			$taskToPlant->attributes = $taskTemplateToPlant->attributes;
 			$taskToPlant->updated_by = null;
 			$taskToPlant->task_id = $this->id;
 			$saved &= $taskToPlant->createSave($models, $taskTemplateToPlant);

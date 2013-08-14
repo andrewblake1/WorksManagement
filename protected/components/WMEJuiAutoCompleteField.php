@@ -144,25 +144,6 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
         $this->htmlOptions['name'] = $this->_lookupID;   
 		$this->htmlOptions['value'] = $this->_display;   
 
- /*       // fouth, an image button to empty all three fields
-        // JJD 1/2/13 v1.6 use relNameLabel if present
-        $label=Yii::t('DR','Remove '). ucfirst((!empty($this->relNameLabel) ? $this->relNameLabel : $this->relName));
-        $deleteImageURL = '/images/text_field_remove.png'; 
- 			echo CHtml::link('<i class="'.$button['icon'].'"></i>', $deleteImageURL, array('title'=>$label,
-                'name' => 'remove'.$this->_fieldID,
-                'style'=>'margin-left:6px;',
-                // JJD 4/27/12 #1350 trigger onchange event for display field, in case there's an event attached (e.g. unsaved-changes-warning)
-                'onclick'=>"$('#".$this->_fieldID."').val('').trigger('change');$('#".$this->_saveID."').val('');$('#".$this->_lookupID."').val('');",
-            ));
-       echo CHtml::image($deleteImageURL, $label,
-            array('title'=>$label,
-                'name' => 'remove'.$this->_fieldID,
-                'style'=>'margin-left:6px;',
-                // JJD 4/27/12 #1350 trigger onchange event for display field, in case there's an event attached (e.g. unsaved-changes-warning)
-                'onclick'=>"$('#".$this->_fieldID."').val('').trigger('change');$('#".$this->_saveID."').val('');$('#".$this->_lookupID."').val('');",
-            )
-        );*/
-
         parent::run();
     }
 }
