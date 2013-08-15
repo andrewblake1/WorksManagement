@@ -112,7 +112,7 @@ class TaskToPlant extends ActiveRecord
 		$criteria->distinct = true;
 
 		# exlude list = failed branch condition or not yet reached branch condition
-		$criteria->condition = ' t.id NOT IN (
+		$criteria->condition .= ' AND t.id NOT IN (
 			SELECT taskToPlant.id
 			FROM tbl_task_to_plant taskToPlant
 			JOIN tbl_plant_data plantData
@@ -131,7 +131,7 @@ class TaskToPlant extends ActiveRecord
 				AND dutyData.id = dutyDataToDutyStepToCustomField.duty_data_id
 				AND (dutyData.updated IS NULL OR NOT dutyDataToDutyStepToCustomField.custom_value REGEXP actionToPlantBranch.compare)
 		) ';
-		$criteria->params = array(':task_id' => $this->task_id);
+		$criteria->params[':task_id'] = $this->task_id;
 
 		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);
 		$criteria->compareAs('searchPrimarySecondary', $this->searchPrimarySecondary, 'IF(primarySecondary.plant_data_id, "Primary", "Secondary")', true);

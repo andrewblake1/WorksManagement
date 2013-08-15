@@ -31,7 +31,7 @@ class Duty extends CustomFieldActiveRecord
 	
 	public $duty_step_id;
 	public $responsible;
-	public $task_to_action_id;
+//	public $task_to_action_id;
 	public $action_id;
 	public $lead_in_days;
 	
@@ -289,7 +289,7 @@ class Duty extends CustomFieldActiveRecord
 		// No actual TaskToAdmin - actual parent is task
 		if($referencesModel == 'TaskToAction')
 		{
-			return 'task_to_action_id';
+			return;//task_to_action_id';
 		}
 		
 		return parent::getParentForeignKey($referencesModel, $foreignKeys);
@@ -334,7 +334,7 @@ class Duty extends CustomFieldActiveRecord
 			return true;
 		}
 		// otherwise if there is something this is relying on that hasn't been completed yet
-		elseif(ViewDashboardDuty::model()->findAll($incompleteDependencies = $this->getIncompleteDependencies(true)))
+		elseif(DashboardDuty::model()->findAll($incompleteDependencies = $this->getIncompleteDependencies(true)))
 		{
 			return $mode == Controller::accessWrite ? false : true;
 		}

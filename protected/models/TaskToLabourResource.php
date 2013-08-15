@@ -111,7 +111,7 @@ class TaskToLabourResource extends ActiveRecord
 		$criteria->distinct = true;
 		
 		# exlude list = failed branch condition or not yet reached branch condition
-		$criteria->condition = ' t.id NOT IN (
+		$criteria->condition .= ' AND t.id NOT IN (
 			SELECT taskToLabourResource.id
 			FROM tbl_task_to_labour_resource taskToLabourResource
 			JOIN tbl_labour_resource_data labourResourceData
@@ -130,7 +130,7 @@ class TaskToLabourResource extends ActiveRecord
 				AND dutyData.id = dutyDataToDutyStepToCustomField.duty_data_id
 				AND (dutyData.updated IS NULL OR NOT dutyDataToDutyStepToCustomField.custom_value REGEXP actionToLabourResourceBranch.compare)
 		) ';
-		$criteria->params = array(':task_id' => $this->task_id);
+		$criteria->params[':task_id'] = $this->task_id;
 
 		$criteria->compareAs('searchLabourResource', $this->searchLabourResource, 'labourResource.auth_item_name', true);
 		$criteria->compareAs('searchPrimarySecondary', $this->searchPrimarySecondary, 'IF(primarySecondary.labour_resource_data_id, "Primary", "Secondary")', true);

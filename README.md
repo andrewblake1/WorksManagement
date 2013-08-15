@@ -64,7 +64,6 @@ echo "max_sp_recursion_depth = 255">>max_sp_recursion_depth.cnf
 #4./ Installing application
 # need to install as user www-data which means www-data needs access to the .ssh folder
 # www-data needs to update into runtime directory and update assets hence doesn't work if installed as root
-# easiest just to chown -R www-data . after pulled down from github as by default www-data has no home directory to store ssh-keys so would need
 
 
 ##### alter the above, everything safer owned by root and only give www-data write access to directories that is needed as below
@@ -109,6 +108,14 @@ chown -R www-data /var/www/test/perth/assets
 chown -R www-data /var/www/dev/melbourne/assets
 chown -R www-data /var/www/dev/perth/assets
 chown -R www-data /home/www-data/uploads
+
+chown -R www-data /var/www/melbourne/protected/runtime
+chown -R www-data /var/www/perth/protected/runtime
+chown -R www-data /var/www/test/melbourne/protected/runtime
+chown -R www-data /var/www/test/perth/protected/runtime
+chown -R www-data /var/www/dev/melbourne/protected/runtime
+chown -R www-data /var/www/dev/perth/protected/runtime
+chown -R www-data /home/www-data/protected/runtime
 
 nano /etc/php5/apache2/php.ini
 #edit php.ini 
