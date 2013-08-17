@@ -289,7 +289,7 @@ class TaskToLabourResource extends ActiveRecord
 				UPDATE `tbl_task_to_labour_resource`
 				SET `duration` = NULL, `start` = NULL
 				WHERE `labour_resource_data_id` = :labour_resource_data_id");
-			$command->bindParam($command, $temp = $this->labour_resource_data_id);
+			$command->bindParam(':labour_resource_data_id', $temp = $this->labour_resource_data_id);
 			$command->execute();
 		}
 

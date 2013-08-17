@@ -124,7 +124,14 @@ class Controller extends CController
 	{
 		return array(
 			array('allow',
-				'actions' => array('admin', 'view', 'download', 'returnForm'),
+				'actions' => array(
+					'admin',
+					'view',
+					'download',
+					'returnForm',
+					'autocomplete',
+					'dependantList',
+				),
 				'roles' => array($this->modelName . 'Read'),
 			),
 			array('allow',
@@ -132,8 +139,6 @@ class Controller extends CController
 					'create',
 					'delete',
 					'update',
-					'autocomplete',
-					'dependantList',
 					'batchDelete'
 				),
 				'roles' => array($this->modelName),

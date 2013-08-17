@@ -29,8 +29,11 @@ class TaskToAssembly extends ActiveRecord
 	use RangeActiveRecordTrait;
 	
 	public $standard_id;
+
+	public $searchDrawingId;
 	
 	public $searchAssembly;
+	public $searchDrawing;
 	public $searchGroup;
 	public $searchAliases;
 	public $searchTaskQuantity;
@@ -143,7 +146,8 @@ class TaskToAssembly extends ActiveRecord
 	public function getSearchCriteria()
 	{
 		$criteria=new DbCriteria($this);
-		$delimiter = Yii::app()->params['delimiter']['display'];
+		
+		$criteria->select[] = 'assembly.drawing_id AS searchDrawingId';
 		
 		$criteria->compareAs('searchAssembly', $this->searchAssembly, 'assembly.description', true);
 		$criteria->composite('searchAliases', $this->searchAliases, array(
@@ -166,6 +170,7 @@ class TaskToAssembly extends ActiveRecord
 		}
 		
 		// admin
+		$criteria->compareAs('searchDrawing', $this->searchDrawing, 'drawing.description', true);
 		$criteria->compareAs('searchTaskQuantity', $this->searchTaskQuantity, 'task.quantity', true);
 		$criteria->composite('searchGroup', $this->searchGroup, array(
 			'assemblyGroup.description',
@@ -176,6 +181,7 @@ class TaskToAssembly extends ActiveRecord
 		$criteria->join = '
 			LEFT JOIN tbl_assembly_group assemblyGroup ON t.assembly_group_id = assemblyGroup.id
 			LEFT JOIN tbl_assembly assembly ON t.assembly_id = assembly.id
+			LEFT JOIN tbl_drawing drawing ON assembly.drawing_id = drawing.id
 			LEFT JOIN tbl_task task ON t.task_id = task.id
 			LEFT JOIN tbl_project project ON task.project_id = project.id
 			LEFT JOIN tbl_client_to_assembly clientToAssembly ON project.client_id = clientToAssembly.client_id
@@ -188,7 +194,8 @@ class TaskToAssembly extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'id';
- 		$columns[] = 'parent_id';
+		$columns[] = 'parent_id';
+		$columns[] = static::linkColumn('searchDrawing', 'Drawing', 'searchDrawingId');
 		$columns[] = 'searchAssembly';
  		$columns[] = 'searchAliases';
 		$columns[] = 'searchGroup';

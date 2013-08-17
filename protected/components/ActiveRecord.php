@@ -1107,7 +1107,7 @@ elseif(!$return)
 						{
 							if($pk !== null)
 							{
-								$command->bindParam(":pk", $pk, PDO::PARAM_STR);
+								$command->bindParam(":pk", $pk);
 							}
 							// otherwise if error - only considered error if current context is a match otherwise could be
 							// another controller creating this model

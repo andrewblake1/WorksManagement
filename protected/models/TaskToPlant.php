@@ -291,7 +291,7 @@ class TaskToPlant extends ActiveRecord
 				UPDATE `tbl_task_to_plant`
 				SET `duration` = NULL, `start` = NULL
 				WHERE `plant_data_id` = :plant_data_id");
-			$command->bindParam($command, $temp = $this->plant_data_id);
+			$command->bindParam(':plant_data_id', $temp = $this->plant_data_id);
 			$command->execute();
 		}
 

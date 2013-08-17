@@ -50,7 +50,7 @@ trait FileActiveRecordTrait
 	
 	public function imageColumn($thumbnail = true)
 	{
-		return  array(
+		return array(
 			'class'=>'WMTbImageColumn',
 			'imagePathExpression'=>'$data->exposeSingle(' . ($thumbnail ? '' : 'false') . ')',
 			'usePlaceKitten'=>FALSE,

@@ -154,8 +154,9 @@ class Duty extends CustomFieldActiveRecord
 	
 		// NB: the depth clause in the join is to eliminate loop back dependencies i.e. exclude them from this
 		$criteria->join="
+			JOIN tbl_duty_data ON t.duty_data_id = tbl_duty_data.id
 			JOIN tbl_duty_step_dependency dutyStepDependency
-				ON t.duty_step_id = dutyStepDependency.parent_duty_step_id
+				ON tbl_duty_data.duty_step_id = dutyStepDependency.parent_duty_step_id
 				AND (SELECT MIN(depth) FROM tbl_duty_step_dependency WHERE child_duty_step_id = dutyStepDependency.child_duty_step_id) >= dutyStepDependency.depth
 			JOIN tbl_duty_data dutyData ON dutyStepDependency.child_duty_step_id = dutyData.duty_step_id
 			JOIN tbl_duty_step dutyStep ON dutyData.duty_step_id = dutyStep.id
@@ -166,7 +167,6 @@ class Duty extends CustomFieldActiveRecord
 		$criteria->compare('t.id', $this->id);
 		// child duties update values arn't set
 		$criteria->compareNull('dutyData.updated');
-
 			
 		if(!$booeanAnswer)
 		{
