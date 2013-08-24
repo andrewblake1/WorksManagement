@@ -92,13 +92,14 @@ return array(
 
 			// RBAC
 			'authManager'=>array(
-				'class'=>'CDbAuthManager',
+				'class'=>'DbAuthManager',
 				'connectionID'=>'db',
 				'defaultRoles'=>array('default'),
 			),
 
 			// Database
 			'db' => array(
+				'class'=>'DbConnection',
 				'connectionString' => "mysql:host=localhost;dbname=$wceDatabaseName",
 				'emulatePrepare' => true,
 				'username' => '',

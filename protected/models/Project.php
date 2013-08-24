@@ -138,18 +138,19 @@ class Project extends CustomFieldActiveRecord
 
 	/**
 	 * check if the current user is assigned to the given role within this project context
-	 * used within business rule of checkAccess by Project task
 	 */
 	static function checkContext($primaryKey, $role)
 	{
 		// if this role exists for this project
-		$projectToAuthItem = ProjectToAuthItem::model()->findAllByAttributes(array('project_id'=>$primaryKey, 'auth_item_name'=>$role));
-		if(!empty($projectToAuthItem))
+		if($projectToAuthItem = ProjectToAuthItem::model()->findAllByAttributes(array('project_id'=>$primaryKey, 'auth_item_name'=>$role)))
 		{
 			// if this user assigned this role within this project
-			if($projectToAuthItem->authAssignment->userid == Yii::app()->user->id)
+			foreach($projectToAuthItem->projectToAuthItemToAuthAssignments as $projectToAuthItemToAuthAssignment)
 			{
-				 return true;
+				if($projectToAuthItemToAuthAssignment->authAssignment->userid == Yii::app()->user->id)
+				{
+					 return true;
+				}
 			}
 		}
 		

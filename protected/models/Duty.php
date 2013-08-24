@@ -70,7 +70,7 @@ class Duty extends CustomFieldActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array_merge(parent::rules(array('duty_data_id')), array(
-			array('action_id, updated, duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
+			array('action_id, duty_step_id, responsible', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -375,8 +375,8 @@ class Duty extends CustomFieldActiveRecord
 				// clear any branches above - for purpose of loop back. Can't do this within trigger as
 				// updating the same table the triger is declared in - which is not allowed
 				$command=Yii::app()->db->createCommand('CALL pro_loopback(:duty_step_id, :task_id)');
-				$command->bindParam(":duty_step_id", $this->dutyData->duty_step_id);
-				$command->bindParam(":task_id", $this->task_id);
+				$command->bindParam(":duty_step_id", $temp1 = $this->dutyData->duty_step_id);
+				$command->bindParam(":task_id", $temp2 = $this->task_id);
 				$command->execute();
 			}
 		}

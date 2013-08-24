@@ -287,9 +287,16 @@ class TaskToLabourResource extends ActiveRecord
 		{
 			$command = Yii::app()->db->createCommand("
 				UPDATE `tbl_task_to_labour_resource`
-				SET `duration` = NULL, `start` = NULL
+				SET `duration` = NULL
 				WHERE `labour_resource_data_id` = :labour_resource_data_id");
 			$command->bindParam(':labour_resource_data_id', $temp = $this->labour_resource_data_id);
+			$command->execute();
+			// NB: can't update in single statement due to trigger and mysql error 1442
+			$command = Yii::app()->db->createCommand("
+				UPDATE `tbl_labour_resource_data`
+				SET `start` = NULL
+				WHERE `id` = :id");
+			$command->bindParam(':id', $temp = $this->labour_resource_data_id);
 			$command->execute();
 		}
 

@@ -18,6 +18,10 @@ class DrawingToAssembly extends ActiveRecord
 		return 'v_drawing_to_assembly';
 	}
 
+	static function primaryKeyName() {
+		return 'id';
+	}
+
 	public function getAdminColumns()
 	{
 		$columns[] = self::linkColumn('description', 'Assembly', 'id');

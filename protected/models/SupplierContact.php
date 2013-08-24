@@ -36,7 +36,7 @@ class SupplierContact extends ContactActiveRecord
 	 */
 	public function rules()
 	{
-		return array_merge(parent::rules(), array(
+		return array_merge(parent::rules(array('contact_id')), array(
 			array('supplier_id, first_name, last_name, email', 'required'),
 			array('supplier_id', 'numerical', 'integerOnly'=>true),
 			array('first_name, last_name, role, town_city, state_province, country, phone_mobile, phone_home, phone_work, phone_fax', 'length', 'max'=>64),

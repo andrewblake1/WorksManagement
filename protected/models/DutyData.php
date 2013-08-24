@@ -26,6 +26,18 @@ class DutyData extends ActiveRecord
 	public $searchDutyStep;
 
 	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array_merge(parent::rules(array('updated')), array(
+			array('updated', 'safe'),
+		));
+	}
+
+	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

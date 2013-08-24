@@ -18,6 +18,10 @@ class DrawingToMaterial extends ActiveRecord
 		return 'v_drawing_to_material';
 	}
 
+	static function primaryKeyName() {
+		return 'id';
+	}
+
 	public function getAdminColumns()
 	{
 		$columns[] = self::linkColumn('description', 'Material', 'id');

@@ -89,12 +89,14 @@ class User extends ContactActiveRecord
 	public $phone_mobile;
 	public $email;
 	
+	static $niceName = 'User';
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
 	{
-		return array_merge(parent::rules(), array(
+		return array_merge(parent::rules(array('contact_id')), array(
 			array('first_name, last_name, email', 'required'),
 			array('first_name, last_name', 'length', 'max'=>64),
 			array('email', 'length', 'max'=>255),
