@@ -551,6 +551,8 @@ $t = $model->attributes;
 	 */
 	public function search($pagination = array())
 	{
+		$columnNames = $this->tableSchema->columnNames;
+
 		// get the sort order
 		foreach($this->adminColumns as $adminColumn)
 		{
@@ -571,9 +573,13 @@ $t = $model->attributes;
 			}
 
 			$attribute = preg_replace('/:.*/', '', $attribute);
+			
+			// add t alias if part of this table
+			$alias = in_array($attribute, $columnNames) ? 't.' : '';
+			
 			$sort[$attribute] = array(
-						'asc'=>" $attribute ",
-						'desc'=>" $attribute DESC",
+						'asc'=>" $alias$attribute ",
+						'desc'=>" $alias$attribute DESC",
 					);
 		}
 

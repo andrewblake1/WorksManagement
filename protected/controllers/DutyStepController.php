@@ -38,6 +38,17 @@ class DutyStepController extends Controller
 		);
 	}	
 
+	// override the tabs when viewing assemblies for a particular task
+	public function setTabs($model) {
+		parent::setTabs($model);
+		
+		$getParams = Controller::getValidGetParams('DutyStep');
+		foreach(static::$tabs[0] as $index => &$tab)
+		{
+			if($index)
+			{
+				$tab['url'] = array_merge($tab['url'], $getParams);
+			}
+		}
+	}
 }
-
-?>

@@ -46,10 +46,7 @@ class Action extends ActiveRecord
 		// take into account the overrides. Can be max 2 overrides - 1 at template level and the next at client level
 		// start by joining result on override to id to obtain
 		$criteria->join = '
-			LEFT JOIN tbl_action override2 ON t.id = override2.override_id
-				AND (
-					t.client_id = override2.client_id
-					OR t.project_template_id = override2.project_template_id)
+			LEFT JOIN (SELECT * FROM `tbl_action` WHERE ((deleted=0) AND ((((project_template_id=2) OR (project_template_id IS NULL)) AND ((client_id=8) OR (client_id IS NULL))) ))) override2 ON t.id = override2.override_id
 		';
 
 		// and finally - exclude any records that have a child
@@ -60,7 +57,7 @@ class Action extends ActiveRecord
 		if($modeId)
 		{
 			// this will be working with tbl_task_to_action as t only
-			$criteria2->compare('tbl_duty_step_to_mode.mode_id', $modeId);
+			$criteria->compare('tbl_duty_step_to_mode.mode_id', $modeId);
 			
 			$criteria->join .= '
 				JOIN tbl_duty_step ON tbl_duty_step.action_id = t.id

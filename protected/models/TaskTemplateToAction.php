@@ -37,6 +37,14 @@ class TaskTemplateToAction extends ActiveRecord
 	const importanceOptional = 'Optional';
 	
 	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		return parent::rules(array('client_id', 'project_template_id'));
+	}
+
+	/**
 	 * Returns importance labels.
 	 * @return array data importance - to match enum type in mysql workbench
 	 */
@@ -128,7 +136,7 @@ class TaskTemplateToAction extends ActiveRecord
 			$this->client_id = $taskTemplate->client_id;
 			$this->project_template_id = $taskTemplate->project_template_id;
 		}
-$t = $this->attributes;		
+		
 		return parent::save();
 	}
 

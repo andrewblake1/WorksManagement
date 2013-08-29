@@ -57,7 +57,7 @@ class Material extends ActiveRecord
 	public function getSearchCriteria()
 	{
 		$criteria=new DbCriteria($this);
-
+		
 		$criteria->composite('searchDrawing', $this->searchDrawing, array(
 			'drawing.alias',
 			'drawing.description'
@@ -66,7 +66,7 @@ class Material extends ActiveRecord
 		$criteria->with = array(
 			'drawing',
 		);
-		
+
 		return $criteria;
 	}
 

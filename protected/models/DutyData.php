@@ -30,8 +30,6 @@ class DutyData extends ActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array_merge(parent::rules(array('updated')), array(
 			array('updated', 'safe'),
 		));
