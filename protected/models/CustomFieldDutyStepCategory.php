@@ -29,8 +29,8 @@ class CustomFieldDutyStepCategory extends CategoryActiveRecord {
 	// place holders used by getValidGetParam in order to retain correct breadcrumb tail and these needed
 	// due to the multi levels available within actions - a dirty hack. Otherwise calculation of breadcrumb trail
 	// will loose the fact that have come thru action - may
-//	public $project_template_id;
-//	public $client_id;
+	public $project_template_id;
+	public $client_id;
 	public $action_id;
 
 	/**

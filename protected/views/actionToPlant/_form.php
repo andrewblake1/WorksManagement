@@ -18,6 +18,9 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('quantity');
 
+	$form->hiddenField('client_id');
+	$form->hiddenField('project_template_id');
+
 $this->endWidget();
 
 ?>

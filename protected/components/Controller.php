@@ -855,7 +855,7 @@ class Controller extends CController
 		{
 			// go to admin view
 			$model->assertFromParent();
-			$this->adminRedirect($model);
+			$this->adminRedirect($model, false, $params);
 		}
 	}
 
@@ -884,7 +884,7 @@ class Controller extends CController
 		$this->adminRedirect($model);
 	}
 
-	public static function staticAdminRedirect($model, $sortByNewest = false)
+	public static function staticAdminRedirect($model, $sortByNewest = false, $params = array())
 	{
 
 		// if posted a controller then this is where we should return to
@@ -896,7 +896,7 @@ class Controller extends CController
 			$modelName = get_class($model);
 		}
 
-		$params = array_merge(array("$modelName/admin"), (static::getAdminParams($modelName) + $_GET));
+		$params = array_merge(array("$modelName/admin"), ($params + static::getAdminParams($modelName) + $_GET));
 
 		// if we want to sort by the newest record first
 		if($sortByNewest)
@@ -909,9 +909,9 @@ class Controller extends CController
 	}
 
 	// redirect to admin
-	protected function adminRedirect($model, $sortByNewest = false)
+	protected function adminRedirect($model, $sortByNewest = false, $params = array())
 	{
-		static::staticAdminRedirect($model, $sortByNewest);
+		static::staticAdminRedirect($model, $sortByNewest, $params);
 	}
 
 	/**
