@@ -30,6 +30,10 @@ class ActionController extends Controller
 				unset(self::$trail['Action']);
 			}
 		}
+				
+		$trail=self::$trail;
+		$getParams = Controller::getValidGetParams('DutyStep');
+		
 	}
 
 	public function __construct($id, $module = null) {

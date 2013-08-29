@@ -454,7 +454,7 @@ class Controller extends CController
 		}
 	}
 
-	static function getValidGetParams($modelName = NULL)
+	static function getValidGetParams($modelName = NULL, $inParams = NULL)
 	{
 		$get = array();
 
@@ -462,10 +462,15 @@ class Controller extends CController
 		{
 			$modelName = static::modelName();
 		}
+		
+		if($inParams === NULL)
+		{
+			$inParams = $_GET;
+		}
 
 		$primaryKeyName = $modelName::primaryKeyName();
 
-		foreach($_GET as $key => $value)
+		foreach($inParams as $key => $value)
 		{
 			if($modelName::model()->hasAttribute($key))
 			{
@@ -708,6 +713,7 @@ class Controller extends CController
 	 */
 	static function getBreadCrumbTrail($lastCrumb = NULL)
 	{
+		$queryParamters = array();
 		$breadcrumbs = array();
 		$modelName = static::modelName();
 
@@ -730,8 +736,10 @@ class Controller extends CController
 				continue;
 			}
 
-			// the only query parameter we want to allow is the foreign key to the parent
-			$queryParamters = array();
+			// add any other valid paramaters from previous breadcrumbs
+			$queryParamters = Controller::getValidGetParams($crumb, $queryParamters);
+
+			// foreign key to the parent
 			if($parentForeignKey = $modelName::getParentForeignKey($parentCrumb = static::getParentCrumb($crumb)))
 			{
 				if(static::getAdminParam($parentForeignKey, $modelName) !== NULL)
@@ -771,10 +779,9 @@ class Controller extends CController
 				{
 					// add an update crumb to this primary key
 					$primaryKey = static::getUpdateId($crumb);
-					$breadcrumbs[] = array($crumb::getNiceName($primaryKey) => array("$crumb/"
-							. (static::checkAccess(self::accessWrite, $crumb) ? 'update' : 'view'),
-							$crumb::model()->tableSchema->primaryKey => $primaryKey,
-					));
+					$breadcrumbs[] = array($crumb::getNiceName($primaryKey) => array("$crumb/" . (static::checkAccess(self::accessWrite, $crumb) ? 'update' : 'view'),
+						$crumb::model()->tableSchema->primaryKey => $primaryKey,
+					) + $queryParamters);
 				}
 			}
 		}

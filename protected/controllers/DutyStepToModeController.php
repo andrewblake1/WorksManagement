@@ -42,12 +42,9 @@ class DutyStepToModeController extends Controller
 		parent::setTabs($model);
 		
 		$getParams = Controller::getValidGetParams('DutyStep');
-		foreach(static::$tabs[0] as $index => &$tab)
+		foreach(static::$tabs[0] as &$tab)
 		{
-			if($index)
-			{
-				$tab['url'] = array_merge($tab['url'], $getParams);
-			}
+			$tab['url'] = array_merge($tab['url'], $getParams);
 		}
 	}
 }
