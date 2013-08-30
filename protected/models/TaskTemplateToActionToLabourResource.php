@@ -52,6 +52,8 @@ class TaskTemplateToActionToLabourResource extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchLabourResource';
+        $columns[] = 'quantity';
+        $columns[] = 'duration';
  		
 		return $columns;
 	}

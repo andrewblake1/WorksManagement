@@ -161,24 +161,22 @@ class TaskTemplateToAction extends ActiveRecord
 		foreach($this->action->actionToLabourResources as $actionToLabourResource)
 		{
 			$taskTemplateToActionToLabourResource = new TaskTemplateToActionToLabourResource;
-			$taskTemplateToActionToLabourResource->insert(array(
-				'task_template_id'=> $this->task_template_id,
-				'action_to_labour_resource_id'=>$actionToLabourResource->id,
-				'task_template_to_action_id'=>$this->id,
-				'quantity'=>$actionToLabourResource->quantity,
-			));
+			$taskTemplateToActionToLabourResource->task_template_id = $this->task_template_id;
+			$taskTemplateToActionToLabourResource->action_to_labour_resource_id = $actionToLabourResource->id;
+			$taskTemplateToActionToLabourResource->task_template_to_action_id = $this->id;
+			$taskTemplateToActionToLabourResource->quantity = $actionToLabourResource->quantity;
+			$taskTemplateToActionToLabourResource->insert();
 		}
 
 		// loop thru and add plant resources
 		foreach($this->action->actionToPlants as $actionToPlant)
 		{
 			$taskTemplateToActionToPlant = new TaskTemplateToActionToPlant;
-			$taskTemplateToActionToPlant->insert(array(
-				'task_template_id'=> $this->task_template_id,
-				'action_to_plant_id'=>$actionToPlant->id,
-				'task_template_to_action_id'=>$this->id,
-				'quantity'=>$actionToPlant->quantity,
-			));
+			$taskTemplateToActionToPlant->task_template_id = $$this->task_template_id;
+			$taskTemplateToActionToPlant->action_to_plant_id = $$actionToPlant->id;
+			$taskTemplateToActionToPlant->task_template_to_action_id = $$this->id;
+			$taskTemplateToActionToPlant->quantity = $$actionToPlant->quantity;
+			$taskTemplateToActionToPlant->insert();
 		}
 
 		return $return;

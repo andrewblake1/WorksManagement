@@ -54,6 +54,8 @@ class TaskTemplateToActionToPlant extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchPlant';
+        $columns[] = 'quantity';
+        $columns[] = 'duration';
  		
 		return $columns;
 	}
