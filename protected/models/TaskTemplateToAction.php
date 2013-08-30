@@ -14,11 +14,15 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property TaskTemplate $taskTemplate
- * @property TaskTemplate $projectTemplate
  * @property User $updatedBy
- * @property Action $action
  * @property TaskTemplate $client
+ * @property TaskTemplate $taskTemplate
+ * @property Action $action
+ * @property TaskTemplate $projectTemplate
+ * @property TaskTemplateToActionToLabourResource[] $taskTemplateToActionToLabourResources
+ * @property TaskTemplateToActionToLabourResource[] $taskTemplateToActionToLabourResources1
+ * @property TaskTemplateToActionToPlant[] $taskTemplateToActionToPlants
+ * @property TaskTemplateToActionToPlant[] $taskTemplateToActionToPlants1
  */
 class TaskTemplateToAction extends ActiveRecord
 {
@@ -87,11 +91,15 @@ class TaskTemplateToAction extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
-            'projectTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'project_template_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
             'client' => array(self::BELONGS_TO, 'TaskTemplate', 'client_id'),
+            'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
+            'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
+            'projectTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'project_template_id'),
+            'taskTemplateToActionToLabourResources' => array(self::HAS_MANY, 'TaskTemplateToActionToLabourResource', 'task_template_id'),
+            'taskTemplateToActionToLabourResources1' => array(self::HAS_MANY, 'TaskTemplateToActionToLabourResource', 'task_template_to_action_id'),
+            'taskTemplateToActionToPlants' => array(self::HAS_MANY, 'TaskTemplateToActionToPlant', 'task_template_id'),
+            'taskTemplateToActionToPlants1' => array(self::HAS_MANY, 'TaskTemplateToActionToPlant', 'task_template_to_action_id'),
         );
     }
 
@@ -138,6 +146,42 @@ class TaskTemplateToAction extends ActiveRecord
 		}
 		
 		return parent::save();
+	}
+	
+	/**
+	 * Labour resources and plant should be added automatically - the users should only have and need ability
+	 * to alter duration and quantity of these
+	 * @param type $attributes
+	 */
+	public function insert($attributes = null)
+	{
+		$return = parent::insert($attributes);
+
+		// loop thru and add labour resources
+		foreach($this->action->actionToLabourResources as $actionToLabourResource)
+		{
+			$taskTemplateToActionToLabourResource = new TaskTemplateToActionToLabourResource;
+			$taskTemplateToActionToLabourResource->insert(array(
+				'task_template_id'=> $this->task_template_id,
+				'action_to_labour_resource_id'=>$actionToLabourResource->id,
+				'task_template_to_action_id'=>$this->id,
+				'quantity'=>$actionToLabourResource->quantity,
+			));
+		}
+
+		// loop thru and add plant resources
+		foreach($this->action->actionToPlants as $actionToPlant)
+		{
+			$taskTemplateToActionToPlant = new TaskTemplateToActionToPlant;
+			$taskTemplateToActionToPlant->insert(array(
+				'task_template_id'=> $this->task_template_id,
+				'action_to_plant_id'=>$actionToPlant->id,
+				'task_template_to_action_id'=>$this->id,
+				'quantity'=>$actionToPlant->quantity,
+			));
+		}
+
+		return $return;
 	}
 
 }

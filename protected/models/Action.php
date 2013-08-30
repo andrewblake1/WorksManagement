@@ -18,6 +18,8 @@
  * @property ProjectTemplate $projectTemplate
  * @property Action $override
  * @property Action[] $actions
+ * @property ActionToLabourResource[] $actionToLabourResources
+ * @property ActionToPlant[] $actionToPlants
  * @property DutyStep[] $dutySteps
  * @property TaskTemplateToAction[] $taskTemplateToActions
  */
@@ -112,6 +114,8 @@ class Action extends ActiveRecord
             'projectTemplate' => array(self::BELONGS_TO, 'ProjectTemplate', 'project_template_id'),
             'override' => array(self::BELONGS_TO, 'Action', 'override_id'),
             'actions' => array(self::HAS_MANY, 'Action', 'override_id'),
+            'actionToLabourResources' => array(self::HAS_MANY, 'ActionToLabourResource', 'action_id'),
+            'actionToPlants' => array(self::HAS_MANY, 'ActionToPlant', 'action_id'),
             'dutySteps' => array(self::HAS_MANY, 'DutyStep', 'action_id'),
             'taskTemplateToActions' => array(self::HAS_MANY, 'TaskTemplateToAction', 'action_id'),
         );

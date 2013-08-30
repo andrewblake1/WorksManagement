@@ -6,7 +6,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('label_override');
 
-
 	$form->hiddenField('client_id');
 	$form->hiddenField('project_template_id');
 	$form->hiddenField('action_id');

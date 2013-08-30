@@ -40,6 +40,16 @@ class ActionToLabourResource extends ActiveRecord
 	public $client_id;
 	public $project_template_id;
 
+	public function scopeAction($action_id)
+	{
+		$criteria=new DbCriteria;
+		$criteria->compare('action_id',$action_id);
+		
+		$this->getDbCriteria()->mergeWith($criteria);
+		
+		return $this;
+	}
+
 	/**
 	 * @return array relational rules.
 	 */

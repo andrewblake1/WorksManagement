@@ -7,6 +7,7 @@
  * @property integer $id
  * @property integer $task_template_id
  * @property integer $action_to_labour_resource_id
+ * @property integer $task_template_to_action_id
  * @property integer $quantity
  * @property string $duration
  * @property integer $updated_by
@@ -18,7 +19,8 @@
  */
 class TaskTemplateToActionToLabourResource extends ActiveRecord
 {
-
+	public $searchLabourResource;
+	
 	/**
 	 * @return array relational rules.
 	 */
@@ -29,10 +31,10 @@ class TaskTemplateToActionToLabourResource extends ActiveRecord
 		return array(
 			'taskTemplate' => array(self::BELONGS_TO, 'TaskTemplate', 'task_template_id'),
 			'actionToLabourResource' => array(self::BELONGS_TO, 'ActionToLabourResource', 'action_to_labour_resource_id'),
+            'taskTemplateToAction' => array(self::BELONGS_TO, 'TaskTemplateToAction', 'task_template_to_action_id'),
 			'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
 		);
 	}
-
 
 	public function getSearchCriteria()
 	{
@@ -60,5 +62,11 @@ class TaskTemplateToActionToLabourResource extends ActiveRecord
 			'searchLabourResource',
 		);
 	}
- 
+ 	
+	public function beforeValidate()
+	{
+		$this->task_template_id = $this->taskTemplateToAction->task_template_id;
+		
+		return parent::beforeValidate();
+	}
 }
