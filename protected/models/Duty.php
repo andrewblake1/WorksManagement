@@ -25,21 +25,21 @@ class Duty extends CustomFieldActiveRecord
 	 */
 	public $description;
 	public $derived_assigned_to_name;
-	
+
 	public $updated;
 	public $due;
-	
+
 	public $duty_step_id;
 	public $responsible;
 //	public $task_to_action_id;
 	public $action_id;
 	public $lead_in_days;
-	
+
 	/**
 	 * @var string label on button in update view
 	 */
 	static $updateButtonText;
-	
+
 	// CustomFieldActiveRecord
 	protected $evalCustomFieldPivots = '$this->dutyData->dutyStep->dutyStepToCustomFields';
 	protected $evalClassEndToCustomFieldPivot = 'DutyDataToDutyStepToCustomField';
@@ -55,7 +55,7 @@ class Duty extends CustomFieldActiveRecord
 			? 'v_duty'
 			: 'tbl_duty';
 	}
-	
+
 	// needed as using a view
 	public function primaryKey()
 	{
@@ -150,6 +150,7 @@ class Duty extends CustomFieldActiveRecord
 		
 		$criteria->select = array(
 			'duty.id',
+			'duty.duty_data_id',
 		);
 	
 		// NB: the depth clause in the join is to eliminate loop back dependencies i.e. exclude them from this

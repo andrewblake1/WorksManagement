@@ -30,11 +30,9 @@ class DbCriteria extends CDbCriteria
 				case 'datetime' : 
 					$partialMatch = false;
 				default :
-					switch($column->type == 'integer')
+					if((strpos($column->dbType, 'int') !== FALSE) || $column->type == 'float')
 					{
-						case 'integer' :
-						case 'float' :
-							$partialMatch = false;
+						$partialMatch = false;
 					}
 			}
 
