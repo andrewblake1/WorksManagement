@@ -13,13 +13,16 @@
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property User $updatedBy
- * @property CustomFieldDutyStepCategory $dutyStep
- * @property CustomField $customField
- * @property CustomFieldDutyStepCategory $customFieldDutyStepCategory
+ * @property ActionToLabourResourceBranch[] $actionToLabourResourceBranches
+ * @property ActionToLabourResourceBranch[] $actionToLabourResourceBranches1
+ * @property ActionToPlantBranch[] $actionToPlantBranches
+ * @property ActionToPlantBranch[] $actionToPlantBranches1
  * @property DutyDataToDutyStepToCustomField[] $dutyDataToDutyStepToCustomFields
  * @property DutyStepBranch[] $dutyStepBranches
- * @property DutyStepBranch[] $dutyStepBranches1
+ * @property CustomField $customField
+ * @property CustomFieldDutyStepCategory $customFieldDutyStepCategory
+ * @property DutyStep $dutyStep
+ * @property User $updatedBy
  */
 class DutyStepToCustomField extends ActiveRecord
 {
@@ -61,12 +64,16 @@ class DutyStepToCustomField extends ActiveRecord
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
-            'customFieldDutyStepCategory' => array(self::BELONGS_TO, 'CustomFieldDutyStepCategory', 'custom_field_duty_step_category_id'),
-            'customFieldProjectCategory' => array(self::BELONGS_TO, 'CustomFieldProjectCategory', 'custom_field_project_category_id'),
+            'actionToLabourResourceBranches' => array(self::HAS_MANY, 'ActionToLabourResourceBranch', 'duty_step_to_custom_field_id'),
+            'actionToLabourResourceBranches1' => array(self::HAS_MANY, 'ActionToLabourResourceBranch', 'duty_step_id'),
+            'actionToPlantBranches' => array(self::HAS_MANY, 'ActionToPlantBranch', 'duty_step_to_custom_field_id'),
+            'actionToPlantBranches1' => array(self::HAS_MANY, 'ActionToPlantBranch', 'duty_step_id'),
             'dutyDataToDutyStepToCustomFields' => array(self::HAS_MANY, 'DutyDataToDutyStepToCustomField', 'duty_step_to_custom_field_id'),
+            'dutyStepBranches' => array(self::HAS_MANY, 'DutyStepBranch', 'duty_step_to_custom_field_id'),
+            'customField' => array(self::BELONGS_TO, 'CustomField', 'custom_field_id'),
+            'customFieldDutyStepCategory' => array(self::BELONGS_TO, 'CustomFieldDutyStepCategory', 'custom_field_duty_step_category_id'),
+            'dutyStep' => array(self::BELONGS_TO, 'DutyStep', 'duty_step_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
         );
     }
 

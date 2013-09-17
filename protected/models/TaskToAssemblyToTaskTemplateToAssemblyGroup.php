@@ -143,19 +143,20 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 		$taskToAssembly = TaskToAssembly::model()->findByPk($this->task_to_assembly_id);
 		$taskToAssembly->attributes = $_POST[__CLASS__];
 		
-		if($saved = $taskToAssembly->updateSave($models))
+		if($saved = $taskToAssembly->id ? $taskToAssembly->updateSave($models) : $taskToAssembly->createSave($models))
 		{
-			$saved &= parent::updateSave($models);
+			$this->task_to_assembly_id = $taskToAssembly->id;
 			// need to get assembly_group_to_assembly_id which is complicated by the deleted attribute which means that more
 			// than one matching row could be returned - if not for deleted attrib
 			$assemblyGroupToAssembly = AssemblyGroupToAssembly::model()->findByAttributes(array('assembly_group_id'=>$this->assembly_group_id, 'assembly_id'=>$this->assembly_id));
 			$this->assembly_group_to_assembly_id = $assemblyGroupToAssembly->id;
+			$saved &= parent::updateSave($models);
 		}
 
 		return $saved;
 	}
 
-	public function createSave(&$models=array())
+/*	public function createSave(&$models=array())
 	{
 	
 		$taskToAssembly = new TaskToAssembly;
@@ -175,6 +176,6 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 		}
 
 		return $saved;
-	}
+	}*/
 	
 }

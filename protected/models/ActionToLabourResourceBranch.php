@@ -21,6 +21,9 @@
  */
 class ActionToLabourResourceBranch extends ActiveRecord
 {
+	static $niceNamePlural = 'Conditions';
+	static $niceName = 'Condition';
+	
 	public $searchDutyStep;
 	public $searchCustomField;
 

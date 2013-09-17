@@ -97,8 +97,8 @@ class Controller extends CController
 		$cs = Yii::app()->getClientScript();
 		$cs->registerCoreScript('jquery');
 		// at this stage this needed as category controller returnform blocks reload of jqueryui in ajax via scriptMap but
-		// need to load jquery ui ahead of bootstrap for radio buttons in boostrap - otherwise jquery ui conflicts, hence put
-		// into package (control the url) in application compontent - corescripts rendered before script files
+		// need to load jquery ui ahead of bootstrap for radio buttons in bootstrap - otherwise jquery ui conflicts, hence put
+		// into package (control the url) in application component - corescripts rendered before script files
 		$cs->registerCoreScript('jquery.ui');
 		$cs->registerScriptFile('jquery-ui.min.js');
 
@@ -207,7 +207,7 @@ class Controller extends CController
 			{
 				$term = trim($term);
 				$paramName = ":param$cntr";
-				$criteria->condition .= ($criteria->condition ? " AND " : '') . "$concat LIKE $paramName";
+				$criteria->condition .= ($criteria->condition ? " AND " : '') . "$concat LIKE $paramName COLLATE utf8_general_ci";
 				$criteria->params[$paramName] = "%$term%";
 				$cntr++;
 			}
@@ -669,16 +669,16 @@ class Controller extends CController
 			'class' => 'WMTbButtonColumn',
 			'buttons' => array(
 				'delete' => array(
-					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
+					'visible' => 'Yii::app()->user->checkAccess("' . $this->modelName . '", array("primaryKey"=>$data->primaryKey))',
 					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/delete", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
 				),
 				'update' => array(
-					'visible' => 'Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))',
+					'visible' => 'Yii::app()->user->checkAccess("' . $this->modelName . '", array("primaryKey"=>$data->primaryKey))',
 					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/update", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
 				),
 				'view' => array(
 					'visible' => '
-						!Yii::app()->user->checkAccess(str_replace("View", "", get_class($data)), array("primaryKey"=>$data->primaryKey))
+						!Yii::app()->user->checkAccess("' . $this->modelName . '", array("primaryKey"=>$data->primaryKey))
 						&& Yii::app()->user->checkAccess(get_class($data)."Read")',
 					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/view", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
 				),

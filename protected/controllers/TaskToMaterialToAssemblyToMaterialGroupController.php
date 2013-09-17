@@ -9,15 +9,9 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 		$taskToMaterial->attributes = $_GET[$this->modelName];
 		$taskToMaterial->id = $model->task_to_material_id;
 		$taskToMaterial->assertFromParent();
-
-		// set heading
-//		$this->heading = TaskToMaterial::getCreateLabel();
 		
 		// set tabs
 		$this->tabs = $taskToMaterial;
-
-		// set breadcrumbs
-	//	$this->breadcrumbs = TaskToMaterialController::getBreadCrumbTrail($this->heading);
 		
 		echo $this->render('_form',array(
 			'model'=>$model,

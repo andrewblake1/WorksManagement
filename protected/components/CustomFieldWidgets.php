@@ -93,9 +93,9 @@ class CustomFieldWidgets extends CWidget
     {
 		// create a new category tree
 		$categoryTree = new CategoryTree($this->categoryModelName);
-		
+
 		echo CHtml::openTag('div', array('id'=>'customValues'));
-		
+
 		// loop thru all the pivot table custom fields
 		foreach(eval('return $this->model->' . $this->relationModelToCustomFieldModelTemplates . ';') as $toCustomField)
 		{
@@ -113,6 +113,10 @@ class CustomFieldWidgets extends CWidget
 				'htmlOptions'=>$this->htmlOptions,
 				'ajax'=>$this->ajax,
 			));
+	
+			// allow any extended class to add contents after this widget
+			$this->afterCustom($toCustomField, $this->model);
+
 			// add the widget html to the tree branch
 			$categoryTree->add(isset($category->id) ? $category->id : null, ob_get_clean());
 		}
@@ -120,9 +124,13 @@ class CustomFieldWidgets extends CWidget
 		$categoryTree->display();
 
 		echo CHtml::closeTag('div', array('id'=>'CustomFields'));
-
 	}
 	
+	protected function afterCustom($toCustomField)
+	{
+		
+	}
+
 }
 
 ?>

@@ -43,6 +43,16 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>'
 		'relationCustomFieldModelTemplate'=>'dutyStepToCustomField',
 		'relation_category'=>'customFieldDutyStepCategory',
 		'categoryModelName'=>'CustomFieldDutyStepCategory',
+		'htmlOptions'=>array('onchange'=>"
+			id = $(this).attr('id') + '_resource';
+
+			data = {
+				'id' : id,
+				'val' : $(this).val())
+			};
+			
+			$(id).load('" . Yii::app()->baseUrl . "Duty/getResources" . "', data);
+		"),
 	));
 
 	// need to show previous steps custom fields on duty form as disabled

@@ -20,7 +20,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		}
 	}
 
-	
 	// add this widget into a text string
 	ob_start();
 	$this->widget('bootstrap.widgets.TbButtonGroup', array(
@@ -33,7 +32,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 		),
 	));
 	$betweenHtml = ob_get_clean();
-
 
 	// strangly at this point neither bootstrap nor yii booster have a way of getting the value - nor setting it
 	$form->hiddenField('type');
@@ -83,8 +81,6 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 	$form->textFieldRow('quantity');
 
 	$form->textFieldRow('estimated_total_quantity');
-
-//	ModeController::listWidgetRow($model, $form, 'mode_id');
 
 $this->endWidget();
 

@@ -123,16 +123,23 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
 		$taskToMaterial = TaskToMaterial::model()->findByPk($this->task_to_material_id);
 		$taskToMaterial->attributes = $_POST[__CLASS__];
+		// filler - unused in this context but necassary in Material model
+		$taskToMaterial->standard_id = 0;
 		
-		if($saved = $taskToMaterial->updateSave($models))
+		if($saved = $taskToMaterial->id ? $taskToMaterial->updateSave($models) : $taskToMaterial->createSave($models))
 		{
+			$this->task_to_material_id = $taskToMaterial->id;
+			// need to get material_group_to_material_id which is complicated by the deleted attribute which means that more
+			// than one matching row could be returned - if not for deleted attrib
+			$materialGroupToMaterial = MaterialGroupToMaterial::model()->findByAttributes(array('material_group_id'=>$this->material_group_id, 'material_id'=>$this->material_id));
+			$this->material_group_to_material_id = $materialGroupToMaterial->id;
 			$saved &= parent::updateSave($models);
 		}
 
 		return $saved;
 	}
 
-	public function createSave(&$models=array())
+/*	public function createSave(&$models=array())
 	{
 		$taskToMaterial = new TaskToMaterial;
 		$taskToMaterial->attributes = $_POST['TaskToMaterialToTaskTemplateToMaterialGroup'];
@@ -150,6 +157,6 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 		}
 
 		return $saved;
-	}
+	}*/
 
 }

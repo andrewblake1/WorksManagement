@@ -377,6 +377,10 @@ class Task extends CustomFieldActiveRecord
 				$saved &= $this->createAssemblies($models);
 				// attempt creation of materials
 				$saved &= $this->createMaterials($models);
+				// attempt creation of assembly groups
+				$saved &= $this->createAssemblyGroups($models);
+				// attempt creation of material groups
+				$saved &= $this->createMaterialGroups($models);
 				// attempt creation of duties
 				$saved &= $this->createDutys($models);
 			}
@@ -546,6 +550,54 @@ class Task extends CustomFieldActiveRecord
 		return $saved;
 	}
 
+	/**
+	 * Append assembly groups to task.
+	 * @param CActiveRecord $model the model (task)
+	 * @param array of CActiveRecord models to extract errors from if necassary
+	 * @return returns 0, or null on error of any inserts
+	 */
+	private function createAssemblyGroups(&$models=array())
+	{
+		// initialise the saved variable to show no errors
+		$saved = true;
+
+		// loop thru all all assemblies related to the tasks type
+		foreach($this->taskTemplate->taskTemplateToAssemblyGroups as $taskTemplateToAssemblyGroup)
+		{
+			$taskToAssemblyToTaskTemplateToAssemblyGroup = new TaskToAssemblyToTaskTemplateToAssemblyGroup();
+			$taskToAssemblyToTaskTemplateToAssemblyGroup->task_id = $this->id;
+			$taskToAssemblyToTaskTemplateToAssemblyGroup->assembly_group_id = $taskTemplateToAssemblyGroup->assembly_group_id;
+			$taskToAssemblyToTaskTemplateToAssemblyGroup->assembly_to_assembly_group_id = $taskTemplateToAssemblyGroup->id;
+			$taskToAssemblyToTaskTemplateToAssemblyGroup->createSave($models);
+		}
+		
+		return $saved;
+	} 
+	
+	/**
+	 * Append material groups to task.
+	 * @param CActiveRecord $model the model (task)
+	 * @param array of CActiveRecord models to extract errors from if necassary
+	 * @return returns 0, or null on error of any inserts
+	 */
+	private function createMaterialGroups(&$models=array())
+	{
+		// initialise the saved variable to show no errors
+		$saved = true;
+
+		// loop thru all all assemblies related to the tasks type
+		foreach($this->taskTemplate->taskTemplateToMaterialGroups as $taskTemplateToMaterialGroup)
+		{
+			$taskToMaterialToTaskTemplateToMaterialGroup = new TaskToMaterialToTaskTemplateToMaterialGroup();
+			$taskToMaterialToTaskTemplateToMaterialGroup->task_id = $this->id;
+			$taskToMaterialToTaskTemplateToMaterialGroup->material_group_id = $taskTemplateToMaterialGroup->material_group_id;
+			$taskToMaterialToTaskTemplateToMaterialGroup->material_to_material_group_id = $taskTemplateToMaterialGroup->id;
+			$taskToMaterialToTaskTemplateToMaterialGroup->createSave($models);
+		}
+		
+		return $saved;
+	} 
+	
 	/**
 	 * Creates the intial duty rows for a task
 	 * @param CActiveRecord $model the model (task)

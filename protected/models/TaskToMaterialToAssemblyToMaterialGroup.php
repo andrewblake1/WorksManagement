@@ -5,10 +5,11 @@
  *
  * The followings are the available columns in table 'tbl_task_to_material_to_assembly_to_material_group':
  * @property string $id
+ * @property string $task_id
  * @property string $task_to_material_id
+ * @property integer $material_id
  * @property integer $material_group_to_material_id
  * @property integer $material_group_id
- * @property integer $material_id
  * @property integer $assembly_to_material_group_id
  * @property integer $updated_by
  *
@@ -19,12 +20,12 @@
  * @property AssemblyToMaterialGroup $assemblyToMaterialGroup
  * @property MaterialGroupToMaterial $materialGroup
  * @property MaterialGroupToMaterial $materialGroupToMaterial
+ * @property TaskToMaterial $task
  */
 class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 {
 	use RangeActiveRecordTrait;
 
-	public $task_id;
 	public $quantity;
 	public $task_to_assembly_id;
 	
@@ -49,8 +50,8 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(array('task_to_material_id', 'material_group_to_material_id')), array(
-			array('task_to_assembly_id, quantity, task_id', 'required'),
-			array('task_to_assembly_id, quantity, task_id', 'numerical', 'integerOnly'=>true),
+			array('task_to_assembly_id, quantity', 'required'),
+			array('task_to_assembly_id, quantity', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -70,11 +71,12 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
         // class name for the relations automatically generated below.
         return array(
             'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
-            'material' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_id'),
+            'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'assemblyToMaterialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'assembly_to_material_group_id'),
             'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
             'materialGroupToMaterial' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_to_material_id'),
+            'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
         );
     }
 
@@ -132,16 +134,23 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
 		$taskToMaterial = TaskToMaterial::model()->findByPk($this->task_to_material_id);
 		$taskToMaterial->attributes = $_POST[__CLASS__];
+		// filler - unused in this context but necassary in Material model
+		$taskToMaterial->standard_id = 0;
 		
-		if($saved = $taskToMaterial->updateSave($models))
+		if($saved = $taskToMaterial->id ? $taskToMaterial->updateSave($models) : $taskToMaterial->createSave($models))
 		{
+			$this->task_to_material_id = $taskToMaterial->id;
+			// need to get material_group_to_material_id which is complicated by the deleted attribute which means that more
+			// than one matching row could be returned - if not for deleted attrib
+			$materialGroupToMaterial = MaterialGroupToMaterial::model()->findByAttributes(array('material_group_id'=>$this->material_group_id, 'material_id'=>$this->material_id));
+			$this->material_group_to_material_id = $materialGroupToMaterial->id;
 			$saved &= parent::updateSave($models);
 		}
 
 		return $saved;
 	}
 
-	public function createSave(&$models=array())
+/*	public function createSave(&$models=array())
 	{
 		$taskToMaterial = new TaskToMaterial;
 		$taskToMaterial->attributes = $_POST['TaskToMaterialToAssemblyToMaterialGroup'];
@@ -159,6 +168,6 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 		}
 
 		return $saved;
-	}
+	}*/
 
 }

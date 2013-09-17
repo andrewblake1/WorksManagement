@@ -39,33 +39,11 @@ class TaskToAssemblyController extends Controller
 			'class'=>'WMTbButtonColumn',
 			'buttons'=>array(
 				'delete' => array(
-					'visible'=>'Yii::app()->user->checkAccess(
-						$data->assembly_group_id
-							? ($data->assembly_to_assembly_group_id
-								? "TaskToAssemblyToAssemblyToAssemblyGroup"
-								: "TaskToAssemblyToTaskTemplateToAssemblyGroup")
-							: "TaskToAssembly"
-					)',
-					'url'=>'Yii::app()->createUrl((
-						$data->assembly_group_id
-							? ($data->assembly_to_assembly_group_id
-								? "TaskToAssemblyToAssemblyToAssemblyGroup"
-								: "TaskToAssemblyToTaskTemplateToAssemblyGroup")
-							: "TaskToAssembly"
-						) . "/delete", array("id"=>
-						$data->id
-							? $data->id
-							: $data->assembly_group_id
-					))',
+					'visible' => 'Yii::app()->user->checkAccess("' . $this->modelName . '", array("primaryKey"=>$data->primaryKey))',
+					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/delete", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
 				),
 				'update' => array(
-					'visible'=>'Yii::app()->user->checkAccess(
-						$data->assembly_group_id
-							? ($data->assembly_to_assembly_group_id
-								? "TaskToAssemblyToAssemblyToAssemblyGroup"
-								: "TaskToAssemblyToTaskTemplateToAssemblyGroup")
-							: "TaskToAssembly"
-					)',
+					'visible'=>'Yii::app()->user->checkAccess("' . $this->modelName . '")',
 
 					'url'=>'Yii::app()->createUrl(
 						$data->assembly_group_id
@@ -104,18 +82,8 @@ class TaskToAssemblyController extends Controller
 				),
 				'view' => array(
 					'visible'=>'
-						!Yii::app()->user->checkAccess(
-							$data->assembly_group_id
-								? ($data->assembly_to_assembly_group_id
-									? "TaskToAssemblyToAssemblyToAssemblyGroup"
-									: "TaskToAssemblyToTaskTemplateToAssemblyGroup")
-								: "TaskToAssembly")
-						&& Yii::app()->user->checkAccess(
-							$data->assembly_group_id
-								? ($data->assembly_to_assembly_group_id
-									? "TaskToAssemblyToAssemblyToAssemblyGroupRead"
-									: "TaskToAssemblyToTaskTemplateToAssemblyGroupRead")
-								: "TaskToAssemblyRead")
+						!Yii::app()->user->checkAccess("' . $this->modelName . '")
+						&& Yii::app()->user->checkAccess("' . $this->modelName . 'Read")
 							',
 					'url'=>'Yii::app()->createUrl((
 						$data->assembly_group_id
@@ -178,6 +146,26 @@ class TaskToAssemblyController extends Controller
 				$taskToMaterialToAssemblyToMaterial->assembly_to_material_id = $assemblyToMaterial->id;
 				$taskToMaterialToAssemblyToMaterial->createSave($models);
 			}
+		}
+
+		// AssemblyToMaterialGroup
+		foreach(AssemblyToMaterialGroup::model()->findAllByAttributes(array('assembly_id'=>$assembly_id)) as $assemblyToMaterialGroup)
+		{
+			$taskToMaterialToAssemblyToMaterialGroup = new TaskToMaterialToAssemblyToMaterialGroup();
+			$taskToMaterialToAssemblyToMaterialGroup->task_id = $task_id;
+			$taskToMaterialToAssemblyToMaterialGroup->material_group_id = $assemblyToMaterialGroup->material_group_id;
+			$taskToMaterialToAssemblyToMaterialGroup->assembly_to_material_group_id = $assemblyToMaterialGroup->id;
+			$taskToMaterialToAssemblyToMaterialGroup->createSave($models);
+		}
+
+		// AssemblyToAssemblyGroup
+		foreach(AssemblyToAssemblyGroup::model()->findAllByAttributes(array('assembly_id'=>$assembly_id)) as $assemblyToAssemblyGroup)
+		{
+			$taskToAssemblyToAssemblyToAssemblyGroup = new TaskToAssemblyToAssemblyToAssemblyGroup();
+			$taskToAssemblyToAssemblyToAssemblyGroup->task_id = $task_id;
+			$taskToAssemblyToAssemblyToAssemblyGroup->assembly_group_id = $assemblyToAssemblyGroup->assembly_group_id;
+			$taskToAssemblyToAssemblyToAssemblyGroup->assembly_to_assembly_group_id = $assemblyToAssemblyGroup->id;
+			$taskToAssemblyToAssemblyToAssemblyGroup->createSave($models);
 		}
 
 		// recurse thru sub assemblies

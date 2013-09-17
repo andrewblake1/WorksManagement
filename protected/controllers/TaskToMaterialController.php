@@ -37,31 +37,11 @@ class TaskToMaterialController extends Controller
 			'class'=>'WMTbButtonColumn',
 			'buttons'=>array(
 				'delete' => array(
-					'visible'=>'Yii::app()->user->checkAccess(
-						$data->material_group_id
-							? ($data->task_to_assembly_id
-								? "TaskToMaterialToAssemblyToMaterialGroup"
-								: "TaskToMaterialToTaskTemplateToMaterialGroup")
-							: "TaskToMaterial")',
-					'url'=>'Yii::app()->createUrl((
-						$data->material_group_id
-							? ($data->task_to_assembly_id
-								? "TaskToMaterialToAssemblyToMaterialGroup"
-								: "TaskToMaterialToTaskTemplateToMaterialGroup")
-							: "TaskToMaterial"
-						) . "/delete", array("id"=>
-							$data->id
-								? $data->id
-								: $data->material_group_id
-					))',
+					'visible' => 'Yii::app()->user->checkAccess("' . $this->modelName . '", array("primaryKey"=>$data->primaryKey))',
+					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/delete", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
 				),
 				'update' => array(
-					'visible'=>'Yii::app()->user->checkAccess(
-						$data->material_group_id
-							? ($data->task_to_assembly_id
-								? "TaskToMaterialToAssemblyToMaterialGroup"
-								: "TaskToMaterialToTaskTemplateToMaterialGroup")
-							: "TaskToMaterial")',
+					'visible'=>'Yii::app()->user->checkAccess("' . $this->modelName . '")',
 					'url'=>'Yii::app()->createUrl(
 						$data->material_group_id
 							? ($data->task_to_assembly_id
@@ -95,18 +75,8 @@ class TaskToMaterialController extends Controller
 					'click'=>'function() {if($(this).attr("href").indexOf("returnForm") >= 0) { onclickReturnForm(this); return false; }}',
 				),
 				'view' => array(
-					'visible'=>'!Yii::app()->user->checkAccess(
-						$data->material_group_id
-							? ($data->task_to_assembly_id
-								? "TaskToMaterialToAssemblyToMaterialGroup"
-								: "TaskToMaterialToTaskTemplateToMaterialGroup")
-							: "TaskToMaterial")
-						&& Yii::app()->user->checkAccess(
-						$data->material_group_id
-							? ($data->task_to_assembly_id
-								? "TaskToMaterialToAssemblyToMaterialGroupRead"
-								: "TaskToMaterialToTaskTemplateToMaterialGroupRead")
-							: "TaskToMaterialRead")
+					'visible'=>'!Yii::app()->user->checkAccess("' . $this->modelName . '")
+						&& Yii::app()->user->checkAccess("' . $this->modelName . 'Read")
 					',
 					'url'=>'Yii::app()->createUrl((
 						$data->material_group_id
