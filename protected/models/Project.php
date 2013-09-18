@@ -200,6 +200,7 @@ class Project extends CustomFieldActiveRecord
 		{
 			// add the Project
 			$this->id = $planning->id;
+			$this->level = $planning->level;
 			$saved &= parent::createSave($models);
 
 			// add a Day

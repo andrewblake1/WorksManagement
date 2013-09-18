@@ -5,10 +5,11 @@
  *
  * The followings are the available columns in table 'tbl_task_to_material_to_task_template_to_material_group':
  * @property string $id
+ * @property string $task_id
  * @property string $task_to_material_id
+ * @property integer $material_id
  * @property integer $material_group_to_material_id
  * @property integer $material_group_id
- * @property integer $material_id
  * @property integer $task_template_to_material_group_id
  * @property integer $updated_by
  *
@@ -19,12 +20,12 @@
  * @property MaterialGroupToMaterial $materialGroupToMaterial
  * @property TaskTemplateToMaterialGroup $materialGroup
  * @property TaskTemplateToMaterialGroup $taskTemplateToMaterialGroup
+ * @property TaskToMaterial $task
  */
 class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 {
 	use RangeActiveRecordTrait;
 
-	public $task_id;
 	public $quantity;
 	
 	public $searchMaterialGroup;
@@ -40,8 +41,8 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(array('task_to_material_id', 'material_group_to_material_id')), array(
-			array('quantity, task_id', 'required'),
-			array('task_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('quantity', 'required'),
+			array('quantity', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -62,12 +63,14 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
-            'material' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_id'),
+            'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
             'materialGroupToMaterial' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_to_material_id'),
             'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
             'taskTemplateToMaterialGroup' => array(self::BELONGS_TO, 'TaskTemplateToMaterialGroup', 'task_template_to_material_group_id'),
+            'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
         );
     }
+
 
 	public function getSearchCriteria()
 	{

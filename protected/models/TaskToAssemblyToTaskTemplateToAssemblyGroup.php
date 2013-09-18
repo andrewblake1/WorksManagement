@@ -5,10 +5,11 @@
  *
  * The followings are the available columns in table 'tbl_task_to_assembly_to_task_template_to_assembly_group':
  * @property string $id
+ * @property string $task_id
  * @property string $task_to_assembly_id
+ * @property integer $assembly_id
  * @property string $assembly_group_to_assembly_id
  * @property integer $assembly_group_id
- * @property integer $assembly_id
  * @property string $task_template_to_assembly_group_id
  * @property integer $updated_by
  *
@@ -19,12 +20,12 @@
  * @property AssemblyGroupToAssembly $assemblyGroupToAssembly
  * @property TaskTemplateToAssemblyGroup $assemblyGroup
  * @property TaskTemplateToAssemblyGroup $taskTemplateToAssemblyGroup
+ * @property TaskToAssembly $task
  */
 class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 {
 	use RangeActiveRecordTrait;
 
-	public $task_id;
 	public $quantity;
 	public $searchAssemblyGroup;
 
@@ -47,8 +48,8 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(array('task_to_assembly_id', 'assembly_group_to_assembly_id')), array(
-			array('quantity, task_id', 'required'),
-			array('task_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('quantity', 'required'),
+			array('quantity', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -69,10 +70,11 @@ class TaskToAssemblyToTaskTemplateToAssemblyGroup extends ActiveRecord
         return array(
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
-            'assembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_id'),
+            'assembly' => array(self::BELONGS_TO, 'Assembly', 'assembly_id'),
             'assemblyGroupToAssembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_to_assembly_id'),
             'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup', 'assembly_group_id'),
             'taskTemplateToAssemblyGroup' => array(self::BELONGS_TO, 'TaskTemplateToAssemblyGroup', 'task_template_to_assembly_group_id'),
+            'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
         );
     }
 

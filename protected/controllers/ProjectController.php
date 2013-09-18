@@ -26,6 +26,8 @@ class ProjectController extends Controller
 	// in order to generate the custom fields
 	public function actionDependantList($model = NULL)
 	{
+		$fromAjax = FALSE;
+
 		// a simple cheat to create customValues is to create within cancellable transaction
 		// NB: don't set any attributes as might fail validation
 		if(!$model)
@@ -54,7 +56,7 @@ class ProjectController extends Controller
 		}
 
 		$transaction->rollBack();
-		if(isset($fromAjax))
+		if($fromAjax)
 		{
 			Yii::app()->end();
 		}

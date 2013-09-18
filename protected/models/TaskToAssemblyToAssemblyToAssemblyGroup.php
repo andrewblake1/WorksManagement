@@ -5,10 +5,11 @@
  *
  * The followings are the available columns in table 'tbl_task_to_assembly_to_assembly_to_assembly_group':
  * @property string $id
+ * @property string $task_id
  * @property string $task_to_assembly_id
+ * @property integer $assembly_id
  * @property string $assembly_group_to_assembly_id
  * @property integer $assembly_group_id
- * @property integer $assembly_id
  * @property string $assembly_to_assembly_group_id
  * @property integer $updated_by
  *
@@ -19,12 +20,12 @@
  * @property AssemblyToAssemblyGroup $assemblyToAssemblyGroup
  * @property AssemblyGroupToAssembly $assemblyGroup
  * @property AssemblyGroupToAssembly $assemblyGroupToAssembly
+ * @property TaskToAssembly $task
  */
 class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 {
 	use RangeActiveRecordTrait;
 
-	public $task_id;
 	public $quantity;
 	public $searchAssemblyGroup;
 
@@ -47,8 +48,8 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(array('task_to_assembly_id', 'assembly_group_to_assembly_id')), array(
-			array('quantity, task_id', 'required'),
-			array('quantity, task_id', 'numerical', 'integerOnly'=>true),
+			array('quantity', 'required'),
+			array('quantity', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -71,8 +72,9 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
             'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
             'assembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_id'),
             'assemblyToAssemblyGroup' => array(self::BELONGS_TO, 'AssemblyToAssemblyGroup', 'assembly_to_assembly_group_id'),
-            'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup ', 'assembly_group_id'),
+            'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup', 'assembly_group_id'),
             'assemblyGroupToAssembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_to_assembly_id'),
+            'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
         );
     }
 
