@@ -152,8 +152,11 @@ class TaskToAssemblyController extends Controller
 		foreach(AssemblyToMaterialGroup::model()->findAllByAttributes(array('assembly_id'=>$assembly_id)) as $assemblyToMaterialGroup)
 		{
 			$taskToMaterialToAssemblyToMaterialGroup = new TaskToMaterialToAssemblyToMaterialGroup();
+			$taskToMaterialToAssemblyToMaterialGroup->quantity = 0; // Dummy to pass validation designed for form update
 			$taskToMaterialToAssemblyToMaterialGroup->task_id = $task_id;
+			$taskToMaterialToAssemblyToMaterialGroup->task_to_assembly_id = $taskToAssembly->id;
 			$taskToMaterialToAssemblyToMaterialGroup->material_group_id = $assemblyToMaterialGroup->material_group_id;
+			$taskToMaterialToAssemblyToMaterialGroup->assembly_to_material_group_id = $assemblyToMaterialGroup->id;
 			$taskToMaterialToAssemblyToMaterialGroup->assembly_to_material_group_id = $assemblyToMaterialGroup->id;
 			$taskToMaterialToAssemblyToMaterialGroup->createSave($models);
 		}

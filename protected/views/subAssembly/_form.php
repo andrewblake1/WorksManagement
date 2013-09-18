@@ -25,9 +25,9 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('maximum');
 
-	$form->textAreaRow('select');
-
 	$form->textAreaRow('quantity_tooltip');
+
+	$form->textAreaRow('select');
 
 $this->endWidget();
 

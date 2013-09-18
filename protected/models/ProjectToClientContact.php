@@ -28,6 +28,15 @@ class ProjectToClientContact extends ActiveRecord
 	public $searchPhoneFax;
 
 	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array_merge(parent::rules(array('client_id')));
+	}
+	/**
 	 * @return array relational rules.
 	 */
 	public function relations()
@@ -51,8 +60,8 @@ class ProjectToClientContact extends ActiveRecord
 
 		$criteria->compareAs('searchRole', $this->searchRole, 'clientContact.role', true);
 		$criteria->compareAs('searchFirstName', $this->searchFirstName, 'contact.first_name', true);
-		$criteria->compareAs('searchLastName', $this->searchLastName, 'contact.first_name', true);
-		$criteria->compareAs('searchEmail', $this->searchEmail, 'contact.first_name', true);
+		$criteria->compareAs('searchLastName', $this->searchLastName, 'contact.last_name', true);
+		$criteria->compareAs('searchEmail', $this->searchEmail, 'contact.email', true);
 		$criteria->compareAs('searchPhoneMobile', $this->searchPhoneMobile, 'contact.phone_mobile', true);
 		$criteria->compareAs('searchPhoneHome', $this->searchPhoneHome, 'contact.phone_home', true);
 		$criteria->compareAs('searchPhoneWork', $this->searchPhoneWork, 'contact.phone_work', true);
