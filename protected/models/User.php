@@ -84,10 +84,6 @@
  */
 class User extends ContactActiveRecord
 {
-	public $first_name;
-	public $last_name;
-	public $phone_mobile;
-	public $email;
 	
 	static $niceName = 'User';
 	

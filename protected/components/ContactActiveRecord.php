@@ -4,6 +4,16 @@ class ContactActiveRecord extends ActiveRecord
 	public $first_name;
 	public $last_name;
 	public $email;
+	public $address_line_1;
+	public $address_line_2;
+	public $post_code;
+	public $town_city;
+	public $state_province;
+	public $country;
+	public $phone_mobile;
+	public $phone_home;
+	public $phone_work;
+	public $phone_fax;
 	
 	protected $defaultSort = array('email');
 	/**
@@ -39,7 +49,7 @@ class ContactActiveRecord extends ActiveRecord
 	}
 
 	public function afterFind() {
-		$this->attributes = $this->contact->attributes;
+		$this->copyProperties($this->contact);
 		
 		parent::afterFind();
 	}
@@ -47,7 +57,7 @@ class ContactActiveRecord extends ActiveRecord
 	public function insert($attributes = null)
 	{
 		$contact = new Contact();
-		static::copyProperties($contact, $this, array('id'));
+		$contact->attributes = $_POST[get_class($this)];
 		$contact->insert();
 		
 		if($contact->errors)
@@ -57,9 +67,8 @@ class ContactActiveRecord extends ActiveRecord
 		}
 		else
 		{
-			$isErrors = FALSE;
 			$this->contact_id = $contact->id;
-			parent::insert($attributes);
+			$isErrors = !parent::insert($attributes);
 		}
 			
 		return !$isErrors;
@@ -68,7 +77,7 @@ class ContactActiveRecord extends ActiveRecord
 	public function update($attributes = null)
 	{
 		$contact = Contact::model()->findByPk($this->contact_id);
-		static::copyProperties($contact, $this, array('id'));
+		$contact->attributes = $_POST[get_class($this)];
 		$contact->update();
 		
 		if($contact->errors)
@@ -78,24 +87,17 @@ class ContactActiveRecord extends ActiveRecord
 		}
 		else
 		{
-			$isErrors = FALSE;
-			parent::update($attributes);
+			$isErrors = !parent::update($attributes);
 		}
 			
 		return !$isErrors;
 	}
 	
-// TODO: late at night - this easier than figuring out why massive assignment not working even
-// with all variables safe in Contact. Fix to use massive assignment
-	static function copyProperties(&$target, &$source, $ignore = array())
+	private function copyProperties(&$source, $ignore = array())
 	{
-		$targetSafeAttributeNames = $target->safeAttributeNames;
 		foreach($source->safeAttributeNames as $attribute)
 		{
-			if(in_array($attribute, $targetSafeAttributeNames) && !in_array($attribute, $ignore))
-			{
-				$target->$attribute = $source->$attribute;
-			}
+			$this->$attribute = $source->$attribute;
 		}
 	}
 }

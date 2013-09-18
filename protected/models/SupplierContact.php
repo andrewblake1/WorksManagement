@@ -17,20 +17,6 @@
  */
 class SupplierContact extends ContactActiveRecord
 {
-	public $first_name;
-	public $last_name;
-	public $email;
-	public $address_line_1;
-	public $address_line_2;
-	public $post_code;
-	public $town_city;
-	public $state_province;
-	public $country;
-	public $phone_mobile;
-	public $phone_home;
-	public $phone_work;
-	public $phone_fax;
-
 	/**
 	 * @return array validation rules for model attributes.
 	 */

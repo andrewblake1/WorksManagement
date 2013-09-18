@@ -4,6 +4,8 @@ class TaskController extends Controller
 
 	public function actionDependantList($model = NULL)
 	{
+		$fromAjax = FALSE;
+
 		// a simple cheat to create customValues is to create within cancellable transaction
 		if(!$model)
 		{
@@ -33,7 +35,7 @@ class TaskController extends Controller
 		}
 
 		$transaction->rollBack();
-		if(isset($fromAjax))
+		if($fromAjax)
 		{
 			Yii::app()->end();
 		}

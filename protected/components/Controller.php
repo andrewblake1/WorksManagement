@@ -129,10 +129,20 @@ class Controller extends CController
 					'view',
 					'download',
 					'returnForm',
+//					'autocomplete',
+//					'dependantList',
+				),
+				'roles' => array($this->modelName . 'Read'),
+			),
+// TODO: this is potential security risk - allowing any authenticated user effectively
+// access to all data via these actions - hence need to protect within these actions inside the controller
+// i.e. perhaps check that ?? - simple fix for now! See issue 401
+			array('allow',
+				'actions' => array(
 					'autocomplete',
 					'dependantList',
 				),
-				'roles' => array($this->modelName . 'Read'),
+				'users' => array('@'),
 			),
 			array('allow',
 				'actions' => array(
