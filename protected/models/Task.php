@@ -566,8 +566,9 @@ class Task extends CustomFieldActiveRecord
 		{
 			$taskToAssemblyToTaskTemplateToAssemblyGroup = new TaskToAssemblyToTaskTemplateToAssemblyGroup();
 			$taskToAssemblyToTaskTemplateToAssemblyGroup->task_id = $this->id;
+			$taskToAssemblyToTaskTemplateToAssemblyGroup->quantity = 0;	// dummy
 			$taskToAssemblyToTaskTemplateToAssemblyGroup->assembly_group_id = $taskTemplateToAssemblyGroup->assembly_group_id;
-			$taskToAssemblyToTaskTemplateToAssemblyGroup->assembly_to_assembly_group_id = $taskTemplateToAssemblyGroup->id;
+			$taskToAssemblyToTaskTemplateToAssemblyGroup->task_template_to_assembly_group_id = $taskTemplateToAssemblyGroup->id;
 			$taskToAssemblyToTaskTemplateToAssemblyGroup->createSave($models);
 		}
 		
@@ -590,8 +591,9 @@ class Task extends CustomFieldActiveRecord
 		{
 			$taskToMaterialToTaskTemplateToMaterialGroup = new TaskToMaterialToTaskTemplateToMaterialGroup();
 			$taskToMaterialToTaskTemplateToMaterialGroup->task_id = $this->id;
+			$taskToMaterialToTaskTemplateToMaterialGroup->quantity = 0;	// dummy
 			$taskToMaterialToTaskTemplateToMaterialGroup->material_group_id = $taskTemplateToMaterialGroup->material_group_id;
-			$taskToMaterialToTaskTemplateToMaterialGroup->material_to_material_group_id = $taskTemplateToMaterialGroup->id;
+			$taskToMaterialToTaskTemplateToMaterialGroup->task_template_to_material_group_id = $taskTemplateToMaterialGroup->id;
 			$taskToMaterialToTaskTemplateToMaterialGroup->createSave($models);
 		}
 		

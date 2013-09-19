@@ -18,20 +18,19 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 					'success'=>"function(data) {
 						if(data)
 						{
-							$('#customValues').hide('slow', function() {
-								$('#customValues').replaceWith(data);
-								$('#customValues').hide('slow', function() {
-									$('#customValues').show('slow');
+							$('#templateDependantArea').hide('slow', function() {
+								$('#templateDependantArea').replaceWith(data);
+								$('#templateDependantArea').hide('slow', function() {
+									$('#templateDependantArea').show('slow');
 								});
 							});
 						}
-						// clean it out
-						else
+						else // clean it out
 						{
-							$('#customValues').hide('slow', function() {
-								$('#customValues').html('');
-								$('#customValues').hide('slow', function() {
-									$('#customValues').show('slow');
+							$('#templateDependantArea').hide('slow', function() {
+								$('#templateDependantArea').html('');
+								$('#templateDependantArea').hide('slow', function() {
+									$('#templateDependantArea').show('slow');
 								});
 							});
 						}
@@ -40,12 +39,18 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 			),
 			array('scopeCrew'=>array($model->crew_id))
 		);
+
+		// if a single option
+		if(!empty($model->task_template_id))
+		{
+			// set some necassary variables - making use of a php quirk here to call non static method via scope resolution operator - ok if not accessing non static member variables
+			TaskController::actionDependantList($model);
+			$customFieldsAdded = TRUE;
+		}
 	}
 	else
 	{
 		$form->hiddenField('task_template_id');
-		$taskTemplate = $model->taskTemplate;
-		$form->rangeFieldRow('quantity', $taskTemplate->quantity, $taskTemplate->minimum, $taskTemplate->maximum, $taskTemplate->select, $taskTemplate->quantity_tooltip);
 	}
 
 	$form->textFieldRow('name');
@@ -62,29 +67,31 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->checkBoxListInlineRow('preferred', array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'));
 
-	// customValues
-	if($model->isNewRecord)
-	{
-		// if a single option
-		if(!empty($model->task_template_id))
-		{
-			// set some necassary variables - making use of a php quirk here to call non static method via scope resolution operator - ok if not accessing non static member variables
-			TaskController::actionDependantList($model);
-			$customFieldsAdded = TRUE;
-		}
-	}
-
 	ModeController::listWidgetRow($model, $form, 'mode_id');
 
-	$this->widget('CustomFieldWidgets',array(
-		'model'=>$model,
-		'form'=>$form,
-		'relationModelToCustomFieldModelTemplate'=>'taskToTaskTemplateToCustomField',
-		'relationModelToCustomFieldModelTemplates'=>'taskToTaskTemplateToCustomFields',
-		'relationCustomFieldModelTemplate'=>'taskTemplateToCustomField',
-		'relation_category'=>'customFieldTaskCategory',
-		'categoryModelName'=>'CustomFieldTaskCategory',
-	));
+	if(!isset($customFieldsAdded))
+	{
+		echo CHtml::openTag('div', array('id'=>'templateDependantArea'));
+	
+		// quantity
+		if($taskTemplate = $model->taskTemplate)
+		{
+			$form->rangeFieldRow('quantity', $taskTemplate->quantity, $taskTemplate->minimum, $taskTemplate->maximum, $taskTemplate->select, $taskTemplate->quantity_tooltip);
+		}
+
+		// custom fields
+		$this->widget('CustomFieldWidgets',array(
+			'model'=>$model,
+			'form'=>$form,
+			'relationModelToCustomFieldModelTemplate'=>'taskToTaskTemplateToCustomField',
+			'relationModelToCustomFieldModelTemplates'=>'taskToTaskTemplateToCustomFields',
+			'relationCustomFieldModelTemplate'=>'taskTemplateToCustomField',
+			'relation_category'=>'customFieldTaskCategory',
+			'categoryModelName'=>'CustomFieldTaskCategory',
+		));
+
+		echo CHtml::closeTag('div');
+	}
 
 $this->endWidget();
 

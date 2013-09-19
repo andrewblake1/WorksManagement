@@ -21,6 +21,13 @@ class TaskController extends Controller
 		Yii::app()->db->createCommand('SET foreign_key_checks = 0')->execute();
 		if($model->createSave($models, false))
 		{
+			echo CHtml::openTag('div', array('id'=>'templateDependantArea'));
+
+			$form = new WMTbActiveForm;
+			// quantity
+			$taskTemplate = $model->taskTemplate;
+			$form->rangeFieldRow('quantity', $taskTemplate->quantity, $taskTemplate->minimum, $taskTemplate->maximum, $taskTemplate->select, $taskTemplate->quantity_tooltip, array(), $model);
+
 			// customValues
 			$this->widget('CustomFieldWidgets',array(
 				'model'=>$model,
@@ -32,6 +39,8 @@ class TaskController extends Controller
 				'categoryModelName'=>'CustomFieldTaskCategory',
 				'ajax'=>$fromAjax,
 			));
+
+			echo CHtml::closeTag('div');
 		}
 
 		$transaction->rollBack();

@@ -17,10 +17,9 @@ class DefaultValueController extends Controller
 
 	public function actionDynamicColumns()
 	{
-//		$tableName = Yii::app()->functions->camelize($_POST['DefaultValue']['table'], true);
 		$attributes = $this->getColumns($_POST['DefaultValue']['table']);
-		ob_start();
 		$model = DefaultValue::model();
+		ob_start();
 		$form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		ob_end_clean();
 

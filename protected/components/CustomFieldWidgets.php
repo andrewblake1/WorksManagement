@@ -123,7 +123,7 @@ class CustomFieldWidgets extends CWidget
 
 		$categoryTree->display();
 
-		echo CHtml::closeTag('div', array('id'=>'CustomFields'));
+		echo CHtml::closeTag('div');
 	}
 	
 	protected function afterCustom($toCustomField)

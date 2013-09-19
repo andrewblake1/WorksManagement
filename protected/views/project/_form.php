@@ -50,6 +50,13 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 			array('scopeClient'=>array($model->client_id))
 		);
 		
+		// if a single option
+		if(!empty($model->project_type_id))
+		{
+			// set some necassary variables - making use of a php quirk here to call non static method via scope resolution operator - ok if not accessing non static member variables
+			ProjectController::actionDependantList($model);
+			$customFieldsAdded = TRUE;
+		}
 	}
 	else
 	{
@@ -62,18 +69,6 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->textFieldRow('planned');
 	
-	// customValues
-	if($model->isNewRecord)
-	{
-		// if a single option
-		if(!empty($model->project_type_id))
-		{
-			// set some necassary variables - making use of a php quirk here to call non static method via scope resolution operator - ok if not accessing non static member variables
-			ProjectController::actionDependantList($model);
-			$customFieldsAdded = TRUE;
-		}
-	}
-
 	if(!isset($customFieldsAdded))
 	{
 		$this->widget('CustomFieldWidgets',array(

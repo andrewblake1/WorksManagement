@@ -253,18 +253,14 @@ class WMTbActiveForm extends TbActiveForm
 						'id'=>$id . '_dummy',
 					) + $htmlOptions);
 				
-				// one potential issue here is that the element may have an ajax event attached to change handler
-//				if(isset($htmlOptions['ajax']))
-				{
-					// trigger the change handler on document load
-					Yii::app()->clientScript->registerScript("dropDownListRow_$id", "
-						// trigger the change handler
-						$('#$id').trigger('change');
-						// hide the select
-						$('#$id').hide();
-						", CClientScript::POS_READY
-					);
-				}
+				// trigger the change handler on document load
+				Yii::app()->clientScript->registerScript("dropDownListRow_$id", "
+					// trigger the change handler
+					$('#$id').trigger('change');
+					// hide the select
+					$('#$id').hide();
+					", CClientScript::POS_READY
+				);
 			}
 		}
 		// otherwise if multiple options or attribute required (need to show the empty list so admin can see why failing)
@@ -366,18 +362,28 @@ class WMTbActiveForm extends TbActiveForm
 				? $model::getDefaultValue($select, $minimum, $maximum)
 				: $default;
 		}
+		// ensure value is in range
+		elseif(($minimum !== null && $model->$attribute < $minimum) || ($maximum !== null && $model->$attribute > $maximum))
+		{
+			$model->$attribute = null;
+		}
 		
 		if(empty($select))
 		{
 			// if nothing given
 			if($minimum === NULL || $maximum === NULL)
 			{
+				$model->$attribute = $minimum;
+
 				$this->textFieldRow($attribute, $htmlOptions, $model);
 			}
 			// if single value
 			elseif($minimum == $maximum)
 			{
-				$this->hiddenField($attribute);
+				// ensure value is in range
+				$model->$attribute = $minimum;
+
+				$this->hiddenField($attribute, $htmlOptions, $model);
 				// add a dummy field to display as the actual one will be hidden - disabled isn't su
 				$htmlOptions['id'] = CHtml::activeId($model, $attribute) . '_dummy';
 				$htmlOptions['disabled'] = 'disabled';
@@ -394,7 +400,18 @@ class WMTbActiveForm extends TbActiveForm
 		{
 			// first need to get a list where array keys are the same as the display members
 			$list = explode(',', $select);
-			$this->dropDownListRow($attribute, array_combine($list, $list), $htmlOptions, $model);
+			if(sizeof($list) > 1)
+			{
+				$this->dropDownListRow($attribute, array_combine($list, $list), $htmlOptions, $model);
+			}
+			else
+			{
+				$this->hiddenField($attribute, $htmlOptions, $model);
+				// add a dummy field to display as the actual one will be hidden - disabled isn't su
+				$htmlOptions['id'] = CHtml::activeId($model, $attribute) . '_dummy';
+				$htmlOptions['disabled'] = 'disabled';
+				$this->textFieldRow($attribute, $htmlOptions, $model);
+			}
 		}
 	}
 	
