@@ -5,17 +5,10 @@ class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 
 	protected function updateRedirect($model)
 	{
-		$this->createRedirect($model);
-	}
-
-	protected function createRedirect($model)
-	{
-		// go to admin view
-		$taskToAssembly = TaskToAssembly::model()->findByPk($model->task_to_assembly_id);
-		$taskToAssembly->assertFromParent();
-
-		$params = array("TaskToAssembly/admin") + static::getAdminParams('TaskToAssembly');
-		$params['parent_id'] = $taskToAssembly->parent_id;
+		$params = array("TaskToAssembly/admin") + array(
+			'parent_id' => $model->parent_id,
+			'task_id' => $model->task_id,
+		);
 
 		$this->redirect($params);
 	}
@@ -34,11 +27,11 @@ class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 		$modelName = $this->modelName;
 
 		// control extra rows of tabs if action is update or create
-		if($model && !empty($_GET[$modelName]['task_to_assembly_id']))
+		if($model && !empty($_GET[$modelName]['parent_id']))
 		{
-			$task_to_assembly_id = $_GET['parent_id'] = $_GET[$modelName]['task_to_assembly_id'];
+			$parent_id = $_GET['parent_id'] = $_GET[$modelName]['parent_id'];
 			$taskToAssemblyController = new TaskToAssemblyController(NULL);
-			$taskToAssembly = TaskToAssembly::model()->findByPk($task_to_assembly_id);
+			$taskToAssembly = TaskToAssembly::model()->findByPk($parent_id);
 			$taskToAssembly->assertFromParent();
 			$taskToAssemblyController->setTabs(NULL);
 			$taskToAssemblyController->setActiveTabs(NULL, SubAssembly::getNiceNamePlural());

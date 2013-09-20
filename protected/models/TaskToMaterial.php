@@ -200,6 +200,20 @@ class TaskToMaterial extends ActiveRecord
 		
 		return $columns;
 	}
+	
+	public function delete()
+	{
+		// can't use cascade delete on fk's for these as also need the ability if reseting selection to null to just delete this record and not cascade
+		// need to bear in mind bulk deletes hence this works best here like this
+		$command = Yii::app()->db->createCommand('DELETE FROM tbl_task_to_material_to_assembly_to_material_group WHERE task_to_material_id = :task_to_material_id');
+		$command->bindParam(':task_to_material_id', $temp = $this->id);
+		$command->execute();
+		$command = Yii::app()->db->createCommand('DELETE FROM tbl_task_to_material_to_task_template_to_material_group WHERE task_to_material_id = :task_to_material_id');
+		$command->bindParam(':task_to_material_id', $temp = $this->id);
+		$command->execute();
+		
+		return parent::delete();
+	}
 
 }
 

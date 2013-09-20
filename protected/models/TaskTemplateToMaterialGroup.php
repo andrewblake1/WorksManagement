@@ -83,6 +83,7 @@ class TaskTemplateToMaterialGroup extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchMaterialGroup';
+ 		$columns[] = 'quantity';
  		$columns[] = 'comment';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';

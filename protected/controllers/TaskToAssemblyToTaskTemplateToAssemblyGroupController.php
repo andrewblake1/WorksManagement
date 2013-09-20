@@ -3,43 +3,8 @@
 class TaskToAssemblyToTaskTemplateToAssemblyGroupController extends Controller
 {
 
-// TODO: repeated
-	protected function createRender($model, $models, $modal_id)
-	{
-		$taskToAssembly = new TaskToAssembly;
-		$taskToAssembly->attributes = $_GET[$this->modelName];
-		$taskToAssembly->id = $model->task_to_assembly_id;
-		$taskToAssembly->assertFromParent();
-
-		// set heading
-		$this->heading = TaskToAssembly::getNiceName();
-
-		// set breadcrumbs
-		$this->breadcrumbs = TaskToAssemblyController::getBreadCrumbTrail('Create');
-		
-		// set tabs
-		$this->tabs = $taskToAssembly;
-		
-		echo $this->render('_form',array(
-			'model'=>$model,
-			'models'=>$models,
-		));
-	}
-
 	protected function updateRedirect($model) {
-		$this->createRedirect($model);
-	}
-
-	protected function createRedirect($model)
-	{
-		// go to admin view
-		$taskToAssembly = TaskToAssembly::model()->findByPk($model->task_to_assembly_id);
-		$taskToAssembly->assertFromParent();
-		
-		$params = array("TaskToAssembly/admin") + static::getAdminParams('TaskToAssembly');
-		$params['parent_id'] = $taskToAssembly->parent_id;
-		
-		$this->redirect($params);
+		$this->redirect(array("TaskToAssembly/admin", 'task_id'=> $model->task_id));
 	}
 	
 	public static function getBreadCrumbTrail($lastCrumb = NULL) {

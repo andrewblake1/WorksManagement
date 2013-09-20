@@ -8,7 +8,6 @@
  * @property string $task_id
  * @property string $task_to_assembly_id
  * @property integer $assembly_id
- * @property string $assembly_group_to_assembly_id
  * @property integer $assembly_group_id
  * @property string $assembly_to_assembly_group_id
  * @property integer $updated_by
@@ -25,7 +24,8 @@
 class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 {
 	use RangeActiveRecordTrait;
-
+	
+	public $parent_id;
 	public $quantity;
 	public $searchAssemblyGroup;
 
@@ -47,9 +47,9 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	 */
 	public function rules()
 	{
-		return array_merge(parent::rules(array('task_to_assembly_id', 'assembly_group_to_assembly_id')), array(
+		return array_merge(parent::rules(), array(
 			array('quantity', 'required'),
-			array('quantity', 'numerical', 'integerOnly'=>true),
+			array('quantity, parent_id', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -73,7 +73,6 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
             'assembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_id'),
             'assemblyToAssemblyGroup' => array(self::BELONGS_TO, 'AssemblyToAssemblyGroup', 'assembly_to_assembly_group_id'),
             'assemblyGroup' => array(self::BELONGS_TO, 'AssemblyGroup', 'assembly_group_id'),
-            'assemblyGroupToAssembly' => array(self::BELONGS_TO, 'AssemblyGroupToAssembly', 'assembly_group_to_assembly_id'),
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
         );
     }
@@ -101,16 +100,6 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 		);
 	}
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'assembly_group_to_assembly_id' => 'Assembly Group',
-		);
-	}
-	
 	public function assertFromParent($modelName = null) {
 		Controller::setUpdateId($this->task_to_assembly_id, 'TaskToAssembly');
 		
@@ -135,42 +124,47 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	}
 	
 	public function updateSave(&$models = array()) {
-		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
-		$taskToAssembly = TaskToAssembly::model()->findByPk($this->task_to_assembly_id);
-		$taskToAssembly->attributes = $_POST[__CLASS__];
+		$saved = true;
 		
-		if($saved = $taskToAssembly->id ? $taskToAssembly->updateSave($models) : $taskToAssembly->createSave($models))
+		$taskToAssembly = $this->task_to_assembly_id
+			? $this->taskToAssembly
+			: new TaskToAssembly;
+
+		$taskToAssembly->attributes = $_POST[__CLASS__];
+		// filler - unused in this context but necassary in Assembly model
+		$taskToAssembly->standard_id = 0;
+		
+		// if selection
+		if($taskToAssembly->assembly_id)
 		{
+			$saved = $taskToAssembly->id
+				? $taskToAssembly->updateSave($models)
+				: $taskToAssembly->createSave($models);
 			$this->task_to_assembly_id = $taskToAssembly->id;
-			// need to get assembly_group_to_assembly_id which is complicated by the deleted attribute which means that more
-			// than one matching row could be returned - if not for deleted attrib
-			$assemblyGroupToAssembly = AssemblyGroupToAssembly::model()->findByAttributes(array('assembly_group_id'=>$this->assembly_group_id, 'assembly_id'=>$this->assembly_id));
-			$this->assembly_group_to_assembly_id = $assemblyGroupToAssembly->id;
+		}
+		elseif($taskToAssembly->id)	// existing row
+		{
+			$saved = $taskToAssembly->delete();
+			$this->task_to_assembly_id = null;
+		}
+		
+		if($saved)
+		{
 			$saved &= parent::updateSave($models);
 		}
 
 		return $saved;
 	}
-
-/*	public function createSave(&$models=array())
+	
+	public function delete()
 	{
-	
-		$taskToAssembly = new TaskToAssembly;
-		$taskToAssembly->attributes = $_POST['TaskToAssemblyToAssemblyToAssemblyGroup'];
-		$taskToAssembly->parent_id = $_POST['TaskToAssemblyToAssemblyToAssemblyGroup']['task_to_assembly_id'];
-		// filler - unused in this context but necassary in Assembly model
-		$taskToAssembly->standard_id = 0;
-		if($saved = $taskToAssembly->createSave($models))
-		{
-			$this->task_to_assembly_id = $taskToAssembly->id;
-			// need to get assembly_group_to_assembly_id which is complicated by the deleted attribute which means that more
-			// than one matching row could be returned - if not for deleted attrib
-			$assemblyGroupToAssembly = AssemblyGroupToAssembly::model()->findByAttributes(array('assembly_group_id'=>$this->assembly_group_id, 'assembly_id'=>$this->assembly_id));
-			$this->assembly_group_to_assembly_id = $assemblyGroupToAssembly->id;
-			$saved &= parent::createSave($models);
-		}
+		$return = parent::delete();
 
-		return $saved;
-	}*/
-	
+		$command = Yii::app()->db->createCommand('DELETE FROM tbl_task_to_assembly WHERE id = :id');
+		$command->bindParam(':id', $temp = $this->task_to_assembly_id);
+		$command->execute();
+		
+		return $return;
+	}
+
 }

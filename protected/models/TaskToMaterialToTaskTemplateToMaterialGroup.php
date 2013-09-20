@@ -8,7 +8,6 @@
  * @property string $task_id
  * @property string $task_to_material_id
  * @property integer $material_id
- * @property integer $material_group_to_material_id
  * @property integer $material_group_id
  * @property integer $task_template_to_material_group_id
  * @property integer $updated_by
@@ -17,7 +16,6 @@
  * @property User $updatedBy
  * @property TaskToMaterial $taskToMaterial
  * @property MaterialGroupToMaterial $material
- * @property MaterialGroupToMaterial $materialGroupToMaterial
  * @property TaskTemplateToMaterialGroup $materialGroup
  * @property TaskTemplateToMaterialGroup $taskTemplateToMaterialGroup
  * @property TaskToMaterial $task
@@ -40,7 +38,7 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 	 */
 	public function rules()
 	{
-		return array_merge(parent::rules(array('task_to_material_id', 'material_group_to_material_id')), array(
+		return array_merge(parent::rules(array('task_to_material_id')), array(
 			array('quantity', 'required'),
 			array('quantity', 'numerical', 'integerOnly'=>true),
 		));
@@ -48,9 +46,7 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 
 	public function setCustomValidators()
 	{
-		$rangeModel = TaskTemplateToMaterialGroup::model()->findByPk($this->task_template_to_material_group_id);
-		
-		$this->setCustomValidatorsFromSource($rangeModel);
+		$this->setCustomValidatorsFromSource($this->taskTemplateToMaterialGroup);
 	}
 	
 	/**
@@ -64,7 +60,6 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
             'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
-            'materialGroupToMaterial' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_to_material_id'),
             'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
             'taskTemplateToMaterialGroup' => array(self::BELONGS_TO, 'TaskTemplateToMaterialGroup', 'task_template_to_material_group_id'),
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
@@ -115,51 +110,62 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 	}
 	
 	public function afterFind() {
-		
-		$task_to_material_id = TaskToMaterial::model()->findByPk($this->task_to_material_id);
-		$this->quantity = $task_to_material_id->quantity;
+		if($task_to_material_id = TaskToMaterial::model()->findByPk($this->task_to_material_id))
+		{
+			$this->quantity = $task_to_material_id->quantity;
+		}
 
 		parent::afterFind();
 	}
 	
 	public function updateSave(&$models = array()) {
-		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
-		$taskToMaterial = TaskToMaterial::model()->findByPk($this->task_to_material_id);
+		$saved = true;
+		
+		$taskToMaterial = $this->task_to_material_id
+			? $this->taskToMaterial
+			: new TaskToMaterial;
+
 		$taskToMaterial->attributes = $_POST[__CLASS__];
 		// filler - unused in this context but necassary in Material model
 		$taskToMaterial->standard_id = 0;
 		
-		if($saved = $taskToMaterial->id ? $taskToMaterial->updateSave($models) : $taskToMaterial->createSave($models))
+		// if selection
+		if($taskToMaterial->material_id)
 		{
-			$this->task_to_material_id = $taskToMaterial->id;
-			// need to get material_group_to_material_id which is complicated by the deleted attribute which means that more
-			// than one matching row could be returned - if not for deleted attrib
-			$materialGroupToMaterial = MaterialGroupToMaterial::model()->findByAttributes(array('material_group_id'=>$this->material_group_id, 'material_id'=>$this->material_id));
-			$this->material_group_to_material_id = $materialGroupToMaterial->id;
+			if($saved = $taskToMaterial->id
+				? $taskToMaterial->updateSave($models)
+				: $taskToMaterial->createSave($models))
+			{
+				$this->task_to_material_id = $taskToMaterial->id;
+				$saved &= parent::updateSave($models);
+			}
+		}
+		elseif($taskToMaterial->id)	// existing row
+		{
+			// NB: it is important that the task_to_material id of this is set to null in the database
+			// prior to removing the below record otherwise a constraint will cause a failure
+			$this->task_to_material_id = null;
 			$saved &= parent::updateSave($models);
+
+			// can't use models delete as will result in this being deleted also which is not desired
+			// the delete operation required here should live $this but delete task_to_material
+			$command = Yii::app()->db->createCommand('DELETE FROM tbl_task_to_material WHERE id = :id');
+			$command->bindParam(':id', $temp = $taskToMaterial->id);
+			$command->execute();
 		}
 
 		return $saved;
 	}
-
-/*	public function createSave(&$models=array())
+	
+	public function delete()
 	{
-		$taskToMaterial = new TaskToMaterial;
-		$taskToMaterial->attributes = $_POST['TaskToMaterialToTaskTemplateToMaterialGroup'];
-		// filler - unused in this context but necassary in Material model
-		$taskToMaterial->standard_id = 0;
+		$return = parent::delete();
 
-		if($saved = $taskToMaterial->createSave($models))
-		{
-			$this->task_to_material_id = $taskToMaterial->id;
-			// need to get material_group_to_material_id which is complicated by the deleted attribute which means that more
-			// than one matching row could be returned - if not for deleted attrib
-			$materialGroupToMaterial = MaterialGroupToMaterial::model()->findByAttributes(array('material_group_id'=>$this->material_group_id, 'material_id'=>$this->material_id));
-			$this->material_group_to_material_id = $materialGroupToMaterial->id;
-			$saved &= parent::createSave($models);
-		}
-
-		return $saved;
-	}*/
+		$command = Yii::app()->db->createCommand('DELETE FROM tbl_task_to_material WHERE id = :id');
+		$command->bindParam(':id', $temp = $this->task_to_material_id);
+		$command->execute();
+		
+		return $return;
+	}
 
 }

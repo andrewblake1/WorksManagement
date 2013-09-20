@@ -18,9 +18,6 @@
  * @property User $updatedBy
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups
  * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups1
- * @property TaskToMaterialToAssemblyToMaterialGroup[] $taskToMaterialToAssemblyToMaterialGroups2
- * @property TaskToMaterialToTaskTemplateToMaterialGroup[] $taskToMaterialToTaskTemplateToMaterialGroups
- * @property TaskToMaterialToTaskTemplateToMaterialGroup[] $taskToMaterialToTaskTemplateToMaterialGroups1
  */
 class MaterialGroupToMaterial extends ActiveRecord
 {
@@ -46,9 +43,7 @@ class MaterialGroupToMaterial extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'taskToMaterialToAssemblyToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'material_id'),
             'taskToMaterialToAssemblyToMaterialGroups1' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'material_group_id'),
-            'taskToMaterialToAssemblyToMaterialGroups2' => array(self::HAS_MANY, 'TaskToMaterialToAssemblyToMaterialGroup', 'material_group_to_material_id'),
             'taskToMaterialToTaskTemplateToMaterialGroups' => array(self::HAS_MANY, 'TaskToMaterialToTaskTemplateToMaterialGroup', 'material_id'),
-            'taskToMaterialToTaskTemplateToMaterialGroups1' => array(self::HAS_MANY, 'TaskToMaterialToTaskTemplateToMaterialGroup', 'material_group_to_material_id'),
         );
     }
 

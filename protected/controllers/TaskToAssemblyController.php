@@ -39,41 +39,31 @@ class TaskToAssemblyController extends Controller
 			'class'=>'WMTbButtonColumn',
 			'buttons'=>array(
 				'delete' => array(
-					'visible' => 'Yii::app()->user->checkAccess("' . $this->modelName . '", array("primaryKey"=>$data->primaryKey))',
+					'visible'=>'Yii::app()->user->checkAccess("' . $this->modelName . '")',
 					'url' => 'Yii::app()->createUrl("' . $this->modelName . '/delete", array("' . $model->tableSchema->primaryKey . '"=>$data->primaryKey))',
 				),
 				'update' => array(
 					'visible'=>'Yii::app()->user->checkAccess("' . $this->modelName . '")',
-
 					'url'=>'Yii::app()->createUrl(
 						$data->assembly_group_id
 							? ($data->assembly_to_assembly_group_id
-								? ($data->id
-									? "TaskToAssemblyToAssemblyToAssemblyGroup/returnForm"
-									: "TaskToAssemblyToAssemblyToAssemblyGroup/returnForm")
-								: ($data->id
-									? "TaskToAssemblyToTaskTemplateToAssemblyGroup/returnForm"
-									: "TaskToAssemblyToTaskTemplateToAssemblyGroup/returnForm"))
+								? "TaskToAssemblyToAssemblyToAssemblyGroup/returnForm"
+								: "TaskToAssemblyToTaskTemplateToAssemblyGroup/returnForm")
 							: "TaskToAssembly/update",
 
 						$data->assembly_group_id
 							? ($data->assembly_to_assembly_group_id
 								? (array("id"=>$data->task_to_assembly_to_assembly_to_assembly_group_id, "TaskToAssemblyToAssemblyToAssemblyGroup"=>array(
-									"assembly_group_to_assembly_id"		=>$data->assembly_group_to_assembly_id,
 									"assembly_group_id"					=>$data->assembly_group_id,
 									"task_id"							=>$data->task_id,
-									"task_to_assembly_id"				=>($data->id
-										? $data->id
-										: $data->parent_id),
+									"task_to_assembly_id"				=>$data->id,
+									"parent_id"							=>$data->parent_id,
 									"assembly_to_assembly_group_id"		=>$data->assembly_to_assembly_group_id,
 									)))
 								: (array("id"=>$data->task_to_assembly_to_task_template_to_assembly_group_id, "TaskToAssemblyToTaskTemplateToAssemblyGroup"=>array(
-									"assembly_group_to_assembly_id"		=>$data->assembly_group_to_assembly_id,
 									"assembly_group_id"					=>$data->assembly_group_id,
 									"task_id"							=>$data->task_id,
-									"task_to_assembly_id"				=>($data->id
-										? $data->id
-										: $data->parent_id),
+									"task_to_assembly_id"				=>$data->id,
 									"task_template_to_assembly_group_id"		=>$data->task_template_to_assembly_group_id,
 									))))
 							: array("id"=>$data->id)
@@ -83,8 +73,7 @@ class TaskToAssemblyController extends Controller
 				'view' => array(
 					'visible'=>'
 						!Yii::app()->user->checkAccess("' . $this->modelName . '")
-						&& Yii::app()->user->checkAccess("' . $this->modelName . 'Read")
-							',
+						&& Yii::app()->user->checkAccess("' . $this->modelName . 'Read")',
 					'url'=>'Yii::app()->createUrl((
 						$data->assembly_group_id
 							? ($data->assembly_to_assembly_group_id

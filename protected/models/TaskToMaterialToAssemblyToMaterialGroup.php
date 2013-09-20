@@ -8,7 +8,6 @@
  * @property string $task_id
  * @property string $task_to_material_id
  * @property integer $material_id
- * @property integer $material_group_to_material_id
  * @property integer $material_group_id
  * @property integer $assembly_to_material_group_id
  * @property integer $updated_by
@@ -19,7 +18,6 @@
  * @property User $updatedBy
  * @property AssemblyToMaterialGroup $assemblyToMaterialGroup
  * @property MaterialGroupToMaterial $materialGroup
- * @property MaterialGroupToMaterial $materialGroupToMaterial
  * @property TaskToMaterial $task
  */
 class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
@@ -49,7 +47,7 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	 */
 	public function rules()
 	{
-		return array_merge(parent::rules(array('task_to_material_id', 'material_group_to_material_id')), array(
+		return array_merge(parent::rules(array('task_to_material_id')), array(
 			array('task_to_assembly_id, quantity', 'required'),
 			array('task_to_assembly_id, quantity', 'numerical', 'integerOnly'=>true),
 		));
@@ -75,7 +73,6 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'assemblyToMaterialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'assembly_to_material_group_id'),
             'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
-            'materialGroupToMaterial' => array(self::BELONGS_TO, 'MaterialGroupToMaterial', 'material_group_to_material_id'),
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
         );
     }
@@ -131,43 +128,47 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	}
 	
 	public function updateSave(&$models = array()) {
-		// first need to save the TaskToAssembly record as otherwise may breach a foreign key constraint - this has on update case
-		$taskToMaterial = TaskToMaterial::model()->findByPk($this->task_to_material_id);
+		$saved = true;
+		
+		$taskToMaterial = $this->task_to_material_id
+			? $this->taskToMaterial
+			: new TaskToMaterial;
+
 		$taskToMaterial->attributes = $_POST[__CLASS__];
 		// filler - unused in this context but necassary in Material model
 		$taskToMaterial->standard_id = 0;
 		
-		if($saved = $taskToMaterial->id ? $taskToMaterial->updateSave($models) : $taskToMaterial->createSave($models))
+		// if selection
+		if($taskToMaterial->material_id)
 		{
+			$saved = $taskToMaterial->id
+				? $taskToMaterial->updateSave($models)
+				: $taskToMaterial->createSave($models);
 			$this->task_to_material_id = $taskToMaterial->id;
-			// need to get material_group_to_material_id which is complicated by the deleted attribute which means that more
-			// than one matching row could be returned - if not for deleted attrib
-			$materialGroupToMaterial = MaterialGroupToMaterial::model()->findByAttributes(array('material_group_id'=>$this->material_group_id, 'material_id'=>$this->material_id));
-			$this->material_group_to_material_id = $materialGroupToMaterial->id;
+		}
+		elseif($taskToMaterial->id)	// existing row
+		{
+			$saved = $taskToMaterial->delete();
+			$this->task_to_material_id = null;
+		}
+		
+		if($saved)
+		{
 			$saved &= parent::updateSave($models);
 		}
 
 		return $saved;
 	}
-
-/*	public function createSave(&$models=array())
+	
+	public function delete()
 	{
-		$taskToMaterial = new TaskToMaterial;
-		$taskToMaterial->attributes = $_POST['TaskToMaterialToAssemblyToMaterialGroup'];
-		// filler - unused in this context but necassary in Material model
-		$taskToMaterial->standard_id = 0;
+		$return = parent::delete();
 
-		if($saved = $taskToMaterial->createSave($models))
-		{
-			$this->task_to_material_id = $taskToMaterial->id;
-			// need to get material_group_to_material_id which is complicated by the deleted attribute which means that more
-			// than one matching row could be returned - if not for deleted attrib
-			$materialGroupToMaterial = MaterialGroupToMaterial::model()->findByAttributes(array('material_group_id'=>$this->material_group_id, 'material_id'=>$this->material_id));
-			$this->material_group_to_material_id = $materialGroupToMaterial->id;
-			$saved &= parent::createSave($models);
-		}
-
-		return $saved;
-	}*/
+		$command = Yii::app()->db->createCommand('DELETE FROM tbl_task_to_material WHERE id = :id');
+		$command->bindParam(':id', $temp = $this->task_to_material_id);
+		$command->execute();
+		
+		return $return;
+	}
 
 }

@@ -3,15 +3,15 @@ trait RangeActiveRecordTrait
 {
 	public function setCustomValidatorsFromSource($rangeModel = NULL)
 	{
-		if($this->rangeModel)
+		if($rangeModel)
 		{
-			if(empty($this->rangeModel->select))
+			if(empty($rangeModel->select))
 			{
-				$this->customValidators[] = array('quantity', 'numerical', 'min'=>$this->rangeModel->minimum, 'max'=>$this->rangeModel->maximum);
+				$this->customValidators[] = array('quantity', 'numerical', 'min'=>$rangeModel->minimum, 'max'=>$rangeModel->maximum);
 			}
 			else
 			{
-				$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $this->rangeModel->select));
+				$this->customValidators[] = array('quantity', 'in', 'range'=>explode(',', $rangeModel->select));
 			}
 		}
 // TODO: this re-engineer into activerecord when traits.
