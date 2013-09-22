@@ -26,8 +26,6 @@
  * @property TaskTemplateToAction[] $taskTemplateToActions
  * @property TaskTemplateToAction[] $taskTemplateToActions1
  * @property TaskTemplateToAction[] $taskTemplateToActions2
- * @property TaskTemplateToActionToLabourResource[] $taskTemplateToActionToLabourResources
- * @property TaskTemplateToActionToPlant[] $taskTemplateToActionToPlants
  * @property TaskTemplateToAssembly[] $taskTemplateToAssemblies
  * @property TaskTemplateToAssemblyGroup[] $taskTemplateToAssemblyGroups
  * @property TaskTemplateToCustomField[] $taskTemplateToCustomFields
@@ -105,6 +103,14 @@ class TaskTemplate extends ActiveRecord
 		return parent::beforeValidate();
 	}
 
+	public static function getDisplayAttr()
+	{
+		return array(
+			't.alias',
+			't.description',
+		);
+	}
+ 
 }
 
 ?>
