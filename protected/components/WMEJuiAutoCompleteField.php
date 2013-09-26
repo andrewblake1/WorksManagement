@@ -14,6 +14,12 @@
 Yii::import('zii.widgets.jui.CJuiAutoComplete');
 abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
 {
+    /**
+     * @var string the chain of method calls that would be appended at the end of the autocomplete constructor.
+     * For example, ".result(function(...){})" would cause the specified js function to execute
+     * when the user selects an option.
+     */
+    public $methodChain;
 	/**
 	 * @var WMTbActiveFormthe form.
 	 */
@@ -140,12 +146,24 @@ abstract class WMEJuiAutoCompleteField extends CJuiAutoComplete
         echo CHtml::hiddenField($this->_saveID, $this->_display, array('id'=>$this->_saveID)); 
 
         // third, the autoComplete field itself
-        $this->htmlOptions['id'] = $this->_lookupID;
+        $id = $this->htmlOptions['id'] = $this->_lookupID;
         $this->htmlOptions['name'] = $this->_lookupID;   
-		$this->htmlOptions['value'] = $this->_display;   
+		$this->htmlOptions['value'] = $this->_display;
+		
+		// useful addition to the class from http://www.yiiframework.com/wiki/217/custom-autocomplete-display-and-value-submission/
+        if($this->sourceUrl!==null)
+            $this->options['source']=CHtml::normalizeUrl($this->sourceUrl);
+        else
+            $this->options['source']=$this->source;
+ 
+		$options=CJavaScript::encode($this->options);
+		Yii::app()->getClientScript()->registerScript(__CLASS__.'#'.$id,"jQuery('#{$id}').autocomplete($options){$this->methodChain};");
 
-        parent::run();
-    }
+		if($this->hasModel())
+			echo CHtml::activeTextField($this->model,$this->attribute,$this->htmlOptions);
+		else
+			echo CHtml::textField($name,$this->value,$this->htmlOptions);
+		}
 }
 
 ?>

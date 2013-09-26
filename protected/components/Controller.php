@@ -245,6 +245,7 @@ class Controller extends CController
 			{
 				$out = array();
 				$primaryKey = $model->tableSchema->primaryKey;
+				$toolTipAttribute = $model->toolTipAttribute;
 				foreach($fKModels as $p)
 				{
 					eval("\$value=\"$display\";");
@@ -254,7 +255,7 @@ class Controller extends CController
 						'value' => $value,
 						// return value from autocomplete
 						'id' => $p->$primaryKey,
-					);
+					) + ($toolTipAttribute ? array('title' => $p->$toolTipAttribute) : array());
 				}
 				echo CJSON::encode($out);
 				Yii::app()->end();
@@ -1371,8 +1372,14 @@ $t = $model->attributes;
 			'htmlOptions' => $htmlOptions + array('class' => 'span5'),
 			'scopes' => $scopes,
 			'fKModelType' => $fKModelType,
-			)
-		);
+			'methodChain'=>'.data( "autocomplete" )._renderItem = function( ul, item ) {
+				return $( "<li></li>" )
+					.data( "item.autocomplete", item )
+					.append( "<a data-original-title=\'" + item.title +  "\'>" + item.label +  "</a>" )
+					.appendTo( ul );
+			};'
+		));
+		
 	}
 
 	static function dropDownListFKfieldRow($model, $form, $fkField, $htmlOptions = array(), $scopes = array())
@@ -1392,9 +1399,36 @@ $t = $model->attributes;
 
 		// javascript bubbling will remove please select item after selection or allow blank otherwise
 		$htmlOptions['empty'] = $allowNull ? '' : 'Please select';
+		
+		$id = CHtml::activeId($model, $fkField);
+		$options = array();
+		$listData = $modelName::getListData($scopes, $options);
 
+		// allow for possible tooltips
+		if(sizeof($options))
+		{
+			$htmlOptions['options'] = $options + (isset($htmlOptions['options']) ? $htmlOptions['options'] : array());
+			Yii::app()->clientScript->registerScript("tooltip_$id", '
+				$("#' . $id. '").on("mouseover", function(e) {
+					$("#' . $id. '").tooltip("destroy");
+					var $e = $(e.target); 
+					if ($e.is("option")) {
+
+							$("#' . $id. '").tooltip({
+								trigger: "manual",
+								placement: "top",
+								title: $e.attr("data-original-title"),
+							}).tooltip("show");
+					} 
+				});
+				$("#' . $id. '").on("mouseleave", function(e) {
+					$("#' . $id. '").tooltip("destroy");
+				});'
+			);
+		}
+		
 		echo $form->dropDownListRow(
-			$fkField, $modelName::getListData($scopes), $htmlOptions + array('name' => get_class($model) . "[$fkField]"), $model);
+			$fkField, $listData, $htmlOptions + array('name' => get_class($model) . "[$fkField]"), $model);
 	}
 
 	const accessRead = 'Read';

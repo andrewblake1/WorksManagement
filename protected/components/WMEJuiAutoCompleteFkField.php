@@ -85,6 +85,28 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 
 		echo $this->form->labelEx($this->model, $this->attribute);
 
+		// allow for possible tooltips
+		if($fKModelType::model()->toolTipAttribute)
+		{
+			Yii::app()->clientScript->registerScript("tooltip_$id", '
+			$("ul").on("mouseover", function(e) {
+				$("#' . $this->_lookupID. '").tooltip("destroy");
+				var $e = $(e.target);
+				if ($e.is("a#ui-active-menuitem.ui-corner-all")) {
+					$("#' . $this->_lookupID. '").tooltip({
+						trigger: "manual",
+						placement: "top",
+						title: $e.attr("data-original-title"),
+					}).tooltip("show");
+				} 
+			});
+			$("ul").on("mouseleave", function(e) {
+				$("#' . $this->_lookupID. '").tooltip("destroy");
+			});
+			', CClientScript::POS_LOAD
+			);
+		}
+		
 		parent::init(); // ensure necessary assets are loaded
 	}
 	

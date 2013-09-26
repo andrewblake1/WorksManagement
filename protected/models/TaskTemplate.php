@@ -36,6 +36,7 @@
  */
 class TaskTemplate extends ActiveRecord
 {
+	public $toolTipAttribute = 'comment';
 
 	public function scopeCrew($crew_id)
 	{
@@ -85,6 +86,8 @@ class TaskTemplate extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'description';
+		$columns[] = 'alias';
+		$columns[] = 'comment';
 		$columns[] = 'unit_price';
   		$columns[] = 'quantity';
  		$columns[] = 'minimum';

@@ -47,6 +47,10 @@ abstract class ActiveRecord extends CActiveRecord
 	 */
 	public static $inSearch = false;
 
+	/**
+	 * @var string the name of a tooltip field if any to provide tooltip where needed e.g. drop down lists
+	 */
+	public $toolTipAttribute;
 
 	public static function primaryKeyName()
 	{
@@ -392,11 +396,13 @@ abstract class ActiveRecord extends CActiveRecord
 	/**
 	 * Returns the listdata of specified bound column and display column.
 	 * @param string $displayColumn the bound column.
+	 * @param string $options can be use in sub class to specify additional attributes per option.
 	 * @return listData the static model class
 	 */
-	public static function getListData($scopes = array())
+	public static function getListData($scopes = array(), &$options = array())
 	{
 		$model = static::model();
+		$primaryKeyName = static::model()->tableSchema->primaryKey;
 		$criteria = $model->searchCriteria;
 		$criteria->condition = '';
 		$displayAttr = $model::getDisplayAttr();
@@ -411,9 +417,20 @@ abstract class ActiveRecord extends CActiveRecord
 		// order
 		$criteria->order = implode(', ', $order);
 	
+		$models = static::model()->findAll($criteria);
+		
+		// tooltips
+		if($toolTipAttribute = $model->toolTipAttribute)
+		{
+			foreach($models as $m)
+			{
+				$options[$m->$primaryKeyName] = array('data-original-title'=>$m->$toolTipAttribute);
+			}
+		}
+
 		return CHtml::listData(
-			static::model()->findAll($criteria), 
-			static::model()->tableSchema->primaryKey,
+			$models, 
+			$primaryKeyName,
 			function ($p) use ($display) { return eval("return \"$display\";"); }
 		);
 	}
