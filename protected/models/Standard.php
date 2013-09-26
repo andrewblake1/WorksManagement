@@ -19,6 +19,8 @@
  */
 class Standard extends ActiveRecord
 {
+	use FileActiveRecordTrait;
+
 	/**
 	 * @return array relational rules.
 	 */
