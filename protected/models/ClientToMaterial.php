@@ -72,6 +72,11 @@ class ClientToMaterial extends ActiveRecord
 
 	public function getAdminColumns()
 	{
+		$columns[] = array(
+			'class'=>'WMTbImageColumn',
+			'imagePathExpression'=>'$data->material->exposeSingle()',
+			'usePlaceKitten'=>FALSE,
+		);
  		$columns[] = 'searchMaterial';
  		$columns[] = 'category';
  		$columns[] = 'searchUnit';

@@ -1,8 +1,8 @@
 <?php
 
 trait FileControllerTrait {
+
 	private $uploadHandler;
-	//public $multiple = true;
 
 	private function initUploadHandler($id)
 	{
