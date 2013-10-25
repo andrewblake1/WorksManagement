@@ -164,9 +164,9 @@ class Task extends CustomFieldActiveRecord
 
 			$attribute = preg_replace('/:.*/', '', $attribute);
 			$sort[$attribute] = array(
-						'asc'=>" $attribute ",
-						'desc'=>" $attribute DESC",
-					);
+				'asc'=>" $attribute ",
+				'desc'=>" $attribute DESC",
+			);
 		}
 		
 		// add all other attributes

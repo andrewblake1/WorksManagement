@@ -124,6 +124,7 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 		if($task_to_material_id = TaskToMaterial::model()->findByPk($this->task_to_material_id))
 		{
 			$this->quantity = $task_to_material_id->quantity;
+			$this->task_id = $task_to_material_id->task_id;
 		}
 
 		parent::afterFind();

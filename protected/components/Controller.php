@@ -185,9 +185,9 @@ class Controller extends CController
 		{
 			$model = new $modelName;
 			$action = NULL;
-			$model->attributes = $_GET[$modelName];
 		}
-	
+
+		$model->attributes = $_GET[$modelName];
 
 		$this->renderPartial('_form', array('model' => $model, 'action'=>$action), false, true);
 	}

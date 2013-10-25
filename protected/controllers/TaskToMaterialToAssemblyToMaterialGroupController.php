@@ -6,7 +6,7 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 	protected function updateRedirect($model)
 	{
 		$params = array("TaskToMaterial/admin") + array(
-			'task_to_assembly' => $model->task_to_assembly,
+			'task_to_assembly_id' => $model->task_to_assembly_id,
 			'task_id' => $model->task_id,
 		);
 

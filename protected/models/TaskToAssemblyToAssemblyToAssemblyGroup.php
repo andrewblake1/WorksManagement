@@ -27,6 +27,8 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	
 	public $parent_id;
 	public $quantity;
+	public $task_to_assembly_id;
+
 	public $searchAssemblyGroup;
 
 	/**
@@ -48,8 +50,8 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(), array(
-			array('quantity', 'required'),
-			array('quantity, parent_id', 'numerical', 'integerOnly'=>true),
+			array('task_to_assembly_id, quantity', 'required'),
+			array('task_to_assembly_id, quantity, parent_id', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -116,9 +118,11 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	public function afterFind() {
 		
 		// otherwise our previous saved quantity
-		$task_to_assembly_id = TaskToAssembly::model()->findByPk($this->task_to_assembly_id);
-		$this->quantity = $task_to_assembly_id->quantity;
-		$this->task_id = $task_to_assembly_id->task_id;
+		if($task_to_assembly_id = TaskToAssembly::model()->findByPk($this->task_to_assembly_id))
+		{
+			$this->quantity = $task_to_assembly_id->quantity;
+			$this->task_id = $task_to_assembly_id->task_id;
+		}
 
 		parent::afterFind();
 	}
