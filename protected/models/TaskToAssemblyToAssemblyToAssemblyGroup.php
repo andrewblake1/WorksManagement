@@ -107,8 +107,11 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 		// need to trick it here into using task to assembly model instead as this model not in navigation hierachy
 		if(!empty($this->task_to_assembly_id))
 		{
-			$taskToAssembly = TaskToAssembly::model()->findByPk($this->task_to_assembly_id);
-			return $taskToAssembly->assertFromParent('TaskToAssembly');
+			return $this->taskToAssembly->assertFromParent();
+		}
+		elseif(!empty($this->task_id))
+		{
+			return $this->task->assertFromParent();
 		}
 		
 		return parent::assertFromParent($modelName);
