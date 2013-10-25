@@ -25,7 +25,7 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	use RangeActiveRecordTrait;
 
 	public $quantity;
-	public $task_to_assembly_id;
+//	public $task_to_assembly_id;
 	
 	public $searchMaterialGroup;
 
@@ -48,8 +48,8 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(array('task_to_material_id')), array(
-			array('task_to_assembly_id, quantity', 'required'),
-			array('task_to_assembly_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('quantity', 'required'),
+			array('quantity', 'numerical', 'integerOnly'=>true),
 		));
 	}
 

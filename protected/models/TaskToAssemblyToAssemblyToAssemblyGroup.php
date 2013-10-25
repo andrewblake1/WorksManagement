@@ -27,7 +27,6 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	
 	public $parent_id;
 	public $quantity;
-	public $task_to_assembly_id;
 
 	public $searchAssemblyGroup;
 
@@ -50,8 +49,8 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	public function rules()
 	{
 		return array_merge(parent::rules(), array(
-			array('task_to_assembly_id, quantity', 'required'),
-			array('task_to_assembly_id, quantity, parent_id', 'numerical', 'integerOnly'=>true),
+			array('quantity', 'required'),
+			array('quantity, parent_id', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
