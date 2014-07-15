@@ -21,9 +21,10 @@ class TaskController extends Controller
 		Yii::app()->db->createCommand('SET foreign_key_checks = 0')->execute();
 		if($model->createSave($models, false))
 		{
+			$form = new WMTbActiveForm;
+
 			echo CHtml::openTag('div', array('id'=>'templateDependantArea'));
 
-			$form = new WMTbActiveForm;
 			// quantity
 			$taskTemplate = $model->taskTemplate;
 			$form->rangeFieldRow('quantity', $taskTemplate->quantity, $taskTemplate->minimum, $taskTemplate->maximum, $taskTemplate->select, $taskTemplate->quantity_tooltip, array(), $model);
@@ -40,6 +41,14 @@ class TaskController extends Controller
 				'ajax'=>$fromAjax,
 			));
 
+			// any script
+			echo '<script type="text/javascript">';
+			foreach(Yii::app()->getClientScript()->scripts as $scripts) {
+				foreach($scripts as $script) {
+					echo $script;
+				}
+			}
+			echo '</script>';
 			echo CHtml::closeTag('div');
 		}
 

@@ -7,7 +7,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	$form->checkBoxRow('mandatory');	
 
 	$htmlOptions = array();
-	CHtml::resolveNameID($model, $temp = 'allow_new', $htmlOptions);
+	$temp = 'allow_new';
+	CHtml::resolveNameID($model, $temp, $htmlOptions);
 	$form->dropDownListRow('validation_type', $model->validationTypeLabels, array(
 		// show allow new only if sql select
 		'onchange'=>"
@@ -22,7 +23,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 	));
 	// trigger the change handler on document load
 	$htmlOptions = array();
-	CHtml::resolveNameID($model, $temp = 'validation_type', $htmlOptions);
+	$temp = 'validation_type';
+	CHtml::resolveNameID($model, $temp, $htmlOptions);
 	Yii::app()->clientScript->registerScript("validation_type", "
 		$('select#{$htmlOptions['id']}').trigger('change');
 		", CClientScript::POS_READY

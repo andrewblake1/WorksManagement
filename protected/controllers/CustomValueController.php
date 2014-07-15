@@ -21,9 +21,9 @@ class CustomValueController extends Controller
 			$secondColumnName = ($secondColumnName = each($row)) ? $secondColumnName[0] : $firstColumnName;
 
 			// query and loop
-			$command = Yii::app()->db->createCommand("$sql WHERE `$secondColumnName` LIKE :$secondColumnName ORDER BY `$secondColumnName` ASC LIMIT 20");
+			$command = Yii::app()->db->createCommand("$sql WHERE `$secondColumnName` LIKE :second_column_value ORDER BY `$secondColumnName` ASC LIMIT 20");
 			$term = $_GET['term'].'%';
-			$command->bindParam(":$secondColumnName", $term);
+			$command->bindParam(":second_column_value", $term);
 			foreach($command->queryAll() as $row)
 			{
 				$out[] = array(
