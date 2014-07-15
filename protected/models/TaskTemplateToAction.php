@@ -43,7 +43,7 @@ class TaskTemplateToAction extends ActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return parent::rules(array('client_id', 'project_template_id'));
 	}

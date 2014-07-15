@@ -9,7 +9,7 @@ class CustomFieldDutyStepCategoryController extends CategoryController
 		parent::__construct($id, $module);
 	}
 	
-	protected function createRedirect($model)
+	protected function createRedirect($model, $params = array())
 	{
 		parent::createRedirect($model, ActionController::getCreateRedirectParams($this->modelName));
 	}
@@ -38,7 +38,7 @@ class CustomFieldDutyStepCategoryController extends CategoryController
 	}	
 
 	// override the tabs when viewing assemblies for a particular task
-	public function setTabs($model) {
+	public function setTabs($model = NULL, &$tabs = NULL) {
 		parent::setTabs($model);
 		
 		$getParams = Controller::getValidGetParams('DutyStep');

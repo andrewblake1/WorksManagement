@@ -9,7 +9,7 @@ class ActionToPlantBranchController extends Controller
 		parent::__construct($id, $module);
 	}
 	
-	protected function createRedirect($model)
+	protected function createRedirect($model, $params = array())
 	{
 		parent::createRedirect($model, ActionController::getCreateRedirectParams($this->modelName));
 	}

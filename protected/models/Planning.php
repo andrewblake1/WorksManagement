@@ -62,7 +62,7 @@ class Planning extends CategoryActiveRecord {
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		$rules = parent::rules();
 		$rules[] = array('project_id', 'numerical', 'integerOnly'=>true);

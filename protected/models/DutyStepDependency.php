@@ -64,7 +64,7 @@ class DutyStepDependency extends ActiveRecord
     /**
      * @return array customized attribute labels (name=>label)
      */
-    public function attributeLabels()
+    public function attributeLabels($attributeLabels = array())
     {
  		return parent::attributeLabels(array(
             'child_duty_step_id' => 'Depends on',

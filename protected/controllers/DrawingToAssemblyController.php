@@ -12,7 +12,7 @@ class DrawingToAssemblyController extends Controller
 	}
 	
 	// simulate the tabs in Drawing
-	public function setTabs($model) {
+	public function setTabs($model = NULL, &$tabs = NULL) {
 		$drawingController = new DrawingController(NULL);
 		$_GET['parent_id'] = $_GET['drawing_id'];
 		$drawingController->setTabs(NULL);

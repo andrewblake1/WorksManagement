@@ -50,7 +50,7 @@ class Project extends CustomFieldActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(), array(
 			array('in_charge_id', 'numerical', 'integerOnly'=>true),
@@ -187,7 +187,7 @@ class Project extends CustomFieldActiveRecord
 	/*
 	 * overidden as mulitple models
 	 */
-	public function createSave(&$models=array())
+	public function createSave(&$models=array(), $runValidation = true)
 	{
 		// need to insert a row into the planning nested set model so that the id can be used here
 

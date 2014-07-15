@@ -59,7 +59,7 @@ class TaskTemplateToCustomField extends ActiveRecord
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	public function attributeLabels($attributeLabels = array())
 	{
 		return parent::attributeLabels(array(
 			'custom_field_task_category_id' => 'Custom field set',

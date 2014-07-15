@@ -19,7 +19,7 @@ class XUploadForm extends CFormModel
          * The rules state that username and password are required,
          * and password needs to be authenticated.
          */
-        public function rules()
+        public function rules($ignores = array())
         {
                 return array(
                         array('file', 'file'),

@@ -42,7 +42,7 @@ class TaskToAssembly extends ActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(), array(
 			array('standard_id', 'numerical', 'integerOnly'=>true),
@@ -135,7 +135,7 @@ class TaskToAssembly extends ActiveRecord
 	/*
 	 * to be overidden if using mulitple models
 	 */
-	public function createSave(&$models=array())
+	public function createSave(&$models=array(), $runValidation = true)
 	{
 		return TaskToAssemblyController::addAssembly($this->task_id, $this->assembly_id, $this->quantity, $this->parent_id, $this->sub_assembly_id, $models, $this);
 	}

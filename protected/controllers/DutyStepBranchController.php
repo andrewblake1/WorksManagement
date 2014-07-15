@@ -28,7 +28,7 @@ class DutyStepBranchController extends Controller
 		);
 	}
 
-	public function setTabs($model) {
+	public function setTabs($model = NULL, &$tabs = NULL) {
 
 		// in duty step dependency admin view
 		$dutyStepDependencyController= new DutyStepDependencyController(NULL);

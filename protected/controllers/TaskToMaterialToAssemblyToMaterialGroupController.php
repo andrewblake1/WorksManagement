@@ -24,7 +24,7 @@ class TaskToMaterialToAssemblyToMaterialGroupController extends Controller
 	}
 	
 	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
-	public function setTabs($model) {
+	public function setTabs($model = NULL, &$tabs = NULL) {
 		$modelName = $this->modelName;
 
 		if($_GET['parent_id'] = $task_to_assembly_id = (isset($model->taskToAssembly) ? $model->taskToAssembly->id : $model->taskToMaterial->taskToAssembly->id))

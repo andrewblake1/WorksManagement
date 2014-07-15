@@ -46,7 +46,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(), array(
 			array('quantity', 'required'),

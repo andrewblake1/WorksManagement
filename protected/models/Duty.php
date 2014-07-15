@@ -65,7 +65,7 @@ class Duty extends CustomFieldActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
@@ -91,7 +91,7 @@ class Duty extends CustomFieldActiveRecord
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	public function attributeLabels($attributeLabels = array())
 	{
 		return parent::attributeLabels(array(
 			'duty_step_id' => 'Duty',
@@ -388,7 +388,7 @@ class Duty extends CustomFieldActiveRecord
 	/*
 	 * overidden as mulitple models
 	 */
-	public function createSave(&$models=array())
+	public function createSave(&$models=array(), $runValidation = true)
 	{
 		// ensure existance of a related DutyData. First get the desired planning id which is the desired ancestor of task
 		// if this is task level

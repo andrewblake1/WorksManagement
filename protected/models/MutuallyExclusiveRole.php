@@ -24,7 +24,7 @@ class MutuallyExclusiveRole extends ActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(), array(
 			array('task_to_labour_resource_id', 'numerical', 'integerOnly'=>true),
@@ -46,7 +46,7 @@ class MutuallyExclusiveRole extends ActiveRecord
 			'child' => array(self::BELONGS_TO, 'LabourResourceData', 'child_id'),
 		);
 	}
-   public function attributeLabels()
+   public function attributeLabels($attributeLabels = array())
     {
         return array(
             'child_id' => 'Exclusive to',

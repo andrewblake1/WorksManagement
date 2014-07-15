@@ -28,7 +28,7 @@ class Day extends ActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
@@ -151,7 +151,7 @@ class Day extends ActiveRecord
 	/*
 	 * overidden as mulitple models
 	 */
-	public function createSave(&$models=array())
+	public function createSave(&$models=array(), $runValidation = true)
 	{
 		// need to insert a row into the planning nested set model so that the id can be used here
 		// create a root node

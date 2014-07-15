@@ -36,7 +36,7 @@ class TaskToMaterialToTaskTemplateToMaterialGroup extends ActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(array('task_to_material_id')), array(
 			array('quantity', 'required'),

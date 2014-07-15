@@ -37,7 +37,7 @@ class ClientContact extends ContactActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(array('contact_id')), array(
 			array('first_name, last_name, email', 'required'),

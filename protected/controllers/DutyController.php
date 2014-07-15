@@ -96,7 +96,7 @@ class DutyController extends Controller
 	}
 	
 	// special handling of update for duties
-	public function actionUpdate($id)
+	public function actionUpdate($id, $model = NULL)
 	{
 		// get duty
 		$model = Duty::model()->findByPk($id);
@@ -124,7 +124,7 @@ class DutyController extends Controller
 	}
 	
 	// redirect to admin
-	protected function adminRedirect($model, $sortByNewest = false) {
+	protected function adminRedirect($model, $sortByNewest = false, $params = array()) {
 
 		// if posted a controller then this is where we should return to
 		if (!empty($_POST['controller']))

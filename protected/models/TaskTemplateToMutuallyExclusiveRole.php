@@ -24,7 +24,7 @@ class TaskTemplateToMutuallyExclusiveRole extends ActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(), array(
 			array('task_template_to_labour_resource_id', 'numerical', 'integerOnly'=>true),
@@ -47,7 +47,7 @@ class TaskTemplateToMutuallyExclusiveRole extends ActiveRecord
 		);
 	}
 
-   public function attributeLabels()
+   public function attributeLabels($attributeLabels = array())
     {
         return array(
             'child_id' => 'Exclusive to',

@@ -108,7 +108,7 @@ class SubAssemblyController extends Controller
 	}
 
 	// override the tabs when viewing assemblies for a particular task
-	public function setTabs($model) {
+	public function setTabs($model = NULL, &$tabs = NULL) {
 		if($model)
 		{
 			parent::setTabs(NULL);

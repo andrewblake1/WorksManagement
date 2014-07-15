@@ -74,7 +74,7 @@ class ActionController extends Controller
 		);
 	}
 	
-	protected function createRedirect($model)
+	protected function createRedirect($model, $params = array())
 	{
 		parent::createRedirect($model, self::getCreateRedirectParams($this->modelName));
 	}

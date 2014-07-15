@@ -64,7 +64,7 @@ class Task extends CustomFieldActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(), array(
 			array('in_charge_id', 'numerical', 'integerOnly'=>true),
@@ -121,7 +121,7 @@ class Task extends CustomFieldActiveRecord
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	public function attributeLabels($attributeLabels = array())
 	{
 		return parent::attributeLabels(array(
 			'derived_in_charge' => 'In charge',

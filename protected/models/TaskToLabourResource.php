@@ -51,7 +51,7 @@ class TaskToLabourResource extends ActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(array('labour_resource_data_id', 'type')), array(
 			array('labour_resource_id, durationTemp', 'required'),
@@ -78,7 +78,7 @@ class TaskToLabourResource extends ActiveRecord
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	public function attributeLabels($attributeLabels = array())
 	{
 		return parent::attributeLabels(array(
 			'labour_resource_to_supplier_id' => 'Supplier',

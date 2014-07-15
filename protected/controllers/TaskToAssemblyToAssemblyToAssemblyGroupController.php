@@ -22,7 +22,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroupController extends Controller
 	}
 
 	// override the tabs when viewing materials for a particular task - make match taskToAssembly view
-	public function setTabs($model)
+	public function setTabs($model = NULL, &$tabs = NULL)
 	{
 		$modelName = $this->modelName;
 

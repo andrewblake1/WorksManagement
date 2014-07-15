@@ -18,7 +18,7 @@ class LoginForm extends CFormModel
 	 * The rules state that username and password are required,
 	 * and password needs to be authenticated.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array(
 			// username and password are required
@@ -33,7 +33,7 @@ class LoginForm extends CFormModel
 	/**
 	 * Declares attribute labels.
 	 */
-	public function attributeLabels()
+	public function attributeLabels($attributeLabels = array())
 	{
 		return array(
 			'rememberMe'=>'Remember me next time',

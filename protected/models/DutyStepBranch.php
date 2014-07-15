@@ -42,7 +42,7 @@ class DutyStepBranch extends ActiveRecord
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	public function attributeLabels($attributeLabels = array())
 	{
 		return array(
 			'duty_step_to_custom_field_id' => 'Custom field',

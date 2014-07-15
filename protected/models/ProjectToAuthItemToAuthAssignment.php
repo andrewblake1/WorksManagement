@@ -46,7 +46,7 @@ class ProjectToAuthItemToAuthAssignment extends ActiveRecord
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	public function attributeLabels($attributeLabels = array())
 	{
 		return array(
 			'project_to_auth_item_id' => 'Role',

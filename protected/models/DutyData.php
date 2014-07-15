@@ -28,7 +28,7 @@ class DutyData extends ActiveRecord
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(array('updated')), array(
 			array('updated', 'safe'),
@@ -56,7 +56,7 @@ class DutyData extends ActiveRecord
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	public function attributeLabels($attributeLabels = array())
 	{
 		return parent::attributeLabels(array(
 			'duty_step_id' => 'Duty',

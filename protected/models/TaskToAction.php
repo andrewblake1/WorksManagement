@@ -31,7 +31,7 @@ class TaskToAction extends ViewActiveRecord
 		return 'id';
 	}
 
-	public function rules()
+	public function rules($ignores = array())
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
@@ -76,7 +76,7 @@ class TaskToAction extends ViewActiveRecord
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
+	public function attributeLabels($attributeLabels = array())
 	{
 		return parent::attributeLabels(array(
 			'description' => 'Action',
@@ -84,7 +84,7 @@ class TaskToAction extends ViewActiveRecord
 		));
 	}
 
-	public function createSave(&$models=array())
+	public function createSave(&$models=array(), $runValidation = true)
 	{
 		// only need to call factory method to add duties as no actual TaskToAction table
 		// factory method to create duties

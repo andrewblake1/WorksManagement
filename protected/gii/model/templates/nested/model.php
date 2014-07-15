@@ -87,7 +87,7 @@ class <?php echo $modelClass; ?> extends <?php echo $this->baseClass."\n"; ?>
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
+	public function rules($ignores = array())
 	{
 		// NOTE1: you should only define rules for those attributes that
 		// will receive user inputs.

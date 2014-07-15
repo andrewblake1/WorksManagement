@@ -169,7 +169,7 @@ trait FileControllerTrait {
 		$this->createRender($model, $models, $modal_id);
 	}
 	
-	protected function createRedirect($model)
+	protected function createRedirect($model, $params = array())
 	{
 		if(Yii::app()->controller->action->id != 'upload')
 		{

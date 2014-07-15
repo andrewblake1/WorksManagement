@@ -75,7 +75,7 @@ class PlanningController extends CategoryController
 		throw new CHttpException(403,'Invalid request.');
 	}
 
-	public function actionUpdate($id)
+	public function actionUpdate($id, $model = NULL)
 	{
 		// can't update a planning, must update a project, or day or crew or task
 		throw new CHttpException(403,'Invalid request.');

@@ -2,7 +2,7 @@
 class ProjectController extends Controller
 {
 
-	public function actionUpdate($id) {
+	public function actionUpdate($id, $model = NULL) {
 		// ensure access
 		if(!Yii::app()->user->checkAccess('Project', array('primaryKey'=>$id)))
 		{

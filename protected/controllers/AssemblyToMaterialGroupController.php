@@ -2,7 +2,7 @@
 
 class AssemblyToMaterialGroupController extends Controller
 {
-	public function setTabs($model) {
+	public function setTabs($model = NULL, &$tabs = NULL) {
 
 		if(isset($_GET['sub_assembly_ids']))
 		{

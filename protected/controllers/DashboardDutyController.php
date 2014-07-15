@@ -7,7 +7,7 @@ class DashboardDutyController extends DutyController
 		
 	}
 	
-	public function actionUpdate($id) {
+	public function actionUpdate($id, $model = NULL) {
 		if(isset($_POST['DashboardDuty'])) {
 			$_POST['Duty'] = $_POST['DashboardDuty'];
 		}
@@ -16,7 +16,7 @@ class DashboardDutyController extends DutyController
 	}
 	
 	// redirect to admin - bypass the dutyController version as don't want to limit by task
-	protected function adminRedirect($model, $sortByNewest = false) {
+	protected function adminRedirect($model, $sortByNewest = false, $params = array()) {
 		static::staticAdminRedirect($model, $sortByNewest);
 	}
 
@@ -46,7 +46,7 @@ class DashboardDutyController extends DutyController
 		);
 	}
 	
-	public function setTabs($model) {
+	public function setTabs($model = NULL, &$tabs = NULL) {
 		$dashboardController = new DashboardController(NULL);
 		$dashboardController->setTabs(NULL);
 		static::$tabs = $dashboardController->tabs;

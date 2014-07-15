@@ -22,7 +22,7 @@ abstract class CategoryActiveRecord extends ActiveRecord {
 
 	const ADMIN_TREE_CONTAINER_ID = 'category_admin_tree';
 
-	public function rules()
+	public function rules($ignores = array())
 	{
 		return parent::rules(array('rgt','lft','root','level','id'));
 	}

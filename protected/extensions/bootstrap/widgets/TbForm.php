@@ -17,7 +17,7 @@ class FormbuilderTestModel extends CFormModel
     public $agree;
     public $radiolist;
 
-    public function rules()
+    public function rules($ignores = array())
     {
         return array(
             array('search', 'required'),

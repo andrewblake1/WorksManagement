@@ -63,7 +63,8 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 
         $value = CHtml::resolveValue($this->model, $this->attribute);
 
-		if($model = $this->getRelation($this->model, $fKModelType, $level = 0))
+		$level = 0;
+		if($model = $this->getRelation($this->model, $fKModelType, $level))
 		{
 			// find our way down to the end model
 			foreach($fKModelType::getDisplayAttr() as $field)

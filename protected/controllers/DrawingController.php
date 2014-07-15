@@ -46,7 +46,7 @@ class DrawingController extends Controller
 	}
 	
 	// override the tabs when viewing assemblies for a particular task
-	public function setTabs($model) {
+	public function setTabs($model = NULL, &$tabs = NULL) {
 
 		// control extra rows of tabs if action is 
 		if($model)
