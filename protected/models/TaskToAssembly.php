@@ -174,6 +174,7 @@ class TaskToAssembly extends ActiveRecord
 		$criteria->compareAs('searchDrawing', $this->searchDrawing, 'drawing.description', true);
 		$criteria->compareAs('searchParent', $this->searchParent, 'assemblyParent.description', true);
 		$criteria->compareAs('searchTaskQuantity', $this->searchTaskQuantity, 'task.quantity', true);
+		$criteria->compareAs('searchAccumlatedTotal', $this->searchAccumlatedTotal, 'accumulated_total', true);
 		$criteria->composite('searchGroup', $this->searchGroup, array(
 			'assemblyGroup.description',
 			't.comment'
@@ -215,10 +216,12 @@ class TaskToAssembly extends ActiveRecord
 		// can't use cascade delete on fk's for these as also need the ability if reseting selection to null to just delete this record and not cascade
 		// need to bear in mind bulk deletes hence this works best here like this
 		$command = Yii::app()->db->createCommand('DELETE FROM tbl_task_to_assembly_to_assembly_to_assembly_group WHERE task_to_assembly_id = :task_to_assembly_id');
-		$command->bindParam(':task_to_assembly_id', $temp = $this->id);
+		$temp = $this->id;
+		$command->bindParam(':task_to_assembly_id', $temp);
 		$command->execute();
 		$command = Yii::app()->db->createCommand('DELETE FROM tbl_task_to_assembly_to_task_template_to_assembly_group WHERE task_to_assembly_id = :task_to_assembly_id');
-		$command->bindParam(':task_to_assembly_id', $temp = $this->id);
+		$temp = $this->id;
+		$command->bindParam(':task_to_assembly_id', $temp);
 		$command->execute();
 		
 		return parent::delete();

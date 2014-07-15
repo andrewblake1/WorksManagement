@@ -141,18 +141,17 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 		// filler - unused in this context but necassary in Assembly model
 		$taskToAssembly->standard_id = 0;
 		
-		// if selection
-		if($taskToAssembly->assembly_id)
-		{
-			$saved = $taskToAssembly->id
-				? $taskToAssembly->updateSave($models)
-				: $taskToAssembly->createSave($models);
-			$this->task_to_assembly_id = $taskToAssembly->id;
-		}
-		elseif($taskToAssembly->id)	// existing row
+		// if existing selection made in past
+		if($taskToAssembly->id)
 		{
 			$saved = $taskToAssembly->delete();
-			$this->task_to_assembly_id = null;
+			$taskToAssembly->id = null;
+		}
+
+		if($taskToAssembly->assembly_id)
+		{
+			$saved = $taskToAssembly->createSave($models);
+			$this->task_to_assembly_id = $taskToAssembly->id;
 		}
 		
 		if($saved)

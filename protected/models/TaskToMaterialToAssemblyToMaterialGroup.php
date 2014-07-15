@@ -8,24 +8,25 @@
  * @property string $task_id
  * @property string $task_to_material_id
  * @property integer $material_id
+ * @property string $task_to_assembly_id
  * @property integer $material_group_id
  * @property integer $assembly_to_material_group_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property TaskToMaterial $taskToMaterial
- * @property MaterialGroupToMaterial $material
- * @property User $updatedBy
+ * @property TaskToAssembly $taskToAssembly
+ * @property Task $task
+ * @property AssemblyToMaterialGroup $materialGroup
+ * @property TaskToMaterial $material
  * @property AssemblyToMaterialGroup $assemblyToMaterialGroup
- * @property MaterialGroupToMaterial $materialGroup
- * @property TaskToMaterial $task
+ * @property User $updatedBy
+ * @property TaskToMaterial $taskToMaterial
  */
 class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 {
 	use RangeActiveRecordTrait;
 
 	public $quantity;
-	public $task_to_assembly_id;
 	public $searchMaterialGroup;
 
 	/**
@@ -48,7 +49,7 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	{
 		return array_merge(parent::rules(array('task_to_material_id')), array(
 			array('quantity', 'required'),
-			array('task_to_assembly_id, quantity', 'numerical', 'integerOnly'=>true),
+			array('quantity', 'numerical', 'integerOnly'=>true),
 		));
 	}
 
@@ -63,16 +64,17 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
 	 * @return array relational rules.
 	 */
 	public function relations()
-	{
+    {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
-            'material' => array(self::BELONGS_TO, 'Material', 'material_id'),
-            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'assemblyToMaterialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'assembly_to_material_group_id'),
-            'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
+            'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
+            'materialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'material_group_id'),
+            'material' => array(self::BELONGS_TO, 'TaskToMaterial', 'material_id'),
+            'assemblyToMaterialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'assembly_to_material_group_id'),
+            'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
+            'taskToMaterial' => array(self::BELONGS_TO, 'TaskToMaterial', 'task_to_material_id'),
         );
     }
 

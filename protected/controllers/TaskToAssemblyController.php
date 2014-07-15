@@ -124,6 +124,10 @@ class TaskToAssemblyController extends Controller
 		$taskToAssembly->parent_id = $parent_id;
 		$taskToAssembly->sub_assembly_id = $sub_assembly_id;
 		$taskToAssembly->quantity = $quantity;
+		// dummy for validation
+		if(!$taskToAssembly->standard_id) {
+			$taskToAssembly->standard_id = 0;
+		}
 		// NB: can't call createSave due to recursion so this is internals
 		$saved = $taskToAssembly->dbCallback('save');
 		$models[] = $taskToAssembly;
@@ -145,7 +149,7 @@ class TaskToAssemblyController extends Controller
 				$taskToMaterialToAssemblyToMaterial = new TaskToMaterialToAssemblyToMaterial();
 				$taskToMaterialToAssemblyToMaterial->task_to_material_id = $taskToMaterial->id;
 				$taskToMaterialToAssemblyToMaterial->assembly_to_material_id = $assemblyToMaterial->id;
-				$taskToMaterialToAssemblyToMaterial->createSave($models);
+				$saved &= $taskToMaterialToAssemblyToMaterial->createSave($models);
 			}
 		}
 
@@ -155,10 +159,10 @@ class TaskToAssemblyController extends Controller
 			$taskToMaterialToAssemblyToMaterialGroup = new TaskToMaterialToAssemblyToMaterialGroup;
 			$taskToMaterialToAssemblyToMaterialGroup->quantity = 0; // Dummy to pass validation designed for form update
 			$taskToMaterialToAssemblyToMaterialGroup->task_id = $task_id;
-//			$taskToMaterialToAssemblyToMaterialGroup->task_to_assembly_id = $taskToAssembly->id;
+			$taskToMaterialToAssemblyToMaterialGroup->task_to_assembly_id = $taskToAssembly->id;
 			$taskToMaterialToAssemblyToMaterialGroup->material_group_id = $assemblyToMaterialGroup->material_group_id;
 			$taskToMaterialToAssemblyToMaterialGroup->assembly_to_material_group_id = $assemblyToMaterialGroup->id;
-			$taskToMaterialToAssemblyToMaterialGroup->createSave($models);
+			$saved &= $taskToMaterialToAssemblyToMaterialGroup->createSave($models);
 		}
 
 		// AssemblyToAssemblyGroup
@@ -170,7 +174,7 @@ class TaskToAssemblyController extends Controller
 			$taskToAssemblyToAssemblyToAssemblyGroup->task_to_assembly_parent_id = $taskToAssembly->id;
 			$taskToAssemblyToAssemblyToAssemblyGroup->assembly_group_id = $assemblyToAssemblyGroup->assembly_group_id;
 			$taskToAssemblyToAssemblyToAssemblyGroup->assembly_to_assembly_group_id = $assemblyToAssemblyGroup->id;
-			$taskToAssemblyToAssemblyToAssemblyGroup->createSave($models);
+			$saved &= $taskToAssemblyToAssemblyToAssemblyGroup->createSave($models);
 		}
 
 		// recurse thru sub assemblies
