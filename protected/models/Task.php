@@ -10,14 +10,6 @@
  * @property integer $task_template_id
  * @property integer $quantity
  * @property string $planned
- * @property string $location
- * @property integer $preferred_mon
- * @property integer $preferred_tue
- * @property integer $preferred_wed
- * @property integer $preferred_thu
- * @property integer $preferred_fri
- * @property integer $preferred_sat
- * @property integer $preferred_sun
  * @property string $crew_id
  * @property integer $mode_id
  * @property integer $updated_by
@@ -48,10 +40,6 @@ class Task extends CustomFieldActiveRecord
 	public $searchEarliest;
 	public $name;
 	public $in_charge_id;
-	/**
-	 * inline checkbox property 
-	 */
-	public $preferred = array();
 	
 	// CustomFieldActiveRecord
 	protected $evalCustomFieldPivots = '$this->taskTemplate->taskTemplateToCustomFields';
@@ -67,7 +55,7 @@ class Task extends CustomFieldActiveRecord
 	public function rules($ignores = array())
 	{
 		return array_merge(parent::rules(), array(
-			array('in_charge_id', 'numerical', 'integerOnly'=>true),
+			array('in_charge_id, ', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>255),
 		));
 	}
@@ -128,13 +116,6 @@ class Task extends CustomFieldActiveRecord
 			'derived_task_template_description' => 'Template',
 			'name' => 'Task',
 			'derived_earliest' => 'Earliest',
-			'preferred_mon' => 'Mo',
-			'preferred_tue' => 'Tu',
-			'preferred_wed' => 'We',
-			'preferred_thu' => 'Th',
-			'preferred_fri' => 'Fr',
-			'preferred_sat' => 'Sa',
-			'preferred_sun' => 'Su',
 		));
 	}
 
@@ -187,7 +168,6 @@ class Task extends CustomFieldActiveRecord
 		$columns['id'] = 'id';
 		$columns['name'] = 'name';
 		$columns['quantity'] = 'quantity';
-		$columns['location'] = 'location';
         $columns['derived_in_charge'] = static::linkColumn('derived_in_charge', 'User', 'in_charge_id');
         $columns['derived_task_template_description'] = static::linkColumn('derived_task_template_description', 'TaskTemplate', 'task_template_id');
 		$columns['planned'] = 'planned';
@@ -235,52 +215,7 @@ class Task extends CustomFieldActiveRecord
 		return $displaAttr;
 	}
 
-	public function beforeSave() {
-
-		if(!empty($this->preferred))
-		{
-			$this->preferred_mon = in_array('0', $this->preferred);
-			$this->preferred_tue = in_array('1', $this->preferred);
-			$this->preferred_wed = in_array('2', $this->preferred);
-			$this->preferred_thu = in_array('3', $this->preferred);
-			$this->preferred_fri = in_array('4', $this->preferred);
-			$this->preferred_sat = in_array('5', $this->preferred);
-			$this->preferred_sun = in_array('6', $this->preferred);
-		}
-
-		return parent::beforeSave();
-	}
-
 	public function afterFind() {
-		// prepare check box row items
-		if($this->preferred_mon)
-		{
-			$this->preferred[] = 0;
-		}
-		if($this->preferred_tue)
-		{
-			$this->preferred[] = 1;
-		}
-		if($this->preferred_wed)
-		{
-			$this->preferred[] = 2;
-		}
-		if($this->preferred_thu)
-		{
-			$this->preferred[] = 3;
-		}
-		if($this->preferred_fri)
-		{
-			$this->preferred[] = 4;
-		}
-		if($this->preferred_sat)
-		{
-			$this->preferred[] = 5;
-		}
-		if($this->preferred_sun)
-		{
-			$this->preferred[] = 6;
-		}
 
 		$this->name = $this->id0->name;
 		$this->in_charge_id = $this->id0->in_charge_id;

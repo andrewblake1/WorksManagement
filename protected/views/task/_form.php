@@ -55,8 +55,6 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->textFieldRow('name');
 
-	$form->textAreaRow('location');
-
 	// only allow setting or update of in_charge_id if user has correct privilege
 	if(Yii::app()->user->checkAccess('scheduler'))
 	{
@@ -64,8 +62,6 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	}
 
 	$form->textFieldRow('planned');
-
-	$form->checkBoxListInlineRow('preferred', array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'));
 
 	ModeController::listWidgetRow($model, $form, 'mode_id');
 

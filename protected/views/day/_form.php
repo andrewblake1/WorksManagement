@@ -7,7 +7,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 	'htmlOptions'=>Yii::app()->user->checkAccess('scheduler') ? array('readonly'=>'readonly') : array(),
 ));
 
-	$form->textFieldRow('name');
+	$form->checkBoxListInlineRow('preferred', array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'));
 
 	UserController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
 

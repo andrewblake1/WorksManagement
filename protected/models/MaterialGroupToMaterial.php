@@ -28,6 +28,8 @@ class MaterialGroupToMaterial extends ActiveRecord
 	public $searchMaterial;
 	public $searchUnit;
 	public $searchAlias;
+	public $searchDrawing;
+	public $searchDrawingId;
 	
 	/**
 	 * @return array relational rules.
@@ -57,10 +59,12 @@ class MaterialGroupToMaterial extends ActiveRecord
 		$criteria->compareAs('searchMaterial', $this->searchMaterial,'material.description',true);
 		$criteria->compareAs('searchUnit', $this->searchUnit,'material.unit',true);
 		$criteria->compareAs('searchAlias', $this->searchAlias,'material.alias',true);
+		$criteria->select[] = 'drawing.id AS searchDrawingId';
  
 		// with
 		$criteria->with = array(
 			'material',
+			'material.drawing',
 		);
 
 		return $criteria;
@@ -71,6 +75,7 @@ class MaterialGroupToMaterial extends ActiveRecord
 		$columns[] = 'searchMaterial';
  		$columns[] = 'searchUnit';
  		$columns[] = 'searchAlias';
+		$columns[] = static::linkColumn('searchDrawing', 'Drawing', 'searchDrawingId');
 		
 		return $columns;
 	}

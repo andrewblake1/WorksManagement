@@ -146,6 +146,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 		{
 			$saved = $taskToAssembly->delete();
 			$taskToAssembly->id = null;
+			$taskToAssembly->isNewRecord = true;
 		}
 
 		if($taskToAssembly->assembly_id)

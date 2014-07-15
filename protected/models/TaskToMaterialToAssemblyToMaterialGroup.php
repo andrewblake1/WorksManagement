@@ -70,7 +70,7 @@ class TaskToMaterialToAssemblyToMaterialGroup extends ActiveRecord
         return array(
             'taskToAssembly' => array(self::BELONGS_TO, 'TaskToAssembly', 'task_to_assembly_id'),
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
-            'materialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'material_group_id'),
+            'materialGroup' => array(self::BELONGS_TO, 'MaterialGroup', 'material_group_id'),
             'material' => array(self::BELONGS_TO, 'TaskToMaterial', 'material_id'),
             'assemblyToMaterialGroup' => array(self::BELONGS_TO, 'AssemblyToMaterialGroup', 'assembly_to_material_group_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),

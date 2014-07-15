@@ -28,6 +28,8 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	 */
 	public $searchAssembly;
 	public $searchAlias;
+	public $searchDrawing;
+	public $searchDrawingId;
 	
 	/**
 	 * @return array relational rules.
@@ -57,10 +59,13 @@ class AssemblyGroupToAssembly extends ActiveRecord
 		// select
 		$criteria->compareAs('searchAssembly', $this->searchAssembly, 'assembly.description', true);
 		$criteria->compareAs('searchAlias', $this->searchAlias, 'assembly.alias', true);
+		$criteria->compareAs('searchDrawing', $this->searchDrawing, 'drawing.description', true);
+		$criteria->select[] = 'drawing.id AS searchDrawingId';
 
 		// with
 		$criteria->with = array(
 			'assembly',
+			'assembly.drawing',
 		);
 
 		return $criteria;
@@ -70,6 +75,7 @@ class AssemblyGroupToAssembly extends ActiveRecord
 	{
 		$columns[] = 'searchAssembly';
  		$columns[] = 'searchAlias';
+		$columns[] = static::linkColumn('searchDrawing', 'Drawing', 'searchDrawingId');
 		
 		return $columns;
 	}

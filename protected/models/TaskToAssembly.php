@@ -199,11 +199,11 @@ class TaskToAssembly extends ActiveRecord
 	public function getAdminColumns()
 	{
 //		$columns[] = 'id';
-		$columns[] = 'searchAssembly';
+		$columns[] = static::linkColumn('searchAssembly', 'TaskToAssembly', 'id');
 		$columns[] = static::linkColumn('searchParent', 'TaskToAssembly', 'parent_id');
 		$columns[] = static::linkColumn('searchDrawing', 'Drawing', 'searchDrawingId');
  		$columns[] = 'searchAliases';
-		$columns[] = 'searchGroup';
+		$columns[] = static::linkColumn('searchGroup', 'AssemblyGroup', 'assembly_group_id');
 		$columns[] = 'quantity';
 		$columns[] = 'searchTaskQuantity';
 		$columns[] = 'searchAccumlatedTotal';
@@ -211,7 +211,7 @@ class TaskToAssembly extends ActiveRecord
 		return $columns;
 	}
 
-	public function delete()
+/*	public function delete()
 	{
 		// can't use cascade delete on fk's for these as also need the ability if reseting selection to null to just delete this record and not cascade
 		// need to bear in mind bulk deletes hence this works best here like this
@@ -225,7 +225,7 @@ class TaskToAssembly extends ActiveRecord
 		$command->execute();
 		
 		return parent::delete();
-	}
+	}*/
 
 }
 

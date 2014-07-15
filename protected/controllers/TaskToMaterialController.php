@@ -112,6 +112,7 @@ class TaskToMaterialController extends Controller
 		elseif(isset($_GET['task_to_assembly_id']))
 		{
 			$parent_id = $_GET['task_to_assembly_id'];
+			unset($_GET['task_to_assembly_id']);
 		}
 		else
 		{
