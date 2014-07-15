@@ -167,7 +167,7 @@ class TaskToAssemblyController extends Controller
 			$taskToAssemblyToAssemblyToAssemblyGroup = new TaskToAssemblyToAssemblyToAssemblyGroup;
 			$taskToAssemblyToAssemblyToAssemblyGroup->quantity = 0; // Dummy to pass validation designed for form update
 			$taskToAssemblyToAssemblyToAssemblyGroup->task_id = $task_id;
-//			$taskToAssemblyToAssemblyToAssemblyGroup->task_to_assembly_id = $taskToAssembly->id;
+			$taskToAssemblyToAssemblyToAssemblyGroup->task_to_assembly_parent_id = $taskToAssembly->id;
 			$taskToAssemblyToAssemblyToAssemblyGroup->assembly_group_id = $assemblyToAssemblyGroup->assembly_group_id;
 			$taskToAssemblyToAssemblyToAssemblyGroup->assembly_to_assembly_group_id = $assemblyToAssemblyGroup->id;
 			$taskToAssemblyToAssemblyToAssemblyGroup->createSave($models);

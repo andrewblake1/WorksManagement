@@ -91,7 +91,7 @@ class Crew extends ActiveRecord
 
 	// ensure that where possible a pk has been passed from parent
 	// needed to overwrite this here because project has to look thru project type to get to client when doing update but gets client for admin
-	public function assertFromParent()
+	public function assertFromParent($modelName = NULL)
 	{
 // TODO: repeated in task, an day
 		// if update in planning view

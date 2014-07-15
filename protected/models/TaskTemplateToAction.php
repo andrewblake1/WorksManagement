@@ -138,7 +138,7 @@ class TaskTemplateToAction extends ActiveRecord
 		);
 	}
 	
-	public function save() {
+	public function save($runValidation = true, $attributes = NULL) {
 		if($taskTemplate = TaskTemplate::model()->findByPk($this->task_template_id))
 		{
 			$this->client_id = $taskTemplate->client_id;

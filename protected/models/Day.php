@@ -102,7 +102,7 @@ class Day extends ActiveRecord
 		parent::afterFind();
 	}
 
-	public function assertFromParent()
+	public function assertFromParent($modelName = NULL)
 	{
 		// if update in planning view
 		if(isset($_POST['controller']['Planning']) && isset($_GET['project_id']))

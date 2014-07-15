@@ -114,7 +114,7 @@ class DutyStepDependency extends ActiveRecord
 	 * @param string $referencesModel the name name of the model that the foreign key references.
 	 * @return string the foreign key attribute name within this model that references another model
 	 */
-	static function getParentForeignKey($referencesModel)
+	static function getParentForeignKey($referencesModel, $foreignKeys = array())
 	{
 		return parent::getParentForeignKey($referencesModel, array('DutyStep'=>'parent_duty_step_id'));
 	}	

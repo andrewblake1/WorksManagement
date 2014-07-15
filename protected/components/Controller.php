@@ -1579,7 +1579,8 @@ $t = $model->attributes;
 		$listModelName = static::modelName();
 
 		$inHtmlOptions = $htmlOptions;	// without the id that is about to calculated
-		CHtml::resolveNameID($model, $attribute = $fkField, $htmlOptions);
+		$attribute = $fkField;
+		CHtml::resolveNameID($model, $attribute, $htmlOptions);
 
 		$source = Yii::app()->createUrl("$listModelName/autocomplete") . "?model=$modelName&attribute=$fkField&scopes%5Bscope$dependantOnModelName%5D%5B0%5D=";
 

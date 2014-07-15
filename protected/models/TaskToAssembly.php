@@ -33,6 +33,7 @@ class TaskToAssembly extends ActiveRecord
 	public $searchDrawingId;
 	
 	public $searchAssembly;
+	public $searchParent;
 	public $searchDrawing;
 	public $searchGroup;
 	public $searchAliases;
@@ -171,6 +172,7 @@ class TaskToAssembly extends ActiveRecord
 		
 		// admin
 		$criteria->compareAs('searchDrawing', $this->searchDrawing, 'drawing.description', true);
+		$criteria->compareAs('searchParent', $this->searchParent, 'assemblyParent.description', true);
 		$criteria->compareAs('searchTaskQuantity', $this->searchTaskQuantity, 'task.quantity', true);
 		$criteria->composite('searchGroup', $this->searchGroup, array(
 			'assemblyGroup.description',
@@ -186,6 +188,8 @@ class TaskToAssembly extends ActiveRecord
 			LEFT JOIN tbl_project project ON task.project_id = project.id
 			LEFT JOIN tbl_client_to_assembly clientToAssembly ON project.client_id = clientToAssembly.client_id
 				AND t.assembly_id = clientToAssembly.assembly_id
+			LEFT JOIN tbl_task_to_assembly parent ON t.parent_id = parent.id
+			LEFT JOIN tbl_assembly assemblyParent ON parent.assembly_id = assemblyParent.id
 		';
 
 		return $criteria;
@@ -193,10 +197,10 @@ class TaskToAssembly extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
-		$columns[] = 'parent_id';
-		$columns[] = static::linkColumn('searchDrawing', 'Drawing', 'searchDrawingId');
+//		$columns[] = 'id';
 		$columns[] = 'searchAssembly';
+		$columns[] = static::linkColumn('searchParent', 'TaskToAssembly', 'parent_id');
+		$columns[] = static::linkColumn('searchDrawing', 'Drawing', 'searchDrawingId');
  		$columns[] = 'searchAliases';
 		$columns[] = 'searchGroup';
 		$columns[] = 'quantity';

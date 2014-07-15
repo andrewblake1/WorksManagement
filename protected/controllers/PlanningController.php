@@ -21,7 +21,7 @@ class PlanningController extends CategoryController
 		return $accessRules;
 	}
 
-	public function actionFetchTree()
+	public function actionFetchTree($parent_id = NULL)
 	{
 		if(isset($_GET['project_id']))
 		{
@@ -69,7 +69,7 @@ class PlanningController extends CategoryController
 		}
 	}
 	
-	public function actionCreate($modal_id = 'myModal')
+	public function actionCreate($modal_id = 'myModal', &$model = NULL)
 	{
 		// can't create a planning, must create a project, or day or crew or task
 		throw new CHttpException(403,'Invalid request.');

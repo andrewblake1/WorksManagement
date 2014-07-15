@@ -8,18 +8,19 @@
  * @property string $task_id
  * @property string $task_to_assembly_id
  * @property integer $assembly_id
+ * @property string $task_to_assembly_parent_id
  * @property integer $assembly_group_id
  * @property string $assembly_to_assembly_group_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
- * @property User $updatedBy
+ * @property Task $task
  * @property TaskToAssembly $taskToAssembly
- * @property AssemblyGroupToAssembly $assembly
+ * @property TaskToAssembly $taskToAssemblyParent
+ * @property AssemblyToAssemblyGroup $assemblyGroup
+ * @property TaskToAssembly $assembly
  * @property AssemblyToAssemblyGroup $assemblyToAssemblyGroup
- * @property AssemblyGroupToAssembly $assemblyGroup
- * @property AssemblyGroupToAssembly $assemblyGroupToAssembly
- * @property TaskToAssembly $task
+ * @property User $updatedBy
  */
 class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 {
@@ -27,7 +28,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	
 	public $parent_id;
 	public $quantity;
-
+	public $task_to_assembly_id;
 	public $searchAssemblyGroup;
 
 	/**
@@ -50,7 +51,7 @@ class TaskToAssemblyToAssemblyToAssemblyGroup extends ActiveRecord
 	{
 		return array_merge(parent::rules(), array(
 			array('quantity', 'required'),
-			array('quantity, parent_id', 'numerical', 'integerOnly'=>true),
+			array('task_to_assembly_id, quantity, parent_id', 'numerical', 'integerOnly'=>true),
 		));
 	}
 

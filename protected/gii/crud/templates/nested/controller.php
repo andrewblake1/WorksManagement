@@ -112,7 +112,7 @@ class <?php echo $this->controllerClass; ?> extends <?php echo $this->baseContro
 		return $model;
 	}
 
-      public function actionFetchTree(){
+      public function actionFetchTree($parent_id = NULL){
           <?php echo $this->modelClass; ?>::printULTree();
       }
 
