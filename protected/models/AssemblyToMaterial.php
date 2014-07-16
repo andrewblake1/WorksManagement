@@ -15,6 +15,8 @@
  * @property integer $maximum
  * @property string $select
  * @property string $quantity_tooltip
+ * @property string $comment
+ * @property string $item
  * @property integer $deleted
  * @property integer $updated_by
  *
@@ -85,10 +87,12 @@ class AssemblyToMaterial extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = 'searchMaterial';
+ 		$columns[] = 'comment';
+		$columns[] = static::linkColumn('searchDetailDrawing', 'Drawing', 'detail_drawing_id');
  		$columns[] = 'searchUnit';
  		$columns[] = 'searchAlias';
  		$columns[] = 'searchStage';
-		$columns[] = static::linkColumn('searchDetailDrawing', 'Drawing', 'detail_drawing_id');
+ 		$columns[] = 'item';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
@@ -105,6 +109,7 @@ class AssemblyToMaterial extends ActiveRecord
 	{
 		return array(
 			'searchMaterial',
+			'comment',
 			'searchUnit',
 			'searchAlias',
 			'searchStage',

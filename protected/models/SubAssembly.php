@@ -15,6 +15,7 @@
  * @property integer $maximum
  * @property string $select
  * @property string $quantity_tooltip
+ * @property string $item
  * @property integer $deleted
  * @property integer $updated_by
  *
@@ -89,12 +90,13 @@ class SubAssembly extends ActiveRecord
 	{
         $columns[] = 'searchChildAssembly';
   		$columns[] = 'comment';
+  		$columns[] = 'item';
 		$columns[] = static::linkColumn('searchDetailDrawing', 'Drawing', 'detail_drawing_id');
 		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
- 		$columns[] = 'select';
- 		$columns[] = 'quantity_tooltip';
+  		$columns[] = 'quantity_tooltip';
+		$columns[] = 'select';
 		
 		return $columns;
 	}

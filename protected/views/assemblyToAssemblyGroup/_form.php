@@ -6,6 +6,8 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 
 	$form->textFieldRow('comment');
 
+	$form->textFieldRow('item');
+
 	DrawingController::listWidgetRow($model, $form, 'detail_drawing_id', array(), array('scopeStandard'=>array($model->standard_id)), 'Drawing');
 
 	$form->textFieldRow('quantity');

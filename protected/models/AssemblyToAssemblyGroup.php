@@ -16,6 +16,7 @@
  * @property string $quantity_tooltip
  * @property string $selection_tooltip
  * @property string $comment
+ * @property string $item
  * @property integer $deleted
  * @property integer $updated_by
  *
@@ -78,13 +79,14 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 	{
         $columns[] = 'searchAssemblyGroup';
  		$columns[] = 'comment';
-		$columns[] = static::linkColumn('searchDetailDrawing', 'Drawing', 'detail_drawing_id');
+ 		$columns[] = static::linkColumn('searchDetailDrawing', 'Drawing', 'detail_drawing_id');
+		$columns[] = 'item';
  		$columns[] = 'selection_tooltip';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
- 		$columns[] = 'select';
- 		$columns[] = 'quantity_tooltip';
+  		$columns[] = 'quantity_tooltip';
+		$columns[] = 'select';
 		
 		return $columns;
 	}

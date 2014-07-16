@@ -17,6 +17,7 @@
  * @property string $quantity_tooltip
  * @property string $selection_tooltip
  * @property string $comment
+ * @property string $item
  * @property integer $deleted
  * @property integer $updated_by
  *
@@ -84,13 +85,14 @@ class AssemblyToMaterialGroup extends ActiveRecord
         $columns[] = 'searchMaterialGroup';
  		$columns[] = 'comment';
 		$columns[] = static::linkColumn('searchDetailDrawing', 'Drawing', 'detail_drawing_id');
- 		$columns[] = 'selection_tooltip';
  		$columns[] = 'searchStage';
+ 		$columns[] = 'item';
+ 		$columns[] = 'selection_tooltip';
  		$columns[] = 'quantity';
  		$columns[] = 'minimum';
  		$columns[] = 'maximum';
- 		$columns[] = 'select';
  		$columns[] = 'quantity_tooltip';
+ 		$columns[] = 'select';
 		
 		return $columns;
 	}
