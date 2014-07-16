@@ -40,8 +40,10 @@ class ProjectController extends Controller
 
 		// ensure unique project de
 		$transaction = Yii::app()->db->beginTransaction();
-		if($model->createSave($models))
+		if($model->createSave($models, false))
 		{
+			echo CHtml::openTag('div', array('id'=>'templateDependantArea'));
+
 			// customValues
 			$this->widget('CustomFieldWidgets',array(
 				'model'=>$model,
@@ -53,6 +55,16 @@ class ProjectController extends Controller
 				'categoryModelName'=>'CustomFieldProjectCategory',
 				'ajax'=>$fromAjax,
 			));
+
+			// any script
+			echo '<script type="text/javascript">';
+			foreach(Yii::app()->getClientScript()->scripts as $scripts) {
+				foreach($scripts as $script) {
+					echo $script;
+				}
+			}
+			echo '</script>';
+			echo CHtml::closeTag('div');
 		}
 
 		$transaction->rollBack();

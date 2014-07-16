@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'tbl_custom_field':
  * @property integer $id
  * @property string $label
+ * @property string $comment
  * @property integer $mandatory
  * @property integer $allow_new
  * @property string $validation_type
@@ -18,9 +19,9 @@
  *
  * The followings are the available model relations:
  * @property User $updatedBy
+ * @property DutyStepToCustomField[] $dutyStepToCustomFields
  * @property ProjectTemplateToCustomField[] $projectTemplateToCustomFields
  * @property TaskTemplateToCustomField[] $taskTemplateToCustomFields
- * @property DutyStep[] $dutySteps
  */
 class CustomField extends ActiveRecord
 {

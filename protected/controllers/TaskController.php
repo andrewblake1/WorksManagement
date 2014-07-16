@@ -32,7 +32,7 @@ class TaskController extends Controller
 			// customValues
 			$this->widget('CustomFieldWidgets',array(
 				'model'=>$model,
-				'form'=>new WMTbActiveForm(),
+				'form'=>$form,
 				'relationModelToCustomFieldModelTemplate'=>'taskToTaskTemplateToCustomField',
 				'relationModelToCustomFieldModelTemplates'=>'taskToTaskTemplateToCustomFields',
 				'relationCustomFieldModelTemplate'=>'taskTemplateToCustomField',

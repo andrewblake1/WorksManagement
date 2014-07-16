@@ -20,10 +20,20 @@ class CustomValueController extends Controller
 			$firstColumnName = $firstColumnName[0];
 			$secondColumnName = ($secondColumnName = each($row)) ? $secondColumnName[0] : $firstColumnName;
 
+			// create the search term
+			$cntr = 0;
+			foreach($terms = explode(' ', $_GET['term']) as $term)
+			{
+				$conditions[] = "`$secondColumnName` LIKE :param$cntr COLLATE utf8_general_ci";
+				$params[":param$cntr"] = '%' . trim($term) .'%';
+				$cntr++;
+			}
+			
 			// query and loop
-			$command = Yii::app()->db->createCommand("$sql WHERE `$secondColumnName` LIKE :second_column_value ORDER BY `$secondColumnName` ASC LIMIT 20");
-			$term = $_GET['term'].'%';
-			$command->bindParam(":second_column_value", $term);
+			$command = Yii::app()->db->createCommand("$sql WHERE " . implode(' AND ', $conditions) . " ORDER BY `$secondColumnName` ASC LIMIT 20");
+			foreach($params as $paramName => $paramValue) {
+				$command->bindParam($paramName, $paramValue);
+			}
 			foreach($command->queryAll() as $row)
 			{
 				$out[] = array(

@@ -33,6 +33,9 @@ class TaskToMaterial extends ActiveRecord
 	public $searchAlias;
 	public $searchAssemblyQuantity;
 	public $searchAccumlatedTotal;
+	public $searchDrawingId;
+	
+	
 
 	public function tableName() {
 
@@ -128,6 +131,16 @@ class TaskToMaterial extends ActiveRecord
 	}
 	
 	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels($attributeLabels = array())
+	{
+		return parent::attributeLabels(array(
+			'search_assembly' => 'Assembly drawing',
+		));
+	}
+
+	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
@@ -157,6 +170,8 @@ class TaskToMaterial extends ActiveRecord
 		
 		// admin
 		
+		$criteria->select[] = 'assembly.drawing_id AS searchDrawingId';
+
 		$criteria->compareAs('searchStage', $this->searchStage, 'stage.description', true);
 		$criteria->compareAs('searchMaterial', $this->searchMaterial, 'material.description', true);
 		$criteria->compareAs('searchUnit', $this->searchUnit, 'material.unit', true);
@@ -180,6 +195,7 @@ class TaskToMaterial extends ActiveRecord
 			LEFT JOIN tbl_project project ON task.project_id = project.id
 			LEFT JOIN tbl_client_to_material clientToMaterial ON project.client_id = clientToMaterial.client_id
 				AND t.material_id = clientToMaterial.material_id
+			LEFT JOIN tbl_assembly assembly ON taskToAssembly.assembly_id = assembly.id
 		';
 
 		return $criteria;
@@ -196,7 +212,7 @@ class TaskToMaterial extends ActiveRecord
 		$columns[] = 'search_task_quantity';
 		$columns[] = 'searchAssemblyQuantity';
 		$columns[] = 'searchAccumlatedTotal';
-		$columns[] = static::linkColumn('search_assembly', 'TaskToAssembly', 'task_to_assembly_id');
+		$columns[] = static::linkColumn('search_assembly', 'Drawing', 'searchDrawingId');
 		
 		return $columns;
 	}
