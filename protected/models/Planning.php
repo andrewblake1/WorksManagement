@@ -11,6 +11,7 @@
  * @property string $level
  * @property string $name
  * @property integer $in_charge_id
+ * @property string $critical_completion
  * @property integer $updated_by
  *
  * The followings are the available model relations:

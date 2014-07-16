@@ -9,7 +9,6 @@
  * @property integer $project_type_id
  * @property integer $client_id
  * @property string $travel_time_1_way
- * @property string $critical_completion
  * @property string $planned
  * @property integer $updated_by
  *
@@ -34,6 +33,7 @@ class Project extends CustomFieldActiveRecord
 	public $searchProjectType;
 	public $searchInCharge;
 	public $searchName;
+	public $critical_completion;
 	public $name;
 	public $in_charge_id;
 	public $project_template_id;
@@ -89,6 +89,7 @@ class Project extends CustomFieldActiveRecord
 		$criteria->compareAs('searchName', $this->searchName, 'id0.name', true);
 		$criteria->compareAs('searchProjectType', $this->searchProjectType, 'projectType.name', true);
 		$criteria->compareAs('in_charge_id', $this->in_charge_id, 'id0.in_charge_id');
+		$criteria->compareAs('critical_completion', $this->in_charge_id, 'id0.critical_completion');
 		$criteria->composite('searchInCharge', $this->searchInCharge, array(
 			'contact.first_name',
 			'contact.last_name',
@@ -130,6 +131,7 @@ class Project extends CustomFieldActiveRecord
 
 	public function afterFind() {
 		$this->name = $this->id0->name;
+		$this->critical_completion = $this->id0->critical_completion;
 		$this->project_template_id = $this->projectType->project_template_id;
 		$this->projectTemplate = $this->projectType->projectTemplate;
 		
@@ -175,6 +177,7 @@ class Project extends CustomFieldActiveRecord
 		// get the planning model
 		$planning = Planning::model()->findByPk($this->id);
 		$planning->name = $this->name;
+		$planning->critical_completion = $this->critical_completion;
 		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
 		// atempt save
 		$saved = $planning->saveNode(false);
@@ -195,6 +198,7 @@ class Project extends CustomFieldActiveRecord
 		// NB: the project description is actually the name field in the nested set model
 		$planning = new Planning;
 		$planning->name = $this->name;
+		$planning->critical_completion = $this->critical_completion;
 		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
 		if($saved = $planning->saveNode(true))
 		{

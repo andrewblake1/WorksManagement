@@ -38,6 +38,7 @@ class Task extends CustomFieldActiveRecord
 	public $searchProject;
 	public $searchTaskTemplate;
 	public $searchEarliest;
+	public $critical_completion;
 	public $name;
 	public $in_charge_id;
 	
@@ -167,6 +168,7 @@ class Task extends CustomFieldActiveRecord
 	{
 		$columns['id'] = 'id';
 		$columns['name'] = 'name';
+		$columns['critical_completion'] = 'critical_completion';
 		$columns['quantity'] = 'quantity';
         $columns['derived_in_charge'] = static::linkColumn('derived_in_charge', 'User', 'in_charge_id');
         $columns['derived_task_template_description'] = static::linkColumn('derived_task_template_description', 'TaskTemplate', 'task_template_id');
@@ -219,6 +221,7 @@ class Task extends CustomFieldActiveRecord
 
 		$this->name = $this->id0->name;
 		$this->in_charge_id = $this->id0->in_charge_id;
+		$this->critical_completion = $this->id0->critical_completion;
 	
 		parent::afterFind();
 	}
@@ -272,6 +275,7 @@ class Task extends CustomFieldActiveRecord
 		// get the planning model
 		$planning = Planning::model()->findByPk($this->id);
 		$planning->name = $this->name;
+		$planning->critical_completion = $this->critical_completion;
 		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
 		// atempt save
 		$saved = $planning->saveNode(false);
@@ -292,6 +296,7 @@ class Task extends CustomFieldActiveRecord
 		// NB: the project description is actually the name field in the nested set model
 		$planning = new Planning;
 		$planning->name = $this->name;
+		$planning->critical_completion = $this->critical_completion;
 		$planning->in_charge_id = empty($_POST['Planning']['in_charge_id']) ? null : $_POST['Planning']['in_charge_id'];
 
 		if($saved = $planning->appendTo(Planning::model()->findByPk($this->crew_id)))
