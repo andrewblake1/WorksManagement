@@ -61,7 +61,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 		UserController::listWidgetRow($model->id0 ? $model->id0 : new Planning, $form, 'in_charge_id', array(), array(), 'In charge');
 	}
 
-	$form->textFieldRow('critical_completion');
+	$form->datepickerRow('critical_completion');
 
 	$form->textFieldRow('planned');
 

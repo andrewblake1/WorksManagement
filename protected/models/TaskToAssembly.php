@@ -203,6 +203,7 @@ class TaskToAssembly extends ActiveRecord
 		$columns[] = static::linkColumn('searchParent', 'TaskToAssembly', 'parent_id');
 		$columns[] = static::linkColumn('searchDrawing', 'Drawing', 'searchDrawingId');
  		$columns[] = 'searchAliases';
+ 		$columns[] = 'item';
 		$columns[] = static::linkColumn('searchGroup', 'AssemblyGroup', 'assembly_group_id');
 		$columns[] = 'quantity';
 		$columns[] = 'searchTaskQuantity';

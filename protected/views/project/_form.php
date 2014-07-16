@@ -65,7 +65,7 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->textFieldRow('travel_time_1_way');
 
-	$form->textFieldRow('critical_completion');
+	$form->datepickerRow('critical_completion');
 
 	$form->textFieldRow('planned');
 	

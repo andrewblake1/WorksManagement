@@ -36,6 +36,7 @@ class WMEJuiAutoCompleteCustomField extends WMEJuiAutoCompleteField
 		unset($this->htmlOptions['labelOptions']);
 		$this->htmlOptions['required']=  $this->customField->mandatory;
 		echo $this->form->labelEx($this->model, $this->attribute, $this->htmlOptions);
+		$this->htmlOptions['class'] = 'span5';
 		
 		parent::init(); // ensure necessary assets are loaded
 	}

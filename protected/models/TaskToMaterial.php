@@ -213,6 +213,7 @@ class TaskToMaterial extends ActiveRecord
 		$columns[] = 'searchAssemblyQuantity';
 		$columns[] = 'searchAccumlatedTotal';
 		$columns[] = static::linkColumn('search_assembly', 'Drawing', 'searchDrawingId');
+ 		$columns[] = 'item';
 		
 		return $columns;
 	}
