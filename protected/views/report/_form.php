@@ -25,7 +25,7 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model));
 		'attribute'=>'template_html',
 		'editorTemplate'=>'full',
 		'useSwitch'=>false,
-		));
+	));
 //	echo $form->error($model,'contractData'); 
 //	echo '</div>';
 

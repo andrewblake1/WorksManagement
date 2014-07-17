@@ -128,6 +128,7 @@ class ReportController extends Controller
 		$subReportDescription = $matches[1];
 		$userId = Yii::app()->user->id;
 		$params = array();
+		$export = isset($_GET['action']) && $_GET['action'] == 'download';
 
 		// get the sub report model
 		if(!$subReportModel = SubReport::model()->findByAttributes(array(
@@ -213,7 +214,7 @@ class ReportController extends Controller
 			{
 				// set the cgridview template to include paged stuff
 				$template = '{items}\n{pager}';
-				$options['pagination'] = array('pageSize'=>10);
+				$options['pagination'] = $export ? false : array('pageSize'=>10);
 				// Create filter model and set properties
 				$filtersForm=new FiltersForm;
 				if(isset($_GET['FiltersForm']))
@@ -254,7 +255,7 @@ class ReportController extends Controller
 			if($subReportModel->format == SubReport::subReportFormatPaged)
 			{
 				// if exporting to xl
-				if(isset($_GET['action']) && $_GET['action'] == 'download')
+				if($export)
 				{
 					// Export it
 					Yii::app()->controller->toExcel($dataProvider, $attributes, null, array(), 'CSV'/*'Excel5'*/);
@@ -356,7 +357,7 @@ class ReportController extends Controller
 	}
 
 	// NB: drop down menu stops working when tinymce present hence hide the non working menu from system admin
-	public function getReportsMenu()
+	public function getReportsMenu($reportType = 0, $context = NULL)
 	{
 		// hide the reports menu when tinymce is present as drop down menu not working - javascript or css conflict
 		if($this->action->Id == 'update')

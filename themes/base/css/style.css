@@ -98,3 +98,16 @@ form {
 .btn-group {
     padding-bottom: 10px;
 }
+
+@media print {
+	a[href]:after {
+	  content: none !important;
+	}
+	thead {
+		display:table-header-group !important;
+	}
+	tbody {
+		display:table-row-group !important;
+	}
+}
+
