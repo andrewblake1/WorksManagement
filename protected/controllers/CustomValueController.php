@@ -30,7 +30,7 @@ class CustomValueController extends Controller
 			}
 			
 			// query and loop
-			$command = Yii::app()->db->createCommand("$sql WHERE " . implode(' AND ', $conditions) . " ORDER BY `$secondColumnName` ASC LIMIT 20");
+			$command = Yii::app()->db->createCommand("$sql HAVING " . implode(' AND ', $conditions) . " ORDER BY `$secondColumnName` ASC LIMIT 20");
 			foreach($params as $paramName => $paramValue) {
 				$command->bindParam($paramName, $paramValue);
 			}

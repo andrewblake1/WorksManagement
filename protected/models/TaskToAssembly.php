@@ -174,12 +174,12 @@ class TaskToAssembly extends ActiveRecord
 		$criteria->compareAs('searchDrawing', $this->searchDrawing, 'drawing.description', true);
 		$criteria->compareAs('searchParent', $this->searchParent, 'assemblyParent.description', true);
 		$criteria->compareAs('searchTaskQuantity', $this->searchTaskQuantity, 'task.quantity', true);
-		$criteria->compareAs('searchAccumlatedTotal', $this->searchAccumlatedTotal, 'accumulated_total', true);
+		$criteria->compareAs('searchAccumlatedTotal', $this->searchAccumlatedTotal, 'task.quantity * t.quantity', true);
 		$criteria->composite('searchGroup', $this->searchGroup, array(
 			'assemblyGroup.description',
 			't.comment'
 		));
-				
+
 		// join
 		$criteria->join = '
 			LEFT JOIN tbl_assembly_group assemblyGroup ON t.assembly_group_id = assemblyGroup.id

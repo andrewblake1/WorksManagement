@@ -109,5 +109,8 @@ form {
 	tbody {
 		display:table-row-group !important;
 	}
+	.btn {
+		display: none;
+	}
 }
 
