@@ -3,6 +3,8 @@ Yii::import('ext.bootstrap.widgets.TbExtendedGridView');
 class WMTbExtendedGridView extends TbExtendedGridView
 {
 	private $_controller;
+	
+	public $heading;
 
 	/**
 	 * Displays a particular model.
@@ -68,5 +70,42 @@ class WMTbExtendedGridView extends TbExtendedGridView
 			echo "</tfoot>\n";
 		}
 	}
+	
+	/**
+	 * allow for an extra heading row
+	 * @ inheritdoc
+	 */
+	public function renderTableHeader()
+	{
+		if(!$this->hideHeader)
+		{
+			echo "<thead>\n";
+
+			if($this->filterPosition===self::FILTER_POS_HEADER)
+				$this->renderFilter();
+
+			if($this->heading) {
+				echo '<tr><td colspan="' . sizeof($this->columns) . '"><h3>' . $this->heading . '</h3></td></tr>';
+			}
+			
+			echo "<tr>\n";
+			foreach($this->columns as $column)
+				$column->renderHeaderCell();
+			echo "</tr>\n";
+
+			if($this->filterPosition===self::FILTER_POS_BODY)
+				$this->renderFilter();
+
+			echo "</thead>\n";
+		}
+		elseif($this->filter!==null && ($this->filterPosition===self::FILTER_POS_HEADER || $this->filterPosition===self::FILTER_POS_BODY))
+		{
+			echo "<thead>\n";
+			$this->renderFilter();
+			echo "</thead>\n";
+		}
+	}
+
+
  
 }

@@ -139,12 +139,20 @@ class ReportController extends Controller
 			throw new CHttpException(403, "System admin error. Sub report '$subReportDescription' does not exist.");
 		}
 
+		// make username available as variable for selects
+		$command = Yii::app()->db->createCommand('SET @username = :username');
+		$user = User::model()->findByPk(Yii::app()->user->id);
+		$username =$user->contact->first_name .' ' . $user->contact->last_name;
+		$command->bindParam(":username", $username, PDO::PARAM_STR);
+		$command->execute();
+
 		// this could before a multi-statement that might do something like createing a temporary table so in this case the sql we
 		// want to deal with is the last one, and all previous ones are just to be executed
 		// The last one is our sql
 		// The last one is` our sql - array filter removes blank elements created eg. by ; at end
 		$sqls = array_filter(explode(';', $subReportModel->select));
 		$sql = array_pop($sqls);
+
 		// execute any others
 		foreach($sqls as $excuteSql)
 		{
@@ -179,6 +187,7 @@ class ReportController extends Controller
 			// get any link columns which have :link appended to column name
 			foreach(array_keys($command->queryRow()) as $attribute)
 			{
+//				$attribute = str_replace(' ', '', $attribute);
 				$exploded = explode(':', $attribute);
 				if(sizeof($exploded) > 1)
 				{
@@ -196,7 +205,11 @@ class ReportController extends Controller
 				}
 				else
 				{
-					$name = $attributes[$attribute] = $attribute;
+					$name = $attribute;
+					$attributes[$attribute] = array(
+						'name'=>$attribute,
+						'type'=>'raw',
+					);
 					$options['sort']['attributes'][] = $attribute;
 				}
 				
@@ -252,7 +265,7 @@ class ReportController extends Controller
 			ob_start();
 
 			// if we need to page
-			if($subReportModel->format == SubReport::subReportFormatPaged)
+			if($subReportModel->format == SubReport::subReportFormatPaged || ($subReportModel->format == SubReport::subReportFormatNotPaged))
 			{
 				// if exporting to xl
 				if($export)
@@ -277,19 +290,24 @@ class ReportController extends Controller
 
 			// display the grid
 			static $cntr = 0;
-			Yii::app()->controller->widget('bootstrap.widgets.TbGridView',array(
+			Yii::app()->controller->widget('WMTbExtendedGridView',array(
 				'id'=>'report-grid' . $cntr++,
 				'type'=>'striped',
 				'dataProvider'=>$dataProvider,
 //				'filter'=>$filtersForm,
 				'columns'=>$attributes,
 				'template'=>$template,
-
+				'heading'=>$subReportModel->description,
 			));
 			$html = ob_get_clean();
 		}
 		
 		return $html;
+	}
+	
+	public function exportButton ()
+	{
+		// already dealing with export button so don't need one at the bottom
 	}
 
 	protected function adminRender($_model)

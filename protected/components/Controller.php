@@ -1546,30 +1546,36 @@ $t = $model->attributes;
 
 	protected function navbar()
 	{
+		$items = array(
+			//$this->operations,
+			array(
+				'class' => 'bootstrap.widgets.TbMenu',
+				'items' => array(
+					Yii::app()->user->checkAccess('system admin') ? array('label' => 'Database', 'url' => Yii::app()->request->hostInfo . '/phpmyadmin') : array(),
+				),
+			),
+			array(
+				'class' => 'bootstrap.widgets.TbMenu',
+				'htmlOptions' => array('class' => 'pull-right'),
+				'items' => array(
+	//				array('label' => 'Login', 'url' => array('/site/login'), 'visible' => Yii::app()->user->isGuest),
+					array('label' => 'Logout (' . Yii::app()->user->name . ')', 'url' => array('/site/logout'), 'visible' => !Yii::app()->user->isGuest),
+				),
+			),
+		);
+
+		// only show reports menu in update and view - needs id, can't be used in admin view
+		if($this->action->id == 'update' || $this->action->id == 'view') {
+			array_unshift($items, $this->reportsMenu);
+		}
+		
 		$this->widget('bootstrap.widgets.TbNavbar', array(
 			'fixed' => false,
 			'htmlOptions' => array('class' => 'navbar-inverse'),
 			'brand' => Yii::app()->name,
 			'brandUrl' => '#',
 			'collapse' => true, // requires bootstrap-responsive.css
-			'items' => array(
-				$this->reportsMenu,
-				//$this->operations,
-				array(
-					'class' => 'bootstrap.widgets.TbMenu',
-					'items' => array(
-						Yii::app()->user->checkAccess('system admin') ? array('label' => 'Database', 'url' => Yii::app()->request->hostInfo . '/phpmyadmin') : array(),
-					),
-				),
-				array(
-					'class' => 'bootstrap.widgets.TbMenu',
-					'htmlOptions' => array('class' => 'pull-right'),
-					'items' => array(
-		//				array('label' => 'Login', 'url' => array('/site/login'), 'visible' => Yii::app()->user->isGuest),
-						array('label' => 'Logout (' . Yii::app()->user->name . ')', 'url' => array('/site/logout'), 'visible' => !Yii::app()->user->isGuest),
-					),
-				),
-			),
+			'items' => $items,
 		));
 	}
 
