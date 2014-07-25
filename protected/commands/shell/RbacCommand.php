@@ -148,6 +148,11 @@ EOD;
 			$this->_authManager->createOperation('ClientToMaterialRead', 'ClientToMaterial read');
 			$task->addChild('ClientToMaterialRead');
 
+			$task=$this->_authManager->createTask('Contact', 'Contact task');
+			$systemAdminRole->addChild('Contact');
+			$this->_authManager->createOperation('ContactRead', 'Contact read');
+			$task->addChild('ContactRead');
+
 			$task=$this->_authManager->createTask('CustomField', 'CustomField task');
 			$systemAdminRole->addChild('CustomField');
 			$this->_authManager->createOperation('CustomFieldRead', 'CustomField read');

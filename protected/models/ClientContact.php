@@ -69,30 +69,30 @@ class ClientContact extends ActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[]='first_name';
-		$columns[]='last_name';
 		$columns[]='role';
+		$columns[] = 'searchFirstName';
+		$columns[] = 'searchLastName';
         $columns[] = array(
-			'name'=>'phone_mobile',
-			'value'=>'CHtml::link($data->phone_mobile, "tel:".$data->phone_mobile)',
-			'type'=>'raw',
-		);
-        $columns[] = array(
-			'name'=>'phone_home',
-			'value'=>'CHtml::link($data->phone_home, "tel:".$data->phone_home)',
-			'type'=>'raw',
-		);
-        $columns[] = array(
-			'name'=>'phone_work',
-			'value'=>'CHtml::link($data->phone_work, "tel:".$data->phone_work)',
-			'type'=>'raw',
-		);
-		$columns[]='phone_fax';
-        $columns[] = array(
-			'name'=>'email',
-			'value'=>'$data->email',
+			'name'=>'searchEmail',
+			'value'=>'$data->searchEmail',
 			'type'=>'email',
 		);
+		$columns[] = array(
+			'name'=>'searchPhoneMobile',
+			'value'=>'CHtml::link($data->searchPhoneMobile, "tel:".$data->searchPhoneMobile)',
+			'type'=>'raw',
+		);
+        $columns[] = array(
+			'name'=>'searchPhoneHome',
+			'value'=>'CHtml::link($data->searchPhoneHome, "tel:".$data->searchPhoneHome)',
+			'type'=>'raw',
+		);
+        $columns[] = array(
+			'name'=>'searchPhoneWork',
+			'value'=>'CHtml::link($data->searchPhoneWork, "tel:".$data->searchPhoneWork)',
+			'type'=>'raw',
+		);
+		$columns[]='searchPhoneFax';
 		
 		return $columns;
 	}

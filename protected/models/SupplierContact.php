@@ -102,11 +102,6 @@ class SupplierContact extends ActiveRecord
 			'type'=>'raw',
 		);
 		$columns[]='searchPhoneFax';
-        $columns[] = array(
-			'name'=>'email',
-			'value'=>'$data->email',
-			'type'=>'email',
-		);
 		
 		return $columns;
 	}
