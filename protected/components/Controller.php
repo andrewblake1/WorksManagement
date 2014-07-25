@@ -938,7 +938,6 @@ class Controller extends CController
 		$models = array();
 
 		$model->attributes = $_GET;
-$t = $model->attributes;
 
 		// $validating will be set to true if ajax validating and passed so-far but still need to try, catch db errors before actual submit
 		$validating = $this->performAjaxValidation($model);

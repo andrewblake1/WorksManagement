@@ -36,7 +36,7 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 		readAccessDay = <?php echo Controller::checkAccess(Controller::accessRead, 'Day') ? 'true' : 'false'; ?>;
 		readAccessCrew = <?php echo Controller::checkAccess(Controller::accessRead, 'Crew') ? 'true' : 'false'; ?>;
 		readAccessTask = <?php echo Controller::checkAccess(Controller::accessRead, 'Task') ? 'true' : 'true'; ?>;
-		isScheduler = <?php echo Yii::app()->user->checkAccess('scheduler') ? 'true' : 'false'; ?>;
+//		isScheduler = <?php echo Yii::app()->user->checkAccess('scheduler') ? 'true' : 'false'; ?>;
 		
 					
 		function getAction(obj)
@@ -62,14 +62,14 @@ echo '<div id="'.  $modelName::ADMIN_TREE_CONTAINER_ID.'" ></div>';
 			}
 			else if(level == 2)
 			{
-				writeAccess = writeAccessDay && isScheduler;
+				writeAccess = writeAccessDay;
 				readAccess = readAccessDay;
 				modelName = "Day";
 				reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Day'); ?>;
 			}
 			else if(level == 3)
 			{
-				writeAccess = writeAccessCrew && isScheduler;
+				writeAccess = writeAccessCrew;
 				readAccess = readAccessCrew;
 				modelName = "Crew";
 				reportItemsProject = <?php echo $this->getReportsMenu(Controller::reportTypeJavascript, 'Crew'); ?>;

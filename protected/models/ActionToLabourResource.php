@@ -105,6 +105,7 @@ class ActionToLabourResource extends ActiveRecord
 		
 		return $columns;
 	}
+
 	/**
 	 * @return array the list of columns to be concatenated for use in drop down lists
 	 */

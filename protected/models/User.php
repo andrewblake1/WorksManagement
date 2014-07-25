@@ -82,22 +82,15 @@
  * @property User[] $users
  * @property Contact $contact
  */
-class User extends ContactActiveRecord
+class User extends ActiveRecord
 {
-	
 	static $niceName = 'User';
 	
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules($ignores = array())
-	{
-		return array_merge(parent::rules(array('contact_id')), array(
-			array('first_name, last_name, email', 'required'),
-			array('first_name, last_name', 'length', 'max'=>64),
-			array('email', 'length', 'max'=>255),
-		));
-	}
+	// search variables
+	public $searchFirstName;
+	public $searchLastName;
+	public $searchPhoneMobile;
+	public $searchEmail;
 
 	/**
 	 * @return array relational rules.
@@ -187,10 +180,10 @@ class User extends ContactActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('first_name', $this->first_name, 'contact.first_name', true);
-		$criteria->compareAs('last_name', $this->last_name, 'contact.last_name', true);
-		$criteria->compareAs('phone_mobile', $this->phone_mobile, 'contact.phone_mobile', true);
-		$criteria->compareAs('email', $this->email, 'contact.email', true);
+		$criteria->compareAs('searchFirstName', $this->searchFirstName, 'contact.first_name', true);
+		$criteria->compareAs('searchLastName', $this->searchLastName, 'contact.last_name', true);
+		$criteria->compareAs('searchPhoneMobile', $this->searchPhoneMobile, 'contact.phone_mobile', true);
+		$criteria->compareAs('searchEmail', $this->searchEmail, 'contact.email', true);
 
 		// with
 		$criteria->with=array(
@@ -202,21 +195,33 @@ class User extends ContactActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
-		$columns[] = 'first_name';
-		$columns[] = 'last_name';
+		$columns[] = 'searchFirstName';
+		$columns[] = 'searchLastName';
         $columns[] = array(
-			'name'=>'phone_mobile',
-			'value'=>'CHtml::link($data->phone_mobile, "tel:".$data->phone_mobile)',
-			'type'=>'raw',
-		);
-        $columns[] = array(
-			'name'=>'email',
-			'value'=>'$data->email',
+			'name'=>'searchEmail',
+			'value'=>'$data->searchEmail',
 			'type'=>'email',
+		);
+		$columns[] = array(
+			'name'=>'searchPhoneMobile',
+			'value'=>'CHtml::link($data->searchPhoneMobile, "tel:".$data->searchPhoneMobile)',
+			'type'=>'raw',
 		);
 		
 		return $columns;
+	}
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+			'searchFirstName',
+			'searchLastName',
+			'searchPhoneMobile',
+			'searchEmail',
+		);
 	}
 
 	/**

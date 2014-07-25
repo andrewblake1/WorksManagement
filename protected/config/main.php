@@ -284,6 +284,7 @@ return array(
 					),
 					'ProjectType',
 				),
+				'Contact',
 				'CustomField',
 				'DefaultValue',
 				'Mode',

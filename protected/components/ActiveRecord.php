@@ -920,14 +920,14 @@ elseif(!$return)
 				{
 					// soft delete
 					// mark the row as deleted - increment to allow re-create and re delete later without violating unique constraints combined with deleted
-					$this->deleted = 1;
-					$result=$this->save();
+					// must use update by pk to avoid special update functionality e.g. of contactActiveRecord
+					$result=$this->updateByPk($this->primaryKey, array('deleted' => 1));
 				}
 				// otherwise delete the row
 				else
 				{
 					// hard delete
-					$result=$this->deleteByPk($this->getPrimaryKey())>0;;
+					$result=$this->deleteByPk($this->primaryKey)>0;;
 				}
 
 				$this->afterDelete();

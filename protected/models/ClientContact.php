@@ -19,32 +19,15 @@
  */
 class ClientContact extends ContactActiveRecord
 {
-	public $first_name;
-	public $last_name;
-	public $email;
-	public $address_line_1;
-	public $address_line_2;
-	public $post_code;
-	public $town_city;
-	public $state_province;
-	public $country;
-	public $phone_mobile;
-	public $phone_home;
-	public $phone_work;
-	public $phone_fax;
 
-
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules($ignores = array())
-	{
-		return array_merge(parent::rules(array('contact_id')), array(
-			array('first_name, last_name, email', 'required'),
-			array('first_name, last_name', 'length', 'max'=>64),
-			array('email', 'length', 'max'=>255),
-		));
-	}
+	// search variables
+	public $searchFirstName;
+	public $searchLastName;
+	public $searchEmail;
+	public $searchPhoneMobile;
+	public $searchPhoneHome;
+	public $searchPhoneWork;
+	public $searchPhoneFax;
 
 	/**
 	 * @return array relational rules.
@@ -68,13 +51,13 @@ class ClientContact extends ContactActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
-		$criteria->compareAs('first_name', $this->first_name, 'contact.first_name', true);
-		$criteria->compareAs('last_name', $this->last_name, 'contact.last_name', true);
-		$criteria->compareAs('email', $this->email, 'contact.email', true);
-		$criteria->compareAs('phone_mobile', $this->phone_mobile, 'contact.phone_mobile', true);
-		$criteria->compareAs('phone_home', $this->phone_home, 'contact.phone_home', true);
-		$criteria->compareAs('phone_work', $this->phone_work, 'contact.phone_work', true);
-		$criteria->compareAs('phone_fax', $this->phone_fax, 'contact.phone_fax', true);
+		$criteria->compareAs('searchFirstName', $this->searchFirstName, 'contact.first_name', true);
+		$criteria->compareAs('searchLastName', $this->searchLastName, 'contact.last_name', true);
+		$criteria->compareAs('searchEmail', $this->searchEmail, 'contact.email', true);
+		$criteria->compareAs('searchPhoneMobile', $this->searchPhoneMobile, 'contact.phone_mobile', true);
+		$criteria->compareAs('searchPhoneHome', $this->searchPhoneHome, 'contact.phone_home', true);
+		$criteria->compareAs('searchPhoneWork', $this->searchPhoneWork, 'contact.phone_work', true);
+		$criteria->compareAs('searchPhoneFax', $this->searchPhoneFax, 'contact.phone_fax', true);
 
 		// with
 		$criteria->with=array(
@@ -112,6 +95,19 @@ class ClientContact extends ContactActiveRecord
 		);
 		
 		return $columns;
+	}
+
+	/**
+	 * @return array the list of columns to be concatenated for use in drop down lists
+	 */
+	public static function getDisplayAttr()
+	{
+		return array(
+			'searchFirstName',
+			'searchLastName',
+			'searchPhoneMobile',
+			'searchEmail',
+		);
 	}
 
 	public function scopeClient($client_id)
