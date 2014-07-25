@@ -49,7 +49,6 @@ class Contact extends ActiveRecord
 	public function getAdminColumns()
 	{
 		$columns[] = $this->imageColumn();
-		$columns[] = 'id';
 		$columns[] = 'first_name';
 		$columns[] = 'last_name';
         $columns[] = array(
