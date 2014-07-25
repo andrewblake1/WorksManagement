@@ -17,7 +17,7 @@
  * @property Contact $contact
  * @property ProjectToClientContact[] $projectToClientContacts
  */
-class ClientContact extends ContactActiveRecord
+class ClientContact extends ActiveRecord
 {
 
 	// search variables
