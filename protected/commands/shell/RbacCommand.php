@@ -248,11 +248,6 @@ EOD;
 			$this->_authManager->createOperation('ModeRead', 'Mode read');
 			$task->addChild('ModeRead');
 
-			$task=$this->_authManager->createTask('Plan', 'Plan task');
-			$systemAdminRole->addChild('Plan');
-			$this->_authManager->createOperation('PlanRead', 'Plan read');
-			$task->addChild('PlanRead');
-
 			$task=$this->_authManager->createTask('Plant', 'Plant task');
 			$systemAdminRole->addChild('Plant');
 			$this->_authManager->createOperation('PlantRead', 'Plant read');
