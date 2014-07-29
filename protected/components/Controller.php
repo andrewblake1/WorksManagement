@@ -206,7 +206,7 @@ class Controller extends CController
 			$modelName = $this->modelName;
 			$model = $modelName::model();
 			$criteria = $model->searchCriteria;
-			$criteria->condition = '';
+			$criteria->having = '';
 			$displayAttr = $modelName::getDisplayAttr();
 
 			// create the search term
@@ -217,7 +217,7 @@ class Controller extends CController
 			{
 				$term = trim($term);
 				$paramName = ":param$cntr";
-				$criteria->condition .= ($criteria->condition ? " AND " : '') . "$concat LIKE $paramName COLLATE utf8_general_ci";
+				$criteria->having .= ($criteria->having ? " AND " : '') . "$concat LIKE $paramName COLLATE utf8_general_ci";
 				$criteria->params[$paramName] = "%$term%";
 				$cntr++;
 			}

@@ -66,13 +66,17 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 		$level = 0;
 		if($model = $this->getRelation($this->model, $fKModelType, $level))
 		{
+			// ensure we get any aliased fields
+			$primaryKeyName = $model->tableSchema->primaryKey;
+			$model = $model->findByPk($model->$primaryKeyName, $model->searchCriteria);
+
 			// find our way down to the end model
 			foreach($fKModelType::getDisplayAttr() as $field)
 			{
 				eval('$this->_display[] = $model->' . str_replace('t.', '', $field) . ";");
 			}
 		}
-		
+
 		// create the ajax url including foreign key model name and existing get parameters
 		$this->sourceUrl = Yii::app()->createUrl("$fKModelType/autocomplete",
 			array(

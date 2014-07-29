@@ -4,7 +4,7 @@
  * Dataprovider
  */
 
-class TaskActiveDataProvider extends ActiveDataProvider
+class CustomFieldActiveDataProvider extends ActiveDataProvider
 {
 
 	public function getData($refresh = false) {

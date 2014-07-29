@@ -34,10 +34,6 @@ class Task extends CustomFieldActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
-	public $searchInCharge;
-	public $searchProject;
-	public $searchTaskTemplate;
-	public $searchEarliest;
 	public $critical_completion;
 	public $name;
 	public $in_charge_id;
@@ -60,12 +56,6 @@ class Task extends CustomFieldActiveRecord
 			array('name', 'length', 'max'=>255),
 			array('critical_completion', 'safe'),
 		));
-	}
-
-	// needed as using a view to concat custom columns in admin view
-	public function primaryKey()
-	{
-		return 'id';
 	}
 
 	public function tableName() {
@@ -121,50 +111,6 @@ class Task extends CustomFieldActiveRecord
 		));
 	}
 
-	/**
-	 * Different becuase fo the temp table and need the extra columns
-	 */
-	public function search($pagination = array())
-	{
-		// get the sort order
-		foreach($this->adminColumns as $adminColumn)
-		{
-			if(is_array($adminColumn))
-			{
-				if(isset($adminColumn['name']))
-				{
-					$attribute = $adminColumn['name'];
-				}
-				else
-				{
-					continue;;
-				}
-			}
-			else
-			{
-				$attribute = $adminColumn;
-			}
-
-			$attribute = preg_replace('/:.*/', '', $attribute);
-			$sort[$attribute] = array(
-				'asc'=>" $attribute ",
-				'desc'=>" $attribute DESC",
-			);
-		}
-		
-		// add all other attributes
-		$sort[] = '*';
-		
-		// use custom made ActiveDataProvider just for this purpose
-		$dataProvider = new TaskActiveDataProvider($this, array(
-			'criteria'=>self::getSearchCriteria($this),
-			'sort'=>array('attributes'=>$sort),
-			'pagination' => $pagination,
-		));
-	
-		return $dataProvider;
-	}
-
 	public function getAdminColumns()
 	{
 		$columns['id'] = 'id';
@@ -194,13 +140,10 @@ class Task extends CustomFieldActiveRecord
 			// if not already in our list of columns to show
 			if(!array_key_exists($tempTableColumnName, $columns))
 			{
-				$taskTemplateToCustomField = TaskTemplateToCustomField::model()->findByPk(str_replace('task_template_to_custom_field_id_', '', $tempTableColumnName));
-				$label = $taskTemplateToCustomField->label_override
-					? $taskTemplateToCustomField->label_override
-					: $taskTemplateToCustomField->customField->label;
+				$label = 'test';
 				
 				// use setter to dynamically create an attribute
-				$columns[] = "$tempTableColumnName::$label";
+				$columns[] = "$tempTableColumnName::" . str_replace('_', ' ', $tempTableColumnName);
 			}
 		}
 

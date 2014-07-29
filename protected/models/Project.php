@@ -31,8 +31,6 @@ class Project extends CustomFieldActiveRecord
 	 * these values are entered by user in admin view to search
 	 */
 	public $searchProjectType;
-	public $searchInCharge;
-	public $searchName;
 	public $critical_completion;
 	public $name;
 	public $in_charge_id;
@@ -59,6 +57,24 @@ class Project extends CustomFieldActiveRecord
 		));
 	}
 
+	public function tableName() {
+
+		// need to create a single shot instance of creating the temp table that appends required custom columns - only if in search scenario will actually
+		// do the search later when attribute assignments have been made which will repeat this - however some methods need the table architecture earlier
+		static $called = false;
+
+		if(!$called && $this->scenario == 'search')
+		{
+			Yii::app()->db->createCommand("CALL pro_get_projects_from_client_admin_view({$_GET['client_id']})")->execute();
+			$called = true;
+		}
+
+		return ($this->scenario == 'search') || static::$inSearch
+			? 'tmp_table'
+			: 'tbl_project';
+	}
+	
+	/**
 	/**
 	 * @return array relational rules.
 	 */
@@ -81,27 +97,27 @@ class Project extends CustomFieldActiveRecord
     }
 
 	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels($attributeLabels = array())
+	{
+		return parent::attributeLabels(array(
+			'derived_in_charge' => 'In charge',
+			'name' => 'Project',
+		));
+	}
+
+	/**
 	 * @return DbCriteria the search/filter conditions.
 	 */
 	public function getSearchCriteria()
 	{
-		$criteria=new DbCriteria($this);
+		$criteria = new DbCriteria;
 
-		$criteria->compareAs('searchName', $this->searchName, 'id0.name', true);
 		$criteria->compareAs('searchProjectType', $this->searchProjectType, 'projectType.name', true);
-		$criteria->compareAs('in_charge_id', $this->in_charge_id, 'id0.in_charge_id');
-		$criteria->compareAs('critical_completion', $this->in_charge_id, 'id0.critical_completion');
-		$criteria->composite('searchInCharge', $this->searchInCharge, array(
-			'contact.first_name',
-			'contact.last_name',
-			'contact.email'
-		));
 
 		$criteria->with = array(
 			'projectType',
-			'projectType.client',
-			'id0',
-			'id0.inCharge.contact',
 		);
 
 		return $criteria;
@@ -109,14 +125,37 @@ class Project extends CustomFieldActiveRecord
 
 	public function getAdminColumns()
 	{
-		$columns[] = 'id';
-		$columns[] = 'searchName';
-        $columns[] = static::linkColumn('searchInCharge', 'User', 'in_charge_id');
-		$columns[] = 'searchProjectType';
-		$columns[] = 'travel_time_1_way';
-		$columns[] = 'critical_completion';
-		$columns[] = 'planned';
+		$columns['id'] = 'id';
+		$columns['name'] = 'name';
+		$columns['critical_completion'] = 'critical_completion';
+        $columns['derived_in_charge'] = static::linkColumn('derived_in_charge', 'User', 'in_charge_id');
+		$columns['searchProjectType'] = 'searchProjectType';
+		$columns['travel_time_1_way'] = 'travel_time_1_way';
+		$columns['planned'] = 'planned';
 		
+		// loop thru temporary table columns
+		$isCustom = FALSE;
+		foreach(static::model()->tableSchema->getColumnNames() AS $key => $tempTableColumnName)
+		{
+			// start from derived_planned - the last fixed column
+			if($tempTableColumnName == 'derived_planned')
+			{
+				$isCustom = TRUE;
+				continue;
+			}
+			elseif($isCustom === FALSE)
+			{
+				continue;
+			}
+
+			// if not already in our list of columns to show
+			if(!array_key_exists($tempTableColumnName, $columns))
+			{
+				// use setter to dynamically create an attribute
+				$columns[] = "$tempTableColumnName::" . str_replace('_', ' ', $tempTableColumnName);
+			}
+		}
+
 		return $columns;
 	}
 
@@ -125,7 +164,7 @@ class Project extends CustomFieldActiveRecord
 	 */
 	public static function getDisplayAttr()
 	{
-		$displayAttr[]='searchName';
+		$displayAttr[]='name';
 
 		return $displayAttr;
 	}

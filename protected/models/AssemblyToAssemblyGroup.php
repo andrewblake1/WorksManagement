@@ -38,6 +38,18 @@ class AssemblyToAssemblyGroup extends ActiveRecord
 	public $searchDetailDrawing;
 
 	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules($ignores = array())
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array_merge(parent::rules(array('comment')), array(
+			array('comment', 'safe'),
+		));
+	}
+
+	/**
 	 * @return array relational rules.
 	 */
 	public function relations()
