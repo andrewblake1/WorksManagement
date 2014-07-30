@@ -56,12 +56,6 @@ class Duty extends CustomFieldActiveRecord
 			: 'tbl_duty';
 	}
 
-	// needed as using a view
-	public function primaryKey()
-	{
-		return 'id';
-	}
-
 	/**
 	 * @return array validation rules for model attributes.
 	 */

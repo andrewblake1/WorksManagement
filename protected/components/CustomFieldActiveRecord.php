@@ -99,51 +99,6 @@ abstract class CustomFieldActiveRecord extends ActiveRecord
 
 		return $saved;
 	}
-	
-	/**
-	 * Different becuase fo the temp table and need the extra columns
-	 */
-	public function search($pagination = array())
-	{
-		// get the sort order
-		foreach($this->adminColumns as $adminColumn)
-		{
-			if(is_array($adminColumn))
-			{
-				if(isset($adminColumn['name']))
-				{
-					$attribute = $adminColumn['name'];
-				}
-				else
-				{
-					continue;;
-				}
-			}
-			else
-			{
-				$attribute = $adminColumn;
-			}
-
-			$attribute = preg_replace('/:.*/', '', $attribute);
-			$sort[$attribute] = array(
-				'asc'=>" $attribute ",
-				'desc'=>" $attribute DESC",
-			);
-		}
-		
-		// add all other attributes
-		$sort[] = '*';
-		
-		// use custom made ActiveDataProvider just for this purpose
-		$dataProvider = new CustomFieldActiveDataProvider($this, array(
-			'criteria'=>self::getSearchCriteria($this),
-			'sort'=>array('attributes'=>$sort),
-			'pagination' => $pagination,
-		));
-	
-		return $dataProvider;
-	}
-
 
 }
 ?>
