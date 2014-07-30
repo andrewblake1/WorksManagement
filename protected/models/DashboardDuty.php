@@ -59,13 +59,12 @@ class DashboardDuty extends Duty
 			$duty->attributes = $_GET['DashboardDuty'];
 		}
 
-		$criteria = new DbCriteria($duty, array('derived_assigned_to_id', 'updated', 'planned'));
+		$criteria = new DbCriteria($duty, array('derived_assigned_to_id', 'updated'));
 
 		// filter to current active duties for this user
 		$user = User::model()->findByPk(Yii::app()->user->id);
 		$criteria->compare('t.derived_assigned_to_id', $user->contact_id);
 		$criteria->compareNull('t.updated');
-		$criteria->addCondition("t.planned IS NOT NULL");
 		
 		// group by
 		$criteria->group = 't.duty_data_id';

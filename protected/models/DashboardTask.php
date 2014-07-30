@@ -9,7 +9,6 @@
  * @property string $project_id
  * @property integer $task_template_id
  * @property integer $quantity
- * @property string $planned
  * @property string $location
  * @property integer $preferred_mon
  * @property integer $preferred_tue

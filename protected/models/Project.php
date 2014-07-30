@@ -9,7 +9,6 @@
  * @property integer $project_type_id
  * @property integer $client_id
  * @property string $travel_time_1_way
- * @property string $planned
  * @property integer $updated_by
  *
  * The followings are the available model relations:
@@ -131,14 +130,13 @@ class Project extends CustomFieldActiveRecord
         $columns['derived_in_charge'] = static::linkColumn('derived_in_charge', 'User', 'in_charge_id');
 		$columns['searchProjectType'] = 'searchProjectType';
 		$columns['travel_time_1_way'] = 'travel_time_1_way';
-		$columns['planned'] = 'planned';
 		
 		// loop thru temporary table columns
 		$isCustom = FALSE;
 		foreach(static::model()->tableSchema->getColumnNames() AS $key => $tempTableColumnName)
 		{
-			// start from derived_planned - the last fixed column
-			if($tempTableColumnName == 'derived_planned')
+			// start from the last fixed column
+			if($tempTableColumnName == 'derived_project_template_description')
 			{
 				$isCustom = TRUE;
 				continue;

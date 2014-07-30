@@ -63,8 +63,6 @@ $form=$this->beginWidget('WMTbActiveForm', array(
 
 	$form->datepickerRow('critical_completion');
 
-	$form->textFieldRow('planned');
-
 	ModeController::listWidgetRow($model, $form, 'mode_id');
 
 	if(!isset($customFieldsAdded))

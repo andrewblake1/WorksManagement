@@ -9,7 +9,6 @@
  * @property string $project_id
  * @property integer $task_template_id
  * @property integer $quantity
- * @property string $planned
  * @property string $crew_id
  * @property integer $mode_id
  * @property integer $updated_by
@@ -119,15 +118,14 @@ class Task extends CustomFieldActiveRecord
 		$columns['quantity'] = 'quantity';
         $columns['derived_in_charge'] = static::linkColumn('derived_in_charge', 'User', 'in_charge_id');
         $columns['derived_task_template_description'] = static::linkColumn('derived_task_template_description', 'TaskTemplate', 'task_template_id');
-		$columns['planned'] = 'planned';
 		$columns['derived_earliest'] = 'derived_earliest:date';
 		
 		// loop thru temporary table columns
 		$isCustom = FALSE;
 		foreach(static::model()->tableSchema->getColumnNames() AS $key => $tempTableColumnName)
 		{
-			// start from derived_planned - the last fixed column
-			if($tempTableColumnName == 'derived_planned')
+			// start from the last fixed column
+			if($tempTableColumnName == 'derived_task_template_description')
 			{
 				$isCustom = TRUE;
 				continue;
@@ -170,17 +168,6 @@ class Task extends CustomFieldActiveRecord
 		parent::afterFind();
 	}
 	
-	/*
-	 * can't set default value in database as TEXT data type but is required
-	 */
-	public function init()
-	{
-		// can't set default value in database as TEXT data type for AuthItem
-		$this->planned = date('d M, Y');
-		
-		parent::init();
-	}
-
 	/*
 	 * can't set default value in database as TEXT data type but is required
 	 */
