@@ -194,7 +194,10 @@ class Project extends CustomFieldActiveRecord
 			if(!array_key_exists($tempTableColumnName, $columns))
 			{
 				// use setter to dynamically create an attribute
-				$columns[] = "$tempTableColumnName::" . str_replace('_', ' ', $tempTableColumnName);
+				$columns[] = array(
+					'name' => $tempTableColumnName,
+					'header' => str_replace('_', ' ', $tempTableColumnName),
+				);
 			}
 		}
 

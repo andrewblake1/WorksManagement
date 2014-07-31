@@ -95,7 +95,7 @@ abstract class ActiveRecord extends CActiveRecord
 			}
 		}
 
-		$return = parent::getRelated($name,$refresh,$params);
+		$return = parent::getRelated($name,true,$params);
 
 		static::$showSoftDeletes = FALSE;
 		
