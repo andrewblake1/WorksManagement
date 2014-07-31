@@ -337,8 +337,15 @@ class Duty extends CustomFieldActiveRecord
 		// there is nothing this is dependant on so technically can be ticked off
 		else
 		{
+			// need this and refresh for some reason due to the findByAttributes when updating trying to use tbl_duty instead of v_duty
+			$duty = new DashboardDuty('search');
+			$duty->refreshMetaData();
+			$duty->findByAttributes(array(
+				"duty_data_id"=>$this->duty_data_id,
+				"derived_assigned_to_id"=>$user->contact_id,
+			));
 			// if write access all duties, or write access on this duty
-			return Yii::app()->user->checkAccess($mode == Controller::accessWrite ? 'Duty' : 'DutyRead') || Duty::model()->findByAttributes(array(
+			return Yii::app()->user->checkAccess($mode == Controller::accessWrite ? 'Duty' : 'DutyRead') || $duty->findByAttributes(array(
 				"duty_data_id"=>$this->duty_data_id,
 				"derived_assigned_to_id"=>$user->contact_id,
 			));

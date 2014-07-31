@@ -68,7 +68,9 @@ class WMEJuiAutoCompleteFkField extends WMEJuiAutoCompleteField
 		{
 			// ensure we get any aliased fields
 			$primaryKeyName = $model->tableSchema->primaryKey;
-			$model = $model->findByPk($model->$primaryKeyName, $model->searchCriteria);
+			$criteria = $model->searchCriteria;
+			$criteria->condition = '';
+			$model = $model->findByPk($model->$primaryKeyName, $criteria);
 
 			// find our way down to the end model
 			foreach($fKModelType::getDisplayAttr() as $field)

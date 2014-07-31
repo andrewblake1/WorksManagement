@@ -206,6 +206,7 @@ class Controller extends CController
 			$modelName = $this->modelName;
 			$model = $modelName::model();
 			$criteria = $model->searchCriteria;
+			$criteria->condition = '';
 			$criteria->having = '';
 			$displayAttr = $modelName::getDisplayAttr();
 
