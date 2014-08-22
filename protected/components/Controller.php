@@ -874,7 +874,6 @@ class Controller extends CController
 	/*
 	 * to be overidden if not wanting to redirect to admin
 	 */
-
 	protected function updateRedirect($model)
 	{
 

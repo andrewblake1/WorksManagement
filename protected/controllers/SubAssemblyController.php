@@ -158,8 +158,14 @@ class SubAssemblyController extends Controller
 		parent::storeAdminSettings($modelName, $_SESSION['admin'][$modelName][$tabLevel]);
 	}
 	
-	
-	
-	
-	
+	protected function updateRedirect($model)
+	{
+		// need to drop off the last sub assembly id as returning a level higher
+		if(isset($_GET['sub_assembly_ids']))
+		{
+			array_pop($_GET['sub_assembly_ids']);
+		}
+
+		return parent::updateRedirect($model);
+	}
 }

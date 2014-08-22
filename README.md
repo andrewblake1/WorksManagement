@@ -49,7 +49,7 @@ git init yii
 cd yii
 git clone git@github.com:yiisoft/yii
 cd yii
-git checkout 1.1.12
+git checkout 1.1.13
 
 3./ MySQL - to upload databases straight from workbench need to open mysql to other ip's
 find / -name my.cnf. This potential security risk as normally only open to 127.0.0.1 - may require firewall to make safe

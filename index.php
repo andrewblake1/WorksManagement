@@ -25,7 +25,7 @@ switch($_SERVER['SERVER_NAME'])
 		break;
 	case 'melbourne.wcewm.co.nz' :
 		$wceBusiness = 'melbourne';
-		$wceEnvironment = 'PRODUCTION';
+		$wceEnvironment = 'DEVELOPMENT';
 		break;
 	case 'perth.wcewm.co.nz' :
 		$wceBusiness = 'perth';

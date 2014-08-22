@@ -150,7 +150,6 @@ class TaskToAssembly extends ActiveRecord
 		
 		$criteria->select[] = 'assembly.drawing_id AS searchDrawingId';
 		
-		$criteria->compareAs('searchAssembly', $this->searchAssembly, 'assembly.description', true);
 		$criteria->composite('searchAliases', $this->searchAliases, array(
 			'clientToAssembly.alias',
 			'assembly.alias'
@@ -159,6 +158,7 @@ class TaskToAssembly extends ActiveRecord
 		// update
 		if(($this->tableName()) == 'tbl_task_to_assembly')
 		{
+			$criteria->compareAs('searchAssembly', $this->searchAssembly, 'assembly.description', true);
 			$criteria->join = '
 				JOIN tbl_assembly assembly ON t.assembly_id = assembly.id
 				JOIN tbl_task task ON t.task_id = task.id
@@ -171,13 +171,17 @@ class TaskToAssembly extends ActiveRecord
 		}
 		
 		// admin
+		$criteria->composite('searchAssembly', $this->searchAssembly, array(
+			'assembly.description',
+			't.sub_assembly_comment'
+		));
 		$criteria->compareAs('searchDrawing', $this->searchDrawing, 'drawing.description', true);
 		$criteria->compareAs('searchParent', $this->searchParent, 'assemblyParent.description', true);
 		$criteria->compareAs('searchTaskQuantity', $this->searchTaskQuantity, 'task.quantity', true);
 		$criteria->compareAs('searchAccumlatedTotal', $this->searchAccumlatedTotal, 'task.quantity * t.quantity', true);
 		$criteria->composite('searchGroup', $this->searchGroup, array(
 			'assemblyGroup.description',
-			't.comment'
+			't.group_comment'
 		));
 
 		// join

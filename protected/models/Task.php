@@ -326,6 +326,7 @@ class Task extends CustomFieldActiveRecord
 			$taskToLabourResource = new TaskToLabourResource();
 			// copy any useful attributes from
 			$taskToLabourResource->attributes = $taskTemplateToLabourResource->attributes;
+			$taskToLabourResource->durationTemp = $taskToLabourResource->duration;
 			$taskToLabourResource->updated_by = null;
 			$taskToLabourResource->task_id = $this->id;
 			$saved &= $taskToLabourResource->createSave($models, $taskTemplateToLabourResource);
@@ -388,6 +389,7 @@ class Task extends CustomFieldActiveRecord
 			$taskToPlant = new TaskToPlant();
 			// copy any useful attributes from
 			$taskToPlant->attributes = $taskTemplateToPlant->attributes;
+			$taskToPlant->durationTemp = $taskToPlant->duration;
 			$taskToPlant->updated_by = null;
 			$taskToPlant->task_id = $this->id;
 			$saved &= $taskToPlant->createSave($models, $taskTemplateToPlant);
