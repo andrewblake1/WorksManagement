@@ -866,7 +866,7 @@ $t = $model->attributes;
 		}
 		catch(CDbException $e)
 		{
-				$errorMessage = $e->getMessage();
+			$errorMessage = $e->getMessage();
 fb($errorMessage);
 
 			// special handling if forcing trigger failures to block an operation

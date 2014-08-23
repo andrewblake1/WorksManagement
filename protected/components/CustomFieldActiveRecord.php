@@ -23,7 +23,7 @@ abstract class CustomFieldActiveRecord extends ActiveRecord
 		if($saved = $this->dbCallback('save', array($runValidation)))
 		{
 			// attempt creation of customValues
-			$saved &= $this->createCustomFields($models);
+			$saved &= $this->createCustomFields($models, $runValidation);
 		}
 		else
 		{
@@ -53,7 +53,7 @@ abstract class CustomFieldActiveRecord extends ActiveRecord
 		return $saved;
 	}
 
-	protected function createCustomFields(&$models=array())
+	protected function createCustomFields(&$models=array(), $runValidation=true)
 	{
 		// initialise the saved variable to show no errors in case the are no
 		// model customValues - otherwise will return null indicating a save error
@@ -76,7 +76,7 @@ abstract class CustomFieldActiveRecord extends ActiveRecord
 			}
 
 			// attempt save
-			$saved &= $endToCustomFieldPivot->dbCallback('save');
+			$saved &= $endToCustomFieldPivot->dbCallback('save', array($runValidation));
 			// record any errors
 			$models[] = $endToCustomFieldPivot;
 		}

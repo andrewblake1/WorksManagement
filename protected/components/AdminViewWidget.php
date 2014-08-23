@@ -96,7 +96,16 @@ class AdminViewWidget extends CWidget
 
 		// as using boostrap modal for create the html for the modal needs to be on
 		// the calling page
-		$this->_controller->actionCreate('myModal', $this->model);
+		// need to ensure we pass a model that has correct scenario set i.e. insert and not search
+		$model = new $modelName;
+		foreach($this->model->attributes as $attribute => $value)
+		{
+			if(isset($model->$attribute))
+			{
+				$model->$attribute = $value;
+			}
+		}
+		$this->_controller->actionCreate('myModal', $model);
 		
 		parent::run();
 		

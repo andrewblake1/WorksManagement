@@ -182,8 +182,6 @@ class Task extends CustomFieldActiveRecord
 			// if not already in our list of columns to show
 			if(!array_key_exists($tempTableColumnName, $columns))
 			{
-				$label = 'test';
-				
 				// use setter to dynamically create an attribute
 				$columns[] = "$tempTableColumnName::" . str_replace('_', ' ', $tempTableColumnName);
 			}

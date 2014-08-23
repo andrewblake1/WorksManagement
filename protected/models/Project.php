@@ -250,7 +250,7 @@ class Project extends CustomFieldActiveRecord
 			$this->project_template_id = $this->projectType->project_template_id;
 			$this->projectTemplate = $this->projectType->projectTemplate;
 		}
-		
+
 		return parent::beforeSave();
 	}
 	
@@ -290,15 +290,15 @@ class Project extends CustomFieldActiveRecord
 			// add the Project
 			$this->id = $planning->id;
 			$this->level = $planning->level;
-			$saved &= parent::createSave($models);
+			$saved &= parent::createSave($models, $runValidation);
 
 			// add a Day
 			$day = new Day;
 			$day->project_id = $this->id;
-			$saved &= $day->createSave($models);
+			$saved &= $day->createSave($models, $runValidation);
 
 			// attempt creation of default roles
-			$saved &= $this->createRoles($models);
+			$saved &= $this->createRoles($models, $runValidation);
 		}
 
 		// put the model into the models array used for showing all errors

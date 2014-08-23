@@ -258,7 +258,7 @@ class Duty extends CustomFieldActiveRecord
 	{
 		// initialise the saved variable to show no errors in case the are no
 		// model customValues - otherwise will return null indicating a save error
-		$saved = true;
+		$saved = trcue;
 		
 		// get the action
 		$action = Action::model()->findByPk($actionId);
@@ -444,7 +444,7 @@ class Duty extends CustomFieldActiveRecord
 	}
 	
 	// this needs overriding here as really should be part of duty data however handling the variables at this level
-	protected function createCustomFields(&$models=array())
+	protected function createCustomFields(&$models = array(), $runValidation = true)
 	{
 		// initialise the saved variable to show no errors in case the are no
 		// model customValues - otherwise will return null indicating a save error
