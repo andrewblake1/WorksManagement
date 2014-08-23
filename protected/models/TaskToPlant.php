@@ -152,7 +152,7 @@ class TaskToPlant extends ActiveRecord
 			JOIN tbl_plant_data plantData ON t.plant_data_id = plantData.id
 			JOIN tbl_plant plant ON plantData.plant_id = plant.id
 			JOIN tbl_level level ON plantData.level = level.id
-			LEFT JOIN tbl_mode mode
+			JOIN tbl_mode mode
 				ON plantData.mode_id = mode.id
 				AND task.mode_id = plantData.mode_id
 			LEFT JOIN tbl_plant_to_supplier plantToSupplier
@@ -248,7 +248,6 @@ class TaskToPlant extends ActiveRecord
 		{
 			$this->duration = null;
 			$this->start = null;
-			$this->plant_to_supplier_id = null;
 			$this->estimated_total_duration = null;
 		}
 		else
@@ -260,6 +259,7 @@ class TaskToPlant extends ActiveRecord
 		if(!$plantData = PlantData::model()->findByAttributes(array(
 			'planning_id'=>$planning_id,
 			'plant_id'=>$this->plant_id,
+			'mode_id'=>$this->mode_id,
 		)))
 		{
 			$plantData = new PlantData;

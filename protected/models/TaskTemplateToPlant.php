@@ -31,6 +31,20 @@ class TaskTemplateToPlant extends ActiveRecord
 	public $searchLevel;
 	public $searchMode;
 	public $searchSupplier;
+	public $searchSupplierId;
+	public $durationTemp;	// used to get around an awkward validation situation where want duration to be required if Primary role but not if Secondary role or type not set
+	public $type;	// role type ie. Primary role or Secondary role
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules($ignores = array())
+	{
+		return array_merge(parent::rules(array('type')), array(
+			array('durationTemp', 'required'),
+			array('type', 'safe'),
+		));
+	}
 
 	/**
 	 * @return array relational rules.
@@ -57,6 +71,11 @@ class TaskTemplateToPlant extends ActiveRecord
 	{
 		$criteria=new DbCriteria($this);
 
+		$criteria->select=array(
+			't.*',
+			'supplier.id AS searchSupplierId',
+		);
+
 		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);
 		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 		$criteria->compareAs('searchLevel', $this->searchLevel, 'level.name', true);
@@ -76,11 +95,11 @@ class TaskTemplateToPlant extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchPlant';
-  		$columns[] = 'searchMode';
- 		$columns[] = 'searchLevel';
- 		$columns[] = 'searchSupplier';
-		$columns[] = 'quantity';
+  		$columns[] = 'quantity';
 		$columns[] = 'duration';
+ 		$columns[] = 'searchMode';
+ 		$columns[] = 'searchLevel';
+        $columns[] = static::linkColumn('searchSupplier', 'Supplier', 'searchSupplierId');
 		
 		return $columns;
 	}
@@ -108,6 +127,42 @@ class TaskTemplateToPlant extends ActiveRecord
 		$this->getDbCriteria()->mergeWith($criteria);
 		
 		return $this;
+	}	
+	
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels($attributeLabels = array())
+	{
+		return parent::attributeLabels(array(
+			'durationTemp' => 'Duration',
+			'searchPrimarySecondary' => 'Type',
+		));
 	}
 	
+	public function afterFind() {
+		parent::afterFind();
+
+		$this->durationTemp = $this->duration;
+	}
+	
+	public function beforeValidate()
+	{
+		// if primary role then all values can be inserted, if secondary then we want to clear
+		// start, duration, estimated duration, and supplier for data item and children
+		if($this->type == 'Secondary')
+		{
+			$this->duration = null;
+		}
+		else
+		{
+			$this->duration = $this->durationTemp;
+		}
+
+		// a hack to get around not easily being able to adjust rules
+		$this->durationTemp = 0;
+		
+		return parent::beforeValidate();
+	}
+
 }

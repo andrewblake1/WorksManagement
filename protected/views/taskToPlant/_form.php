@@ -43,12 +43,10 @@ $form=$this->beginWidget('WMTbActiveForm', array('model'=>$model, 'parent_fk'=>$
 			{
 				// hide the irrelvenat fields
 				$('#primary-role').fadeOut('slow');
-				$('#dependant-plant_to_supplier_id').fadeOut('slow');
 			}
 			else
 			{
 				$('#primary-role').fadeIn('slow');
-				$('#dependant-plant_to_supplier_id').fadeIn('slow');
 			}
 		}); 
 		", CClientScript::POS_READY

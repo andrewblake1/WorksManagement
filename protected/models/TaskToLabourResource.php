@@ -24,7 +24,6 @@ class TaskToLabourResource extends ActiveRecord
 	 */
 	public $searchSupplier;
 	public $searchPrimarySecondary;
-	public $searchLabourResourceToSupplierId;
 	public $searchLabourResource;
 	public $searchTaskQuantity;
 	public $searchMode;
@@ -40,6 +39,7 @@ class TaskToLabourResource extends ActiveRecord
 	public $labour_resource_to_supplier_id;
 	public $action_to_labour_resource_id;
 	public $searchLevel;
+	public $searchSupplierId;
 	public $labour_resource_id;
 	public $mode_id;
 	public $level;
@@ -105,6 +105,7 @@ class TaskToLabourResource extends ActiveRecord
 		
 		$criteria->select=array(
 			't.*',
+			'supplier.id AS searchSupplierId',
 			'IF(primarySecondary.labour_resource_data_id, "Primary", "Secondary") AS searchPrimarySecondary',
 		);
 		
@@ -151,7 +152,7 @@ class TaskToLabourResource extends ActiveRecord
 			JOIN tbl_labour_resource_data labourResourceData ON t.labour_resource_data_id = labourResourceData.id
 			JOIN tbl_labour_resource labourResource ON labourResourceData.labour_resource_id = labourResource.id
 			JOIN tbl_level level ON labourResourceData.level = level.id
-			LEFT JOIN tbl_mode mode
+			JOIN tbl_mode mode
 				ON labourResourceData.mode_id = mode.id
 				AND task.mode_id = labourResourceData.mode_id
 			LEFT JOIN tbl_labour_resource_to_supplier labourResourceToSupplier
@@ -169,7 +170,7 @@ class TaskToLabourResource extends ActiveRecord
 	{
         $columns[] = 'searchLabourResource';
         $columns[] = 'searchPrimarySecondary';
-        $columns[] = static::linkColumn('searchSupplier', 'LabourResourceToSupplier', 'searchLabourResourceToSupplierId');
+        $columns[] = static::linkColumn('searchSupplier', 'Supplier', 'searchSupplierId');
 		$columns[] = 'searchTaskQuantity';
 		$columns[] = 'start:time';
 		$columns[] = 'searchLevel';
@@ -204,7 +205,6 @@ class TaskToLabourResource extends ActiveRecord
 		$this->level = $this->labourResourceData->level;
 		$this->mode_id = $this->labourResourceData->mode_id;
 		$this->action_to_labour_resource_id = $this->labourResourceData->action_to_labour_resource_id;
-		
 	}
 
 // TODO:repeated in duties -- use trait but watch setting of level as different in duties slightly
@@ -258,6 +258,7 @@ class TaskToLabourResource extends ActiveRecord
 		if(!$labourResourceData = LabourResourceData::model()->findByAttributes(array(
 			'planning_id'=>$planning_id,
 			'labour_resource_id'=>$this->labour_resource_id,
+			'mode_id'=>$this->mode_id,
 		)))
 		{
 			$labourResourceData = new LabourResourceData;
@@ -317,7 +318,6 @@ class TaskToLabourResource extends ActiveRecord
 		{
 			$this->duration = null;
 			$this->start = null;
-			$this->labour_resource_to_supplier_id = null;
 			$this->estimated_total_duration = null;
 		}
 		else
