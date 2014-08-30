@@ -98,6 +98,17 @@ class AdminViewWidget extends CWidget
 		// the calling page
 		// need to ensure we pass a model that has correct scenario set i.e. insert and not search
 		$model = new $modelName;
+		// needed to put this line back in because was failing on assertToParent for Drawing model
+		try
+		{
+			$model->attributes = $this->model->attributes;
+		}
+		catch(Exception $ex)
+		{
+			// do nothint just in case an attribute doesn't exist e.g. dashboardduty where the model types might differ
+			// but not sure if deliberate or accidental but a quick hack to get past bug ecnonomically.
+		}
+//		$this->_controller->actionCreate('myModal', $this->model); //
 		foreach($this->model->attributes as $attribute => $value)
 		{
 			if(isset($model->$attribute))

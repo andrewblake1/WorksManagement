@@ -60,6 +60,7 @@ class PlantCapability extends ActiveRecord
 
 			$criteria->with = 'plantToSupplierToPlantCapabilties.plantToSupplier';
 			$criteria->compare('plantToSupplier.supplier_id', $supplierId);
+			$criteria->compare('plantToSupplier.deleted', 0);
 
 			$this->getDbCriteria()->mergeWith($criteria);
 		}

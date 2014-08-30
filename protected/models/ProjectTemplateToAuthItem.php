@@ -30,6 +30,7 @@ class ProjectTemplateToAuthItem extends ActiveRecord
 // also add deleted to unique indexes and make deleted += 1 so not violating constraints when adding new and removing old multiple times
 		$criteria=new DbCriteria;
 		$criteria->compare('taskTemplate.id',$task_template_id);
+		$criteria->compare('taskTemplate.deleted',0);
 		$criteria->join='
 			JOIN tbl_task_template taskTemplate
 			USING ( project_template_id )

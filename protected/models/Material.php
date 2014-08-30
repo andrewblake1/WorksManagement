@@ -110,7 +110,7 @@ class Material extends ActiveRecord
 
 		// join
 		$criteria->join = '
-			JOIN tbl_material_group_to_material materialGroupToMaterial ON materialGroupToMaterial.material_id = t.id
+			JOIN tbl_material_group_to_material materialGroupToMaterial ON materialGroupToMaterial.material_id = t.id AND materialGroupToMaterial.deleted = 0
 		';
 
 		$this->getDbCriteria()->mergeWith($criteria);

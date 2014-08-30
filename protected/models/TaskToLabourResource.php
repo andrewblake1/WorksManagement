@@ -270,7 +270,7 @@ class TaskToLabourResource extends ActiveRecord
 			$labourResourceData->estimated_total_duration = $this->estimated_total_duration;
 //			$labourResourceData->action_to_labour_resource_id = $this->action_to_labour_resource_id;
 			$labourResourceData->start = $this->start;
-			$labourResourceData->mode_id = $this->task->mode_id;
+			$labourResourceData->mode_id = $this->mode_id ? $this->mode_id : $this->task->mode_id;
 			$labourResourceData->updated_by = Yii::app()->user->id;
 			$labourResourceData->insert();
 		}

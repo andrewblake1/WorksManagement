@@ -258,7 +258,7 @@ class Duty extends CustomFieldActiveRecord
 	{
 		// initialise the saved variable to show no errors in case the are no
 		// model customValues - otherwise will return null indicating a save error
-		$saved = trcue;
+		$saved = true;
 		
 		// get the action
 		$action = Action::model()->findByPk($actionId);

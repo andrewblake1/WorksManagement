@@ -271,7 +271,7 @@ class TaskToPlant extends ActiveRecord
 			$plantData->estimated_total_duration = $this->estimated_total_duration;
 //			$plantData->action_to_plant_id = $this->action_to_plant_id;
 			$plantData->start = $this->start;
-			$plantData->mode_id = $this->task->mode_id;
+			$plantData->mode_id = $this->mode_id ? $this->mode_id : $this->task->mode_id;
 			$plantData->updated_by = Yii::app()->user->id;
 			$plantData->insert();
 		}

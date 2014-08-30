@@ -62,7 +62,7 @@ class Action extends ActiveRecord
 			$criteria->compare('tbl_duty_step_to_mode.mode_id', $modeId);
 			
 			$criteria->join .= '
-				JOIN tbl_duty_step ON tbl_duty_step.action_id = t.id
+				JOIN tbl_duty_step ON tbl_duty_step.action_id = t.id AND tbl_duty_step.deleted = 0
 				JOIN tbl_duty_step_to_mode ON tbl_duty_step.id = tbl_duty_step_to_mode.duty_step_id
 			';
 	

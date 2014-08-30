@@ -609,7 +609,7 @@ $t = $model->attributes;
 		return $dataProvider;
 	}
 
-     public function defaultScope()
+    public function defaultScope()
     {
 		$defaultScope = array();
 	

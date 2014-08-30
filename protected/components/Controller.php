@@ -1658,7 +1658,8 @@ class Controller extends CController
 		$modelName = $_POST['controller'];
 		ob_start();
 		// get the model name of the lookup table from fk field
-		$lookupModelName = $this->getFKModelType($modelName::model(), $_GET['fkField']);
+		$model = $modelName::model();
+		$lookupModelName = $this->getFKModelType($model, $_GET['fkField']);
 		$form = $this->beginWidget('WMTbActiveForm', array('model' => $modelName::model(), 'parent_fk' => $_GET['fkField']));
 		ob_end_clean();
 		$scopeValue = isset($_POST[$modelName][$_GET['dependantOnAttribute']])

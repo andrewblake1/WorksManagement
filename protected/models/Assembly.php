@@ -104,7 +104,7 @@ class Assembly extends ActiveRecord
 
 		// join
 		$criteria->join = '
-			JOIN tbl_assembly_group_to_assembly assemblyGroupToAssembly ON assemblyGroupToAssembly.assembly_id = t.id
+			JOIN tbl_assembly_group_to_assembly assemblyGroupToAssembly ON assemblyGroupToAssembly.assembly_id = t.id AND assemblyGroupToAssembly.deleted = 0
 		';
 
 		$this->getDbCriteria()->mergeWith($criteria);
