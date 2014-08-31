@@ -268,7 +268,7 @@ class ReportController extends Controller
 			if($subReportModel->format == SubReport::subReportFormatPaged || ($subReportModel->format == SubReport::subReportFormatNotPaged))
 			{
 				// if exporting to xl
-				if($export)
+				if($export && $_GET['subreport'] == $subReportModel->id)
 				{
 					// Export it
 					Yii::app()->controller->toExcel($dataProvider, $attributes, null, array(), 'CSV'/*'Excel5'*/);
@@ -281,7 +281,7 @@ class ReportController extends Controller
 				echo '<h2>';
 					Yii::app()->controller->widget('bootstrap.widgets.TbButton', array(
 						'label'=>'Download Excel',
-						'url'=>Yii::app()->controller->createUrl("show", $_GET + array('action'=>'download')),
+						'url'=>Yii::app()->controller->createUrl("show", $_GET + array('action'=>'download', 'subreport'=>$subReportModel->id)),
 						'type'=>'primary',
 						'size'=>'small', // '', 'large', 'small' or 'mini'
 					));

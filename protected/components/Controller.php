@@ -991,7 +991,12 @@ class Controller extends CController
 		} elseif(isset($_GET[$this->modelName]))
 		{
 			// set any url based paramters
-			$model->attributes = $_GET[$this->modelName];
+//			$model->attributes = $_GET[$this->modelName];
+			foreach($_GET[$this->modelName] as $attribute => $value) {
+				if(isset($model->$attribute)) {
+					$model->$attribute = $value;
+				}
+			}
 			// ensure Controller::$nav is set
 			$model->assertFromParent();
 		}

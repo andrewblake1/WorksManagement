@@ -171,11 +171,12 @@ class TaskToMaterial extends ActiveRecord
 		// admin
 		
 		$criteria->select[] = 'assembly.drawing_id AS searchDrawingId';
+		$criteria->select[] = 'search_task_quantity';
 
 		$criteria->compareAs('searchStage', $this->searchStage, 'stage.description', true);
 		$criteria->compareAs('searchMaterial', $this->searchMaterial, 'material.description', true);
 		$criteria->compareAs('searchUnit', $this->searchUnit, 'material.unit', true);
-		$criteria->compareAs('searchAccumlatedTotal', $this->searchAccumlatedTotal, 't.quantity * task.quantity * taskToAssembly.accumulated_total', true);
+		$criteria->compareAs('searchAccumlatedTotal', $this->searchAccumlatedTotal, 't.quantity * task.quantity * COALESCE(taskToAssembly.accumulated_total, 1)', true);
 		$criteria->compareAs('searchAssemblyQuantity', $this->searchAssemblyQuantity, 'taskToAssembly.accumulated_total', true);
 		$criteria->composite('searchAlias', $this->searchAlias, array(
 			'clientToMaterial.alias',
