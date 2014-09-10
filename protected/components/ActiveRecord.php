@@ -209,7 +209,7 @@ abstract class ActiveRecord extends CActiveRecord
 		$validators = array_merge($validators, array(array(implode(',', $requiredValidator), 'required')));
 		$validators = array_merge($validators, array(array(implode(',', $integerOnlyValidator), 'numerical', 'integerOnly'=>true)));
 		$validators = array_merge($validators, array(array(implode(',', $dateOnlyValidator), 'date', 'format'=>'d MMM, yyyy')));
-		$validators = array_merge($validators, array(array(implode(',', $timeOnlyValidator), 'date', 'format'=>'hh:mm')));
+		$validators = array_merge($validators, array(array(implode(',', $timeOnlyValidator), 'date', 'format'=>'h:mm')));
 		$validators = array_merge($validators, array(array(implode(',', $dateTimeOnlyValidator), 'date', 'format'=>'d MMM yyyy, hh:mm')));
 		$validators = array_merge($validators, array(array(implode(',', $safeValidator), 'safe')));
 		// because search is not altering data it should be safe to allow all attributes for search scenario

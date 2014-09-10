@@ -135,6 +135,8 @@ class ActionToPlant extends ActiveRecord
 				'action_to_plant_id'=>$actionToPlant->id)))
 			{
 				$taskToPlant->attributes = $taskTemplateToActionToPlant->attributes;
+				// this needed or otherwise type needs to be set to primary if there is a duration in order for duration to be saved
+				$taskToPlant->durationTemp = $taskToPlant->duration;
 			}
 
 			$taskToPlant->updated_by = null;

@@ -172,10 +172,10 @@ class TaskTemplateToAction extends ActiveRecord
 		foreach($this->action->actionToPlants as $actionToPlant)
 		{
 			$taskTemplateToActionToPlant = new TaskTemplateToActionToPlant;
-			$taskTemplateToActionToPlant->task_template_id = $$this->task_template_id;
-			$taskTemplateToActionToPlant->action_to_plant_id = $$actionToPlant->id;
-			$taskTemplateToActionToPlant->task_template_to_action_id = $$this->id;
-			$taskTemplateToActionToPlant->quantity = $$actionToPlant->quantity;
+			$taskTemplateToActionToPlant->task_template_id = $this->task_template_id;
+			$taskTemplateToActionToPlant->action_to_plant_id = $actionToPlant->id;
+			$taskTemplateToActionToPlant->task_template_to_action_id = $this->id;
+			$taskTemplateToActionToPlant->quantity = $actionToPlant->quantity;
 			$taskTemplateToActionToPlant->insert();
 		}
 

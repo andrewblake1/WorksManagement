@@ -133,6 +133,8 @@ class ActionToLabourResource extends ActiveRecord
 				'action_to_labour_resource_id'=>$actionToLabourResource->id)))
 			{
 				$taskToLabourResource->attributes = $taskTemplateToActionToLabourResource->attributes;
+				// this needed or otherwise type needs to be set to primary if there is a duration in order for duration to be saved
+				$taskToLabourResource->durationTemp = $taskToLabourResource->duration;
 			}
 			$taskToLabourResource->updated_by = null;
 			$taskToLabourResource->task_id = $task->id;

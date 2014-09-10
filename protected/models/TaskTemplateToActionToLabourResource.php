@@ -20,6 +20,7 @@
 class TaskTemplateToActionToLabourResource extends ActiveRecord
 {
 	public $searchLabourResource;
+	public $searchMode;
 	
 	/**
 	 * @return array relational rules.
@@ -41,8 +42,10 @@ class TaskTemplateToActionToLabourResource extends ActiveRecord
 		$criteria=new DbCriteria($this);
 
 		$criteria->compareAs('searchLabourResource', $this->searchLabourResource, 'labourResource.auth_item_name', true);
+		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 
 		$criteria->with=array(
+			'actionToLabourResource.mode',
 			'actionToLabourResource.labourResource',
 		);
 
@@ -52,6 +55,7 @@ class TaskTemplateToActionToLabourResource extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchLabourResource';
+  		$columns[] = 'searchMode';
         $columns[] = 'quantity';
         $columns[] = 'duration';
  		

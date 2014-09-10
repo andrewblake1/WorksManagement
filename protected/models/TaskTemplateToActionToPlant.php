@@ -22,6 +22,7 @@ class TaskTemplateToActionToPlant extends ActiveRecord
 	static $niceNamePlural = 'Plant';
 
 	public $searchPlant;
+	public $searchMode;
 
 	/**
 	 * @return array relational rules.
@@ -43,8 +44,10 @@ class TaskTemplateToActionToPlant extends ActiveRecord
 		$criteria=new DbCriteria($this);
 
 		$criteria->compareAs('searchPlant', $this->searchPlant, 'plant.description', true);
+		$criteria->compareAs('searchMode', $this->searchMode, 'mode.description', true);
 
 		$criteria->with=array(
+			'actionToPlant.mode',
 			'actionToPlant.plant',
 		);
 
@@ -54,6 +57,7 @@ class TaskTemplateToActionToPlant extends ActiveRecord
 	public function getAdminColumns()
 	{
         $columns[] = 'searchPlant';
+  		$columns[] = 'searchMode';
         $columns[] = 'quantity';
         $columns[] = 'duration';
  		
