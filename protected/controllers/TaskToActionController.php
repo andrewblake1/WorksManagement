@@ -38,8 +38,7 @@ class TaskToActionController extends Controller
 		{
 			try
 			{
-				// we only allow deletion via POST request
-				$model = $this->loadModel($id);
+				$model = TaskToAction::model()->findByAttributes(array('action_id'=>$id, 'task_id'=>$_GET['task_id']));
 				$model->delete();
 			}
 			catch (CDbException $e)

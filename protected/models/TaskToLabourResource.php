@@ -121,7 +121,7 @@ class TaskToLabourResource extends ActiveRecord
 				ON taskToLabourResource.labour_resource_data_id = labourResourceData.id
 				AND taskToLabourResource.task_id = :task_id
 			JOIN tbl_action_to_labour_resource actionToLabourResource
-				ON t.action_to_labour_resource_id = actionToLabourResource.id
+				ON taskToLabourResource.action_to_labour_resource_id = actionToLabourResource.id
 			JOIN tbl_action_to_labour_resource_branch actionToLabourResourceBranch
 				ON actionToLabourResource.id = actionToLabourResourceBranch.id
 			JOIN tbl_duty duty
@@ -379,7 +379,7 @@ class TaskToLabourResource extends ActiveRecord
 	// see if this is deleteable in the application - not blocked by trigger as could interfere with all removals ultimately
 	public function getCanDelete()
 	{
-		return $this->action_to_labour_resource_id ? !$this->actionToLabourResource->mandatory : true;
+		return $this->action_to_labour_resource_id ? false : true;
 	}
 
 }
