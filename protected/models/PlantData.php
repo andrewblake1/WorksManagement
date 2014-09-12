@@ -13,7 +13,6 @@
  * @property integer $estimated_total_quantity
  * @property string $estimated_total_duration
  * @property string $start
- * @property integer $action_to_plant_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
@@ -46,7 +45,6 @@ class PlantData extends ActiveRecord
 			'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
 			'plant' => array(self::BELONGS_TO, 'PlantToSupplier', 'plant_id'),
 			'plantToSupplier' => array(self::BELONGS_TO, 'PlantToSupplier', 'plant_to_supplier_id'),
-			'actionToPlant' => array(self::BELONGS_TO, 'ActionToPlant', 'action_to_plant_id'),
 			'plantDataToPlantCapabilities' => array(self::HAS_MANY, 'PlantDataToPlantCapability', 'plant_data_id'),
 			'taskToPlants' => array(self::HAS_MANY, 'TaskToPlant', 'plant_data_id'),
 		);
@@ -120,7 +118,6 @@ class PlantData extends ActiveRecord
 				$plantData->plant_to_supplier_id = $this->plant_to_supplier_id;
 				$plantData->estimated_total_quantity = $this->estimated_total_quantity;
 				$plantData->estimated_total_duration = $this->estimated_total_duration;
-				$plantData->action_to_plant_id = $this->action_to_plant_id;
 				$plantData->start = $this->start;
 				$plantData->updated_by = Yii::app()->user->id;
 				// loop thru all relevant new planning id's

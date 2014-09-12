@@ -40,7 +40,6 @@ class TaskToPlant extends ActiveRecord
 	public $start;
 	public $description;
 	public $plant_to_supplier_id;
-	public $action_to_plant_id;
 	public $searchLevel;
 	public $plant_id;
 	public $mode_id;
@@ -57,7 +56,7 @@ class TaskToPlant extends ActiveRecord
 	{
 		return array_merge(parent::rules(array('plant_data_id', 'type')), array(
 			array('plant_id, durationTemp', 'required'),
-			array('level, action_to_plant_id, plant_id, mode_id, plant_to_supplier_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
+			array('level, plant_id, mode_id, plant_to_supplier_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
 			array('start, duration, estimated_total_duration', 'date', 'format'=>'H:m'),
 			array('type', 'safe'),
 		));
@@ -119,7 +118,7 @@ class TaskToPlant extends ActiveRecord
 				ON taskToPlant.plant_data_id = plantData.id
 				AND taskToPlant.task_id = :task_id
 			JOIN tbl_action_to_plant actionToPlant
-				ON plantData.action_to_plant_id = actionToPlant.id
+				ON taskToPlant.action_to_plant_id = actionToPlant.id
 			JOIN tbl_action_to_plant_branch actionToPlantBranch
 				ON actionToPlant.id = actionToPlantBranch.id
 			JOIN tbl_duty duty
@@ -205,7 +204,6 @@ class TaskToPlant extends ActiveRecord
 		$this->plant_id = $this->plantData->plant_id;
 		$this->level = $this->plantData->level;
 		$this->mode_id = $this->plantData->mode_id;
-		$this->action_to_plant_id = $this->plantData->action_to_plant_id;
 		
 	}
 
@@ -269,7 +267,6 @@ class TaskToPlant extends ActiveRecord
 			$plantData->plant_to_supplier_id = $this->plant_to_supplier_id;
 			$plantData->estimated_total_quantity = $this->estimated_total_quantity;
 			$plantData->estimated_total_duration = $this->estimated_total_duration;
-//			$plantData->action_to_plant_id = $this->action_to_plant_id;
 			$plantData->start = $this->start;
 			$plantData->mode_id = $this->mode_id ? $this->mode_id : $this->task->mode_id;
 			$plantData->updated_by = Yii::app()->user->id;
@@ -323,7 +320,6 @@ class TaskToPlant extends ActiveRecord
 		// attempt save of related PlantData
 		$this->plantData->estimated_total_quantity = $this->estimated_total_quantity;
 		$this->plantData->estimated_total_duration = $this->estimated_total_duration;
-//		$this->plantData->action_to_plant_id = $this->action_to_plant_id;
 		$this->plantData->plant_to_supplier_id = $this->plant_to_supplier_id;
 		$this->plantData->start = $this->start;
 		$this->plantData->plant_id = $this->plant_id;
@@ -375,7 +371,7 @@ class TaskToPlant extends ActiveRecord
 	// see if this is deleteable in the application - not blocked by trigger as could interfere with all removals ultimately
 	public function getCanDelete()
 	{
-		return $this->action_to_plant_id ? !$this->actionToPlant->mandatory : true;
+		return $this->action_to_plant_id ? false : true;
 	}
 
 }

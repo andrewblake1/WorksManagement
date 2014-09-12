@@ -8,6 +8,7 @@
  * @property string $action_id
  * @property integer $plant_id
  * @property integer $plant_to_supplier_id
+ * @property integer $action_to_plant_id
  * @property string $level
  * @property integer $mode_id
  * @property integer $quantity
@@ -69,7 +70,8 @@ class ActionToPlant extends ActiveRecord
             'actionToPlantBranches' => array(self::HAS_MANY, 'ActionToPlantBranch', 'action_id'),
             'actionToPlantBranches1' => array(self::HAS_MANY, 'ActionToPlantBranch', 'action_to_plant_id'),
             'actionToPlantToPlantCapabilities' => array(self::HAS_MANY, 'ActionToPlantToPlantCapability', 'action_to_plant_id'),
-            'plantDatas' => array(self::HAS_MANY, 'PlantData', 'action_to_plant_id'),
+            'taskToPlants' => array(self::HAS_MANY, 'TaskToPlant', 'action_to_plant_id'),
+			'actionToPlant' => array(self::BELONGS_TO, 'ActionToPlant', 'action_to_plant_id'),
             'taskTemplateToActionToPlants' => array(self::HAS_MANY, 'TaskTemplateToActionToPlant', 'action_to_plant_id'),
         );
     }
