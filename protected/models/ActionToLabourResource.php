@@ -66,7 +66,7 @@ class ActionToLabourResource extends ActiveRecord
             'action' => array(self::BELONGS_TO, 'Action', 'action_id'),
             'actionToLabourResourceBranches' => array(self::HAS_MANY, 'ActionToLabourResourceBranch', 'action_to_labour_resource_id'),
             'actionToLabourResourceBranches1' => array(self::HAS_MANY, 'ActionToLabourResourceBranch', 'deleted'),
-            'labourResourceDatas' => array(self::HAS_MANY, 'LabourResourceData', 'action_to_labour_resource_id'),
+            'taskTolabourResources' => array(self::HAS_MANY, 'TaskToLabourResource', 'action_to_labour_resource_id'),
             'taskTemplateToActionToLabourResources' => array(self::HAS_MANY, 'TaskTemplateToActionToLabourResource', 'action_to_labour_resource_id'),
             'taskTemplateToActionToLabourResources1' => array(self::HAS_MANY, 'TaskTemplateToActionToLabourResource', 'deleted'),
         );
@@ -123,7 +123,7 @@ class ActionToLabourResource extends ActiveRecord
 		// loop thru labour resources for the Action
 		foreach(ActionToLabourResource::model()->findAllByAttributes(array('action_id'=>$action_id)) as $actionToLabourResource)
 		{
-			// create a new labourResource
+			// create a new task to labourResource
 			$taskToLabourResource = new TaskToLabourResource();
 			$taskToLabourResource->attributes = $actionToLabourResource->attributes;
 			$taskToLabourResource->action_to_labour_resource_id = $actionToLabourResource->id;

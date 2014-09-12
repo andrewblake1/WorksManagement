@@ -7,6 +7,7 @@
  * @property string $id
  * @property string $task_id
  * @property string $labour_resource_data_id
+ * @property string $action_to_labour_resource_data_id
  * @property string $duration
  * @property integer $quantity
  * @property integer $updated_by
@@ -15,6 +16,7 @@
  * @property Task $task
  * @property User $updatedBy
  * @property LabourResourceData $labourResourceData
+ * @property ActionToLabourResource $actionToLabourResource
  */
 class TaskToLabourResource extends ActiveRecord
 {
@@ -37,7 +39,6 @@ class TaskToLabourResource extends ActiveRecord
 	public $start;
 	public $auth_item_name;
 	public $labour_resource_to_supplier_id;
-	public $action_to_labour_resource_id;
 	public $searchLevel;
 	public $searchSupplierId;
 	public $labour_resource_id;
@@ -55,7 +56,7 @@ class TaskToLabourResource extends ActiveRecord
 	{
 		return array_merge(parent::rules(array('labour_resource_data_id', 'type')), array(
 			array('labour_resource_id, durationTemp', 'required'),
-			array('level, action_to_labour_resource_id, labour_resource_id, mode_id, labour_resource_to_supplier_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
+			array('level, labour_resource_id, mode_id, labour_resource_to_supplier_id, estimated_total_quantity', 'numerical', 'integerOnly'=>true),
 			array('start, duration, estimated_total_duration', 'date', 'format'=>'H:m'),
 			array('type', 'safe'),
 		));
@@ -72,7 +73,8 @@ class TaskToLabourResource extends ActiveRecord
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'labourResourceData' => array(self::BELONGS_TO, 'LabourResourceData', 'labour_resource_data_id'),
-        );
+            'actionToLabourResource' => array(self::BELONGS_TO, 'ActionToLabourResource', 'action_to_labour_resource_id'),
+       );
     }
 
 	/**
@@ -119,7 +121,7 @@ class TaskToLabourResource extends ActiveRecord
 				ON taskToLabourResource.labour_resource_data_id = labourResourceData.id
 				AND taskToLabourResource.task_id = :task_id
 			JOIN tbl_action_to_labour_resource actionToLabourResource
-				ON labourResourceData.action_to_labour_resource_id = actionToLabourResource.id
+				ON t.action_to_labour_resource_id = actionToLabourResource.id
 			JOIN tbl_action_to_labour_resource_branch actionToLabourResourceBranch
 				ON actionToLabourResource.id = actionToLabourResourceBranch.id
 			JOIN tbl_duty duty
@@ -204,7 +206,6 @@ class TaskToLabourResource extends ActiveRecord
 		$this->labour_resource_id = $this->labourResourceData->labour_resource_id;
 		$this->level = $this->labourResourceData->level;
 		$this->mode_id = $this->labourResourceData->mode_id;
-		$this->action_to_labour_resource_id = $this->labourResourceData->action_to_labour_resource_id;
 	}
 
 // TODO:repeated in duties -- use trait but watch setting of level as different in duties slightly
@@ -268,7 +269,6 @@ class TaskToLabourResource extends ActiveRecord
 			$labourResourceData->labour_resource_to_supplier_id = $this->labour_resource_to_supplier_id;
 			$labourResourceData->estimated_total_quantity = $this->estimated_total_quantity;
 			$labourResourceData->estimated_total_duration = $this->estimated_total_duration;
-//			$labourResourceData->action_to_labour_resource_id = $this->action_to_labour_resource_id;
 			$labourResourceData->start = $this->start;
 			$labourResourceData->mode_id = $this->mode_id ? $this->mode_id : $this->task->mode_id;
 			$labourResourceData->updated_by = Yii::app()->user->id;
@@ -328,7 +328,6 @@ class TaskToLabourResource extends ActiveRecord
 		// attempt save of related LabourResourceData
 		$this->labourResourceData->estimated_total_quantity = $this->estimated_total_quantity;
 		$this->labourResourceData->estimated_total_duration = $this->estimated_total_duration;
-//		$this->labourResourceData->action_to_labour_resource_id = $this->action_to_labour_resource_id;
 		$this->labourResourceData->labour_resource_to_supplier_id = $this->labour_resource_to_supplier_id;
 		$this->labourResourceData->start = $this->start;
 		$this->labourResourceData->labour_resource_id = $this->labour_resource_id;

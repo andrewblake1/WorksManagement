@@ -13,7 +13,6 @@
  * @property integer $estimated_total_quantity
  * @property string $estimated_total_duration
  * @property string $start
- * @property integer $action_to_labour_resource_id
  * @property integer $updated_by
  *
  * The followings are the available model relations:
@@ -48,7 +47,6 @@ class LabourResourceData extends ActiveRecord
             'labourResource' => array(self::BELONGS_TO, 'LabourResource', 'labour_resource_id'),
             'labourResourceToSupplier' => array(self::BELONGS_TO, 'LabourResourceToSupplier', 'labour_resource_to_supplier_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
-            'actionToLabourResource' => array(self::BELONGS_TO, 'ActionToLabourResource', 'action_to_labour_resource_id'),
             'mode' => array(self::BELONGS_TO, 'Mode', 'mode_id'),
             'taskToLabourResources' => array(self::HAS_MANY, 'TaskToLabourResource', 'labour_resource_data_id'),
         );
@@ -121,7 +119,6 @@ class LabourResourceData extends ActiveRecord
 				$labourResourceData->labour_resource_to_supplier_id = $this->labour_resource_to_supplier_id;
 				$labourResourceData->estimated_total_quantity = $this->estimated_total_quantity;
 				$labourResourceData->estimated_total_duration = $this->estimated_total_duration;
-				$labourResourceData->action_to_labour_resource_id = $this->action_to_labour_resource_id;
 				$labourResourceData->start = $this->start;
 				$labourResourceData->updated_by = Yii::app()->user->id;
 				// loop thru all relevant new planning id's
