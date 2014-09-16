@@ -7,7 +7,7 @@
  * @property string $id
  * @property string $task_id
  * @property string $labour_resource_data_id
- * @property string $action_to_labour_resource_data_id
+ * @property string $action_to_labour_resource_id
  * @property string $duration
  * @property integer $quantity
  * @property integer $updated_by
@@ -24,7 +24,9 @@ class TaskToLabourResource extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
+	public $searchLevel;
 	public $searchSupplier;
+	public $searchSupplierId;
 	public $searchPrimarySecondary;
 	public $searchLabourResource;
 	public $searchTaskQuantity;
@@ -39,8 +41,6 @@ class TaskToLabourResource extends ActiveRecord
 	public $start;
 	public $auth_item_name;
 	public $labour_resource_to_supplier_id;
-	public $searchLevel;
-	public $searchSupplierId;
 	public $labour_resource_id;
 	public $mode_id;
 	public $level;
@@ -341,14 +341,13 @@ class TaskToLabourResource extends ActiveRecord
 			// a hack to get around not easily being able to adjust rules
 			$this->durationTemp = 0;
 
-			if(!($saved = $this->dbCallback('save')))
-			{
-				// put the model into the models array used for showing all errors
-				$models[] = $this;
-			}
 		}
 		
-		$return = $saved & parent::updateSave($models);
+		if(!($saved = $this->dbCallback('save')))
+		{
+			// put the model into the models array used for showing all errors
+			$models[] = $this;
+		}
 		
 		// clear task to labour resource values to indicated secondary role
 		if($this->type == 'Secondary')
@@ -361,7 +360,7 @@ class TaskToLabourResource extends ActiveRecord
 			$command->execute();
 		}
 
-		return $return;
+		return $saved;
 	}
 	
 	public function beforeValidate()

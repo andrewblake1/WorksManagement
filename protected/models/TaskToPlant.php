@@ -7,6 +7,7 @@
  * @property string $id
  * @property string $task_id
  * @property string $plant_data_id
+ * @property string $action_to_plant_id
  * @property string $duration
  * @property integer $quantity
  * @property integer $updated_by
@@ -15,6 +16,7 @@
  * @property Task $task
  * @property User $updatedBy
  * @property PlantData $plantData
+ * @property ActionToPlant $actionToPlant
  */
 class TaskToPlant extends ActiveRecord
 {
@@ -24,9 +26,10 @@ class TaskToPlant extends ActiveRecord
 	 * @var string search variables - foreign key lookups sometimes composite.
 	 * these values are entered by user in admin view to search
 	 */
+	public $searchLevel;
 	public $searchSupplier;
+	public $searchSupplierId;
 	public $searchPrimarySecondary;
-	public $searchPlantToSupplierId;
 	public $searchPlant;
 	public $searchTaskQuantity;
 	public $searchMode;
@@ -40,7 +43,6 @@ class TaskToPlant extends ActiveRecord
 	public $start;
 	public $description;
 	public $plant_to_supplier_id;
-	public $searchLevel;
 	public $plant_id;
 	public $mode_id;
 	public $level;
@@ -73,7 +75,8 @@ class TaskToPlant extends ActiveRecord
             'task' => array(self::BELONGS_TO, 'Task', 'task_id'),
             'updatedBy' => array(self::BELONGS_TO, 'User', 'updated_by'),
             'plantData' => array(self::BELONGS_TO, 'PlantData', 'plant_data_id'),
-        );
+            'actionToPlant' => array(self::BELONGS_TO, 'ActionToPlant', 'action_to_plant_id'),
+       );
     }
 
 	/**
@@ -105,11 +108,12 @@ class TaskToPlant extends ActiveRecord
 		
 		$criteria->select=array(
 			't.*',
+			'supplier.id AS searchSupplierId',
 			'IF(primarySecondary.plant_data_id, "Primary", "Secondary") AS searchPrimarySecondary',
 		);
 		
 		$criteria->distinct = true;
-
+		
 		# exlude list = failed branch condition or not yet reached branch condition
 		$criteria->condition .= ' AND t.id NOT IN (
 			SELECT taskToPlant.id
@@ -162,7 +166,6 @@ class TaskToPlant extends ActiveRecord
 				AND primarySecondary.duration IS NOT NULL
 		";
 		
-		
 		return $criteria;
 	}
 
@@ -170,7 +173,7 @@ class TaskToPlant extends ActiveRecord
 	{
         $columns[] = 'searchPlant';
         $columns[] = 'searchPrimarySecondary';
-        $columns[] = static::linkColumn('searchSupplier', 'PlantToSupplier', 'searchPlantToSupplierId');
+        $columns[] = static::linkColumn('searchSupplier', 'Supplier', 'searchSupplierId');
 		$columns[] = 'searchTaskQuantity';
 		$columns[] = 'start:time';
 		$columns[] = 'searchLevel';
@@ -204,7 +207,6 @@ class TaskToPlant extends ActiveRecord
 		$this->plant_id = $this->plantData->plant_id;
 		$this->level = $this->plantData->level;
 		$this->mode_id = $this->plantData->mode_id;
-		
 	}
 
 // TODO:repeated in duties -- use trait but watch setting of level as different in duties slightly
@@ -246,6 +248,7 @@ class TaskToPlant extends ActiveRecord
 		{
 			$this->duration = null;
 			$this->start = null;
+			$this->plant_to_supplier_id = null;
 			$this->estimated_total_duration = null;
 		}
 		else
@@ -281,14 +284,21 @@ class TaskToPlant extends ActiveRecord
 
 		parent::createSave($models);
 		
-		// clear task to plant values to indicated secondary role
+		// clear task to labour resource values to indicated secondary role
 		if($this->type == 'Secondary')
 		{
 			$command = Yii::app()->db->createCommand("
 				UPDATE `tbl_task_to_plant`
-				SET `duration` = NULL, `start` = NULL
+				SET `duration` = NULL
 				WHERE `plant_data_id` = :plant_data_id");
 			$command->bindParam(':plant_data_id', $temp = $this->plant_data_id);
+			$command->execute();
+			// NB: can't update in single statement due to trigger and mysql error 1442
+			$command = Yii::app()->db->createCommand("
+				UPDATE `tbl_plant_data`
+				SET `start` = NULL
+				WHERE `id` = :id");
+			$command->bindParam(':id', $temp = $this->plant_data_id);
 			$command->execute();
 		}
 
@@ -309,7 +319,6 @@ class TaskToPlant extends ActiveRecord
 		{
 			$this->duration = null;
 			$this->start = null;
-			$this->plant_to_supplier_id = null;
 			$this->estimated_total_duration = null;
 		}
 		else
@@ -333,16 +342,15 @@ class TaskToPlant extends ActiveRecord
 			// a hack to get around not easily being able to adjust rules
 			$this->durationTemp = 0;
 
-			if(!($saved = $this->dbCallback('save')))
-			{
-				// put the model into the models array used for showing all errors
-				$models[] = $this;
-			}
 		}
 		
-		$return = $saved & parent::updateSave($models);
+		if(!($saved = $this->dbCallback('save')))
+		{
+			// put the model into the models array used for showing all errors
+			$models[] = $this;
+		}
 		
-		// clear task to plant values to indicated secondary role
+		// clear task to labour resource values to indicated secondary role
 		if($this->type == 'Secondary')
 		{
 			$command = Yii::app()->db->createCommand("
@@ -353,7 +361,7 @@ class TaskToPlant extends ActiveRecord
 			$command->execute();
 		}
 
-		return $return;
+		return $saved;
 	}
 	
 	public function beforeValidate()
