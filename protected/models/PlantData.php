@@ -83,7 +83,12 @@ class PlantData extends ActiveRecord
 					SELECT id FROM tbl_plant_data
 					WHERE plant_id = :plantId
 						AND planning_id = :targetPlanningId
-					')->queryScalar(array(':plantId'=>$this->plant_id, ':targetPlanningId'=>$targetPlanningId)))
+						AND mode_id = :modeId
+					')->queryScalar(array(
+						':plantId'=>$this->plant_id,
+						':modeId'=>$this->mode_id,
+						':targetPlanningId'=>$targetPlanningId
+				)))
 				{
 					// update existing tbl_task_to_plant records to now point at this target
 					Yii::app()->db->createCommand('
