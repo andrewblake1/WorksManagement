@@ -79,22 +79,18 @@ class PlantData extends ActiveRecord
 				')->queryScalar(array(':newLevel'=>$newLevel, ':planningId'=>$this->planning_id));
 		
 				// if a plant_data already exists for this at new target level
-				if($exisPlantDataRow=Yii::app()->db->createCommand('
-					SELECT * FROM tbl_plant_data
+				if($exisPlantDataId=Yii::app()->db->createCommand('
+					SELECT id FROM tbl_plant_data
 					WHERE plant_id = :plantId
 						AND planning_id = :targetPlanningId
-					')->queryRow(true, array(':plantId'=>$this->plant_id, ':targetPlanningId'=>$targetPlanningId)))
+					')->queryScalar(array(':plantId'=>$this->plant_id, ':targetPlanningId'=>$targetPlanningId)))
 				{
-					$exisPlantDataTarget = new self;
-					$exisPlantDataTarget->attributes = $exisPlantDataRow;
-// beware - not sure if id is safe?
-					$exisPlantDataTarget->setIsNewRecord(false);
 					// update existing tbl_task_to_plant records to now point at this target
 					Yii::app()->db->createCommand('
 						UPDATE tbl_task_to_plant taskToPlant
 						SET plant_data_id = :exisPlantDataTargetid
 						WHERE plant_data_id = :mergePlantId
-					')->execute(array(':exisPlantDataTargetid'=>$exisPlantDataTarget->id, ':mergePlantId'=>$this->id));
+					')->execute(array(':exisPlantDataTargetid'=>$exisPlantDataId, ':mergePlantId'=>$this->id));
 					
 					// remove this record as all the related plant items should now point at the correct new target
 					return $this->delete();
