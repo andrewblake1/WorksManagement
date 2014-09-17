@@ -186,56 +186,60 @@ class DutyData extends ActiveRecord
 				foreach($command->queryColumn(array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planning)
 				{
 					$dutyData->planning_id = $planning['id'];
-					$dutyData->insert();
-					
-					// NB: this needs to go before the update statement above because once no related tbl_duty items then update trigger
-					// removes unattached tbl_duty items which could cascade here
-					// create new set of custom fields for each - cloning from the original which will disappear due to update trigger and cascade
-					// delete on foreign key to tbl_duty_data
-					Yii::app()->db->createCommand('
-					INSERT INTO tbl_duty_data_to_duty_step_to_custom_field (
-						custom_value,
-						duty_step_to_custom_field_id,
-						duty_data_id,
-						updated_by
-						)
-						SELECT
+
+					// if a data row does not already exists
+					if(!DutyData::model()->findByAttributes(array(
+						'planning_id' => $dutyData->planning_id,
+						'duty_step_id' => $dutyData->duty_step_id,
+					))) 
+					{
+						$dutyData->insert();
+
+						// NB: this needs to go before the update statement above because once no related tbl_duty items then update trigger
+						// removes unattached tbl_duty items which could cascade here
+						// create new set of custom fields for each - cloning from the original which will disappear due to update trigger and cascade
+						// delete on foreign key to tbl_duty_data
+						Yii::app()->db->createCommand('
+						INSERT INTO tbl_duty_data_to_duty_step_to_custom_field (
 							custom_value,
 							duty_step_to_custom_field_id,
-							:newDutyDataId,
-							:updatedBy
-						FROM tbl_duty_data_to_duty_step_to_custom_field
-						WHERE duty_data_id = :oldDutyDataId
-					')->execute(array(
-						':newDutyDataId'=>$dutyData->id,
-						':updatedBy'=>$this->updated_by,
-						':oldDutyDataId'=>$this->id,
-					));
-					
-					// make the relevant duty items relate
-					Yii::app()->db->createCommand('
-						UPDATE tbl_duty JOIN tbl_planning AS task ON tbl_duty.task_id = task.id
-						SET duty_data_id = :newDutyDataId
-						WHERE duty_data_id = :oldDutyDataId
-							AND task.lft >= :planningLft
-							AND task.rgt <= :planningRgt
-					')->execute(array(
-						':newDutyDataId'=>$dutyData->id,
-						':oldDutyDataId'=>$this->id,
-						':planningLft'=>$planning['lft'],
-						':planningRgt'=>$planning['rgt'],
-					));
-					
-					// reset for next iteration
-					$dutyData->id = NULL;
-					$dutyData->setIsNewRecord(true);
+							duty_data_id,
+							updated_by
+							)
+							SELECT
+								custom_value,
+								duty_step_to_custom_field_id,
+								:newDutyDataId,
+								:updatedBy
+							FROM tbl_duty_data_to_duty_step_to_custom_field
+							WHERE duty_data_id = :oldDutyDataId
+						')->execute(array(
+							':newDutyDataId'=>$dutyData->id,
+							':updatedBy'=>$this->updated_by,
+							':oldDutyDataId'=>$this->id,
+						));
+
+						// make the relevant duty items relate
+						Yii::app()->db->createCommand('
+							UPDATE tbl_duty JOIN tbl_planning AS task ON tbl_duty.task_id = task.id
+							SET duty_data_id = :newDutyDataId
+							WHERE duty_data_id = :oldDutyDataId
+								AND task.lft >= :planningLft
+								AND task.rgt <= :planningRgt
+						')->execute(array(
+							':newDutyDataId'=>$dutyData->id,
+							':oldDutyDataId'=>$this->id,
+							':planningLft'=>$planning['lft'],
+							':planningRgt'=>$planning['rgt'],
+						));
+
+						// reset for next iteration
+						$dutyData->id = NULL;
+						$dutyData->setIsNewRecord(true);
+					}
 				}
 
-				// remove this record as all the related duty items should now point at the correct new target
-				// this will remove the old custom fields as well by cascade delete
-				// NB: don't return the delete as may delete 0 rows due to orphan maintenance in duty update trigger
-				$this->delete();
-				
+				// delete of this shouldn't be necassary as update trigger should have taken care of it in child table
 				return true;
 			}
 		}

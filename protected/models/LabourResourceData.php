@@ -134,29 +134,38 @@ class LabourResourceData extends ActiveRecord
 				foreach($command->queryAll(true, array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planning)
 				{
 					$labourResourceData->planning_id = $planning['id'];
- 					$labourResourceData->insert();
-					
-					// make the relevant tbl_task_to_labour_resource items relate i.e. those that are descendants of or equal the planningId
-					// e.g. where task's.lft >= planningId.lft AND task's.rgt <= planningId.rgt
-					Yii::app()->db->createCommand('
-						UPDATE tbl_task_to_labour_resource JOIN tbl_planning AS task ON tbl_task_to_labour_resource.task_id = task.id
-						SET labour_resource_data_id = :newLabourResourceDataId
-						WHERE labour_resource_data_id = :oldLabourResourceDataId
-							AND task.lft >= :planningLft
-							AND task.rgt <= :planningRgt
-					')->execute(array(
-						':newLabourResourceDataId'=>$labourResourceData->id,
-						':oldLabourResourceDataId'=>$this->id,
-						':planningLft'=>$planning['lft'],
-						':planningRgt'=>$planning['rgt'],
-					));
-					
-					// reset for next iteration
-					$labourResourceData->id = NULL;
-					$labourResourceData->setIsNewRecord(true);
+
+					// if a data row does not already exists
+					if(!LabourResourceData::model()->findByAttributes(array(
+						'planning_id' => $labourResourceData->planning_id,
+						'labour_resource_id' => $labourResourceData->labour_resource_id,
+						'mode_id' => $labourResourceData->mode_id,
+					))) 
+					{
+						$labourResourceData->insert();
+
+						// make the relevant tbl_task_to_labour_resource items relate i.e. those that are descendants of or equal the planningId
+						// e.g. where task's.lft >= planningId.lft AND task's.rgt <= planningId.rgt
+						Yii::app()->db->createCommand('
+							UPDATE tbl_task_to_labour_resource JOIN tbl_planning AS task ON tbl_task_to_labour_resource.task_id = task.id
+							SET labour_resource_data_id = :newLabourResourceDataId
+							WHERE labour_resource_data_id = :oldLabourResourceDataId
+								AND task.lft >= :planningLft
+								AND task.rgt <= :planningRgt
+						')->execute(array(
+							':newLabourResourceDataId'=>$labourResourceData->id,
+							':oldLabourResourceDataId'=>$this->id,
+							':planningLft'=>$planning['lft'],
+							':planningRgt'=>$planning['rgt'],
+						));
+
+						// reset for next iteration
+						$labourResourceData->id = NULL;
+						$labourResourceData->setIsNewRecord(true);
+					}
 				}
 
-				// delete of this planning id shouldn't be necassary as update trigger should have taken care of it in child table
+				// delete of this shouldn't be necassary as update trigger should have taken care of it in child table
 				return true;
 			}
 		}

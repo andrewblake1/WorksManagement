@@ -133,29 +133,38 @@ class PlantData extends ActiveRecord
 				foreach($command->queryAll(true, array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planning)
 				{
 					$plantData->planning_id = $planning['id'];
- 					$plantData->insert();
 					
-					// make the relevant tbl_task_to_plant items relate i.e. those that are descendants of or equal the planningId
-					// e.g. where task's.lft >= planningId.lft AND task's.rgt <= planningId.rgt
-					Yii::app()->db->createCommand('
-						UPDATE tbl_task_to_plant JOIN tbl_planning AS task ON tbl_task_to_plant.task_id = task.id
-						SET plant_data_id = :newPlantDataId
-						WHERE plant_data_id = :oldPlantDataId
-							AND task.lft >= :planningLft
-							AND task.rgt <= :planningRgt
-					')->execute(array(
-						':newPlantDataId'=>$plantData->id,
-						':oldPlantDataId'=>$this->id,
-						':planningLft'=>$planning['lft'],
-						':planningRgt'=>$planning['rgt'],
-					));
-					
-					// reset for next iteration
-					$plantData->id = NULL;
-					$plantData->setIsNewRecord(true);
+					// if a data row does not already exists
+					if(!PlantData::model()->findByAttributes(array(
+						'planning_id' => $plantData->planning_id,
+						'plant_id' => $plantData->plant_id,
+						'mode_id' => $plantData->mode_id,
+					))) 
+					{
+						$plantData->insert();
+ 					
+						// make the relevant tbl_task_to_plant items relate i.e. those that are descendants of or equal the planningId
+						// e.g. where task's.lft >= planningId.lft AND task's.rgt <= planningId.rgt
+						Yii::app()->db->createCommand('
+							UPDATE tbl_task_to_plant JOIN tbl_planning AS task ON tbl_task_to_plant.task_id = task.id
+							SET plant_data_id = :newPlantDataId
+							WHERE plant_data_id = :oldPlantDataId
+								AND task.lft >= :planningLft
+								AND task.rgt <= :planningRgt
+						')->execute(array(
+							':newPlantDataId'=>$plantData->id,
+							':oldPlantDataId'=>$this->id,
+							':planningLft'=>$planning['lft'],
+							':planningRgt'=>$planning['rgt'],
+						));
+
+						// reset for next iteration
+						$plantData->id = NULL;
+						$plantData->setIsNewRecord(true);
+					}
 				}
 
-				// delete of this planning id shouldn't be necassary as update trigger should have taken care of it in child table
+				// delete of this shouldn't be necassary as update trigger should have taken care of it in child table
 				return true;
 			}
 		}
