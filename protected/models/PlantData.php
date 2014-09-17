@@ -97,7 +97,7 @@ class PlantData extends ActiveRecord
 						WHERE plant_data_id = :thisId
 					')->execute(array(':mergePlantDataId'=>$mergePlantDataId, ':thisId'=>$this->id));
 					
-					// don't need to delete as a trigger on update will have done this
+					// don't need to delete as a trigger on update shoujld have done this
 					return true;
 				}
 				// otherwise just shifting this one to the new level
@@ -124,33 +124,38 @@ class PlantData extends ActiveRecord
 				// loop thru all relevant new planning id's
 				// child hunt
 				$command=Yii::app()->db->createCommand('
-					SELECT id FROM tbl_planning planning
+					SELECT id, lft, rgt FROM tbl_planning planning
 					WHERE planning.level = :newLevel
 						AND planning.lft >= (SELECT lft FROM tbl_planning WHERE id = :planningId)
 						AND planning.rgt <= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
 						AND planning.root = (SELECT root FROM tbl_planning WHERE id = :planningId)
 				');
-				foreach($command->queryColumn(array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planningId)
+				foreach($command->queryAll(true, array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planning)
 				{
-					$plantData->planning_id = $planningId;
-					$plantData->insert();
+					$plantData->planning_id = $planning['id'];
+ 					$plantData->insert();
 					
-					// make the relevant tbl_task_to_plant items relate
+					// make the relevant tbl_task_to_plant items relate i.e. those that are descendants of or equal the planningId
+					// e.g. where task's.lft >= planningId.lft AND task's.rgt <= planningId.rgt
 					Yii::app()->db->createCommand('
-						UPDATE tbl_task_to_plant
+						UPDATE tbl_task_to_plant JOIN tbl_planning AS task USING ( id )
 						SET plant_data_id = :newPlantDataId
 						WHERE plant_data_id = :oldPlantDataId
-					')->execute(array(':newPlantDataId'=>$plantData->id, ':oldPlantDataId'=>$this->id));
+							AND task.lft >= :planningLft
+							AND task.rgt >= :planningRgt
+					')->execute(array(
+						':newPlantDataId'=>$plantData->id,
+						':oldPlantDataId'=>$this->id,
+						':planningLft'=>$planning['lft'],
+						':planningRgt'=>$planning['rgt'],
+					));
 					
 					// reset for next iteration
 					$plantData->id = NULL;
 					$plantData->setIsNewRecord(true);
 				}
 
-				// remove this record as all the related tasktoplant items should now point at the correct new target
-				// NB: don't return the delete as may delete 0 rows due to orphan maintenance in plant update trigger
-				$this->delete();
-				
+				// delete of this planning id shouldn't be necassary as update trigger should have taken care of it in child table
 				return true;
 			}
 		}

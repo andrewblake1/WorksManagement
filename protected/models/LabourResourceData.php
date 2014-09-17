@@ -125,33 +125,38 @@ class LabourResourceData extends ActiveRecord
 				// loop thru all relevant new planning id's
 				// child hunt
 				$command=Yii::app()->db->createCommand('
-					SELECT id FROM tbl_planning planning
+					SELECT id, lft, rgt FROM tbl_planning planning
 					WHERE planning.level = :newLevel
 						AND planning.lft >= (SELECT lft FROM tbl_planning WHERE id = :planningId)
 						AND planning.rgt <= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
 						AND planning.root = (SELECT root FROM tbl_planning WHERE id = :planningId)
 				');
-				foreach($command->queryColumn(array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planningId)
+				foreach($command->queryAll(true, array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planning)
 				{
-					$labourResourceData->planning_id = $planningId;
-					$labourResourceData->insert();
+					$labourResourceData->planning_id = $planning['id'];
+ 					$labourResourceData->insert();
 					
-					// make the relevant tbl_task_to_labour_resource items relate
+					// make the relevant tbl_task_to_labour_resource items relate i.e. those that are descendants of or equal the planningId
+					// e.g. where task's.lft >= planningId.lft AND task's.rgt <= planningId.rgt
 					Yii::app()->db->createCommand('
-						UPDATE tbl_task_to_labour_resource
+						UPDATE tbl_task_to_labour_resource JOIN tbl_planning AS task USING ( id )
 						SET labour_resource_data_id = :newLabourResourceDataId
 						WHERE labour_resource_data_id = :oldLabourResourceDataId
-					')->execute(array(':newLabourResourceDataId'=>$labourResourceData->id, ':oldLabourResourceDataId'=>$this->id));
+							AND task.lft >= :planningLft
+							AND task.rgt >= :planningRgt
+					')->execute(array(
+						':newLabourResourceDataId'=>$labourResourceData->id,
+						':oldLabourResourceDataId'=>$this->id,
+						':planningLft'=>$planning['lft'],
+						':planningRgt'=>$planning['rgt'],
+					));
 					
 					// reset for next iteration
 					$labourResourceData->id = NULL;
 					$labourResourceData->setIsNewRecord(true);
 				}
 
-				// remove this record as all the related tasktolabourResource items should now point at the correct new target
-				// NB: don't return the delete as may delete 0 rows due to orphan maintenance in labourResource update trigger
-				$this->delete();
-				
+				// delete of this planning id shouldn't be necassary as update trigger should have taken care of it in child table
 				return true;
 			}
 		}

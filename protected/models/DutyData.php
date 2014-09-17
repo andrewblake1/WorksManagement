@@ -177,25 +177,21 @@ class DutyData extends ActiveRecord
 				// loop thru all relevant new planning id's
 				// child hunt
 				$command=Yii::app()->db->createCommand('
-					SELECT id FROM tbl_planning planning
+					SELECT id, lft, rgt FROM tbl_planning planning
 					WHERE planning.level = :newLevel
 						AND planning.lft >= (SELECT lft FROM tbl_planning WHERE id = :planningId)
 						AND planning.rgt <= (SELECT rgt FROM tbl_planning WHERE id = :planningId)
 						AND planning.root = (SELECT root FROM tbl_planning WHERE id = :planningId)
 				');
-				foreach($command->queryColumn(array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planningId)
+				foreach($command->queryColumn(array(':newLevel'=>$newLevel, 'planningId'=>$this->planning_id)) as $planning)
 				{
-					$dutyData->planning_id = $planningId;
+					$dutyData->planning_id = $planning['id'];
 					$dutyData->insert();
 					
-					// make the relevant duty items relate
-					Yii::app()->db->createCommand('
-						UPDATE tbl_duty
-						SET duty_data_id = :newDutyDataId
-						WHERE duty_data_id = :oldDutyDataId
-					')->execute(array(':newDutyDataId'=>$dutyData->id, ':oldDutyDataId'=>$this->id));
-					
-					// create new set of custom fields for each
+					// NB: this needs to go before the update statement above because once no related tbl_duty items then update trigger
+					// removes unattached tbl_duty items which could cascade here
+					// create new set of custom fields for each - cloning from the original which will disappear due to update trigger and cascade
+					// delete on foreign key to tbl_duty_data
 					Yii::app()->db->createCommand('
 					INSERT INTO tbl_duty_data_to_duty_step_to_custom_field (
 						custom_value,
@@ -213,7 +209,21 @@ class DutyData extends ActiveRecord
 					')->execute(array(
 						':newDutyDataId'=>$dutyData->id,
 						':updatedBy'=>$this->updated_by,
-						':oldDutyDataId'=>  $this->id,
+						':oldDutyDataId'=>$this->id,
+					));
+					
+					// make the relevant duty items relate
+					Yii::app()->db->createCommand('
+						UPDATE tbl_duty JOIN tbl_planning AS task USING ( id )
+						SET duty_data_id = :newDutyDataId
+						WHERE duty_data_id = :oldDutyDataId
+							AND task.lft >= :planningLft
+							AND task.rgt >= :planningRgt
+					')->execute(array(
+						':newDutyDataId'=>$dutyData->id,
+						':oldDutyDataId'=>$this->id,
+						':planningLft'=>$planning['lft'],
+						':planningRgt'=>$planning['rgt'],
 					));
 					
 					// reset for next iteration
