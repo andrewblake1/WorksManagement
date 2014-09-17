@@ -142,7 +142,7 @@ class PlantData extends ActiveRecord
 						SET plant_data_id = :newPlantDataId
 						WHERE plant_data_id = :oldPlantDataId
 							AND task.lft >= :planningLft
-							AND task.rgt >= :planningRgt
+							AND task.rgt <= :planningRgt
 					')->execute(array(
 						':newPlantDataId'=>$plantData->id,
 						':oldPlantDataId'=>$this->id,

@@ -143,7 +143,7 @@ class LabourResourceData extends ActiveRecord
 						SET labour_resource_data_id = :newLabourResourceDataId
 						WHERE labour_resource_data_id = :oldLabourResourceDataId
 							AND task.lft >= :planningLft
-							AND task.rgt >= :planningRgt
+							AND task.rgt <= :planningRgt
 					')->execute(array(
 						':newLabourResourceDataId'=>$labourResourceData->id,
 						':oldLabourResourceDataId'=>$this->id,

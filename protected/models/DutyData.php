@@ -218,7 +218,7 @@ class DutyData extends ActiveRecord
 						SET duty_data_id = :newDutyDataId
 						WHERE duty_data_id = :oldDutyDataId
 							AND task.lft >= :planningLft
-							AND task.rgt >= :planningRgt
+							AND task.rgt <= :planningRgt
 					')->execute(array(
 						':newDutyDataId'=>$dutyData->id,
 						':oldDutyDataId'=>$this->id,
