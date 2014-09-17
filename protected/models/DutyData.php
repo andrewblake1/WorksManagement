@@ -131,35 +131,30 @@ class DutyData extends ActiveRecord
 				')->queryScalar(array(':newLevel'=>$newLevel, ':planningId'=>$this->planning_id));
 		
 				// if a duty_data already exists for this step at new target level
-				if($exisDutyDataRow=Yii::app()->db->createCommand('
+				if($mergeDutyDataId=Yii::app()->db->createCommand('
 					SELECT * FROM tbl_duty_data
 					WHERE duty_step_id = :dutyStepId
 						AND planning_id = :targetPlanningId
-					')->queryRow(true, array(':dutyStepId'=>$this->duty_step_id, ':targetPlanningId'=>$targetPlanningId)))
+					')->queryScalar(array(':dutyStepId'=>$this->duty_step_id, ':targetPlanningId'=>$targetPlanningId)))
 				{
-					$exisDutyDataTarget = new self;
-					$exisDutyDataTarget->attributes = $exisDutyDataRow;
-// beware - not sure if id is safe?
-					$exisDutyDataTarget->setIsNewRecord(false);
 					// merge the custom values
 					Yii::app()->db->createCommand('
 						UPDATE (SELECT * FROM tbl_duty_data_to_duty_step_to_custom_field customExis
-							WHERE duty_data_id = :exisDutyDataTargetid) AS exis
+							WHERE duty_data_id = :mergeDutyDataId) AS exis
 						JOIN (SELECT * FROM tbl_duty_data_to_duty_step_to_custom_field
-							WHERE duty_data_id = :mergeDutyDataTargetid) AS merge
+							WHERE duty_data_id = :thisId) AS merge
 						USING(duty_step_to_custom_field_id)
 						SET customExis.custom_value = COALESCE(exis.custom_value, merge.custom_value)
-					')->execute(array(':exisDutyDataTargetid'=>$exisDutyDataTarget->id, ':mergeDutyDataTargetid'=>$this->id));
+					')->execute(array(':mergeDutyDataId'=>$mergeDutyDataId, ':thisId'=>$this->id));
 					// update existing duty records to now point at this target
 					Yii::app()->db->createCommand('
 						UPDATE tbl_duty duty
-						SET duty_data_id = :exisDutyDataTargetid
-						WHERE duty_data_id = :mergeDutyId
-					')->execute(array(':exisDutyDataTargetid'=>$exisDutyDataTarget->id, ':mergeDutyId'=>$this->id));
+						SET duty_data_id = :mergeDutyDataId
+						WHERE duty_data_id = :thisId
+					')->execute(array(':mergeDutyDataId'=>$mergeDutyDataId, ':thisId'=>$this->id));
 					
-					// remove this record as all the related duty items should now point at the correct new target
-					// this will remove the old custom fields as well by cascade delete
-					return $this->delete();
+					// don't need to delete as a trigger on update will have done this
+					return true;
 				}
 				// otherwise just shifting this one to the new level
 				else

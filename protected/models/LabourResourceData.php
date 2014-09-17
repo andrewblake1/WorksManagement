@@ -80,25 +80,26 @@ class LabourResourceData extends ActiveRecord
 				')->queryScalar(array(':newLevel'=>$newLevel, ':planningId'=>$this->planning_id));
 		
 				// if a labour_resource_data already exists for this at new target level
-				if($exisLabourResourceDataRow=Yii::app()->db->createCommand('
-					SELECT * FROM tbl_labour_resource_data
+				if($mergeLabourResourceDataId=Yii::app()->db->createCommand('
+					SELECT id FROM tbl_labour_resource_data
 					WHERE labour_resource_id = :labourResourceId
 						AND planning_id = :targetPlanningId
-					')->queryRow(true, array(':labourResourceId'=>$this->labour_resource_id, ':targetPlanningId'=>$targetPlanningId)))
+						AND mode_id = :modeId
+					')->queryScalar(array(
+						':labourResourceId'=>$this->labour_resource_id,
+						':modeId'=>$this->mode_id,
+						':targetPlanningId'=>$targetPlanningId
+				)))
 				{
-					$exisLabourResourceDataTarget = new self;
-					$exisLabourResourceDataTarget->attributes = $exisLabourResourceDataRow;
-// beware - not sure if id is safe?
-					$exisLabourResourceDataTarget->setIsNewRecord(false);
 					// update existing tbl_task_to_labour_resource records to now point at this target
 					Yii::app()->db->createCommand('
 						UPDATE tbl_task_to_labour_resource taskToLabourResource
-						SET labour_resource_data_id = :exisLabourResourceDataTargetid
-						WHERE labour_resource_data_id = :mergeLabourResourceId
-					')->execute(array(':exisLabourResourceDataTargetid'=>$exisLabourResourceDataTarget->id, ':mergeLabourResourceId'=>$this->id));
+						SET labour_resource_data_id = :mergeLabourResourceDataId
+						WHERE labour_resource_data_id = :thisId
+					')->execute(array(':mergeLabourResourceDataId'=>$mergeLabourResourceDataId, ':thisId'=>$this->id));
 					
-					// remove this record as all the related labourResource items should now point at the correct new target
-					return $this->delete();
+					// don't need to delete as a trigger on update will have done this
+					return true;
 				}
 				// otherwise just shifting this one to the new level
 				else
