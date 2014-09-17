@@ -139,7 +139,7 @@ class LabourResourceData extends ActiveRecord
 					// make the relevant tbl_task_to_labour_resource items relate i.e. those that are descendants of or equal the planningId
 					// e.g. where task's.lft >= planningId.lft AND task's.rgt <= planningId.rgt
 					Yii::app()->db->createCommand('
-						UPDATE tbl_task_to_labour_resource JOIN tbl_planning AS task USING ( id )
+						UPDATE tbl_task_to_labour_resource JOIN tbl_planning AS task ON tbl_task_to_labour_resource.task_id = task.id
 						SET labour_resource_data_id = :newLabourResourceDataId
 						WHERE labour_resource_data_id = :oldLabourResourceDataId
 							AND task.lft >= :planningLft

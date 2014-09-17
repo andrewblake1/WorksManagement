@@ -138,7 +138,7 @@ class PlantData extends ActiveRecord
 					// make the relevant tbl_task_to_plant items relate i.e. those that are descendants of or equal the planningId
 					// e.g. where task's.lft >= planningId.lft AND task's.rgt <= planningId.rgt
 					Yii::app()->db->createCommand('
-						UPDATE tbl_task_to_plant JOIN tbl_planning AS task USING ( id )
+						UPDATE tbl_task_to_plant JOIN tbl_planning AS task ON tbl_task_to_plant.task_id = task.id
 						SET plant_data_id = :newPlantDataId
 						WHERE plant_data_id = :oldPlantDataId
 							AND task.lft >= :planningLft

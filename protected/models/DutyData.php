@@ -214,7 +214,7 @@ class DutyData extends ActiveRecord
 					
 					// make the relevant duty items relate
 					Yii::app()->db->createCommand('
-						UPDATE tbl_duty JOIN tbl_planning AS task USING ( id )
+						UPDATE tbl_duty JOIN tbl_planning AS task ON tbl_duty.task_id = task.id
 						SET duty_data_id = :newDutyDataId
 						WHERE duty_data_id = :oldDutyDataId
 							AND task.lft >= :planningLft
