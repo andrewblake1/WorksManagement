@@ -804,12 +804,12 @@ $t = $model->attributes;
 			// convert dates to mysql format - allow for nulls
 			if(!empty($value) && $this->metadata->columns[$name]->dbType == 'date')
 			{
-				$this->$name = date('Y-m-d', strtotime($value));
+				$this->$name = date('Y-m-d', strtotime(str_replace(',', '.', $value)));
 			}
 			// convert datetime to mysql format - allow for nulls
 			if(!empty($value) && $this->metadata->columns[$name]->dbType == 'datetime')
 			{
-				$this->$name = date('Y-m-d H:i:s', strtotime($value));
+				$this->$name = date('Y-m-d H:i:s', strtotime(str_replace(',', '.', $value)));
 			}
 			// convert time to mysql format - allow for nulls - convert single colon without seconds to seconds
 			if(!empty($value) && $this->metadata->columns[$name]->dbType == 'time')
