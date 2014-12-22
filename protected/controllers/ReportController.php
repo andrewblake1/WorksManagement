@@ -148,8 +148,8 @@ class ReportController extends Controller
 		
 		// make contactid available as variable for selects
 		$command = Yii::app()->db->createCommand('SET @contact_id = :contact_id');
-		$user = User::model()->findByPk(Yii::app()->user->id);
-		$contact_id =$user->contact->id;
+		$contact = User::model()->findByPk(Yii::app()->user->id);
+		$contact_id =$contact->contact->id;
 		$command->bindParam(":contact_id", $contact_id, PDO::PARAM_STR);
 		$command->execute();
 
