@@ -145,6 +145,13 @@ class ReportController extends Controller
 		$username =$user->contact->first_name .' ' . $user->contact->last_name;
 		$command->bindParam(":username", $username, PDO::PARAM_STR);
 		$command->execute();
+		
+		// make contactid available as variable for selects
+		$command = Yii::app()->db->createCommand('SET @contact_id = :contact_id');
+		$user = User::model()->findByPk(Yii::app()->user->id);
+		$contact_id =$user->contact->id;
+		$command->bindParam(":contact_id", $contact_id, PDO::PARAM_STR);
+		$command->execute();
 
 		// this could before a multi-statement that might do something like createing a temporary table so in this case the sql we
 		// want to deal with is the last one, and all previous ones are just to be executed
